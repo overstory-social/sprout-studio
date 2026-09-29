@@ -56,27 +56,57 @@ scores cannot.
 
 ## One round
 
-1. **Brief-check** the current world (skipped in round 1 before the world
-   exists).
-2. **Playtest:** K runs in parallel over personas × seeds (default K=6, one
-   per persona). Each starts
-   `sprout mcp --seed s --record rounds/NN/runs/<id>.json --turn-cap T`,
-   hands a playtester that server alone, and takes its report.
-3. **Measure:** `sprout play --report` on every run, plus a merged report.
-4. **Synthesize** into `synthesis.md`.
-5. **Steer:** publish the synthesis to the world's doc as a new tab; read
-   the comments already there into `steering.md`. A late comment steers the
-   round after.
-6. **Revise:** the author writes `revision.md`, edits the world, and
-   `sprout check` and `sprout test` pass.
-7. Commit the round.
+The saved workflow `.claude/workflows/studio-round.js` runs it, with the
+agents in `.claude/agents/`. It is generated from
+`scripts/studio-round.template.js` by `npm run schemas`, which writes the
+schemas into it, since a workflow reads no file; everything on disk is
+done by the `clerk` agent running `scripts/round.mjs`.
 
-Around rounds: `studio new <brief>` writes `intent.md` and world v1, then
-round 1; `studio run <world> --rounds N` repeats until N, until the budget
-is spent, or until two rounds pass with no accepted design point and flat
-metrics. A round is resumable from disk at any step, and the workflow stops
-and says why when a cap (turns per run, runs per round, rounds per world,
-spend) is hit.
+1. **Brief-check** the world (`brief-checker`), from round 2 on. A
+   violation goes back to the `author` once; one that stays stops the round.
+2. **Playtest:** a run for each persona × seed (default: the six personas,
+   seed 1; the impatient casual player has at most 30 turns), in parallel.
+   Each run is opened by `round.mjs open`, which writes a ticket (world,
+   seed, turn cap, time per turn, the file it is recorded to) under a
+   random **door**. The `playtester` is handed the door, a name and its
+   persona, and its only tools are `arrive`, `say` and `leave` on the
+   door's server (`scripts/playtest-mcp.mjs`), which plays the world
+   through `@overstory/sprout-mcp`'s session, exactly as `sprout mcp` does,
+   and records it to `runs/<id>.json`. Its report is kept only if valid.
+3. **Measure:** `sprout play --report` on every run, and `sprout test
+   --report` over them all as `metrics/merged.json`.
+4. **Synthesize** (`synthesizer`) into `synthesis.json`, and
+   `synthesis.md` for people.
+5. **Steer** (`steward`): publish `synthesis.md` to the world's doc as a
+   new tab; read the comments already there into `steering.md`. The loop
+   does not wait; a late comment steers the round after.
+6. **Revise** (`author`): `revision.json` answers every point and comment,
+   then the world is edited, and `sprout check` and `sprout test` pass.
+7. **Commit** the round.
+
+Every agent's output is validated through `round.mjs save` and re-asked
+once with the problems; a second refusal is logged and dropped.
+
+Run it by asking Claude Code to run the `studio-round` workflow with
+arguments:
+
+| argument | means | default |
+| --- | --- | --- |
+| `world` | the folder under `worlds/`, holding `brief.md` | required |
+| `new` | write `intent.md` and world v1 first (`studio new`) | only where the world is not yet playable |
+| `rounds` | how many rounds to play (`studio run`) | 1 |
+| `personas`, `seeds` | the runs of a round | all six, `[1]` |
+| `turnCap`, `advancePerTurn` | turns per run; seconds each turn moves time | 150, 30 |
+| `maxRuns`, `maxRounds` | the caps on runs per round and rounds per call | 12, 12 |
+| `author` | the author's model, from the brief: `opus` or `fable` | `opus` |
+| `perRoundBudget` | tokens a round is taken to need, against a `+500k`-style budget | 400000 |
+
+It stops, and says why, when the rounds asked for are played, when the
+budget left is less than a round, when two rounds pass with no accepted
+design point and flat metrics, when the brief cannot be met, or when a
+round yields no report or no synthesis. It is resumable from disk: a round
+not yet committed is picked up where it stands, playing only the runs not
+yet reported.
 
 ## Decisions
 
@@ -89,6 +119,12 @@ spend) is hit.
 - **Eric steers asynchronously** through a Claude Doc, one tab per round.
 - **Playtesters see prose only,** a pure text-adventure experience. There
   are no chips.
+- **A playtester's server is the studio's door, not `sprout mcp` itself.**
+  A subagent's MCP servers are fixed in its definition, and a run's seed,
+  cap and recording differ each time, so the door server hosts every open
+  run behind an opaque token, through the same session code `sprout mcp`
+  uses. The playtester's definition also leaves out `CLAUDE.md`, which
+  describes the loop.
 
 ## What it stands on
 

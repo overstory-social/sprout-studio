@@ -16,6 +16,8 @@ world, an agent or a synthesis disagrees with it, the spec wins.
 - **`npm test` before every commit** that touches `schemas/` or
   `scripts/`; a changed schema is followed by `npm run schemas`, and the
   JSON it writes is committed with it.
+- **The workflow is generated.** Edit `scripts/studio-round.template.js`,
+  never `.claude/workflows/studio-round.js`, then `npm run schemas`.
 - **Playtesters stay blind.** Nothing a playtester is handed names a file,
   a path, the round, the author, or that a world is a calibration world.
 - **Work is tracked as issues** in overstory-social/sprout under the

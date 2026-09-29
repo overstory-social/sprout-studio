@@ -250,12 +250,37 @@ export const RevisionPlan = z
     );
   });
 
+export const BriefCheck = z
+  .object({
+    ok: z.boolean(),
+    violations: z.array(
+      z
+        .object({
+          constraint: words.describe('The constraint, as the brief words it.'),
+          where: words.describe('Where in the world it fails.'),
+          why: words,
+        })
+        .strict(),
+    ),
+  })
+  .strict()
+  .superRefine((check, ctx) => {
+    if (check.ok !== (check.violations.length === 0)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['ok'],
+        message: 'a world is ok exactly where it has no violations',
+      });
+    }
+  });
+
 /** Every schema, by the name an agent's output is validated as. */
 export const SCHEMAS = {
   'playtest-report': PlaytestReport,
   'pairwise-verdict': PairwiseVerdict,
   synthesis: Synthesis,
   'revision-plan': RevisionPlan,
+  'brief-check': BriefCheck,
 };
 
 /**

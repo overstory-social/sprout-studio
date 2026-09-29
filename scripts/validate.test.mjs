@@ -43,6 +43,6 @@ describe('npm run validate', () => {
     assert.match(leaky.out, /^about: names /m);
     const misused = validate('essay', {});
     assert.equal(misused.code, 2);
-    assert.match(misused.err, /^usage: npm run validate -- <playtest-report\|pairwise-verdict\|synthesis\|revision-plan> <file\.json>/);
+    assert.match(misused.err, /^usage: npm run validate -- <playtest-report\|pairwise-verdict\|synthesis\|revision-plan\|brief-check> <file\.json>/);
   });
 });
