@@ -27,6 +27,7 @@ const PACKAGES = {
   sprout: 'sprout',
   player: 'sprout-player',
   repl: 'sprout-repl',
+  mcp: 'sprout-mcp',
   server: 'sprout-server',
   tui: 'sprout-tui',
   cli: 'sprout-cli',
@@ -67,16 +68,18 @@ function build(pin) {
   run('npm', ['run', 'build', '--silent'], { cwd: src, stdio: ['ignore', 'ignore', 'inherit'] });
   rmSync(packs, { recursive: true, force: true });
   mkdirSync(packs, { recursive: true });
-  const workspaces = Object.keys(PACKAGES).flatMap((w) => ['-w', w]);
+  // A package the pinned commit does not have yet is left out, and so is its dependency.
+  const present = Object.keys(PACKAGES).filter((w) => existsSync(join(src, w, 'package.json')));
+  const workspaces = present.flatMap((w) => ['-w', w]);
   const packed = JSON.parse(
     read('npm', ['pack', '--json', '--silent', ...workspaces, '--pack-destination', packs], { cwd: src }),
   );
   for (const { name, filename } of packed) {
     const short = name.replace(/^@overstory\//, '');
-    if (!Object.values(PACKAGES).includes(short)) throw new Error(`packed an unexpected package ${name}`);
+    if (!present.map((w) => PACKAGES[w]).includes(short)) throw new Error(`packed an unexpected package ${name}`);
     renameSync(join(packs, filename.replace(/^@overstory\//, 'overstory-')), join(packs, `${short}.tgz`));
   }
-  const missing = Object.values(PACKAGES).filter((p) => !existsSync(join(packs, `${p}.tgz`)));
+  const missing = present.map((w) => PACKAGES[w]).filter((p) => !existsSync(join(packs, `${p}.tgz`)));
   if (missing.length > 0) throw new Error(`no tarball for ${missing.join(', ')}`);
   writeFileSync(stamp, `${commit}\n`);
   say(`packed ${readdirSync(packs).filter((f) => f.endsWith('.tgz')).length} packages`);
