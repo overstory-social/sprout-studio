@@ -74,9 +74,10 @@ worlds/<name>/
     runs/<id>.json      recorded script (from `sprout mcp --record`)
     metrics/<id>.json   `sprout play --report`
     reports/<id>.json   the playtester's structured report
-    synthesis.md        the synthesizer's critique
+    synthesis.json      the synthesizer's critique, a valid `synthesis`; synthesis.md, the same for people
     steering.md         Eric's comments from the round's doc, as the author read them
-    revision.md         the author's accept/reject for each point, then what changed
+    revision.json       the author's accept/reject for each point, then what changed, a valid `revision-plan`
+    pairwise/<id>.json  from round 2, blind comparisons of this version and the last, each a `pairwise-verdict`
 templates/brief.md  the brief a new world starts from
 schemas/            what each agent hands back, as zod (index.mjs) and as JSON Schema (json/)
 docs/loop.md        the loop, kept current
