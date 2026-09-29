@@ -89,7 +89,18 @@ function install() {
   const pin = readPin();
   if (!/^[0-9a-f]{40}$/.test(pin.commit)) throw new Error('sprout.pin.json: commit must be a full 40-character sha');
   build(pin);
-  // `npm install`, not `ci`: a new pin changes the tarballs' integrity in the lock.
+  // `npm install`, not `ci`: a new pin changes the tarballs. npm would keep, or fetch from its
+  // cache by the lock's integrity, a package whose version and path look unchanged, so the
+  // installed copies and the lock's entries for them go first, and the lock takes the new hashes.
+  rmSync(join(root, 'node_modules', '@overstory'), { recursive: true, force: true });
+  const lockFile = join(root, 'package-lock.json');
+  if (existsSync(lockFile)) {
+    const lock = JSON.parse(readFileSync(lockFile, 'utf8'));
+    for (const key of Object.keys(lock.packages ?? {})) {
+      if (key.startsWith('node_modules/@overstory/')) delete lock.packages[key];
+    }
+    writeFileSync(lockFile, `${JSON.stringify(lock, null, 2)}\n`);
+  }
   run('npm', ['install', '--no-audit', '--no-fund', '--loglevel=error'], { cwd: root });
   say(`installed ${pin.commit.slice(0, 7)} (${read('git', ['-C', src, 'log', '-1', '--format=%s', pin.commit])})`);
 }

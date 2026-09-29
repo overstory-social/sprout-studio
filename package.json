@@ -2,7 +2,7 @@
   "name": "sprout-studio",
   "private": true,
   "type": "module",
-  "description": "An automated author–playtest loop for showcase Sprout microworlds",
+  "description": "An automated author\u2013playtest loop for showcase Sprout microworlds",
   "engines": {
     "node": ">=22"
   },
@@ -15,6 +15,7 @@
     "@overstory/sprout": "file:.sprout/packs/sprout.tgz",
     "@overstory/sprout-cli": "file:.sprout/packs/sprout-cli.tgz",
     "@overstory/sprout-language-server": "file:.sprout/packs/sprout-language-server.tgz",
+    "@overstory/sprout-mcp": "file:.sprout/packs/sprout-mcp.tgz",
     "@overstory/sprout-player": "file:.sprout/packs/sprout-player.tgz",
     "@overstory/sprout-repl": "file:.sprout/packs/sprout-repl.tgz",
     "@overstory/sprout-server": "file:.sprout/packs/sprout-server.tgz",
@@ -22,6 +23,7 @@
   },
   "overrides": {
     "@overstory/sprout": "$@overstory/sprout",
+    "@overstory/sprout-mcp": "$@overstory/sprout-mcp",
     "@overstory/sprout-player": "$@overstory/sprout-player",
     "@overstory/sprout-repl": "$@overstory/sprout-repl",
     "@overstory/sprout-server": "$@overstory/sprout-server",

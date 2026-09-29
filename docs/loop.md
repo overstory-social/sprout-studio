@@ -90,8 +90,8 @@ spend) is hit.
 - **Playtesters see prose only,** a pure text-adventure experience. There
   are no chips.
 
-## What it waits on
+## What it stands on
 
-In Sprout, and staying there: `sprout mcp` (sprout#377), `sprout play
---report` (sprout#378), and the friction channel back (sprout#386). A pin
-bump brings each one in when it lands.
+In Sprout, and staying there: `sprout mcp` (sprout#377) and `sprout play
+--report` / `sprout test --report` (sprout#378), both in the pinned
+commit; the friction channel back (sprout#386) is still to come.
