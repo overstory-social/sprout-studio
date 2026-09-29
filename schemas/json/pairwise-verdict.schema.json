@@ -1,0 +1,337 @@
+{
+  "title": "pairwise-verdict",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "axes": {
+      "type": "object",
+      "properties": {
+        "fun": {
+          "type": "object",
+          "properties": {
+            "better": {
+              "type": "string",
+              "enum": [
+                "first",
+                "second",
+                "same"
+              ]
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "type": "object",
+              "properties": {
+                "first": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                },
+                "second": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                }
+              },
+              "required": [
+                "first",
+                "second"
+              ],
+              "additionalProperties": false,
+              "description": "The turns, in each, the verdict rests on."
+            }
+          },
+          "required": [
+            "better",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        },
+        "engagement": {
+          "type": "object",
+          "properties": {
+            "better": {
+              "type": "string",
+              "enum": [
+                "first",
+                "second",
+                "same"
+              ]
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "type": "object",
+              "properties": {
+                "first": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                },
+                "second": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                }
+              },
+              "required": [
+                "first",
+                "second"
+              ],
+              "additionalProperties": false,
+              "description": "The turns, in each, the verdict rests on."
+            }
+          },
+          "required": [
+            "better",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        },
+        "difficulty": {
+          "type": "object",
+          "properties": {
+            "better": {
+              "type": "string",
+              "enum": [
+                "first",
+                "second",
+                "same"
+              ]
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "type": "object",
+              "properties": {
+                "first": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                },
+                "second": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                }
+              },
+              "required": [
+                "first",
+                "second"
+              ],
+              "additionalProperties": false,
+              "description": "The turns, in each, the verdict rests on."
+            }
+          },
+          "required": [
+            "better",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        },
+        "interestingness": {
+          "type": "object",
+          "properties": {
+            "better": {
+              "type": "string",
+              "enum": [
+                "first",
+                "second",
+                "same"
+              ]
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "type": "object",
+              "properties": {
+                "first": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                },
+                "second": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                }
+              },
+              "required": [
+                "first",
+                "second"
+              ],
+              "additionalProperties": false,
+              "description": "The turns, in each, the verdict rests on."
+            }
+          },
+          "required": [
+            "better",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        },
+        "prose": {
+          "type": "object",
+          "properties": {
+            "better": {
+              "type": "string",
+              "enum": [
+                "first",
+                "second",
+                "same"
+              ]
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "type": "object",
+              "properties": {
+                "first": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                },
+                "second": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991,
+                    "description": "A transcript turn: the number of the line the player typed, from 1."
+                  }
+                }
+              },
+              "required": [
+                "first",
+                "second"
+              ],
+              "additionalProperties": false,
+              "description": "The turns, in each, the verdict rests on."
+            }
+          },
+          "required": [
+            "better",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "fun",
+        "engagement",
+        "difficulty",
+        "interestingness",
+        "prose"
+      ],
+      "additionalProperties": false
+    },
+    "overall": {
+      "type": "object",
+      "properties": {
+        "better": {
+          "type": "string",
+          "enum": [
+            "first",
+            "second",
+            "same"
+          ]
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1
+        },
+        "turns": {
+          "type": "object",
+          "properties": {
+            "first": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991,
+                "description": "A transcript turn: the number of the line the player typed, from 1."
+              }
+            },
+            "second": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991,
+                "description": "A transcript turn: the number of the line the player typed, from 1."
+              }
+            }
+          },
+          "required": [
+            "first",
+            "second"
+          ],
+          "additionalProperties": false,
+          "description": "The turns, in each, the verdict rests on."
+        }
+      },
+      "required": [
+        "better",
+        "why",
+        "turns"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "axes",
+    "overall"
+  ],
+  "additionalProperties": false
+}

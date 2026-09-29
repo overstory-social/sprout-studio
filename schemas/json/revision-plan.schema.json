@@ -1,0 +1,79 @@
+{
+  "title": "revision-plan",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "decisions": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "string",
+            "pattern": "^(P|S)\\d+$"
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "accept",
+              "reject"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Why, for a rejection above all: the brief and the artistic direction outrank the median playtester."
+          }
+        },
+        "required": [
+          "answers",
+          "decision",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "what": {
+            "type": "string",
+            "minLength": 1
+          },
+          "files": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "The world files it touches."
+          },
+          "for": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(P|S)\\d+$"
+            },
+            "description": "The accepted points it answers."
+          }
+        },
+        "required": [
+          "what",
+          "files",
+          "for"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "decisions",
+    "changes"
+  ],
+  "additionalProperties": false
+}

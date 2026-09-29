@@ -9,7 +9,10 @@
   "scripts": {
     "sprout:install": "node scripts/sprout.mjs install",
     "sprout:bump": "node scripts/sprout.mjs bump",
-    "sprout": "sprout"
+    "sprout": "sprout",
+    "schemas": "node scripts/schemas.mjs",
+    "validate": "node scripts/validate.mjs",
+    "test": "node --test 'schemas/*.test.mjs' 'scripts/*.test.mjs' && node scripts/schemas.mjs --check"
   },
   "dependencies": {
     "@overstory/sprout": "file:.sprout/packs/sprout.tgz",
@@ -19,7 +22,8 @@
     "@overstory/sprout-player": "file:.sprout/packs/sprout-player.tgz",
     "@overstory/sprout-repl": "file:.sprout/packs/sprout-repl.tgz",
     "@overstory/sprout-server": "file:.sprout/packs/sprout-server.tgz",
-    "@overstory/sprout-tui": "file:.sprout/packs/sprout-tui.tgz"
+    "@overstory/sprout-tui": "file:.sprout/packs/sprout-tui.tgz",
+    "zod": "^4.4.2"
   },
   "overrides": {
     "@overstory/sprout": "$@overstory/sprout",

@@ -1,0 +1,350 @@
+{
+  "title": "playtest-report",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "persona": {
+      "type": "string",
+      "enum": [
+        "explorer",
+        "goal-seeker",
+        "casual",
+        "prose-reader",
+        "parser-breaker",
+        "newcomer"
+      ]
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "turns": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991,
+      "description": "How many lines the player typed."
+    },
+    "done": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "enum": [
+            "ending",
+            "stuck",
+            "bored",
+            "exhausted",
+            "turn-cap"
+          ]
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "reason",
+        "why"
+      ],
+      "additionalProperties": false,
+      "description": "Why the player stopped, in their words."
+    },
+    "about": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What this world is about, in the player’s own words."
+    },
+    "ending": {
+      "type": "object",
+      "properties": {
+        "reached": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "unsure"
+          ]
+        },
+        "what": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The ending, where one was reached or may have been."
+        }
+      },
+      "required": [
+        "reached",
+        "what"
+      ],
+      "additionalProperties": false
+    },
+    "moments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "turn": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "A transcript turn: the number of the line the player typed, from 1."
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "delight",
+              "frustration",
+              "confusion",
+              "surprise"
+            ]
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "turn",
+          "kind",
+          "note"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Noted as they happened, not only at the end."
+    },
+    "wished": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "What the player wished they could do, and could not."
+    },
+    "lines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "turn": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991,
+            "description": "A transcript turn: the number of the line the player typed, from 1."
+          },
+          "line": {
+            "type": "string",
+            "minLength": 1
+          },
+          "why": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "turn",
+          "line",
+          "why"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Lines the world wrote that mattered to the player, as they read them."
+    },
+    "ratings": {
+      "type": "object",
+      "properties": {
+        "fun": {
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991,
+                "description": "A transcript turn: the number of the line the player typed, from 1."
+              },
+              "description": "The transcript turns this rests on; at least one."
+            }
+          },
+          "required": [
+            "score",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        },
+        "engagement": {
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991,
+                "description": "A transcript turn: the number of the line the player typed, from 1."
+              },
+              "description": "The transcript turns this rests on; at least one."
+            }
+          },
+          "required": [
+            "score",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        },
+        "difficulty": {
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991,
+                "description": "A transcript turn: the number of the line the player typed, from 1."
+              },
+              "description": "The transcript turns this rests on; at least one."
+            },
+            "felt": {
+              "type": "string",
+              "enum": [
+                "too easy",
+                "right",
+                "too hard"
+              ]
+            }
+          },
+          "required": [
+            "score",
+            "why",
+            "turns",
+            "felt"
+          ],
+          "additionalProperties": false
+        },
+        "interestingness": {
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991,
+                "description": "A transcript turn: the number of the line the player typed, from 1."
+              },
+              "description": "The transcript turns this rests on; at least one."
+            }
+          },
+          "required": [
+            "score",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        },
+        "prose": {
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            },
+            "turns": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991,
+                "description": "A transcript turn: the number of the line the player typed, from 1."
+              },
+              "description": "The transcript turns this rests on; at least one."
+            }
+          },
+          "required": [
+            "score",
+            "why",
+            "turns"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "fun",
+        "engagement",
+        "difficulty",
+        "interestingness",
+        "prose"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "persona",
+    "seed",
+    "turns",
+    "done",
+    "about",
+    "ending",
+    "moments",
+    "wished",
+    "lines",
+    "ratings"
+  ],
+  "additionalProperties": false
+}

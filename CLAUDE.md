@@ -13,6 +13,9 @@ world, an agent or a synthesis disagrees with it, the spec wins.
 - **Language friction goes back to Sprout, never around it.** An author who
   cannot express something logs it in the world's `friction.md`; a bug in
   Sprout is an issue there. The studio never patches Sprout.
+- **`npm test` before every commit** that touches `schemas/` or
+  `scripts/`; a changed schema is followed by `npm run schemas`, and the
+  JSON it writes is committed with it.
 - **Playtesters stay blind.** Nothing a playtester is handed names a file,
   a path, the round, the author, or that a world is a calibration world.
 - **Work is tracked as issues** in overstory-social/sprout under the

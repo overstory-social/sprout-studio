@@ -1,0 +1,197 @@
+{
+  "title": "synthesis",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^P\\d+$"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "design",
+              "world-bug",
+              "engine-bug",
+              "language-gap"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "consensus": {
+            "type": "object",
+            "properties": {
+              "n": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "of": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "n",
+              "of"
+            ],
+            "additionalProperties": false,
+            "description": "How many of the round’s runs support it."
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "run": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The run id: its persona and seed, as `explorer-7`."
+                },
+                "turn": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991,
+                  "description": "A transcript turn: the number of the line the player typed, from 1."
+                },
+                "quote": {
+                  "description": "What the transcript says there, where it helps.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "run",
+                "turn"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "recommendation": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "category",
+          "severity",
+          "consensus",
+          "claim",
+          "evidence",
+          "recommendation"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "legibility": {
+      "type": "object",
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "legible",
+            "partly",
+            "illegible"
+          ]
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runs": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "run": {
+                "type": "string",
+                "minLength": 1
+              },
+              "understood": {
+                "type": "string",
+                "minLength": 1,
+                "description": "What the player thought the world was about."
+              },
+              "matches": {
+                "type": "string",
+                "enum": [
+                  "yes",
+                  "partly",
+                  "no"
+                ]
+              }
+            },
+            "required": [
+              "run",
+              "understood",
+              "matches"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "verdict",
+        "why",
+        "runs"
+      ],
+      "additionalProperties": false,
+      "description": "What players took the world to be about, against the sealed intent."
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string",
+            "minLength": 1,
+            "description": "A figure from `sprout test --report`, as `reach.passages.never`."
+          },
+          "before": {
+            "description": "Last round’s; null in round 1.",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "after": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "metric",
+          "before",
+          "after"
+        ],
+        "additionalProperties": false
+      },
+      "description": "The round’s metric deltas."
+    }
+  },
+  "required": [
+    "points",
+    "legibility",
+    "metrics"
+  ],
+  "additionalProperties": false
+}

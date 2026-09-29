@@ -43,6 +43,25 @@ npx sprout check worlds/<name>/world
   publishes to npm (sprout#406) and slows down, the `file:` dependencies
   become exact versions and the pin goes away.
 
+## What agents hand back
+
+A playtest report, a pairwise verdict, a synthesis and a revision plan
+each have a schema in [`schemas/index.mjs`](schemas/index.mjs), emitted
+as JSON Schema into `schemas/json/` for an agent's structured output.
+Every judgement cites the transcript turns it rests on; a rating with no
+evidence is invalid.
+
+```sh
+npm run validate -- playtest-report rounds/01/reports/explorer-7.json
+npm run schemas   # after changing a schema: rewrites schemas/json/
+npm test          # the schemas' specs, and schemas/json/ is current
+```
+
+`validate` is silent where the output is valid, and otherwise prints each
+problem on its own line, as the orchestrator hands them back to the agent
+on its one re-ask. A playtest report whose words name a round or a world
+file is refused as a leak.
+
 ## Layout
 
 ```
@@ -59,6 +78,7 @@ worlds/<name>/
     steering.md         Eric's comments from the round's doc, as the author read them
     revision.md         the author's accept/reject for each point, then what changed
 templates/brief.md  the brief a new world starts from
+schemas/            what each agent hands back, as zod (index.mjs) and as JSON Schema (json/)
 docs/loop.md        the loop, kept current
 scripts/sprout.mjs  Sprout at the pinned commit: install and bump
 ```
