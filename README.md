@@ -78,6 +78,8 @@ arguments, and when it stops, are in [`docs/loop.md`](docs/loop.md#one-round).
 | `steward` | Sonnet 5.5 | the steering doc: publishes a round, reads the comments |
 | `clerk` | Haiku 4.5 | runs `scripts/round.mjs` for the workflow, which touches no file itself |
 
+`pr-review` (Sonnet 5.5) is not part of the loop: it reviews this repository's own pull requests (CLAUDE.md › Branches, PRs, review, merge).
+
 ## Layout
 
 ```
