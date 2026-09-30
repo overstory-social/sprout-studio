@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
@@ -171,6 +171,58 @@ describe('a round on disk', () => {
     assert.equal(status('shed').rounds[0].acceptedDesign, 1);
   });
 
+  it('keeps the steering the steward read, each comment once, and why there is none', () => {
+    const steering = (comments) => ({ reached: true, doc: 'https://claude.ai/doc/shed', comments });
+    const first = { id: 'c1', words: 'A quieter ending.', tab: 'Round 01', on: '' };
+    assert.deepEqual(save('shed', '01', 'steering', undefined, steering([first])), {
+      ok: true,
+      file: join('worlds', 'shed', 'rounds', '01', 'steering.json'),
+      reached: true,
+      comments: 1,
+    });
+    assert.equal(
+      readFileSync(join(root, 'worlds', 'shed', 'rounds', '01', 'steering.md'), 'utf8'),
+      '# Steering\n\n## S1 (on Round 01)\n\nA quieter ending.\n',
+    );
+    assert.deepEqual(JSON.parse(readFileSync(join(root, 'worlds', 'shed', 'steering.json'), 'utf8')), {
+      doc: 'https://claude.ai/doc/shed',
+    });
+    // Round 02 reads the same doc: the comment round 01 read is not read again.
+    const later = { id: 'c2', words: 'More cats.', tab: 'Round 01', on: 'the shed' };
+    assert.equal(save('shed', '02', 'steering', undefined, steering([first, later])).comments, 1);
+    assert.equal(
+      readFileSync(join(root, 'worlds', 'shed', 'rounds', '02', 'steering.md'), 'utf8'),
+      '# Steering\n\n## S1 (on Round 01, at "the shed")\n\nMore cats.\n',
+    );
+    assert.equal(save('shed', '03', 'steering', undefined, { reached: false, doc: null, comments: [] }).reached, false);
+    assert.equal(
+      readFileSync(join(root, 'worlds', 'shed', 'rounds', '03', 'steering.md'), 'utf8'),
+      '# Steering\n\nThe steering doc could not be reached this round.\n',
+    );
+    rmSync(join(root, 'worlds', 'shed', 'rounds', '02'), { recursive: true });
+    rmSync(join(root, 'worlds', 'shed', 'rounds', '03'), { recursive: true });
+  });
+
+  it('refuses a report whose persona and seed are not its run', () => {
+    const report = JSON.parse(readFileSync(join(root, 'worlds', 'shed', 'rounds', '01', 'reports', 'explorer-7.json'), 'utf8'));
+    assert.deepEqual(save('shed', '01', 'playtest-report', 'casual-7', report), {
+      ok: false,
+      problems: ['persona and seed: explorer-7 is not the run casual-7 it is saved as'],
+    });
+  });
+
+  it('marks a round committed only where the commit succeeds', () => {
+    // A hook that refuses every commit.
+    const hook = join(root, '.git', 'hooks', 'pre-commit');
+    writeFileSync(hook, '#!/bin/sh\necho refused by hook >&2\nexit 1\n');
+    chmodSync(hook, 0o755);
+    const refused = commit('shed', '01', 'played');
+    assert.equal(refused.ok, false);
+    assert.match(refused.problems[0], /^git would not commit round 01: refused by hook/);
+    assert.equal(status('shed').rounds[0].committed, false);
+    rmSync(hook);
+  });
+
   it('says where the rounds stand, and commits one', () => {
     const [first] = status('shed').rounds;
     assert.equal(first.figures.faults, 0);
@@ -178,18 +230,20 @@ describe('a round on disk', () => {
     assert.deepEqual(status('shed').rounds.map(({ figures: _, ...rest }) => rest), [
       {
         round: '01',
+        points: 1,
         acceptedDesign: 1,
         runs: ['explorer-7'],
         reports: ['explorer-7'],
         metrics: true,
         pairwise: [],
         synthesis: true,
-        steering: false,
+        steering: true,
         revision: true,
         committed: false,
       },
     ]);
-    const { committed } = commit('shed', '01', 'played');
+    const { ok, committed } = commit('shed', '01', 'played');
+    assert.equal(ok, true);
     assert.match(committed, /^[0-9a-f]{7,}$/);
     assert.equal(status('shed').rounds[0].committed, true);
     assert.equal(

@@ -91,21 +91,30 @@ function stage(options = {}) {
           return { ok: false, problems: ['points.0.evidence: Too small'] };
         }
         if (kind === 'playtest-report') current().reports.push(name);
-        if (kind === 'synthesis') current().synthesis = true;
+        if (kind === 'synthesis') {
+          current().synthesis = true;
+          current().points = stdin.points.length;
+        }
+        if (kind === 'steering') current().steering = true;
+        if (kind === 'playtest-report' && `${stdin.persona}-${stdin.seed}` !== name) {
+          return { ok: false, problems: [`persona and seed: not the run ${name}`] };
+        }
         if (kind === 'revision-plan') {
           current().revision = true;
           current().acceptedDesign = stdin.decisions.filter((one) => one.decision === 'accept').length;
         }
         return { ok: true, file: `${kind}.json` };
       case 'measure':
+        if (options.measureFails) return { ok: false, problems: ['sprout play refused explorer-1'] };
         current().metrics = true;
         current().figures = { faults: 0, 'reach.passages.never': 3 };
         return { runs: current().runs, figures: current().figures };
       case 'verify':
         return { ok: true };
       case 'commit':
+        if (options.commitFails) return { ok: false, problems: ['git would not commit round 01: refused by hook'] };
         current().committed = true;
-        return { committed: 'abc1234' };
+        return { ok: true, committed: 'abc1234' };
       default:
         throw new Error(`unexpected clerk command ${command}`);
     }
@@ -121,8 +130,9 @@ function stage(options = {}) {
         return { stdout: JSON.stringify(clerk(command, stdin === null ? undefined : JSON.parse(stdin[1]))) };
       }
       case 'playtester': {
-        const [, persona, seed] = /persona "([a-z-]+)" and seed (\d+)/.exec(prompt);
-        return reportFor(persona, Number(seed));
+        // What a player hands back, without the persona and seed it is never told.
+        const { persona: _p, seed: _s, ...theirs } = reportFor('explorer', 0);
+        return theirs;
       }
       case 'brief-checker':
         return options.violated
@@ -131,7 +141,7 @@ function stage(options = {}) {
       case 'synthesizer':
         return SYNTHESIS;
       case 'steward':
-        return 'Published.';
+        return { reached: true, doc: 'https://claude.ai/doc/shed', comments: [] };
       case 'author':
         if (opts.schema === undefined) {
           world.playable = true;
@@ -183,7 +193,7 @@ describe('the studio-round workflow', () => {
     assert.equal(plays.length, 2);
     for (const play of plays) {
       assert.match(play.prompt, /^Your door: door\d+aa\n/);
-      assert.equal(/shed|worlds\/|round|\.json|\.sprout|intent|brief/i.exec(play.prompt), null);
+      assert.equal(/shed|worlds\/|round|\.json|\.sprout|intent|brief|seed|persona|test|parser/i.exec(play.prompt), null);
     }
     const opens = s.calls.filter((one) => one.type === 'clerk' && /round\.mjs open/.test(one.prompt));
     assert.match(opens[0].prompt, /open shed 01 explorer 1 --turn-cap 150 --advance 30/);
@@ -214,7 +224,7 @@ describe('the studio-round workflow', () => {
     const half = { round: '01', runs: ['explorer-1'], reports: ['explorer-1'], metrics: false, pairwise: [], synthesis: false, steering: false, revision: false, committed: false, figures: null, acceptedDesign: null };
     const s = stage({ rounds: [half] });
     await s.run({ world: 'shed', personas: ['explorer', 'casual'] });
-    assert.deepEqual(s.calls.filter((one) => one.type === 'playtester').map((one) => /persona "([a-z-]+)"/.exec(one.prompt)[1]), ['casual']);
+    assert.deepEqual(s.calls.filter((one) => one.type === 'playtester').map((one) => one.label), ['play casual-1']);
     assert.match(s.logs[0], /round 01, resumed from disk/);
   });
 
@@ -223,6 +233,35 @@ describe('the studio-round workflow', () => {
     const out = await s.run({ world: 'shed', rounds: 6, personas: ['explorer'] });
     assert.deepEqual(out.rounds.map((one) => one.round), ['01', '02', '03']);
     assert.equal(s.logs.at(-1), 'stopping: two rounds with no accepted design point and flat metrics');
+  });
+
+  it('keeps each report under its run, with the persona and seed the workflow gave it', async () => {
+    const s = stage();
+    await s.run({ world: 'shed', personas: ['explorer', 'casual'], seeds: [4] });
+    assert.deepEqual(s.world.rounds[0].reports.sort(), ['casual-4', 'explorer-4']);
+  });
+
+  it('resumed past a step, does not do it twice', async () => {
+    const synthesized = { round: '01', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, points: 3, steering: true, revision: false, committed: false, figures: null, acceptedDesign: null };
+    const s = stage({ rounds: [synthesized] });
+    const out = await s.run({ world: 'shed', personas: ['explorer'] });
+    assert.deepEqual(s.calls.filter((one) => ['synthesizer', 'steward', 'playtester'].includes(one.type)), []);
+    assert.equal(s.calls.filter((one) => one.type === 'author').length, 1);
+    assert.equal(out.rounds[0].points, 3);
+  });
+
+  it('stops, saying so, where the round cannot be committed, and never counts it played', async () => {
+    const s = stage({ commitFails: true });
+    const out = await s.run({ world: 'shed', rounds: 2, personas: ['explorer'] });
+    assert.deepEqual(out.rounds, []);
+    assert.equal(s.logs.at(-1), 'stopping: round 01 is played but not committed: git would not commit round 01: refused by hook');
+  });
+
+  it('stops, saying so, where the runs cannot be measured', async () => {
+    const s = stage({ measureFails: true });
+    await s.run({ world: 'shed', personas: ['explorer'] });
+    assert.equal(s.logs.at(-1), "stopping: the round's runs could not be measured: sprout play refused explorer-1");
+    assert.equal(s.calls.filter((one) => one.type === 'synthesizer').length, 0);
   });
 
   it('refuses to start without a world to play, or a brief to play it to', async () => {

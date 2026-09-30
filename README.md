@@ -75,7 +75,8 @@ arguments, and when it stops, are in [`docs/loop.md`](docs/loop.md#one-round).
 | `playtester` | Sonnet 5.5 | plays blind through a door; its only tools are `arrive`, `say` and `leave` |
 | `synthesizer` | Opus 5.5 | the round's critique, read-only |
 | `brief-checker` | Sonnet 5.5 | the world against its brief |
-| `steward` | Sonnet 5.5 | the steering doc: publishes a round, reads the comments |
+| `steward` | Sonnet 5.5 | the steering doc: publishes a round, hands back the comments |
+| `mender` | Sonnet 5.5 | corrects a refused report or steering from itself, inventing nothing |
 | `clerk` | Haiku 4.5 | runs `scripts/round.mjs` for the workflow, which touches no file itself |
 
 `pr-review` (Sonnet 5.5) is not part of the loop: it reviews this repository's own pull requests (CLAUDE.md › Branches, PRs, review, merge).

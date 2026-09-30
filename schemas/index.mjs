@@ -274,6 +274,32 @@ export const BriefCheck = z
     }
   });
 
+/** What the steward read of the steering doc: whether it reached it, its url, and every comment on it. */
+export const Steering = z
+  .object({
+    reached: z.boolean().describe('Whether the doc could be reached at all.'),
+    doc: z.string().trim().min(1).nullable().describe('The doc’s url; null where it could not be reached.'),
+    comments: z.array(
+      z
+        .object({
+          id: words.describe('The comment’s own id in the doc, which tells a new comment from one already read.'),
+          words: words.describe('The comment, exactly as the director wrote it.'),
+          tab: words.describe('The tab it was left on.'),
+          on: z.string().describe('What it was left on: the words it is anchored to, or empty for the tab as a whole.'),
+        })
+        .strict(),
+    ),
+  })
+  .strict()
+  .superRefine((steering, ctx) => {
+    if (!steering.reached && (steering.doc !== null || steering.comments.length > 0)) {
+      ctx.addIssue({ code: 'custom', path: ['reached'], message: 'a doc that could not be reached has no url and no comments' });
+    }
+    if (steering.reached && steering.doc === null) {
+      ctx.addIssue({ code: 'custom', path: ['doc'], message: 'give the url of the doc that was reached' });
+    }
+  });
+
 /** Every schema, by the name an agent's output is validated as. */
 export const SCHEMAS = {
   'playtest-report': PlaytestReport,
@@ -281,6 +307,7 @@ export const SCHEMAS = {
   synthesis: Synthesis,
   'revision-plan': RevisionPlan,
   'brief-check': BriefCheck,
+  steering: Steering,
 };
 
 /**

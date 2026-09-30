@@ -30,8 +30,10 @@ brief (Eric) ──► AUTHOR (Opus 5.5 / Fable 5.1) ──► world vN + sealed
    the arc, the secrets, what "done" looks like. The synthesizer measures
    _legibility_ — whether players worked out what the world is about —
    against it.
-3. **Playtesters are blind by construction:** their only tool is a visitor
-   session (`sprout mcp`) that shows prose only. Personas vary: explorer,
+3. **Playtesters are blind by construction:** their only tools are a
+   visitor's, `arrive`, `say` and `leave`, through a door onto one run
+   (`scripts/playtest-mcp.mjs`, played by `sprout mcp`'s own session), and
+   they read prose only. They are never told their seed. Personas vary: explorer,
    goal-seeker, impatient casual, prose reader, parser-breaker, newcomer to
    IF. The player decides when it is done.
 4. **Evidence comes in two kinds:** engine metrics no model can flatter
@@ -78,14 +80,22 @@ done by the `clerk` agent running `scripts/round.mjs`.
 4. **Synthesize** (`synthesizer`) into `synthesis.json`, and
    `synthesis.md` for people.
 5. **Steer** (`steward`): publish `synthesis.md` to the world's doc as a
-   new tab; read the comments already there into `steering.md`. The loop
-   does not wait; a late comment steers the round after.
+   new tab, and hand back every comment on it; `steering.json` keeps those
+   no earlier round read, and `steering.md` numbers them S1, S2… for the
+   author. The steward writes nothing itself. The loop does not wait; a
+   late comment steers the round after, and an unreachable doc is logged
+   and the round goes on.
 6. **Revise** (`author`): `revision.json` answers every point and comment,
    then the world is edited, and `sprout check` and `sprout test` pass.
 7. **Commit** the round.
 
 Every agent's output is validated through `round.mjs save` and re-asked
-once with the problems; a second refusal is logged and dropped.
+once with the problems (a playtest report or a steering through the
+`mender`, since the one who wrote it cannot be asked again); a second
+refusal is logged and dropped. The clerk carries each output to `save` as
+JSON it retypes into a here-document: validation catches an output that
+arrives malformed, not one altered into another valid one, which is a
+risk this first cut accepts.
 
 Run it by asking Claude Code to run the `studio-round` workflow with
 arguments:
@@ -104,9 +114,12 @@ arguments:
 It stops, and says why, when the rounds asked for are played, when the
 budget left is less than a round, when two rounds pass with no accepted
 design point and flat metrics, when the brief cannot be met, or when a
-round yields no report or no synthesis. It is resumable from disk: a round
-not yet committed is picked up where it stands, playing only the runs not
-yet reported.
+round yields no report or no synthesis, and when a round's runs cannot be
+measured or the round cannot be committed. It is resumable from disk: a
+round not yet committed is picked up where it stands, playing only the
+runs not yet reported and skipping a synthesis, steering or revision whose
+file is there. A round is marked committed only by the commit that holds
+it.
 
 ## Decisions
 

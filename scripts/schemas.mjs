@@ -40,11 +40,19 @@ const json = Object.fromEntries(
 for (const [name, schema] of Object.entries(json)) {
   emit(join(root, 'schemas', 'json', `${name}.schema.json`), `${JSON.stringify(schema, null, 2)}\n`);
 }
+// What a playtester hands back is its report without the run's persona and seed, which it is
+// never told; the workflow adds them before the report is kept.
+const asPlayed = structuredClone(json['playtest-report']);
+delete asPlayed.properties.persona;
+delete asPlayed.properties.seed;
+asPlayed.required = asPlayed.required.filter((key) => key !== 'persona' && key !== 'seed');
+asPlayed.title = 'playtest-report-as-played';
+const embedded = { ...json, 'playtest-report-as-played': asPlayed };
 const template = readFileSync(join(root, 'scripts', 'studio-round.template.js'), 'utf8');
 if (!template.includes('/*SCHEMAS*/ {}')) throw new Error('the workflow template has lost its /*SCHEMAS*/ {} mark');
 emit(
   join(root, '.claude', 'workflows', 'studio-round.js'),
-  template.replace('/*SCHEMAS*/ {}', JSON.stringify(json, null, 2)),
+  template.replace('/*SCHEMAS*/ {}', () => JSON.stringify(embedded, null, 2)),
 );
 if (stale > 0) process.exit(1);
 console.log(`schemas: ${Object.keys(SCHEMAS).length} and the workflow ${check ? 'current' : 'written'}`);

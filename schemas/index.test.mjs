@@ -185,7 +185,7 @@ describe('a revision plan', () => {
 
 describe('problemsIn', () => {
   it('names the schemas there are where asked for one that is not', () => {
-    assert.throws(() => problemsIn('essay', {}), /no schema named essay: one of playtest-report, pairwise-verdict, synthesis, revision-plan, brief-check/);
+    assert.throws(() => problemsIn('essay', {}), /no schema named essay: one of playtest-report, pairwise-verdict, synthesis, revision-plan, brief-check, steering/);
   });
 });
 
@@ -196,6 +196,20 @@ describe('a brief check', () => {
     assert.deepEqual(problemsIn('brief-check', { ok: false, violations: [violation] }), []);
     assert.deepEqual(problemsIn('brief-check', { ok: true, violations: [violation] }), [
       'ok: a world is ok exactly where it has no violations',
+    ]);
+  });
+});
+
+describe('what the steward read', () => {
+  it('is the doc and its comments where it was reached, and nothing where it was not', () => {
+    const comment = { id: 'c1', words: 'Quieter ending.', tab: 'Round 01', on: '' };
+    assert.deepEqual(problemsIn('steering', { reached: true, doc: 'https://claude.ai/doc/x', comments: [comment] }), []);
+    assert.deepEqual(problemsIn('steering', { reached: false, doc: null, comments: [] }), []);
+    assert.deepEqual(problemsIn('steering', { reached: false, doc: null, comments: [comment] }), [
+      'reached: a doc that could not be reached has no url and no comments',
+    ]);
+    assert.deepEqual(problemsIn('steering', { reached: true, doc: null, comments: [] }), [
+      'doc: give the url of the doc that was reached',
     ]);
   });
 });

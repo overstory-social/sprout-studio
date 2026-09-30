@@ -1029,6 +1029,401 @@ const SCHEMAS = {
       "violations"
     ],
     "additionalProperties": false
+  },
+  "steering": {
+    "title": "steering",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "reached": {
+        "type": "boolean",
+        "description": "Whether the doc could be reached at all."
+      },
+      "doc": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "The doc’s url; null where it could not be reached."
+      },
+      "comments": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The comment’s own id in the doc, which tells a new comment from one already read."
+            },
+            "words": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The comment, exactly as the director wrote it."
+            },
+            "tab": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The tab it was left on."
+            },
+            "on": {
+              "type": "string",
+              "description": "What it was left on: the words it is anchored to, or empty for the tab as a whole."
+            }
+          },
+          "required": [
+            "id",
+            "words",
+            "tab",
+            "on"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "reached",
+      "doc",
+      "comments"
+    ],
+    "additionalProperties": false
+  },
+  "playtest-report-as-played": {
+    "title": "playtest-report-as-played",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "turns": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991,
+        "description": "How many lines the player typed."
+      },
+      "done": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "enum": [
+              "ending",
+              "stuck",
+              "bored",
+              "exhausted",
+              "turn-cap"
+            ]
+          },
+          "why": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "reason",
+          "why"
+        ],
+        "additionalProperties": false,
+        "description": "Why the player stopped, in their words."
+      },
+      "about": {
+        "type": "string",
+        "minLength": 1,
+        "description": "What this world is about, in the player’s own words."
+      },
+      "ending": {
+        "type": "object",
+        "properties": {
+          "reached": {
+            "type": "string",
+            "enum": [
+              "yes",
+              "no",
+              "unsure"
+            ]
+          },
+          "what": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The ending, where one was reached or may have been."
+          }
+        },
+        "required": [
+          "reached",
+          "what"
+        ],
+        "additionalProperties": false
+      },
+      "moments": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "turn": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991,
+              "description": "A transcript turn: the number of the line the player typed, from 1."
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "delight",
+                "frustration",
+                "confusion",
+                "surprise"
+              ]
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "turn",
+            "kind",
+            "note"
+          ],
+          "additionalProperties": false
+        },
+        "description": "Noted as they happened, not only at the end."
+      },
+      "wished": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": "What the player wished they could do, and could not."
+      },
+      "lines": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "turn": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991,
+              "description": "A transcript turn: the number of the line the player typed, from 1."
+            },
+            "line": {
+              "type": "string",
+              "minLength": 1
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "turn",
+            "line",
+            "why"
+          ],
+          "additionalProperties": false
+        },
+        "description": "Lines the world wrote that mattered to the player, as they read them."
+      },
+      "ratings": {
+        "type": "object",
+        "properties": {
+          "fun": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "why": {
+                "type": "string",
+                "minLength": 1
+              },
+              "turns": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991,
+                  "description": "A transcript turn: the number of the line the player typed, from 1."
+                },
+                "description": "The transcript turns this rests on; at least one."
+              }
+            },
+            "required": [
+              "score",
+              "why",
+              "turns"
+            ],
+            "additionalProperties": false
+          },
+          "engagement": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "why": {
+                "type": "string",
+                "minLength": 1
+              },
+              "turns": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991,
+                  "description": "A transcript turn: the number of the line the player typed, from 1."
+                },
+                "description": "The transcript turns this rests on; at least one."
+              }
+            },
+            "required": [
+              "score",
+              "why",
+              "turns"
+            ],
+            "additionalProperties": false
+          },
+          "difficulty": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "why": {
+                "type": "string",
+                "minLength": 1
+              },
+              "turns": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991,
+                  "description": "A transcript turn: the number of the line the player typed, from 1."
+                },
+                "description": "The transcript turns this rests on; at least one."
+              },
+              "felt": {
+                "type": "string",
+                "enum": [
+                  "too easy",
+                  "right",
+                  "too hard"
+                ]
+              }
+            },
+            "required": [
+              "score",
+              "why",
+              "turns",
+              "felt"
+            ],
+            "additionalProperties": false
+          },
+          "interestingness": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "why": {
+                "type": "string",
+                "minLength": 1
+              },
+              "turns": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991,
+                  "description": "A transcript turn: the number of the line the player typed, from 1."
+                },
+                "description": "The transcript turns this rests on; at least one."
+              }
+            },
+            "required": [
+              "score",
+              "why",
+              "turns"
+            ],
+            "additionalProperties": false
+          },
+          "prose": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "why": {
+                "type": "string",
+                "minLength": 1
+              },
+              "turns": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991,
+                  "description": "A transcript turn: the number of the line the player typed, from 1."
+                },
+                "description": "The transcript turns this rests on; at least one."
+              }
+            },
+            "required": [
+              "score",
+              "why",
+              "turns"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "fun",
+          "engagement",
+          "difficulty",
+          "interestingness",
+          "prose"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "turns",
+      "done",
+      "about",
+      "ending",
+      "moments",
+      "wished",
+      "lines",
+      "ratings"
+    ],
+    "additionalProperties": false
   }
 }
 
@@ -1057,7 +1452,7 @@ const PERSONA = {
   'prose-reader':
     'A reader first: you linger, examine, reread, and care most about how it is written. You rate the writing closely.',
   'parser-breaker':
-    'A tester of the parser: you phrase things oddly, try the unexpected, combine things, and push on whatever the world says it will not do.',
+    'Contrary by habit: you phrase things oddly, try the unexpected, combine things, and push on whatever the world says it will not do.',
   newcomer:
     'New to text adventures: you do not know the conventions. You type what you would say to a person, and you notice what confuses you.',
 }
@@ -1175,20 +1570,25 @@ while (played < ROUNDS) {
       return clerk(`open ${WORLD} ${round} ${run.persona} ${run.seed} --turn-cap ${cap} --advance ${ADVANCE}`, undefined, `open ${run.id}`)
     },
     (opened, run) =>
-      kept('playtest-report', run.id, round, (problems, refused) =>
-        problems === null
-          ? agent(
-              `Your door: ${opened.door}\nGo by the name ${['Ash', 'Bryn', 'Cato', 'Dell', 'Esme', 'Finch'][PERSONAS.indexOf(run.persona) % 6]}.\n` +
-                `Who you are as a player: ${PERSONA[run.persona]}\n` +
-                `You are arriving in a place. Play.\n\nWhen you are done, report with persona "${run.persona}" and seed ${run.seed}.`,
-              { agentType: 'playtester', phase: 'Playtest', label: `play ${run.id}`, schema: SCHEMAS['playtest-report'] },
-            )
-          : agent(
-              `This is a playtest report a player wrote, and it was refused. You cannot replay what they played: ` +
-                `correct only what is refused, from the report itself, and invent nothing.${again(problems)}\n\nThe report:\n${JSON.stringify(refused)}`,
-              { phase: 'Playtest', label: `fix report ${run.id}`, schema: SCHEMAS['playtest-report'] },
-            ),
-      ),
+      kept('playtest-report', run.id, round, async (problems, refused) => {
+        // The player never learns its seed: the report is theirs, the run's persona and seed the workflow's.
+        const played =
+          problems === null
+            ? await agent(
+                `Your door: ${opened.door}\nGo by the name ${['Ash', 'Bryn', 'Cato', 'Dell', 'Esme', 'Finch'][PERSONAS.indexOf(run.persona) % 6]}.\n` +
+                  `Who you are as a player: ${PERSONA[run.persona]}\n` +
+                  `You are arriving in a place. Play.`,
+                { agentType: 'playtester', phase: 'Playtest', label: `play ${run.id}`, schema: SCHEMAS['playtest-report-as-played'] },
+              )
+            : await agent(
+                `This is a playtest report a player wrote, and it was refused. You cannot replay what they played.${again(problems)}\n\n` +
+                  `The report:\n${JSON.stringify(refused)}`,
+                { agentType: 'mender', phase: 'Playtest', label: `mend report ${run.id}`, schema: SCHEMAS['playtest-report-as-played'] },
+              )
+        if (played === null) return null
+        const { persona: _p, seed: _s, ...theirs } = played
+        return { persona: run.persona, seed: run.seed, ...theirs }
+      }),
   )
   const reported = reports.filter(Boolean).length
   log(`${reported} of ${todo.length} runs reported`)
@@ -1200,11 +1600,18 @@ while (played < ROUNDS) {
   // 3. Measure.
   phase('Measure')
   const measured = await clerk(`measure ${WORLD} ${round}`, undefined, 'measure')
+  if (measured.ok === false) {
+    log(`stopping: the round's runs could not be measured: ${measured.problems.join(' | ')}`)
+    break
+  }
 
   // 4. Synthesize.
+  // Resumed past a step, the step's file stands and it is not done twice.
   phase('Synthesize')
   const before = previous === null ? null : previous.figures
-  const synthesis = await kept('synthesis', null, round, (problems) =>
+  const synthesis = at.synthesis
+    ? { points: { length: at.points } }
+    : await kept('synthesis', null, round, (problems) =>
     agent(
       `Synthesize round ${round} of ${W}. The reports are ${R}/reports/, the metrics ${R}/metrics/ ` +
         `(merged.json is the round's), the recorded runs ${R}/runs/, the sealed intent ${W}/intent.md and the brief ${W}/brief.md.\n` +
@@ -1212,7 +1619,7 @@ while (played < ROUNDS) {
         `(report each figure's delta, before null in the first round). The round had ${measured.runs.length} runs.${again(problems)}`,
       { agentType: 'synthesizer', phase: 'Synthesize', label: 'synthesize', schema: SCHEMAS.synthesis },
     ),
-  )
+      )
   if (synthesis === null) {
     log('stopping: no valid synthesis')
     break
@@ -1220,15 +1627,30 @@ while (played < ROUNDS) {
 
   // 5. Steer, without waiting: what is there now steers this revision, and a late comment the next.
   phase('Steer')
-  await agent(
-    `Round ${round} of the world ${WORLD}: publish ${R}/synthesis.md as tab "Round ${round}" of the world's steering doc ` +
-      `(${W}/steering.json), and write every new comment on the doc to ${R}/steering.md.`,
-    { agentType: 'steward', phase: 'Steer', label: 'steer' },
-  )
+  if (!at.steering) {
+    const steering = await kept('steering', null, round, (problems, refused) =>
+      problems === null
+        ? agent(
+            `Round ${round} of the world ${WORLD}: publish ${R}/synthesis.md as tab "Round ${round}" of the world's steering doc ` +
+              `(its url, where there is one yet, is in ${W}/steering.json), and hand back every comment on the doc.`,
+            { agentType: 'steward', phase: 'Steer', label: 'steer', schema: SCHEMAS.steering },
+          )
+        : agent(`This is what was read of a steering doc, and it was refused.${again(problems)}\n\n${JSON.stringify(refused)}`, {
+            agentType: 'mender',
+            phase: 'Steer',
+            label: 'mend steering',
+            schema: SCHEMAS.steering,
+          }),
+    )
+    if (steering === null) log('steering: nothing valid was read of the doc; the author revises without it')
+    else if (!steering.reached) log('steering: the doc could not be reached; the author revises without it')
+  }
 
   // 6. Revise.
   phase('Revise')
-  const plan = await kept('revision-plan', null, round, (problems) =>
+  const plan = at.revision
+    ? null
+    : await kept('revision-plan', null, round, (problems) =>
     agent(
       `Revise ${W}/world after round ${round}. Read ${R}/synthesis.json, ${R}/steering.md, ${R}/metrics/merged.json and your ${W}/intent.md. ` +
         `Answer every point (P…) and every steering comment (S…), accept or reject, with a reason; then make the accepted changes, ` +
@@ -1236,7 +1658,7 @@ while (played < ROUNDS) {
         `Hand back the plan: your decisions, then the changes you made.${again(problems)}`,
       { agentType: 'author', model: AUTHOR_MODEL, phase: 'Revise', label: 'revise', schema: SCHEMAS['revision-plan'] },
     ),
-  )
+      )
   const verified = await clerk(`verify ${WORLD}`)
   if (!verified.ok) {
     log(`stopping: the revised world does not pass: ${verified.problems.join(' | ')}`)
@@ -1246,7 +1668,11 @@ while (played < ROUNDS) {
   // 7. Commit.
   phase('Commit')
   const accepted = plan === null ? 0 : plan.decisions.filter((one) => one.decision === 'accept' && /^P/.test(one.answers)).length
-  await clerk(`commit ${WORLD} ${round} ${reported} runs, ${synthesis.points.length} points, ${accepted} accepted`, undefined, 'commit')
+  const committed = await clerk(`commit ${WORLD} ${round} ${reported} runs, ${synthesis.points.length} points, ${accepted} accepted`, undefined, 'commit')
+  if (committed.ok === false) {
+    log(`stopping: round ${round} is played but not committed: ${committed.problems.join(' | ')}`)
+    break
+  }
   played += 1
   status = await clerk(`status ${WORLD}`, undefined, 'status')
   const now = status.rounds.find((one) => one.round === round)

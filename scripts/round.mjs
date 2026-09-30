@@ -18,7 +18,7 @@
 // round, the run's file or the world's folder.
 import { execFileSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -75,6 +75,7 @@ export function status(world) {
       return {
         round,
         figures: merged === null ? null : figures(merged),
+        points: synthesis === null ? null : synthesis.points.length,
         acceptedDesign:
           revision === null
             ? null
@@ -84,7 +85,7 @@ export function status(world) {
         metrics: here('metrics/merged.json'),
         pairwise: jsonIn(at, 'pairwise'),
         synthesis: here('synthesis.json'),
-        steering: here('steering.md'),
+        steering: here('steering.json'),
         revision: here('revision.json'),
         committed: here('.committed'),
       };
@@ -118,7 +119,32 @@ const KEPT = {
   'pairwise-verdict': (at, name) => join(at, 'pairwise', `${name}.json`),
   synthesis: (at) => join(at, 'synthesis.json'),
   'revision-plan': (at) => join(at, 'revision.json'),
+  steering: (at) => join(at, 'steering.json'),
 };
+
+/** Every comment id an earlier round's steering already read. */
+function readBefore(world, round) {
+  const dir = join(ROOT, worldDir(world), 'rounds');
+  const ids = new Set();
+  for (const earlier of existsSync(dir) ? readdirSync(dir) : []) {
+    const file = join(dir, earlier, 'steering.json');
+    if (earlier >= round || !existsSync(file)) continue;
+    for (const comment of JSON.parse(readFileSync(file, 'utf8')).comments) ids.add(comment.id);
+  }
+  return ids;
+}
+
+/** A round's steering as the author reads it: each new comment numbered S1, S2…, or why there is none. */
+export function renderSteering(steering) {
+  if (!steering.reached) return '# Steering\n\nThe steering doc could not be reached this round.\n';
+  if (steering.comments.length === 0) return '# Steering\n\nNo steering this round.\n';
+  const lines = ['# Steering', ''];
+  steering.comments.forEach((comment, i) => {
+    const on = comment.on === '' ? `on ${comment.tab}` : `on ${comment.tab}, at "${comment.on}"`;
+    lines.push(`## S${i + 1} (${on})`, '', comment.words, '');
+  });
+  return `${lines.join('\n')}`;
+}
 
 /** A synthesis as people read it: synthesis.md beside synthesis.json. */
 export function renderSynthesis(synthesis) {
@@ -149,13 +175,27 @@ export function save(world, round, kind, name, value) {
   const takesName = kind === 'playtest-report' || kind === 'pairwise-verdict';
   if (takesName && !/^[a-z0-9-]+$/.test(name ?? '')) throw new Error(`a ${kind} is saved under its run's id, as explorer-7`);
   const problems = [...problemsIn(kind, value), ...(kind === 'playtest-report' ? leaksIn(value) : [])];
+  if (kind === 'playtest-report' && problems.length === 0 && `${value.persona}-${value.seed}` !== name) {
+    problems.push(`persona and seed: ${value.persona}-${value.seed} is not the run ${name} it is saved as`);
+  }
   if (problems.length > 0) return { ok: false, problems };
   const at = roundDir(world, round);
   const file = kept(at, name);
+  // A steering keeps only what no earlier round read, so a comment steers once.
+  const keeping =
+    kind === 'steering'
+      ? { ...value, comments: value.comments.filter((one) => !readBefore(world, round).has(one.id)) }
+      : value;
   mkdirSync(join(ROOT, dirname(file)), { recursive: true });
-  writeFileSync(join(ROOT, file), `${JSON.stringify(value, null, 2)}\n`);
-  if (kind === 'synthesis') writeFileSync(join(ROOT, at, 'synthesis.md'), renderSynthesis(value));
-  return { ok: true, file };
+  writeFileSync(join(ROOT, file), `${JSON.stringify(keeping, null, 2)}\n`);
+  if (kind === 'synthesis') writeFileSync(join(ROOT, at, 'synthesis.md'), renderSynthesis(keeping));
+  if (kind === 'steering') {
+    writeFileSync(join(ROOT, at, 'steering.md'), renderSteering(keeping));
+    if (keeping.doc !== null) {
+      writeFileSync(join(ROOT, worldDir(world), 'steering.json'), `${JSON.stringify({ doc: keeping.doc }, null, 2)}\n`);
+    }
+  }
+  return { ok: true, file, ...(kind === 'steering' ? { reached: keeping.reached, comments: keeping.comments.length } : {}) };
 }
 
 /** The installed `sprout` command, from the pin. */
@@ -214,10 +254,20 @@ export function verify(world) {
 /** Commit the round's files and the world as they stand, and mark the round committed. */
 export function commit(world, round, what) {
   const at = roundDir(world, round);
-  writeFileSync(join(ROOT, at, '.committed'), '');
-  execFileSync('git', ['add', worldDir(world)], { cwd: ROOT });
-  execFileSync('git', ['commit', '-q', '-m', `${world}, round ${round}: ${what}`], { cwd: ROOT });
-  return { committed: execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim() };
+  const marker = join(ROOT, at, '.committed');
+  // The marker is part of the commit, and is taken back where the commit fails, so a round
+  // is marked committed exactly when it is.
+  writeFileSync(marker, '');
+  try {
+    execFileSync('git', ['add', worldDir(world)], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'] });
+    execFileSync('git', ['commit', '-q', '-m', `${world}, round ${round}: ${what}`], { cwd: ROOT, stdio: ['ignore', 'ignore', 'pipe'] });
+  } catch (error) {
+    rmSync(marker, { force: true });
+    execFileSync('git', ['reset', '-q', '--', marker], { cwd: ROOT, stdio: 'ignore' });
+    const said = String(error.stderr ?? error.message).trim();
+    return { ok: false, problems: [`git would not commit round ${round}: ${said}`] };
+  }
+  return { ok: true, committed: execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim() };
 }
 
 /** `--name value` flags, and the words before them. */
