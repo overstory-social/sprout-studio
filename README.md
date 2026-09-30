@@ -62,6 +62,25 @@ problem on its own line, as the orchestrator hands them back to the agent
 on its one re-ask. A playtest report whose words name a round or a world
 file is refused as a leak.
 
+## Running a round
+
+Ask Claude Code to run the `studio-round` workflow, as
+`{ "world": "printers_shop", "new": true }` for a world that has only its
+brief, or `{ "world": "printers_shop", "rounds": 3 }` to play on. Its
+arguments, and when it stops, are in [`docs/loop.md`](docs/loop.md#one-round).
+
+| agent | model | does |
+| --- | --- | --- |
+| `author` | Opus 5.5, or Fable 5.1 by the brief | writes and revises the world, `intent.md` and `friction.md` |
+| `playtester` | Sonnet 5.5 | plays blind through a door; its only tools are `arrive`, `say` and `leave` |
+| `synthesizer` | Opus 5.5 | the round's critique, read-only |
+| `brief-checker` | Sonnet 5.5 | the world against its brief |
+| `steward` | Sonnet 5.5 | the steering doc: publishes a round, hands back the comments |
+| `mender` | Sonnet 5.5 | corrects a refused playtest report from itself, inventing nothing; its one tool is Read |
+| `clerk` | Haiku 4.5 | runs `scripts/round.mjs` for the workflow, which touches no file itself |
+
+`pr-review` (Sonnet 5.5) is not part of the loop: it reviews this repository's own pull requests (CLAUDE.md › Branches, PRs, review, merge).
+
 ## Layout
 
 ```
@@ -82,6 +101,10 @@ templates/brief.md  the brief a new world starts from
 schemas/            what each agent hands back, as zod (index.mjs) and as JSON Schema (json/)
 docs/loop.md        the loop, kept current
 scripts/sprout.mjs  Sprout at the pinned commit: install and bump
+scripts/round.mjs   a round's work on disk: status, open a run, save, measure, verify, commit
+scripts/playtest-mcp.mjs  the playtester's door: a run's world as three tools
+.claude/agents/     the loop's agents
+.claude/workflows/studio-round.js  one round and more, generated from scripts/studio-round.template.js
 ```
 
 Git history is the record of how a world grew. A run id carries its

@@ -1,0 +1,63 @@
+{
+  "title": "steering",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "reached": {
+      "type": "boolean",
+      "description": "Whether the doc could be reached at all."
+    },
+    "doc": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "The doc’s url; null where it could not be reached."
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The comment’s own id in the doc, which tells a new comment from one already read."
+          },
+          "words": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The comment, exactly as the director wrote it."
+          },
+          "tab": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The tab it was left on."
+          },
+          "on": {
+            "type": "string",
+            "description": "What it was left on: the words it is anchored to, or empty for the tab as a whole."
+          }
+        },
+        "required": [
+          "id",
+          "words",
+          "tab",
+          "on"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "reached",
+    "doc",
+    "comments"
+  ],
+  "additionalProperties": false
+}

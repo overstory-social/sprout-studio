@@ -1,0 +1,43 @@
+{
+  "title": "brief-check",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "violations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "constraint": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The constraint, as the brief words it."
+          },
+          "where": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Where in the world it fails."
+          },
+          "why": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "constraint",
+          "where",
+          "why"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "ok",
+    "violations"
+  ],
+  "additionalProperties": false
+}
