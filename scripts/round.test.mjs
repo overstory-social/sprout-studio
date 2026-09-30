@@ -179,6 +179,7 @@ describe('a round on disk', () => {
       file: join('worlds', 'shed', 'rounds', '01', 'steering.json'),
       reached: true,
       comments: 1,
+      note: 'steering: 1 new comment(s), 0 already read in an earlier round',
     });
     assert.equal(
       readFileSync(join(root, 'worlds', 'shed', 'rounds', '01', 'steering.md'), 'utf8'),
@@ -189,7 +190,11 @@ describe('a round on disk', () => {
     });
     // Round 02 reads the same doc: the comment round 01 read is not read again.
     const later = { id: 'c2', words: 'More cats.', tab: 'Round 01', on: 'the shed' };
-    assert.equal(save('shed', '02', 'steering', undefined, steering([first, later])).comments, 1);
+    assert.equal(save('shed', '02', 'steering', undefined, steering([first, later])).note, 'steering: 1 new comment(s), 1 already read in an earlier round');
+    // The same id with other words is another comment, as a steward numbering comments per call would give it.
+    const reused = { ...first, words: 'Actually, a louder ending.' };
+    assert.equal(save('shed', '03', 'steering', undefined, steering([reused])).comments, 1);
+    rmSync(join(root, 'worlds', 'shed', 'rounds', '03'), { recursive: true });
     assert.equal(
       readFileSync(join(root, 'worlds', 'shed', 'rounds', '02', 'steering.md'), 'utf8'),
       '# Steering\n\n## S1 (on Round 01, at "the shed")\n\nMore cats.\n',

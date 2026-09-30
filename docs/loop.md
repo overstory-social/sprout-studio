@@ -90,8 +90,9 @@ done by the `clerk` agent running `scripts/round.mjs`.
 7. **Commit** the round.
 
 Every agent's output is validated through `round.mjs save` and re-asked
-once with the problems (a playtest report or a steering through the
-`mender`, since the one who wrote it cannot be asked again); a second
+once with the problems (a playtest report through the `mender`, which has
+no tools, since the player cannot be asked again; a steering of the
+steward again, since only it reads the doc); a second
 refusal is logged and dropped. The clerk carries each output to `save` as
 JSON it retypes into a here-document: validation catches an output that
 arrives malformed, not one altered into another valid one, which is a

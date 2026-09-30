@@ -122,16 +122,19 @@ const KEPT = {
   steering: (at) => join(at, 'steering.json'),
 };
 
-/** Every comment id an earlier round's steering already read. */
+/** A comment as it is known across rounds: its id, its tab and its words together, since the id is only what the steward says it is. */
+const commentKey = (comment) => JSON.stringify([comment.id, comment.tab, comment.words]);
+
+/** Every comment an earlier round's steering already read. */
 function readBefore(world, round) {
   const dir = join(ROOT, worldDir(world), 'rounds');
-  const ids = new Set();
+  const read = new Set();
   for (const earlier of existsSync(dir) ? readdirSync(dir) : []) {
     const file = join(dir, earlier, 'steering.json');
     if (earlier >= round || !existsSync(file)) continue;
-    for (const comment of JSON.parse(readFileSync(file, 'utf8')).comments) ids.add(comment.id);
+    for (const comment of JSON.parse(readFileSync(file, 'utf8')).comments) read.add(commentKey(comment));
   }
-  return ids;
+  return read;
 }
 
 /** A round's steering as the author reads it: each new comment numbered S1, S2…, or why there is none. */
@@ -182,20 +185,29 @@ export function save(world, round, kind, name, value) {
   const at = roundDir(world, round);
   const file = kept(at, name);
   // A steering keeps only what no earlier round read, so a comment steers once.
+  const before = kind === 'steering' ? readBefore(world, round) : new Set();
   const keeping =
-    kind === 'steering'
-      ? { ...value, comments: value.comments.filter((one) => !readBefore(world, round).has(one.id)) }
-      : value;
+    kind === 'steering' ? { ...value, comments: value.comments.filter((one) => !before.has(commentKey(one))) } : value;
   mkdirSync(join(ROOT, dirname(file)), { recursive: true });
-  writeFileSync(join(ROOT, file), `${JSON.stringify(keeping, null, 2)}\n`);
+  // The page for people is written before the file that marks the step done, so a step
+  // marked done always has its page.
   if (kind === 'synthesis') writeFileSync(join(ROOT, at, 'synthesis.md'), renderSynthesis(keeping));
-  if (kind === 'steering') {
-    writeFileSync(join(ROOT, at, 'steering.md'), renderSteering(keeping));
-    if (keeping.doc !== null) {
-      writeFileSync(join(ROOT, worldDir(world), 'steering.json'), `${JSON.stringify({ doc: keeping.doc }, null, 2)}\n`);
-    }
+  if (kind === 'steering') writeFileSync(join(ROOT, at, 'steering.md'), renderSteering(keeping));
+  writeFileSync(join(ROOT, file), `${JSON.stringify(keeping, null, 2)}\n`);
+  if (kind === 'steering' && keeping.doc !== null) {
+    writeFileSync(join(ROOT, worldDir(world), 'steering.json'), `${JSON.stringify({ doc: keeping.doc }, null, 2)}\n`);
   }
-  return { ok: true, file, ...(kind === 'steering' ? { reached: keeping.reached, comments: keeping.comments.length } : {}) };
+  if (kind !== 'steering') return { ok: true, file };
+  const dropped = value.comments.length - keeping.comments.length;
+  return {
+    ok: true,
+    file,
+    reached: keeping.reached,
+    comments: keeping.comments.length,
+    note: keeping.reached
+      ? `steering: ${keeping.comments.length} new comment(s), ${dropped} already read in an earlier round`
+      : 'steering: the doc could not be reached',
+  };
 }
 
 /** The installed `sprout` command, from the pin. */

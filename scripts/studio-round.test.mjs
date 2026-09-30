@@ -95,6 +95,10 @@ function stage(options = {}) {
           current().synthesis = true;
           current().points = stdin.points.length;
         }
+        if (kind === 'steering' && options.refuseSteering && !current().steeringRefused) {
+          current().steeringRefused = true;
+          return { ok: false, problems: ['doc: give the url of the doc that was reached'] };
+        }
         if (kind === 'steering') current().steering = true;
         if (kind === 'playtest-report' && `${stdin.persona}-${stdin.seed}` !== name) {
           return { ok: false, problems: [`persona and seed: not the run ${name}`] };
@@ -255,6 +259,21 @@ describe('the studio-round workflow', () => {
     const out = await s.run({ world: 'shed', rounds: 2, personas: ['explorer'] });
     assert.deepEqual(out.rounds, []);
     assert.equal(s.logs.at(-1), 'stopping: round 01 is played but not committed: git would not commit round 01: refused by hook');
+  });
+
+  it('asks the steward again where its steering is refused, never mending the director’s words', async () => {
+    const s = stage({ refuseSteering: true });
+    await s.run({ world: 'shed', personas: ['explorer'] });
+    assert.deepEqual(s.calls.filter((one) => ['steward', 'mender'].includes(one.type)).map((one) => one.label), ['steer', 'steer, again']);
+    assert.match(s.calls.find((one) => one.label === 'steer, again').prompt, /- doc: give the url of the doc that was reached/);
+  });
+
+  it('resumed past the revision, commits with the design points it accepted', async () => {
+    const revised = { round: '01', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, points: 2, steering: true, revision: true, committed: false, figures: null, acceptedDesign: 2 };
+    const s = stage({ rounds: [revised] });
+    await s.run({ world: 'shed', personas: ['explorer'] });
+    assert.equal(s.calls.filter((one) => one.type === 'author').length, 0);
+    assert.match(s.calls.find((one) => /round\.mjs commit/.test(one.prompt)).prompt, /commit shed 01 0 runs, 2 points, 2 accepted/);
   });
 
   it('stops, saying so, where the runs cannot be measured', async () => {

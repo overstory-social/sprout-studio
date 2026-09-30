@@ -82,10 +82,12 @@ async function kept(kind, name, round, ask) {
   let value = await ask(null)
   if (value === null) return null
   let saved = await clerk(`save ${where}`, value, `keep ${kind}${name ? ` ${name}` : ''}`)
+  if (saved.ok && saved.note) log(saved.note)
   if (saved.ok) return value
   value = await ask(saved.problems, value)
   if (value === null) return null
   saved = await clerk(`save ${where}`, value, `keep ${kind}${name ? ` ${name}` : ''}, again`)
+  if (saved.ok && saved.note) log(saved.note)
   if (saved.ok) return value
   log(`${kind}${name ? ` ${name}` : ''} was refused twice: ${saved.problems.join('; ')}`)
   return null
@@ -233,12 +235,11 @@ while (played < ROUNDS) {
               `(its url, where there is one yet, is in ${W}/steering.json), and hand back every comment on the doc.`,
             { agentType: 'steward', phase: 'Steer', label: 'steer', schema: SCHEMAS.steering },
           )
-        : agent(`This is what was read of a steering doc, and it was refused.${again(problems)}\n\n${JSON.stringify(refused)}`, {
-            agentType: 'mender',
-            phase: 'Steer',
-            label: 'mend steering',
-            schema: SCHEMAS.steering,
-          }),
+        : // Asked again of the steward, which reads the doc, never mended: a mender could drop or reword the director's words.
+          agent(
+            `Round ${round} of the world ${WORLD}: the tab "Round ${round}" is already published; read the doc again and hand back every comment on it.${again(problems)}`,
+            { agentType: 'steward', phase: 'Steer', label: 'steer, again', schema: SCHEMAS.steering },
+          ),
     )
     if (steering === null) log('steering: nothing valid was read of the doc; the author revises without it')
     else if (!steering.reached) log('steering: the doc could not be reached; the author revises without it')
@@ -265,7 +266,10 @@ while (played < ROUNDS) {
 
   // 7. Commit.
   phase('Commit')
-  const accepted = plan === null ? 0 : plan.decisions.filter((one) => one.decision === 'accept' && /^P/.test(one.answers)).length
+  const accepted =
+    plan === null
+      ? (at.acceptedDesign ?? 0)
+      : plan.decisions.filter((one) => one.decision === 'accept' && /^P/.test(one.answers)).length
   const committed = await clerk(`commit ${WORLD} ${round} ${reported} runs, ${synthesis.points.length} points, ${accepted} accepted`, undefined, 'commit')
   if (committed.ok === false) {
     log(`stopping: round ${round} is played but not committed: ${committed.problems.join(' | ')}`)
