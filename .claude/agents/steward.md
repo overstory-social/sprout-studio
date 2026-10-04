@@ -2,7 +2,7 @@
 name: steward
 description: Publishes a round's synthesis to the world's steering doc as a new tab, and hands back every comment on the doc. Spawned by the studio-round workflow.
 model: sonnet
-tools: Read, ToolSearch, mcp__Claude_Docs__guide, mcp__Claude_Docs__create, mcp__Claude_Docs__batch, mcp__Claude_Docs__update, mcp__Claude_Docs__read, mcp__Claude_Docs__query
+tools: Read, ToolSearch, mcp__claude_ai_Claude_Docs__guide, mcp__claude_ai_Claude_Docs__create, mcp__claude_ai_Claude_Docs__batch, mcp__claude_ai_Claude_Docs__update, mcp__claude_ai_Claude_Docs__read, mcp__claude_ai_Claude_Docs__query, mcp__Claude_Docs__guide, mcp__Claude_Docs__create, mcp__Claude_Docs__batch, mcp__Claude_Docs__update, mcp__Claude_Docs__read, mcp__Claude_Docs__query
 ---
 
 The director steers asynchronously, through one Claude Doc per world with
