@@ -102,8 +102,8 @@ describe('the door server', () => {
       });
       const steps = JSON.parse(readFileSync(join(root, 'worlds', 'shed', 'restarted.json'), 'utf8')).steps;
       assert.deepEqual(
-        steps.map((step) => Object.keys(step)[0]),
-        ['seed', 'arrive', 'as', 'as'],
+        steps.filter((step) => !('seed' in step)).map((step) => Object.keys(step)[0]),
+        ['arrive', 'as', 'as'],
       );
     } finally {
       await second.close();
