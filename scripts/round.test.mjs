@@ -93,7 +93,8 @@ describe('a round on disk', () => {
     const recorded = JSON.parse(readFileSync(join(root, 'worlds', 'shed', 'rounds', '01', 'runs', 'explorer-7.json'), 'utf8'));
     assert.deepEqual(recorded.steps[0], { seed: 7 });
     // Each look, then a tick and time moved on, every turn after a seed of its own.
-    assert.ok(recorded.steps.slice(1).every((step, i, rest) => 'seed' in step || 'seed' in rest[i - 1]));
+    // A step of `slice(1)` at i follows `recorded.steps[i]`, the opening seed for the first.
+    assert.ok(recorded.steps.slice(1).every((step, i) => 'seed' in step || 'seed' in recorded.steps[i]));
     assert.deepEqual(
       recorded.steps.slice(1).filter((step) => !('seed' in step)).map((step) => Object.keys(step)[0]),
       ['arrive', 'as', 'tick', 'advance', 'as', 'tick', 'advance', 'as', 'tick', 'advance'],
