@@ -26,7 +26,7 @@ export const meta = {
 const SCHEMAS = {
   "playtest-report": {
     "title": "playtest-report",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
       "persona": {
@@ -376,7 +376,7 @@ const SCHEMAS = {
   },
   "pairwise-verdict": {
     "title": "pairwise-verdict",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
       "axes": {
@@ -713,7 +713,7 @@ const SCHEMAS = {
   },
   "synthesis": {
     "title": "synthesis",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
       "points": {
@@ -910,7 +910,7 @@ const SCHEMAS = {
   },
   "revision-plan": {
     "title": "revision-plan",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
       "decisions": {
@@ -989,7 +989,7 @@ const SCHEMAS = {
   },
   "brief-check": {
     "title": "brief-check",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
       "ok": {
@@ -1032,7 +1032,7 @@ const SCHEMAS = {
   },
   "steering": {
     "title": "steering",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
       "reached": {
@@ -1095,7 +1095,7 @@ const SCHEMAS = {
   },
   "playtest-report-as-played": {
     "title": "playtest-report-as-played",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
       "turns": {

@@ -34,8 +34,10 @@ function emit(file, text) {
   }
 }
 
+// Draft-07, since the workflow runner validates an agent's schema as Ajv does by default, and
+// refuses a 2020-12 one outright: "no schema with key or ref".
 const json = Object.fromEntries(
-  Object.entries(SCHEMAS).map(([name, schema]) => [name, { title: name, ...z.toJSONSchema(schema) }]),
+  Object.entries(SCHEMAS).map(([name, schema]) => [name, { title: name, ...z.toJSONSchema(schema, { target: 'draft-7' }) }]),
 );
 for (const [name, schema] of Object.entries(json)) {
   emit(join(root, 'schemas', 'json', `${name}.schema.json`), `${JSON.stringify(schema, null, 2)}\n`);
