@@ -1,0 +1,72 @@
+// The scenery Zork keeps in LOCAL-GLOBALS and shows in several rooms: the
+// white house, its boards and boarded windows, the front door, the trees.
+// Here each room that shows one has its own.
+import {Thing, Scenery} from 'thing'
+import {open, read, shift, look_in, climb_up, climb_down, :travel} from 'verbs'
+
+kind WhiteHouse is Scenery {
+  grammar { name "white house"  nouns "house"  adjectives "beautiful", "colonial" }
+  passage short {white house}
+  describe {
+    text "The house is a beautiful colonial house which is painted white. It is clear that the owners must have been extremely wealthy."
+  }
+  without as target for open from Thing
+  as target for open { do { say "I can't see how to get in from here." } }
+}
+
+// The house, seen from the forest: everything about it is elsewhere.
+kind DistantHouse is Scenery {
+  grammar { name "white house"  nouns "house"  adjectives "beautiful", "colonial" }
+  passage short {white house}
+  as target for any { permit { refuse "You're not at the house." } }
+}
+
+kind Boards is Scenery {
+  grammar { name "board"  nouns "boards" }
+  passage short {board}
+  passage no_take { The boards are securely fastened. }
+  describe { text "The boards are securely fastened." }
+}
+
+kind BoardedWindow is Scenery {
+  grammar { name "boarded window"  nouns "window", "windows" }
+  passage short {boarded window}
+  without as target for open from Thing
+  as target for open { do { say "The windows are boarded and can't be opened." } }
+}
+
+kind FrontDoor is Scenery {
+  grammar { name "door"  adjectives "front", "boarded" }
+  passage short {door}
+  without as target for open from Thing
+  without as target for read from Thing
+  without as target for look_in from Thing
+  as target for open    { do { say "The door cannot be opened." } }
+  as target for read    { do { say "There is no writing on this side." } }
+  as target for look_in { do { say "The door is closed." } }
+  describe { text "The door is closed." }
+}
+
+kind Tree is Scenery {
+  grammar { name "tree"  nouns "branch", "branches", "trees"  adjectives "large", "storm" }
+  passage short {tree}
+}
+
+// The tree by the Forest Path, from below and from among its branches.
+kind TreeBelow is Tree {
+  without as target for climb_up from Thing
+  without as target for climb_down from Thing
+  as target for climb_up   { do { send actor :travel with :up_a_tree  say "" } }
+  as target for climb_down { do { say "You can't go that way." } }
+}
+kind TreeAbove is Tree {
+  without as target for climb_up from Thing
+  without as target for climb_down from Thing
+  as target for climb_up   { do { say "You cannot climb any higher." } }
+  as target for climb_down { do { send actor :travel with :path  say "" } }
+}
+
+kind Stairs is Scenery {
+  grammar { name "stairs"  nouns "steps", "staircase", "stairway"  adjectives "dark", "rickety" }
+  passage short {stairs}
+}

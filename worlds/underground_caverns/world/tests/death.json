@@ -1,0 +1,115 @@
+{
+  "about": "Three deaths: twice another chance in the forest, the third time the Land of the Living Dead.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "jump", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "This was not a very safe place to try jumping." },
+      { "reader": "Marta", "kind": "said", "words": "In the movies, your life would be passing before your eyes." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 0 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is open." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "jump", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "This was not a very safe place to try jumping." },
+      { "reader": "Marta", "kind": "said", "words": "In the movies, your life would be passing before your eyes." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "as": "Marta", "type": "diagnose", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are in perfect health." },
+      { "reader": "Marta", "kind": "said", "words": "You can be killed by a serious wound." },
+      { "reader": "Marta", "kind": "said", "words": "You have been killed twice." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is open." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "jump", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "This was not a very safe place to try jumping." },
+      { "reader": "Marta", "kind": "said", "words": "Geronimo..." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "You clearly are a suicidal maniac. We don't allow psychotics in the cave, since they may harm other adventurers. Your remains will be installed in the Land of the Living Dead, where your fellow adventurers may gloat over them." },
+      { "reader": "Marta", "kind": "told", "words": "Your score is -20 (total of 350 points)." },
+      { "reader": "Marta", "kind": "told", "words": "This gives you the rank of Beginner." },
+      { "reader": "Marta", "kind": "described", "words": "Land of the Living Dead" },
+      { "reader": "Marta", "kind": "described", "words": "Your remains lie here, where your fellow adventurers may gloat over them. There is no way out, and nothing further will happen to you in this game." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of the Living Dead" },
+      { "reader": "Marta", "kind": "described", "words": "Your remains lie here, where your fellow adventurers may gloat over them. There is no way out, and nothing further will happen to you in this game." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "That sentence isn't one I recognize." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is -20 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." }
+    ] }
+  ]
+}

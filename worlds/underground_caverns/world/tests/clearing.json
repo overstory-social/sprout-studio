@@ -1,0 +1,62 @@
+{
+  "about": "The pile of leaves hides a grating, locked from below; the clearing's other ways.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Clearing" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a clearing, with a forest surrounding you on all sides. A path leads south." },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a pile of leaves." }
+    ] },
+    { "as": "Marta", "type": "look under leaves", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Underneath the pile of leaves is a grating. As you release the leaves, the grating is once again concealed from view." }
+    ] },
+    { "as": "Marta", "type": "count leaves", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There are 69,105 leaves here." }
+    ] },
+    { "as": "Marta", "type": "take leaves", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "told", "words": "In disturbing the pile of leaves, a grating is revealed." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Clearing" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a clearing, with a forest surrounding you on all sides. A path leads south." },
+      { "reader": "Marta", "kind": "described", "words": "There is a grating securely fastened into the ground." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The grating is closed!" }
+    ] },
+    { "as": "Marta", "type": "drop leaves", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "move leaves", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "open grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grating is locked." }
+    ] },
+    { "as": "Marta", "type": "x grating", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The grating is closed." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The forest becomes impenetrable to the north." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Up a Tree" },
+      { "reader": "Marta", "kind": "described", "words": "You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach." },
+      { "reader": "Marta", "kind": "described", "words": "Beside you on the branch is a small bird's nest." },
+      { "reader": "Marta", "kind": "described", "words": "In the bird's nest is a large egg encrusted with precious jewels, apparently scavenged by a childless songbird. The egg is covered with fine gold inlay, and ornamented in lapis lazuli and mother-of-pearl. Unlike most eggs, this one is hinged and closed with a delicate looking clasp. The egg appears extremely fragile." }
+    ] }
+  ]
+}

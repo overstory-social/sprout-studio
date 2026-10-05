@@ -1,0 +1,78 @@
+// The pile of leaves in the Clearing, and the grating it hides. The grating
+// lies in the ground, which shows nothing of it until the leaves are moved;
+// it is locked, and its key lies in a part of the Empire not yet built.
+import {Thing, Portable, Scenery} from 'thing'
+import {open, close, unlock, lock, look_under, tally, shift, look_in, :reveal} from 'verbs'
+import {grating_clearing} from 'above_ground'
+
+kind Leaves is Portable {
+  grammar { name "pile of leaves"  nouns "leaves", "leaf", "pile" }
+  :size 25
+  :hiding true
+  passage short {pile of leaves}
+  passage ldesc { On the ground is a pile of leaves. }
+
+  on :moved (from, to) { self.set(:hiding, false) }
+
+  without as target for shift from Portable
+  as target for shift {
+    do {
+      say "Done."
+      if (self.get(:hiding)) {
+        self.set(:hiding, false)
+        say "In disturbing the pile of leaves, a grating is revealed."
+        send grating_clearing :reveal
+      }
+    }
+  }
+
+  without as target for look_under from Thing
+  as target for look_under {
+    do {
+      if (self.get(:hiding)) {
+        say "Underneath the pile of leaves is a grating. As you release the leaves, the grating is once again concealed from view."
+      } else {
+        say "There is nothing but dust there."
+      }
+    }
+  }
+
+  without as target for tally from Thing
+  as target for tally { do { say "There are 69,105 leaves here." } }
+}
+
+// The ground under the Clearing: nothing in it can be seen or named until
+// it is uncovered.
+kind Ground is Scenery {
+  contains
+  :revealed false
+  pass any (self.get(:revealed))
+  grammar { name "ground"  nouns "dirt", "earth", "floor" }
+  passage short {ground}
+  on :reveal (from) { self.set(:revealed, true) }
+}
+
+kind Grating is Scenery {
+  grammar { name "grating"  nouns "grate" }
+  passage short {grating}
+  describe { text "The grating is closed." }
+
+  without as target for open from Thing
+  without as target for close from Thing
+  without as target for unlock from Thing
+  without as target for lock from Thing
+  without as target for look_in from Thing
+  as target for open    { do { say "The grating is locked." } }
+  as target for close   { do { say "It is already closed." } }
+  as target for look_in { do { say "The grating is closed." } }
+  as target for lock    { do { say "You can't lock it from this side." } }
+  as target for unlock {
+    do {
+      if (bound tool) {
+        if (tool.is(Thing)) { say "Can you unlock a grating with a {tool.short}?" }
+      } else {
+        say "The grating is locked."
+      }
+    }
+  }
+}

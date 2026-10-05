@@ -1,0 +1,42 @@
+{
+  "about": "The brief's opening: arriving West of House, the mailbox, and the leaflet read and taken in one breath.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "open mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the small mailbox reveals a leaflet." }
+    ] },
+    { "as": "Marta", "type": "read leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(Taken)" },
+      { "reader": "Marta", "kind": "said", "words": "\"WELCOME TO ZORK!" },
+      { "reader": "Marta", "kind": "said", "words": "ZORK is a game of adventure, danger, and low cunning. In it you will explore some of the most amazing territory ever seen by mortals. No computer should be without one!\"" }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A leaflet" }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "take mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It is securely anchored." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The door is boarded and you can't remove the boards." }
+    ] },
+    { "as": "Marta", "type": "drop leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." },
+      { "reader": "Marta", "kind": "described", "words": "A small leaflet is on the ground." }
+    ] }
+  ]
+}

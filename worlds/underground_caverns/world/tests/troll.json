@@ -1,0 +1,103 @@
+{
+  "about": "The troll fends the visitor off, fights on Zork's tables with the sword, and is killed; the passages beyond him lead to country not yet built.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "move rug", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." },
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The troll fends you off with a menacing gesture." }
+    ] },
+    { "as": "Marta", "type": "take troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll spits in your face, grunting \"Better luck next time\" in a rather barbarous accent." }
+    ] },
+    { "as": "Marta", "type": "x troll", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." }
+    ] },
+    { "as": "Marta", "type": "listen to troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
+    ] },
+    { "as": "Marta", "type": "attack troll with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll is momentarily disoriented and can't fight back." },
+      { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
+    ] },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(With the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "The troll takes a fatal blow and slumps to the floor dead." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The passage to the east has not been finished. Someone has left a pick leaning against the rock, and a note: \"Back soon. -- The Management.\"" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You peer into the forbidding hole. It is dark even by the standards of this place, and it does not seem to go anywhere yet. You think better of it." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
+    ] }
+  ]
+}

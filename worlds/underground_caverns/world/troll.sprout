@@ -1,0 +1,68 @@
+// The troll, and Zork's melee. A blow is resolved on Zork's own tables
+// (DEF1, DEF2A and DEF2B in actions.zil): a nine-sided die, read along a
+// row chosen by the attacker's strength and the defender's, the sword
+// counting one point of the troll's defence away. The lines are Zork's,
+// chosen as Zork chooses them, at random within the kind of blow.
+//
+// What he does, he does in his own room, so his handlers are written on the
+// troll himself, in cellar.sprout.
+import {Thing} from 'thing'
+import {Axe} from 'items'
+import {listen} from 'verbs'
+
+kind Troll is Thing {
+  contains
+  pass any (false)
+
+  // Zork's P?STRENGTH: 2 fresh, less when wounded, negated while out cold.
+  :strength 2 min -2 max 2
+  :dead false
+  :staggered false
+  :fighting false
+  :waking false
+  // Whether he has already swung back at a blow since his last own turn:
+  // Zork's troll swings once a move, so a wake that finds this set passes.
+  :swung false
+  // The weapon last swung at him: 1 the sword, 2 the knife, 3 the axe.
+  :wep 1 min 1 max 3
+  // What the last blow at him did (Zork's blow results, 1 to 7), or 8 and 9
+  // for a troll who could not defend himself, or 0 for no blow at all.
+  :last 0 min 0 max 9
+  // A turn's dice: see the world's friction log, on seeds.
+  :r 0 min 0 max 17
+  :spin9 0 min 0 max 13
+  :spin3 0 min 0 max 4
+
+  passage short {troll}
+  passage ldesc {
+    {if self.get(:strength) < 0}An unconscious troll is sprawled on the floor. All passages out of the room are open.{else if self.count(Axe) > 0}A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.{else}A pathetically babbling troll is here.{/if}
+  }
+  passage no_take {The troll spits in your face, grunting "Better luck next time" in a rather barbarous accent.}
+  describe { text ldesc }
+
+  without as target for listen from Thing
+  as target for listen {
+    do { say "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
+  }
+
+  passage wep_name {{if self.get(:wep) == 1}sword{else if self.get(:wep) == 2}nasty knife{else}bloody axe{/if}}
+
+  // Zork's HERO-MELEE, the line chosen by the turn's roll.
+  passage hit_line {{if self.get(:last) == 1}{self.missed}{else if self.get(:last) == 2}{self.knocked_out}{else if self.get(:last) == 3}{self.killed}{else if self.get(:last) == 4}{self.wounded}{else if self.get(:last) == 6}{self.staggered}{else if self.get(:last) == 7}{self.disarmed}{else if self.get(:last) == 8}The unconscious troll cannot defend himself: He dies.{else if self.get(:last) == 9}The unarmed troll cannot defend himself: He dies.{/if}}
+  passage missed {{if self.get(:r) < 2}Your {self.wep_name} misses the troll by an inch.{else if self.get(:r) < 3}A good slash, but it misses the troll by a mile.{else if self.get(:r) < 5}You charge, but the troll jumps nimbly aside.{else if self.get(:r) < 6}Clang! Crash! The troll parries.{else if self.get(:r) < 8}A quick stroke, but the troll is on guard.{else}A good stroke, but it's too slow; the troll dodges.{/if}}
+  passage knocked_out {{if self.get(:r) < 2}Your {self.wep_name} crashes down, knocking the troll into dreamland.{else if self.get(:r) < 4}The troll is battered into unconsciousness.{else if self.get(:r) < 6}A furious exchange, and the troll is knocked out!{else if self.get(:r) < 8}The haft of your {self.wep_name} knocks out the troll.{else}The troll is knocked out!{/if}}
+  passage killed {{if self.get(:r) < 3}It's curtains for the troll as your {self.wep_name} removes his head.{else if self.get(:r) < 6}The fatal blow strikes the troll square in the heart: He dies.{else}The troll takes a fatal blow and slumps to the floor dead.{/if}}
+  passage wounded {{if self.get(:r) < 2}The troll is struck on the arm; blood begins to trickle down.{else if self.get(:r) < 5}Your {self.wep_name} pinks the troll on the wrist, but it's not serious.{else if self.get(:r) < 7}Your stroke lands, but it was only the flat of the blade.{else}The blow lands, making a shallow gash in the troll's arm!{/if}}
+  passage staggered {{if self.get(:r) < 2}The troll is staggered, and drops to his knees.{else if self.get(:r) < 4}The troll is momentarily disoriented and can't fight back.{else if self.get(:r) < 6}The force of your blow knocks the troll back, stunned.{else if self.get(:r) < 8}The troll is confused and can't fight back.{else}The quickness of your thrust knocks the troll back, stunned.{/if}}
+  passage disarmed {{if self.get(:r) < 5}The troll's weapon is knocked to the floor, leaving him unarmed.{else}The troll is disarmed by a subtle feint past his guard.{/if}}
+}
+
+// Where the fog takes what it takes: a closed place inside the Troll Room
+// that nothing can see into or name the contents of.
+kind Fog is Thing {
+  contains
+  pass any (false)
+  :ndesc true
+  passage short {fog}
+  describe { text "The fog has lifted." }
+}

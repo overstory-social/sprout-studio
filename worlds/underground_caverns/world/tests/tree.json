@@ -1,0 +1,84 @@
+{
+  "about": "Up the tree for the egg; whatever is dropped up there falls to the path, and the egg does not survive it.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "climb tree", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Up a Tree" },
+      { "reader": "Marta", "kind": "described", "words": "You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach." },
+      { "reader": "Marta", "kind": "described", "words": "Beside you on the branch is a small bird's nest." },
+      { "reader": "Marta", "kind": "described", "words": "In the bird's nest is a large egg encrusted with precious jewels, apparently scavenged by a childless songbird. The egg is covered with fine gold inlay, and ornamented in lapis lazuli and mother-of-pearl. Unlike most eggs, this one is hinged and closed with a delicate looking clasp. The egg appears extremely fragile." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Up a Tree" },
+      { "reader": "Marta", "kind": "described", "words": "You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach." },
+      { "reader": "Marta", "kind": "described", "words": "Beside you on the branch is a small bird's nest." },
+      { "reader": "Marta", "kind": "described", "words": "In the bird's nest is a large egg encrusted with precious jewels, apparently scavenged by a childless songbird. The egg is covered with fine gold inlay, and ornamented in lapis lazuli and mother-of-pearl. Unlike most eggs, this one is hinged and closed with a delicate looking clasp. The egg appears extremely fragile." }
+    ] },
+    { "as": "Marta", "type": "take egg", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "drop egg", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The egg falls to the ground and springs open, seriously damaged. There is a golden clockwork canary nestled in the egg. It seems to have recently had a bad experience. The mountings for its jewel-like eyes are empty, and its silver beak is crumpled. Through a cracked crystal window below its left wing you can see the remains of intricate machinery. It is not clear what result winding it would have, as the mainspring seems sprung." }
+    ] },
+    { "as": "Marta", "type": "climb down", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." },
+      { "reader": "Marta", "kind": "described", "words": "There is a somewhat ruined egg here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a golden clockwork canary nestled in the egg. It seems to have recently had a bad experience. The mountings for its jewel-like eyes are empty, and its silver beak is crumpled. Through a cracked crystal window below its left wing you can see the remains of intricate machinery. It is not clear what result winding it would have, as the mainspring seems sprung." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." },
+      { "reader": "Marta", "kind": "described", "words": "There is a somewhat ruined egg here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a golden clockwork canary nestled in the egg. It seems to have recently had a bad experience. The mountings for its jewel-like eyes are empty, and its silver beak is crumpled. Through a cracked crystal window below its left wing you can see the remains of intricate machinery. It is not clear what result winding it would have, as the mainspring seems sprung." }
+    ] },
+    { "as": "Marta", "type": "x egg", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The broken jewel-encrusted egg contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A broken clockwork canary" }
+    ] },
+    { "as": "Marta", "type": "wind canary", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is an unpleasant grinding noise from inside the canary." }
+    ] },
+    { "as": "Marta", "type": "take egg", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "climb up tree", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Up a Tree" },
+      { "reader": "Marta", "kind": "described", "words": "You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach." },
+      { "reader": "Marta", "kind": "described", "words": "Beside you on the branch is a small bird's nest." }
+    ] },
+    { "as": "Marta", "type": "take nest", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "drop nest", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The bird's nest falls to the ground." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Up a Tree" },
+      { "reader": "Marta", "kind": "described", "words": "You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach." }
+    ] },
+    { "as": "Marta", "type": "jump", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "In a feat of unaccustomed daring, you manage to land on your feet without killing yourself." },
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." },
+      { "reader": "Marta", "kind": "described", "words": "There is a bird's nest here." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." },
+      { "reader": "Marta", "kind": "described", "words": "There is a bird's nest here." }
+    ] }
+  ]
+}

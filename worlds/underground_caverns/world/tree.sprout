@@ -1,0 +1,122 @@
+// The tree on the Forest Path, and what is up it: the bird's nest and the
+// jewel-encrusted egg with the clockwork canary inside.
+//
+// Whatever is let go of Up a Tree falls to the Forest Path below. The egg
+// does not survive it. Dropping the nest with the egg in it spills the egg,
+// ruined, onto the path and leaves the nest where it was, as Zork's own
+// TREE-ROOM does.
+import {Thing, Portable} from 'thing'
+import {Box, Bag} from 'box'
+import {Treasure, Weapon} from 'items'
+import {Forest} from 'room'
+import {Adventurer} from 'adventurer'
+import {open, close, look_in, wind, :fall, :landed, :smash, :open_gate, :gate_open, :close_gate} from 'verbs'
+import {forest_path} from 'above_ground'
+
+kind TreeTop is Forest {
+  on :entered (item, from) {
+    if (item.is(Thing)) {
+      if (from.is(Adventurer)) {
+        send item :fall
+        send underground_caverns :open_gate
+      }
+    }
+  }
+
+  on :gate_open {
+    each t: Thing in self {
+      if (t.get(:falling)) {
+        if (t.is(Nest)) {
+          if (t.count(Egg) > 0) {
+            each e: Egg in t {
+              move e to forest_path
+              send e :smash
+            }
+            send t :landed
+            } else {
+            move t to forest_path
+          }
+        } else if (t.is(Egg)) {
+          move t to forest_path
+          send t :smash
+        } else {
+          move t to forest_path
+        }
+      }
+    }
+    send underground_caverns :close_gate
+  }
+}
+
+kind Nest is Bag {
+  :open true
+  passage short {bird's nest}
+}
+
+// Zork's EGG and BROKEN-EGG are two objects; here they are one, which
+// remembers that it has been broken.
+kind Egg is Box, Treasure {
+  without as target for close from Thing
+  without as target for look_in from Thing
+  without as target for open from Thing
+  :broken false
+  :tried false
+  :capacity 6
+
+  passage short {{if self.get(:broken)}broken jewel-encrusted egg{else}jewel-encrusted egg{/if}}
+  passage ldesc {
+    {if self.get(:broken)}There is a somewhat ruined egg here.{else}There is a jewel-encrusted egg here.{/if}
+  }
+  passage spill {{if self.count(Canary) > 0} {self.canary_text}{/if}}
+  passage canary_text {
+    There is a golden clockwork canary nestled in the egg. It seems to have recently had a bad experience. The mountings for its jewel-like eyes are empty, and its silver beak is crumpled. Through a cracked crystal window below its left wing you can see the remains of intricate machinery. It is not clear what result winding it would have, as the mainspring seems sprung.
+  }
+
+  without as target for open from Box
+  as target for open {
+    do {
+      if (self.get(:open)) { say "The egg is already open." }
+      else if (bound tool) {
+        if (tool.is(Weapon)) {
+          say "The egg is now open, but the clumsiness of your attempt has seriously compromised its esthetic appeal.{self.spill}"
+          send self :smash
+        } else if (self.get(:tried)) {
+          if (tool.is(Thing)) { say "Not to say that using the {tool.short} isn't original too..." }
+        } else {
+          self.set(:tried, true)
+          if (tool.is(Thing)) { say "The concept of using a {tool.short} is certainly original." }
+        }
+      }
+      else { say "You have neither the tools nor the expertise." }
+    }
+  }
+
+  on :smash {
+    if (!self.get(:broken)) {
+      self.set(:broken, true)
+      self.set(:open, true)
+      self.set(:tvalue, 2)
+      self.set(:value, 0)
+      each c: Canary in self { send c :smash }
+    }
+  }
+}
+
+kind Canary is Treasure {
+  :broken false
+  passage short {{if self.get(:broken)}broken clockwork canary{else}golden clockwork canary{/if}}
+
+  without as target for wind from Thing
+  as target for wind {
+    do {
+      if (self.get(:broken)) { say "There is an unpleasant grinding noise from inside the canary." }
+      else { say "The canary chirps blithely, if somewhat tinnily, for a short time." }
+    }
+  }
+
+  on :smash {
+    self.set(:broken, true)
+    self.set(:tvalue, 1)
+    self.set(:value, 0)
+  }
+}

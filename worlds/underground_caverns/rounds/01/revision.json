@@ -1,0 +1,91 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "I followed the recommendation and reproduced it, and the world is not the cause. The door (scripts/playtest-mcp.mjs) only answers \"Arrive first.\" when entry.bound is null, which is only true in a door process that has just started. openSession also rewrites the record file, which is why each run kept only its last session (P2). I replayed the exact path through the same @overstory/sprout-mcp session code with turnCap 150 and advancePerTurn 30, on seeds 0 to 3, through the cellar, the fight, a death and the forest. I also ran 30 seeded fuzz runs of 140 turns each past the cellar. The visitor was never absent, nothing faulted or threw, and no turn took more than 6 ms. So the play-door process was restarted mid-run. The drops cluster near the time the shortest run (prose-reader, 13 turns, which ended at the cellar) closed its door, so a shared or recycled studio-play server is the likely cause. The fix and the issue belong to the studio harness, plus Sprout's host if it should notice an orphaned door. My role lets me write only the world, intent and friction, so I am not filing it myself; it needs filing. On the world side, I added a regression test of the whole path at half a minute per turn."
+    },
+    {
+      "answers": "P2",
+      "decision": "reject",
+      "reason": "There is nothing to change in the world. It has the same cause as P1: the door's process restarted, openSession overwrote the record file, and so only the last session survived. That is a studio harness / sprout-mcp recorder bug and should be filed there. I agree that this round's reach and reading figures are a floor, not a measurement."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "I added the scripted check the synthesis asked for. `open mailbox` then `take leaflet` answers \"Taken.\", so the leaflet is reachable by name and the casual report could not be reproduced. The parser-breaker's line, `put leaflet in mailbox and close it`, is read as a run of nouns, which is P4's subject, not a mailbox bug."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "I checked it as recommended. Sprout chains on `then` and `.`, as Zork does, and both work in this world; they are now tested. Chaining on `and` between verb phrases is not Zork either, and `walk around the house` is refused just as Zork refuses it. The real gap is `take lamp and sword`, which Zork accepts and this world does not, because take is a single-object role. That is logged in friction.md as 11a. Rebuilding take, drop and put to take several objects is out of scope for this revision."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "I checked the fight against Zork as the point asks. The tables were already right, but the timing was not. With time moving half a minute per turn, a troll wake could land in the same turn as the troll's swing back at a blow, so he swung twice in one move. Zork's I-FIGHT never does that. It made the fight harder than Zork's and fits the goal-seeker being stunned and beheaded within a few rounds. The troll now swings at most once between two of his own turns. The randomness itself is Zork's and stays. The sword's glow remains the only warning, which is also faithful."
+    },
+    {
+      "answers": "P6",
+      "decision": "reject",
+      "reason": "Both details are word-for-word Zork: the thin examine answers and west from Behind House going through the window. The brief puts faithfulness first, and the synthesis also recommends no change."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "No change to how the world plays, as recommended. In Zork, LAMP-ON finds a light source that is held, carried, on the ground or in the room, and takes nothing. friction.md did not say so; it now does, under Differences chosen."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Added a regression test that plays the drop path the synthesis named, at half a minute per turn as the playtest host does: window, lamp, sword, rug, trap door, cellar, the troll fight with its wakes, back to the cellar, then inventory and score. The visitor stays present and nothing faults.",
+      "files": [
+        "worlds/underground_caverns/world/tests/descent.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "Added a test: `open mailbox` then `take leaflet` answers \"Taken.\", and lines chained with `then` and a full stop each run as two commands.",
+      "files": [
+        "worlds/underground_caverns/world/tests/leaflet.json"
+      ],
+      "for": [
+        "P3",
+        "P4"
+      ]
+    },
+    {
+      "what": "The troll now swings at most once per move. A new property `:swung` is set by every blow at him. When one of his wakes finds it set while he is fighting, he skips that swing, clears the flag and schedules his next wake. Coming round from a knockout clears it too. This removes the second swing in one move that half-minute turns allowed, matching Zork's one I-FIGHT per move.",
+      "files": [
+        "worlds/underground_caverns/world/troll.sprout",
+        "worlds/underground_caverns/world/cellar.sprout"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "friction.md: new entry 11a covers `and` between things and between commands, notes that `then` and `.` work, and logs `take lamp and sword` as the open gap (spec: Parsing › Sequences; Verbs › Set roles). Entry 24 now records the double swing found in round 1 and how the world avoids it (spec: Time › Wakes; The runtime › Turns). A new note under Differences chosen says `turn on lamp` without taking it matches Zork's LAMP-ON syntax.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P4",
+        "P5",
+        "P7"
+      ]
+    },
+    {
+      "what": "intent.md: the arc now says the troll never swings twice in one move. A new 'After round 1' section records that the drops came from the host and are covered by descent.json, and that the forest, tree, attic and score secrets are still unreached.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P5"
+      ]
+    }
+  ]
+}

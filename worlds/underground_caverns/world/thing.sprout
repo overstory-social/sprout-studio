@@ -1,0 +1,71 @@
+// Everything in the Empire that a visitor can see and name. A thing answers
+// each of Zork's verbs with Zork's default refusal; a thing that does
+// something better leaves the default out with `without` and writes its own.
+//
+// Zork describes a thing in a room by its first description (FDESC) until it
+// has been moved, and by its long one (LDESC) after, or by "There is a ...
+// here." when it has none; `here_line` is that rule. A thing marked `:ndesc`
+// (Zork's NDESCBIT) is never listed.
+import {take, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, :fall, :landed} from 'verbs'
+
+kind Thing {
+  grammar { article the }
+
+  :touched false
+  :has_fdesc false
+  :ndesc false
+  :falling false
+  :size 5 min 0 max 100
+
+  passage short default {thing}
+  passage fdesc default { {self.ldesc} }
+  passage ldesc default { There is a {self.short} here. }
+  passage here_line default {
+    {if !self.get(:ndesc)}{if self.get(:has_fdesc) && !self.get(:touched)}{self.fdesc}{else}{self.ldesc}{/if}{/if}
+  }
+  passage inside_lines default { {if false}.{/if} }
+  passage no_take default {
+    {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}
+  }
+  passage hacked default {{one of} doesn't seem to work.{or} isn't notably helpful.{or} has no effect.{/one of}}
+
+  on :moved (from, to) {
+    self.set(:touched, true)
+    self.set(:falling, false)
+  }
+  on :fall   { self.set(:falling, true) }
+  on :landed { self.set(:falling, false) }
+
+  as target for open       { do { say "You must tell me how to do that to a {self.short}." } }
+  as target for close      { do { say "You must tell me how to do that to a {self.short}." } }
+  as target for read       { do { say "How does one read a {self.short}?" } }
+  as target for look_in    { do { say "You can't look inside a {self.short}." } }
+  as target for look_under { do { say "There is nothing but dust there." } }
+  as target for lamp_on    { do { say "You can't turn that on." } }
+  as target for lamp_off   { do { say "You can't turn that off." } }
+  as target for shift      { do { say "You can't move the {self.short}." } }
+  as target for raise      { do { say "Playing in this way with the {self.short}{self.hacked}" } }
+  as target for eat        { do { say "I don't think that the {self.short} would agree with you." } }
+  as target for drink      { do { say "I don't think that the {self.short} would agree with you." } }
+  as target for wind       { do { say "You cannot wind up a {self.short}." } }
+  as target for tally      { do { say "You have lost your mind." } }
+  as target for smell      { do { say "It smells like a {self.short}." } }
+  as target for listen     { do { say "The {self.short} makes no sound." } }
+  as target for unlock     { do { say "It doesn't seem to work." } }
+  as target for lock       { do { say "It doesn't seem to work." } }
+  as target for climb_up   { do { say "You can't do that!" } }
+  as target for climb_down { do { say "You can't do that!" } }
+}
+
+// A thing that can be carried off. Only these answer `take all`.
+kind Portable is Thing {
+  as target for take { permit { if (false) { refuse "" } } }
+
+  without as target for shift from Thing
+  as target for shift { do { say "Moving the {self.short} reveals nothing." } }
+}
+
+// A thing Zork describes only in its room's own words.
+kind Scenery is Thing {
+  :ndesc true
+}

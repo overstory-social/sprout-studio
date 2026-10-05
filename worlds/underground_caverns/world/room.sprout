@@ -1,0 +1,98 @@
+// Rooms. A room reads as Zork's do: its name, its description, then what is
+// in it, each in its own paragraph. A room worth points (the Kitchen, the
+// Cellar) pays them to whoever first walks in.
+//
+// A dark room is a shut container around whoever stands in it: until light
+// comes, nothing in it can be named, and its description is the grue's
+// warning. It opens when a lit lamp is set down in it or carried in, and
+// shuts again when the light goes. Its walls let through the world's own
+// business (the gate, the trap door, the fight) whatever the light.
+import * as sprout from 'sprout'
+import {Thing} from 'thing'
+import {Lamp} from 'lamp'
+import {Adventurer} from 'adventurer'
+import {:scored, :relight, :room_lit, :open_gate, :gate_open, :close_gate, :trap_sync, :troll_gone, :blow, :struck, :die, :window_sync} from 'verbs'
+
+kind Room is sprout.Place {
+  grammar { article none }
+
+  :value 0 min 0 max 100
+  :glow 0 min 0 max 2
+
+  passage title default {{self}}
+  passage body default { {if false}.{/if} }
+  // Zork's PRINT-CONT: first what has a first description and has not been
+  // moved, then everything else.
+  passage full {
+    {self.title}
+
+    {self.body}{for t: Thing in self}{if !t.get(:ndesc) && t.get(:has_fdesc) && !t.get(:touched)}
+
+    {t.fdesc}{t.inside_lines}{/if}{/for}{for t: Thing in self}{if t.get(:ndesc) || !t.get(:has_fdesc) || t.get(:touched)}{if !t.get(:ndesc)}
+
+    {t.ldesc}{/if}{t.inside_lines}{/if}{/for}
+  }
+
+  describe { text full }
+
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      if (self.get(:value) > 0) {
+        send item :scored with self.get(:value)
+        self.set(:value, 0)
+      }
+    }
+  }
+}
+
+kind DarkRoom is Room {
+  :open false
+  :floor_lit false
+
+  pass any (self.get(:open) || underground_caverns.get(:gate))
+  pass :relight (true)
+  pass :room_lit (true)
+  pass :scored (true)
+  pass :open_gate (true)
+  pass :gate_open (true)
+  pass :close_gate (true)
+  pass :trap_sync (true)
+  pass :troll_gone (true)
+  pass :blow (true)
+  pass :struck (true)
+  pass :die (true)
+  pass :window_sync (true)
+
+  describe {
+    if (self.get(:open)) { text full }
+    else { text "It is pitch black. You are likely to be eaten by a grue." }
+  }
+
+  on :entered (item, from) { send self :relight }
+  on :left (item, to)      { send self :relight }
+
+  on :relight {
+    self.set(:floor_lit, false)
+    each l: Lamp in self { if (l.get(:lit)) { self.set(:floor_lit, true) } }
+    self.set(:open, self.get(:floor_lit))
+    each a: Adventurer in self {
+      if (a.get(:light) > 0) { self.set(:open, true) }
+      send a :room_lit with self.get(:floor_lit)
+    }
+  }
+}
+
+// The forest rooms, where a songbird is sometimes heard.
+kind Forest is Room { }
+
+// A place an exit leads to when the way is shut. Nobody ever gets in: its
+// `accept` refuses with the line Zork gives for that way.
+kind Nowhere is sprout.Place {
+  passage refusal default { You can't go that way. }
+  accept (item, from) { refuse refusal }
+  describe { text refusal }
+}
+
+// A room where jumping is a mistake, as the Kitchen is in Zork: its way
+// down leads nowhere a body can follow.
+kind Perilous { }
