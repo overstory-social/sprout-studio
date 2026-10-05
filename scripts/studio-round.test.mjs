@@ -283,6 +283,11 @@ describe('the studio-round workflow', () => {
     assert.equal(s.calls.filter((one) => one.type === 'synthesizer').length, 0);
   });
 
+  it('hands agents schemas in draft-07, the draft the workflow runner reads', () => {
+    const drafts = new Set(SOURCE.match(/"\$schema": "[^"]*"/g));
+    assert.deepEqual([...drafts], ['"$schema": "http://json-schema.org/draft-07/schema#"']);
+  });
+
   it('refuses to start without a world to play, or a brief to play it to', async () => {
     await assert.rejects(stage().run({}), /args\.world names a folder under worlds\//);
     const s = stage();
