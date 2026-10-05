@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
@@ -26,8 +26,8 @@ ticket('0badbadbadbad', { world: 'worlds/secret-place/world', record: 'worlds/se
 ticket('0norecordhere', { record: 'worlds/shed/nowhere/at/all/run.json' });
 
 let stderr = '';
-let client;
-before(async () => {
+/** A door server process of its own, as the client starts one. */
+const connect = async () => {
   const transport = new StdioClientTransport({
     command: 'node',
     args: [join(REPO, 'scripts', 'playtest-mcp.mjs')],
@@ -35,15 +35,21 @@ before(async () => {
     stderr: 'pipe',
   });
   transport.stderr.on('data', (chunk) => (stderr += chunk));
-  client = new Client({ name: 'spec', version: '0' });
-  await client.connect(transport);
+  const one = new Client({ name: 'spec', version: '0' });
+  await one.connect(transport);
+  return one;
+};
+let client;
+before(async () => {
+  client = await connect();
 });
 after(() => client.close());
 
-const call = async (name, args) => {
-  const result = await client.callTool({ name, arguments: args });
+const callOn = async (one, name, args) => {
+  const result = await one.callTool({ name, arguments: args });
   return { text: result.content[0].text, refused: result.isError === true };
 };
+const call = (name, args) => callOn(client, name, args);
 
 describe('the door server', () => {
   it('offers arrive, say and leave, each taking the door, and describes itself in a player’s words', async () => {
@@ -75,5 +81,32 @@ describe('the door server', () => {
     await new Promise((resolve) => setTimeout(resolve, 100));
     assert.match(stderr, /playtest: a call failed: .*secret-place/);
     assert.match(stderr, /playtest: a call failed: .*ENOENT/);
+  });
+
+  it('outlives its process: a door opened again carries on its visitor’s play, and keeps all of it recorded', async () => {
+    ticket('0restartedrun', { seed: 3, record: 'worlds/shed/restarted.json' });
+    const first = await connect();
+    assert.equal((await callOn(first, 'arrive', { door: '0restartedrun', name: 'Ada' })).refused, false);
+    assert.equal((await callOn(first, 'say', { door: '0restartedrun', line: 'look' })).refused, false);
+    // The client stops the process, as it does when another playtester sharing it is done.
+    await first.close();
+    const recorded = readFileSync(join(root, 'worlds', 'shed', 'restarted.json'), 'utf8');
+    assert.doesNotMatch(recorded, /"leave"/);
+    const second = await connect();
+    try {
+      const looked = await callOn(second, 'say', { door: '0restartedrun', line: 'look' });
+      assert.equal(looked.refused, false);
+      assert.deepEqual(await callOn(second, 'arrive', { door: '0restartedrun', name: 'Ada' }), {
+        text: 'You are Ada here already.',
+        refused: true,
+      });
+      const steps = JSON.parse(readFileSync(join(root, 'worlds', 'shed', 'restarted.json'), 'utf8')).steps;
+      assert.deepEqual(
+        steps.map((step) => Object.keys(step)[0]),
+        ['seed', 'arrive', 'as', 'as'],
+      );
+    } finally {
+      await second.close();
+    }
   });
 });

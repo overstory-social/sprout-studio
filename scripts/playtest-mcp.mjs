@@ -8,13 +8,16 @@
 // is kept, stay the host's. Each door is one session and one visitor,
 // played through @overstory/sprout-mcp's session exactly as `sprout mcp`
 // plays it: the prose a person reads, a fault by its name, never a path.
+// A door outlives this process: the client may run one process for every
+// playtester and stop it when any one of them is done, so a door opened
+// again resumes its session from its recording, with its visitor still in it.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { compileBundle, DEFAULT_BLESSED } from '@overstory/sprout/lang';
-import { arrive, isPresent, leave, openSession, say } from '@overstory/sprout-mcp';
+import { arrive, isPresent, leave, resumeSession, say } from '@overstory/sprout-mcp';
 import { readWorld } from '@overstory/sprout-player';
 import { z } from 'zod';
 
@@ -29,7 +32,7 @@ const warn = (words) => process.stderr.write(`playtest: ${words}\n`);
 /** Each door opened this process, with the name it arrived as. */
 const opened = new Map();
 
-/** The session behind `door`, opened on first use from its ticket; null where there is no such door. */
+/** The session behind `door`, opened or resumed on first use from its ticket; null where there is no such door. */
 function sessionAt(door) {
   const known = opened.get(door);
   if (known !== undefined) return known;
@@ -44,7 +47,7 @@ function sessionAt(door) {
   if (world.source === null) throw new Error(`${ticket.world}: its manifest does not read`);
   const { bundle } = compileBundle(world.source, { mode: 'publish', blessed: DEFAULT_BLESSED });
   if (bundle === null) throw new Error(`${ticket.world}: sprout check refuses it`);
-  const session = openSession(
+  const session = resumeSession(
     bundle,
     {
       seed: ticket.seed,
@@ -54,7 +57,9 @@ function sessionAt(door) {
     },
     warn,
   );
-  const entry = { session, bound: null };
+  // A resumed door's visitor is the one its recording left standing in the world.
+  const arrived = session.recorded.filter((step) => 'arrive' in step).map((step) => step.arrive);
+  const entry = { session, bound: arrived.findLast((name) => isPresent(session, name)) ?? null };
   opened.set(door, entry);
   return entry;
 }
@@ -130,12 +135,5 @@ server.registerTool(
       entry.bound === null ? { text: 'Arrive first.', refused: true } : leave(entry.session, entry.bound),
     ),
 );
-
-// A playtester that stops without leaving has its visitor leave, as a last `leave` would.
-server.server.onclose = () => {
-  for (const { session, bound } of opened.values()) {
-    if (bound !== null && isPresent(session, bound)) leave(session, bound);
-  }
-};
 
 await server.connect(new StdioServerTransport());

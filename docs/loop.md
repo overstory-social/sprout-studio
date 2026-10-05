@@ -123,6 +123,14 @@ runs not yet reported and skipping a synthesis, steering or revision whose
 file is there. A round is marked committed only by the commit that holds
 it.
 
+Resume by launching the workflow again, never with the Workflow tool's
+`resumeFromRunId`. A resumed run replays its agents' cached answers,
+including the clerk's first `status`, which describes the world as it was
+before the round began, so steps whose files are already on disk run
+again. A session also keeps the copy of `.claude/workflows/studio-round.js`
+it started with. After the workflow changes, launch it by its path
+(`scriptPath`) or from a new session, rather than by name.
+
 ## Decisions
 
 - **The studio is its own repo** and consumes Sprout as installed packages,
