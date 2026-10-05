@@ -45,7 +45,7 @@
       { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
       { "reader": "Marta", "kind": "described", "words": "Cellar" },
       { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
     ] },
@@ -60,21 +60,25 @@
     { "advance": "1 minutes", "expect": [
       { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" }
     ] },
+    { "seed": 8 },
     { "advance": "1 minutes", "expect": [
       { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" },
-      { "reader": "Marta", "kind": "told", "words": "The troll swings; the blade turns on your armor but crashes broadside into your head." }
+      { "reader": "Marta", "kind": "told", "words": "The troll's mighty blow drops you to your knees." }
     ] },
+    { "seed": 2 },
     { "advance": "1 minutes", "expect": [
       { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" },
-      { "reader": "Marta", "kind": "told", "words": "The troll swings his axe, but it misses." }
+      { "reader": "Marta", "kind": "told", "words": "The axe sweeps past as you jump aside." }
     ] },
+    { "seed": 0 },
     { "as": "Marta", "type": "diagnose", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are in perfect health." },
       { "reader": "Marta", "kind": "said", "words": "You can be killed by a serious wound." }
     ] },
+    { "seed": 1 },
     { "as": "Marta", "type": "kill troll", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are still recovering from that last blow, so your attack is ineffective." },
-      { "reader": "Marta", "kind": "told", "words": "The troll's swing almost knocks you over as you barely parry in time." }
+      { "reader": "Marta", "kind": "told", "words": "The flat of the troll's axe skins across your forearm." }
     ] }
   ]
 }

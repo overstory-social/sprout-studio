@@ -17,7 +17,7 @@ kind Thing {
   :falling false
   :size 5 min 0 max 100
 
-  passage short default {thing}
+  passage short default { thing }
   passage fdesc default { {self.ldesc} }
   passage ldesc default { There is a {self.short} here. }
   passage here_line default {
@@ -27,7 +27,7 @@ kind Thing {
   passage no_take default {
     {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}
   }
-  passage hacked default {{one of} doesn't seem to work.{or} isn't notably helpful.{or} has no effect.{/one of}}
+  passage hacked default {{one of}doesn't seem to work.{or}isn't notably helpful.{or}has no effect.{/one of}}
 
   on :moved (from, to) {
     self.set(:touched, true)
@@ -44,7 +44,7 @@ kind Thing {
   as target for lamp_on    { do { say "You can't turn that on." } }
   as target for lamp_off   { do { say "You can't turn that off." } }
   as target for shift      { do { say "You can't move the {self.short}." } }
-  as target for raise      { do { say "Playing in this way with the {self.short}{self.hacked}" } }
+  as target for raise      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
   as target for eat        { do { say "I don't think that the {self.short} would agree with you." } }
   as target for drink      { do { say "I don't think that the {self.short} would agree with you." } }
   as target for wind       { do { say "You cannot wind up a {self.short}." } }

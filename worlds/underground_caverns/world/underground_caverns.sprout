@@ -3,7 +3,8 @@
 // gate: a room cannot reach another, so where Zork moves a body or a thing
 // across the map at a stroke (dying, falling from the tree), whoever needs
 // to asks the world to open the gate, does it, and asks it shut again, in
-// the one turn.
+// the one turn. While the world passes, every place is in range of every
+// other, and an actor may move to any of them (Range; Actors and visitors).
 import * as sprout from 'sprout'
 import {Person} from 'person'
 import {go} from 'sprout'
@@ -29,6 +30,8 @@ world underground_caverns is sprout.World {
 
   passage unknown         { That sentence isn't one I recognize. }
   passage not_here        { You can't see any such thing. }
+  passage no_way          { You can't go that way. }
+  passage dark            { It is pitch black. You are likely to be eaten by a grue. }
   passage unremarkable    { There's nothing special about {thing}. }
   passage nothing_happens { Nothing happens. }
   passage waited          { Time passes... }

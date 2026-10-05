@@ -26,16 +26,12 @@ kind TreeTop is Forest {
   on :gate_open {
     each t: Thing in self {
       if (t.get(:falling)) {
-        if (t.is(Nest)) {
-          if (t.count(Egg) > 0) {
-            each e: Egg in t {
-              move e to forest_path
-              send e :smash
-            }
-            send t :landed
-            } else {
-            move t to forest_path
+        if (t.is(Nest) && t.count(Egg) > 0) {
+          each e: Egg in t {
+            move e to forest_path
+            send e :smash
           }
+          send t :landed
         } else if (t.is(Egg)) {
           move t to forest_path
           send t :smash
@@ -50,7 +46,7 @@ kind TreeTop is Forest {
 
 kind Nest is Bag {
   :open true
-  passage short {bird's nest}
+  passage short { bird's nest }
 }
 
 // Zork's EGG and BROKEN-EGG are two objects; here they are one, which
@@ -67,7 +63,7 @@ kind Egg is Box, Treasure {
   passage ldesc {
     {if self.get(:broken)}There is a somewhat ruined egg here.{else}There is a jewel-encrusted egg here.{/if}
   }
-  passage spill {{if self.count(Canary) > 0} {self.canary_text}{/if}}
+  passage spill {{if self.count(Canary) > 0}{self.canary_text}{/if}}
   passage canary_text {
     There is a golden clockwork canary nestled in the egg. It seems to have recently had a bad experience. The mountings for its jewel-like eyes are empty, and its silver beak is crumpled. Through a cracked crystal window below its left wing you can see the remains of intricate machinery. It is not clear what result winding it would have, as the mainspring seems sprung.
   }
@@ -78,7 +74,7 @@ kind Egg is Box, Treasure {
       if (self.get(:open)) { say "The egg is already open." }
       else if (bound tool) {
         if (tool.is(Weapon)) {
-          say "The egg is now open, but the clumsiness of your attempt has seriously compromised its esthetic appeal.{self.spill}"
+          say "The egg is now open, but the clumsiness of your attempt has seriously compromised its esthetic appeal. {self.spill}"
           send self :smash
         } else if (self.get(:tried)) {
           if (tool.is(Thing)) { say "Not to say that using the {tool.short} isn't original too..." }

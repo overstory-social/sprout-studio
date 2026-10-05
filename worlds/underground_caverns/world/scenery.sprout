@@ -6,7 +6,7 @@ import {open, read, shift, look_in, climb_up, climb_down, :travel} from 'verbs'
 
 kind WhiteHouse is Scenery {
   grammar { name "white house"  nouns "house"  adjectives "beautiful", "colonial" }
-  passage short {white house}
+  passage short { white house }
   describe {
     text "The house is a beautiful colonial house which is painted white. It is clear that the owners must have been extremely wealthy."
   }
@@ -17,27 +17,27 @@ kind WhiteHouse is Scenery {
 // The house, seen from the forest: everything about it is elsewhere.
 kind DistantHouse is Scenery {
   grammar { name "white house"  nouns "house"  adjectives "beautiful", "colonial" }
-  passage short {white house}
+  passage short { white house }
   as target for any { permit { refuse "You're not at the house." } }
 }
 
 kind Boards is Scenery {
   grammar { name "board"  nouns "boards" }
-  passage short {board}
+  passage short { board }
   passage no_take { The boards are securely fastened. }
   describe { text "The boards are securely fastened." }
 }
 
 kind BoardedWindow is Scenery {
   grammar { name "boarded window"  nouns "window", "windows" }
-  passage short {boarded window}
+  passage short { boarded window }
   without as target for open from Thing
   as target for open { do { say "The windows are boarded and can't be opened." } }
 }
 
 kind FrontDoor is Scenery {
   grammar { name "door"  adjectives "front", "boarded" }
-  passage short {door}
+  passage short { door }
   without as target for open from Thing
   without as target for read from Thing
   without as target for look_in from Thing
@@ -49,7 +49,7 @@ kind FrontDoor is Scenery {
 
 kind Tree is Scenery {
   grammar { name "tree"  nouns "branch", "branches", "trees"  adjectives "large", "storm" }
-  passage short {tree}
+  passage short { tree }
 }
 
 // The tree by the Forest Path, from below and from among its branches.
@@ -68,5 +68,5 @@ kind TreeAbove is Tree {
 
 kind Stairs is Scenery {
   grammar { name "stairs"  nouns "steps", "staircase", "stairway"  adjectives "dark", "rickety" }
-  passage short {stairs}
+  passage short { stairs }
 }

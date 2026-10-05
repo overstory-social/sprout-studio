@@ -16,7 +16,8 @@ import {Weapon, Sword, Knife, Axe, Treasure, Food, Water} from 'items'
 import {Room, DarkRoom, Forest, Perilous} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
-import {take, drop, put, attack, eat, drink, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, Dest, :scored, :light, :relight, :room_lit, :open_gate, :gate_open, :close_gate, :blow, :struck, :troll_gone, :glow, :die, :claimed, :settle, :travel} from 'verbs'
+import {go, look, examine, inventory, wait} from 'sprout'
+import {take, drop, put, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :struck, :troll_gone, :glow, :die, :claimed, :settle, :travel} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -34,23 +35,26 @@ kind Adventurer is sprout.Visitor {
   :healing false
   :load 0 min 0 max 900
   :dest Dest default forest_1
-  // A turn's dice: see the world's friction log, on seeds.
-  :spin5 0 min 0 max 6
-  :vary 0 min 0 max 12
-  :spin7 0 min 0 max 9
+  :devoured false
+  :own_light false
+  :mode Mode default brief
+  // Zork's MOVES: every command but the ones about the game itself.
+  :moves 0 min 0 max 1000000
 
   passage hands_full { You're holding too many things already! }
 
   // Zork has no HELP; the Empire answers it in its own voice rather than
   // with every verb against every thing in sight.
   passage help {
-    You are in the Great Underground Empire. Tell it what to do in plain English: NORTH, SOUTH, EAST, WEST, NORTHEAST and the other diagonals, UP and DOWN (N, S, E, W, NE, U, D and so on) to move; LOOK (or L) to look around; INVENTORY (or I) to see what you carry; and TAKE, DROP, OPEN, CLOSE, READ, EXAMINE, PUT something IN something, TURN ON something, ATTACK something WITH something, for the rest. SCORE and DIAGNOSE tell you how you are doing.
+    You are in the Great Underground Empire. Tell it what to do in plain English: NORTH, SOUTH, EAST, WEST, NORTHEAST and the other diagonals, UP and DOWN (N, S, E, W, NE, U, D and so on) to move; LOOK (or L) to look around; INVENTORY (or I) to see what you carry; and TAKE, DROP, OPEN, CLOSE, READ, EXAMINE, PUT something IN something, TURN ON something, ATTACK something WITH something, for the rest. SCORE and DIAGNOSE tell you how you are doing. A room is described in full the first time you enter it and named after that, unless you ask for VERBOSE; BRIEF goes back to that, and SUPERBRIEF names every room and no more.
   }
 
   passage inventory {
     {if self.count(Thing) == 0}You are empty-handed.{else}You are carrying:{for t: Thing in self}
 
-    A {t.short}{if t.is(Lamp)}{if t.get(:lit)} (providing light){/if}{/if}{t.inside_lines}{/for}{/if}
+    A {t.short}{if t.is(Lamp)}{if t.get(:lit)} (providing light){/if}{/if}
+
+    {t.inside_lines}{/for}{/if}
   }
 
   passage yuk {
@@ -60,7 +64,7 @@ kind Adventurer is sprout.Visitor {
   passage rank {{if self.get(:score) >= 350}Master Adventurer{else if self.get(:score) > 330}Wizard{else if self.get(:score) > 300}Master{else if self.get(:score) > 200}Adventurer{else if self.get(:score) > 100}Junior Adventurer{else if self.get(:score) > 50}Novice Adventurer{else if self.get(:score) > 25}Amateur Adventurer{else}Beginner{/if}}
 
   passage score_line {
-    Your score is {self.get(:score)} (total of 350 points).
+    Your score is {self.get(:score)} (total of 350 points), in {self.get(:moves)} {if self.get(:moves) == 1}move{else}moves{/if}.
 
     This gives you the rank of {self.rank}.
   }
@@ -96,36 +100,51 @@ kind Adventurer is sprout.Visitor {
   }
   on :room_lit (from, value) { self.set(:room_dark, !value) }
 
-  // Arriving somewhere: the dark, the grue, the sword's glow, the songbird.
-  // Zork's grue takes four in five of those who walk from one dark place
-  // into another without a light.
-  on :moved (from, to) {
-    if (to.is(DarkRoom)) {
-      let had_light = !self.get(:room_dark) || self.get(:light) > 0
-      self.set(:room_dark, !to.get(:floor_lit))
-      if (self.get(:light) == 0 && !to.get(:open)) {
-        self.adjust(:spin5, 2)
-        if (self.get(:spin5) >= 5) { self.adjust(:spin5, -5) }
-        let g = random(5) + self.get(:spin5)
-        if (!had_light && g != 0 && g != 5) {
-          tell self "Oh, no! A lurking grue slithered into the room and devoured you!"
-          send self :die
-        } else {
-          tell self "You have moved into a dark place."
-          send self :settle with to.get(:glow)
+  // Going somewhere, as Zork's GOTO does it: into a dark place, the
+  // warning; from one dark place into another without a light, four times
+  // in five, the grue; and into the Cellar while the trap door stands open
+  // above, the crash. These are said before the room is described, and
+  // what is told on arrival (the sword's glow, the songbird) after it.
+  as actor for go {
+    do {
+      self.adjust(:moves, 1)
+      // A lamp lights the way in the hand or in an open bag, as the room's
+      // own `lit` sees it.
+      self.set(:own_light, self.get(:light) > 0)
+      each b: Box in self {
+        if (b.get(:open)) {
+          each l: Lamp in b { if (l.get(:lit)) { self.set(:own_light, true) } }
         }
-      } else {
-        send self :settle with to.get(:glow)
       }
-    } else if (to.is(Room)) {
-      self.set(:room_dark, false)
+      if (here.is(DarkRoom)) {
+        if (!self.get(:own_light) && !here.get(:alight)) {
+          if (self.get(:room_dark) && !chance(5)) {
+            self.set(:devoured, true)
+            send self :grue
+          } else {
+            say "You have moved into a dark place."
+          }
+        }
+      }
+      if (here.is(Room)) {
+        if (here.get(:crash)) { say "The trap door crashes shut, and you hear someone barring it." }
+      }
+    }
+  }
+
+  on :grue {
+    self.set(:devoured, false)
+    tell self "Oh, no! A lurking grue slithered into the room and devoured you!"
+    send self :die
+  }
+
+  // Arriving somewhere: the sword's glow, and in the forest, now and then,
+  // the songbird.
+  on :moved (from, to) {
+    if (to.is(Room) && !self.get(:devoured)) {
+      if (!to.is(DarkRoom)) { self.set(:room_dark, false) }
       send self :settle with to.get(:glow)
-      if (to.is(Forest)) {
-        self.adjust(:spin7, 3)
-        if (self.get(:spin7) >= 7) { self.adjust(:spin7, -7) }
-        let c = random(7) + self.get(:spin7)
-        if (c == 0 || c == 7) { tell self "You hear in the distance the chirping of a song bird." }
-      }
+      if (to.is(Forest) && chance(7)) { tell self "You hear in the distance the chirping of a song bird." }
     }
   }
 
@@ -149,32 +168,28 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  // The troll's blow, and what it does. `value` is Zork's blow result
-  // times ten, plus the turn's roll, which chooses the line: 1 missed,
-  // 2 knocked out, 3 killed, 4 lightly wounded, 6 staggered.
+  // The troll's blow, and what it does. `value` is Zork's blow result:
+  // 1 missed, 2 knocked out, 3 killed, 4 lightly wounded, 6 staggered.
+  // The line is drawn from Zork's own for that result.
   passage weapon_name {{if self.count(Sword) > 0}sword{else if self.count(Knife) > 0}nasty knife{else}bloody axe{/if}}
   on :struck (from, value) {
-    if (value < 20) {
-      let v = value - 10
-      tell self "{if v < 2}The troll swings his axe, but it misses.{else if v < 5}The troll's axe barely misses your ear.{else if v < 7}The axe sweeps past as you jump aside.{else}The axe crashes against the rock, throwing sparks!{/if}"
-    } else if (value < 30) {
-      let v = value - 20
+    if (value == 1) {
+      tell self "{one of}The troll swings his axe, but it misses.{or}The troll's axe barely misses your ear.{or}The axe sweeps past as you jump aside.{or}The axe crashes against the rock, throwing sparks!{/one of}"
+    } else if (value == 2) {
       tell self "The flat of the troll's axe hits you delicately on the head, knocking you out."
-      if (v == 3 || v == 8) {
-        tell self "{if v == 3}The troll hesitates, fingering his axe.{else}The troll scratches his head ruminatively:  Might you be magically protected, he wonders?{/if}"
+      if (random(9) < 2) {
+        tell self "{one of}The troll hesitates, fingering his axe.{or}The troll scratches his head ruminatively:  Might you be magically protected, he wonders?{/one of}"
       } else {
         tell self "Conquering his fears, the troll puts you to death."
         tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
         send self :die
       }
-    } else if (value < 40) {
-      let v = value - 30
-      tell self "{if v < 3}The troll neatly removes your head.{else if v < 6}The troll's axe stroke cleaves you from the nave to the chops.{else}The troll's axe removes your head.{/if}"
+    } else if (value == 3) {
+      tell self "{one of}The troll neatly removes your head.{or}The troll's axe stroke cleaves you from the nave to the chops.{or}The troll's axe removes your head.{/one of}"
       tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
       send self :die
-    } else if (value < 50) {
-      let v = value - 40
-      tell self "{if v < 2}The axe gets you right in the side. Ouch!{else if v < 5}The flat of the troll's axe skins across your forearm.{else if v < 7}The troll's swing almost knocks you over as you barely parry in time.{else}The troll swings his axe, and it nicks your arm as you dodge.{/if}"
+    } else if (value == 4) {
+      tell self "{one of}The axe gets you right in the side. Ouch!{or}The flat of the troll's axe skins across your forearm.{or}The troll's swing almost knocks you over as you barely parry in time.{or}The troll swings his axe, and it nicks your arm as you dodge.{/one of}"
       self.adjust(:wounds, 1)
       self.adjust(:fight, -1)
       if (self.get(:fight) <= 0) {
@@ -185,9 +200,9 @@ kind Adventurer is sprout.Visitor {
         wake in 10 minutes
       }
     } else {
-      let v = value - 60
-      if (self.count(Weapon) > 0 && (v == 0 || v == 4)) {
-        tell self "{if v == 0}The axe hits your {self.weapon_name} and knocks it spinning.{else}The axe knocks your {self.weapon_name} out of your hand. It falls to the floor.{/if}"
+      // Staggered, or one time in four disarmed (Zork's LOSE-WEAPON).
+      if (self.count(Weapon) > 0 && chance(4)) {
+        tell self "{one of}The axe hits your {self.weapon_name} and knocks it spinning.{or}The axe knocks your {self.weapon_name} out of your hand. It falls to the floor.{/one of}"
         if (self.count(Sword) > 0) {
           each w: Sword in self { move w to troll_room }
         } else if (self.count(Knife) > 0) {
@@ -196,7 +211,7 @@ kind Adventurer is sprout.Visitor {
           each w: Axe in self { move w to troll_room }
         }
       } else {
-        tell self "{if v < 2}The troll hits you with a glancing blow, and you are momentarily stunned.{else if v < 5}The troll swings; the blade turns on your armor but crashes broadside into your head.{else if v < 7}You stagger back under a hail of axe strokes.{else}The troll's mighty blow drops you to your knees.{/if}"
+        tell self "{one of}The troll hits you with a glancing blow, and you are momentarily stunned.{or}The troll swings; the blade turns on your armor but crashes broadside into your head.{or}You stagger back under a hail of axe strokes.{or}The troll's mighty blow drops you to your knees.{/one of}"
         self.set(:staggered, true)
       }
     }
@@ -274,6 +289,7 @@ kind Adventurer is sprout.Visitor {
 
   as actor for take {
     do {
+      self.adjust(:moves, 1)
       if (self.holds(target)) { say "You already have that!" }
       else if (target.is(Portable)) {
         if (self.get(:load) + target.get(:size) > 100) { say "Your load is too heavy." }
@@ -289,12 +305,13 @@ kind Adventurer is sprout.Visitor {
 
   as actor for drop {
     do {
+      self.adjust(:moves, 1)
       if (here.is(TreeTop)) {
         if (target.is(Nest)) {
           if (target.count(Egg) > 0) { say "The nest falls to the ground, and the egg spills out of it, seriously damaged." }
           else { say "The bird's nest falls to the ground." }
         } else if (target.is(Egg)) {
-          say "The egg falls to the ground and springs open, seriously damaged.{target.spill}"
+          say "The egg falls to the ground and springs open, seriously damaged. {target.spill}"
         } else if (target.is(Thing)) {
           say "The {target.short} falls to the ground."
         }
@@ -309,6 +326,7 @@ kind Adventurer is sprout.Visitor {
 
   as actor for put {
     do {
+      self.adjust(:moves, 1)
       if (item == container) { say "How can you do that?" }
       else if (item.is(Portable)) {
         if (container.holds(item)) { say "The {item.short} is already in the {container.short}." }
@@ -324,6 +342,7 @@ kind Adventurer is sprout.Visitor {
 
   as actor for attack {
     do {
+      self.adjust(:moves, 1)
       if (target.is(Troll)) {
         if (self.get(:staggered)) {
           self.set(:staggered, false)
@@ -361,6 +380,7 @@ kind Adventurer is sprout.Visitor {
 
   as actor for jump {
     do {
+      self.adjust(:moves, 1)
       if (here.is(TreeTop)) {
         say "In a feat of unaccustomed daring, you manage to land on your feet without killing yourself."
         self.set(:dest, :path)
@@ -370,9 +390,7 @@ kind Adventurer is sprout.Visitor {
         say "{one of}You should have looked before you leaped.{or}In the movies, your life would be passing before your eyes.{or}Geronimo...{/one of}"
         send self :die
       } else {
-        self.adjust(:vary, 1)
-        if (self.get(:vary) >= 12) { self.set(:vary, 0) }
-        say "{if self.get(:vary) == 1 || self.get(:vary) == 5 || self.get(:vary) == 9}Very good. Now you can go to the second grade.{else if self.get(:vary) == 2 || self.get(:vary) == 6 || self.get(:vary) == 10}Are you enjoying yourself?{else if self.get(:vary) == 3 || self.get(:vary) == 7 || self.get(:vary) == 11}Do you expect me to applaud?{else}Wheeeeeeeeee!!!!!{/if}"
+        say "{one of}Very good. Now you can go to the second grade.{or}Are you enjoying yourself?{or}Wheeeeeeeeee!!!!!{or}Do you expect me to applaud?{/one of}"
       }
     }
   }
@@ -381,6 +399,7 @@ kind Adventurer is sprout.Visitor {
 
   as actor for diagnose {
     do {
+      self.adjust(:moves, 1)
       say "{if self.get(:wounds) == 0}You are in perfect health.{else if self.get(:wounds) == 1}You have a light wound.{else if self.get(:wounds) == 2}You have a serious wound.{else if self.get(:wounds) == 3}You have several wounds.{else}You have serious wounds.{/if}"
       say "You can {if self.get(:fight) <= 0}expect death soon{else if self.get(:fight) == 1}be killed by one more light wound{else if self.get(:fight) == 2}be killed by a serious wound{else if self.get(:fight) == 3}survive one serious wound{else}survive several wounds{/if}."
       if (self.get(:deaths) == 1) { say "You have been killed once." }
@@ -388,24 +407,46 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for xyzzy { do { say "A hollow voice says \"Fool.\"" } }
+  as actor for xyzzy { do { self.adjust(:moves, 1)  say "A hollow voice says \"Fool.\"" } }
   as actor for hello {
     do {
-      self.adjust(:vary, 1)
-      if (self.get(:vary) >= 12) { self.set(:vary, 0) }
-      say "{if self.get(:vary) == 1 || self.get(:vary) == 5 || self.get(:vary) == 9}Hello.{else if self.get(:vary) == 2 || self.get(:vary) == 6 || self.get(:vary) == 10}Good day.{else if self.get(:vary) == 3 || self.get(:vary) == 7 || self.get(:vary) == 11}Nice weather we've been having lately.{else}Goodbye.{/if}"
+      self.adjust(:moves, 1)
+      say "{one of}Hello.{or}Good day.{or}Nice weather we've been having lately.{or}Goodbye.{/one of}"
     }
   }
-  as actor for yell { do { say "Aaaarrrrgggghhhh!" } }
-  as actor for zork { do { say "At your service!" } }
-  as actor for curse { do { say "Such language in a high-class establishment like this!" } }
-  as actor for verbose { do { say "Maximum verbosity." } }
-  as actor for brief {
-    do { say "Brief descriptions are not to be had in this part of the Empire. Every room will tell you everything, every time." }
-  }
-  as actor for superbrief {
-    do { say "Superbrief descriptions are not to be had in this part of the Empire. Every room will tell you everything, every time." }
-  }
+  as actor for yell { do { self.adjust(:moves, 1)  say "Aaaarrrrgggghhhh!" } }
+  as actor for zork { do { self.adjust(:moves, 1)  say "At your service!" } }
+  as actor for curse { do { self.adjust(:moves, 1)  say "Such language in a high-class establishment like this!" } }
+
+  // Every other verb counts a move, as Zork's CLOCKER does; `score`,
+  // `verbose`, `brief`, `superbrief`, `quit`, `restart`, `save` and
+  // `restore`, which are about the game rather than in it, do not.
+  as actor for look       { do { self.adjust(:moves, 1) } }
+  as actor for examine    { do { self.adjust(:moves, 1) } }
+  as actor for inventory  { do { self.adjust(:moves, 1) } }
+  as actor for wait       { do { self.adjust(:moves, 1) } }
+  as actor for open       { do { self.adjust(:moves, 1) } }
+  as actor for close      { do { self.adjust(:moves, 1) } }
+  as actor for read       { do { self.adjust(:moves, 1) } }
+  as actor for look_in    { do { self.adjust(:moves, 1) } }
+  as actor for look_under { do { self.adjust(:moves, 1) } }
+  as actor for lamp_on    { do { self.adjust(:moves, 1) } }
+  as actor for lamp_off   { do { self.adjust(:moves, 1) } }
+  as actor for shift      { do { self.adjust(:moves, 1) } }
+  as actor for raise      { do { self.adjust(:moves, 1) } }
+  as actor for eat        { do { self.adjust(:moves, 1) } }
+  as actor for drink      { do { self.adjust(:moves, 1) } }
+  as actor for wind       { do { self.adjust(:moves, 1) } }
+  as actor for tally      { do { self.adjust(:moves, 1) } }
+  as actor for smell      { do { self.adjust(:moves, 1) } }
+  as actor for listen     { do { self.adjust(:moves, 1) } }
+  as actor for climb_up   { do { self.adjust(:moves, 1) } }
+  as actor for climb_down { do { self.adjust(:moves, 1) } }
+  as actor for unlock     { do { self.adjust(:moves, 1) } }
+  as actor for lock       { do { self.adjust(:moves, 1) } }
+  as actor for verbose    { do { self.set(:mode, :verbose)  say "Maximum verbosity." } }
+  as actor for brief      { do { self.set(:mode, :brief)  say "Brief descriptions." } }
+  as actor for superbrief { do { self.set(:mode, :superbrief)  say "Superbrief descriptions." } }
   as actor for quit {
     do {
       say score_line

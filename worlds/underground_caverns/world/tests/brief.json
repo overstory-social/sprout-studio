@@ -1,0 +1,55 @@
+{
+  "about": "Zork's BRIEF, the default: a room in full the first time, its name and what is in it after, in full on look; VERBOSE, every time; SUPERBRIEF, the name alone.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "verbose", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Maximum verbosity." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "superbrief", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Superbrief descriptions." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "brief", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Brief descriptions." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest" }
+    ] }
+  ]
+}

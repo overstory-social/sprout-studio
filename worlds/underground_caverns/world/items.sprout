@@ -60,14 +60,14 @@ kind Readable is Portable {
 // Zork's lunch and clove of garlic, from the brown sack.
 kind Lunch is Food {
   grammar { name "lunch"  nouns "food", "sandwich", "dinner"  adjectives "hot", "pepper" }
-  passage short {lunch}
+  passage short { lunch }
   passage ldesc { A hot pepper sandwich is here. }
 }
 
 kind Garlic is Food {
   grammar { name "clove of garlic"  nouns "garlic", "clove" }
   :size 4
-  passage short {clove of garlic}
+  passage short { clove of garlic }
   without as target for eat from Food
   as target for eat {
     permit { if (!actor.holds(self)) { refuse "You're not holding that." } }
@@ -83,7 +83,7 @@ kind Garlic is Food {
 kind Water is Thing {
   grammar { name "quantity of water"  nouns "water", "liquid", "h2o" }
   :size 4
-  passage short {quantity of water}
+  passage short { quantity of water }
   passage no_take { It's in the bottle. Perhaps you should take that instead. }
   without as target for drink from Thing
   as target for drink {

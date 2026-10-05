@@ -8,35 +8,33 @@ import {Room, Forest} from 'room'
 import {TreeTop, Nest, Egg, Canary} from 'tree'
 import {Adventurer} from 'adventurer'
 import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, TreeBelow} from 'scenery'
-import {KitchenWindow, Outdoors, Indoors} from 'house'
+import {KitchenWindow, Outdoors} from 'house'
 import {Leaves, Ground, Grating} from 'grating'
 import {take, open, :window_sync, :reveal, :travel} from 'verbs'
 import {kitchen} from 'house'
-import {boarded_door, boarded_windows, canyon_closed, grating_closed, impassable, impenetrable, machete, no_higher, no_tree, storm_trees, undergrowth} from 'nowhere'
 
 object west_of_house is Room in underground_caverns {
   grammar {
-    name "front yard"
+    name "West of House"
     exit north     "north"      -> north_of_house
     exit south     "south"      -> south_of_house
     exit northeast "northeast"  -> north_of_house
     exit southeast "southeast"  -> south_of_house
     exit west      "west"       -> forest_1
-    exit east      "front door" -> boarded_door
+    exit east      "front door" refuse "The door is boarded and you can't remove the boards."
   }
-  passage title {West of House}
   passage body { You are standing in an open field west of a white house, with a boarded front door. }
 
   object mailbox is Box {
     grammar { name "small mailbox"  nouns "box" }
     :plain 1
-    passage short {small mailbox}
+    passage short { small mailbox }
     passage no_take { It is securely anchored. }
 
     object leaflet is Readable {
       grammar { nouns "advertisement", "booklet", "mail"  adjectives "small" }
       :size 2
-      passage short {leaflet}
+      passage short { leaflet }
       passage ldesc { A small leaflet is on the ground. }
       passage words {
         "WELCOME TO ZORK!
@@ -53,15 +51,14 @@ object west_of_house is Room in underground_caverns {
 
 object north_of_house is Room in underground_caverns {
   grammar {
-    name "north yard"
+    name "North of House"
     exit southwest "southwest" -> west_of_house
     exit southeast "southeast" -> behind_house
     exit west      "west"      -> west_of_house
     exit east      "east"      -> behind_house
     exit north     "north"     -> forest_path
-    exit south     "window"    -> boarded_windows
+    exit south     "window"    refuse "The windows are all boarded."
   }
-  passage title {North of House}
   passage body {
     You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees.
   }
@@ -72,15 +69,14 @@ object north_of_house is Room in underground_caverns {
 
 object south_of_house is Room in underground_caverns {
   grammar {
-    name "south yard"
+    name "South of House"
     exit west      "west"      -> west_of_house
     exit east      "east"      -> behind_house
     exit northeast "northeast" -> behind_house
     exit northwest "northwest" -> west_of_house
     exit south     "south"     -> forest_3
-    exit north     "window"    -> boarded_windows
+    exit north     "window"    refuse "The windows are all boarded."
   }
-  passage title {South of House}
   passage body {
     You are facing the south side of a white house. There is no door here, and all the windows are boarded.
   }
@@ -91,28 +87,22 @@ object south_of_house is Room in underground_caverns {
 
 object behind_house is Room, Outdoors in underground_caverns {
   grammar {
-    name "back yard"
+    name "Behind House"
     exit north     "north"     -> north_of_house
     exit south     "south"     -> south_of_house
     exit southwest "southwest" -> south_of_house
     exit northwest "northwest" -> north_of_house
     exit east      "east"      -> clearing
-    exit west      "window"    -> kitchen
-    exit in        "house"     -> kitchen
+    exit west      "window"    -> kitchen when (self.get(:window_open))
+    exit west      "window"    refuse "The kitchen window is closed."
+    exit in        "house"     -> kitchen when (self.get(:window_open))
+    exit in        "house"     refuse "The kitchen window is closed."
   }
-  passage title {Behind House}
   :window_open false
   passage body {
     You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is {if self.get(:window_open)}open.{else}slightly ajar.{/if}
   }
   on :window_sync (from, value) { self.set(:window_open, value) }
-
-  // Coming out of the kitchen is by the window, and only while it is open.
-  accept (item, from) {
-    if (item.is(Adventurer) && !self.get(:window_open) && from.is(Indoors)) {
-      refuse "The kitchen window is closed."
-    }
-  }
 
   object house is WhiteHouse {
     without as target for open from WhiteHouse
@@ -132,11 +122,11 @@ object behind_house is Room, Outdoors in underground_caverns {
 object forest_1 is Forest in underground_caverns {
   grammar {
     name "Forest"
-    exit up    "tree"  -> no_tree
+    exit up    "tree"  refuse "There is no tree here suitable for climbing."
     exit north "north" -> grating_clearing
     exit east  "east"  -> forest_path
     exit south "south" -> forest_3
-    exit west  "west"  -> machete
+    exit west  "west"  refuse "You would need a machete to go further west."
   }
   passage body { This is a forest, with trees in all directions. To the east, there appears to be sunlight. }
   object house is DistantHouse
@@ -145,8 +135,8 @@ object forest_1 is Forest in underground_caverns {
 object forest_2 is Forest in underground_caverns {
   grammar {
     name "Forest"
-    exit up    "tree"  -> no_tree
-    exit north "north" -> impenetrable
+    exit up    "tree"  refuse "There is no tree here suitable for climbing."
+    exit north "north" refuse "The forest becomes impenetrable to the north."
     exit east  "east"  -> mountains
     exit south "south" -> clearing
     exit west  "west"  -> forest_path
@@ -158,9 +148,9 @@ object forest_2 is Forest in underground_caverns {
 object mountains is Forest in underground_caverns {
   grammar {
     name "Forest"
-    exit up    "mountains" -> impassable
+    exit up    "mountains" refuse "The mountains are impassable."
     exit north "north"     -> forest_2
-    exit east  "east"      -> impassable
+    exit east  "east"      refuse "The mountains are impassable."
     exit south "south"     -> forest_2
     exit west  "west"      -> forest_2
   }
@@ -171,10 +161,10 @@ object mountains is Forest in underground_caverns {
 object forest_3 is Forest in underground_caverns {
   grammar {
     name "Forest"
-    exit up        "tree"      -> no_tree
+    exit up        "tree"      refuse "There is no tree here suitable for climbing."
     exit north     "north"     -> clearing
-    exit east      "east"      -> undergrowth
-    exit south     "south"     -> storm_trees
+    exit east      "east"      refuse "The rank undergrowth prevents eastward movement."
+    exit south     "south"     refuse "Storm-tossed trees block your way."
     exit west      "west"      -> forest_1
     exit northwest "northwest" -> south_of_house
   }
@@ -200,11 +190,10 @@ object forest_path is Forest in underground_caverns {
 
 object up_a_tree is TreeTop in underground_caverns {
   grammar {
-    name "treetop"
+    name "Up a Tree"
     exit down "down" -> forest_path
-    exit up   "tree"      -> no_higher
+    exit up   "tree" refuse "You cannot climb any higher."
   }
-  passage title {Up a Tree}
   passage body {
     You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach.
   }
@@ -245,11 +234,11 @@ object up_a_tree is TreeTop in underground_caverns {
 object grating_clearing is Forest in underground_caverns {
   grammar {
     name "Clearing"
-    exit north "north"   -> impenetrable
+    exit north "north"   refuse "The forest becomes impenetrable to the north."
     exit east  "east"    -> forest_2
     exit west  "west"    -> forest_1
     exit south "south"   -> forest_path
-    exit down  "grating" -> grating_closed when (self.get(:revealed))
+    exit down  "grating" refuse "The grating is closed!" when (self.get(:revealed))
   }
   :revealed false
   passage body {
@@ -283,12 +272,16 @@ object grating_clearing is Forest in underground_caverns {
 object clearing is Forest in underground_caverns {
   grammar {
     name "Clearing"
-    exit up    "tree"  -> no_tree
-    exit east  "east"  -> canyon_closed
+    exit up    "tree"  refuse "There is no tree here suitable for climbing."
+    exit east  "east"  refuse canyon
     exit north "north" -> forest_2
     exit south "south" -> forest_3
     exit west  "west"  -> behind_house
   }
   passage body { You are in a small clearing in a well marked forest path that extends to the east and west. }
+  // The edge of what is built so far.
+  passage canyon {
+    The path to the east is roped off. A sign hanging from the rope reads: "CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience."
+  }
   object house is DistantHouse
 }

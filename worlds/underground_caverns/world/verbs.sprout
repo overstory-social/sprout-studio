@@ -121,6 +121,10 @@ intent open_with {
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
 enum Dest { forest_1, path, up_a_tree, kitchen, living_dead }
 
+// How much of a room a visitor is told on coming back to it: Zork's BRIEF
+// (the default), VERBOSE and SUPERBRIEF.
+enum Mode { brief, verbose, superbrief }
+
 message :scored with integer
 message :claimed
 message :light with integer
@@ -147,4 +151,5 @@ message :troll_gone
 message :glow with integer
 message :settle with integer
 message :die
+message :grue
 message :travel with Dest

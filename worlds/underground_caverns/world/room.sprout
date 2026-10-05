@@ -2,41 +2,80 @@
 // in it, each in its own paragraph. A room worth points (the Kitchen, the
 // Cellar) pays them to whoever first walks in.
 //
-// A dark room is a shut container around whoever stands in it: until light
-// comes, nothing in it can be named, and its description is the grue's
-// warning. It opens when a lit lamp is set down in it or carried in, and
-// shuts again when the light goes. Its walls let through the world's own
-// business (the gate, the trap door, the fight) whatever the light.
+// A dark room is lit only while it sees a lit lamp, on its floor or in
+// somebody's hands; until then a visitor in it can name only what they
+// carry, and reads the world's `dark` line, the grue's warning, for its
+// description. What it keeps besides, `:alight`, is for the grue: a handler
+// cannot ask a place whether it is lit, so the room counts its own lamps
+// and tells each visitor in it whether it would be lit without them.
 import * as sprout from 'sprout'
 import {Thing} from 'thing'
 import {Lamp} from 'lamp'
 import {Adventurer} from 'adventurer'
-import {:scored, :relight, :room_lit, :open_gate, :gate_open, :close_gate, :trap_sync, :troll_gone, :blow, :struck, :die, :window_sync} from 'verbs'
+import {:scored, :relight, :room_lit} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
 
   :value 0 min 0 max 100
   :glow 0 min 0 max 2
+  // The Cellar's: the trap door is open above and not yet barred, so the
+  // next to come down will hear it crash shut.
+  :crash false
 
-  passage title default {{self}}
+  // How many times each visitor has come in, up to twice: Zork's TOUCHBIT,
+  // kept per visitor.
+  remembers { :visits 0 min 0 max 2 }
+
+  passage title default { {self} }
   passage body default { {if false}.{/if} }
   // Zork's PRINT-CONT: first what has a first description and has not been
   // moved, then everything else.
+  passage objects {
+    {for t: Thing in self}{if !t.get(:ndesc) && t.get(:has_fdesc) && !t.get(:touched)}
+
+    {t.fdesc}
+
+    {t.inside_lines}{/if}{/for}{for t: Thing in self}{if t.get(:ndesc) || !t.get(:has_fdesc) || t.get(:touched)}{if !t.get(:ndesc)}
+
+    {t.ldesc}{/if}
+
+    {t.inside_lines}{/if}{/for}
+  }
   passage full {
     {self.title}
 
-    {self.body}{for t: Thing in self}{if !t.get(:ndesc) && t.get(:has_fdesc) && !t.get(:touched)}
+    {self.body}
 
-    {t.fdesc}{t.inside_lines}{/if}{/for}{for t: Thing in self}{if t.get(:ndesc) || !t.get(:has_fdesc) || t.get(:touched)}{if !t.get(:ndesc)}
+    {self.objects}
+  }
+  passage brief {
+    {self.title}
 
-    {t.ldesc}{/if}{t.inside_lines}{/if}{/for}
+    {self.objects}
   }
 
-  describe { text full }
+  // Zork's DESCRIBE-ROOM: the room's name always; its long description on
+  // `look`, in VERBOSE, or the first time in; what is in it unless
+  // SUPERBRIEF. Arriving is the only time a visitor's mode is asked.
+  describe {
+    if (seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :superbrief) { text title }
+    else if (seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :brief && actor.recall(:visits) > 1) { text brief }
+    else { text full }
+  }
+
+  // A room answers to the words of its name ("Troll Room" to `troll`), but
+  // only where nothing in it does; then it is as if nothing were there.
+  as target for any { permit { refuse "You can't see any such thing." } }
 
   on :entered (item, from) {
     if (item.is(Adventurer)) {
+      // A visit counts only where there is light to see the room by.
+      let seen_by = !self.is(DarkRoom) || item.get(:light) > 0
+      if (item.recall(:visits) < 2 && seen_by) { item.adjust(:visits, 1) }
+      if (self.is(DarkRoom) && item.recall(:visits) < 2 && !seen_by) {
+        if (self.get(:alight)) { item.adjust(:visits, 1) }
+      }
       if (self.get(:value) > 0) {
         send item :scored with self.get(:value)
         self.set(:value, 0)
@@ -46,52 +85,32 @@ kind Room is sprout.Place {
 }
 
 kind DarkRoom is Room {
-  :open false
+  grammar { lit (self.sees(sprout.LightSource, :lit)) }
+
+  // Lit by a lamp on its floor, or by one in somebody's hands: `:alight`.
   :floor_lit false
-
-  pass any (self.get(:open) || underground_caverns.get(:gate))
-  pass :relight (true)
-  pass :room_lit (true)
-  pass :scored (true)
-  pass :open_gate (true)
-  pass :gate_open (true)
-  pass :close_gate (true)
-  pass :trap_sync (true)
-  pass :troll_gone (true)
-  pass :blow (true)
-  pass :struck (true)
-  pass :die (true)
-  pass :window_sync (true)
-
-  describe {
-    if (self.get(:open)) { text full }
-    else { text "It is pitch black. You are likely to be eaten by a grue." }
-  }
+  :bearers 0 min 0 max 50
+  :alight false
 
   on :entered (item, from) { send self :relight }
   on :left (item, to)      { send self :relight }
 
   on :relight {
     self.set(:floor_lit, false)
+    self.set(:bearers, 0)
     each l: Lamp in self { if (l.get(:lit)) { self.set(:floor_lit, true) } }
-    self.set(:open, self.get(:floor_lit))
+    each a: Adventurer in self { if (a.get(:light) > 0) { self.adjust(:bearers, 1) } }
+    self.set(:alight, self.get(:floor_lit) || self.get(:bearers) > 0)
+    // Each visitor is told whether the room would be lit without their own.
     each a: Adventurer in self {
-      if (a.get(:light) > 0) { self.set(:open, true) }
-      send a :room_lit with self.get(:floor_lit)
+      if (a.get(:light) > 0) { send a :room_lit with self.get(:floor_lit) || self.get(:bearers) > 1 }
+      else { send a :room_lit with self.get(:alight) }
     }
   }
 }
 
 // The forest rooms, where a songbird is sometimes heard.
 kind Forest is Room { }
-
-// A place an exit leads to when the way is shut. Nobody ever gets in: its
-// `accept` refuses with the line Zork gives for that way.
-kind Nowhere is sprout.Place {
-  passage refusal default { You can't go that way. }
-  accept (item, from) { refuse refusal }
-  describe { text refusal }
-}
 
 // A room where jumping is a mistake, as the Kitchen is in Zork: its way
 // down leads nowhere a body can follow.

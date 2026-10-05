@@ -35,10 +35,10 @@ written down. That log is a product of the world as much as the rooms are.
    brass lantern, the elvish sword, the wooden door with gothic lettering,
    and the oriental rug.
 5. `move rug` reveals the trap door; `open trap door` reveals the rickety
-   staircase. Going down without a light: "It is pitch black. You are
-   likely to be eaten by a grue." Going down at all: the trap door crashes
-   shut and someone bars it (25 points for the Cellar). The way back up is
-   gone, as in Zork.
+   staircase. Going down at all: the trap door crashes shut and someone
+   bars it (25 points for the Cellar). Going down without a light: "You
+   have moved into a dark place." and "It is pitch black. You are likely to
+   be eaten by a grue." The way back up is gone, as in Zork.
 6. The Troll Room. The troll fends the visitor off every passage but the
    one they came by, and fights: with the sword (best), the knife or the
    axe, on Zork's own melee tables, with Zork's own melee lines. He swings
@@ -54,13 +54,17 @@ out cold with the passages beyond him open onto country not yet built.
 
 ## Secrets and interactions I hope players find
 
-- **Darkness is a lid.** A dark room is a shut container around the
-  visitor: what is in it cannot be named or taken until light comes, and
-  then it can. Light comes from a lit lamp carried in or set down there;
-  carrying it out leaves the room dark again behind you.
+- **Darkness is real.** In a dark room nothing can be named but what the
+  visitor carries, and the room is the grue's warning, until light comes.
+  Light comes from a lit lamp, in the hand, in an open sack, or set down
+  there; carrying it out leaves the room dark again behind you. Leaving a
+  lit lamp in the Cellar makes it a safe place to walk back into.
 - **The grue is real.** Walking from one dark room into another dark room
   with no light is fatal four times in five, as in Zork ("Oh, no! A lurking
   grue slithered into the room and devoured you!").
+- **Rooms remember you.** As in Zork's default BRIEF mode, a room is
+  described in full the first time and named after; `look` and `verbose`
+  give it all, `superbrief` only the names.
 - **The tree is high.** Anything dropped Up a Tree falls to the Forest Path
   below. The egg does not survive the fall, and neither does the canary
   inside it. Dropping the nest with the egg in it spills the egg, ruined,
@@ -91,27 +95,32 @@ out cold with the passages beyond him open onto country not yet built.
 
 ## The shape of the source
 
-- `underground_caverns.sprout`: the world, Zork's engine lines, and the
-  gate by which a body or a thing crosses the map in one turn.
+- `underground_caverns.sprout`: the world, Zork's engine lines (with the
+  grue's warning as the `dark` line and "You can't go that way." as
+  `no_way`), and the gate by which a body or a thing crosses the map in one
+  turn.
 - `above_ground.sprout`, `house.sprout`, `cellar.sprout`: the rooms and
-  what is in them; the troll's fight is written on the troll, in
-  `cellar.sprout`.
-- `nowhere.sprout`: the places an exit leads to when the way is shut, each
-  refusing entry with Zork's own line or, for country not yet built, an
-  in-world line in Zork's voice; and the Land of the Living Dead.
+  what is in them. A shut way is an exit that refuses in Zork's own words,
+  or, for country not yet built, in a passage of its room in Zork's voice.
+- `nowhere.sprout`: the Land of the Living Dead.
 - `thing.sprout` (Thing, Portable, Scenery: Zork's default answers to every
-  verb), `box.sprout` (containers, PRINT-CONT), `room.sprout` (rooms, dark
-  rooms, the room-listing rule), `adventurer.sprout` (the visitor: taking,
-  fighting, light, wounds, score, death), `lamp.sprout`, `items.sprout`
-  (weapons, treasures, food, water, readables), `tree.sprout` (the tree top,
-  the nest, the egg, the canary), `scenery.sprout`, `grating.sprout`,
-  `troll.sprout`, `person.sprout` (the visitor kind).
-- `verbs.sprout`: Zork's verbs, the messages, the enum of gate destinations.
+  verb), `box.sprout` (containers, PRINT-CONT), `room.sprout` (rooms and
+  their BRIEF descriptions, dark rooms and what they keep for the grue, the
+  room-listing rule), `adventurer.sprout` (the visitor: going, taking,
+  fighting, light, wounds, moves, score, death), `lamp.sprout` (a
+  `sprout.LightSource`), `items.sprout` (weapons, treasures, food, water,
+  readables), `tree.sprout` (the tree top, the nest, the egg, the canary),
+  `scenery.sprout`, `grating.sprout`, `troll.sprout` (the troll and his
+  whole fight), `person.sprout` (the visitor kind).
+- `verbs.sprout`: Zork's verbs, the messages, the enums of gate
+  destinations and description modes.
 
 ## Notes to self for revisions
 
-- Every random roll is mixed with a per-object counter, because the hosts
-  playtesters use start every turn from the same seed (friction 1).
+- Every roll is Sprout's own `random`, `chance` or `{one of}`: the host
+  playtesters use draws every turn from its own seed. `sprout test` does
+  not: a script's turns share one seed until a seed step changes it, so the
+  tests that fight carry seed steps.
 - Being trapped in the cellar is Zork's design: once the trap door is barred
   the only ways on lead to unbuilt country, and the only way back to the
   surface is to die. Playtesters will find this; it is the edge of the slice.
@@ -127,3 +136,12 @@ out cold with the passages beyond him open onto country not yet built.
 - The troll now swings at most once between two of his own turns.
 - Nobody has yet reached the forest, the tree, the attic or the trophy
   case's score; those are still the secrets to watch for.
+
+## After the port to Sprout fe916a5
+
+- Darkness is the engine's (`lit`, the `dark` line), and the troll now
+  fights in his dark room, as Zork's does. Zork's room names are back.
+- Zork's BRIEF is the default, and the score counts moves.
+- Things to watch in round 2: whether anyone finds that a lit lamp left in
+  the Cellar keeps it safe; whether BRIEF's short returns confuse anyone
+  walking the forest; whether the move count reads as Zork's.

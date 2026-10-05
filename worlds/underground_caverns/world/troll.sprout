@@ -2,13 +2,15 @@
 // (DEF1, DEF2A and DEF2B in actions.zil): a nine-sided die, read along a
 // row chosen by the attacker's strength and the defender's, the sword
 // counting one point of the troll's defence away. The lines are Zork's,
-// chosen as Zork chooses them, at random within the kind of blow.
+// drawn as Zork draws them, at random within the kind of blow.
 //
-// What he does, he does in his own room, so his handlers are written on the
-// troll himself, in cellar.sprout.
+// He swings back in the turn he is struck, and on his own turns besides
+// while he is fighting: a wake every minute while somebody stands in his
+// room, the Troll Room.
 import {Thing} from 'thing'
 import {Axe} from 'items'
-import {listen} from 'verbs'
+import {Adventurer} from 'adventurer'
+import {listen, :blow, :hit, :swing, :expire, :struck, :troll_flag, :troll_gone} from 'verbs'
 
 kind Troll is Thing {
   contains
@@ -28,16 +30,12 @@ kind Troll is Thing {
   // What the last blow at him did (Zork's blow results, 1 to 7), or 8 and 9
   // for a troll who could not defend himself, or 0 for no blow at all.
   :last 0 min 0 max 9
-  // A turn's dice: see the world's friction log, on seeds.
-  :r 0 min 0 max 17
-  :spin9 0 min 0 max 13
-  :spin3 0 min 0 max 4
 
-  passage short {troll}
+  passage short { troll }
   passage ldesc {
     {if self.get(:strength) < 0}An unconscious troll is sprawled on the floor. All passages out of the room are open.{else if self.count(Axe) > 0}A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.{else}A pathetically babbling troll is here.{/if}
   }
-  passage no_take {The troll spits in your face, grunting "Better luck next time" in a rather barbarous accent.}
+  passage no_take { The troll spits in your face, grunting "Better luck next time" in a rather barbarous accent. }
   describe { text ldesc }
 
   without as target for listen from Thing
@@ -45,16 +43,192 @@ kind Troll is Thing {
     do { say "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
   }
 
+  // The visitor's blow. `value` is the weapon: 1 the sword, 2 the knife,
+  // 3 the axe, 0 a blow that came to nothing.
+  on :blow (from, value) {
+    if (from.is(Adventurer)) {
+      self.set(:fighting, true)
+      self.set(:swung, true)
+      self.set(:last, 0)
+      if (value == 0) { send self :swing }
+      else if (self.get(:strength) < 0) {
+        self.set(:last, 8)
+        send self :expire
+      } else if (self.count(Axe) == 0) {
+        self.set(:last, 9)
+        send self :expire
+      } else {
+        self.set(:wep, value)
+        let r = random(9)
+        let att = from.get(:fight)
+        if (self.get(:strength) == 1 || value == 1) {
+          // DEF1, read from 0, 2 or 4 as the attacker is weak, fair or strong.
+          if (att <= 1) {
+            if (r < 4) { send self :hit with 1 } else if (r < 6) { send self :hit with 6 } else if (r < 8) { send self :hit with 2 } else { send self :hit with 3 }
+          } else if (att == 2) {
+            if (r < 2) { send self :hit with 1 } else if (r < 4) { send self :hit with 6 } else if (r < 6) { send self :hit with 2 } else { send self :hit with 3 }
+          } else {
+            if (r < 2) { send self :hit with 6 } else if (r < 4) { send self :hit with 2 } else { send self :hit with 3 }
+          }
+        } else {
+          // DEF2A, then DEF2B read from 0, 2 or 4.
+          if (att <= 1) {
+            if (r < 5) { send self :hit with 1 } else if (r < 7) { send self :hit with 6 } else { send self :hit with 4 }
+          } else if (att == 2) {
+            if (r < 3) { send self :hit with 1 } else if (r < 5) { send self :hit with 6 } else if (r < 8) { send self :hit with 4 } else { send self :hit with 2 }
+          } else if (att == 3) {
+            if (r < 1) { send self :hit with 1 } else if (r < 3) { send self :hit with 6 } else if (r < 6) { send self :hit with 4 } else if (r < 7) { send self :hit with 2 } else { send self :hit with 3 }
+          } else {
+            if (r < 1) { send self :hit with 6 } else if (r < 4) { send self :hit with 4 } else if (r < 5) { send self :hit with 2 } else { send self :hit with 3 }
+          }
+        }
+      }
+    }
+  }
+
+  // What the blow did to him; then, if he can, he swings back. A stagger
+  // is a lost weapon one time in four (Zork's LOSE-WEAPON).
+  on :hit (from, value) {
+    if (value == 6 && chance(4)) { self.set(:last, 7) }
+    else { self.set(:last, value) }
+    if (value == 2) {
+      self.set(:strength, 0 - self.get(:strength))
+      self.set(:fighting, false)
+      each x: Axe in self { move x to underground_caverns.troll_room }
+      send underground_caverns.troll_room :troll_flag with true
+      if (!self.get(:waking)) { self.set(:waking, true)  wake in 3 minutes }
+    } else if (value == 3) {
+      send self :expire
+    } else if (value == 4) {
+      self.adjust(:strength, -1)
+      if (self.get(:strength) <= 0) { send self :expire } else { send self :swing }
+    } else if (self.get(:last) == 7) {
+      each x: Axe in self { move x to underground_caverns.troll_room }
+      send self :swing
+    } else if (value == 6) {
+      self.set(:staggered, true)
+      send self :swing
+    } else {
+      send self :swing
+    }
+  }
+
+  // His swing, at whoever stands in his room, unless he is out cold,
+  // reeling, or without his axe. The visitor is sent the blow's result.
+  on :swing {
+    if (!self.get(:dead) && self.get(:strength) > 0) {
+      if (self.get(:staggered)) {
+        self.set(:staggered, false)
+        each a: Adventurer in underground_caverns.troll_room { tell a "The troll slowly regains his feet." }
+      } else if (self.count(Axe) == 0) {
+        if (underground_caverns.troll_room.count(Axe) > 0 && !chance(3)) {
+          each x: Axe in underground_caverns.troll_room { move x to self }
+          each a: Adventurer in underground_caverns.troll_room {
+            tell a "The troll, angered and humiliated, recovers his weapon. He appears to have an axe to grind with you."
+          }
+        } else {
+          each a: Adventurer in underground_caverns.troll_room {
+            tell a "The troll, disarmed, cowers in terror, pleading for his life in the guttural tongue of the trolls."
+          }
+        }
+      } else {
+        let r = random(9)
+        let s = self.get(:strength)
+        each a: Adventurer in underground_caverns.troll_room {
+          let d = a.get(:fight)
+          if (d <= 1) {
+            if (s <= 1) {
+              if (r < 4) { send a :struck with 1 } else if (r < 6) { send a :struck with 6 } else if (r < 8) { send a :struck with 2 } else { send a :struck with 3 }
+            } else {
+              if (r < 2) { send a :struck with 1 } else if (r < 4) { send a :struck with 6 } else if (r < 6) { send a :struck with 2 } else { send a :struck with 3 }
+            }
+          } else {
+            if (s <= 1) {
+              if (r < 5) { send a :struck with 1 } else if (r < 7) { send a :struck with 6 } else { send a :struck with 4 }
+            } else {
+              if (r < 3) { send a :struck with 1 } else if (r < 5) { send a :struck with 6 } else if (r < 8) { send a :struck with 4 } else { send a :struck with 2 }
+            }
+          }
+        }
+      }
+      if (self.get(:fighting) && !self.get(:waking) && underground_caverns.troll_room.count(Adventurer) > 0) {
+        self.set(:waking, true)
+        wake in 1 minutes
+      }
+    }
+  }
+
+  // His own turns: a swing while he fights, coming round while he is out,
+  // and, one time in three, a first strike at somebody standing there.
+  on :woke (elapsed) {
+    self.set(:waking, false)
+    if (!self.get(:dead)) {
+      if (self.get(:strength) < 0) {
+        if (underground_caverns.troll_room.count(Adventurer) == 0 || !chance(3)) {
+          self.set(:strength, 0 - self.get(:strength))
+          self.set(:fighting, true)
+          each x: Axe in underground_caverns.troll_room { move x to self }
+          send underground_caverns.troll_room :troll_flag with false
+          self.set(:swung, false)
+          each a: Adventurer in underground_caverns.troll_room { tell a "The troll stirs, quickly resuming a fighting stance." }
+          send self :swing
+        } else {
+          self.set(:waking, true)
+          wake in 1 minutes
+        }
+      } else if (self.get(:fighting)) {
+        // He has swung back at a blow since his last turn: that was this
+        // turn's swing, and he waits for the next.
+        if (self.get(:swung)) {
+          self.set(:swung, false)
+          self.set(:waking, true)
+          wake in 1 minutes
+        } else {
+          send self :swing
+        }
+      } else if (underground_caverns.troll_room.count(Adventurer) > 0) {
+        if (chance(3)) {
+          self.set(:fighting, true)
+          send self :swing
+        } else {
+          self.set(:waking, true)
+          wake in 1 minutes
+        }
+      }
+    }
+  }
+
+  // Somebody comes in: he may strike first, on one of his own turns.
+  on :arrived (actor, from) {
+    if (actor.is(Adventurer) && !self.get(:dead) && !self.get(:waking)) {
+      self.set(:waking, true)
+      wake in 1 minutes
+    }
+  }
+
+  // Dead: the fog takes him, and his axe stays behind.
+  on :expire {
+    self.set(:dead, true)
+    self.set(:fighting, false)
+    each a: Adventurer in underground_caverns.troll_room {
+      tell a "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared."
+    }
+    each x: Axe in self { move x to underground_caverns.troll_room }
+    send underground_caverns.troll_room :troll_flag with true
+    broadcast :troll_gone
+    each f: Fog in underground_caverns.troll_room { move self to f }
+  }
+
   passage wep_name {{if self.get(:wep) == 1}sword{else if self.get(:wep) == 2}nasty knife{else}bloody axe{/if}}
 
-  // Zork's HERO-MELEE, the line chosen by the turn's roll.
+  // Zork's HERO-MELEE: a line drawn from those for what the blow did.
   passage hit_line {{if self.get(:last) == 1}{self.missed}{else if self.get(:last) == 2}{self.knocked_out}{else if self.get(:last) == 3}{self.killed}{else if self.get(:last) == 4}{self.wounded}{else if self.get(:last) == 6}{self.staggered}{else if self.get(:last) == 7}{self.disarmed}{else if self.get(:last) == 8}The unconscious troll cannot defend himself: He dies.{else if self.get(:last) == 9}The unarmed troll cannot defend himself: He dies.{/if}}
-  passage missed {{if self.get(:r) < 2}Your {self.wep_name} misses the troll by an inch.{else if self.get(:r) < 3}A good slash, but it misses the troll by a mile.{else if self.get(:r) < 5}You charge, but the troll jumps nimbly aside.{else if self.get(:r) < 6}Clang! Crash! The troll parries.{else if self.get(:r) < 8}A quick stroke, but the troll is on guard.{else}A good stroke, but it's too slow; the troll dodges.{/if}}
-  passage knocked_out {{if self.get(:r) < 2}Your {self.wep_name} crashes down, knocking the troll into dreamland.{else if self.get(:r) < 4}The troll is battered into unconsciousness.{else if self.get(:r) < 6}A furious exchange, and the troll is knocked out!{else if self.get(:r) < 8}The haft of your {self.wep_name} knocks out the troll.{else}The troll is knocked out!{/if}}
-  passage killed {{if self.get(:r) < 3}It's curtains for the troll as your {self.wep_name} removes his head.{else if self.get(:r) < 6}The fatal blow strikes the troll square in the heart: He dies.{else}The troll takes a fatal blow and slumps to the floor dead.{/if}}
-  passage wounded {{if self.get(:r) < 2}The troll is struck on the arm; blood begins to trickle down.{else if self.get(:r) < 5}Your {self.wep_name} pinks the troll on the wrist, but it's not serious.{else if self.get(:r) < 7}Your stroke lands, but it was only the flat of the blade.{else}The blow lands, making a shallow gash in the troll's arm!{/if}}
-  passage staggered {{if self.get(:r) < 2}The troll is staggered, and drops to his knees.{else if self.get(:r) < 4}The troll is momentarily disoriented and can't fight back.{else if self.get(:r) < 6}The force of your blow knocks the troll back, stunned.{else if self.get(:r) < 8}The troll is confused and can't fight back.{else}The quickness of your thrust knocks the troll back, stunned.{/if}}
-  passage disarmed {{if self.get(:r) < 5}The troll's weapon is knocked to the floor, leaving him unarmed.{else}The troll is disarmed by a subtle feint past his guard.{/if}}
+  passage missed {{one of}Your {self.wep_name} misses the troll by an inch.{or}A good slash, but it misses the troll by a mile.{or}You charge, but the troll jumps nimbly aside.{or}Clang! Crash! The troll parries.{or}A quick stroke, but the troll is on guard.{or}A good stroke, but it's too slow; the troll dodges.{/one of}}
+  passage knocked_out {{one of}Your {self.wep_name} crashes down, knocking the troll into dreamland.{or}The troll is battered into unconsciousness.{or}A furious exchange, and the troll is knocked out!{or}The haft of your {self.wep_name} knocks out the troll.{or}The troll is knocked out!{/one of}}
+  passage killed {{one of}It's curtains for the troll as your {self.wep_name} removes his head.{or}The fatal blow strikes the troll square in the heart: He dies.{or}The troll takes a fatal blow and slumps to the floor dead.{/one of}}
+  passage wounded {{one of}The troll is struck on the arm; blood begins to trickle down.{or}Your {self.wep_name} pinks the troll on the wrist, but it's not serious.{or}Your stroke lands, but it was only the flat of the blade.{or}The blow lands, making a shallow gash in the troll's arm!{/one of}}
+  passage staggered {{one of}The troll is staggered, and drops to his knees.{or}The troll is momentarily disoriented and can't fight back.{or}The force of your blow knocks the troll back, stunned.{or}The troll is confused and can't fight back.{or}The quickness of your thrust knocks the troll back, stunned.{/one of}}
+  passage disarmed {{one of}The troll's weapon is knocked to the floor, leaving him unarmed.{or}The troll is disarmed by a subtle feint past his guard.{/one of}}
 }
 
 // Where the fog takes what it takes: a closed place inside the Troll Room
@@ -63,6 +237,6 @@ kind Fog is Thing {
   contains
   pass any (false)
   :ndesc true
-  passage short {fog}
+  passage short { fog }
   describe { text "The fog has lifted." }
 }

@@ -13,17 +13,15 @@ import {Stairs} from 'scenery'
 import {open, close, look_in, read, shift, raise, look_under, smell, eat, :window_sync, :trap, :trap_sync, :rug_moved, :scored} from 'verbs'
 import {behind_house} from 'above_ground'
 import {cellar} from 'cellar'
-import {chimney, nailed_door, trap_closed} from 'nowhere'
 
-// The room outside the kitchen window, and the room inside it.
+// The room outside the kitchen window.
 kind Outdoors { }
-kind Indoors { }
 
 kind KitchenWindow is Scenery {
   grammar { name "kitchen window"  nouns "window"  adjectives "small" }
   :open false
   :opened_once false
-  passage short {kitchen window}
+  passage short { kitchen window }
 
   describe {
     if (!self.get(:opened_once)) { text "The window is slightly ajar, but not enough to allow entry." }
@@ -64,14 +62,16 @@ kind KitchenWindow is Scenery {
   }
 }
 
-object kitchen is Room, Perilous, Indoors in underground_caverns {
+object kitchen is Room, Perilous in underground_caverns {
   grammar {
     name "Kitchen"
-    exit east "window"  -> behind_house
-    exit out  "outside" -> behind_house
+    exit east "window"  -> behind_house when (self.get(:window_open))
+    exit east "window"  refuse "The kitchen window is closed."
+    exit out  "outside" -> behind_house when (self.get(:window_open))
+    exit out  "outside" refuse "The kitchen window is closed."
     exit west "west"    -> living_room
     exit up   "stairs"  -> attic
-    exit down "chimney" -> chimney
+    exit down "chimney" refuse "Only Santa Claus climbs down chimneys."
   }
   :value 10
   :window_open false
@@ -92,27 +92,20 @@ object kitchen is Room, Perilous, Indoors in underground_caverns {
     }
   }
 
-  // Coming in from outside is by the window, and only while it is open.
-  accept (item, from) {
-    if (item.is(Adventurer) && !self.get(:window_open) && from.is(Outdoors)) {
-      refuse "The kitchen window is closed."
-    }
-  }
-
   object table is Box {
     grammar { name "kitchen table"  nouns "table" }
     :open true
     :surface true
     :ndesc true
     :capacity 50
-    passage short {kitchen table}
+    passage short { kitchen table }
 
     object sack is Bag {
       grammar { name "brown sack"  nouns "bag", "sack"  adjectives "elongated", "smelly" }
       :has_fdesc true
       :size 9
       :capacity 9
-      passage short {brown sack}
+      passage short { brown sack }
       passage fdesc { On the table is an elongated brown sack, smelling of hot peppers. }
 
       without as target for smell from Thing
@@ -128,7 +121,7 @@ object kitchen is Room, Perilous, Indoors in underground_caverns {
       :has_fdesc true
       :transparent true
       :capacity 4
-      passage short {glass bottle}
+      passage short { glass bottle }
       passage fdesc { A bottle is sitting on the table. }
     }
   }
@@ -137,7 +130,7 @@ object kitchen is Room, Perilous, Indoors in underground_caverns {
   object stairs is Stairs
   object chimney_flue is Scenery {
     grammar { name "chimney"  adjectives "dark", "narrow" }
-    passage short {chimney}
+    passage short { chimney }
     describe { text "The chimney leads downward, and looks climbable." }
   }
 }
@@ -153,7 +146,7 @@ object attic is DarkRoom in underground_caverns {
     grammar { nouns "rope", "hemp", "coil"  adjectives "large" }
     :has_fdesc true
     :size 10
-    passage short {rope}
+    passage short { rope }
     passage fdesc { A large coil of rope is lying in the corner. }
   }
 
@@ -163,13 +156,13 @@ object attic is DarkRoom in underground_caverns {
     :surface true
     :ndesc true
     :capacity 40
-    passage short {table}
+    passage short { table }
     on :left (item, to) { self.set(:ndesc, false) }
 
     object knife is Knife {
       grammar { name "nasty knife"  nouns "knife", "knives", "blade"  adjectives "nasty", "unrusty" }
       :has_fdesc true
-      passage short {nasty knife}
+      passage short { nasty knife }
       passage fdesc { On a table is a nasty-looking knife. }
     }
   }
@@ -180,9 +173,9 @@ object living_room is Room in underground_caverns {
   grammar {
     name "Living Room"
     exit east "east"      -> kitchen
-    exit west "west"      -> nailed_door
+    exit west "west"      refuse "The door is nailed shut."
     exit down "trap door" -> cellar when (self.get(:trap_open))
-    exit down "trap door" -> trap_closed when (self.get(:rug_moved))
+    exit down "trap door" refuse "The trap door is closed." when (self.get(:rug_moved))
   }
   :rug_moved false
   :trap_open false
@@ -197,32 +190,12 @@ object living_room is Room in underground_caverns {
   }
   on :trap_sync (from, value) { self.set(:trap_open, value) }
 
-  // Coming up from the cellar is by the trap door, and only while it is open.
-  accept (item, from) {
-    if (item.is(Adventurer) && !self.get(:trap_open) && from.is(DarkRoom)) {
-      refuse "The trap door is closed."
-    }
-  }
-
-  // The trophy case pays a treasure's worth to everyone in the room when
-  // it goes in, and takes it back when it comes out.
-  object trophy_case is TrophyCase {
-    on :entered (item, from) {
-      if (item.is(Treasure)) {
-        each a: Adventurer in living_room { send a :scored with item.get(:tvalue) }
-      }
-    }
-    on :left (item, to) {
-      if (item.is(Treasure)) {
-        each a: Adventurer in living_room { send a :scored with 0 - item.get(:tvalue) }
-      }
-    }
-  }
+  object trophy_case is TrophyCase
   object lamp is Lamp {
     grammar { name "brass lantern"  nouns "lamp", "lantern", "light"  adjectives "brass" }
     :has_fdesc true
     :size 15
-    passage short {brass lantern}
+    passage short { brass lantern }
     passage fdesc { A battery-powered brass lantern is on the trophy case. }
     passage ldesc { There is a brass lantern (battery-powered) here. }
     describe {
@@ -233,7 +206,7 @@ object living_room is Room in underground_caverns {
     grammar { nouns "sword", "orcrist", "glamdring", "blade"  adjectives "elvish", "old", "antique" }
     :has_fdesc true
     :size 30
-    passage short {sword}
+    passage short { sword }
     passage fdesc { Above the trophy case hangs an elvish sword of great antiquity. }
     describe {
       if (self.get(:glow) == 2) { text "Your sword is glowing very brightly." }
@@ -246,7 +219,7 @@ object living_room is Room in underground_caverns {
   }
   object wooden_door is Scenery {
     grammar { name "wooden door"  nouns "door", "lettering", "writing", "engravings"  adjectives "wooden", "gothic", "strange", "west" }
-    passage short {wooden door}
+    passage short { wooden door }
     without as target for open from Thing
     without as target for read from Thing
     as target for open { do { say "The door cannot be opened." } }
@@ -255,21 +228,33 @@ object living_room is Room in underground_caverns {
   }
   object nails is Scenery {
     grammar { nouns "nails", "nail" }
-    passage short {nails}
+    passage short { nails }
     passage no_take { The nails, deeply imbedded in the door, cannot be removed. }
   }
   object stairs is Stairs
 }
 
-// The trophy case.
+// The trophy case. It pays a treasure's worth to everyone in the Living
+// Room when it goes in, and takes it back when it comes out.
 kind TrophyCase is Box {
   grammar { name "trophy case"  nouns "case"  adjectives "trophy" }
   :transparent true
   :ndesc true
   :capacity 50
-  passage short {trophy case}
+  passage short { trophy case }
   passage no_take { The trophy case is securely fastened to the wall. }
   passage header { Your collection of treasures consists of: }
+
+  on :entered (item, from) {
+    if (item.is(Treasure)) {
+      each a: Adventurer in underground_caverns.living_room { send a :scored with item.get(:tvalue) }
+    }
+  }
+  on :left (item, to) {
+    if (item.is(Treasure)) {
+      each a: Adventurer in underground_caverns.living_room { send a :scored with 0 - item.get(:tvalue) }
+    }
+  }
 }
 
 // The rug hides the trap door until it is moved, once, aside.
@@ -278,7 +263,7 @@ kind Rug is Scenery {
   :moved false
   pass any (self.get(:moved))
   grammar { name "carpet"  nouns "rug"  adjectives "large", "oriental" }
-  passage short {carpet}
+  passage short { carpet }
   passage no_take { The rug is extremely heavy and cannot be carried. }
 
   without as target for shift from Thing
@@ -313,7 +298,7 @@ kind Rug is Scenery {
 kind TrapDoor is Scenery {
   grammar { name "trap door"  nouns "door", "trapdoor", "trap-door", "cover"  adjectives "trap", "dusty" }
   :open false
-  passage short {trap door}
+  passage short { trap door }
   describe {
     if (self.get(:open)) { text "The trap door is open, but I can't tell what's beyond it." }
     else { text "The trap door is closed." }

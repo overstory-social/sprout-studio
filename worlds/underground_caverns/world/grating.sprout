@@ -9,7 +9,7 @@ kind Leaves is Portable {
   grammar { name "pile of leaves"  nouns "leaves", "leaf", "pile" }
   :size 25
   :hiding true
-  passage short {pile of leaves}
+  passage short { pile of leaves }
   passage ldesc { On the ground is a pile of leaves. }
 
   on :moved (from, to) { self.set(:hiding, false) }
@@ -48,13 +48,13 @@ kind Ground is Scenery {
   :revealed false
   pass any (self.get(:revealed))
   grammar { name "ground"  nouns "dirt", "earth", "floor" }
-  passage short {ground}
+  passage short { ground }
   on :reveal (from) { self.set(:revealed, true) }
 }
 
 kind Grating is Scenery {
   grammar { name "grating"  nouns "grate" }
-  passage short {grating}
+  passage short { grating }
   describe { text "The grating is closed." }
 
   without as target for open from Thing

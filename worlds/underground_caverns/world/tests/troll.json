@@ -48,19 +48,19 @@
       { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "The trap door crashes shut, and you hear someone barring it." },
-      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." },
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
       { "reader": "Marta", "kind": "described", "words": "Cellar" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." },
       { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
-      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." }
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The troll fends you off with a menacing gesture." }
+      { "reader": "Marta", "kind": "notice", "words": "The troll fends you off with a menacing gesture." }
     ] },
     { "as": "Marta", "type": "take troll", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The troll spits in your face, grunting \"Better luck next time\" in a rather barbarous accent." }
@@ -71,18 +71,21 @@
     { "as": "Marta", "type": "listen to troll", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
     ] },
+    { "seed": 2 },
     { "as": "Marta", "type": "attack troll with sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll is momentarily disoriented and can't fight back." },
+      { "reader": "Marta", "kind": "said", "words": "The force of your blow knocks the troll back, stunned." },
       { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
     ] },
+    { "seed": 1 },
     { "as": "Marta", "type": "kill troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "(With the sword)" },
-      { "reader": "Marta", "kind": "said", "words": "The troll takes a fatal blow and slumps to the floor dead." },
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
       { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
       { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
+    { "seed": 0 },
     { "as": "Marta", "type": "kill troll", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
     ] },
     { "as": "Marta", "type": "l", "expect": [
       { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
@@ -90,14 +93,13 @@
       { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage to the east has not been finished. Someone has left a pick leaning against the rock, and a note: \"Back soon. -- The Management.\"" }
+      { "reader": "Marta", "kind": "notice", "words": "The passage to the east has not been finished. Someone has left a pick leaning against the rock, and a note: \"Back soon. -- The Management.\"" }
     ] },
     { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You peer into the forbidding hole. It is dark even by the standards of this place, and it does not seem to go anywhere yet. You think better of it." }
+      { "reader": "Marta", "kind": "notice", "words": "You peer into the forbidding hole. It is dark even by the standards of this place, and it does not seem to go anywhere yet. You think better of it." }
     ] },
     { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Cellar" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
+      { "reader": "Marta", "kind": "described", "words": "Cellar" }
     ] }
   ]
 }

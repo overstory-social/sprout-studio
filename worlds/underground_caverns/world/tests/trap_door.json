@@ -47,7 +47,7 @@
       { "reader": "Marta", "kind": "said", "words": "Having moved the carpet previously, you find it impossible to move it again." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The trap door is closed." }
+      { "reader": "Marta", "kind": "notice", "words": "The trap door is closed." }
     ] },
     { "as": "Marta", "type": "open trap door", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
@@ -58,8 +58,8 @@
       { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "The trap door crashes shut, and you hear someone barring it." },
-      { "reader": "Marta", "kind": "told", "words": "You have moved into a dark place." },
+      { "reader": "Marta", "kind": "said", "words": "You have moved into a dark place." },
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
       { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
     ] },
     { "as": "Marta", "type": "l", "expect": [
@@ -78,7 +78,7 @@
       { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
     ] },
     { "as": "Marta", "type": "up", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The trap door is closed." }
+      { "reader": "Marta", "kind": "notice", "words": "The trap door is closed." }
     ] },
     { "as": "Marta", "type": "open trap door", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The door is locked from above." }
@@ -101,14 +101,14 @@
       { "reader": "Marta", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 22 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
     ] },
     { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The crawlway to the south ends, after a few feet, in raw rock. A small brass plaque reads: \"EXCAVATION SUSPENDED BY ORDER OF THE FROBOZZ MAGIC TUNNELLING COMPANY.\"" }
+      { "reader": "Marta", "kind": "notice", "words": "The crawlway to the south ends, after a few feet, in raw rock. A small brass plaque reads: \"EXCAVATION SUSPENDED BY ORDER OF THE FROBOZZ MAGIC TUNNELLING COMPANY.\"" }
     ] },
     { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You try to ascend the ramp, but it is impossible, and you slide back down." }
+      { "reader": "Marta", "kind": "notice", "words": "You try to ascend the ramp, but it is impossible, and you slide back down." }
     ] }
   ]
 }
