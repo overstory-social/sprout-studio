@@ -94,7 +94,9 @@ once with the problems (a playtest report through the `mender`, whose one
 tool is Read and which is told to use nothing but the report, since the
 player cannot be asked again; a steering of the
 steward again, since only it reads the doc); a second
-refusal is logged and dropped. The clerk carries each output to `save` as
+refusal is logged and dropped. A report of a run whose recording holds no
+line typed is dropped at once and never mended: there is no play to
+report, and a mender could only invent one. The clerk carries each output to `save` as
 JSON it retypes into a here-document: validation catches an output that
 arrives malformed, not one altered into another valid one, which is a
 risk this first cut accepts.
@@ -116,12 +118,18 @@ arguments:
 It stops, and says why, when the rounds asked for are played, when the
 budget left is less than a round, when two rounds pass with no accepted
 design point and flat metrics, when the brief cannot be met, or when a
-round yields no report or no synthesis, and when a round's runs cannot be
+round has fewer than half its runs reported (it stops before the
+synthesis, uncommitted, to be played again) or no synthesis, and when a round's runs cannot be
 measured or the round cannot be committed. It is resumable from disk: a
 round not yet committed is picked up where it stands, playing only the
 runs not yet reported and skipping a synthesis, steering or revision whose
 file is there. A round is marked committed only by the commit that holds
 it.
+
+A door server records its process and the Sprout pin it loaded in
+`.studio/servers/`, and `round.mjs open` stops any still holding an older
+pin before a run is opened: the client may keep one server running across
+a pin bump, and the next call starts it again at the new pin.
 
 Resume by launching the workflow again, never with the Workflow tool's
 `resumeFromRunId`. A resumed run replays its agents' cached answers,

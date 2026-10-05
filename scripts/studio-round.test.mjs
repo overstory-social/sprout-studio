@@ -90,6 +90,9 @@ function stage(options = {}) {
           refusals -= 1;
           return { ok: false, problems: ['points.0.evidence: Too small'] };
         }
+        if (kind === 'playtest-report' && (options.unplayed ?? []).includes(name)) {
+          return { ok: false, unplayed: true, problems: [`the run ${name} recorded no line typed, so there is no play to report: it is dropped, not mended`] };
+        }
         if (kind === 'playtest-report') current().reports.push(name);
         if (kind === 'synthesis') {
           current().synthesis = true;
@@ -286,6 +289,23 @@ describe('the studio-round workflow', () => {
   it('hands agents schemas in draft-07, the draft the workflow runner reads', () => {
     const drafts = new Set(SOURCE.match(/"\$schema": "[^"]*"/g));
     assert.deepEqual([...drafts], ['"$schema": "http://json-schema.org/draft-07/schema#"']);
+  });
+
+  it('drops a run nobody played without asking the mender, and plays the round on where most runs were played', async () => {
+    const s = stage({ unplayed: ['newcomer-1'] });
+    await s.run({ world: 'shed', personas: ['explorer', 'casual', 'newcomer'] });
+    assert.equal(s.calls.filter((one) => one.type === 'mender').length, 0);
+    assert.ok(s.logs.includes('playtest-report newcomer-1 dropped: the run newcomer-1 recorded no line typed, so there is no play to report: it is dropped, not mended'));
+    assert.ok(s.logs.includes('2 of 3 runs reported'));
+    assert.equal(s.calls.filter((one) => one.type === 'synthesizer').length, 1);
+  });
+
+  it('stops before the synthesis, uncommitted, where fewer than half the runs were reported', async () => {
+    const s = stage({ unplayed: ['explorer-1', 'newcomer-1'] });
+    await s.run({ world: 'shed', personas: ['explorer', 'casual', 'newcomer'] });
+    assert.ok(s.logs.includes('stopping: 1 of 3 runs were reported, and a round needs at least half'));
+    assert.equal(s.calls.filter((one) => one.type === 'synthesizer').length, 0);
+    assert.equal(s.world.rounds[0].committed, false);
   });
 
   it('refuses to start without a world to play, or a brief to play it to', async () => {

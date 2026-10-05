@@ -84,6 +84,11 @@ async function kept(kind, name, round, ask) {
   let saved = await clerk(`save ${where}`, value, `keep ${kind}${name ? ` ${name}` : ''}`)
   if (saved.ok && saved.note) log(saved.note)
   if (saved.ok) return value
+  // A run nobody played has nothing to mend: asking again could only invent the play.
+  if (saved.unplayed) {
+    log(`${kind}${name ? ` ${name}` : ''} dropped: ${saved.problems.join('; ')}`)
+    return null
+  }
   value = await ask(saved.problems, value)
   if (value === null) return null
   saved = await clerk(`save ${where}`, value, `keep ${kind}${name ? ` ${name}` : ''}, again`)
@@ -192,8 +197,10 @@ while (played < ROUNDS) {
   )
   const reported = reports.filter(Boolean).length
   log(`${reported} of ${todo.length} runs reported`)
-  if (at.reports.length + reported === 0) {
-    log('stopping: no run of this round was reported')
+  // A synthesis of a few runs speaks for a round it did not see: the round stops, uncommitted, to be played again.
+  const wanted = Math.min(runs.length, MAX_RUNS)
+  if ((at.reports.length + reported) * 2 < wanted) {
+    log(`stopping: ${at.reports.length + reported} of ${wanted} runs were reported, and a round needs at least half`)
     break
   }
 

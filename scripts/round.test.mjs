@@ -1,5 +1,5 @@
 import { strict as assert } from 'node:assert';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -21,7 +21,21 @@ execFileSync('git', ['config', 'user.name', 'spec'], { cwd: root });
 mkdirSync(join(root, 'worlds', 'shed'), { recursive: true });
 execFileSync(SPROUT, ['scaffold', 'world', join(root, 'worlds', 'shed', 'world'), '--author', 'spec'], { stdio: 'ignore' });
 
-const { DOORS, measure, open, save, status, commit, renderSynthesis, verify } = await import('./round.mjs');
+const { DOORS, measure, open, pinned, save, status, commit, renderSynthesis, verify } = await import('./round.mjs');
+
+/**
+ * A recording of the run `name` in round 01 with `typed` lines typed, as a door
+ * writes one, where the round has none yet; the way to take it away again,
+ * leaving a recording another spec played.
+ */
+const played = (name, typed) => {
+  const file = join(root, 'worlds', 'shed', 'rounds', '01', 'runs', `${name}.json`);
+  if (existsSync(file)) return () => {};
+  mkdirSync(dirname(file), { recursive: true });
+  const steps = [{ seed: 7 }, { arrive: 'Ash' }, ...Array.from({ length: typed }, () => ({ as: 'Ash', type: 'look' }))];
+  writeFileSync(file, JSON.stringify({ steps }));
+  return () => rmSync(file);
+};
 
 /** A client on the playtester's server, as the playtester agent has it. */
 async function playtester() {
@@ -109,7 +123,9 @@ describe('a round on disk', () => {
     assert.deepEqual(readdirSync(join(root, 'worlds', 'shed', 'rounds', '01', 'metrics')).sort(), ['explorer-7.json', 'merged.json']);
   });
 
-  it('keeps an output only where it is valid, and gives back the problems where it is not', () => {
+  it('keeps an output only where it is valid, and gives back the problems where it is not', (t) => {
+    const forget = [played('explorer-7', 3), played('explorer-8', 3)];
+    t.after(() => forget.forEach((one) => one()));
     const report = {
       persona: 'explorer',
       seed: 7,
@@ -210,12 +226,48 @@ describe('a round on disk', () => {
     rmSync(join(root, 'worlds', 'shed', 'rounds', '03'), { recursive: true });
   });
 
-  it('refuses a report whose persona and seed are not its run', () => {
+  it('refuses a report whose persona and seed are not its run', (t) => {
+    t.after(played('casual-7', 3));
     const report = JSON.parse(readFileSync(join(root, 'worlds', 'shed', 'rounds', '01', 'reports', 'explorer-7.json'), 'utf8'));
     assert.deepEqual(save('shed', '01', 'playtest-report', 'casual-7', report), {
       ok: false,
       problems: ['persona and seed: explorer-7 is not the run casual-7 it is saved as'],
     });
+  });
+
+  it('drops, never to be mended, a report of a run that recorded no line typed', (t) => {
+    const report = JSON.parse(readFileSync(join(root, 'worlds', 'shed', 'rounds', '01', 'reports', 'explorer-7.json'), 'utf8'));
+    const unplayed = {
+      ok: false,
+      unplayed: true,
+      problems: ['the run newcomer-7 recorded no line typed, so there is no play to report: it is dropped, not mended'],
+    };
+    // No recording at all, and a recording of an arrival and nothing typed.
+    assert.deepEqual(save('shed', '01', 'playtest-report', 'newcomer-7', { ...report, persona: 'newcomer' }), unplayed);
+    t.after(played('newcomer-7', 0));
+    assert.deepEqual(save('shed', '01', 'playtest-report', 'newcomer-7', { ...report, persona: 'newcomer' }), unplayed);
+    assert.equal(existsSync(join(root, 'worlds', 'shed', 'rounds', '01', 'reports', 'newcomer-7.json')), false);
+  });
+
+  it('stops a door server still running a Sprout other than the pinned one, and leaves a current one', async () => {
+    const servers = join(root, '.studio', 'servers');
+    mkdirSync(servers, { recursive: true });
+    const sleeper = () => spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' });
+    const stale = sleeper();
+    const current = sleeper();
+    writeFileSync(join(servers, `${stale.pid}.json`), JSON.stringify({ pid: stale.pid, pin: 'an-older-commit' }));
+    writeFileSync(join(servers, `${current.pid}.json`), JSON.stringify({ pid: current.pid, pin: pinned() }));
+    const stopped = new Promise((resolve) => stale.once('exit', (_code, signal) => resolve(signal)));
+    try {
+      open('shed', '01', 'explorer', '9');
+      assert.equal(await stopped, 'SIGTERM');
+      assert.equal(existsSync(join(servers, `${stale.pid}.json`)), false);
+      assert.equal(existsSync(join(servers, `${current.pid}.json`)), true);
+      assert.equal(current.exitCode, null);
+    } finally {
+      stale.kill();
+      current.kill();
+    }
   });
 
   it('marks a round committed only where the commit succeeds', () => {
