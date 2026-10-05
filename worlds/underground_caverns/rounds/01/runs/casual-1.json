@@ -1,0 +1,18 @@
+{
+  "steps": [
+    { "seed": 1 },
+    { "arrive": "Cato", "expect": [
+      { "reader": "Cato", "kind": "described", "words": "West of House" },
+      { "reader": "Cato", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Cato", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Cato", "type": "inventory", "expect": [
+      { "reader": "Cato", "kind": "said", "words": "You are empty-handed." }
+    ] },
+    { "tick": true, "expect": [] },
+    { "advance": "30 seconds", "expect": [] },
+    { "leave": "Cato", "expect": [
+      { "reader": "Cato", "kind": "notice", "words": "You leave, and take what you carry with you." }
+    ] }
+  ]
+}

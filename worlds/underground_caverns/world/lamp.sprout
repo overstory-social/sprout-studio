@@ -1,0 +1,44 @@
+// The brass lantern. Whoever carries it lit carries light: the lamp tells
+// its bearer when it is lit, put out, picked up or set down, and the bearer
+// tells the room around them, which opens to the light or shuts against
+// the dark.
+import {Portable, Thing} from 'thing'
+import {Adventurer} from 'adventurer'
+import {DarkRoom, Room} from 'room'
+import {lamp_on, lamp_off, :light, :relight} from 'verbs'
+
+kind Lamp is Portable {
+  :lit false
+
+  without as target for lamp_on from Thing
+  without as target for lamp_off from Thing
+
+  as target for lamp_on {
+    permit { if (self.get(:lit)) { refuse "It is already on." } }
+    do {
+      self.set(:lit, true)
+      say "The {self.short} is now on."
+      if (actor.holds(self)) { send actor :light with 1 } else { send here :relight }
+      if (here.is(DarkRoom)) {
+        if (!here.get(:open)) { say "{here.full}" }
+      }
+    }
+  }
+
+  as target for lamp_off {
+    permit { if (!self.get(:lit)) { refuse "It is already off." } }
+    do {
+      self.set(:lit, false)
+      say "The {self.short} is now off."
+      if (actor.holds(self)) { send actor :light with -1 } else { send here :relight }
+      if (here.is(DarkRoom)) { say "It is now pitch black." }
+    }
+  }
+
+  on :moved (from, to) {
+    if (self.get(:lit)) {
+      if (from.is(Adventurer)) { send from :light with -1 }
+      if (to.is(Adventurer)) { send to :light with 1 }
+    }
+  }
+}

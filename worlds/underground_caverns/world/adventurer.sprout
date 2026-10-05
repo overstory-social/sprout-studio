@@ -1,0 +1,424 @@
+// The adventurer: what every visitor is made of. Zork's own parts of the
+// verbs that are the adventurer's to answer (taking, dropping, putting,
+// fighting, the score), the light they carry, their wounds, their score and
+// their deaths.
+//
+// Dying is Zork's JIGS-UP: ten points lost, then, the first two times, the
+// Forest with what was carried scattered (the lamp to the Living Room,
+// treasures to dark places, everything else above ground); the third time,
+// the Land of the Living Dead. Getting there takes the world's gate, since
+// no room can otherwise reach another.
+import * as sprout from 'sprout'
+import {Thing, Portable} from 'thing'
+import {Box} from 'box'
+import {Lamp} from 'lamp'
+import {Weapon, Sword, Knife, Axe, Treasure, Food, Water} from 'items'
+import {Room, DarkRoom, Forest, Perilous} from 'room'
+import {TreeTop, Nest, Egg} from 'tree'
+import {Troll} from 'troll'
+import {take, drop, put, attack, eat, drink, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, Dest, :scored, :light, :relight, :room_lit, :open_gate, :gate_open, :close_gate, :blow, :struck, :troll_gone, :glow, :die, :claimed, :settle, :travel} from 'verbs'
+import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
+import {cellar, troll_room} from 'cellar'
+import {attic, kitchen, living_room} from 'house'
+import {land_of_the_living_dead} from 'nowhere'
+
+kind Adventurer is sprout.Visitor {
+  :capacity 30
+  :score 0 min -100 max 350
+  :deaths 0 min 0 max 3
+  :light 0 min 0 max 9
+  :room_dark false
+  :wounds 0 min 0 max 9
+  :fight 2 min -9 max 9
+  :staggered false
+  :healing false
+  :load 0 min 0 max 900
+  :dest Dest default forest_1
+  // A turn's dice: see the world's friction log, on seeds.
+  :spin5 0 min 0 max 6
+  :vary 0 min 0 max 12
+  :spin7 0 min 0 max 9
+
+  passage hands_full { You're holding too many things already! }
+
+  // Zork has no HELP; the Empire answers it in its own voice rather than
+  // with every verb against every thing in sight.
+  passage help {
+    You are in the Great Underground Empire. Tell it what to do in plain English: NORTH, SOUTH, EAST, WEST, NORTHEAST and the other diagonals, UP and DOWN (N, S, E, W, NE, U, D and so on) to move; LOOK (or L) to look around; INVENTORY (or I) to see what you carry; and TAKE, DROP, OPEN, CLOSE, READ, EXAMINE, PUT something IN something, TURN ON something, ATTACK something WITH something, for the rest. SCORE and DIAGNOSE tell you how you are doing.
+  }
+
+  passage inventory {
+    {if self.count(Thing) == 0}You are empty-handed.{else}You are carrying:{for t: Thing in self}
+
+    A {t.short}{if t.is(Lamp)}{if t.get(:lit)} (providing light){/if}{/if}{t.inside_lines}{/for}{/if}
+  }
+
+  passage yuk {
+    {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}
+  }
+
+  passage rank {{if self.get(:score) >= 350}Master Adventurer{else if self.get(:score) > 330}Wizard{else if self.get(:score) > 300}Master{else if self.get(:score) > 200}Adventurer{else if self.get(:score) > 100}Junior Adventurer{else if self.get(:score) > 50}Novice Adventurer{else if self.get(:score) > 25}Amateur Adventurer{else}Beginner{/if}}
+
+  passage score_line {
+    Your score is {self.get(:score)} (total of 350 points).
+
+    This gives you the rank of {self.rank}.
+  }
+
+  // What carrying weighs, as Zork weighs it: a load of 100 at most.
+  on :entered (item, from) {
+    if (item.is(Thing)) { self.adjust(:load, item.get(:size)) }
+    if (item.is(Treasure)) {
+      if (item.get(:value) > 0) {
+        self.adjust(:score, item.get(:value))
+        send item :claimed
+      }
+    }
+  }
+  on :left (item, to) {
+    if (item.is(Thing)) { self.adjust(:load, 0 - item.get(:size)) }
+  }
+
+  on :scored (from, value) { self.adjust(:score, value) }
+
+  // Asked to go somewhere no exit from here leads (up the tree by its
+  // branches, say): through the world's gate.
+  on :travel (from, value) {
+    self.set(:dest, value)
+    send underground_caverns :open_gate
+  }
+
+  // Light: how many lit lamps are carried, and whether the room is dark
+  // without them.
+  on :light (from, value) {
+    self.adjust(:light, value)
+    broadcast :relight
+  }
+  on :room_lit (from, value) { self.set(:room_dark, !value) }
+
+  // Arriving somewhere: the dark, the grue, the sword's glow, the songbird.
+  // Zork's grue takes four in five of those who walk from one dark place
+  // into another without a light.
+  on :moved (from, to) {
+    if (to.is(DarkRoom)) {
+      let had_light = !self.get(:room_dark) || self.get(:light) > 0
+      self.set(:room_dark, !to.get(:floor_lit))
+      if (self.get(:light) == 0 && !to.get(:open)) {
+        self.adjust(:spin5, 2)
+        if (self.get(:spin5) >= 5) { self.adjust(:spin5, -5) }
+        let g = random(5) + self.get(:spin5)
+        if (!had_light && g != 0 && g != 5) {
+          tell self "Oh, no! A lurking grue slithered into the room and devoured you!"
+          send self :die
+        } else {
+          tell self "You have moved into a dark place."
+          send self :settle with to.get(:glow)
+        }
+      } else {
+        send self :settle with to.get(:glow)
+      }
+    } else if (to.is(Room)) {
+      self.set(:room_dark, false)
+      send self :settle with to.get(:glow)
+      if (to.is(Forest)) {
+        self.adjust(:spin7, 3)
+        if (self.get(:spin7) >= 7) { self.adjust(:spin7, -7) }
+        let c = random(7) + self.get(:spin7)
+        if (c == 0 || c == 7) { tell self "You hear in the distance the chirping of a song bird." }
+      }
+    }
+  }
+
+  on :settle (from, value) {
+    each s: Sword in self {
+      if (s.get(:glow) != value) {
+        if (value == 2) { tell self "Your sword has begun to glow very brightly." }
+        else if (value == 1) { tell self "Your sword is glowing with a faint blue glow." }
+        else { tell self "Your sword is no longer glowing." }
+        send s :glow with value
+      }
+    }
+  }
+
+  on :troll_gone {
+    each s: Sword in self {
+      if (s.get(:glow) > 0) {
+        tell self "Your sword is no longer glowing."
+        send s :glow with 0
+      }
+    }
+  }
+
+  // The troll's blow, and what it does. `value` is Zork's blow result
+  // times ten, plus the turn's roll, which chooses the line: 1 missed,
+  // 2 knocked out, 3 killed, 4 lightly wounded, 6 staggered.
+  passage weapon_name {{if self.count(Sword) > 0}sword{else if self.count(Knife) > 0}nasty knife{else}bloody axe{/if}}
+  on :struck (from, value) {
+    if (value < 20) {
+      let v = value - 10
+      tell self "{if v < 2}The troll swings his axe, but it misses.{else if v < 5}The troll's axe barely misses your ear.{else if v < 7}The axe sweeps past as you jump aside.{else}The axe crashes against the rock, throwing sparks!{/if}"
+    } else if (value < 30) {
+      let v = value - 20
+      tell self "The flat of the troll's axe hits you delicately on the head, knocking you out."
+      if (v == 3 || v == 8) {
+        tell self "{if v == 3}The troll hesitates, fingering his axe.{else}The troll scratches his head ruminatively:  Might you be magically protected, he wonders?{/if}"
+      } else {
+        tell self "Conquering his fears, the troll puts you to death."
+        tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
+        send self :die
+      }
+    } else if (value < 40) {
+      let v = value - 30
+      tell self "{if v < 3}The troll neatly removes your head.{else if v < 6}The troll's axe stroke cleaves you from the nave to the chops.{else}The troll's axe removes your head.{/if}"
+      tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
+      send self :die
+    } else if (value < 50) {
+      let v = value - 40
+      tell self "{if v < 2}The axe gets you right in the side. Ouch!{else if v < 5}The flat of the troll's axe skins across your forearm.{else if v < 7}The troll's swing almost knocks you over as you barely parry in time.{else}The troll swings his axe, and it nicks your arm as you dodge.{/if}"
+      self.adjust(:wounds, 1)
+      self.adjust(:fight, -1)
+      if (self.get(:fight) <= 0) {
+        tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
+        send self :die
+      } else if (!self.get(:healing)) {
+        self.set(:healing, true)
+        wake in 10 minutes
+      }
+    } else {
+      let v = value - 60
+      if (self.count(Weapon) > 0 && (v == 0 || v == 4)) {
+        tell self "{if v == 0}The axe hits your {self.weapon_name} and knocks it spinning.{else}The axe knocks your {self.weapon_name} out of your hand. It falls to the floor.{/if}"
+        if (self.count(Sword) > 0) {
+          each w: Sword in self { move w to troll_room }
+        } else if (self.count(Knife) > 0) {
+          each w: Knife in self { move w to troll_room }
+        } else {
+          each w: Axe in self { move w to troll_room }
+        }
+      } else {
+        tell self "{if v < 2}The troll hits you with a glancing blow, and you are momentarily stunned.{else if v < 5}The troll swings; the blade turns on your armor but crashes broadside into your head.{else if v < 7}You stagger back under a hail of axe strokes.{else}The troll's mighty blow drops you to your knees.{/if}"
+        self.set(:staggered, true)
+      }
+    }
+  }
+
+  // Wounds heal, a light wound at a time.
+  on :woke (elapsed) {
+    self.set(:healing, false)
+    if (self.get(:wounds) > 0) {
+      self.adjust(:wounds, -1)
+      self.adjust(:fight, 1)
+      if (self.get(:wounds) > 0) {
+        self.set(:healing, true)
+        wake in 10 minutes
+      }
+    }
+  }
+
+  // JIGS-UP.
+  on :die {
+    self.adjust(:score, -10)
+    self.adjust(:deaths, 1)
+    self.set(:wounds, 0)
+    self.set(:fight, 2)
+    self.set(:staggered, false)
+    tell self "****  You have died  ****"
+    if (self.get(:deaths) >= 3) {
+      tell self "You clearly are a suicidal maniac.  We don't allow psychotics in the cave, since they may harm other adventurers.  Your remains will be installed in the Land of the Living Dead, where your fellow adventurers may gloat over them."
+      tell self score_line
+      self.set(:dest, :living_dead)
+    } else {
+      tell self "Now, let's take a look here... Well, you probably deserve another chance.  I can't quite fix you up completely, but you can't have everything."
+      self.set(:dest, :forest_1)
+    }
+    send underground_caverns :open_gate
+  }
+
+  // The gate is open: go where the world sends you.
+  on :gate_open {
+    if (self.get(:dest) == :living_dead) {
+      move self to land_of_the_living_dead
+    } else if (self.get(:dest) == :path) {
+      move self to forest_path
+    } else if (self.get(:dest) == :up_a_tree) {
+      move self to up_a_tree
+    } else if (self.get(:dest) == :kitchen) {
+      move self to kitchen
+    } else {
+      each t: Thing in self {
+        if (t.is(Lamp)) {
+          move t to living_room
+        } else if (t.is(Treasure)) {
+          let r = random(3)
+          if (r == 0) { move t to attic }
+          else if (r == 1) { move t to cellar }
+          else { move t to troll_room }
+        } else {
+          let n = random(10)
+          if (n == 0) { move t to west_of_house }
+          else if (n == 1) { move t to north_of_house }
+          else if (n == 2) { move t to south_of_house }
+          else if (n == 3) { move t to behind_house }
+          else if (n == 4) { move t to forest_1 }
+          else if (n == 5) { move t to forest_2 }
+          else if (n == 6) { move t to forest_3 }
+          else if (n == 7) { move t to forest_path }
+          else if (n == 8) { move t to clearing }
+          else { move t to grating_clearing }
+        }
+      }
+      move self to forest_1
+    }
+    send underground_caverns :close_gate
+  }
+
+  as actor for take {
+    do {
+      if (self.holds(target)) { say "You already have that!" }
+      else if (target.is(Portable)) {
+        if (self.get(:load) + target.get(:size) > 100) { say "Your load is too heavy." }
+        else {
+          move target to self
+          say "Taken."
+        }
+      }
+      else if (target.is(Thing)) { say "{target.no_take}" }
+      else { say yuk }
+    }
+  }
+
+  as actor for drop {
+    do {
+      if (here.is(TreeTop)) {
+        if (target.is(Nest)) {
+          if (target.count(Egg) > 0) { say "The nest falls to the ground, and the egg spills out of it, seriously damaged." }
+          else { say "The bird's nest falls to the ground." }
+        } else if (target.is(Egg)) {
+          say "The egg falls to the ground and springs open, seriously damaged.{target.spill}"
+        } else if (target.is(Thing)) {
+          say "The {target.short} falls to the ground."
+        }
+        move target to here
+      }
+      else {
+        move target to here
+        say "Dropped."
+      }
+    }
+  }
+
+  as actor for put {
+    do {
+      if (item == container) { say "How can you do that?" }
+      else if (item.is(Portable)) {
+        if (container.holds(item)) { say "The {item.short} is already in the {container.short}." }
+        else {
+          move item to container
+          say "Done."
+        }
+      }
+      else if (item.is(Thing)) { say "{item.no_take}" }
+      else { say yuk }
+    }
+  }
+
+  as actor for attack {
+    do {
+      if (target.is(Troll)) {
+        if (self.get(:staggered)) {
+          self.set(:staggered, false)
+          say "You are still recovering from that last blow, so your attack is ineffective."
+          send target :blow with 0
+        } else if (bound weapon) {
+          if (weapon.is(Weapon)) {
+            send target :blow with weapon.get(:wcode)
+            say "{target.hit_line}"
+          }
+          else if (weapon.is(Thing)) { say "Trying to attack the troll with a {weapon.short} is suicidal." }
+          else { say "Trying to attack a troll with your bare hands is suicidal." }
+        } else if (self.count(Sword) > 0) {
+          say "(with the sword)"
+          send target :blow with 1
+          say "{target.hit_line}"
+        } else if (self.count(Knife) > 0) {
+          say "(with the nasty knife)"
+          send target :blow with 2
+          say "{target.hit_line}"
+        } else if (self.count(Axe) > 0) {
+          say "(with the bloody axe)"
+          send target :blow with 3
+          say "{target.hit_line}"
+        } else {
+          say "Trying to attack a troll with your bare hands is suicidal."
+        }
+      } else if (target.is(Thing)) {
+        say "I've known strange people, but fighting a {target.short}?"
+      } else {
+        say "I've known strange people, but fighting that?"
+      }
+    }
+  }
+
+  as actor for jump {
+    do {
+      if (here.is(TreeTop)) {
+        say "In a feat of unaccustomed daring, you manage to land on your feet without killing yourself."
+        self.set(:dest, :path)
+        send underground_caverns :open_gate
+      } else if (here.is(Perilous)) {
+        say "This was not a very safe place to try jumping."
+        say "{one of}You should have looked before you leaped.{or}In the movies, your life would be passing before your eyes.{or}Geronimo...{/one of}"
+        send self :die
+      } else {
+        self.adjust(:vary, 1)
+        if (self.get(:vary) >= 12) { self.set(:vary, 0) }
+        say "{if self.get(:vary) == 1 || self.get(:vary) == 5 || self.get(:vary) == 9}Very good. Now you can go to the second grade.{else if self.get(:vary) == 2 || self.get(:vary) == 6 || self.get(:vary) == 10}Are you enjoying yourself?{else if self.get(:vary) == 3 || self.get(:vary) == 7 || self.get(:vary) == 11}Do you expect me to applaud?{else}Wheeeeeeeeee!!!!!{/if}"
+      }
+    }
+  }
+
+  as actor for score { do { say score_line } }
+
+  as actor for diagnose {
+    do {
+      say "{if self.get(:wounds) == 0}You are in perfect health.{else if self.get(:wounds) == 1}You have a light wound.{else if self.get(:wounds) == 2}You have a serious wound.{else if self.get(:wounds) == 3}You have several wounds.{else}You have serious wounds.{/if}"
+      say "You can {if self.get(:fight) <= 0}expect death soon{else if self.get(:fight) == 1}be killed by one more light wound{else if self.get(:fight) == 2}be killed by a serious wound{else if self.get(:fight) == 3}survive one serious wound{else}survive several wounds{/if}."
+      if (self.get(:deaths) == 1) { say "You have been killed once." }
+      else if (self.get(:deaths) == 2) { say "You have been killed twice." }
+    }
+  }
+
+  as actor for xyzzy { do { say "A hollow voice says \"Fool.\"" } }
+  as actor for hello {
+    do {
+      self.adjust(:vary, 1)
+      if (self.get(:vary) >= 12) { self.set(:vary, 0) }
+      say "{if self.get(:vary) == 1 || self.get(:vary) == 5 || self.get(:vary) == 9}Hello.{else if self.get(:vary) == 2 || self.get(:vary) == 6 || self.get(:vary) == 10}Good day.{else if self.get(:vary) == 3 || self.get(:vary) == 7 || self.get(:vary) == 11}Nice weather we've been having lately.{else}Goodbye.{/if}"
+    }
+  }
+  as actor for yell { do { say "Aaaarrrrgggghhhh!" } }
+  as actor for zork { do { say "At your service!" } }
+  as actor for curse { do { say "Such language in a high-class establishment like this!" } }
+  as actor for verbose { do { say "Maximum verbosity." } }
+  as actor for brief {
+    do { say "Brief descriptions are not to be had in this part of the Empire. Every room will tell you everything, every time." }
+  }
+  as actor for superbrief {
+    do { say "Superbrief descriptions are not to be had in this part of the Empire. Every room will tell you everything, every time." }
+  }
+  as actor for quit {
+    do {
+      say score_line
+      say "There is no quitting the Great Underground Empire from inside it. Walk away whenever you like; it will keep your place, and your score, until you come back."
+    }
+  }
+  as actor for restart {
+    do { say "The Great Underground Empire cannot be started over from inside it. What is done here stays done." }
+  }
+  as actor for save {
+    do { say "The Empire keeps your place for you whether you ask or not. There is nothing to save." }
+  }
+  as actor for restore {
+    do { say "The Empire keeps your place for you whether you ask or not. There is nothing to restore." }
+  }
+}

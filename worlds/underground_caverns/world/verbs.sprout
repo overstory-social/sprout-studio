@@ -1,0 +1,150 @@
+// Zork's verbs, as Sprout verbs. Where the standard library has a verb of
+// the same name (take, drop, put, open, close, look_in, unlock), this one
+// replaces it, so that the words and the refusals are Zork's own.
+import {Box} from 'box'
+import {Portable} from 'thing'
+
+verb take {
+  role target
+  "take [target]"  "get [target]"  "pick up [target]"  "pick [target] up"
+  "grab [target]"  "carry [target]"  "hold [target]"
+  synonyms "steal", "seize"
+}
+
+verb drop {
+  role target: Portable carried
+  "drop [target]"  "put down [target]"  "put [target] down"  "discard [target]"
+  "release [target]"
+}
+
+verb put {
+  role item
+  role container: Box
+  "put [item] in [container]"  "put [item] into [container]"  "put [item] on [container]"
+  "place [item] in [container]"  "place [item] on [container]"
+  "insert [item] in [container]"  "insert [item] into [container]"
+  "stuff [item] in [container]"
+}
+
+verb open {
+  role target
+  role tool carried
+  "open [target]"  "open [target] with [tool]"
+  "pry open [target] with [tool]"  "force [target] with [tool]"
+}
+
+verb close { role target  "close [target]"  "shut [target]" }
+
+verb read { role target  "read [target]"  "skim [target]"  "peruse [target]" }
+
+verb look_in {
+  role target
+  "look in [target]"  "look inside [target]"  "look into [target]"
+  "search [target]"  "look through [target]"
+}
+
+verb look_under {
+  role target
+  "look under [target]"  "look beneath [target]"  "look below [target]"
+  "search under [target]"
+}
+
+verb lamp_on {
+  role target
+  "turn on [target]"  "turn [target] on"  "light [target]"  "switch on [target]"
+  "switch [target] on"  "activate [target]"
+}
+
+verb lamp_off {
+  role target
+  "turn off [target]"  "turn [target] off"  "extinguish [target]"
+  "switch off [target]"  "switch [target] off"  "douse [target]"
+}
+
+verb attack {
+  role target
+  role weapon carried
+  "attack [target] with [weapon]"  "attack [target]"
+  synonyms "kill", "hit", "fight", "stab", "slay", "murder", "strike"
+}
+
+verb shift {
+  role target
+  "move [target]"  "push [target]"  "pull [target]"  "slide [target]"
+  "roll up [target]"  "shove [target]"  "press [target]"
+}
+
+verb raise { role target  "raise [target]"  "lift [target]"  "lift up [target]" }
+
+verb eat { role target  "eat [target]"  "consume [target]"  "devour [target]"  "taste [target]" }
+
+verb drink { role target  "drink [target]"  "sip [target]"  "swallow [target]" }
+
+verb wind { role target  "wind [target]"  "wind up [target]" }
+
+verb tally { role target  "count [target]" }
+
+verb smell { role target  "smell [target]"  "sniff [target]" }
+
+verb listen { role target  "listen to [target]"  "listen for [target]" }
+
+verb climb_up { role target  "climb up [target]"  "go up [target]"  "scale [target]" }
+verb climb_down { role target  "climb down [target]"  "go down [target]"  "descend [target]" }
+
+verb unlock { role target  role tool carried  "unlock [target] with [tool]"  "unlock [target]" }
+
+verb lock { role target  "lock [target]" }
+
+verb score { "score" }
+verb diagnose { "diagnose" }
+verb xyzzy { "xyzzy"  "plugh" }
+verb hello { "hello"  "hi" }
+verb jump { "jump"  "leap" }
+verb yell { "yell"  "scream"  "shout" }
+verb zork { "zork" }
+verb verbose { "verbose" }
+verb brief { "brief" }
+verb superbrief { "superbrief" }
+verb quit { "quit"  "q" }
+verb restart { "restart" }
+verb save { "save" }
+verb restore { "restore" }
+verb curse { "damn"  "curse"  "shit"  "fuck" }
+
+// The library's `open [y] with [x]` intent stands for its own `open`, which
+// this world replaces; this one stands for this world's.
+intent open_with {
+  "use [x] to open [y]"
+  do open (target: y, tool: x)
+}
+
+// Where somebody may be sent by the world's gate: see the world's `:gate`.
+enum Dest { forest_1, path, up_a_tree, kitchen, living_dead }
+
+message :scored with integer
+message :claimed
+message :light with integer
+message :relight
+message :room_lit with boolean
+message :open_gate
+message :gate_open
+message :close_gate
+message :fall
+message :landed
+message :smash
+message :window_sync with boolean
+message :trap with boolean
+message :trap_sync with boolean
+message :rug_moved
+message :reveal
+message :blow with integer
+message :struck with integer
+message :hit with integer
+message :swing
+message :expire
+message :troll_flag with boolean
+message :troll_gone
+message :glow with integer
+message :settle with integer
+message :die
+message :travel with Dest

@@ -1,0 +1,35 @@
+{
+  "about": "The leaflet in the opened mailbox can be taken by name, as well as read; a line chained with \"then\" or a full stop runs as two commands.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "open mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the small mailbox reveals a leaflet." }
+    ] },
+    { "as": "Marta", "type": "take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "close mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Closed." }
+    ] },
+    { "as": "Marta", "type": "drop leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "open mailbox then take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." },
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "drop leaflet. take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "read leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"WELCOME TO ZORK!" },
+      { "reader": "Marta", "kind": "said", "words": "ZORK is a game of adventure, danger, and low cunning. In it you will explore some of the most amazing territory ever seen by mortals. No computer should be without one!\"" }
+    ] }
+  ]
+}

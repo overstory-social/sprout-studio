@@ -1,0 +1,36 @@
+// Zork I: The Great Underground Empire, as far as it is built. The world
+// keeps Zork's narrator for the lines the engine speaks for itself, and a
+// gate: a room cannot reach another, so where Zork moves a body or a thing
+// across the map at a stroke (dying, falling from the tree), whoever needs
+// to asks the world to open the gate, does it, and asks it shut again, in
+// the one turn.
+import * as sprout from 'sprout'
+import {Person} from 'person'
+import {go} from 'sprout'
+import {west_of_house} from 'above_ground'
+import {:open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone} from 'verbs'
+
+world underground_caverns is sprout.World {
+  visitors are Person
+  visitors arrive at west_of_house
+  synonyms go: "climb", "run", "proceed"
+
+  :gate false
+  pass any (self.get(:gate))
+  pass :trap_sync (true)
+  pass :window_sync (true)
+  pass :troll_gone (true)
+
+  on :open_gate (from) {
+    self.set(:gate, true)
+    send from :gate_open
+  }
+  on :close_gate { self.set(:gate, false) }
+
+  passage unknown         { That sentence isn't one I recognize. }
+  passage not_here        { You can't see any such thing. }
+  passage unremarkable    { There's nothing special about {thing}. }
+  passage nothing_happens { Nothing happens. }
+  passage waited          { Time passes... }
+  passage not_carrying    { You don't have {thing}. }
+}

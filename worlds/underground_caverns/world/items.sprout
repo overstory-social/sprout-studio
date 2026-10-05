@@ -1,0 +1,95 @@
+// The kinds of portable thing Zork treats specially: weapons, treasures,
+// food and drink, and things with writing on them.
+import {Portable, Thing} from 'thing'
+import {Adventurer} from 'adventurer'
+import {eat, drink, read, :glow, :claimed} from 'verbs'
+
+// A weapon, and which one: Zork's melee tables care whether it is the
+// sword (which the troll fears most), the knife or the axe.
+kind Weapon is Portable {
+  :wcode 1 min 1 max 3
+}
+
+kind Sword is Weapon {
+  :glow 0 min 0 max 2
+  on :glow (from, value) { self.set(:glow, value) }
+}
+
+kind Knife is Weapon { :wcode 2 }
+
+kind Axe is Weapon { :wcode 3 }
+
+// A treasure pays `:value` the first time it is taken, and `:tvalue` for as
+// long as it sits in the trophy case.
+kind Treasure is Portable {
+  :value 0 min 0 max 50
+  :tvalue 0 min 0 max 50
+  on :claimed { self.set(:value, 0) }
+}
+
+// Something to eat. Eaten, it is gone for good, as in Zork.
+kind Food is Portable {
+  without as target for eat from Thing
+  as target for eat {
+    permit {
+      if (!actor.holds(self)) { refuse "You're not holding that." }
+    }
+    do {
+      say "Thank you very much. It really hit the spot."
+      destroy self
+    }
+  }
+}
+
+// Something with words on it. Reading a thing you are not holding picks it
+// up first, as Zork's parser does, and says so.
+kind Readable is Portable {
+  without as target for read from Thing
+  passage words default { {if false}.{/if} }
+  as target for read {
+    do {
+      if (!actor.holds(self)) {
+        move self to actor
+        say "(Taken)"
+      }
+      say words
+    }
+  }
+}
+
+// Zork's lunch and clove of garlic, from the brown sack.
+kind Lunch is Food {
+  grammar { name "lunch"  nouns "food", "sandwich", "dinner"  adjectives "hot", "pepper" }
+  passage short {lunch}
+  passage ldesc { A hot pepper sandwich is here. }
+}
+
+kind Garlic is Food {
+  grammar { name "clove of garlic"  nouns "garlic", "clove" }
+  :size 4
+  passage short {clove of garlic}
+  without as target for eat from Food
+  as target for eat {
+    permit { if (!actor.holds(self)) { refuse "You're not holding that." } }
+    do {
+      say "What the heck! You won't make friends this way, but nobody around here is too friendly anyhow. Gulp!"
+      destroy self
+    }
+  }
+}
+
+// Water, from the glass bottle: it slips through the fingers, and is drunk
+// where it stands.
+kind Water is Thing {
+  grammar { name "quantity of water"  nouns "water", "liquid", "h2o" }
+  :size 4
+  passage short {quantity of water}
+  passage no_take { It's in the bottle. Perhaps you should take that instead. }
+  without as target for drink from Thing
+  as target for drink {
+    do {
+      say "Thank you very much. I was rather thirsty (from all this talking, probably)."
+      destroy self
+    }
+  }
+}
