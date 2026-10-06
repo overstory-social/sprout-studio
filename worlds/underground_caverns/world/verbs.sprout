@@ -163,6 +163,45 @@ verb give {
   "feed [recipient] [item]"  "donate [item] to [recipient]"
 }
 
+// Zork's THROW: the thing leaves the hand for the floor, and whatever it
+// was thrown at answers.
+verb throw {
+  role target carried
+  role aim
+  "throw [target] at [aim]"  "throw [target] to [aim]"  "toss [target] at [aim]"
+  "hurl [target] at [aim]"  "chuck [target] at [aim]"
+  "throw [target]"  "toss [target]"  "hurl [target]"
+}
+
+// Zork's HACK-HACK verbs, and the rest of the small change of the parser:
+// each answered by every thing with Zork's default, and by a few things
+// better.
+verb kick { role target  "kick [target]"  "taunt [target]" }
+verb rub { role target  "rub [target]"  "touch [target]"  "feel [target]"  "pat [target]"  "pet [target]"  "caress [target]" }
+verb wave { role target  "wave [target]"  "brandish [target]"  "flourish [target]" }
+verb shake { role target  "shake [target]" }
+verb squeeze { role target  "squeeze [target]" }
+verb kiss { role target  "kiss [target]"  "hug [target]"  "embrace [target]" }
+verb look_behind { role target  "look behind [target]" }
+verb fill {
+  role target
+  role tool
+  "fill [target] with [tool]"  "fill [target]"  "fill up [target]"
+}
+verb tie {
+  role target
+  role tool
+  "tie [target] to [tool]"  "fasten [target] to [tool]"  "attach [target] to [tool]"
+  "tie up [target]"  "tie [target]"
+}
+// Zork's ALARM: waking someone who is out cold.
+verb alarm { role target  "wake [target]"  "wake up [target]"  "awaken [target]"  "rouse [target]"  "startle [target]"  "surprise [target]" }
+// Zork's TELL, and HELLO said to someone.
+verb talk { role target  "talk to [target]"  "speak to [target]"  "tell [target]"  "ask [target]"  "chat with [target]" }
+verb greet { role target  "hello [target]"  "hi [target]"  "greet [target]"  "say hello to [target]" }
+verb pray { "pray" }
+verb swim { "swim"  "bathe"  "wade" }
+
 verb score { "score" }
 verb diagnose { "diagnose" }
 verb xyzzy { "xyzzy"  "plugh" }
@@ -210,10 +249,11 @@ message :trap_sync with boolean
 message :rug_moved
 message :reveal
 message :blow with integer
-message :struck with integer
 message :hit with integer
 message :swing
 message :expire
+message :gift
+message :come_round
 message :troll_flag with boolean
 message :troll_gone
 message :glow with integer
@@ -223,3 +263,4 @@ message :grue
 message :travel with Dest
 message :wall_look with integer
 message :unbar
+message :sealed with boolean

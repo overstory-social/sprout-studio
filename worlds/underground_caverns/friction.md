@@ -6,7 +6,8 @@ entry: what Zork does (what I wanted), what the world does instead, and the
 spec section it touches. Section names are `sprout-design-spec.md`'s.
 
 Each entry carries a **Status** as of the port to Sprout fe916a5, brought
-up to date after round 2 where round 2 touched it:
+up to date after each round where the round touched it, and before round 4
+for Sprout 26e6124 (sprout#450 to #453) and the troll's rebuild as an NPC:
 **resolved** (by which change), **corrected** (the entry was my misreading),
 **changed** (the answer moved but something remains), or **open**. The
 entries' first text is kept as it was written against 61f02bb.
@@ -70,7 +71,10 @@ entries' first text is kept as it was written against 61f02bb.
   the refused ways are no longer offered, and the unbuilt edges refuse with
   a passage of their room (`refuse crawlway`). `nowhere.sprout` holds only
   the Land of the Living Dead. An exit's refusal reads as a notice, where
-  the old `accept` refusal read as a refusal.
+  the old `accept` refusal read as a refusal. **At 26e6124:** sprout#450
+  makes an exit's refusal a `refused` line, as an accept's is; eight tests'
+  expectations moved from `notice` to `refused`, and nothing in the world
+  changed.
 
 ### 4. Eight exits are not always enough
 
@@ -167,7 +171,11 @@ entries' first text is kept as it was written against 61f02bb.
   A room now refuses to be the target of any verb with "You can't see any
   such thing." (`as target for any`), and `x troll` describes the room
   where Zork says "You can't see any troll here!". Wanted still: a place
-  that answers only to nouns it writes.
+  that answers only to nouns it writes. **Before round 4:** `x troll`
+  after his death is now refused by the same guard, "You can't see any such
+  thing.", which is Zork's answer in all but the noun; and a room refuses as
+  a tool too (`as tool for any`), so `give axe to troll` after his death is
+  no longer "Nothing happens." but the same line.
 
 ## Darkness and light
 
@@ -236,6 +244,13 @@ entries' first text is kept as it was written against 61f02bb.
   `take leaflet and sack`. It leaves out what is already held from any
   list that holds something else, and names each one only when everything
   listed is already held.
+  **At 26e6124:** sprout#453 lets a run of things in a one-thing role run
+  once for each, so `put lunch and garlic in case` now puts each in turn
+  and stops at the first refusal. `take` and `drop` stay set roles, since
+  that is what lets `take all` be one move that names each thing, as
+  Zork's is. A thing in the troll's fist or behind a shut glass lid is in
+  reach of a name now (37, 40), so `take all` leaves those out by name, and
+  `take axe` alone is refused by the troll's own guard.
 
 ### 11a. `and` between things, and between commands
 
@@ -276,6 +291,13 @@ entries' first text is kept as it was written against 61f02bb.
   two commands, or failing that answer with `unknown` rather than a
   refusal that says the thing is not there. Lists of things in a one-thing
   role are sprout#448.
+  **Status: resolved** by sprout#453 at 26e6124: `and` before a verb chains
+  as `then` does, so `take leaflet and read it` takes the leaflet and reads
+  it, and `put lunch and garlic in case` puts each in turn. `open window
+  and climb in`, the round-3 line that read "You can't see any such thing.",
+  now opens the window and goes in by the way labelled "in". A bare `enter`
+  is still not a sentence here, since no exit is labelled so: `open window
+  and enter` opens it and then answers `unknown`.
 
 ### 12. The engine's lines have no slot for the word
 
@@ -571,7 +593,14 @@ entries' first text is kept as it was written against 61f02bb.
   egg's `spill` and Zork's HO-HUM, `hacked`, lost their leading space and their
   callers write it.
 - **Spec:** Prose › Passages; Prose › Slots.
-- **Status: open.**
+- **Status: resolved** by sprout#452 at 26e6124: a slotted passage that
+  renders words keeps a blank line at its edges as a paragraph break. Every
+  `inside_lines` now carries its own break, and its callers (the room's
+  listing, a container's, the inventory) write `{t.fdesc}{t.inside_lines}`
+  with nothing between. The single spaces the egg's `spill` and Zork's
+  HO-HUM lost to sprout#427 are still written by their callers: an edge's
+  spaces are trimmed by design, and only a line break or a paragraph break
+  survives.
 
 ## Found after round 2
 
@@ -595,7 +624,13 @@ entries' first text is kept as it was written against 61f02bb.
   weapon thrown back). The visitor reads only Zork's line.
 - **Spec:** Range ("what another visitor carries is out of range"); Verbs ›
   The two passes.
-- **Status: open.**
+- **Status: changed** before round 4. The troll is a `sprout.Actor` now,
+  whose `accept` takes what fits, so the giver's own part of `give` moves
+  the gift straight from their hand (or from the open bottle in it) into
+  his, as the library's own `give` does; his part then eats it, keeps his
+  axe, or throws a weapon back with `act throw`. Nothing passes through the
+  floor. What remains is the rule itself: he could not take it from the
+  hand, only be handed it, which is the spec's design rather than a gap.
 
 ### 34. Eight phrases a verb
 
@@ -642,7 +677,9 @@ entries' first text is kept as it was written against 61f02bb.
 - **Wrote instead:** the troll is declared ahead of the room's scenery, so
   the range walk reaches him first; the scenery after him is what is cut.
 - **Spec:** Parsing › Sequences, again and all; Limits.
-- **Status: open.**
+- **Status: changed** before round 4: `examine all` in the Troll Room now
+  stops at once on the troll's axe, whose examine refuses (37, 48), so the
+  cap no longer comes into it while he holds it.
 
 ### 37. What a person holds cannot be looked at
 
@@ -664,7 +701,18 @@ entries' first text is kept as it was written against 61f02bb.
   at it while he is waving it at you; taken, it is Zork's white-hot axe.
 - **Spec:** Range; Sight; Events › Containers route; Engine verbs;
   Parsing › Choosing a reading.
-- **Status: open.**
+- **Status: resolved** before round 4, by the troll's rebuild as an NPC.
+  The troll passes (`pass any (true)`, replacing `sprout.Actor`'s), so the
+  one axe, in his fist, is in reach of the visitor's nouns. Its own
+  `as target for examine` refuses while he wields it: `examine`, an engine
+  verb with no `do`, still runs its participants' permits, which this entry
+  had not tried. `take
+  axe` is refused by `sprout.Actor`'s own `release` guard, whose `not_yours`
+  line the troll writes as Zork's AXE-FUNCTION. What he has eaten goes into
+  his stomach, a container inside him that passes nothing, since a pass
+  rule cannot open a person to one of his things and not another. The
+  `held_axe` stand-in is gone. The cost is under 48: `examine all` in his
+  room now stops on the axe.
 
 ## Found after round 3
 
@@ -719,7 +767,24 @@ entries' first text is kept as it was written against 61f02bb.
 - **Wrote instead:** nothing; the visitor must open the bottle first.
 - **Spec:** Range ("A key in a shut chest cannot be named until the chest
   is open"); Containers route.
-- **Status: open.**
+- **Status: changed** before round 4. A transparent box (the bottle, the
+  trophy case) passes while shut, so what it holds can be named, and its lid
+  is written as guards instead: its `accept` and a new `release` refuse
+  while it is shut ("You can't reach something that's inside a closed
+  container.", Zork's PRE-TAKE), and each thing it holds keeps `:sealed`,
+  told by the box as it shuts and opens, so that the water's own permits
+  answer Zork's "The bottle is closed." to `pour`, `throw` and `give`, and
+  "You'll have to open the glass bottle first." to `drink`. `take all` and
+  a run leave a sealed thing out. So `give water to troll` with the bottle
+  shut is "The bottle is closed.", and with it open the troll gets the water
+  out of the bottle in the visitor's hand. What is still lost: a pass rule
+  is all-or-nothing, so glass that shows but does not let hands through is
+  a pass rule, two guards, a message and a flag on every thing, where the
+  spec's `lit` already separates sight from reach for light alone. And the
+  water cannot see where its bottle is, so a shut bottle in hand and one on
+  the table both answer `take water` with "It's in the bottle. Perhaps you
+  should take that instead.", where Zork says "The bottle is closed." of the
+  one in hand.
 
 ### 41. A tool with no target is a verb of its own
 
@@ -776,30 +841,138 @@ entries' first text is kept as it was written against 61f02bb.
   reading.
 - **Status: open.**
 
+## Found before round 4: the troll as an NPC
+
+The troll is rebuilt as the brief now asks: `kind Troll is Thing,
+sprout.Actor`, an NPC with nobody behind him. He swings at a visitor with
+`act attack (target: a, weapon: x)`, the very verb the visitor swings at him
+with, deciding in his own `as actor for attack` what the blow does on
+Zork's tables; the visitor's `as target for attack` takes it, tells them the
+line, and wounds, stuns, disarms or kills them. He picks his axe up off the
+floor with `act take`, and throws a weapon he is given back to the floor
+with `act throw`. These are what the NPC model would not let me say.
+
+### 45. An NPC's voice does not reach the one it acts on
+
+- **Wanted:** the troll's own part of his own blow saying the blow: "The
+  troll swings his axe, but it misses." from `as actor for attack`, as a
+  visitor's part of their blow says theirs.
+- **Found:** nobody is behind an NPC to read its `say`, so its `say` goes
+  out through `npc_says` to everyone who would hear its `tell`; and a plain
+  `tell` leaves out the reading's participants. The visitor he swings at is
+  the reading's target, so neither reaches them. Only `tell target "…"`
+  does (checked: of `say`, `tell` and `tell target` in his part, the
+  visitor read only the last). A `say` would also come out as speech, "The
+  troll says "…"", unless he wrote his own `npc_says`.
+- **Wrote instead:** the troll decides the blow and keeps it (`:dealt`); the
+  visitor's own `as target for attack` reads it from `actor` and tells
+  itself the line (`tell self`), with the wound, the stagger or the death
+  that only the visitor may write. So Zork's lines for the troll's blows
+  live in `adventurer.sprout`, beside the effects, rather than with him.
+- **Spec:** Acting ("Nobody is behind it to read its `say` lines…"); Other
+  people › Who hears it.
+- **Status: open.**
+
+### 46. An NPC cannot stand in a doorway
+
+- **Wanted:** Zork's troll, who "fends you off with a menacing gesture" as
+  his own act, whenever he is awake and armed.
+- **Found:** a move asks three parties, the thing moving, the place it
+  leaves and the place it enters; a bystander, even an actor, has no guard
+  on anyone else's move, and `act` cannot refuse for somebody else.
+- **Wrote instead:** as before, the Troll Room's own exits refuse while its
+  `:troll_flag` is false, a flag the troll sends it as he falls, wakes and
+  dies.
+- **Spec:** Movement and consent › The three roles; Exits › An exit may be
+  conditional.
+- **Status: open.**
+
+### 47. An NPC's turns are wakes it keeps asking for
+
+- **Wanted:** Zork's I-FIGHT demon: the troll's turn every move while he
+  fights, and his first strike when somebody walks in.
+- **Found:** an NPC "acts on `:tick` or on a message", but only a place is
+  ticked, and a tick's interval is the host's, never to be counted. An
+  object may hold one pending wake, which cannot be cancelled (24, 38).
+- **Wrote instead:** as before: on `:arrived` and after every swing he asks
+  for a wake a minute on; the wake swings, or passes if he swung back at a
+  blow since. The knockout's second chance is kept, as round 3 left it.
+- **Spec:** Time › Ticks; Time › Wakes; Actors and visitors (NPCs).
+- **Status: open.**
+
+### 48. `all` in a one-thing role stops at a refusal before what comes ahead of it
+
+- **Wanted:** `examine all` in the Troll Room reading the visitor's things,
+  the walls and the troll, and then the axe's refusal, as the spec says a
+  line of `all` runs "in the order the range walk reaches them, and stops
+  at the first refusal".
+- **Found:** the line reads only the axe's refusal, and nothing it would
+  have examined first. A run of names (`examine lamp and sword and axe`) is
+  read in order and stops at the axe, as it should. A minimal world shows
+  it: a place holding an apple, a pear, then a lamp whose `as target for
+  examine` refuses; `examine all` answers only the lamp's refusal, while
+  `examine apple and pear and lamp` examines the apple and the pear first.
+  This looks like a Sprout bug, not a choice.
+- **Wrote instead:** nothing; `gift.json` expects the refusal alone for
+  now, so that a fix shows up as a failing test. Sprout's sprout#389 option
+  1 (leave out of `all` what consent refuses) would also answer it.
+- **Spec:** Parsing › Sequences, again and all.
+- **Status: open.**
+
+### 49. A container in someone's hands cannot pour itself out
+
+- **Wanted:** Zork's SHAKE: an open sack in hand, shaken, spills what is in
+  it onto the floor, said by the sack.
+- **Found:** a thing in a visitor's hands reaches the visitor and no
+  further, since `sprout.Actor` passes nothing, so the sack cannot move its
+  contents to the room; and the actor's part of a verb runs before the
+  target's, so by the time the sack speaks it is already empty.
+- **Wrote instead:** the visitor's own part of `shake` spills an open bag
+  and says so, and leaves `:spilled` for the bag's part to read, which says
+  "Shaken." only when nothing spilled. A shut one rattles or sounds empty.
+- **Spec:** Range; Verbs › The two passes.
+- **Status: open.**
+
+### 50. `wake` is a word of the language
+
+- **Wanted:** Zork's WAKE (ALARM) as a verb named `wake`.
+- **Found:** "`wake` is a word of the language, so it cannot name a verb."
+- **Wrote instead:** the verb is `alarm`, Zork's own name for it, with
+  "wake", "wake up", "awaken" and "rouse" among its phrases.
+- **Spec:** The compiler › Lexical rules.
+- **Status: open** (a naming nuisance only).
+
 ## Differences chosen, not forced
 
-- **The troll can be given things, not thrown them.** After round 2 the
+- **The troll can be given things, or thrown them.** After round 2 the
   troll takes gifts as Zork's TROLL-FCN does: he eats food and treasure
   alike, takes back his axe, throws a sword or knife back four times in
   five and eats it, and dies, the fifth; a gift wakes him if he is out cold.
   Anything else given to anything else is "You can't give a ... to a ...!".
-  `throw` is not built.
+  Before round 4, THROW: at the troll, he catches it ("who is remarkably
+  coordinated") and does as he does with a gift; at anyone else, they duck;
+  anything else is "Thrown.", and the thing falls (Up a Tree, to the path).
+  Water thrown splashes on the walls.
 - **The songbird** is not an object; asking after it reads "You can't see
   any such thing.", close to Zork's "You can't see any songbird here."
 - **Up a Tree** does not list what lies on the path below ("On the ground
   below you can see: ..."): the path is out of range (see 6).
-- **The troll's room after his death** answers `x troll` with its own
-  description, and every other verb with "You can't see any such thing."
-  (see 8).
+- **The troll's room after his death** answers `x troll`, and every other
+  verb that names the troll, with "You can't see any such thing." (see 8).
 - **`turn on lamp`** works on the lantern where it lies, on the trophy case,
   without taking it. That is Zork's: LAMP-ON's syntax finds a light source
   held, carried, on the ground or in the room, and takes nothing.
 - **Eating from an open sack you carry** needs the food in hand; Zork lets
-  it be eaten from a held container. Drinking needs only the bottle open;
-  Zork wants the bottle in hand.
+  it be eaten from a held container. Drinking needs the bottle open, as
+  Zork's does, but not in hand, where Zork wants it held.
 - **Weight.** Zork's load is weights against 100, as here, but wounds do not
   lower it, and there is no fumbling.
-- **No `throw`, `break`, `burn`, `tie`, `swim`.** Not in this slice.
+- **No `burn`.** There is nothing to burn anything with in this slice.
+  THROW, TIE, SWIM, KICK, RUB (and TOUCH), WAVE, SHAKE, SQUEEZE, KISS, LOOK
+  BEHIND, FILL, WAKE (Zork's ALARM), TALK TO (Zork's TELL), HELLO to
+  someone, and PRAY are built before round 4 with Zork's answers from
+  `gverbs.zil` and TROLL-FCN; FILL has no water to fill from, since the
+  slice has no stream or reservoir.
 - **The unbuilt edges** (east of the Clearing, east and west of the Troll
   Room; south of the Cellar until round 4 opened the crawlway) refuse in
   new prose in the Empire's voice, as the brief asks. After round 2 each refuses in a different way, so they do not

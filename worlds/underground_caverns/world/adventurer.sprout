@@ -10,14 +10,14 @@
 // no room can otherwise reach another.
 import * as sprout from 'sprout'
 import {Thing, Portable} from 'thing'
-import {Box} from 'box'
+import {Box, Bag} from 'box'
 import {Lamp} from 'lamp'
 import {Weapon, Sword, Knife, Axe, Treasure, Food, Water} from 'items'
 import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
 import {go, look, examine, inventory, wait} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :struck, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -64,15 +64,13 @@ kind Adventurer is sprout.Visitor {
   // Zork has no HELP; the Empire answers it in its own voice rather than
   // with every verb against every thing in sight.
   passage help {
-    You are in the Great Underground Empire. Tell it what to do in plain English: NORTH, SOUTH, EAST, WEST, NORTHEAST and the other diagonals, UP and DOWN (N, S, E, W, NE, U, D and so on) to move; LOOK (or L) to look around; INVENTORY (or I) to see what you carry; and TAKE, DROP, OPEN, CLOSE, READ, EXAMINE, PUT something IN something, TURN ON something, ATTACK something WITH something, for the rest. SCORE and DIAGNOSE tell you how you are doing. A room is described in full the first time you enter it and named after that, unless you ask for VERBOSE; BRIEF goes back to that, and SUPERBRIEF names every room and no more.
+    You are in the Great Underground Empire. Tell it what to do in plain English: NORTH, SOUTH, EAST, WEST, NORTHEAST and the other diagonals, UP and DOWN (N, S, E, W, NE, U, D and so on) to move; LOOK (or L) to look around; INVENTORY (or I) to see what you carry; and TAKE, DROP, OPEN, CLOSE, READ, EXAMINE, PUT something IN something, GIVE something TO someone, THROW something AT something, TURN ON something, ATTACK something WITH something, for the rest. SCORE and DIAGNOSE tell you how you are doing. A room is described in full the first time you enter it and named after that, unless you ask for VERBOSE; BRIEF goes back to that, and SUPERBRIEF names every room and no more.
   }
 
   passage inventory {
     {if self.count(Thing) == 0}You are empty-handed.{else}You are carrying:{for t: Thing in self}
 
-    A {t.short}{if t.is(Lamp)}{if t.get(:lit)} (providing light){/if}{/if}
-
-    {t.inside_lines}{/for}{/if}
+    A {t.short}{if t.is(Lamp)}{if t.get(:lit)} (providing light){/if}{/if}{t.inside_lines}{/for}{/if}
   }
 
   passage yuk {
@@ -190,54 +188,62 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  // The troll's blow, and what it does. `value` is Zork's blow result:
-  // 1 missed, 2 knocked out, 3 killed, 4 lightly wounded, 6 staggered.
-  // The line is drawn from Zork's own for that result.
-  on :struck (from, value) {
-    if (value == 1) {
-      tell self "{one of}The troll swings his axe, but it misses.{or}The troll's axe barely misses your ear.{or}The axe sweeps past as you jump aside.{or}The axe crashes against the rock, throwing sparks!{/one of}"
-    } else if (value == 2) {
-      tell self "The flat of the troll's axe hits you delicately on the head, knocking you out."
-      if (random(9) < 2) {
-        tell self "{one of}The troll hesitates, fingering his axe.{or}The troll scratches his head ruminatively:  Might you be magically protected, he wonders?{/one of}"
-      } else {
-        tell self "Conquering his fears, the troll puts you to death."
-        tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
-        send self :die
-      }
-    } else if (value == 3) {
-      tell self "{one of}The troll neatly removes your head.{or}The troll's axe stroke cleaves you from the nave to the chops.{or}The troll's axe removes your head.{/one of}"
-      tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
-      send self :die
-    } else if (value == 4) {
-      tell self "{one of}The axe gets you right in the side. Ouch!{or}The flat of the troll's axe skins across your forearm.{or}The troll's swing almost knocks you over as you barely parry in time.{or}The troll swings his axe, and it nicks your arm as you dodge.{/one of}"
-      self.adjust(:wounds, 1)
-      self.adjust(:fight, -1)
-      if (self.get(:fight) <= 0) {
-        tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
-        send self :die
-      } else if (!self.get(:healing)) {
-        self.set(:healing, true)
-        wake in 10 minutes
-      }
-    } else {
-      // Staggered, or one time in four disarmed (Zork's LOSE-WEAPON).
-      if (self.count(Weapon) > 0 && chance(4)) {
-        // The weapon is named before it goes: a line is rendered once the
-        // turn's work is done, when the hand it was in is empty.
-        if (self.count(Sword) > 0) {
-          tell self "{one of}The axe hits your sword and knocks it spinning.{or}The axe knocks your sword out of your hand. It falls to the floor.{/one of}"
-          each w: Sword in self { move w to troll_room }
-        } else if (self.count(Knife) > 0) {
-          tell self "{one of}The axe hits your nasty knife and knocks it spinning.{or}The axe knocks your nasty knife out of your hand. It falls to the floor.{/one of}"
-          each w: Knife in self { move w to troll_room }
+  // The troll's blow, which he deals by acting: `attack`, with this visitor
+  // as its target. He has decided what it does (`:dealt`, Zork's blow
+  // result: 1 missed, 2 knocked out, 3 killed, 4 lightly wounded, 6
+  // staggered); this is the visitor's own part of it, told to them, since
+  // the one acting is the troll. The line is drawn from Zork's own for that
+  // result.
+  as target for attack {
+    do {
+      if (actor.is(Troll)) {
+        let v = actor.get(:dealt)
+        if (v == 1) {
+          tell self "{one of}The troll swings his axe, but it misses.{or}The troll's axe barely misses your ear.{or}The axe sweeps past as you jump aside.{or}The axe crashes against the rock, throwing sparks!{/one of}"
+        } else if (v == 2) {
+          tell self "The flat of the troll's axe hits you delicately on the head, knocking you out."
+          if (random(9) < 2) {
+            tell self "{one of}The troll hesitates, fingering his axe.{or}The troll scratches his head ruminatively:  Might you be magically protected, he wonders?{/one of}"
+          } else {
+            tell self "Conquering his fears, the troll puts you to death."
+            tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
+            send self :die
+          }
+        } else if (v == 3) {
+          tell self "{one of}The troll neatly removes your head.{or}The troll's axe stroke cleaves you from the nave to the chops.{or}The troll's axe removes your head.{/one of}"
+          tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
+          send self :die
+        } else if (v == 4) {
+          tell self "{one of}The axe gets you right in the side. Ouch!{or}The flat of the troll's axe skins across your forearm.{or}The troll's swing almost knocks you over as you barely parry in time.{or}The troll swings his axe, and it nicks your arm as you dodge.{/one of}"
+          self.adjust(:wounds, 1)
+          self.adjust(:fight, -1)
+          if (self.get(:fight) <= 0) {
+            tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
+            send self :die
+          } else if (!self.get(:healing)) {
+            self.set(:healing, true)
+            wake in 10 minutes
+          }
         } else {
-          tell self "{one of}The axe hits your bloody axe and knocks it spinning.{or}The axe knocks your bloody axe out of your hand. It falls to the floor.{/one of}"
-          each w: Axe in self { move w to troll_room }
+          // Staggered, or one time in four disarmed (Zork's LOSE-WEAPON).
+          if (self.count(Weapon) > 0 && chance(4)) {
+            // The weapon is named before it goes: a line is rendered once
+            // the turn's work is done, when the hand it was in is empty.
+            if (self.count(Sword) > 0) {
+              tell self "{one of}The axe hits your sword and knocks it spinning.{or}The axe knocks your sword out of your hand. It falls to the floor.{/one of}"
+              each w: Sword in self { move w to here }
+            } else if (self.count(Knife) > 0) {
+              tell self "{one of}The axe hits your nasty knife and knocks it spinning.{or}The axe knocks your nasty knife out of your hand. It falls to the floor.{/one of}"
+              each w: Knife in self { move w to here }
+            } else {
+              tell self "{one of}The axe hits your bloody axe and knocks it spinning.{or}The axe knocks your bloody axe out of your hand. It falls to the floor.{/one of}"
+              each w: Axe in self { move w to here }
+            }
+          } else {
+            tell self "{one of}The troll hits you with a glancing blow, and you are momentarily stunned.{or}The troll swings; the blade turns on your armor but crashes broadside into your head.{or}You stagger back under a hail of axe strokes.{or}The troll's mighty blow drops you to your knees.{/one of}"
+            self.set(:staggered, true)
+          }
         }
-      } else {
-        tell self "{one of}The troll hits you with a glancing blow, and you are momentarily stunned.{or}The troll swings; the blade turns on your armor but crashes broadside into your head.{or}You stagger back under a hail of axe strokes.{or}The troll's mighty blow drops you to your knees.{/one of}"
-        self.set(:staggered, true)
       }
     }
   }
@@ -332,10 +338,21 @@ kind Adventurer is sprout.Visitor {
       self.set(:carry, self.get(:load))
       self.set(:fresh, 0)
       let several = target.count > 1
-      each t of target { if (!self.holds(t)) { self.adjust(:fresh, 1) } }
+      each t of target {
+        if (t.is(Thing)) {
+          if (!self.holds(t) && !t.get(:sealed)) {
+            if (t.is(Axe)) { if (!t.get(:wielded)) { self.adjust(:fresh, 1) } }
+            else { self.adjust(:fresh, 1) }
+          }
+        }
+      }
       each t of target {
         if (t.is(Thing)) {
           if (several && self.holds(t) && self.get(:fresh) > 0) { }
+          // In the troll's fist, or behind a shut glass lid, a thing is seen
+          // and in reach of a name but not of a hand; `all` and a run leave
+          // it out, and taken alone, the move says why.
+          else if (several && (t.get(:sealed) || t.is(Axe) && t.get(:wielded))) { }
           else if (self.holds(t)) { say "{if several}{t.short}: {/if}You already have that!" }
           else if (t.is(Portable)) {
             if (self.get(:carry) + t.get(:size) > 100) { say "{if several}{t.short}: {/if}Your load is too heavy." }
@@ -497,15 +514,68 @@ kind Adventurer is sprout.Visitor {
   as actor for knock      { do { self.adjust(:moves, 1) } }
   as actor for walk_around { do { self.adjust(:moves, 1) } }
   as actor for through    { do { self.adjust(:moves, 1) } }
-  // A gift to the troll leaves the hand first, onto the floor at his feet,
-  // since nothing in a visitor's hands is in his reach; he takes it from
-  // there, or lets it lie.
+  // A gift to the troll goes from the visitor's hand (or the open bottle in
+  // it) into his; what he does with it is his part of the reading.
   as actor for give {
     do {
       self.adjust(:moves, 1)
-      if (recipient.is(Troll)) { move item to here }
+      if (recipient.is(Troll)) { move item to recipient }
     }
   }
+
+  // Zork's THROW: out of the hand and onto the floor (and so, Up a Tree,
+  // down to the path below), or into the troll's, who catches it.
+  as actor for throw {
+    do {
+      self.adjust(:moves, 1)
+      if (bound aim) {
+        if (aim.is(Troll)) { move target to aim }
+        else if (target.is(Water)) { }
+        else if (aim.is(sprout.Actor)) {
+          move target to here
+          if (target.is(Thing)) { say "{aim} ducks as the {target.short} flies by and crashes to the ground." }
+        } else {
+          move target to here
+          say "Thrown."
+        }
+      } else if (target.is(Water)) {
+      } else {
+        move target to here
+        say "Thrown."
+      }
+    }
+  }
+
+  // Zork's SHAKE, for an open container with something in it: what is in it
+  // spills to the ground. The container's own part says the rest.
+  :spilled false
+  as actor for shake {
+    do {
+      self.adjust(:moves, 1)
+      self.set(:spilled, false)
+      if (target.is(Bag)) {
+        if (target.get(:open) && target.count(Thing) > 0) {
+          self.set(:spilled, true)
+          say "The contents of the {target.short} spill to the ground."
+          each u: Thing in target { move u to here }
+        }
+      }
+    }
+  }
+
+  as actor for kick        { do { self.adjust(:moves, 1) } }
+  as actor for rub         { do { self.adjust(:moves, 1) } }
+  as actor for wave        { do { self.adjust(:moves, 1) } }
+  as actor for squeeze     { do { self.adjust(:moves, 1) } }
+  as actor for kiss        { do { self.adjust(:moves, 1) } }
+  as actor for look_behind { do { self.adjust(:moves, 1) } }
+  as actor for fill        { do { self.adjust(:moves, 1) } }
+  as actor for tie         { do { self.adjust(:moves, 1) } }
+  as actor for alarm       { do { self.adjust(:moves, 1) } }
+  as actor for talk        { do { self.adjust(:moves, 1) } }
+  as actor for greet       { do { self.adjust(:moves, 1) } }
+  as actor for pray  { do { self.adjust(:moves, 1)  say "If you pray enough, your prayers may be answered." } }
+  as actor for swim  { do { self.adjust(:moves, 1)  say "Go jump in a lake!" } }
   as actor for walk_about { do { self.adjust(:moves, 1)  say "Use compass directions for movement." } }
 
   // Zork's DIG: with nothing else to dig with, a pair of hands. Zork asks

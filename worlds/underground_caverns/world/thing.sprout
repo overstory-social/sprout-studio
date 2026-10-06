@@ -6,7 +6,8 @@
 // has been moved, and by its long one (LDESC) after, or by "There is a ...
 // here." when it has none; `here_line` is that rule. A thing marked `:ndesc`
 // (Zork's NDESCBIT) is never listed.
-import {take, knock, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, :fall, :landed} from 'verbs'
+import {ask} from 'sprout'
+import {take, knock, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, :fall, :landed, :sealed} from 'verbs'
 
 kind Thing {
   grammar { article the }
@@ -18,6 +19,8 @@ kind Thing {
   :size 5 min 0 max 100
   // Zork's DOORBIT, for knocking.
   :door false
+  // Inside a shut glass container: seen, and out of reach.
+  :sealed false
 
   passage short default { thing }
   passage fdesc default { {self.ldesc} }
@@ -34,7 +37,9 @@ kind Thing {
   on :moved (from, to) {
     self.set(:touched, true)
     self.set(:falling, false)
+    self.set(:sealed, false)
   }
+  on :sealed (from, value) { self.set(:sealed, value) }
   on :fall   { self.set(:falling, true) }
   on :landed { self.set(:falling, false) }
 
@@ -68,6 +73,32 @@ kind Thing {
   as item for pour_on      { do { say "You can't pour that." } }
   as target for mung       { do { say "Nice try." } }
   as target for walk_around { do { say "Use compass directions for movement." } }
+  // Zork's HACK-HACK, and the rest of its small change.
+  as target for kick    { do { say "Kicking the {self.short} {self.hacked}" } }
+  as target for rub     { do { say "Fiddling with the {self.short} {self.hacked}" } }
+  as target for wave    { do { say "Waving the {self.short} {self.hacked}" } }
+  as target for shake   { do { say "You can't take it; thus, you can't shake it!" } }
+  as target for squeeze { do { say "How singularly useless." } }
+  as target for kiss    { do { say "I'd sooner kiss a pig." } }
+  as target for look_behind { do { say "There is nothing behind the {self.short}." } }
+  as target for fill {
+    do {
+      if (bound tool) { say "You may know how to do that, but I don't." }
+      else { say "There's nothing to fill it with." }
+    }
+  }
+  as target for tie {
+    do {
+      if (bound tool) {
+        if (tool.is(Thing)) { say "You can't tie the {self.short} to that." }
+        else { say "You can't tie anything to yourself." }
+      } else { say "You'll have to say what to tie the {self.short} to." }
+    }
+  }
+  as target for alarm    { do { say "The {self.short} isn't sleeping." } }
+  as target for talk    { do { say "You can't talk to the {self.short}!" } }
+  as target for ask     { do { say "You can't talk to the {self.short}!" } }
+  as target for greet   { do { say "It's a well known fact that only schizophrenics say \"Hello\" to a {self.short}." } }
   as target for through { do { say "You hit your head against the {self.short} as you attempt this feat." } }
   as recipient for give {
     do {
@@ -82,6 +113,9 @@ kind Portable is Thing {
 
   without as target for shift from Thing
   as target for shift { do { say "Moving the {self.short} reveals nothing." } }
+
+  without as target for shake from Thing
+  as target for shake { do { say "Shaken." } }
 
   without as target for through from Thing
   as target for through {

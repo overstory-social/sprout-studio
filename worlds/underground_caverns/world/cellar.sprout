@@ -133,27 +133,10 @@ object troll_room is DarkRoom in underground_caverns {
     object axe is Axe {
       grammar { name "bloody axe"  nouns "axe", "ax"  adjectives "bloody" }
       :size 25
+      :wielded true
       passage short { bloody axe }
       describe { text "The axe is a heavy, ugly, single-bitted thing, its haft wrapped in greasy leather and its edge notched from use. The blood on the blade is not all old." }
     }
-
-    // The axe in his fist is out of sight inside him, as everything he holds
-    // is; what the visitor sees of it while he holds it is `held_axe`, which
-    // stands in the room while the axe is in his hands and waits inside him
-    // while it is not.
-    on :entered (item, from) {
-      if (item.is(Axe)) { move troll_room.held_axe to troll_room }
-    }
-    on :left (item, to) {
-      if (item.is(Axe)) { move troll_room.held_axe to self }
-    }
-  }
-
-  object held_axe is Scenery {
-    grammar { name "bloody axe"  nouns "axe", "ax"  adjectives "bloody" }
-    passage short { bloody axe }
-    passage no_take { The troll's axe seems white-hot. You can't hold on to it. }
-    describe { text "You can't get a good look at the axe while the troll is waving it at you. What you can see of it is heavy, notched and bloody, and generally coming your way." }
   }
 
   object passages is Scenery {

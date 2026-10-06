@@ -57,7 +57,7 @@
       { "reader": "Marta", "kind": "said", "words": "A brown sack" }
     ] },
     { "as": "Marta", "type": "take water", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+      { "reader": "Marta", "kind": "said", "words": "It's in the bottle. Perhaps you should take that instead." }
     ] },
     { "as": "Marta", "type": "open bottle", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Opened." }
@@ -87,7 +87,7 @@
       { "reader": "Marta", "kind": "said", "words": "The window closes (more easily than it opened)." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "The kitchen window is closed." }
+      { "reader": "Marta", "kind": "refused", "words": "The kitchen window is closed." }
     ] },
     { "as": "Marta", "type": "open window", "expect": [
       { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
@@ -100,7 +100,7 @@
       { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." }
     ] },
     { "as": "Marta", "type": "climb chimney", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "Only Santa Claus climbs down chimneys." }
+      { "reader": "Marta", "kind": "refused", "words": "Only Santa Claus climbs down chimneys." }
     ] },
     { "as": "Marta", "type": "x chimney", "expect": [
       { "reader": "Marta", "kind": "described", "words": "The chimney leads downward, and looks climbable." }

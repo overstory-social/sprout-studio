@@ -2,8 +2,10 @@
 // food and drink, and things with writing on them.
 import {Portable, Thing} from 'thing'
 import {Adventurer} from 'adventurer'
-import {eat, drink, read, pour, pour_in, pour_on, :glow, :claimed} from 'verbs'
+import {eat, drink, read, pour, pour_in, pour_on, give, throw, :glow, :claimed} from 'verbs'
 import {TrophyCase} from 'house'
+import {Troll} from 'troll'
+import {examine} from 'sprout'
 import {Box} from 'box'
 
 // A weapon, and which one: Zork's melee tables care whether it is the
@@ -19,7 +21,19 @@ kind Sword is Weapon {
 
 kind Knife is Weapon { :wcode 2 }
 
-kind Axe is Weapon { :wcode 3 }
+// The troll's axe. While he wields it, it is in plain sight in his fist and
+// in reach of a name, but not of a good look, and not of a hand (his own
+// guard says so: see `Troll`).
+kind Axe is Weapon {
+  :wcode 3
+  :wielded false
+  on :moved (from, to) { self.set(:wielded, to.is(Troll)) }
+  as target for examine {
+    permit {
+      if (self.get(:wielded)) { refuse "You can't get a good look at the axe while the troll is waving it at you. What you can see of it is heavy, notched and bloody, and generally coming your way." }
+    }
+  }
+}
 
 // A treasure pays `:value` the first time it is taken, and `:tvalue` for as
 // long as it sits in the trophy case.
@@ -91,8 +105,12 @@ kind Water is Thing {
   :size 4
   passage short { quantity of water }
   passage no_take { It's in the bottle. Perhaps you should take that instead. }
+  // Behind the bottle's shut stopper it is seen and named, as Zork's
+  // TRANSBIT shows it, and not to be had: WATER-F's and V-DRINK's lines.
+  passage stoppered { The bottle is closed. }
   without as target for drink from Thing
   as target for drink {
+    permit { if (self.get(:sealed)) { refuse "You'll have to open the glass bottle first." } }
     do {
       say "Thank you very much. I was rather thirsty (from all this talking, probably)."
       destroy self
@@ -103,6 +121,7 @@ kind Water is Thing {
   // the bottle it is in, or over something, it is gone.
   without as target for pour from Thing
   as target for pour {
+    permit { if (self.get(:sealed)) { refuse stoppered } }
     do {
       say "The water spills to the floor and evaporates."
       destroy self
@@ -110,6 +129,7 @@ kind Water is Thing {
   }
   without as item for pour_in from Thing
   as item for pour_in {
+    permit { if (self.get(:sealed)) { refuse stoppered } }
     do {
       if (container.is(Box)) {
         if (container.holds(self)) { say "The water slips through your fingers." }
@@ -128,10 +148,33 @@ kind Water is Thing {
   }
   without as item for pour_on from Thing
   as item for pour_on {
+    permit { if (self.get(:sealed)) { refuse stoppered } }
     do {
       if (target.is(Thing)) { say "The water spills over the {target.short}, to the floor, and evaporates." }
       else { say "The water spills to the floor and evaporates." }
       destroy self
+    }
+  }
+
+  // Given to the troll, out of the open bottle in hand, it goes into his;
+  // shut in the bottle, it goes nowhere.
+  as item for give {
+    permit { if (self.get(:sealed)) { refuse stoppered } }
+  }
+  // Thrown, as WATER-F has it, unless at the troll, who catches anything.
+  as target for throw {
+    permit { if (self.get(:sealed)) { refuse stoppered } }
+    do {
+      if (bound aim) {
+        if (aim.is(Troll)) { }
+        else {
+          say "The water splashes on the walls and evaporates immediately."
+          destroy self
+        }
+      } else {
+        say "The water splashes on the walls and evaporates immediately."
+        destroy self
+      }
     }
   }
 }

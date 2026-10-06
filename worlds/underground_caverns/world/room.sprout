@@ -42,13 +42,9 @@ kind Room is sprout.Place {
   passage objects {
     {for t: Thing in self}{if !t.get(:ndesc) && t.get(:has_fdesc) && !t.get(:touched)}
 
-    {t.fdesc}
+    {t.fdesc}{t.inside_lines}{/if}{/for}{for t: Thing in self}{if t.get(:ndesc) || !t.get(:has_fdesc) || t.get(:touched)}{if !t.get(:ndesc)}
 
-    {t.inside_lines}{/if}{/for}{for t: Thing in self}{if t.get(:ndesc) || !t.get(:has_fdesc) || t.get(:touched)}{if !t.get(:ndesc)}
-
-    {t.ldesc}{/if}
-
-    {t.inside_lines}{/if}{/for}
+    {t.ldesc}{/if}{t.inside_lines}{/if}{/for}
   }
   passage full {
     {self.title}
@@ -75,6 +71,7 @@ kind Room is sprout.Place {
   // A room answers to the words of its name ("Troll Room" to `troll`), but
   // only where nothing in it does; then it is as if nothing were there.
   as target for any { permit { refuse "You can't see any such thing." } }
+  as tool for any { permit { refuse "You can't see any such thing." } }
 
   on :entered (item, from) {
     if (item.is(Adventurer)) {

@@ -42,11 +42,16 @@ written down. That log is a product of the world as much as the rooms are.
    bars it (25 points for the Cellar). Going down without a light: "You
    have moved into a dark place." and "It is pitch black. You are likely to
    be eaten by a grue." The way back up the stairs is gone, as in Zork.
-6. The Troll Room. The troll fends the visitor off every passage but the
-   one they came by, and fights: with the sword (best), the knife or the
-   axe, on Zork's own melee tables, with Zork's own melee lines. He swings
+6. The Troll Room. The troll is an NPC, a `sprout.Actor` with nobody
+   behind him, and what he does to a visitor he does by acting. He fends
+   the visitor off every passage but the one they came by, and fights:
+   they with the sword (best), the knife or the axe, on Zork's own melee
+   tables, with Zork's own melee lines; he with his axe, by `act attack`,
+   the same verb, the visitor's own part of it taking the blow. He swings
    back in the same turn and, while he is fighting, on his own turns
-   besides, but never twice in one move, as in Zork. Dying sends the
+   besides, but never twice in one move, as in Zork. Disarmed, he picks his
+   axe up again (`act take`); given a weapon, he throws it back (`act
+   throw`). Dying sends the
    visitor back to the Forest with their possessions scattered and ten
    points lost; a third death ends their welcome.
 7. The way home, south of the Cellar: the crawlway to East of Chasm (dark;
@@ -112,7 +117,26 @@ egg 5 and 5, the painting 4 and 6.
   on his first turn after the blow, and a tenth likelier on each turn
   after, so the next blow almost always finds him helpless.
 - **Water pours.** Into anything but its bottle it leaks away, onto
-  anything it spills and evaporates; nothing else pours.
+  anything it spills and evaporates; nothing else pours. Thrown, it
+  splashes on the walls.
+- **Glass shows and does not give.** The water in the shut bottle and a
+  treasure in the shut trophy case can be seen and named, and are answered
+  that the bottle is closed, or that you can't reach inside a closed
+  container, until the lid comes off. With the bottle open in hand, `give
+  water to troll` gives him the water out of it, and he drinks it as he
+  eats everything.
+- **The troll's axe is in his fist.** It is in plain sight, and named, but
+  "you can't get a good look at it while he is waving it at you", and taken
+  it is white-hot: his own hands' guard says so. Knocked out of his hand or
+  dropped as he falls, it is an axe like any other; he will pick it up
+  again if he can, and coming round, he takes it back off the floor.
+- **The troll catches.** Throw something at him and he catches it ("who is
+  remarkably coordinated") and treats it as a gift: eats it, keeps his axe,
+  or throws a weapon back to the floor. What he eats goes into his stomach,
+  which can be examined and not looked into.
+- **The troll can be woken.** Out cold, `wake troll` (or breaking him, or
+  moving him, or a gift) brings him round "rudely awakened", axe in hand,
+  which is a bad idea that Zork allows.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
   chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
@@ -146,8 +170,11 @@ egg 5 and 5, the painting 4 and 6.
   fighting, light, wounds, moves, score, death), `lamp.sprout` (a
   `sprout.LightSource`), `items.sprout` (weapons, treasures, food, water,
   readables), `tree.sprout` (the tree top, the nest, the egg, the canary),
-  `scenery.sprout`, `grating.sprout`, `troll.sprout` (the troll, his
-  whole fight, and his gifts), `person.sprout` (the visitor kind).
+  `scenery.sprout`, `grating.sprout`, `troll.sprout` (the troll, an NPC:
+  his own parts of `attack`, `take` and `throw`, his turns, the visitor's
+  blow at him, his gifts and his stomach), `person.sprout` (the visitor
+  kind). The visitor's side of the troll's blow is `adventurer.sprout`'s
+  `as target for attack`.
 - `verbs.sprout`: Zork's verbs, the messages, the enums of gate
   destinations and description modes.
 
@@ -238,3 +265,72 @@ egg 5 and 5, the painting 4 and 6.
   whether the painting is slashed; darkness and the grue (East of Chasm and
   the Studio are dark, so a visitor who leaves the lamp behind meets them
   now); and the attic, still unvisited in eighteen runs.
+
+## Before round 4
+
+The director's steering for this pass, and what came of it.
+
+- **Sprout 26e6124.** An exit's refusal is a `refused` line (sprout#450);
+  the eight tests that expected `notice` now expect `refused`, and nothing
+  else changed. A slotted passage keeps its edge breaks (sprout#452), so
+  `inside_lines` carries its own paragraph break and its callers write
+  none. `take leaflet and read it`, `take x, y and z` and `put lunch and
+  garlic in case` work (sprout#453): the round-3 complaint about `and`
+  that six players met is gone.
+- **The route home, and why it.** Zork has four ways from the Troll Room
+  back to daylight: west through the Maze to the Grating Room and up
+  through the grating into the Clearing, which needs the skeleton key from
+  the Maze and a dozen or more maze rooms; east by the Round Room, the
+  Cyclops and the strange passage into the Living Room, which needs the
+  troll dead, the cyclops seen off and the better part of the dungeon
+  built; the river and the rainbow to the Canyon, which needs the dam, the
+  boat and the Rainbow; and south past the Cellar, down the crawlway to
+  East of Chasm, east to the Gallery, north to the Studio and up its
+  chimney into the Kitchen. The last is three rooms, every one Zork's, and
+  it is the only one that does not need the troll dead: a visitor who goes
+  down the trap door and cannot or will not win the fight still has a way
+  home, by Zork's own puzzle, the narrow chimney that takes only the lamp
+  and one thing more. It is the way Zork's own map offers the player the
+  trap door shuts behind, and the cheapest faithful one. It was opened at
+  the end of round 3 on the director's word (round 3's P1); this pass
+  checks it from the Troll Room itself (`troll_room_home.json`). The other
+  three stay refused in-world: the hole west, the passage east, and the
+  grating, locked from below.
+- **The troll as an NPC.** `kind Troll is Thing, sprout.Actor`. He swings
+  by `act attack (target: a, weapon: axe)`, deciding the blow on Zork's
+  tables in his own part (`:dealt`); the visitor's `as target for attack`
+  tells them the line and wounds, stuns, disarms or kills them. He picks up
+  his axe with `act take` and throws back a weapon with `act throw`. He
+  passes, so his axe is in reach in his fist; the axe's own `examine`
+  refuses while he wields it, and `sprout.Actor`'s `release` refuses `take`
+  with his `not_yours` line, Zork's white-hot axe. What he eats goes into a
+  stomach inside him that passes nothing. The knockout's second chance and
+  the fight's randomness are as round 3 left them. What the NPC model
+  would not let me say is friction 45 to 47.
+- **Verbs.** GIVE water from the bottle (open: the troll drinks it; shut:
+  "The bottle is closed."), POUR from a shut bottle refused in Zork's
+  words, THROW (at the troll he catches it), KICK, RUB and TOUCH, WAVE,
+  SHAKE, SQUEEZE, KISS, LOOK BEHIND, FILL, TIE, WAKE, TALK TO, HELLO to
+  someone, PRAY and SWIM, with Zork's answers. P8's other gaps: DIG WITH
+  and POUR were built in round 3; the digging beyond the crawlway that
+  could not be listened to went with the rock that choked it.
+
+### What round 4 should test
+
+- **The way home.** Whether a visitor barred in the Cellar finds the
+  crawlway, reads the chimney's rule as a puzzle (the lamp and one thing),
+  and comes up into the Kitchen; and whether anyone then goes back down
+  for a second treasure. Nobody has yet been barred in and come home alive.
+- **The troll as an NPC.** Whether his fight still reads as Zork's, now
+  that his blows are his own acts; whether the knockout's second chance is
+  found; whether anyone tries the axe in his fist (looking, taking), throws
+  things at him, wakes him, or gives him water from the bottle.
+- **The new verbs,** and whether any player meets the `examine all` stop
+  on the axe (friction 48).
+- **Glass.** Whether the shut bottle's "The bottle is closed." reads well,
+  and whether the trophy case, shut, is read as keeping its treasures.
+- Still unvisited after eighteen runs: the attic, darkness and the grue,
+  dropping things from the tree, the score's ranks. East of Chasm and the
+  Studio are dark, so the route home is where a visitor who has let the
+  lamp go first meets the grue.
+

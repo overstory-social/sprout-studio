@@ -1,7 +1,7 @@
 {
-  "about": "The troll and his gifts: he eats what he is given, throws a weapon back, and one time in five eats it and dies of it, leaving his axe; there is no fog about the room before he dies, and no troll at all after.",
+  "about": "The troll is an NPC: his axe is in his fist, in plain sight and in reach of a name, but it cannot be looked at closely or taken from him; what he eats goes into his stomach; he catches what is thrown at him; he swings at the visitor by acting, and the visitor's own part takes the blow; knocked out, he can be woken, and comes round with his axe back in his hand.",
   "steps": [
-    { "seed": 2 },
+    { "seed": 1 },
     { "arrive": "Marta", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West of House" },
       { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
@@ -26,11 +26,15 @@
       { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
       { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
     ] },
-    { "as": "Marta", "type": "take sack", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    { "as": "Marta", "type": "take all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Brown sack: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Glass bottle: Taken." }
     ] },
     { "as": "Marta", "type": "open sack", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Opening the brown sack reveals a lunch, and a clove of garlic." }
+    ] },
+    { "as": "Marta", "type": "open bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Living Room" },
@@ -38,11 +42,9 @@
       { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
       { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
     ] },
-    { "as": "Marta", "type": "take lamp", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "take sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    { "as": "Marta", "type": "take lamp and sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Brass lantern: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Sword: Taken." }
     ] },
     { "as": "Marta", "type": "move rug", "expect": [
       { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
@@ -65,45 +67,72 @@
       { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
       { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
-    { "as": "Marta", "type": "examine all", "expect": [
+    { "as": "Marta", "type": "x troll", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." }
+    ] },
+    { "as": "Marta", "type": "x axe", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "You can't get a good look at the axe while the troll is waving it at you. What you can see of it is heavy, notched and bloody, and generally coming your way." }
     ] },
-    { "as": "Marta", "type": "give lunch to troll", "expect": [
+    { "as": "Marta", "type": "take axe", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The troll's axe seems white-hot. You can't hold on to it." }
+    ] },
+    { "as": "Marta", "type": "take all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Lunch: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Clove of garlic: Taken." }
+    ] },
+    { "as": "Marta", "type": "x stomach", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is large and green and makes a noise like distant furniture being moved. Whatever went down it is not coming back up for you." }
+    ] },
+    { "as": "Marta", "type": "give water to troll", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and not having the most discriminating tastes, gleefully eats it." }
     ] },
-    { "as": "Marta", "type": "give garlic to troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and not having the most discriminating tastes, gleefully eats it." }
+    { "as": "Marta", "type": "throw lunch at troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll, who is remarkably coordinated, catches the lunch and not having the most discriminating tastes, gleefully eats it." }
     ] },
-    { "as": "Marta", "type": "give sword to troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and, being for the moment sated, throws it back. Fortunately, the troll has poor control, and the sword falls to the floor. He does not look pleased." }
+    { "as": "Marta", "type": "hello troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll bows his head to you in greeting." }
     ] },
-    { "as": "Marta", "type": "take sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    { "as": "Marta", "type": "talk to troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll isn't much of a conversationalist." }
     ] },
-    { "seed": 4 },
-    { "as": "Marta", "type": "give sword to troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and eats it hungrily. Poor troll, he dies from an internal hemorrhage and his carcass disappears in a sinister black fog." }
+    { "as": "Marta", "type": "listen to troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
     ] },
-    { "advance": "2 minutes", "expect": [] },
-    { "as": "Marta", "type": "examine troll", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
+    { "as": "Marta", "type": "shake troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "This seems to have no effect." }
     ] },
-    { "as": "Marta", "type": "l", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
-      { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
+    { "as": "Marta", "type": "kiss troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "I'd sooner kiss a pig." }
+    ] },
+    { "seed": 3 },
+    { "as": "Marta", "type": "attack troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "You charge, but the troll jumps nimbly aside." },
+      { "reader": "Marta", "kind": "told", "words": "The troll swings his axe, and it nicks your arm as you dodge." }
+    ] },
+    { "seed": 7 },
+    { "as": "Marta", "type": "attack troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "Your sword crashes down, knocking the troll into dreamland." }
+    ] },
+    { "as": "Marta", "type": "x troll", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "An unconscious troll is sprawled on the floor. All passages out of the room are open." }
+    ] },
+    { "as": "Marta", "type": "x axe", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The axe is a heavy, ugly, single-bitted thing, its haft wrapped in greasy leather and its edge notched from use. The blood on the blade is not all old." }
+    ] },
+    { "as": "Marta", "type": "wake troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll is rudely awakened." },
+      { "reader": "Marta", "kind": "said", "words": "The troll stirs, quickly resuming a fighting stance." }
+    ] },
+    { "as": "Marta", "type": "x troll", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." }
+    ] },
+    { "as": "Marta", "type": "x axe", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't get a good look at the axe while the troll is waving it at you. What you can see of it is heavy, notched and bloody, and generally coming your way." }
     ] },
     { "as": "Marta", "type": "take axe", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage to the east has not been finished. A note is pinned to the rock: \"Back soon. -- The Management.\"" }
-    ] },
-    { "as": "Marta", "type": "take pick", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
-    ] },
-    { "as": "Marta", "type": "dig", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Digging with a pair of hands is silly." }
+      { "reader": "Marta", "kind": "refused", "words": "The troll's axe seems white-hot. You can't hold on to it." }
     ] }
   ]
 }

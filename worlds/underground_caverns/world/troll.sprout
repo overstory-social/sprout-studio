@@ -1,20 +1,42 @@
-// The troll, and Zork's melee. A blow is resolved on Zork's own tables
-// (DEF1, DEF2A and DEF2B in actions.zil): a nine-sided die, read along a
-// row chosen by the attacker's strength and the defender's, the sword
-// counting one point of the troll's defence away. The lines are Zork's,
-// drawn as Zork draws them, at random within the kind of blow.
+// The troll: an NPC, a `sprout.Actor` with nobody behind him, and Zork's
+// melee. What he does to a visitor he does by acting: he swings his axe at
+// them with `act attack`, the very verb they swing at him with, and their
+// own part of that reading takes the blow; he picks his axe up off the
+// floor with `act take`, and throws back a weapon he is given with `act
+// throw`.
+//
+// A blow is resolved on Zork's own tables (DEF1, DEF2A and DEF2B in
+// actions.zil): a nine-sided die, read along a row chosen by the attacker's
+// strength and the defender's, the sword counting one point of the troll's
+// defence away. The lines are Zork's, drawn as Zork draws them, at random
+// within the kind of blow.
 //
 // He swings back in the turn he is struck, and on his own turns besides
 // while he is fighting: a wake every minute while somebody stands in his
 // room, the Troll Room.
-import {Thing} from 'thing'
+import * as sprout from 'sprout'
+import {Thing, Scenery} from 'thing'
 import {Weapon, Axe} from 'items'
 import {Adventurer} from 'adventurer'
-import {listen, give, :blow, :hit, :swing, :expire, :struck, :troll_flag, :troll_gone} from 'verbs'
+import {ask} from 'sprout'
+import {listen, give, attack, take, drop, throw, mung, shift, alarm, talk, greet, shake, squeeze, :blow, :hit, :gift, :swing, :expire, :come_round, :troll_flag, :troll_gone} from 'verbs'
 
-kind Troll is Thing {
+// What he eats goes down here, out of everyone's sight and reach, and is
+// gone with him when he dies.
+kind Belly is Scenery {
   contains
   pass any (false)
+  grammar { name "troll's stomach"  nouns "stomach", "belly", "gut", "paunch" }
+  passage short { troll's stomach }
+  describe { text "It is large and green and makes a noise like distant furniture being moved. Whatever went down it is not coming back up for you." }
+}
+
+kind Troll is Thing, sprout.Actor {
+  // He holds his axe in plain sight, and in reach; what he has eaten is in
+  // his belly, which shows nothing.
+  pass any (true)
+
+  object belly is Belly
 
   // Zork's P?STRENGTH: 2 fresh, less when wounded, negated while out cold.
   :strength 2 min -2 max 2
@@ -30,7 +52,12 @@ kind Troll is Thing {
   // What the last blow at him did (Zork's blow results, 1 to 7), or 8 and 9
   // for a troll who could not defend himself, or 0 for no blow at all.
   :last 0 min 0 max 9
-  // Whether he died of what he was given, which says so itself.
+  // What his own blow does to whoever he swings at, decided as he swings:
+  // 1 missed, 2 knocked out, 3 killed, 4 lightly wounded, 6 staggered.
+  :dealt 1 min 1 max 6
+  // Whether he means to eat the weapon he has just been given, and whether
+  // he died of it, which says so itself.
+  :gorge false
   :gorged false
   // Out cold, his chance of coming round on one of his turns, in tenths:
   // nothing on the first turn after the blow, then a tenth more each turn,
@@ -44,52 +71,175 @@ kind Troll is Thing {
   passage no_take { The troll spits in your face, grunting "Better luck next time" in a rather barbarous accent. }
   describe { text ldesc }
 
+  // His hands are his own (`sprout.Actor`'s guards): nobody takes what he
+  // holds, and nobody carries him off. The only thing he holds is his axe,
+  // and Zork's AXE-FUNCTION says why.
+  passage not_yours { The troll's axe seems white-hot. You can't hold on to it. }
+  passage held_fast { The troll spits in your face, grunting "Better luck next time" in a rather barbarous accent. }
+
   without as target for listen from Thing
   as target for listen {
     do { say "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
   }
 
-  // A gift, as Zork's TROLL-FCN takes it: an unconscious troll is woken by
-  // it; the axe he takes back; a weapon he eats one time in five, and dies
-  // of it, and otherwise throws back; anything else he eats. What he eats
-  // goes inside him, where nothing can see it.
+  // MUNG, and moving him, as TROLL-FCN has them: either wakes him if he is
+  // out cold (Zork's AWAKEN).
+  without as target for mung from Thing
+  as target for mung {
+    do {
+      say "The troll laughs at your puny gesture."
+      if (self.get(:strength) < 0) {
+        say "The troll stirs, quickly resuming a fighting stance."
+        send self :come_round
+      }
+    }
+  }
+  without as target for shift from Thing
+  as target for shift {
+    do {
+      say no_take
+      if (self.get(:strength) < 0) {
+        say "The troll stirs, quickly resuming a fighting stance."
+        send self :come_round
+      }
+    }
+  }
+
+  // Zork's ALARM: he is rudely awakened, or was never asleep.
+  without as target for alarm from Thing
+  as target for alarm {
+    do {
+      if (self.get(:strength) < 0) {
+        say "The troll is rudely awakened."
+        say "The troll stirs, quickly resuming a fighting stance."
+        send self :come_round
+      } else { say "He's wide awake, or haven't you noticed..." }
+    }
+  }
+
+  without as target for talk from Thing
+  as target for talk { do { say "The troll isn't much of a conversationalist." } }
+  as target for ask { do { say "The troll isn't much of a conversationalist." } }
+  without as target for greet from Thing
+  as target for greet {
+    do {
+      if (self.get(:strength) < 0) { say "Unfortunately, the troll can't hear you." }
+      else { say "The troll bows his head to you in greeting." }
+    }
+  }
+  without as target for shake from Thing
+  as target for shake { do { say "This seems to have no effect." } }
+  without as target for squeeze from Thing
+  as target for squeeze { do { say "The troll does not understand this." } }
+
+  // A gift, as Zork's TROLL-FCN takes it, handed to him or thrown at him:
+  // an unconscious troll is woken by it; the axe he takes back; a weapon he
+  // eats one time in five, and dies of it, and otherwise throws back to the
+  // floor; anything else he eats. The visitor's own part has already put it
+  // in his hands, and what he does with it he does in `:gift`.
   without as recipient for give from Thing
   as recipient for give {
     do {
       if (item.is(Thing)) {
-        if (self.get(:strength) < 0) {
-          self.set(:strength, 0 - self.get(:strength))
-          each x: Axe in underground_caverns.troll_room { move x to self }
-          send underground_caverns.troll_room :troll_flag with false
-          self.set(:swung, false)
-          say "The troll stirs, quickly resuming a fighting stance."
-        }
+        if (self.get(:strength) < 0) { say "The troll stirs, quickly resuming a fighting stance." }
         if (item.is(Axe)) {
-          move item to self
-          self.set(:fighting, true)
-          send underground_caverns.troll_room :troll_flag with false
           say "The troll scratches his head in confusion, then takes the axe."
         } else if (item.is(Weapon)) {
-          if (chance(5)) {
-            move item to self
-            self.set(:gorged, true)
+          let g = chance(5)
+          self.set(:gorge, g)
+          if (g) {
             say "The troll, who is not overly proud, graciously accepts the gift and eats it hungrily. Poor troll, he dies from an internal hemorrhage and his carcass disappears in a sinister black fog."
-            send self :expire
           } else {
-            move item to underground_caverns.troll_room
-            self.set(:fighting, true)
             say "The troll, who is not overly proud, graciously accepts the gift and, being for the moment sated, throws it back. Fortunately, the troll has poor control, and the {item.short} falls to the floor. He does not look pleased."
           }
         } else {
-          move item to self
           say "The troll, who is not overly proud, graciously accepts the gift and not having the most discriminating tastes, gleefully eats it."
         }
-        if (self.get(:fighting) && !self.get(:waking) && !self.get(:gorged)) {
-          self.set(:waking, true)
-          wake in 1 minutes
+        send self :gift
+      }
+    }
+  }
+  as aim for throw {
+    do {
+      if (target.is(Thing)) {
+        if (self.get(:strength) < 0) { say "The troll stirs, quickly resuming a fighting stance." }
+        if (target.is(Axe)) {
+          say "The troll, who is remarkably coordinated, catches the bloody axe, scratches his head in confusion, and keeps it."
+        } else if (target.is(Weapon)) {
+          let g = chance(5)
+          self.set(:gorge, g)
+          if (g) {
+            say "The troll, who is remarkably coordinated, catches the {target.short} and eats it hungrily. Poor troll, he dies from an internal hemorrhage and his carcass disappears in a sinister black fog."
+          } else {
+            say "The troll, who is remarkably coordinated, catches the {target.short} and, being for the moment sated, throws it back. Fortunately, the troll has poor control, and the {target.short} falls to the floor. He does not look pleased."
+          }
+        } else {
+          say "The troll, who is remarkably coordinated, catches the {target.short} and not having the most discriminating tastes, gleefully eats it."
+        }
+        send self :gift
+      }
+    }
+  }
+
+  // What he does with what he has just been given, on his own account.
+  on :gift {
+    if (self.get(:strength) < 0) { send self :come_round }
+    each t: Thing in self {
+      if (t.is(Belly)) { }
+      else if (t.is(Axe)) {
+        self.set(:fighting, true)
+        send underground_caverns.troll_room :troll_flag with false
+      } else if (t.is(Weapon)) {
+        if (self.get(:gorge)) {
+          each b: Belly in self { move t to b }
+          self.set(:gorged, true)
+          send self :expire
+        } else {
+          self.set(:fighting, true)
+          act throw (target: t)
+        }
+      } else {
+        each b: Belly in self { move t to b }
+      }
+    }
+    if (self.get(:fighting) && !self.get(:waking)) {
+      self.set(:waking, true)
+      wake in 1 minutes
+    }
+  }
+
+  // His own parts of the verbs he acts by. Nobody is behind him to read
+  // what he says, so he says nothing: what his blow does is told by the
+  // part of whoever it falls on.
+  as actor for attack {
+    do {
+      if (target.is(Adventurer)) {
+        let r = random(9)
+        let s = self.get(:strength)
+        let d = target.get(:fight)
+        // Zork's tables read from the defender's side: DEF1 for a weak
+        // visitor, DEF2A and DEF2B for a fair one, as the troll is strong.
+        if (d <= 1) {
+          if (s <= 1) {
+            if (r < 4) { self.set(:dealt, 1) } else if (r < 6) { self.set(:dealt, 6) } else if (r < 8) { self.set(:dealt, 2) } else { self.set(:dealt, 3) }
+          } else {
+            if (r < 2) { self.set(:dealt, 1) } else if (r < 4) { self.set(:dealt, 6) } else if (r < 6) { self.set(:dealt, 2) } else { self.set(:dealt, 3) }
+          }
+        } else {
+          if (s <= 1) {
+            if (r < 5) { self.set(:dealt, 1) } else if (r < 7) { self.set(:dealt, 6) } else { self.set(:dealt, 4) }
+          } else {
+            if (r < 3) { self.set(:dealt, 1) } else if (r < 5) { self.set(:dealt, 6) } else if (r < 8) { self.set(:dealt, 4) } else { self.set(:dealt, 2) }
+          }
         }
       }
     }
+  }
+  as actor for take {
+    do { each t of target { move t to self } }
+  }
+  as actor for throw {
+    do { move target to here }
   }
 
   // The visitor's blow. `value` is the weapon: 1 the sword, 2 the knife,
@@ -136,7 +286,8 @@ kind Troll is Thing {
   }
 
   // What the blow did to him; then, if he can, he swings back. A stagger
-  // is a lost weapon one time in four (Zork's LOSE-WEAPON).
+  // is a lost weapon one time in four (Zork's LOSE-WEAPON). Out cold or
+  // disarmed, his axe falls from his hand: that is done to him, not by him.
   on :hit (from, value) {
     if (value == 6 && chance(4)) { self.set(:last, 7) }
     else { self.set(:last, value) }
@@ -164,47 +315,43 @@ kind Troll is Thing {
   }
 
   // His swing, at whoever stands in his room, unless he is out cold,
-  // reeling, or without his axe. The visitor is sent the blow's result.
+  // reeling, or without his axe; without it, he picks it up off the floor
+  // if he can (Zork's F-BUSY?), and cowers if he cannot.
   on :swing {
     if (!self.get(:dead) && self.get(:strength) > 0) {
       if (self.get(:staggered)) {
         self.set(:staggered, false)
-        each a: Adventurer in underground_caverns.troll_room { tell a "The troll slowly regains his feet." }
+        tell "The troll slowly regains his feet."
       } else if (self.count(Axe) == 0) {
         if (underground_caverns.troll_room.count(Axe) > 0 && !chance(3)) {
-          each x: Axe in underground_caverns.troll_room { move x to self }
-          each a: Adventurer in underground_caverns.troll_room {
-            tell a "The troll, angered and humiliated, recovers his weapon. He appears to have an axe to grind with you."
-          }
+          each x: Axe in underground_caverns.troll_room { act take (target: x) }
+          tell "The troll, angered and humiliated, recovers his weapon. He appears to have an axe to grind with you."
         } else {
-          each a: Adventurer in underground_caverns.troll_room {
-            tell a "The troll, disarmed, cowers in terror, pleading for his life in the guttural tongue of the trolls."
-          }
+          tell "The troll, disarmed, cowers in terror, pleading for his life in the guttural tongue of the trolls."
         }
       } else {
-        let r = random(9)
-        let s = self.get(:strength)
         each a: Adventurer in underground_caverns.troll_room {
-          let d = a.get(:fight)
-          if (d <= 1) {
-            if (s <= 1) {
-              if (r < 4) { send a :struck with 1 } else if (r < 6) { send a :struck with 6 } else if (r < 8) { send a :struck with 2 } else { send a :struck with 3 }
-            } else {
-              if (r < 2) { send a :struck with 1 } else if (r < 4) { send a :struck with 6 } else if (r < 6) { send a :struck with 2 } else { send a :struck with 3 }
-            }
-          } else {
-            if (s <= 1) {
-              if (r < 5) { send a :struck with 1 } else if (r < 7) { send a :struck with 6 } else { send a :struck with 4 }
-            } else {
-              if (r < 3) { send a :struck with 1 } else if (r < 5) { send a :struck with 6 } else if (r < 8) { send a :struck with 4 } else { send a :struck with 2 }
-            }
-          }
+          each x: Axe in self { act attack (target: a, weapon: x) }
         }
       }
       if (self.get(:fighting) && !self.get(:waking) && underground_caverns.troll_room.count(Adventurer) > 0) {
         self.set(:waking, true)
         wake in 1 minutes
       }
+    }
+  }
+
+  // Coming round (Zork's AWAKEN and F-CONSCIOUS): back on his feet, and
+  // his axe back in his hand if it lies on the floor. Whoever woke him has
+  // been told so already.
+  on :come_round {
+    if (!self.get(:dead) && self.get(:strength) < 0) {
+      self.set(:rouse, 0)
+      self.set(:strength, 0 - self.get(:strength))
+      self.set(:fighting, true)
+      self.set(:swung, false)
+      each x: Axe in underground_caverns.troll_room { act take (target: x) }
+      send underground_caverns.troll_room :troll_flag with false
     }
   }
 
@@ -218,13 +365,8 @@ kind Troll is Thing {
     if (!self.get(:dead)) {
       if (self.get(:strength) < 0) {
         if (underground_caverns.troll_room.count(Adventurer) == 0 || random(10) < self.get(:rouse)) {
-          self.set(:rouse, 0)
-          self.set(:strength, 0 - self.get(:strength))
-          self.set(:fighting, true)
-          each x: Axe in underground_caverns.troll_room { move x to self }
-          send underground_caverns.troll_room :troll_flag with false
-          self.set(:swung, false)
-          each a: Adventurer in underground_caverns.troll_room { tell a "The troll stirs, quickly resuming a fighting stance." }
+          tell "The troll stirs, quickly resuming a fighting stance."
+          send self :come_round
           send self :swing
         } else {
           self.adjust(:rouse, 1)
@@ -267,9 +409,7 @@ kind Troll is Thing {
     self.set(:dead, true)
     self.set(:fighting, false)
     if (!self.get(:gorged)) {
-      each a: Adventurer in underground_caverns.troll_room {
-        tell a "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared."
-      }
+      tell "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared."
     }
     each x: Axe in self { move x to underground_caverns.troll_room }
     send underground_caverns.troll_room :troll_flag with true

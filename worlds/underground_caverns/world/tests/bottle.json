@@ -1,7 +1,7 @@
 {
-  "about": "Zork's POUR, DIG WITH and MUNG: water poured is gone, nothing else pours, digging with anything to hand is silly, and breaking things is mostly a nice try.",
+  "about": "Glass that shows what it holds: the water in the shut bottle can be seen and named, and answered that the bottle is closed, until the stopper comes out; then it can be poured, thrown, or given to the troll out of the bottle in hand. The trophy case is glass too: what is in it, shut, can be seen and not taken.",
   "steps": [
-    { "seed": 0 },
+    { "seed": 1 },
     { "arrive": "Marta", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West of House" },
       { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
@@ -26,30 +26,35 @@
       { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
       { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
     ] },
+    { "as": "Marta", "type": "x water", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "There's nothing special about the quantity of water." }
+    ] },
+    { "as": "Marta", "type": "take water", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It's in the bottle. Perhaps you should take that instead." }
+    ] },
+    { "as": "Marta", "type": "drink water", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You'll have to open the glass bottle first." }
+    ] },
+    { "as": "Marta", "type": "pour water", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The bottle is closed." }
+    ] },
+    { "as": "Marta", "type": "pour water into sack", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The bottle is closed." }
+    ] },
     { "as": "Marta", "type": "take bottle", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
-    { "as": "Marta", "type": "pour water", "expect": [
+    { "as": "Marta", "type": "shake bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It sounds like there is something inside the glass bottle." }
+    ] },
+    { "as": "Marta", "type": "throw water", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "The bottle is closed." }
     ] },
     { "as": "Marta", "type": "open bottle", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Opened." }
     ] },
-    { "as": "Marta", "type": "pour water into bottle", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The water slips through your fingers." }
-    ] },
-    { "as": "Marta", "type": "pour water on table", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The water spills over the kitchen table, to the floor, and evaporates." }
-    ] },
-    { "as": "Marta", "type": "i", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
-      { "reader": "Marta", "kind": "said", "words": "A glass bottle" }
-    ] },
-    { "as": "Marta", "type": "take sack", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "pour sack", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You can't pour that." }
+    { "as": "Marta", "type": "throw water at table", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The water splashes on the walls and evaporates immediately." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Living Room" },
@@ -57,24 +62,29 @@
       { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
       { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
     ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "open case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." }
+    ] },
+    { "as": "Marta", "type": "put sword in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "close case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Closed." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't reach something that's inside a closed container." }
+    ] },
     { "as": "Marta", "type": "take all", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Brass lantern: Taken." },
-      { "reader": "Marta", "kind": "said", "words": "Sword: Taken." }
+      { "reader": "Marta", "kind": "said", "words": "Brass lantern: Taken." }
     ] },
-    { "as": "Marta", "type": "dig with sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Digging with a sword is silly." }
+    { "as": "Marta", "type": "open case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." }
     ] },
-    { "as": "Marta", "type": "dig with bottle", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Digging with a glass bottle is silly." }
-    ] },
-    { "as": "Marta", "type": "break sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Nice try." }
-    ] },
-    { "as": "Marta", "type": "destroy rug", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Nice try." }
-    ] },
-    { "as": "Marta", "type": "dig", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Digging with a pair of hands is silly." }
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] }
   ]
 }

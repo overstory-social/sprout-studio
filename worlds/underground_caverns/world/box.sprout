@@ -1,14 +1,17 @@
 // A container, as Zork has them: it opens with "Opened." or "Opening the
 // ... reveals ...", it lists what it holds the way Zork's PRINT-CONT does,
 // and a closed one passes nothing in or out. A transparent one (Zork's
-// TRANSBIT) shows what it holds while closed, and a surface (a table) says
+// TRANSBIT: the bottle, the trophy case) passes while closed, so what it
+// holds can be seen and named, and its lid keeps hands out instead: nothing
+// leaves it, or enters it, until it is opened. A surface (a table) says
 // "Sitting on the ... is:".
 //
 // `:plain` counts what Zork would list plainly ("A leaflet") rather than by
 // a first description: whatever was here from the start without one, and
 // whatever has arrived since.
 import {Thing, Portable} from 'thing'
-import {open, close, look_in} from 'verbs'
+import {open, close, look_in, shake, :sealed} from 'verbs'
+import {Adventurer} from 'adventurer'
 
 kind Box is Thing {
   contains
@@ -18,14 +21,25 @@ kind Box is Thing {
   :capacity 10 min 0 max 100
   :plain 0 min 0 max 100
 
-  pass any (self.get(:open))
+  pass any (self.get(:open) || self.get(:transparent))
 
   accept (item, from) {
     if (!self.get(:open)) { refuse "The {self.short} isn't open." }
     else if (self.count >= self.get(:capacity)) { refuse "There's no room." }
   }
+  release (item, to) {
+    if (!self.get(:open)) { refuse "You can't reach something that's inside a closed container." }
+  }
 
-  on :entered (item, from) { self.adjust(:plain, 1) }
+  // Behind a shut glass lid, what it holds knows it is out of reach.
+  on :entered (item, from) {
+    self.adjust(:plain, 1)
+    if (item.is(Thing)) { send item :sealed with !self.get(:open) && self.get(:transparent) }
+  }
+  changed :open (was) {
+    each t: Thing in self { send t :sealed with !self.get(:open) && self.get(:transparent) }
+  }
+
   on :left (item, to) {
     if (item.is(Thing)) {
       if (item.get(:touched) || !item.get(:has_fdesc)) { self.adjust(:plain, -1) }
@@ -69,9 +83,7 @@ kind Box is Thing {
   passage inside_lines {
     {if self.get(:open) || self.get(:transparent)}{for u: Thing in self}{if u.get(:has_fdesc) && !u.get(:touched)}
 
-    {u.fdesc}
-
-    {u.inside_lines}{/if}{/for}{if self.get(:plain) > 0 && self.count(Thing) > 0}
+    {u.fdesc}{u.inside_lines}{/if}{/for}{if self.get(:plain) > 0 && self.count(Thing) > 0}
 
     {self.header}{for u: Thing in self}{if u.get(:touched) || !u.get(:has_fdesc)}
 
@@ -86,4 +98,18 @@ kind Bag is Box, Portable {
   without as target for open from Thing
   without as target for close from Thing
   without as target for look_in from Thing
+  without as target for shake from Thing
+  without as target for shake from Portable
+  // Zork's SHAKE: an open one spills what it holds (the visitor's own part
+  // does that, and says so); a shut one rattles or does not.
+  as target for shake {
+    do {
+      if (!self.get(:open)) {
+        if (self.count(Thing) > 0) { say "It sounds like there is something inside the {self.short}." }
+        else { say "The {self.short} sounds empty." }
+      } else if (actor.is(Adventurer)) {
+        if (!actor.get(:spilled)) { say "Shaken." }
+      }
+    }
+  }
 }
