@@ -1447,6 +1447,11 @@ for (const persona of Object.keys(GOALS)) {
   if (!PERSONAS.includes(persona)) throw new Error(`args.goals names ${persona}, which is not a persona of this round`)
   if (typeof GOALS[persona] !== 'string' || GOALS[persona].trim() === '') throw new Error(`args.goals.${persona} is a sentence for the player`)
 }
+// A playtester stays blind: nothing it is told names a file, a folder, the round or a calibration world.
+const LEAKS = /worlds\/|rounds\/|\.(md|json|sprout)\b|\bround\s*\d|\bcalibration\b/i
+for (const [what, words] of [['args.framing', FRAMING], ...Object.entries(GOALS).map(([persona, goal]) => [`args.goals.${persona}`, goal])]) {
+  if (words !== null && LEAKS.test(words)) throw new Error(`${what} would tell a playtester about the studio: ${JSON.stringify(words.match(LEAKS)[0])}`)
+}
 const W = `worlds/${WORLD}`
 
 const PERSONA = {

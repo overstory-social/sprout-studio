@@ -323,6 +323,18 @@ describe('the studio-round workflow', () => {
     const synth = s.calls.find((one) => one.type === 'synthesizer').prompt;
     assert.match(synth, /Every player was told: "This place is like one you may know, but it has changed\."/);
     assert.match(synth, /The explorer runs played with a goal: "Find the brass key\."/);
+    // Nothing kept on disk carries them: no clerk command, and nothing it is fed.
+    for (const call of s.calls.filter((one) => one.type === 'clerk')) {
+      assert.doesNotMatch(call.prompt, /brass key|has changed/);
+    }
+  });
+
+  it('refuses a framing or a goal that would tell a playtester about the studio', async () => {
+    await assert.rejects(stage().run({ world: 'shed', framing: 'You are in round 3.' }), /args\.framing would tell a playtester about the studio: "round 3"/);
+    await assert.rejects(
+      stage().run({ world: 'shed', goals: { explorer: 'Read worlds/shed/brief.md first.' } }),
+      /args\.goals\.explorer would tell a playtester about the studio: "worlds\/"/,
+    );
   });
 
   it('refuses a goal for a persona the round does not play', async () => {

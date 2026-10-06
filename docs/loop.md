@@ -111,7 +111,7 @@ arguments:
 | `rounds` | how many rounds to play (`studio run`) | 1 |
 | `personas`, `seeds` | the runs of a round; each run's door seeds its own stream of turn seeds, from its seed and persona | all six, `[1]` |
 | `framing` | a line every playtester is told before it plays, e.g. that the place is a changed version of one it may know | none |
-| `goals` | a goal for a persona's players, as `{ "goal-seeker": "Get as high a score as you can." }`; the synthesizer is told each and judges whether it was reached | none |
+| `goals` | a goal for a persona's players, as `{ "goal-seeker": "Get as high a score as you can." }`; the synthesizer is told each and judges whether it was reached. Both this and `framing` are written blind: they name no file, folder, round, author or calibration world, and the workflow refuses one that names a file, folder, round or calibration world | none |
 | `turnCap`, `advancePerTurn` | turns per run; seconds each turn moves time | 150, 30 |
 | `maxRuns`, `maxRounds` | the caps on runs per round and rounds per call | 12, 12 |
 | `author` | the author's model, from the brief: `opus` or `fable` | `opus` |
