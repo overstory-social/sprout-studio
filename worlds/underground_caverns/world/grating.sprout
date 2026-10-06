@@ -55,6 +55,7 @@ kind Ground is Scenery {
 kind Grating is Scenery {
   grammar { name "grating"  nouns "grate" }
   passage short { grating }
+  :door true
   describe { text "The grating is closed." }
 
   without as target for open from Thing

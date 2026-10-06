@@ -8,9 +8,9 @@
 // while he is fighting: a wake every minute while somebody stands in his
 // room, the Troll Room.
 import {Thing} from 'thing'
-import {Axe} from 'items'
+import {Weapon, Axe} from 'items'
 import {Adventurer} from 'adventurer'
-import {listen, :blow, :hit, :swing, :expire, :struck, :troll_flag, :troll_gone} from 'verbs'
+import {listen, give, :blow, :hit, :swing, :expire, :struck, :troll_flag, :troll_gone} from 'verbs'
 
 kind Troll is Thing {
   contains
@@ -30,6 +30,8 @@ kind Troll is Thing {
   // What the last blow at him did (Zork's blow results, 1 to 7), or 8 and 9
   // for a troll who could not defend himself, or 0 for no blow at all.
   :last 0 min 0 max 9
+  // Whether he died of what he was given, which says so itself.
+  :gorged false
 
   passage short { troll }
   passage ldesc {
@@ -41,6 +43,49 @@ kind Troll is Thing {
   without as target for listen from Thing
   as target for listen {
     do { say "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
+  }
+
+  // A gift, as Zork's TROLL-FCN takes it: an unconscious troll is woken by
+  // it; the axe he takes back; a weapon he eats one time in five, and dies
+  // of it, and otherwise throws back; anything else he eats. What he eats
+  // goes inside him, where nothing can see it.
+  without as recipient for give from Thing
+  as recipient for give {
+    do {
+      if (item.is(Thing)) {
+        if (self.get(:strength) < 0) {
+          self.set(:strength, 0 - self.get(:strength))
+          each x: Axe in underground_caverns.troll_room { move x to self }
+          send underground_caverns.troll_room :troll_flag with false
+          self.set(:swung, false)
+          say "The troll stirs, quickly resuming a fighting stance."
+        }
+        if (item.is(Axe)) {
+          move item to self
+          self.set(:fighting, true)
+          send underground_caverns.troll_room :troll_flag with false
+          say "The troll scratches his head in confusion, then takes the axe."
+        } else if (item.is(Weapon)) {
+          if (chance(5)) {
+            move item to self
+            self.set(:gorged, true)
+            say "The troll, who is not overly proud, graciously accepts the gift and eats it hungrily. Poor troll, he dies from an internal hemorrhage and his carcass disappears in a sinister black fog."
+            send self :expire
+          } else {
+            move item to underground_caverns.troll_room
+            self.set(:fighting, true)
+            say "The troll, who is not overly proud, graciously accepts the gift and, being for the moment sated, throws it back. Fortunately, the troll has poor control, and the {item.short} falls to the floor. He does not look pleased."
+          }
+        } else {
+          move item to self
+          say "The troll, who is not overly proud, graciously accepts the gift and not having the most discriminating tastes, gleefully eats it."
+        }
+        if (self.get(:fighting) && !self.get(:waking) && !self.get(:gorged)) {
+          self.set(:waking, true)
+          wake in 1 minutes
+        }
+      }
+    }
   }
 
   // The visitor's blow. `value` is the weapon: 1 the sword, 2 the knife,
@@ -206,17 +251,20 @@ kind Troll is Thing {
     }
   }
 
-  // Dead: the fog takes him, and his axe stays behind.
+  // Dead: the fog takes him, his axe stays behind, and he is gone for
+  // good, with whatever he ate and any wake he had asked for.
   on :expire {
     self.set(:dead, true)
     self.set(:fighting, false)
-    each a: Adventurer in underground_caverns.troll_room {
-      tell a "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared."
+    if (!self.get(:gorged)) {
+      each a: Adventurer in underground_caverns.troll_room {
+        tell a "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared."
+      }
     }
     each x: Axe in self { move x to underground_caverns.troll_room }
     send underground_caverns.troll_room :troll_flag with true
     broadcast :troll_gone
-    each f: Fog in underground_caverns.troll_room { move self to f }
+    finally destroy self
   }
 
   passage wep_name {{if self.get(:wep) == 1}sword{else if self.get(:wep) == 2}nasty knife{else}bloody axe{/if}}
@@ -229,14 +277,4 @@ kind Troll is Thing {
   passage wounded {{one of}The troll is struck on the arm; blood begins to trickle down.{or}Your {self.wep_name} pinks the troll on the wrist, but it's not serious.{or}Your stroke lands, but it was only the flat of the blade.{or}The blow lands, making a shallow gash in the troll's arm!{/one of}}
   passage staggered {{one of}The troll is staggered, and drops to his knees.{or}The troll is momentarily disoriented and can't fight back.{or}The force of your blow knocks the troll back, stunned.{or}The troll is confused and can't fight back.{or}The quickness of your thrust knocks the troll back, stunned.{/one of}}
   passage disarmed {{one of}The troll's weapon is knocked to the floor, leaving him unarmed.{or}The troll is disarmed by a subtle feint past his guard.{/one of}}
-}
-
-// Where the fog takes what it takes: a closed place inside the Troll Room
-// that nothing can see into or name the contents of.
-kind Fog is Thing {
-  contains
-  pass any (false)
-  :ndesc true
-  passage short { fog }
-  describe { text "The fog has lifted." }
 }

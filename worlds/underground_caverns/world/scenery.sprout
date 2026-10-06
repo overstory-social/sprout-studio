@@ -2,7 +2,7 @@
 // white house, its boards and boarded windows, the front door, the trees.
 // Here each room that shows one has its own.
 import {Thing, Scenery} from 'thing'
-import {open, read, shift, look_in, climb_up, climb_down, :travel} from 'verbs'
+import {open, read, shift, look_in, climb_up, climb_down, walk_around, Dest, :travel} from 'verbs'
 
 kind WhiteHouse is Scenery {
   grammar { name "white house"  nouns "house"  adjectives "beautiful", "colonial" }
@@ -12,6 +12,12 @@ kind WhiteHouse is Scenery {
   }
   without as target for open from Thing
   as target for open { do { say "I can't see how to get in from here." } }
+
+  // Zork's HOUSE-AROUND: walking around the house takes the visitor to the
+  // next side of it, west, north, behind, south and west again.
+  :around Dest default north_side
+  without as target for walk_around from Thing
+  as target for walk_around { do { send actor :travel with self.get(:around)  say "" } }
 }
 
 // The house, seen from the forest: everything about it is elsewhere.
@@ -37,6 +43,7 @@ kind BoardedWindow is Scenery {
 
 kind FrontDoor is Scenery {
   grammar { name "door"  adjectives "front", "boarded" }
+  :door true
   passage short { door }
   without as target for open from Thing
   without as target for read from Thing

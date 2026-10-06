@@ -10,7 +10,7 @@ import {Sword, Knife, Treasure, Food, Water, Lunch, Garlic} from 'items'
 import {Room, DarkRoom, Perilous} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'scenery'
-import {open, close, look_in, read, shift, raise, look_under, smell, eat, :window_sync, :trap, :trap_sync, :rug_moved, :scored} from 'verbs'
+import {open, close, look_in, read, shift, raise, look_under, smell, eat, through, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored} from 'verbs'
 import {behind_house} from 'above_ground'
 import {cellar} from 'cellar'
 
@@ -21,6 +21,7 @@ kind KitchenWindow is Scenery {
   grammar { name "kitchen window"  nouns "window"  adjectives "small" }
   :open false
   :opened_once false
+  :door true
   passage short { kitchen window }
 
   describe {
@@ -54,6 +55,16 @@ kind KitchenWindow is Scenery {
     do {
       if (here.is(Outdoors)) { say "You can see what appears to be a kitchen." }
       else { say "You can see a clear area leading towards a forest." }
+    }
+  }
+  // Through the window, as Zork's WALK and THROUGH take it: to the other
+  // side, if it is open.
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (!self.get(:open)) { say "The kitchen window is closed." }
+      else if (here.is(Outdoors)) { send actor :travel with :kitchen  say "" }
+      else { send actor :travel with :behind  say "" }
     }
   }
   on :window_sync (from, value) {
@@ -220,6 +231,7 @@ object living_room is Room in underground_caverns {
   object wooden_door is Scenery {
     grammar { name "wooden door"  nouns "door", "lettering", "writing", "engravings"  adjectives "wooden", "gothic", "strange", "west" }
     passage short { wooden door }
+    :door true
     without as target for open from Thing
     without as target for read from Thing
     as target for open { do { say "The door cannot be opened." } }
@@ -298,6 +310,7 @@ kind Rug is Scenery {
 kind TrapDoor is Scenery {
   grammar { name "trap door"  nouns "door", "trapdoor", "trap-door", "cover"  adjectives "trap", "dusty" }
   :open false
+  :door true
   passage short { trap door }
   describe {
     if (self.get(:open)) { text "The trap door is open, but I can't tell what's beyond it." }

@@ -1,0 +1,101 @@
+{
+  "persona": "prose-reader",
+  "seed": 1,
+  "turns": 19,
+  "done": {
+    "reason": "bored",
+    "why": "I reached the troll unarmed after a short run through rooms I already knew. The prose was terse, so I stopped."
+  },
+  "about": "A text adventure that looks like the classic Zork. You start outside a white house, get in through the kitchen window, take the lamp, move the rug, go down the trap door and meet a troll in the cellars.",
+  "ending": {
+    "reached": "no",
+    "what": null
+  },
+  "moments": [
+    {
+      "turn": 6,
+      "kind": "delight",
+      "note": "'With great effort, you open the window far enough to allow entry.' A nice small bit of effort in the wording."
+    },
+    {
+      "turn": 16,
+      "kind": "surprise",
+      "note": "The trap door crashes shut and you hear someone barring it. It is a good ominous beat."
+    },
+    {
+      "turn": 18,
+      "kind": "confusion",
+      "note": "'examine walls' got 'You can't see any such thing', even though the room text describes the walls."
+    },
+    {
+      "turn": 19,
+      "kind": "frustration",
+      "note": "Examining the troll only repeated the room description."
+    }
+  ],
+  "wished": [
+    "To examine the scenery that the room descriptions mention, such as the walls.",
+    "To get more detail from 'examine' than the room text already gave."
+  ],
+  "lines": [
+    {
+      "turn": 16,
+      "line": "The trap door crashes shut, and you hear someone barring it.",
+      "why": "It is the best moment of atmosphere, and it gives a sudden sense of being trapped."
+    },
+    {
+      "turn": 17,
+      "line": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.",
+      "why": "It is a strong, compact threat."
+    }
+  ],
+  "ratings": {
+    "fun": {
+      "score": 3,
+      "why": "It is a smooth, responsive run, but familiar.",
+      "turns": [
+        6,
+        13,
+        16
+      ]
+    },
+    "engagement": {
+      "score": 3,
+      "why": "It moved quickly, but I stopped once I was blocked by the troll.",
+      "turns": [
+        17,
+        19
+      ]
+    },
+    "difficulty": {
+      "score": 2,
+      "felt": "too easy",
+      "why": "The early steps were straightforward and the parser accepted most of what I typed.",
+      "turns": [
+        6,
+        7,
+        13,
+        14
+      ]
+    },
+    "interestingness": {
+      "score": 3,
+      "why": "The setting is well known, and I saw little that was new.",
+      "turns": [
+        8,
+        10,
+        17
+      ]
+    },
+    "prose": {
+      "score": 4,
+      "why": "The prose is crisp and economical, with good small touches, but examining things gave little extra.",
+      "turns": [
+        6,
+        8,
+        16,
+        19
+      ]
+    }
+  }
+}

@@ -62,7 +62,7 @@ object north_of_house is Room in underground_caverns {
   passage body {
     You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees.
   }
-  object house is WhiteHouse
+  object house is WhiteHouse { :around behind }
   object window is BoardedWindow
   object boards is Boards
 }
@@ -80,7 +80,7 @@ object south_of_house is Room in underground_caverns {
   passage body {
     You are facing the south side of a white house. There is no door here, and all the windows are boarded.
   }
-  object house is WhiteHouse
+  object house is WhiteHouse { :around west_side }
   object window is BoardedWindow
   object boards is Boards
 }
@@ -105,6 +105,7 @@ object behind_house is Room, Outdoors in underground_caverns {
   on :window_sync (from, value) { self.set(:window_open, value) }
 
   object house is WhiteHouse {
+    :around south_side
     without as target for open from WhiteHouse
     as target for open {
       do {

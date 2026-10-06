@@ -1,0 +1,492 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "The slice ends at the trap door. All six runs took the same short route (Behind House, window, Kitchen, Living Room, rug, trap door), went down, and could not come back up. Five of the six then stopped at the Troll Room's unbuilt exits. Nobody reached the forest, the tree, the egg, the attic or the trophy case, in this round or in round 1. That is 12 runs, and half the slice and the whole of 'done' (the egg in the case) has never been played. reach.places.never lists all four forests, Forest Path, Up a Tree, both clearings and the Attic. The rise in unreadRate (0.13 to 0.24) is mostly this wall: 21 of the 39 unread lines are the world's own refusals at the dead end (unbuilt_passage x6, unbuilt_hole x5, crawlway x4, ramp x2, no_way x4). Players are not misreading the world there. They are reaching its edge sooner.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 14,
+          "quote": "The trap door crashes shut, and you hear someone barring it."
+        },
+        {
+          "run": "casual-1",
+          "turn": 24,
+          "quote": "EXCAVATION SUSPENDED BY ORDER OF THE FROBOZZ MAGIC TUNNELLING COMPANY."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 32,
+          "quote": "go up -> You can't go that way."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 25,
+          "quote": "The passage to the east has not been finished."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 26,
+          "quote": "You peer into the forbidding hole... You think better of it."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 34
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 16
+        }
+      ],
+      "recommendation": "Put this to the director, since the scope widens only on the director's word. One way to keep it faithful: once the troll is dead, the east passage leads to a single stand-in room with Zork's own route home, the Studio chimney up to the Kitchen. Log it in friction.md, so the slice makes a loop instead of a one-way drop. Until then, the above-ground secrets can only be checked with `sprout test` scripts, not with playtesters."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "No run exercised any of the things intent.md says to watch in round 2. Every player lit the lamp before going down, so the darkness lines, the grue and 'lit lamp left in the Cellar' were never met. Nobody reached the forest, so nobody tested whether BRIEF's short returns confuse a forest walk. Nobody typed `score`, so the move count and Zork's ranks were never shown. The passages never reached include 'You have moved into a dark place.' and the grue's death line, and the score, diagnose and verbose verbs were never used. BRIEF did show up on returns (the Cellar and the Troll Room named without their full text), and no player was confused by it.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 13,
+          "quote": "turn on lamp (before go down)"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 12
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 12
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 17
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 18
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 15
+        },
+        {
+          "run": "explorer-1",
+          "turn": 26,
+          "quote": "The Troll Room / There is a bloody axe here."
+        }
+      ],
+      "recommendation": "Cover darkness, the grue, the lamp left in the Cellar and the score with `sprout test` scripts. While P1 stands, players will not reach them. Carry these watch items to round 3 rather than counting them as passed."
+    },
+    {
+      "id": "P3",
+      "category": "language-gap",
+      "severity": "high",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "Commands joined with 'and' or 'then' are read as one noun phrase and answered 'You can't see any such thing.' This covers Zork's own 'take X and Y'. The answer is wrong as well as unhelpful: the casual player concluded the leaflet could not be taken and never tried again, and the goal-seeker never picked up the sack. The brief's showcase goal names Zork's parser conventions.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 2,
+          "quote": "take leaflet and read it -> You can't see any such thing."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 8,
+          "quote": "take lantern and sword -> You can't see any such thing."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 6,
+          "quote": "take sack and bottle -> You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 16,
+          "quote": "take lantern and sword"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 4,
+          "quote": "put the leaflet in the mailbox and close it"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 13,
+          "quote": "drink the water then eat the sack"
+        }
+      ],
+      "recommendation": "Log it in friction.md under the parser section of the spec, and open a Sprout issue: support multiple direct objects and command chaining, or at least refuse a conjunction in words that do not claim the object is absent."
+    },
+    {
+      "id": "P4",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "The unbuilt east passage's own prose (new text, not Zork's) mentions a pick leaning against the rock, but there is no pick to name. Three players tried to take it and two tried to dig, and all three listed it among the things they wished for. The line invites an action the world then denies with 'You can't see any such thing.'",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 28,
+          "quote": "take pick -> You can't see any such thing."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 29,
+          "quote": "dig west -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 26,
+          "quote": "take pick"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 27,
+          "quote": "dig -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 35,
+          "quote": "take the pick"
+        }
+      ],
+      "recommendation": "Either drop the pick from the line, or make it nameable scenery in the Troll Room that refuses in Zork's voice (for example, the Management wants it back). Zork has a DIG verb ('Digging with your hands is silly.' and its variants); add it."
+    },
+    {
+      "id": "P5",
+      "category": "engine-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "All six runs carry seed 1 and draw the same seed sequence step by step, so their dice are not independent. The casual and explorer runs reached the troll at the same step and got the same four-blow fight word for word: stunned, confused, unconscious, dead. intent.md assumes each playtester draws from its own seed. As things stand, a round's fight outcomes, and the 'too easy' consensus built on them, are partly one sample repeated.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 17,
+          "quote": "The force of your blow knocks the troll back, stunned."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 17,
+          "quote": "The force of your blow knocks the troll back, stunned."
+        },
+        {
+          "run": "casual-1",
+          "turn": 20,
+          "quote": "The unconscious troll cannot defend himself: He dies."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 20,
+          "quote": "The unconscious troll cannot defend himself: He dies."
+        }
+      ],
+      "recommendation": "File it against the studio workflow: give each run a distinct seed, at least one per persona, so the per-step seed streams differ. Re-read round 2's combat findings with this in mind."
+    },
+    {
+      "id": "P6",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "All six players rated the game too easy. In the five sword fights the troll died within four blows. Two runs decapitated him with the first blow, and only one player was hit at all ('The axe gets you right in the side. Ouch!'). The troll fights on Zork's own tables, so this may be faithful, and with P5 the sample is thin. The other half of the 'too easy' rating is that nothing is left to solve after the troll (P1).",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 15,
+          "quote": "It's curtains for the troll as your sword removes his head."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 21,
+          "quote": "It's curtains for the troll as your sword removes his head."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 29,
+          "quote": "The troll takes a fatal blow and slumps to the floor dead."
+        },
+        {
+          "run": "casual-1",
+          "turn": 20
+        }
+      ],
+      "recommendation": "Do not retune yet. Run the fight across many seeds with `sprout test`, compare the first-blow kill rate and the player's death rate with Zork's melee tables at score 0, and change it only if the port differs."
+    },
+    {
+      "id": "P7",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "Several verbs and phrasings that Zork handles get 'That sentence isn't one I recognize.' Zork has KNOCK and GIVE (the troll accepts a gift), and it answers WALK AROUND. A newcomer also could not find a way into the house through the window until they guessed 'west'. ('enter window' and 'enter house' do work.)",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 3,
+          "quote": "knock on the boarded door"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 6,
+          "quote": "go around the house"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 26,
+          "quote": "give the pepper sack to the troll -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 4,
+          "quote": "walk around the house"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 9,
+          "quote": "go in through the window"
+        }
+      ],
+      "recommendation": "Add Zork's KNOCK and WALK AROUND answers. Check why 'give X to troll' does not parse even though sprout.give is declared (possibly the adjective 'pepper'), and give the troll Zork's gift handling. Accept 'go in' / 'go through window' as entering. Where Sprout cannot do one of these, log it in friction.md."
+    },
+    {
+      "id": "P8",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "'take all' prints a bare 'Taken.' for each item, without Zork's 'brown sack: Taken.' prefix, so the player cannot tell what was picked up. It also counts things already carried ('You already have that!' for the leaflet in hand), which Zork's 'all' leaves out.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 6,
+          "quote": "Taken. / Taken."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 14,
+          "quote": "You already have that! / Taken. / Taken."
+        }
+      ],
+      "recommendation": "Prefix each multi-object result with the item's short name, as Zork does, and leave held items out of 'all'. If Sprout's multi-step 'all' gives no handle for this, log it in friction.md."
+    },
+    {
+      "id": "P9",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "'examine all' in the Troll Room, with the troll still alive, includes the fog and prints 'The fog has lifted.' The fog is present and nameable before the troll has died.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 16,
+          "quote": "A nasty-looking troll... blocks all passages out of the room. / The fog has lifted."
+        }
+      ],
+      "recommendation": "Keep the fog out of the room, or out of scope, until the troll's death brings it in."
+    },
+    {
+      "id": "P10",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "The troll's scheduled wake still fires after he is dead. The log shows 'troll_room.troll woke, 60 seconds after it asked' on turns after the black fog has taken him. Players see nothing yet, but a dead troll is still running his turn handler.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 15
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 22
+        },
+        {
+          "run": "casual-1",
+          "turn": 20
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 29
+        }
+      ],
+      "recommendation": "Cancel the troll's wake when he dies, or have the woke handler return at once once he has expired."
+    },
+    {
+      "id": "P11",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The prose-reader found that examining gave little beyond the room text. The walls named in the Troll Room description cannot be named, and 'examine troll' repeats his room line.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 18,
+          "quote": "examine walls -> You can't see any such thing."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 19,
+          "quote": "examine troll -> A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room."
+        }
+      ],
+      "recommendation": "Check Zork's answers for these (its global WALL and the troll's examine text) and match them. Do not add new scenery Zork lacks."
+    },
+    {
+      "id": "P12",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "What landed, and should be kept: moving the rug, the trap door crashing shut and being barred, the sword's glow in the Cellar and the Troll Room, and the new dead-end lines in Zork's voice. Five reports quoted the Management note with approval, and the fog and combat lines were praised. Prose was rated 4 by five players and 3 by one. The casual player did find three exits telling the same joke repetitive ('A second wall, with the same joke').",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 21,
+          "quote": "Back soon. -- The Management."
+        },
+        {
+          "run": "casual-1",
+          "turn": 24
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 18
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 24
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 32
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 16,
+          "quote": "The trap door crashes shut, and you hear someone barring it."
+        }
+      ],
+      "recommendation": "Keep these. If the dead ends stay for another round, give each one a different kind of refusal so they do not read as one joke told three times."
+    }
+  ],
+  "legibility": {
+    "verdict": "partly",
+    "why": "Every player recognised a faithful Zork I opening and understood the underground was still being built. That matches the intent's 'Zork, ported as faithfully as Sprout allows'. None of them saw the slice's goal: the egg, the trophy case, the score, the forest and the tree. None met its secrets either (darkness and the grue, rooms remembering you, the tree's height). For all six, the world was 'house, trap door, troll, then walls', and that is half of the arc in intent.md.",
+    "runs": [
+      {
+        "run": "explorer-1",
+        "understood": "A small Zork-style start: in through the window, lantern, sword and sack, down the trap door to a cellar and a troll; the deeper caverns are marked unfinished.",
+        "matches": "partly"
+      },
+      {
+        "run": "casual-1",
+        "understood": "A Zork-style start (house, kitchen, living room, trap door, cellar, troll) with the underground still under construction; thought the leaflet could not be taken.",
+        "matches": "partly"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A Zork-like start up to the troll; past him the cavern is unfinished, with 'back soon' notes in place of rooms.",
+        "matches": "partly"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "A Zork-like adventure: house, window, lantern and sword, trap door, kill the troll, and then the map runs out.",
+        "matches": "partly"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A compact Zork-style start (house, kitchen, living room, trap door, cellar, troll room), with the underground just beginning.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "A text adventure that looks like classic Zork: the white house, the kitchen window, the lamp, the rug and trap door, and a troll in the cellars.",
+        "matches": "partly"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.13,
+      "after": 0.24
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0,
+      "after": 0.04
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 1,
+      "after": 5
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 30,
+      "after": 10
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 46,
+      "after": 39
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 38,
+      "after": 35
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 21,
+      "after": 20
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 290,
+      "after": 270
+    }
+  ]
+}

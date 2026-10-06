@@ -4,7 +4,7 @@ import {Thing, Scenery} from 'thing'
 import {Axe} from 'items'
 import {DarkRoom} from 'room'
 import {Adventurer} from 'adventurer'
-import {Troll, Fog} from 'troll'
+import {Troll} from 'troll'
 import {open, close, :trap_sync, :troll_flag, :troll_gone} from 'verbs'
 import {living_room} from 'house'
 
@@ -26,7 +26,7 @@ object cellar is DarkRoom in underground_caverns {
   }
   // The edge of what is built so far.
   passage crawlway {
-    The crawlway to the south ends, after a few feet, in raw rock. A small brass plaque reads: "EXCAVATION SUSPENDED BY ORDER OF THE FROBOZZ MAGIC TUNNELLING COMPANY."
+    You squeeze a few feet into the crawlway before it is choked with fallen rock. From somewhere beyond it comes the sound of digging, which stops, politely, until you have backed out.
   }
 
   on :trap_sync (from, value) {
@@ -49,6 +49,7 @@ object cellar is DarkRoom in underground_caverns {
   object trap_door is Scenery {
     grammar { name "trap door"  nouns "door", "trapdoor", "trap-door", "cover"  adjectives "trap", "dusty" }
     :open false
+    :door true
     passage short { trap door }
     describe {
       if (self.get(:open)) { text "The trap door is open, but I can't tell what's beyond it." }
@@ -90,7 +91,7 @@ object troll_room is DarkRoom in underground_caverns {
   }
   // The edges of what is built so far.
   passage unbuilt_passage {
-    The passage to the east has not been finished. Someone has left a pick leaning against the rock, and a note: "Back soon. -- The Management."
+    The passage to the east has not been finished. A note is pinned to the rock: "Back soon. -- The Management."
   }
   passage unbuilt_hole {
     You peer into the forbidding hole. It is dark even by the standards of this place, and it does not seem to go anywhere yet. You think better of it.
@@ -113,5 +114,4 @@ object troll_room is DarkRoom in underground_caverns {
       passage short { bloody axe }
     }
   }
-  object fog is Fog
 }

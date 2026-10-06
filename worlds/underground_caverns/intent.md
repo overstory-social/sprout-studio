@@ -77,7 +77,11 @@ out cold with the passages beyond him open onto country not yet built.
 - **The troll** spits in the face of anyone who tries to take him, can be
   knocked out (and wakes up later, angry), disarmed (and recovers his axe
   if it is still on the floor), staggered, or killed, when the black fog
-  takes the body.
+  takes the body. He takes gifts as Zork's does: he eats the lunch, the
+  garlic, a treasure, anything; he takes his axe back; he throws a sword or
+  knife back, and one time in five eats it instead and dies of it.
+- **The house can be walked around** (`walk around house`), a side at a
+  time, and knocked on ("Nobody's home.").
 - **The trophy case** pays a treasure's value when it goes in and takes it
   back when it comes out; `score` reports Zork's ranks.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
@@ -110,15 +114,18 @@ out cold with the passages beyond him open onto country not yet built.
   fighting, light, wounds, moves, score, death), `lamp.sprout` (a
   `sprout.LightSource`), `items.sprout` (weapons, treasures, food, water,
   readables), `tree.sprout` (the tree top, the nest, the egg, the canary),
-  `scenery.sprout`, `grating.sprout`, `troll.sprout` (the troll and his
-  whole fight), `person.sprout` (the visitor kind).
+  `scenery.sprout`, `grating.sprout`, `troll.sprout` (the troll, his
+  whole fight, and his gifts), `person.sprout` (the visitor kind).
 - `verbs.sprout`: Zork's verbs, the messages, the enums of gate
   destinations and description modes.
 
 ## Notes to self for revisions
 
-- Every roll is Sprout's own `random`, `chance` or `{one of}`: the host
-  playtesters use draws every turn from its own seed. `sprout test` does
+- Every roll is Sprout's own `random`, `chance` or `{one of}`. Each turn
+  draws its own seed, but in round 2 every run started from seed 1, so two
+  runs that reached the troll at the same step fought the same fight word
+  for word: a round's fight outcomes are not independent samples until the
+  studio gives each run its own seed. `sprout test` does
   not: a script's turns share one seed until a seed step changes it, so the
   tests that fight carry seed steps.
 - Being trapped in the cellar is Zork's design: once the trap door is barred
@@ -145,3 +152,33 @@ out cold with the passages beyond him open onto country not yet built.
 - Things to watch in round 2: whether anyone finds that a lit lamp left in
   the Cellar keeps it safe; whether BRIEF's short returns confuse anyone
   walking the forest; whether the move count reads as Zork's.
+
+## After round 2
+
+- Every run went the short way (window, lamp, sword, rug, trap door), was
+  barred in, killed or passed the troll, and met the unbuilt edges. Nobody
+  has reached the forest, the tree, the egg, the attic or the trophy case
+  in twelve runs, so half the slice and the whole of "done" are known only
+  from `sprout test`. The brief is clear that the scope widens only on the
+  director's word, so I have not opened a way back up from the cellar.
+  **For the director:** the faithful way to close the loop is Zork's own
+  route home: south from the Cellar down the crawlway to East of Chasm,
+  east to the Gallery, north to the Studio, and up its chimney to the
+  Kitchen (`dungeon.zil`). Three rooms, all Zork's, none needing the troll;
+  they would let a visitor who has gone down come back up and finish the
+  slice. Opening them is the director's call.
+- Still to watch, carried from round 2 since no one met them: darkness
+  without a lamp, the grue, a lit lamp left in the Cellar (now tested in
+  `lamp_left.json`), BRIEF on a forest walk, and the score and its ranks.
+- The troll's fight was checked against Zork's tables, not retuned. With the
+  sword (his weakness, one off his defence of 2) and the visitor's strength
+  of 2 at score 0, Zork reads DEF1 from its third entry: of nine, two miss,
+  two stagger, two knock out, three kill. So a third of first blows kill
+  him and two-ninths knock him out for the next blow to finish: "too easy"
+  is Zork's own troll at 0 points.
+- Round 2's changes: `take` and `drop` take several things, each answered
+  by name; KNOCK, WALK AROUND, DIG, THROUGH and GIVE, with Zork's answers;
+  the troll's gifts; the surrounding wall; the troll destroyed when he dies,
+  with his pending wake, and no fog left standing in his room; no pick in
+  the east passage, and the crawlway refuses in a different way from the
+  other edges.

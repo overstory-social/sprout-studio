@@ -1,0 +1,191 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "reject",
+      "reason": "The brief widens the slice only on the director's word, and this round has no steering. So I have not opened a way back up from the Cellar. The case for it is in intent.md under 'After round 2', for the director: Zork's own route home (crawlway to East of Chasm, Gallery, Studio, chimney to the Kitchen) is three rooms, all Zork's. Until the director decides, the above-ground half is covered by sprout test scripts."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "True: no player met the darkness, the grue, a lit lamp left in the Cellar, or the score. The parts that can be tested are now tested (lamp_left.json is new; grue.json, death.json and brief.json already cover darkness, the grue and BRIEF). The watch items carry over to round 3 in intent.md and are not counted as passed."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Zork's 'take X and Y' is one of the parser conventions the brief names. take and drop are now set roles ('role target many'), so lists and 'all' work and each thing is answered by name. Chaining two verb phrases with 'and' or 'then' cannot be done from a world, and Sprout's not_here line says something false about it, so that is logged in friction.md."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The pick was my own invention, and the world then refused it, so it promised an action it would not allow. It is gone from the east passage's line. Zork's DIG is added with Zork's own answer ('Digging with a pair of hands is silly.')."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "This is a studio-workflow fault, not something the world can fix, but it changes how this round's combat findings should be read. intent.md now says every run started from seed 1 and the fight outcomes are not independent until each run gets its own seed."
+    },
+    {
+      "answers": "P6",
+      "decision": "reject",
+      "reason": "The synthesis itself says not to retune, and the brief asks for Zork ported faithfully. I checked against Zork's melee tables: with the sword (the troll's weakness) at score 0, a third of first blows kill and two-ninths knock him out. So 'too easy' is Zork's own troll at 0 points, and the fight stays as it is. The reasoning is in intent.md."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "KNOCK, WALK AROUND (HOUSE-AROUND), THROUGH and GIVE with the troll's gift handling are all Zork's own, with answers from gverbs.zil and actions.zil. The faithful-port brief asks for them. 'give' had not parsed because the verb was never declared with a recipient role. The eight-phrase cap and the troll's range limit are logged in friction.md."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Zork prefixes each result with the item's name and leaves held things out of 'all'. Both are done as far as Sprout allows. The capitalised prefix ('Brown sack:') and the fact that 'all' and a named list arrive the same way are logged in friction.md."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "A real bug: the Fog thing could be named before the troll died. The Fog kind is removed. The troll is now destroyed when he dies, so no fog object stands in the room."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "A dead troll should not keep acting. Destroying him on death drops his pending wake, as Zork's REMOVE-CAREFULLY removes him. The check warning about destroying a declared thing is accepted, and both are logged in friction.md."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Zork has a global WALL ('surrounding wall'), so each room now has one with Zork's answer. Zork's own examine for the troll prints his room description, so that stays. No scenery Zork lacks was added."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "What landed is kept: the rug, the barred trap door, the sword's glow and the Management note. Since the dead ends stay for now, each one refuses differently: a sign at the canyon, the Management's note, a choked crawlway with digging beyond it, and the hole you think better of."
+    }
+  ],
+  "changes": [
+    {
+      "what": "take and drop take several things at once (set roles). With more than one, each result is prefixed with the thing's name, and things already held are left out of a list that holds anything else. Tests updated for the new lines and move counts.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/house.json",
+        "worlds/underground_caverns/world/tests/parser.json"
+      ],
+      "for": [
+        "P3",
+        "P8"
+      ]
+    },
+    {
+      "what": "Removed the pick from the east passage's line. Added Zork's DIG (dig, dig X, dig X with Y), answering 'Digging with a pair of hands is silly.'",
+      "files": [
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/troll.json"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "Added Zork's KNOCK ('Nobody's home.' at doors, marked with :door on the front door, window, trap door and grating; 'Why knock on a ...?' elsewhere).",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/grating.sprout",
+        "worlds/underground_caverns/world/scenery.sprout",
+        "worlds/underground_caverns/world/tests/parser.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Added Zork's WALK AROUND: walking around the house goes to the next side of it (HOUSE-AROUND). A bare 'walk' or walking around anything else answers 'Use compass directions for movement.'",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/scenery.sprout",
+        "worlds/underground_caverns/world/above_ground.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/tests/parser.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Added Zork's THROUGH: 'go in through the window' and similar phrasings cross the open kitchen window. Anything else gets Zork's refusals.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/parser.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Added GIVE with Zork's troll gift handling: he eats food and treasure, takes back his axe, throws a weapon back (or eats it and dies one time in five), and a gift wakes him if he is out cold. Giving anything else to anything else is refused in Zork's words.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/troll.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/tests/gift.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "The troll is destroyed when he dies, which drops his pending wake. The Fog kind and the fog object are removed, so the fog can no longer be named while he lives. descent.json no longer expects a wake after his death.",
+      "files": [
+        "worlds/underground_caverns/world/troll.sprout",
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/tests/descent.json"
+      ],
+      "for": [
+        "P9",
+        "P10"
+      ]
+    },
+    {
+      "what": "Added Zork's global WALL as a 'surrounding wall' scenery object in every room.",
+      "files": [
+        "worlds/underground_caverns/world/room.sprout",
+        "worlds/underground_caverns/world/tests/parser.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "Each dead end now refuses differently: the crawlway is choked with rock and someone is digging beyond it, while the Management note stays in the east passage. Added a test for a lit lamp left in the Cellar.",
+      "files": [
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/tests/trap_door.json",
+        "worlds/underground_caverns/world/tests/lamp_left.json"
+      ],
+      "for": [
+        "P12",
+        "P2"
+      ]
+    },
+    {
+      "what": "Kept intent.md and friction.md current: watch items carried to round 3, the note that runs share a seed, and new or updated friction entries (11, 12, 17, 24, 26, 32, 33, 34, and Differences chosen).",
+      "files": [
+        "worlds/underground_caverns/intent.md",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P2",
+        "P5"
+      ]
+    }
+  ]
+}

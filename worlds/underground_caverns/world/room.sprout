@@ -9,7 +9,7 @@
 // cannot ask a place whether it is lit, so the room counts its own lamps
 // and tells each visitor in it whether it would be lit without them.
 import * as sprout from 'sprout'
-import {Thing} from 'thing'
+import {Thing, Scenery} from 'thing'
 import {Lamp} from 'lamp'
 import {Adventurer} from 'adventurer'
 import {:scored, :relight, :room_lit} from 'verbs'
@@ -22,6 +22,11 @@ kind Room is sprout.Place {
   // The Cellar's: the trap door is open above and not yet barred, so the
   // next to come down will hear it crash shut.
   :crash false
+
+  // Zork's WALL, one of its GLOBAL-OBJECTS: the surrounding wall, in every
+  // room. Sprout has no object that is everywhere at once, so every room
+  // holds its own.
+  object wall is Wall
 
   // How many times each visitor has come in, up to twice: Zork's TOUCHBIT,
   // kept per visitor.
@@ -115,3 +120,9 @@ kind Forest is Room { }
 // A room where jumping is a mistake, as the Kitchen is in Zork: its way
 // down leads nowhere a body can follow.
 kind Perilous { }
+
+// The surrounding wall: nothing special about it, as in Zork.
+kind Wall is Scenery {
+  grammar { name "surrounding wall"  nouns "wall", "walls"  adjectives "surrounding" }
+  passage short { surrounding wall }
+}

@@ -5,7 +5,8 @@ difference from the original the author chose or was forced into. Each
 entry: what Zork does (what I wanted), what the world does instead, and the
 spec section it touches. Section names are `sprout-design-spec.md`'s.
 
-Each entry carries a **Status** as of the port to Sprout fe916a5:
+Each entry carries a **Status** as of the port to Sprout fe916a5, brought
+up to date after round 2 where round 2 touched it:
 **resolved** (by which change), **corrected** (the entry was my misreading),
 **changed** (the answer moved but something remains), or **open**. The
 entries' first text is kept as it was written against 61f02bb.
@@ -224,7 +225,17 @@ entries' first text is kept as it was written against 61f02bb.
   once per thing with no name, and "You already have that!" once for each
   thing already held.
 - **Spec:** Parsing › Sequences, again and all.
-- **Status: open.**
+- **Status: changed** after round 2. `take` and `drop` are set roles now
+  (`role target many`), so `take all` binds every portable thing in reach
+  at once, in one turn and one move, as Zork's one command is, and the
+  adventurer answers each by name: "Brown sack: Taken." Two things remain.
+  First, the line is capitalised ("Brown sack:", where Zork has "brown
+  sack:"): see 17. Second, `all` and a list of names arrive alike in a set
+  role, so the world cannot leave held things out of `all` (as Zork's
+  TAKE's `all` does) and still answer "leaflet: You already have that!" to
+  `take leaflet and sack`. It leaves out what is already held from any
+  list that holds something else, and names each one only when everything
+  listed is already held.
 
 ### 11a. `and` between things, and between commands
 
@@ -243,7 +254,19 @@ entries' first text is kept as it was written against 61f02bb.
   later round. `walk around the house` is refused, as Zork refuses it.
 - **Spec:** Parsing › Sequences, again and all; Verbs › Set roles ("Parsing
   splits on `and` and commas literally").
-- **Status: open.**
+- **Status: changed** after round 2, where four of six players met it.
+  `take lamp and sword` and `drop sack and bottle` now work, `take` and
+  `drop` being set roles (see 11); `put` is still one thing at a time.
+  `and` between two verb phrases (`take leaflet and read it`, `put leaflet
+  in mailbox and close it`) is still read as a run of nouns and answered
+  "You can't see any such thing.", which tells the visitor something false
+  (that the leaflet is not there): one player gave up on the leaflet for
+  it. The world has no say in that answer; Sprout's `not_here` is the line
+  for a noun nothing answers to, and the parser does not know the run held
+  a verb. (Correction: round 1's note that `walk around the house` is
+  refused as Zork refuses it was wrong. Zork's WHITE-HOUSE-F walks the
+  visitor to the next side of the house; the world now does that: see
+  Differences chosen.)
 
 ### 12. The engine's lines have no slot for the word
 
@@ -303,8 +326,11 @@ entries' first text is kept as it was written against 61f02bb.
 - **Found:** "(With the sword)": the first letter of each rendered line is
   capitalised.
 - **Spec:** Prose › Passages.
-- **Status: resolved** by sprout#427: a line is not capitalised past a
-  bracket. The attack says "(with the sword)".
+- **Status: changed.** sprout#427: a line is not capitalised past a
+  bracket, so the attack says "(with the sword)". But Zork's answers to
+  several things at once open with the thing's bare, lower-case name,
+  "brown sack: Taken.", and here read "Brown sack: Taken." (after round 2;
+  see 11).
 
 ### 18. Indentation is lost
 
@@ -416,6 +442,12 @@ entries' first text is kept as it was written against 61f02bb.
   keeps `:swung`, set by every blow at him; a wake that finds it set
   passes, clears it and waits for the next. He swings at most once between
   two of his own turns.
+- **Found, in round 2:** a wake cannot be taken back. The troll's last
+  wake, asked while he fought, still fell after the fog had taken him, and
+  his `:woke` ran (doing nothing, since it asks `:dead` first); four
+  players' logs carry "troll_room.troll woke" after his death. The world
+  now destroys the troll when he dies (see 26), which drops his pending
+  wakes, as Zork's REMOVE-CAREFULLY drops him from the game.
 - **Spec:** Time › Wakes; The runtime › Turns (a world has no turn
   number).
 - **Spec:** Time › Wakes; Limits (`shortestWakeSeconds`).
@@ -441,6 +473,16 @@ entries' first text is kept as it was written against 61f02bb.
 - **Wrote instead:** the lunch, the garlic and the water are spawned into the
   sack and the bottle the first time anyone enters the Kitchen, so eating
   and drinking may destroy them.
+- **Found, in round 2:** the troll is declared, and Zork removes him for good
+  when he dies (REMOVE-CAREFULLY), with whatever he has eaten. Until now a
+  closed thing in his room, the fog, took the body; but the fog was a
+  thing in the room, and `examine all` with the troll alive read "The fog
+  has lifted." The troll now ends with `finally destroy self`, so his
+  axe, his flag and the sword's dimming still arrive, and his pending wake
+  goes with him (24). `sprout check` warns about it: "Destroying is meant
+  for what was spawned." The warning is accepted; spawning the troll
+  would need a first visitor to set him there, and he is in the Troll Room
+  from the start.
 - **Spec:** Spawning; Destroying; The compiler › What it warns about.
 - **Status: open.**
 
@@ -522,11 +564,50 @@ entries' first text is kept as it was written against 61f02bb.
 - **Spec:** Prose › Passages; Prose › Slots.
 - **Status: open.**
 
+## Found after round 2
+
+### 32. The parser cannot ask
+
+- **Wanted:** Zork's `dig` with no object: "What do you want to dig in?",
+  and the next line taken as the answer.
+- **Wrote instead:** bare `dig` is its own verb and answers what Zork says
+  once it knows: "Digging with a pair of hands is silly."
+- **Spec:** Parsing › Choosing a reading ("The parser never asks").
+- **Status: open.**
+
+### 33. A visitor's hands are out of everyone's reach
+
+- **Wanted:** Zork's troll takes a gift from the hand that gives it.
+- **Found:** the troll's range stops at the visitor, since `sprout.Actor`
+  does not pass, so his `move item to self` faulted ("out of range").
+- **Wrote instead:** the visitor's own part of `give`, which runs first,
+  puts a gift for the troll on the floor at his feet; the troll's part then
+  takes it from there (eats it, takes back his axe) or lets it lie (a
+  weapon thrown back). The visitor reads only Zork's line.
+- **Spec:** Range ("what another visitor carries is out of range"); Verbs ›
+  The two passes.
+- **Status: open.**
+
+### 34. Eight phrases a verb
+
+- **Wanted:** every English way of going in through the kitchen window a
+  player tried, as Zork's WALK IN, WALK WITH (THROUGH), CLIMB WITH and ENTER
+  reach V-THROUGH.
+- **Wrote instead:** `through` has eight phrases ("go in through", "walk in
+  through", "climb in through", "climb through", "crawl through", "walk
+  through", "walk in", "climb in"); "enter through the window" was the one
+  left out, and `enter window` already goes by the exit's label.
+- **Spec:** Limits › Static caps (phrases per verb or intent: 8).
+- **Status: open.**
+
 ## Differences chosen, not forced
 
-- **The troll cannot be given or thrown things.** Zork's troll eats gifts
-  and throws weapons back. He is a thing here, not an actor, so `give` is
-  refused with the library's "You can't give the ... to the troll."
+- **The troll can be given things, not thrown them.** After round 2 the
+  troll takes gifts as Zork's TROLL-FCN does: he eats food and treasure
+  alike, takes back his axe, throws a sword or knife back four times in
+  five and eats it, and dies, the fifth; a gift wakes him if he is out cold.
+  Anything else given to anything else is "You can't give a ... to a ...!".
+  `throw` is not built.
 - **The songbird** is not an object; asking after it reads "You can't see
   any such thing.", close to Zork's "You can't see any songbird here."
 - **Up a Tree** does not list what lies on the path below ("On the ground
@@ -545,7 +626,25 @@ entries' first text is kept as it was written against 61f02bb.
 - **No `throw`, `break`, `burn`, `tie`, `swim`.** Not in this slice.
 - **The unbuilt edges** (east of the Clearing, south of the Cellar, east and
   west of the Troll Room) refuse in new prose in the Empire's voice, as the
-  brief asks.
+  brief asks. After round 2 each refuses in a different way, so they do not
+  read as one joke told three times: a sign at the canyon, a note from the
+  Management in the east passage, a choked crawlway with someone digging
+  beyond it, a hole you think better of. The pick the east passage used to
+  mention is gone: it could not be named, and three players tried.
+- **The surrounding wall** is in every room, as Zork's WALL is a global
+  object, and is named "surrounding wall": `examine walls` reads "There's
+  nothing special about the surrounding wall." Each room holds its own copy
+  (see 16), so `examine all` includes it, where Zork's `all` leaves out
+  global objects.
+- **Knocking, walking around, digging, going through.** KNOCK ("Nobody's
+  home." at a door, "Why knock on a ...?" elsewhere), WALK AROUND (Zork's
+  HOUSE-AROUND: west, north, behind, south; "Use compass directions for
+  movement." elsewhere, and for a bare `walk`), DIG ("Digging with a pair
+  of hands is silly.") and THROUGH (the kitchen window to its other side;
+  "You hit your head against the ... as you attempt this feat.") are Zork's
+  own answers from `gverbs.zil` and `actions.zil`. The forest's own WALK
+  AROUND (FOREST-AROUND) is not built: no forest room has a forest object
+  to walk around.
 - **The intact canary's aria and the brass bauble** are not built: only the
   thief opens the egg intact, and he is not in this slice. Winding the
   ruined canary gives Zork's "unpleasant grinding noise".

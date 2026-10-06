@@ -6,7 +6,7 @@
 // has been moved, and by its long one (LDESC) after, or by "There is a ...
 // here." when it has none; `here_line` is that rule. A thing marked `:ndesc`
 // (Zork's NDESCBIT) is never listed.
-import {take, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, :fall, :landed} from 'verbs'
+import {take, knock, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, :fall, :landed} from 'verbs'
 
 kind Thing {
   grammar { article the }
@@ -16,6 +16,8 @@ kind Thing {
   :ndesc false
   :falling false
   :size 5 min 0 max 100
+  // Zork's DOORBIT, for knocking.
+  :door false
 
   passage short default { thing }
   passage fdesc default { {self.ldesc} }
@@ -55,6 +57,19 @@ kind Thing {
   as target for lock       { do { say "It doesn't seem to work." } }
   as target for climb_up   { do { say "You can't do that!" } }
   as target for climb_down { do { say "You can't do that!" } }
+  as target for knock {
+    do {
+      if (self.get(:door)) { say "Nobody's home." }
+      else { say "Why knock on a {self.short}?" }
+    }
+  }
+  as target for walk_around { do { say "Use compass directions for movement." } }
+  as target for through { do { say "You hit your head against the {self.short} as you attempt this feat." } }
+  as recipient for give {
+    do {
+      if (item.is(Thing)) { say "You can't give a {item.short} to a {self.short}!" }
+    }
+  }
 }
 
 // A thing that can be carried off. Only these answer `take all`.
@@ -63,6 +78,14 @@ kind Portable is Thing {
 
   without as target for shift from Thing
   as target for shift { do { say "Moving the {self.short} reveals nothing." } }
+
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (actor.holds(self)) { say "That would involve quite a contortion!" }
+      else { say "{one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}" }
+    }
+  }
 }
 
 // A thing Zork describes only in its room's own words.

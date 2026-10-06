@@ -4,15 +4,18 @@
 import {Box} from 'box'
 import {Portable} from 'thing'
 
+// `take` and `drop` take several things at once, as Zork's do: `take lamp
+// and sword`, `take all`. Each is answered with its name before it, as
+// Zork answers more than one.
 verb take {
-  role target
+  role target many
   "take [target]"  "get [target]"  "pick up [target]"  "pick [target] up"
   "grab [target]"  "carry [target]"  "hold [target]"
   synonyms "steal", "seize"
 }
 
 verb drop {
-  role target: Portable carried
+  role target: Portable carried many
   "drop [target]"  "put down [target]"  "put [target] down"  "discard [target]"
   "release [target]"
 }
@@ -95,6 +98,39 @@ verb unlock { role target  role tool carried  "unlock [target] with [tool]"  "un
 
 verb lock { role target  "lock [target]" }
 
+verb knock { role target  "knock on [target]"  "knock at [target]"  "rap on [target]"  "rap at [target]" }
+
+// Zork's DIG: with no tool, the visitor's own pair of hands.
+verb dig {
+  role target
+  role tool carried
+  "dig in [target]"  "dig [target]"  "dig in [target] with [tool]"  "dig [target] with [tool]"
+}
+verb dig_here { "dig" }
+
+verb walk_around {
+  role target
+  "walk around [target]"  "go around [target]"  "run around [target]"  "step around [target]"
+  "proceed around [target]"
+}
+verb walk_about { "walk"  "step" }
+
+// Zork's THROUGH, for the ways in English a visitor climbs through a window.
+verb through {
+  role target
+  "go in through [target]"  "walk in through [target]"  "climb in through [target]"
+  "climb through [target]"  "crawl through [target]"  "walk through [target]"
+  "walk in [target]"  "climb in [target]"
+}
+
+verb give {
+  role item carried
+  role recipient
+  "give [item] to [recipient]"  "give [recipient] [item]"
+  "offer [item] to [recipient]"  "hand [item] to [recipient]"  "feed [item] to [recipient]"
+  "feed [recipient] [item]"  "donate [item] to [recipient]"
+}
+
 verb score { "score" }
 verb diagnose { "diagnose" }
 verb xyzzy { "xyzzy"  "plugh" }
@@ -119,7 +155,7 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { forest_1, path, up_a_tree, kitchen, living_dead }
+enum Dest { forest_1, path, up_a_tree, kitchen, living_dead, west_side, north_side, behind, south_side }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.

@@ -1,6 +1,7 @@
 {
-  "about": "The rug, the trap door, the dark cellar and the grue's warning, the barred door, and the lamp.",
+  "about": "A lit lamp left in the Cellar keeps it lit: the visitor walks off into the dark and back into the light, and no grue is waiting.",
   "steps": [
+    { "seed": 3 },
     { "arrive": "Marta", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West of House" },
       { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
@@ -34,63 +35,19 @@
     { "as": "Marta", "type": "take lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
-    { "as": "Marta", "type": "look under rug", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Underneath the rug is a closed trap door. As you drop the corner of the rug, the trap door is once again concealed from view." }
-    ] },
-    { "as": "Marta", "type": "raise rug", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The rug is too heavy to lift, but in trying to take it you have noticed an irregularity beneath it." }
-    ] },
     { "as": "Marta", "type": "move rug", "expect": [
       { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
-    ] },
-    { "as": "Marta", "type": "move rug", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Having moved the carpet previously, you find it impossible to move it again." }
-    ] },
-    { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "The trap door is closed." }
     ] },
     { "as": "Marta", "type": "open trap door", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
     ] },
-    { "as": "Marta", "type": "l", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Living Room" },
-      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a rug lying beside an open trap door." },
-      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You have moved into a dark place." },
       { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
-      { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
-    ] },
-    { "as": "Marta", "type": "l", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
-    ] },
-    { "as": "Marta", "type": "take all", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You already have that!" }
-    ] },
-    { "as": "Marta", "type": "turn on lamp", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." },
-      { "reader": "Marta", "kind": "said", "words": "Cellar" },
-      { "reader": "Marta", "kind": "said", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
-    ] },
-    { "as": "Marta", "type": "l", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cellar" },
       { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
-    ] },
-    { "as": "Marta", "type": "up", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "The trap door is closed." }
-    ] },
-    { "as": "Marta", "type": "open trap door", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The door is locked from above." }
-    ] },
-    { "as": "Marta", "type": "turn off lamp", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now off." },
-      { "reader": "Marta", "kind": "said", "words": "It is now pitch black." }
-    ] },
-    { "as": "Marta", "type": "turn on lamp", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." },
-      { "reader": "Marta", "kind": "said", "words": "Cellar" },
-      { "reader": "Marta", "kind": "said", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
     ] },
     { "as": "Marta", "type": "drop lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
@@ -100,15 +57,25 @@
       { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
       { "reader": "Marta", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
     ] },
-    { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 22 moves." },
-      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You have moved into a dark place." },
+      { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
     ] },
     { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You squeeze a few feet into the crawlway before it is choked with fallen rock. From somewhere beyond it comes the sound of digging, which stops, politely, until you have backed out." }
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
     ] },
-    { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You try to ascend the ramp, but it is impossible, and you slide back down." }
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 16 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
     ] }
   ]
 }

@@ -17,7 +17,7 @@ import {Room, DarkRoom, Forest, Perilous} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
 import {go, look, examine, inventory, wait} from 'sprout'
-import {take, drop, put, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :struck, :troll_gone, :glow, :die, :claimed, :settle, :travel} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :struck, :troll_gone, :glow, :die, :claimed, :settle, :travel} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -40,6 +40,10 @@ kind Adventurer is sprout.Visitor {
   :mode Mode default brief
   // Zork's MOVES: every command but the ones about the game itself.
   :moves 0 min 0 max 1000000
+  // Scratch for taking several things in one command: the load so far, and
+  // how many of them are not already held.
+  :carry 0 min 0 max 900
+  :fresh 0 min 0 max 50
 
   passage hands_full { You're holding too many things already! }
 
@@ -259,6 +263,14 @@ kind Adventurer is sprout.Visitor {
       move self to up_a_tree
     } else if (self.get(:dest) == :kitchen) {
       move self to kitchen
+    } else if (self.get(:dest) == :behind) {
+      move self to behind_house
+    } else if (self.get(:dest) == :west_side) {
+      move self to west_of_house
+    } else if (self.get(:dest) == :north_side) {
+      move self to north_of_house
+    } else if (self.get(:dest) == :south_side) {
+      move self to south_of_house
     } else {
       each t: Thing in self {
         if (t.is(Lamp)) {
@@ -287,39 +299,56 @@ kind Adventurer is sprout.Visitor {
     send underground_caverns :close_gate
   }
 
+  // Taking and dropping several things at once, as Zork does: each answered
+  // with its name before it. Zork's `all` leaves out what is already held;
+  // here `all` and a list of names arrive alike, so what is already held is
+  // left out of any list that has something else in it.
   as actor for take {
     do {
       self.adjust(:moves, 1)
-      if (self.holds(target)) { say "You already have that!" }
-      else if (target.is(Portable)) {
-        if (self.get(:load) + target.get(:size) > 100) { say "Your load is too heavy." }
-        else {
-          move target to self
-          say "Taken."
+      self.set(:carry, self.get(:load))
+      self.set(:fresh, 0)
+      let several = target.count > 1
+      each t of target { if (!self.holds(t)) { self.adjust(:fresh, 1) } }
+      each t of target {
+        if (t.is(Thing)) {
+          if (several && self.holds(t) && self.get(:fresh) > 0) { }
+          else if (self.holds(t)) { say "{if several}{t.short}: {/if}You already have that!" }
+          else if (t.is(Portable)) {
+            if (self.get(:carry) + t.get(:size) > 100) { say "{if several}{t.short}: {/if}Your load is too heavy." }
+            else {
+              move t to self
+              self.adjust(:carry, t.get(:size))
+              say "{if several}{t.short}: {/if}Taken."
+            }
+          }
+          else { say "{if several}{t.short}: {/if}{t.no_take}" }
         }
+        else { say yuk }
       }
-      else if (target.is(Thing)) { say "{target.no_take}" }
-      else { say yuk }
     }
   }
 
   as actor for drop {
     do {
       self.adjust(:moves, 1)
-      if (here.is(TreeTop)) {
-        if (target.is(Nest)) {
-          if (target.count(Egg) > 0) { say "The nest falls to the ground, and the egg spills out of it, seriously damaged." }
-          else { say "The bird's nest falls to the ground." }
-        } else if (target.is(Egg)) {
-          say "The egg falls to the ground and springs open, seriously damaged. {target.spill}"
-        } else if (target.is(Thing)) {
-          say "The {target.short} falls to the ground."
+      let several = target.count > 1
+      each t of target {
+        if (here.is(TreeTop)) {
+          if (t.is(Nest)) {
+            if (t.count(Egg) > 0) { say "{if several}{t.short}: {/if}The nest falls to the ground, and the egg spills out of it, seriously damaged." }
+            else { say "{if several}{t.short}: {/if}The bird's nest falls to the ground." }
+          } else if (t.is(Egg)) {
+            say "{if several}{t.short}: {/if}The egg falls to the ground and springs open, seriously damaged. {t.spill}"
+          } else {
+            say "{if several}{t.short}: {/if}The {t.short} falls to the ground."
+          }
+          move t to here
         }
-        move target to here
-      }
-      else {
-        move target to here
-        say "Dropped."
+        else {
+          move t to here
+          say "{if several}{t.short}: {/if}Dropped."
+        }
       }
     }
   }
@@ -443,6 +472,33 @@ kind Adventurer is sprout.Visitor {
   as actor for climb_up   { do { self.adjust(:moves, 1) } }
   as actor for climb_down { do { self.adjust(:moves, 1) } }
   as actor for unlock     { do { self.adjust(:moves, 1) } }
+  as actor for knock      { do { self.adjust(:moves, 1) } }
+  as actor for walk_around { do { self.adjust(:moves, 1) } }
+  as actor for through    { do { self.adjust(:moves, 1) } }
+  // A gift to the troll leaves the hand first, onto the floor at his feet,
+  // since nothing in a visitor's hands is in his reach; he takes it from
+  // there, or lets it lie.
+  as actor for give {
+    do {
+      self.adjust(:moves, 1)
+      if (recipient.is(Troll)) { move item to here }
+    }
+  }
+  as actor for walk_about { do { self.adjust(:moves, 1)  say "Use compass directions for movement." } }
+
+  // Zork's DIG: with nothing else to dig with, a pair of hands. Zork asks
+  // what to dig in when told only `dig`; the parser here cannot ask, so the
+  // answer is the one Zork gives once it knows.
+  as actor for dig {
+    do {
+      self.adjust(:moves, 1)
+      if (bound tool) {
+        if (tool.is(Thing)) { say "Digging with a {tool.short} is silly." }
+        else { say "Digging with a pair of hands is silly." }
+      } else { say "Digging with a pair of hands is silly." }
+    }
+  }
+  as actor for dig_here { do { self.adjust(:moves, 1)  say "Digging with a pair of hands is silly." } }
   as actor for lock       { do { self.adjust(:moves, 1) } }
   as actor for verbose    { do { self.set(:mode, :verbose)  say "Maximum verbosity." } }
   as actor for brief      { do { self.set(:mode, :brief)  say "Brief descriptions." } }
