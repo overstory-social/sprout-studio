@@ -11,7 +11,10 @@ living room with its trophy case, rug and trap door, lamp and sword), the
 cellar, and the Troll Room with its troll; and, from round 4, by the
 director's word, Zork's own way home from the cellar: the crawlway south to
 East of Chasm, the Gallery with its painting, and the Studio, whose chimney
-climbs to the Kitchen. Every room's name and description
+climbs to the Kitchen; and, from round 5, the Maze west of the Troll Room,
+the dead adventurer's remains in it, and the Grating Room under the
+Clearing, whose grating the skeleton key opens from below: a second way
+back to the surface. Every room's name and description
 is the original's, word for word, from the ZIL source (`dungeon.zil`,
 `actions.zil`, and the shared substrate's `verbs.zil`). The narrator is
 Zork's narrator: "Taken.", "Dropped.", "Opened.", the YUKS, "A hollow voice
@@ -64,13 +67,27 @@ written down. That log is a product of the world as much as the rooms are.
    UP-CHIMNEY-FUNCTION does, and lets them out in the Kitchen. The trap door
    is still barred; whoever opens it from above and goes down hears it
    crash shut and barred behind them again.
+8. The Maze, west through the forbidding hole once the troll is dead or
+   out cold: fifteen rooms of twisty little passages, all alike, and four
+   dead ends, all dark, joined as `dungeon.zil` joins them, loops and
+   one-way tunnels down and all. In Maze 5 (through the hole, then south,
+   east and up) lie a skeleton and what its owner carried: a useless lantern, a
+   rusty knife, a skeleton key and a leather bag of coins (10 points taken,
+   5 in the case).
+9. The Grating Room, northeast of Maze 11 (from Maze 5: southwest, up,
+   east, up, northeast; or down from Maze 9 by a one-way tunnel). Above it
+   is a grating with a skull-and-crossbones lock. The skeleton key unlocks
+   it from below and only from below; opened for the first time, it lets
+   the pile of leaves fall through onto the visitor's head, and the day in.
+   Up through it is the Clearing, north of the Forest Path: the second way
+   home, and the only one that brings a load heavier than the chimney's.
 
-"Done", for this slice, is: the egg and the painting in the trophy case
-(the egg ruined or not), the visitor having been down, round by the
-Gallery and up the chimney, and the troll dead or out cold with the
-passages beyond him open onto country not yet built. 55 points is the
-ceiling with both treasures intact: the Kitchen 10, the Cellar 25, the
-egg 5 and 5, the painting 4 and 6.
+"Done", for this slice, is: the egg, the painting and the bag of coins in
+the trophy case (the egg ruined or not), the visitor having been down,
+past the troll, through the maze to the remains and up through the
+grating, and round by the Gallery and up the chimney. 70 points is the
+ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the egg
+5 and 5, the painting 4 and 6, the coins 10 and 5.
 
 ## Secrets and interactions I hope players find
 
@@ -138,6 +155,29 @@ egg 5 and 5, the painting 4 and 6.
 - **The troll can be woken.** Out cold, `wake troll` (or breaking him, or
   moving him, or a gift) brings him round "rudely awakened", axe in hand,
   which is a bad idea that Zork allows.
+- **The maze is a maze.** Its rooms are all alike, so the classic way
+  through is to drop something in each and read the rooms by what lies in
+  them; a dropped thing shows when the visitor comes back, even in BRIEF.
+  Four of the ways down are one-way, and say so on the way ("You won't be
+  able to get back up to the tunnel you are going through when it gets to
+  the next room."). Some ways lead back into the room they leave.
+- **The maze is dark.** A visitor who lets the lamp go out in the Troll
+  Room walks into the maze's dark, and then into the grue.
+- **The remains bite.** Taking, moving, touching, raising, kicking,
+  kissing or attacking the skeleton brings his ghost, who banishes the
+  visitor's treasures and the room's to the Land of the Living Dead (the
+  bag of coins, if it is still on the floor). The rusty knife makes the
+  sword pulse blue when it is picked up, and turned on anything it slits
+  its bearer's throat.
+- **The load is Zork's.** The sword, the lamp, the rusty knife, the useless
+  lantern and the key weigh 95; the bag of coins will not go on top. Some
+  of it has to stay.
+- **The grating is two-sided.** From the Clearing it can be opened and
+  shut once it is unlocked, never unlocked or locked; from below it takes
+  the key. Open, it lights the Grating Room with the day; shut, the room
+  is dark again. The chimney takes the lamp and one thing; the grating
+  takes everything, so a visitor with all three treasures goes home this
+  way.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
   chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
@@ -149,7 +189,9 @@ egg 5 and 5, the painting 4 and 6.
   here is capped well short of it).
 - The thief, who is the only one who can open the egg intact, and so the
   intact canary's song and the brass bauble.
-- The skeleton key and everything below the grating.
+- Putting things through the grating (Zork lets a small one fall into
+  the Grating Room).
+- The thief, who walks the maze in Zork, and the Cyclops beyond it.
 - The map in the trophy case, which only appears at 350 points.
 
 ## The shape of the source
@@ -171,7 +213,11 @@ egg 5 and 5, the painting 4 and 6.
   fighting, light, wounds, moves, score, death), `lamp.sprout` (a
   `sprout.LightSource`), `items.sprout` (weapons, treasures, food, water,
   readables), `tree.sprout` (the tree top, the nest, the egg, the canary),
-  `scenery.sprout`, `grating.sprout`, `troll.sprout` (the troll, an NPC:
+  `scenery.sprout`, `grating.sprout` (the leaves, the ground, and the
+  grating from above and below), `maze.sprout` (the `Maze` and `DeadEnd`
+  kinds, every maze room's number and ways out, the Grating Room),
+  `remains.sprout` (the skeleton, the useless lantern, the rusty knife, the
+  skeleton key, the bag of coins), `troll.sprout` (the troll, an NPC:
   his own parts of `attack`, `take` and `throw`, his turns, the visitor's
   blow at him, his gifts and his stomach), `person.sprout` (the visitor
   kind). The visitor's side of the troll's blow is `adventurer.sprout`'s
@@ -372,3 +418,64 @@ The director's steering for this pass, and what came of it.
 - **The slice is now smaller than its players.** Both treasure-hunters
   reached 55 points by turn 80 and walked the edges after. Widening further
   is the director's call; the brief's budget ends at round 4.
+
+## Before round 5
+
+The director widened the scope to v3: the Maze, the remains and the
+grating. Built from `dungeon.zil` (MAZE-1 to MAZE-15, DEAD-END-1 to 4,
+GRATING-ROOM, and the objects IN MAZE-5) and `actions.zil` (MAZE-DIODES,
+MAZE-11-FCN, GRATE-FUNCTION, SKELETON, RUSTY-KNIFE-FCN, STUPID-CONTAINER,
+ROB).
+
+- **Rooms:** 15 Maze rooms and 4 Dead Ends, all dark, every one Zork's
+  name, description and ways out; Maze 5 adds the skeleton line. The
+  Grating Room, dark while the grating is shut and lit by the day while it
+  is open. The Troll Room's hole now leads into Maze 1 once the troll is
+  down; Maze 15's way southeast, to the Cyclops, refuses with a sign from
+  the Management.
+- **Objects:** the skeleton, the burned-out lantern, the rusty knife, the
+  skeleton key and the leather bag of coins in Maze 5; the twisty little
+  passages in every maze room, the dead end in every dead end; the
+  grating, its skull-and-crossbones lock and the sunlight in the Grating
+  Room; the sign in Maze 15. Each examines in its own words.
+- **Points:** the coins, 10 taken and 5 in the trophy case. The ceiling is
+  70.
+- **How the maze is written:** two kinds, `Maze` and `DeadEnd`, each a
+  `DarkRoom`, give a room its name, description and passages; each room
+  writes its number and its own exits, since exits do not compose. The
+  one-way tunnels' warning is the adventurer's, read in its part of `go`
+  from the number of the room it left (friction 53).
+- **Darkness** in the maze is the Cellar's: `maze_dark.json`.
+- **Tests:** `maze.json` (the walk to the remains, a loop, a one-way
+  tunnel, the knife's pulse, a dropped marker seen again, the Cyclops
+  sign), `grating.json` (the key and the grating from below and above,
+  the leaves, the day), `coins.json` (the coins home through the grating
+  and into the case, and the score), `maze_dark.json` (the dark and the
+  grue), `skeleton.json` (the ghost and the knife). `troll.json` now walks
+  into the maze through the hole.
+
+### What round 5 should test
+
+- **Does anyone go west?** The hole opens only once the troll is down.
+  Whether players who win the fight try it, and whether they read "a
+  forbidding hole leading west" as an invitation.
+- **The maze as a maze.** Whether players map it, drop things to mark
+  rooms, notice the one-way tunnels' warning, or give up; how many turns
+  it takes to reach the remains (four moves from the hole, if you know)
+  and the Grating Room (five more). The 150-turn cap is tight for a
+  visitor who also wants the egg and the painting.
+- **Darkness at last.** The maze is the likeliest place yet for a lamp to
+  be put down and lost: whether anyone meets the dark place, the warning
+  and the grue, after 24 runs that never did.
+- **The remains.** Whether anyone touches the skeleton (and loses the
+  coins to the ghost), attacks with the rusty knife, or notices the
+  sword's pulse; whether the load (95 with everything but the coins) reads
+  as a puzzle.
+- **The grating.** Whether a visitor with the key finds the Grating Room,
+  works out that the key turns from below only, and comes up into the
+  Clearing; whether anyone carries all three treasures home that way;
+  whether the leaves falling through read as Zork's joke.
+- **The Clearing from above,** for anyone who found the grating there in
+  earlier rounds: whether they come back to it with the key and are told
+  the lock is out of reach.
+

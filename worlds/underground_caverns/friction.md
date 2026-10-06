@@ -981,6 +981,196 @@ with `act throw`. These are what the NPC model would not let me say.
 - **Spec:** Exits; Parsing › Choosing a reading; Range ("`not_here`").
 - **Status: open.**
 
+## Found before round 5: the Maze and the grating
+
+The Maze west of the Troll Room (fifteen rooms and four dead ends, from
+`dungeon.zil`), the dead adventurer's remains in Maze 5, and the Grating
+Room under the Clearing, at Sprout 26e6124. What the maze asked of Sprout,
+area by area, including what it did not find hard.
+
+### 53. A one-way tunnel cannot say so on the way
+
+- **Wanted:** Zork's MAZE-DIODES. Four of the maze's ways down (Maze 2 to
+  Maze 4, Maze 7 to the first Dead End, Maze 9 to Maze 11, Maze 12 to
+  Maze 5) are an exit routine that prints "You won't be able to get back
+  up to the tunnel you are going through when it gets to the next room."
+  and then goes. The words belong to the exit: Maze 5 is also reached
+  going down from Maze 6, with nothing said.
+- **Found:** an exit is a direction, a label, a destination and a `when`;
+  it may refuse with words, and it cannot go with words. The destination's
+  `:entered` and the old room's `:left` are queued, so what they tell comes
+  after the new room's description. The actor's own part of `go` is read
+  before it, but nothing in it says which exit was taken or which room was
+  left: by the time its `do` runs, `here` is the new room, the exit role
+  cannot be read, a declared room cannot be compared with `==` (43), and no
+  property can hold an object.
+- **Wrote instead:** every `Room` has a number, `:num` (Zork's MAZE-1 to
+  MAZE-15, the dead ends 16 to 19, the Grating Room 20, everything else 0),
+  and tells each adventurer who comes in its number from the queue
+  (`:spot`). So while the adventurer's part of the next `go` runs, they
+  still hold the number of the room they left, and the `do` checks the
+  pair (left, arrived) against the four diodes. It reads as Zork's, in
+  Zork's order; but four pairs of numbers live in `adventurer.sprout`, far
+  from the exits they describe, and the trick leans on the queue's order.
+- **Asked of Sprout:** an exit that goes and says something on the way
+  (`exit down "down" -> maze_4 saying diode`), or the room left (`from`)
+  bound in the actor's part of `go`.
+- **Spec:** Exits; Engine verbs (`go`); Object identity; Movement and
+  consent › After the move.
+- **Status: open.**
+
+### 54. A place's name beats a thing's noun, even when the place refuses
+
+- **Wanted:** `x maze` in a maze room to examine its twisty little
+  passages, a thing whose nouns include "maze".
+- **Found:** the room, named "Maze", wins the reading, and refuses (every
+  room refuses to be a target, "You can't see any such thing.", after 8);
+  without that refusal it is described instead. Either way the thing that
+  answers by its noun loses to the place that holds it, which is the
+  opposite of Parsing › Choosing a reading (a reading the consent pass
+  allows beats one it refuses) and of Range ("the visitor's own place is
+  further than everything it holds ... named only where nothing in it
+  answers as well"). A minimal world shows it: a `Room is sprout.Place`
+  with `as target for any { permit { refuse "No such thing." } }`, one room
+  `maze` named "Maze" holding a `sprout.Fixture` named "passages" with
+  `nouns "maze"`; `x maze` reads "No such thing.", `x passages` the
+  fixture. This looks like a Sprout bug.
+- **Wrote instead:** the passages have no noun "maze", so `x maze` answers
+  "You can't see any such thing.", which is what Zork says (it has no
+  maze object).
+- **Spec:** Parsing › Choosing a reading; Range; Names › Addressing and
+  display.
+- **Status: open.**
+
+### 55. Rooms all alike, written once
+
+- **Wanted:** Zork's maze is twenty rooms whose descriptions are one
+  sentence, "This is part of a maze of twisty little passages, all
+  alike." (or "You have come to a dead end in the maze."), and whose ways
+  out are each their own.
+- **Found:** this is what kinds are for, and it worked. `kind Maze is
+  DarkRoom` and `kind DeadEnd is DarkRoom` give a room its name, its
+  description, its dark and its passages; Maze 5 replaces the description
+  (a `default` passage) with Zork's, which adds the skeleton. Exits do not
+  compose, so every room writes its own, which is right for a maze, since
+  no two rooms have the same ways out. Two costs: every room holds its
+  own copy of the kind's passages and of the surrounding wall (16), forty
+  objects for one idea; and a room cannot refine the copy its kind gives
+  it (35), so the dead ends' "dead end" is a third object of the `DeadEnd`
+  kind rather than a line on the passages.
+- **Spec:** Kinds, composition and libraries › How members combine;
+  Exits.
+- **Status: works,** with the costs noted.
+
+### 56. What the maze did not find hard
+
+- **One-way exits.** An exit is one-way by nature: Maze 1's south goes to
+  Maze 2 and Maze 2's north goes nowhere, as in Zork. Only the diodes'
+  words were hard (53).
+- **Loops.** An exit to its own room (Maze 1 north, Maze 6 west, Maze 8
+  west, Maze 9 northwest, Maze 14 northwest) is a move into the place the
+  visitor is in, and it works: the room is described again, briefly.
+- **Marking rooms by dropping things.** A thing dropped in a maze room is
+  listed when the visitor comes back ("There is a burned-out lantern
+  here."), in BRIEF as in VERBOSE, so rooms all alike can be told apart by
+  what has been left in them; in the dark, nothing shows, as in Zork.
+  `maze.json` tests it.
+- **The static caps.** The busiest room, Maze 9, has six ways out; the
+  Grating Room's refused way up is not counted. No cap was near.
+- **Darkness and the grue.** The maze is dark, and every rule the Cellar
+  and the Attic follow holds in it: the dark place, the warning, nothing
+  named but what is carried, the grue from dark to dark (`maze_dark.json`).
+- **Spec:** Exits; Limits › Static caps; Range › Sight.
+- **Status: works.**
+
+### 57. One grating in two rooms, again
+
+- **Wanted:** Zork's GRATE is one object in LOCAL-GLOBALS, seen from the
+  Clearing and from the Grating Room, with one lock (GRUNLOCK) and one
+  lid.
+- **Found:** as with the window and the trap door (16), it is two objects
+  kept in step by messages the world passes (`:grate_unlock`,
+  `:grate_open`, `:grate_revealed`). Two things were new. The Clearing's
+  grating lies inside the ground, which passes nothing until the leaves
+  are moved, so the ground needs pass rules of its own for the grating's
+  news while it hides the grating from every name. And a `broadcast` goes
+  out and in from its sender but never back to it, so each side writes its
+  own state and broadcasts it besides. The leaves that fall through the
+  grating when it is first opened from below are in the Clearing, out of
+  range; the grating asks the world to open its gate (6) to bring them
+  down.
+- **Spec:** The world model; Range; Events, messages and the bus › Sending;
+  Containers route.
+- **Status: open,** as 16.
+
+### 58. A lock cannot see the key in the hand that turns it
+
+- **Wanted:** Zork's `unlock grating`, with the skeleton key carried and no
+  tool named: "(with the skeleton key)" and "The grate is unlocked.", the
+  parser finding the tool.
+- **Found:** the grating's part of `unlock` cannot count what the actor
+  carries, since `sprout.Actor` passes nothing (33), and the parser never
+  supplies a missing tool (32).
+- **Wrote instead:** the adventurer counts the skeleton keys in hand
+  (`:keys`, kept on `:entered` and `:left`) and the grating reads that
+  count off the actor, which it can see.
+- **Spec:** Range ("what another visitor carries is out of range");
+  Parsing › Choosing a reading; Verbs › Optional tools.
+- **Status: open.**
+
+### 59. Two lanterns, and the parser cannot ask which
+
+- **Wanted:** Zork's "Which lantern do you mean, the brass lantern or the
+  burned-out lantern?" where both are in reach.
+- **Found:** the parser never asks (32). Where both readings are allowed
+  it takes the nearer, so `take lamp` in Maze 5 with the brass lantern in
+  hand is "You already have that!"; where they tie it draws, and says which
+  it meant.
+- **Wrote instead:** the burned-out lantern refuses `turn on` in its
+  `permit`, so `turn on lamp` always means the brass one. Its own
+  adjectives (`useless`, `burned-out`, `rusty`, `dead`) name it outright.
+- **Spec:** Parsing › Choosing a reading.
+- **Status: open.**
+
+### 60. The ghost cannot take what the visitor carries
+
+- **Wanted:** Zork's SKELETON: touch the remains and a ghost banishes the
+  visitor's valuables, and the room's, to the Land of the Living Dead
+  (ROB).
+- **Found:** the skeleton cannot take things out of the visitor's hands
+  (`sprout.Actor` releases only to the actor itself), and the Land of the
+  Living Dead is out of range.
+- **Wrote instead:** the skeleton sends the visitor `:banish`; the
+  visitor opens the world's gate (6) and moves their own treasures, and
+  those on the floor of Maze 5, named by its path
+  (`underground_caverns.maze_5`, 27), to the Land. The words are the
+  skeleton's and Zork's.
+- **Spec:** Movement and consent › The three roles; Range.
+- **Status: open,** as 6.
+
+### 61. The rusty knife cannot vanish
+
+- **Wanted:** Zork's RUSTY-KNIFE-FCN: turned on anything, the knife slits
+  its bearer's throat and is gone (REMOVE-CAREFULLY).
+- **Found:** destroying a declared object is warned against, and it would
+  never come back (26).
+- **Wrote instead:** the knife marks itself spent, and the death that
+  follows sends a spent knife to the Land of the Living Dead instead of
+  scattering it.
+- **Spec:** The world model › Destroying.
+- **Status: open,** as 26.
+
+### 62. `examine all` reaches only what answers `examine` itself
+
+- **Found:** in a maze room `examine all` answers "You can't see any such
+  thing.", and in the Troll Room after the fight it examines only the axe.
+  `all` takes "every thing in reach whose kind plays a part in the verb",
+  and in this world only the troll's axe plays a part in `examine`. That is
+  the spec. Zork itself refuses the line ("You can't use multiple direct
+  objects with "examine"."), so nothing is lost but a surprise.
+- **Spec:** Parsing › Sequences, again and all.
+- **Status: open,** noted.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -1064,3 +1254,23 @@ with `act throw`. These are what the NPC model would not let me say.
 - **The intact canary's aria and the brass bauble** are not built: only the
   thief opens the egg intact, and he is not in this slice. Winding the
   ruined canary gives Zork's "unpleasant grinding noise".
+- **The Maze has no thief.** Zork's thief walks the maze and is out of
+  scope by the brief; the dead adventurer's remains lie undisturbed until
+  a visitor finds them. The way southeast from Maze 15 to the Cyclops Room
+  refuses with a sign from the Management, in the voice of the Troll
+  Room's note.
+- **The grating opens from above as "The grating opens."** Zork's
+  GRATE-FUNCTION compares HERE with CLEARING, the other clearing, so in
+  Zork the line from the Grating Clearing is the one meant for below, "The
+  grating opens to reveal trees above you."; here it is the line Zork's
+  code meant.
+- **Nothing goes through the grating.** Zork lets a thing of size 20 or
+  less be put through the grating into the darkness below; `put` here
+  takes a container, and the grating is not one. Not built.
+- **`unlock grating` with nothing to unlock it with** answers "You'll need
+  something to unlock it with.", where Zork asks what with (32).
+- **The rusty knife chooses itself.** `attack troll` with no weapon named
+  and only the rusty knife in hand is "(with the rusty knife)" and the
+  knife's will, as Zork's parser would choose it.
+- **The ghost's curse spares what has no trophy value,** as ROB does, and
+  what lies in a container, which ROB never reaches.

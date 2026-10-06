@@ -226,7 +226,7 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { forest_1, path, up_a_tree, kitchen, living_dead, west_side, north_side, behind, south_side }
+enum Dest { forest_1, path, up_a_tree, kitchen, living_dead, west_side, north_side, behind, south_side, banish }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.
@@ -264,3 +264,17 @@ message :travel with Dest
 message :wall_look with integer
 message :unbar
 message :sealed with boolean
+// Which room a visitor last came into, by its number (`Room`'s `:num`):
+// how the adventurer's own part of `go` tells a maze's one-way tunnel from
+// an ordinary way into the same room.
+message :spot with integer
+// The grating, one grating seen from two rooms: whether it is unlocked and
+// whether it is open, kept in step on both sides, and the leaves that hid
+// it gone from above.
+message :grate_unlock with boolean
+message :grate_open with boolean
+message :grate_revealed
+// The skeleton's ghost: the visitor's valuables, and the room's, banished.
+message :banish
+// The rusty knife, once it has done what it does.
+message :spend

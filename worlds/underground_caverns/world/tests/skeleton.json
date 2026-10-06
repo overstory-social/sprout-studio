@@ -1,12 +1,12 @@
 {
-  "about": "The troll fends the visitor off, fights on Zork's tables with the sword, and is killed; the passage east leads to country not yet built, and the hole west into the Maze.",
+  "about": "The dead adventurer's remains bite back, as Zork's do: kissed or taken, the skeleton brings his ghost, who banishes the treasure on the floor to the Land of the Living Dead; and the rusty knife, turned on anything, slits its bearer's throat.",
   "steps": [
-    { "seed": 0 },
     { "arrive": "Marta", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West of House" },
       { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
       { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
     ] },
+    { "seed": 0 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North of House" },
       { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
@@ -59,23 +59,6 @@
       { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
       { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The troll fends you off with a menacing gesture." }
-    ] },
-    { "as": "Marta", "type": "take troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll spits in your face, grunting \"Better luck next time\" in a rather barbarous accent." }
-    ] },
-    { "as": "Marta", "type": "x troll", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The troll is squat, greenish and nearly as wide as he is tall, with small red eyes and a great many teeth, not all of them his own. The bloody axe is clenched in his fist, and he swings it idly back and forth, the way other people tap a foot. He is watching you the way a cook watches a chicken." }
-    ] },
-    { "as": "Marta", "type": "listen to troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
-    ] },
-    { "seed": 2 },
-    { "as": "Marta", "type": "attack troll with sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The force of your blow knocks the troll back, stunned." },
-      { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
-    ] },
     { "seed": 1 },
     { "as": "Marta", "type": "kill troll", "expect": [
       { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
@@ -84,26 +67,70 @@
       { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
     { "seed": 0 },
-    { "as": "Marta", "type": "kill troll", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
-    ] },
-    { "as": "Marta", "type": "l", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
-      { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
-    ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage to the east has not been finished. A note is pinned to the rock: \"Back soon. -- The Management.\"" }
-    ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Maze" },
       { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The Troll Room" }
-    ] },
     { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Cellar" }
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike. A skeleton, probably the remains of a luckless adventurer, lies here." },
+      { "reader": "Marta", "kind": "described", "words": "The deceased adventurer's useless lantern is here." },
+      { "reader": "Marta", "kind": "described", "words": "Beside the skeleton is a rusty knife." },
+      { "reader": "Marta", "kind": "described", "words": "There is a skeleton key here." },
+      { "reader": "Marta", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
+    ] },
+    { "as": "Marta", "type": "kiss skeleton", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A ghost appears in the room and is appalled at your desecration of the remains of a fellow adventurer. He casts a curse on your valuables and banishes them to the Land of the Living Dead. The ghost leaves, muttering obscenities." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike. A skeleton, probably the remains of a luckless adventurer, lies here." },
+      { "reader": "Marta", "kind": "described", "words": "The deceased adventurer's useless lantern is here." },
+      { "reader": "Marta", "kind": "described", "words": "Beside the skeleton is a rusty knife." },
+      { "reader": "Marta", "kind": "described", "words": "There is a skeleton key here." }
+    ] },
+    { "as": "Marta", "type": "take coins", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "take skeleton", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A ghost appears in the room and is appalled at your desecration of the remains of a fellow adventurer. He casts a curse on your valuables and banishes them to the Land of the Living Dead. The ghost leaves, muttering obscenities." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A brass lantern (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "A sword" }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 21 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "take knife", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "As you touch the rusty knife, your sword gives a single pulse of blinding blue light." },
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "kill skeleton with knife", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "As the knife approaches its victim, your mind is submerged by an overmastering will. Slowly, your hand turns, until the rusty blade is an inch from your neck. The knife seems to sing as it savagely slits your throat." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Marta", "kind": "told", "words": "Your belongings, such as they were, have not come with you. They are scattered about the Empire, though somebody tidy has put the lamp back in the living room." },
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." },
+      { "reader": "Marta", "kind": "told", "words": "You hear in the distance the chirping of a song bird." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are empty-handed." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 25 (total of 350 points), in 24 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." }
     ] }
   ]
 }

@@ -9,8 +9,9 @@ import {TreeTop, Nest, Egg, Canary} from 'tree'
 import {Adventurer} from 'adventurer'
 import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, TreeBelow} from 'scenery'
 import {KitchenWindow, Outdoors} from 'house'
-import {Leaves, Ground, Grating} from 'grating'
-import {take, open, read, :window_sync, :reveal, :travel} from 'verbs'
+import {Leaves, Ground, GratingAbove} from 'grating'
+import {grating_room} from 'maze'
+import {take, open, read, :window_sync, :reveal, :travel, :grate_open, :grate_revealed} from 'verbs'
 import {kitchen} from 'house'
 
 object west_of_house is Room in underground_caverns {
@@ -289,11 +290,15 @@ object grating_clearing is Forest in underground_caverns {
     exit east  "east"    -> forest_2
     exit west  "west"    -> forest_1
     exit south "south"   -> forest_path
+    exit down  "grating" -> grating_room when (self.get(:grate_open))
     exit down  "grating" refuse "The grating is closed!" when (self.get(:revealed))
   }
   :revealed false
+  :grate_open false
   passage body {
-    You are in a clearing, with a forest surrounding you on all sides. A path leads south.{if self.get(:revealed)}
+    You are in a clearing, with a forest surrounding you on all sides. A path leads south.{if self.get(:grate_open)}
+
+    There is an open grating, descending into darkness.{else if self.get(:revealed)}
 
     There is a grating securely fastened into the ground.{/if}
   }
@@ -302,8 +307,10 @@ object grating_clearing is Forest in underground_caverns {
     if (!self.get(:revealed)) {
       self.set(:revealed, true)
       send ground :reveal
+      broadcast :grate_revealed
     }
   }
+  on :grate_open (from, value) { self.set(:grate_open, value) }
 
   // Carrying the leaves off uncovers what they hid.
   on :left (item, to) {
@@ -323,7 +330,7 @@ object grating_clearing is Forest in underground_caverns {
     passage view { The trees stand all around the clearing in a ring, large and close, leaving it the only open sky for some way. }
   }
   object ground is Ground {
-    object grating is Grating
+    object grating is GratingAbove
   }
   object house is DistantHouse
 }

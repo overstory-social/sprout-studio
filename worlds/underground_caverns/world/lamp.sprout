@@ -47,7 +47,9 @@ kind Lamp is Portable, sprout.LightSource {
       self.set(:lit, false)
       say "The {self.short} is now off."
       if (actor.holds(self)) { send actor :light with -1 } else { send here :relight }
-      if (here.is(DarkRoom)) { say "It is now pitch black." }
+      if (here.is(DarkRoom)) {
+        if (!here.get(:daylight)) { say "It is now pitch black." }
+      }
     }
   }
 

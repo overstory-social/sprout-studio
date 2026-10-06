@@ -12,13 +12,18 @@ import * as sprout from 'sprout'
 import {Thing, Scenery} from 'thing'
 import {Lamp} from 'lamp'
 import {Adventurer} from 'adventurer'
-import {:scored, :relight, :room_lit, :wall_look} from 'verbs'
+import {:scored, :relight, :room_lit, :wall_look, :spot} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
 
   :value 0 min 0 max 100
   :glow 0 min 0 max 2
+  // The maze's rooms are numbered as Zork's are (MAZE-1 to MAZE-15, the
+  // dead ends after them, the Grating Room last); every other room is 0.
+  // A visitor is told the number of each room they come into, so that,
+  // going on, they know where they came from.
+  :num 0 min 0 max 40
   // The Cellar's: the trap door is open above and not yet barred, so the
   // next to come down will hear it crash shut.
   :crash false
@@ -76,6 +81,7 @@ kind Room is sprout.Place {
   on :entered (item, from) {
     if (item.is(Adventurer)) {
       send wall :wall_look with self.get(:walls)
+      send item :spot with self.get(:num)
       // A visit counts only where there is light to see the room by.
       let seen_by = !self.is(DarkRoom) || item.get(:light) > 0
       if (item.recall(:visits) < 2 && seen_by) { item.adjust(:visits, 1) }
@@ -91,9 +97,11 @@ kind Room is sprout.Place {
 }
 
 kind DarkRoom is Room {
-  grammar { lit (self.sees(sprout.LightSource, :lit)) }
+  grammar { lit (self.get(:daylight) || self.sees(sprout.LightSource, :lit)) }
 
-  // Lit by a lamp on its floor, or by one in somebody's hands: `:alight`.
+  // Lit by daylight from above (the Grating Room, while the grating is
+  // open), by a lamp on its floor, or by one in somebody's hands: `:alight`.
+  :daylight false
   :floor_lit false
   :bearers 0 min 0 max 50
   :alight false
@@ -101,8 +109,10 @@ kind DarkRoom is Room {
   on :entered (item, from) { send self :relight }
   on :left (item, to)      { send self :relight }
 
+  changed :daylight (was) { send self :relight }
+
   on :relight {
-    self.set(:floor_lit, false)
+    self.set(:floor_lit, self.get(:daylight))
     self.set(:bearers, 0)
     each l: Lamp in self { if (l.get(:lit)) { self.set(:floor_lit, true) } }
     each a: Adventurer in self { if (a.get(:light) > 0) { self.adjust(:bearers, 1) } }

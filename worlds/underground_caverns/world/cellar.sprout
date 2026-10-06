@@ -8,6 +8,7 @@ import {Troll} from 'troll'
 import {open, close, read, :trap_sync, :troll_flag, :troll_gone, :unbar} from 'verbs'
 import {east_of_chasm} from 'gallery'
 import {living_room} from 'house'
+import {maze_1} from 'maze'
 
 object cellar is DarkRoom in underground_caverns {
   grammar {
@@ -108,15 +109,12 @@ object troll_room is DarkRoom in underground_caverns {
     exit south "south" -> cellar
     exit east  "east"  refuse unbuilt_passage when (self.get(:troll_flag))
     exit east  "east"  refuse "The troll fends you off with a menacing gesture."
-    exit west  "hole"  refuse unbuilt_hole when (self.get(:troll_flag))
+    exit west  "hole"  -> maze_1 when (self.get(:troll_flag))
     exit west  "hole"  refuse "The troll fends you off with a menacing gesture."
   }
-  // The edges of what is built so far.
+  // The edge of what is built so far.
   passage unbuilt_passage {
     The passage to the east has not been finished. A note is pinned to the rock: "Back soon. -- The Management."
-  }
-  passage unbuilt_hole {
-    You peer into the forbidding hole. It is dark even by the standards of this place, and it does not seem to go anywhere yet. You think better of it.
   }
   :glow 2
   :troll_flag false
@@ -157,7 +155,7 @@ object troll_room is DarkRoom in underground_caverns {
   object hole is Scenery {
     grammar { name "forbidding hole"  nouns "hole"  adjectives "forbidding", "west" }
     passage short { forbidding hole }
-    describe { text "The hole in the west wall is ragged and dark, dark even by the standards of this place. It is not so much an exit as a suggestion, and not a friendly one." }
+    describe { text "The hole in the west wall is ragged and dark, dark even by the standards of this place. Beyond it the rock is cut into narrow passages that twist away out of sight almost at once. It is not so much an exit as a suggestion, and not a friendly one." }
   }
   object bloodstains is Scenery {
     grammar { name "bloodstains"  nouns "blood", "stains", "bloodstain"  adjectives "dried" }
