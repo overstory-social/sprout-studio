@@ -45,6 +45,12 @@ for (const persona of Object.keys(GOALS)) {
   if (!PERSONAS.includes(persona)) throw new Error(`args.goals names ${persona}, which is not a persona of this round`)
   if (typeof GOALS[persona] !== 'string' || GOALS[persona].trim() === '') throw new Error(`args.goals.${persona} is a sentence for the player`)
 }
+// A persona's players may be played by another model than the playtester's own, to compare how they play.
+const MODELS = A.models ?? {}
+for (const [persona, model] of Object.entries(MODELS)) {
+  if (!PERSONAS.includes(persona)) throw new Error(`args.models names ${persona}, which is not a persona of this round`)
+  if (!['sonnet', 'opus', 'fable', 'haiku'].includes(model)) throw new Error(`args.models.${persona} is one of sonnet, opus, fable, haiku`)
+}
 // A playtester stays blind: nothing it is told names a file, a folder, the round or a calibration world.
 const LEAKS = /worlds\/|rounds\/|\.(md|json|sprout)\b|\bround\s*\d|\bcalibration\b/i
 for (const [what, words] of [['args.framing', FRAMING], ...Object.entries(GOALS).map(([persona, goal]) => [`args.goals.${persona}`, goal])]) {
@@ -197,7 +203,13 @@ while (played < ROUNDS) {
                   (FRAMING === null ? '' : `${FRAMING}\n`) +
                   (GOALS[run.persona] === undefined ? '' : `What you want here: ${GOALS[run.persona].trim()}\n`) +
                   `You are arriving in a place. Play.`,
-                { agentType: 'playtester', phase: 'Playtest', label: `play ${run.id}`, schema: SCHEMAS['playtest-report-as-played'] },
+                {
+                  agentType: 'playtester',
+                  ...(MODELS[run.persona] === undefined ? {} : { model: MODELS[run.persona] }),
+                  phase: 'Playtest',
+                  label: `play ${run.id}`,
+                  schema: SCHEMAS['playtest-report-as-played'],
+                },
               )
             : await agent(
                 `This is a playtest report a player wrote, and it was refused. You cannot replay what they played.${again(problems)}\n\n` +
@@ -241,6 +253,9 @@ while (played < ROUNDS) {
         (FRAMING === null ? '' : `\nEvery player was told: ${JSON.stringify(FRAMING)}`) +
         Object.entries(GOALS)
           .map(([persona, goal]) => `\nThe ${persona} runs played with a goal: ${JSON.stringify(goal.trim())}. Say whether each reached it, and what stood in the way.`)
+          .join('') +
+        Object.entries(MODELS)
+          .map(([persona, model]) => `\nThe ${persona} runs were played by ${model}, the others by the playtester's own model. Say how they played differently, if they did.`)
           .join('') +
         again(problems),
       { agentType: 'synthesizer', phase: 'Synthesize', label: 'synthesize', schema: SCHEMAS.synthesis },

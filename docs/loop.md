@@ -115,6 +115,7 @@ arguments:
 | `turnCap`, `advancePerTurn` | turns per run; seconds each turn moves time | 150, 30 |
 | `maxRuns`, `maxRounds` | the caps on runs per round and rounds per call | 12, 12 |
 | `author` | the author's model, from the brief: `opus` or `fable` | `opus` |
+| `models` | another model for a persona's playtesters, as `{ "explorer": "fable" }` (`sonnet`, `opus`, `fable` or `haiku`); the synthesizer is told and compares them | none |
 | `perRoundBudget` | tokens a round is taken to need, against a `+500k`-style budget | 400000 |
 
 It stops, and says why, when the rounds asked for are played, when the

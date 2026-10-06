@@ -337,6 +337,16 @@ describe('the studio-round workflow', () => {
     );
   });
 
+  it('plays a persona on the model it is given, every other on the playtester’s own, and tells the synthesizer', async () => {
+    const s = stage();
+    await s.run({ world: 'shed', personas: ['explorer', 'casual'], models: { explorer: 'fable' } });
+    const played = Object.fromEntries(s.calls.filter((one) => one.type === 'playtester').map((one) => [one.label, one.model]));
+    assert.deepEqual(played, { 'play explorer-1': 'fable', 'play casual-1': undefined });
+    assert.match(s.calls.find((one) => one.type === 'synthesizer').prompt, /The explorer runs were played by fable/);
+    await assert.rejects(stage().run({ world: 'shed', models: { explorer: 'gpt' } }), /args\.models\.explorer is one of/);
+    await assert.rejects(stage().run({ world: 'shed', personas: ['casual'], models: { explorer: 'fable' } }), /args\.models names explorer/);
+  });
+
   it('refuses a goal for a persona the round does not play', async () => {
     await assert.rejects(stage().run({ world: 'shed', personas: ['casual'], goals: { explorer: 'Find the key.' } }), /args\.goals names explorer/);
   });
