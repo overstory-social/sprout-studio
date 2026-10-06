@@ -29,6 +29,51 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /** Where the worlds and the doors are: the studio's folder, unless `STUDIO_ROOT` names another, as specs do. */
 export const ROOT = process.env.STUDIO_ROOT === undefined ? REPO : resolve(process.env.STUDIO_ROOT);
 export const DOORS = join(ROOT, '.studio', 'doors');
+/** Where each running door server says which process it is and which Sprout it loaded. */
+export const SERVERS = join(ROOT, '.studio', 'servers');
+
+/** The Sprout commit the studio is pinned to now. */
+export function pinned() {
+  return JSON.parse(readFileSync(join(REPO, 'sprout.pin.json'), 'utf8')).commit;
+}
+
+/** Whether the process `pid` is running and is a door server, as `ps` names its command. */
+function isDoorServer(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    return execFileSync('ps', ['-o', 'command=', '-p', String(pid)], { encoding: 'utf8' }).includes('playtest-mcp');
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Stop every door server still running a Sprout other than the pinned one.
+ * The client keeps a server for as long as it likes, and one started before
+ * a pin changed cannot load a world written for the new one; stopped, it is
+ * started again on the next call, as the pin has it.
+ */
+export function stopStaleServers() {
+  if (!existsSync(SERVERS)) return;
+  const now = pinned();
+  for (const file of readdirSync(SERVERS).filter((one) => one.endsWith('.json'))) {
+    let server;
+    try {
+      server = JSON.parse(readFileSync(join(SERVERS, file), 'utf8'));
+    } catch {
+      rmSync(join(SERVERS, file), { force: true });
+      continue;
+    }
+    if (server.pin === now) continue;
+    // A card outlives a server that died without its exit handler, and its pid may since be another process's.
+    if (isDoorServer(server.pid)) {
+      try {
+        process.kill(server.pid, 'SIGTERM');
+      } catch {}
+    }
+    rmSync(join(SERVERS, file), { force: true });
+  }
+}
 
 /** A world's folder under worlds/, from its name; thrown where there is none by that name. */
 function worldDir(world) {
@@ -97,6 +142,7 @@ export function status(world) {
 export function open(world, round, persona, seed, { turnCap, advance } = {}) {
   if (!PERSONAS.includes(persona)) throw new Error(`${persona}: a persona is one of ${PERSONAS.join(', ')}`);
   if (!/^\d+$/.test(String(seed))) throw new Error(`${seed}: a seed is a whole number`);
+  stopStaleServers();
   const run = `${persona}-${seed}`;
   const at = roundDir(world, round);
   mkdirSync(join(ROOT, at, 'runs'), { recursive: true });
@@ -111,6 +157,17 @@ export function open(world, round, persona, seed, { turnCap, advance } = {}) {
   };
   writeFileSync(join(DOORS, `${door}.json`), `${JSON.stringify(ticket, null, 2)}\n`);
   return { run, door };
+}
+
+/** How many lines were typed in the run `name` of a round, as its recording holds them; 0 where it has none. */
+function typedIn(world, round, name) {
+  const file = join(ROOT, roundDir(world, round), 'runs', `${name}.json`);
+  if (!existsSync(file)) return 0;
+  try {
+    return JSON.parse(readFileSync(file, 'utf8')).steps.filter((step) => 'as' in step).length;
+  } catch {
+    return 0;
+  }
 }
 
 /** Where an output of `kind` is kept in a round, and whether it takes a name. */
@@ -180,6 +237,13 @@ export function save(world, round, kind, name, value) {
   const problems = [...problemsIn(kind, value), ...(kind === 'playtest-report' ? leaksIn(value) : [])];
   if (kind === 'playtest-report' && problems.length === 0 && `${value.persona}-${value.seed}` !== name) {
     problems.push(`persona and seed: ${value.persona}-${value.seed} is not the run ${name} it is saved as`);
+  }
+  if (kind === 'playtest-report' && typedIn(world, round, name) === 0) {
+    return {
+      ok: false,
+      unplayed: true,
+      problems: [`the run ${name} recorded no line typed, so there is no play to report: it is dropped, not mended`],
+    };
   }
   if (problems.length > 0) return { ok: false, problems };
   const at = roundDir(world, round);
