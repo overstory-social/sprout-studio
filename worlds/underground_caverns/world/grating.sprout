@@ -11,6 +11,7 @@ kind Leaves is Portable {
   :hiding true
   passage short { pile of leaves }
   passage ldesc { On the ground is a pile of leaves. }
+  describe { text "It is a pile of dead leaves, brown and damp, of the sort a forest produces without being asked. It is rather deeper than leaves usually lie, as though someone had swept them together on purpose." }
 
   on :moved (from, to) { self.set(:hiding, false) }
 
@@ -49,6 +50,10 @@ kind Ground is Scenery {
   pass any (self.get(:revealed))
   grammar { name "ground"  nouns "dirt", "earth", "floor" }
   passage short { ground }
+  describe {
+    if (self.get(:revealed)) { text "The ground of the clearing is packed earth, bare where the leaves lay, with a grating set firmly into it." }
+    else { text "The ground of the clearing is packed earth, soft with fallen leaves and quite unremarkable, as far as it is willing to let on." }
+  }
   on :reveal (from) { self.set(:revealed, true) }
 }
 
@@ -56,7 +61,12 @@ kind Grating is Scenery {
   grammar { name "grating"  nouns "grate" }
   passage short { grating }
   :door true
-  describe { text "The grating is closed." }
+  passage view {
+    It is a heavy iron grating, set securely into the ground and rusted to the colour of the leaves that hid it. Below it is only darkness.
+
+    The grating is closed.
+  }
+  describe { text view }
 
   without as target for open from Thing
   without as target for close from Thing

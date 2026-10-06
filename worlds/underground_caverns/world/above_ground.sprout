@@ -4,7 +4,7 @@
 import {Thing, Portable, Scenery} from 'thing'
 import {Box} from 'box'
 import {Readable, Treasure} from 'items'
-import {Room, Forest} from 'room'
+import {Room, Forest, Woodland, Woods, Trees} from 'room'
 import {TreeTop, Nest, Egg, Canary} from 'tree'
 import {Adventurer} from 'adventurer'
 import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, TreeBelow} from 'scenery'
@@ -30,6 +30,11 @@ object west_of_house is Room in underground_caverns {
     :plain 1
     passage short { small mailbox }
     passage no_take { It is securely anchored. }
+    passage examined {
+      The small mailbox stands on a post at the edge of the field, painted to match the house and a good deal less weathered. Its little flag is down.
+
+      {self.look_inside}
+    }
 
     object leaflet is Readable {
       grammar { nouns "advertisement", "booklet", "mail"  adjectives "small" }
@@ -65,6 +70,14 @@ object north_of_house is Room in underground_caverns {
   object house is WhiteHouse { :around behind }
   object window is BoardedWindow
   object boards is Boards
+  object trees is Trees {
+    passage view { Beyond the path the trees begin, large and close together and darker the further in you look. The path is the only polite way into them. }
+  }
+  object path is Scenery {
+    grammar { name "narrow path"  nouns "path", "trail"  adjectives "narrow", "winding" }
+    passage short { narrow path }
+    describe { text "The narrow path winds north, away from the house and into the trees, as though it had somewhere better to be." }
+  }
 }
 
 object south_of_house is Room in underground_caverns {
@@ -118,9 +131,28 @@ object behind_house is Room, Outdoors in underground_caverns {
     }
   }
   object window is KitchenWindow
+  object forest is Woods {
+    passage view { The forest begins where the path does, to the east, and keeps a respectful distance from the house, which it has perhaps been asked to do. }
+  }
+  object trees is Trees {
+    passage view { The trees of the forest stand off to the east, beyond a strip of grass, large and old and not inclined to come any closer. }
+  }
+  object path is Scenery {
+    grammar { name "path"  nouns "trail"  adjectives "east" }
+    passage short { path }
+    describe { text "The path leads east, away from the house and into the forest. It is well trodden, though not, apparently, by anyone you will meet soon." }
+  }
+  object corner is Scenery {
+    grammar { name "corner"  adjectives "house" }
+    passage short { corner }
+    passage view {
+      In the corner of the house, where the walls meet, is a small window which is {if behind_house.get(:window_open)}open.{else}slightly ajar.{/if} It is the only one on the house that is not boarded.
+    }
+    describe { text view }
+  }
 }
 
-object forest_1 is Forest in underground_caverns {
+object forest_1 is Woodland in underground_caverns {
   grammar {
     name "Forest"
     exit up    "tree"  refuse "There is no tree here suitable for climbing."
@@ -131,9 +163,14 @@ object forest_1 is Forest in underground_caverns {
   }
   passage body { This is a forest, with trees in all directions. To the east, there appears to be sunlight. }
   object house is DistantHouse
+  object sunlight is Scenery {
+    grammar { name "sunlight"  nouns "light", "sun"  adjectives "east" }
+    passage short { sunlight }
+    describe { text "Off to the east the trees thin a little, and sunlight comes through in long pale bars. It is the most cheerful thing in this forest, which is not saying much." }
+  }
 }
 
-object forest_2 is Forest in underground_caverns {
+object forest_2 is Woodland in underground_caverns {
   grammar {
     name "Forest"
     exit up    "tree"  refuse "There is no tree here suitable for climbing."
@@ -157,9 +194,17 @@ object mountains is Forest in underground_caverns {
   }
   passage body { The forest thins out, revealing impassable mountains. }
   object house is DistantHouse
+  object range is Scenery {
+    grammar { name "mountains"  nouns "mountain", "range", "peaks"  adjectives "impassable" }
+    passage short { mountains }
+    describe { text "The mountains rise sheer and grey beyond the last of the trees. They are impassable, and they look it." }
+  }
+  object trees is Trees {
+    passage view { The trees thin out here, the last of them small and wind-bent, as though they had come this far only to have a look at the mountains and think better of it. }
+  }
 }
 
-object forest_3 is Forest in underground_caverns {
+object forest_3 is Woodland in underground_caverns {
   grammar {
     name "Forest"
     exit up        "tree"      refuse "There is no tree here suitable for climbing."
@@ -187,6 +232,11 @@ object forest_path is Forest in underground_caverns {
   }
   object tree is TreeBelow
   object house is DistantHouse
+  object path is Scenery {
+    grammar { name "path"  nouns "trail"  adjectives "forest", "winding" }
+    passage short { path }
+    describe { text "The path winds north and south through the dim forest, around roots and past one particularly large tree, which it seems to regard with respect." }
+  }
 }
 
 object up_a_tree is TreeTop in underground_caverns {
@@ -264,6 +314,14 @@ object grating_clearing is Forest in underground_caverns {
   }
 
   object leaves is Leaves
+  object path is Scenery {
+    grammar { name "path"  nouns "trail"  adjectives "forest", "south" }
+    passage short { path }
+    describe { text "A path leads south out of the clearing, back into the forest." }
+  }
+  object trees is Trees {
+    passage view { The trees stand all around the clearing in a ring, large and close, leaving it the only open sky for some way. }
+  }
   object ground is Ground {
     object grating is Grating
   }
@@ -280,7 +338,15 @@ object clearing is Forest in underground_caverns {
     exit west  "west"  -> behind_house
   }
   passage body { You are in a small clearing in a well marked forest path that extends to the east and west. }
+  object trees is Trees {
+    passage view { The trees stand back from the path on either side, large and old, as though the path had been negotiated with them. }
+  }
   // The edge of what is built so far.
+  object path is Scenery {
+    grammar { name "forest path"  nouns "path", "trail"  adjectives "forest", "well", "marked" }
+    passage short { forest path }
+    describe { text "The path is well marked, as forest paths go, and runs east and west through the clearing. Someone has gone to the trouble of keeping it clear, which is more than can be said for the rest of the forest." }
+  }
   passage canyon {
     The path to the east is roped off. A sign hanging from the rope reads: "CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience."
   }

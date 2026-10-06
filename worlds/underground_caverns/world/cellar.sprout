@@ -51,9 +51,19 @@ object cellar is DarkRoom in underground_caverns {
     :open false
     :door true
     passage short { trap door }
+    passage open_view {
+      High overhead is the underside of the trap door: rough planks and iron bands, and not a handle or a ring to be had from this side.
+
+      The trap door is open, but I can't tell what's beyond it.
+    }
+    passage shut_view {
+      High overhead is the underside of the trap door: rough planks and iron bands, and not a handle or a ring to be had from this side.
+
+      The trap door is closed.
+    }
     describe {
-      if (self.get(:open)) { text "The trap door is open, but I can't tell what's beyond it." }
-      else { text "The trap door is closed." }
+      if (self.get(:open)) { text open_view }
+      else { text shut_view }
     }
     on :trap_sync (from, value) { self.set(:open, value) }
 
@@ -74,9 +84,21 @@ object cellar is DarkRoom in underground_caverns {
   }
 
   object ramp is Scenery {
-    grammar { name "chute"  nouns "ramp", "slide"  adjectives "steep", "metal", "twisting" }
-    passage short { chute }
+    grammar { name "metal ramp"  nouns "ramp", "chute", "slide"  adjectives "steep", "metal", "twisting" }
+    passage short { metal ramp }
+    describe { text "The bottom of a steep metal ramp comes down out of the dark on the west side of the cellar. It is polished smooth by everything that has ever slid down it, and it is unclimbable." }
   }
+  object passageway is Scenery {
+    grammar { name "narrow passageway"  nouns "passageway", "passage"  adjectives "narrow", "north" }
+    passage short { narrow passageway }
+    describe { text "A narrow passageway leads north out of the cellar. The air that comes down it is cold, and smells faintly of something that has not bathed." }
+  }
+  object crawlway is Scenery {
+    grammar { name "crawlway"  nouns "crawl", "tunnel"  adjectives "south", "low" }
+    passage short { crawlway }
+    describe { text "The crawlway to the south is low and mean, the kind of tunnel that is wider at the mouth than it ever is again." }
+  }
+  :walls 1
 }
 
 object troll_room is DarkRoom in underground_caverns {
@@ -114,4 +136,26 @@ object troll_room is DarkRoom in underground_caverns {
       passage short { bloody axe }
     }
   }
+
+  object passages is Scenery {
+    grammar { name "passages"  nouns "passage", "passageway", "passageways"  adjectives "east", "south" }
+    passage short { passages }
+    describe { text "Passages lead east and south out of the room. The one to the south goes back toward the cellar; the one to the east goes somewhere the troll would rather you did not." }
+  }
+  object hole is Scenery {
+    grammar { name "forbidding hole"  nouns "hole"  adjectives "forbidding", "west" }
+    passage short { forbidding hole }
+    describe { text "The hole in the west wall is ragged and dark, dark even by the standards of this place. It is not so much an exit as a suggestion, and not a friendly one." }
+  }
+  object bloodstains is Scenery {
+    grammar { name "bloodstains"  nouns "blood", "stains", "bloodstain"  adjectives "dried" }
+    passage short { bloodstains }
+    describe { text "The bloodstains are old and brown and spattered high up the walls. Whoever they belonged to has no further use for them." }
+  }
+  object scratches is Scenery {
+    grammar { name "deep scratches"  nouns "scratches", "scratch", "gouges"  adjectives "deep" }
+    passage short { deep scratches }
+    describe { text "Deep scratches score the rock, the kind made by something heavy swung hard and often. An axe would do it. Someone has evidently been practicing." }
+  }
+  :walls 2
 }

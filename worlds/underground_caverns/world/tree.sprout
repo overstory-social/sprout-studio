@@ -47,6 +47,11 @@ kind TreeTop is Forest {
 kind Nest is Bag {
   :open true
   passage short { bird's nest }
+  passage examined {
+    The nest is a neat cup of twigs, grass and down, wedged into the fork of a branch by a songbird with better taste in treasure than in architecture.
+
+    {self.look_inside}
+  }
 }
 
 // Zork's EGG and BROKEN-EGG are two objects; here they are one, which
@@ -62,6 +67,11 @@ kind Egg is Box, Treasure {
   passage short {{if self.get(:broken)}broken jewel-encrusted egg{else}jewel-encrusted egg{/if}}
   passage ldesc {
     {if self.get(:broken)}There is a somewhat ruined egg here.{else}There is a jewel-encrusted egg here.{/if}
+  }
+  passage examined {
+    {if self.get(:broken)}The egg has been opened in the least delicate way available. Its gold inlay is scratched, its lapis lazuli cracked, and its clasp hangs by a thread; it was once a wonder.{else}The egg is covered with fine gold inlay and ornamented in lapis lazuli and mother-of-pearl. Unlike most eggs, it is hinged, and closed with a delicate looking clasp. It looks extremely fragile, and extremely valuable, in that order.{/if}
+
+    {self.look_inside}
   }
   passage spill {{if self.count(Canary) > 0}{self.canary_text}{/if}}
   passage canary_text {

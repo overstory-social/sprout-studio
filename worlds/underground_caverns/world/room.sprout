@@ -12,7 +12,7 @@ import * as sprout from 'sprout'
 import {Thing, Scenery} from 'thing'
 import {Lamp} from 'lamp'
 import {Adventurer} from 'adventurer'
-import {:scored, :relight, :room_lit} from 'verbs'
+import {:scored, :relight, :room_lit, :wall_look} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -27,6 +27,9 @@ kind Room is sprout.Place {
   // room. Sprout has no object that is everywhere at once, so every room
   // holds its own.
   object wall is Wall
+  // Which walls these are, for the wall to describe: plain, the Cellar's
+  // damp stone, or the Troll Room's scarred rock.
+  :walls 0 min 0 max 2
 
   // How many times each visitor has come in, up to twice: Zork's TOUCHBIT,
   // kept per visitor.
@@ -75,6 +78,7 @@ kind Room is sprout.Place {
 
   on :entered (item, from) {
     if (item.is(Adventurer)) {
+      send wall :wall_look with self.get(:walls)
       // A visit counts only where there is light to see the room by.
       let seen_by = !self.is(DarkRoom) || item.get(:light) > 0
       if (item.recall(:visits) < 2 && seen_by) { item.adjust(:visits, 1) }
@@ -115,14 +119,51 @@ kind DarkRoom is Room {
 }
 
 // The forest rooms, where a songbird is sometimes heard.
-kind Forest is Room { }
+kind Forest is Room {
+  object forest is Woods
+}
+
+// A forest room whose trees are only trees: none of them the climbing kind.
+kind Woodland is Forest {
+  object trees is Trees
+}
+
+// The trees of the forest, seen from among them or from its edge.
+kind Trees is Scenery {
+  grammar { name "trees"  nouns "tree"  adjectives "large", "tall", "old" }
+  passage short { trees }
+  passage view default {
+    The trees are large and old and stand close about you, as trees in a forest will, each one much like the next. None has a branch low enough to climb, which saves a good deal of argument.
+  }
+  describe { text view }
+}
+
+// The forest itself, wherever a forest room is.
+kind Woods is Scenery {
+  grammar { name "forest"  nouns "woods"  adjectives "dim", "dimly", "lit" }
+  passage short { forest }
+  passage view default { The forest is dim and old and goes on in most directions for longer than seems strictly necessary. Somewhere in it a songbird is minding its own business. }
+  describe { text view }
+}
 
 // A room where jumping is a mistake, as the Kitchen is in Zork: its way
 // down leads nowhere a body can follow.
 kind Perilous { }
 
-// The surrounding wall: nothing special about it, as in Zork.
+// The surrounding wall, in every room. A room cannot give the wall it
+// inherits a line of its own, so it tells the wall, as a visitor comes in,
+// which walls these are.
 kind Wall is Scenery {
   grammar { name "surrounding wall"  nouns "wall", "walls"  adjectives "surrounding" }
   passage short { surrounding wall }
+  :look 0 min 0 max 2
+  on :wall_look (from, value) { self.set(:look, value) }
+  passage plain { The surrounding wall is solid, plain and entirely uninterested in you. }
+  passage damp { The cellar walls are damp, rough stone, sweating quietly in the dark. }
+  passage scarred { The walls are rough rock, marred by old bloodstains and by deep scratches, perhaps made by an axe. }
+  describe {
+    if (self.get(:look) == 1) { text damp }
+    else if (self.get(:look) == 2) { text scarred }
+    else { text plain }
+  }
 }

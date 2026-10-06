@@ -49,7 +49,10 @@ kind Box is Thing {
   }
   as target for look_in { do { say "{self.look_inside}" } }
 
-  describe { text look_inside }
+  // Examined, a box says what it is, where it has words for that, and
+  // then Zork's line for what is in it.
+  passage examined default { {self.look_inside} }
+  describe { text examined }
 
   passage opened_line default {
     {if self.count(Thing) == 0 || self.get(:transparent)}Opened.{else}Opening the {self.short} reveals {self.content_list}.{/if}

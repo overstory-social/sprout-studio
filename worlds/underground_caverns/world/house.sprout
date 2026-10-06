@@ -110,6 +110,11 @@ object kitchen is Room, Perilous in underground_caverns {
     :ndesc true
     :capacity 50
     passage short { kitchen table }
+    passage examined {
+      The kitchen table is a sturdy, scrubbed affair of plain wood, scarred by knives and stained here and there by whatever was prepared on it recently. Someone has been eating well, and has not been tidying up.
+
+      {self.look_inside}
+    }
 
     object sack is Bag {
       grammar { name "brown sack"  nouns "bag", "sack"  adjectives "elongated", "smelly" }
@@ -118,6 +123,11 @@ object kitchen is Room, Perilous in underground_caverns {
       :capacity 9
       passage short { brown sack }
       passage fdesc { On the table is an elongated brown sack, smelling of hot peppers. }
+      passage examined {
+        It is an elongated sack of coarse brown paper, folded over at the top and spotted with grease. It smells of hot peppers, and has clearly been somebody's lunch.
+
+        {self.look_inside}
+      }
 
       without as target for smell from Thing
       as target for smell {
@@ -134,11 +144,23 @@ object kitchen is Room, Perilous in underground_caverns {
       :capacity 4
       passage short { glass bottle }
       passage fdesc { A bottle is sitting on the table. }
+      passage examined {
+        It is a clear glass bottle with a stopper, of the kind made to carry water on long walks.
+
+        {self.look_inside}
+      }
     }
   }
 
   object window is KitchenWindow
-  object stairs is Stairs
+  object stairs is Stairs {
+    passage view { The staircase is dark and narrow, and leads upward to somewhere darker still. }
+  }
+  object west_passage is Scenery {
+    grammar { name "passage"  nouns "passageway"  adjectives "west" }
+    passage short { passage }
+    describe { text "The passage leads west, toward the rest of the house. It is a perfectly ordinary passage, which in this house is almost suspicious." }
+  }
   object chimney_flue is Scenery {
     grammar { name "chimney"  adjectives "dark", "narrow" }
     passage short { chimney }
@@ -159,6 +181,7 @@ object attic is DarkRoom in underground_caverns {
     :size 10
     passage short { rope }
     passage fdesc { A large coil of rope is lying in the corner. }
+    describe { text "It is a good length of stout hemp rope, coiled with more care than anything else in the attic was put away. Someone expected to need it." }
   }
 
   object table is Box {
@@ -168,16 +191,24 @@ object attic is DarkRoom in underground_caverns {
     :ndesc true
     :capacity 40
     passage short { table }
+    passage examined {
+      The table is small, plain and dusty, and has been put up here in the attic for the same reason as everything else in attics.
+
+      {self.look_inside}
+    }
     on :left (item, to) { self.set(:ndesc, false) }
 
     object knife is Knife {
+      describe { text "It is a nasty-looking knife, short and broad in the blade and none too clean. It was not made for buttering bread." }
       grammar { name "nasty knife"  nouns "knife", "knives", "blade"  adjectives "nasty", "unrusty" }
       :has_fdesc true
       passage short { nasty knife }
       passage fdesc { On a table is a nasty-looking knife. }
     }
   }
-  object stairs is Stairs
+  object stairs is Stairs {
+    passage view { The stairway leads down to the kitchen. It is the only way out, unless you count the window, and there is no window. }
+  }
 }
 
 object living_room is Room in underground_caverns {
@@ -209,9 +240,6 @@ object living_room is Room in underground_caverns {
     passage short { brass lantern }
     passage fdesc { A battery-powered brass lantern is on the trophy case. }
     passage ldesc { There is a brass lantern (battery-powered) here. }
-    describe {
-      if (self.get(:lit)) { text "The lamp is on." } else { text "The lamp is turned off." }
-    }
   }
   object sword is Sword {
     grammar { nouns "sword", "orcrist", "glamdring", "blade"  adjectives "elvish", "old", "antique" }
@@ -222,7 +250,7 @@ object living_room is Room in underground_caverns {
     describe {
       if (self.get(:glow) == 2) { text "Your sword is glowing very brightly." }
       else if (self.get(:glow) == 1) { text "Your sword is glowing with a faint blue glow." }
-      else { text "There's nothing special about the sword." }
+      else { text "The blade is long, keen and elvish, its hilt worked with vines and runes. It is very old, and has plainly been in worse places than this living room." }
     }
   }
   object rug is Rug {
@@ -242,8 +270,16 @@ object living_room is Room in underground_caverns {
     grammar { nouns "nails", "nail" }
     passage short { nails }
     passage no_take { The nails, deeply imbedded in the door, cannot be removed. }
+    describe { text "The nails are large and many, driven deep into the wooden door and its frame by someone who meant it. Whatever is behind that door, somebody wanted it to stay there." }
   }
-  object stairs is Stairs
+  object stairs is Stairs {
+    passage view { {if living_room.get(:trap_open)}A rickety staircase descends from the trap door into darkness. It does not look as if it was built with a return trip in mind.{else}The only stairs in sight are the ones in the kitchen, and they are in the kitchen.{/if} }
+  }
+  object doorway is Scenery {
+    grammar { name "doorway"  nouns "opening", "arch"  adjectives "east" }
+    passage short { doorway }
+    describe { text "The doorway leads east, into the kitchen. It has no door, which in this house makes it the friendliest thing in the room." }
+  }
 }
 
 // The trophy case. It pays a treasure's worth to everyone in the Living
@@ -256,6 +292,11 @@ kind TrophyCase is Box {
   passage short { trophy case }
   passage no_take { The trophy case is securely fastened to the wall. }
   passage header { Your collection of treasures consists of: }
+  passage examined {
+    The trophy case is a handsome thing of polished wood and glass, fastened securely to the wall and plainly built to hold treasures. It has the patient air of something that expects to be filled.
+
+    {self.look_inside}
+  }
 
   on :entered (item, from) {
     if (item.is(Treasure)) {
@@ -277,6 +318,10 @@ kind Rug is Scenery {
   grammar { name "carpet"  nouns "rug"  adjectives "large", "oriental" }
   passage short { carpet }
   passage no_take { The rug is extremely heavy and cannot be carried. }
+  describe {
+    if (self.get(:moved)) { text "The oriental rug lies bunched to one side of the room, where you dragged it. It looks faintly resentful." }
+    else { text "It is a large oriental rug, very fine and very heavy, laid squarely in the center of the room. It lies a little unevenly, as if something beneath it were not quite flat." }
+  }
 
   without as target for shift from Thing
   as target for shift {
@@ -312,9 +357,19 @@ kind TrapDoor is Scenery {
   :open false
   :door true
   passage short { trap door }
+  passage open_view {
+    It is a square trap door of heavy planks, set flush into the floor where the rug used to hide it, with an iron ring to lift it by.
+
+    The trap door is open, but I can't tell what's beyond it.
+  }
+  passage shut_view {
+    It is a square trap door of heavy planks, set flush into the floor where the rug used to hide it, with an iron ring to lift it by. A good deal of dust has settled on it, and nobody has disturbed it lately.
+
+    The trap door is closed.
+  }
   describe {
-    if (self.get(:open)) { text "The trap door is open, but I can't tell what's beyond it." }
-    else { text "The trap door is closed." }
+    if (self.get(:open)) { text open_view }
+    else { text shut_view }
   }
 
   without as target for open from Thing

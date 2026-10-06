@@ -12,6 +12,23 @@ kind Lamp is Portable, sprout.LightSource {
   without as target for lamp_on from Thing
   without as target for lamp_off from Thing
 
+  // Examined, the lamp says what it is, then Zork's line for whether it is lit.
+  describe {
+    if (self.get(:lit)) { text lit_view }
+    else { text dark_view }
+  }
+  passage view default { It is a battery-powered brass lantern, dented here and there but sound, with a stout handle and a glass that someone has kept clean. }
+  passage lit_view {
+    {self.view}
+
+    The lamp is on.
+  }
+  passage dark_view {
+    {self.view}
+
+    The lamp is turned off.
+  }
+
   as target for lamp_on {
     permit { if (self.get(:lit)) { refuse "It is already on." } }
     do {

@@ -600,6 +600,41 @@ entries' first text is kept as it was written against 61f02bb.
 - **Spec:** Limits › Static caps (phrases per verb or intent: 8).
 - **Status: open.**
 
+## Found answering the brief's scenery constraint
+
+### 35. A room cannot give the object its kind holds a line of its own
+
+- **Wanted:** Zork's WALL is one global object; here every `Room` holds its
+  own `wall`, and the Cellar's walls (damp stone) and the Troll Room's
+  (bloodstains, axe scratches) should each answer `examine walls` in their
+  own words, by restating `object wall is Wall { passage view { … } }` in
+  that room.
+- **Found:** the compiler refuses it: "`cellar` holds two objects called
+  `wall`". An object a kind declares cannot be restated, refined or left out
+  by the object that composes the kind, and a thing cannot read its
+  container's passages or properties.
+- **Wrote instead:** each room keeps a `:walls` number (plain, damp,
+  scarred) and sends it to its wall in a `:wall_look` message as a visitor
+  comes in; the wall keeps it and picks one of three lines by it. Three
+  lines live on the `Wall` kind, not in the rooms they describe.
+- **Spec:** Kinds, composition and libraries › How members combine;
+  Suppressing a contribution; Names › Identifiers and scope.
+- **Status: open.**
+
+### 36. `examine all` stops at a cap, so scenery crowds out what matters
+
+- **Wanted:** `examine all` in the Troll Room reaching the troll, as it did
+  before the room's passages, hole, bloodstains and scratches became
+  objects the brief asks for.
+- **Found:** "a line of `all` runs at most as many turns as a set role may
+  bind objects", so `examine all` with the lamp, sword, sack, lunch and
+  garlic in hand reads eight things and stops; with four more scenery
+  objects ahead of him, the troll fell off the end.
+- **Wrote instead:** the troll is declared ahead of the room's scenery, so
+  the range walk reaches him first; the scenery after him is what is cut.
+- **Spec:** Parsing › Sequences, again and all; Limits.
+- **Status: open.**
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, not thrown them.** After round 2 the
@@ -632,10 +667,12 @@ entries' first text is kept as it was written against 61f02bb.
   beyond it, a hole you think better of. The pick the east passage used to
   mention is gone: it could not be named, and three players tried.
 - **The surrounding wall** is in every room, as Zork's WALL is a global
-  object, and is named "surrounding wall": `examine walls` reads "There's
-  nothing special about the surrounding wall." Each room holds its own copy
-  (see 16), so `examine all` includes it, where Zork's `all` leaves out
-  global objects.
+  object, and is named "surrounding wall". Zork has nothing to say about
+  it; the brief asks that every named thing answer in its own words, so
+  `examine walls` describes the plain wall, the Cellar's damp stone or the
+  Troll Room's scarred rock (see 35). Each room holds its own copy (see
+  16), so `examine all` includes it, where Zork's `all` leaves out global
+  objects.
 - **Knocking, walking around, digging, going through.** KNOCK ("Nobody's
   home." at a door, "Why knock on a ...?" elsewhere), WALK AROUND (Zork's
   HOUSE-AROUND: west, north, behind, south; "Use compass directions for
@@ -643,8 +680,8 @@ entries' first text is kept as it was written against 61f02bb.
   of hands is silly.") and THROUGH (the kitchen window to its other side;
   "You hit your head against the ... as you attempt this feat.") are Zork's
   own answers from `gverbs.zil` and `actions.zil`. The forest's own WALK
-  AROUND (FOREST-AROUND) is not built: no forest room has a forest object
-  to walk around.
+  AROUND (FOREST-AROUND) is not built: every forest room now has a forest
+  to examine, but walking around it still says to use compass directions.
 - **The intact canary's aria and the brass bauble** are not built: only the
   thief opens the egg intact, and he is not in this slice. Winding the
   ruined canary gives Zork's "unpleasant grinding noise".
