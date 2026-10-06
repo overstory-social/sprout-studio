@@ -1440,6 +1440,13 @@ const TURN_CAP = A.turnCap ?? 150
 const ADVANCE = A.advancePerTurn ?? 30
 const AUTHOR_MODEL = A.author ?? 'opus'
 const PER_ROUND = A.perRoundBudget ?? 400000
+// What every playtester is told before it plays, and what a persona's player is set to do; neither may name a file, a round or the author.
+const FRAMING = typeof A.framing === 'string' && A.framing.trim() !== '' ? A.framing.trim() : null
+const GOALS = A.goals ?? {}
+for (const persona of Object.keys(GOALS)) {
+  if (!PERSONAS.includes(persona)) throw new Error(`args.goals names ${persona}, which is not a persona of this round`)
+  if (typeof GOALS[persona] !== 'string' || GOALS[persona].trim() === '') throw new Error(`args.goals.${persona} is a sentence for the player`)
+}
 const W = `worlds/${WORLD}`
 
 const PERSONA = {
@@ -1584,6 +1591,8 @@ while (played < ROUNDS) {
             ? await agent(
                 `Your door: ${opened.door}\nGo by the name ${['Ash', 'Bryn', 'Cato', 'Dell', 'Esme', 'Finch'][PERSONAS.indexOf(run.persona) % 6]}.\n` +
                   `Who you are as a player: ${PERSONA[run.persona]}\n` +
+                  (FRAMING === null ? '' : `${FRAMING}\n`) +
+                  (GOALS[run.persona] === undefined ? '' : `What you want here: ${GOALS[run.persona].trim()}\n`) +
                   `You are arriving in a place. Play.`,
                 { agentType: 'playtester', phase: 'Playtest', label: `play ${run.id}`, schema: SCHEMAS['playtest-report-as-played'] },
               )
@@ -1625,7 +1634,12 @@ while (played < ROUNDS) {
       `Synthesize round ${round} of ${W}. The reports are ${R}/reports/, the metrics ${R}/metrics/ ` +
         `(merged.json is the round's), the recorded runs ${R}/runs/, the sealed intent ${W}/intent.md and the brief ${W}/brief.md.\n` +
         `The round's figures: ${JSON.stringify(measured.figures)}\nLast round's: ${JSON.stringify(before)} ` +
-        `(report each figure's delta, before null in the first round). The round had ${measured.runs.length} runs.${again(problems)}`,
+        `(report each figure's delta, before null in the first round). The round had ${measured.runs.length} runs.` +
+        (FRAMING === null ? '' : `\nEvery player was told: ${JSON.stringify(FRAMING)}`) +
+        Object.entries(GOALS)
+          .map(([persona, goal]) => `\nThe ${persona} runs played with a goal: ${JSON.stringify(goal.trim())}. Say whether each reached it, and what stood in the way.`)
+          .join('') +
+        again(problems),
       { agentType: 'synthesizer', phase: 'Synthesize', label: 'synthesize', schema: SCHEMAS.synthesis },
     ),
       )

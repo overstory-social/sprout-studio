@@ -150,7 +150,8 @@ export function open(world, round, persona, seed, { turnCap, advance } = {}) {
   const door = randomBytes(12).toString('hex');
   const ticket = {
     world: join(worldDir(world), 'world'),
-    seed: Number(seed),
+    // Each run of a round its own stream of turn seeds, and each run the same stream every time it is played.
+    seed: Number(seed) * PERSONAS.length + PERSONAS.indexOf(persona),
     record: join(at, 'runs', `${run}.json`),
     ...(turnCap === undefined ? {} : { turnCap: Number(turnCap) }),
     ...(advance === undefined ? {} : { advancePerTurn: Number(advance) }),

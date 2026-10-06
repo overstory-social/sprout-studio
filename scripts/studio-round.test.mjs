@@ -308,6 +308,27 @@ describe('the studio-round workflow', () => {
     assert.equal(s.world.rounds[0].committed, false);
   });
 
+  it('tells every player the framing, and only a persona with a goal its goal, and the synthesizer both', async () => {
+    const s = stage();
+    await s.run({
+      world: 'shed',
+      personas: ['explorer', 'casual'],
+      framing: 'This place is like one you may know, but it has changed.',
+      goals: { explorer: 'Find the brass key.' },
+    });
+    const told = Object.fromEntries(s.calls.filter((one) => one.type === 'playtester').map((one) => [one.label, one.prompt]));
+    for (const prompt of Object.values(told)) assert.match(prompt, /This place is like one you may know, but it has changed\.\n/);
+    assert.match(told['play explorer-1'], /What you want here: Find the brass key\.\n/);
+    assert.doesNotMatch(told['play casual-1'], /What you want here/);
+    const synth = s.calls.find((one) => one.type === 'synthesizer').prompt;
+    assert.match(synth, /Every player was told: "This place is like one you may know, but it has changed\."/);
+    assert.match(synth, /The explorer runs played with a goal: "Find the brass key\."/);
+  });
+
+  it('refuses a goal for a persona the round does not play', async () => {
+    await assert.rejects(stage().run({ world: 'shed', personas: ['casual'], goals: { explorer: 'Find the key.' } }), /args\.goals names explorer/);
+  });
+
   it('refuses to start without a world to play, or a brief to play it to', async () => {
     await assert.rejects(stage().run({}), /args\.world names a folder under worlds\//);
     const s = stage();
