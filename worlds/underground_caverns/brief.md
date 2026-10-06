@@ -44,6 +44,11 @@ slice:
   jewel-encrusted egg), the house (kitchen, living room, attic, the trophy
   case, the rug and the trap door, the lamp and the sword), the cellar,
   and the troll room with its troll.
+- **v2, from round 4:** the v1 slice, plus at least one of Zork's own
+  routes from the Troll Room back up to the surface, with the rooms,
+  objects and puzzles on it as Zork has them. The author chooses the route
+  from Zork's map and says why in `intent.md`. A player who goes down the
+  trap door can come back up without dying.
 - Exits into territory not built yet are present, as in Zork, and turn the
   visitor back with an in-world line.
 
@@ -89,6 +94,8 @@ an unbuilt region), is written in that same voice.
   `se`, `sw`, `u`, `d`, and `l` for look and `i` for inventory.
 - An exit to a part of Zork not built yet answers with an in-world line,
   never a fault or a silent refusal.
+- The troll is an NPC: its kind composes `sprout.Actor`, and what it does
+  to the player it does by acting.
 - No fault in any run.
 - The world is playable alone; nothing needs two visitors to finish.
 - Every difference from Zork's map or mechanics that the author was forced
@@ -102,7 +109,8 @@ genre: a parser that meets Zork's conventions (`take all`, `it`,
 abbreviations, implicit takes), containers and surfaces (mailbox, trophy
 case, sack), light and darkness (the lamp, the grue), a hidden passage
 revealed by moving something (the rug and the trap door), an adversary
-with its own turns (the troll), and a score. Where any of those cannot be
+with its own turns built as a Sprout NPC (the troll, composing
+`sprout.Actor` and acting with `act`), and a score. Where any of those cannot be
 built as Zork has it, that is a finding, not a failure.
 
 ## Budget
