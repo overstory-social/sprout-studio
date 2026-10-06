@@ -49,6 +49,13 @@ slice:
   objects and puzzles on it as Zork has them. The author chooses the route
   from Zork's map and says why in `intent.md`. A player who goes down the
   trap door can come back up without dying.
+- **v3, from round 5:** v2, plus the Maze west of the Troll Room as Zork
+  has it: its rooms and their twisty, one-way passages, the dead
+  adventurer's remains (the bag of coins, the rusty knife, the useless
+  lantern, the skeleton key), and the Grating Room below the grating, so
+  the key unlocks the grating and a second way leads up to the Clearing.
+  The thief, his lair and the Cyclops stay out of scope: their exits
+  refuse in-world.
 - Exits into territory not built yet are present, as in Zork, and turn the
   visitor back with an in-world line.
 
@@ -115,7 +122,7 @@ built as Zork has it, that is a finding, not a failure.
 
 ## Budget
 
-- Rounds: 4 (round 3 keeps the round 1–2 slice; round 4 widens it)
+- Rounds: 5 (round 3 keeps the round 1–2 slice; round 4 adds a way home; round 5 the maze and the grating)
 - Playtests per round: 6 (one per persona)
 - Turn cap per run: 150
 - Spend ceiling: the workflow's default, about 400k tokens a round
