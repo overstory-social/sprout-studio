@@ -11,7 +11,7 @@
 // A door outlives this process: the client may run one process for every
 // playtester and stop it when any one of them is done, so a door opened
 // again resumes its session from its recording, with its visitor still in it.
-import { readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -21,7 +21,7 @@ import { arrive, isPresent, leave, resumeSession, say } from '@overstory/sprout-
 import { readWorld } from '@overstory/sprout-player';
 import { z } from 'zod';
 
-import { DOORS, ROOT } from './round.mjs';
+import { DOORS, pinned, ROOT, SERVERS } from './round.mjs';
 
 /** What a visitor is told where the host, and not the world, failed them. */
 const HOST_FAILED = 'Something went wrong outside the world, and that may not have happened.';
@@ -135,5 +135,12 @@ server.registerTool(
       entry.bound === null ? { text: 'Arrive first.', refused: true } : leave(entry.session, entry.bound),
     ),
 );
+
+// Which process this is and which Sprout it loaded, so `round.mjs open` can stop it once the pin moves on.
+const card = join(SERVERS, `${process.pid}.json`);
+mkdirSync(SERVERS, { recursive: true });
+writeFileSync(card, `${JSON.stringify({ pid: process.pid, pin: pinned() })}\n`);
+process.on('exit', () => rmSync(card, { force: true }));
+for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => process.exit(0));
 
 await server.connect(new StdioServerTransport());
