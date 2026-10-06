@@ -28,8 +28,8 @@ kind Room is sprout.Place {
   // holds its own.
   object wall is Wall
   // Which walls these are, for the wall to describe: plain, the Cellar's
-  // damp stone, or the Troll Room's scarred rock.
-  :walls 0 min 0 max 2
+  // damp stone, the Troll Room's scarred rock, or the Studio's paint.
+  :walls 0 min 0 max 3
 
   // How many times each visitor has come in, up to twice: Zork's TOUCHBIT,
   // kept per visitor.
@@ -150,20 +150,28 @@ kind Woods is Scenery {
 // down leads nowhere a body can follow.
 kind Perilous { }
 
+// The two ends of the Studio's chimney: whoever climbs from the foot to the
+// top must have a light and no more than one other thing in hand, as Zork's
+// UP-CHIMNEY-FUNCTION has it.
+kind ChimneyFoot { }
+kind ChimneyTop { }
+
 // The surrounding wall, in every room. A room cannot give the wall it
 // inherits a line of its own, so it tells the wall, as a visitor comes in,
 // which walls these are.
 kind Wall is Scenery {
   grammar { name "surrounding wall"  nouns "wall", "walls"  adjectives "surrounding" }
   passage short { surrounding wall }
-  :look 0 min 0 max 2
+  :look 0 min 0 max 3
   on :wall_look (from, value) { self.set(:look, value) }
   passage plain { The surrounding wall is solid, plain and entirely uninterested in you. }
   passage damp { The cellar walls are damp, rough stone, sweating quietly in the dark. }
   passage scarred { The walls are rough rock, marred by old bloodstains and by deep scratches, perhaps made by an axe. }
+  passage painted { The walls are splattered with paint, sixty-nine colors of it by the count of someone who had the time. Some of the splashes look deliberate. None of them looks finished. }
   describe {
     if (self.get(:look) == 1) { text damp }
     else if (self.get(:look) == 2) { text scarred }
+    else if (self.get(:look) == 3) { text painted }
     else { text plain }
   }
 }

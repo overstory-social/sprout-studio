@@ -5,14 +5,15 @@ import {Axe} from 'items'
 import {DarkRoom} from 'room'
 import {Adventurer} from 'adventurer'
 import {Troll} from 'troll'
-import {open, close, :trap_sync, :troll_flag, :troll_gone} from 'verbs'
+import {open, close, :trap_sync, :troll_flag, :troll_gone, :unbar} from 'verbs'
+import {east_of_chasm} from 'gallery'
 import {living_room} from 'house'
 
 object cellar is DarkRoom in underground_caverns {
   grammar {
     name "Cellar"
     exit north "north"     -> troll_room
-    exit south "crawlway"  refuse crawlway
+    exit south "crawlway"  -> east_of_chasm
     exit up    "trap door" -> living_room when (self.get(:trap_open))
     exit up    "trap door" refuse "The trap door is closed."
     exit west  "ramp"      refuse "You try to ascend the ramp, but it is impossible, and you slide back down."
@@ -24,16 +25,15 @@ object cellar is DarkRoom in underground_caverns {
   passage body {
     You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.
   }
-  // The edge of what is built so far.
-  passage crawlway {
-    You squeeze a few feet into the crawlway before it is choked with fallen rock. From somewhere beyond it comes the sound of digging, which stops, politely, until you have backed out.
-  }
-
   on :trap_sync (from, value) {
     self.set(:trap_open, value)
     self.set(:crash, value && !self.get(:barred))
   }
   on :troll_gone { self.set(:glow, 0) }
+  // Someone has come up the chimney from the Studio while the trap door was
+  // shut: whoever bars it will bar it again behind the next one down, as
+  // Zork's UP-CHIMNEY-FUNCTION clears the trap door's TOUCHBIT.
+  on :unbar { if (!self.get(:trap_open)) { self.set(:barred, false) } }
 
   // The first time down, the trap door crashes shut and is barred above:
   // the one coming down hears it as they arrive (the adventurer's `go`).
@@ -96,7 +96,7 @@ object cellar is DarkRoom in underground_caverns {
   object crawlway is Scenery {
     grammar { name "crawlway"  nouns "crawl", "tunnel"  adjectives "south", "low" }
     passage short { crawlway }
-    describe { text "The crawlway to the south is low and mean, the kind of tunnel that is wider at the mouth than it ever is again." }
+    describe { text "The crawlway to the south is low and mean, the kind of tunnel that is wider at the mouth than it ever is again. Someone has cleared it lately: the fallen rock is stacked neatly along one side, and there are fresh pick marks in the roof." }
   }
   :walls 1
 }
@@ -134,7 +134,26 @@ object troll_room is DarkRoom in underground_caverns {
       grammar { name "bloody axe"  nouns "axe", "ax"  adjectives "bloody" }
       :size 25
       passage short { bloody axe }
+      describe { text "The axe is a heavy, ugly, single-bitted thing, its haft wrapped in greasy leather and its edge notched from use. The blood on the blade is not all old." }
     }
+
+    // The axe in his fist is out of sight inside him, as everything he holds
+    // is; what the visitor sees of it while he holds it is `held_axe`, which
+    // stands in the room while the axe is in his hands and waits inside him
+    // while it is not.
+    on :entered (item, from) {
+      if (item.is(Axe)) { move troll_room.held_axe to troll_room }
+    }
+    on :left (item, to) {
+      if (item.is(Axe)) { move troll_room.held_axe to self }
+    }
+  }
+
+  object held_axe is Scenery {
+    grammar { name "bloody axe"  nouns "axe", "ax"  adjectives "bloody" }
+    passage short { bloody axe }
+    passage no_take { The troll's axe seems white-hot. You can't hold on to it. }
+    describe { text "You can't get a good look at the axe while the troll is waving it at you. What you can see of it is heavy, notched and bloody, and generally coming your way." }
   }
 
   object passages is Scenery {

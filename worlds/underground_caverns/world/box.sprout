@@ -71,7 +71,7 @@ kind Box is Thing {
 
     {u.fdesc}
 
-    {u.inside_lines}{/if}{/for}{if self.get(:plain) > 0}
+    {u.inside_lines}{/if}{/for}{if self.get(:plain) > 0 && self.count(Thing) > 0}
 
     {self.header}{for u: Thing in self}{if u.get(:touched) || !u.get(:has_fdesc)}
 

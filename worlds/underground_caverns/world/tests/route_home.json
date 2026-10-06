@@ -1,0 +1,204 @@
+{
+  "about": "The route home: south from the Cellar to the chasm's edge, the Gallery and its painting, the Studio and its chimney, back up into the Kitchen with a light and one thing more; the trap door is barred again behind the next one down, and a painting ruined in the trophy case is no longer worth anything there.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "move rug", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East of Chasm" },
+      { "reader": "Marta", "kind": "described", "words": "You are on the east edge of a chasm, the bottom of which cannot be seen. A narrow passage goes north, and the path you are on continues to the east." }
+    ] },
+    { "as": "Marta", "type": "x chasm", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The chasm drops away from your feet into a dark that your lamp does not so much light as annoy. A pebble kicked over the edge is never heard from again. Neither, by the look of it, was whoever kicked the last one." }
+    ] },
+    { "as": "Marta", "type": "x passage", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The narrow passage north is the crawlway back to the cellar, as low and mean from this end as from the other." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "The chasm probably leads straight to the infernal regions." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gallery" },
+      { "reader": "Marta", "kind": "described", "words": "This is an art gallery. Most of the paintings have been stolen by vandals with exceptional taste. The vandals left through either the north or west exits." },
+      { "reader": "Marta", "kind": "described", "words": "Fortunately, there is still one chance for you to be a vandal, for on the far wall is a painting of unparalleled beauty." }
+    ] },
+    { "as": "Marta", "type": "x painting", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a painting of a sunlit valley, done with such tenderness that it is hard to look at it for long, and harder to look away. The signature in the corner is too modest to read. The artist was a neglected genius, and it shows." }
+    ] },
+    { "as": "Marta", "type": "x paintings", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Where the stolen paintings hung there are only bare hooks and pale rectangles on the wall, each one exactly the size of something worth having. The vandals took the frames as well. They had taste, and they had time." }
+    ] },
+    { "as": "Marta", "type": "x vandals", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The vandals are long gone, north or west, and have left nothing of themselves behind but a gallery with very little in it and an air of quiet connoisseurship." }
+    ] },
+    { "as": "Marta", "type": "take painting", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 39 (total of 350 points), in 18 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Studio" },
+      { "reader": "Marta", "kind": "described", "words": "This appears to have been an artist's studio. The walls and floors are splattered with paints of 69 different colors. Strangely enough, nothing of value is hanging here. At the south end of the room is an open door (also covered with paint). A dark and narrow chimney leads up from a fireplace; although you might be able to get up it, it seems unlikely you could get back down." },
+      { "reader": "Marta", "kind": "described", "words": "Loosely attached to a wall is a small piece of paper." }
+    ] },
+    { "as": "Marta", "type": "x walls", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The walls are splattered with paint, sixty-nine colors of it by the count of someone who had the time. Some of the splashes look deliberate. None of them looks finished." }
+    ] },
+    { "as": "Marta", "type": "x paint", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Paint is everywhere: on the floor, on the walls, on the door, in drips and fans and handprints, sixty-nine colors by the count of someone with time to count. Strangely enough, none of it is on anything worth stealing." }
+    ] },
+    { "as": "Marta", "type": "x chimney", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The chimney is dark and narrow and leads up out of the fireplace. You might just get up it, if you travelled light and had a light to travel by. Getting back down it is another matter." }
+    ] },
+    { "as": "Marta", "type": "x fireplace", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The fireplace is cold and swept, the only clean thing in the room. Above it the chimney goes up into the dark, narrow and sooty and not built for traffic." }
+    ] },
+    { "as": "Marta", "type": "close door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door is held open by a great many coats of paint, and stays where it is." }
+    ] },
+    { "as": "Marta", "type": "read manual", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(Taken)" },
+      { "reader": "Marta", "kind": "said", "words": "Congratulations!" },
+      { "reader": "Marta", "kind": "said", "words": "You are the privileged owner of ZORK I: The Great Underground Empire, a self-contained and self-maintaining universe. If used and maintained in accordance with normal operating practices for small universes, ZORK will provide many months of trouble-free operation." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't get up there with what you're carrying." }
+    ] },
+    { "as": "Marta", "type": "drop all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Brass lantern: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "Painting: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "ZORK owner's manual: Dropped." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Going up empty-handed is a bad idea." }
+    ] },
+    { "as": "Marta", "type": "climb chimney", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Going up empty-handed is a bad idea." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take painting", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "climb chimney", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "open case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." }
+    ] },
+    { "as": "Marta", "type": "put painting in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 45 (total of 350 points), in 33 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "break painting with lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Congratulations! Unlike the other vandals, who merely stole the artist's masterpieces, you have destroyed one." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 39 (total of 350 points), in 34 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "x canvas", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It was a painting of unparalleled beauty. It is now a canvas with a hole in it, and the hole is the only part anyone will remember." }
+    ] },
+    { "as": "Marta", "type": "take canvas", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 39 (total of 350 points), in 36 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "The trap door is closed." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East of Chasm" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gallery" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Studio" },
+      { "reader": "Marta", "kind": "described", "words": "There is a ZORK owner's manual here." }
+    ] },
+    { "as": "Marta", "type": "drop canvas", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A brass lantern (providing light)" }
+    ] }
+  ]
+}

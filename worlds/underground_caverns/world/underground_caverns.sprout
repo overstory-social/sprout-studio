@@ -9,7 +9,7 @@ import * as sprout from 'sprout'
 import {Person} from 'person'
 import {go} from 'sprout'
 import {west_of_house} from 'above_ground'
-import {:open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone} from 'verbs'
+import {:open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone, :unbar} from 'verbs'
 
 world underground_caverns is sprout.World {
   visitors are Person
@@ -21,6 +21,7 @@ world underground_caverns is sprout.World {
   pass :trap_sync (true)
   pass :window_sync (true)
   pass :troll_gone (true)
+  pass :unbar (true)
 
   on :open_gate (from) {
     self.set(:gate, true)

@@ -1,0 +1,294 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The brief's budget says round 4 widens the slice and S11 says round 4 has the expansion, so this is the round for it. I opened Zork's own route home and nothing else: Cellar south through the crawlway to East of Chasm, east to the Gallery, north to the Studio, and up its chimney to the Kitchen. All three rooms are Zork's and none needs the troll. The trap door stays barred, as Zork's is."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "This is a parser bug in Sprout, and the world must not route around it. I extended friction entry 11a with the round-3 evidence (6 of 6 runs) and the two asks: split the line on 'and' followed by a known verb, or answer `unknown` instead of `not_here`. Lists of things in a one-thing role are already sprout#448. The world itself does not change."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Confirmed. The knockout's own 3-minute wake was never asked for because a 1-minute fight turn was always pending, and a wake cannot be cancelled. I used Zork's own rule (V-PROB): the troll keeps `:rouse`, which the knockout sets to zero and each turn he spends out cold raises by a tenth. The turn already pending now only counts. I logged the missing cancel or replace for a wake as friction 38 and added a seeded test of a knockout followed by the killing blow."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Confirmed. `weapon_name` asked the visitor's hands after the handler had moved the sword, so it fell back to 'bloody axe'. There is now one tell per weapon, each naming it in literal text before the move, and `weapon_name` is removed. The troll's `wep_name` reads the `:wep` property, not the inventory, so it is safe. Friction 39; disarm test added."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "No retune: the spread of outcomes is Zork's own melee tables at 0 points. The P3 fix gives casual's complaint the second chance Zork intends without touching the tables."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "No world change is needed to make players meet darkness, the grue or the attic. The new route adds two dark rooms (East of Chasm, the Studio), and the round-4 watch list in intent.md now names them. Whether a goal points a persona at the attic is the director's choice, not the world's."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "Kept: BRIEF room names, the boarded-window answer and the scattered possessions are all Zork's, and each confused only one run. The new dark rooms are added to the places treasures scatter to on a death, as Zork scatters to unlit rooms."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Added Zork's POUR (bare, IN and ON, with WATER-F's lines) and 'dig with <tool>' as its own verb, because a target can never be optional (friction 41). The crawlway's digging went away with the rock that choked it, so 'listen to the digging' no longer has anything to answer. 'give water to troll' failed because the bottle was shut, and a shut glass bottle hides what it holds from range (friction 40); with the bottle open the troll takes the water. 'pour water in bottle' reads as 'the water in the bottle' (friction 44)."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "This belongs in the Sprout runtime, not the world, and is tracked as sprout#448. Round 3's evidence and the ask to split on 'and' followed by a verb are in friction 11a. The world adds no workaround."
+    },
+    {
+      "answers": "S2",
+      "decision": "accept",
+      "reason": "Taken up in the round-3 revision, where the crawlway's refusal changed. In round 4 the crawlway leads somewhere."
+    },
+    {
+      "answers": "S3",
+      "decision": "accept",
+      "reason": "Each run now has its own seed (sprout#449), and round 3's fights were independent samples (P5). No world change."
+    },
+    {
+      "answers": "S4",
+      "decision": "accept",
+      "reason": "Not retuned (see P5)."
+    },
+    {
+      "answers": "S5",
+      "decision": "accept",
+      "reason": "KNOCK, WALK AROUND, DIG, THROUGH and GIVE were built in the round-2 revision. This round extends the same line of Zork verbs with POUR, DIG WITH and MUNG."
+    },
+    {
+      "answers": "S6",
+      "decision": "accept",
+      "reason": "`take all` names each thing it takes ('Brown sack: Taken.') since the round-2 revision; round 3 shows it working."
+    },
+    {
+      "answers": "S7",
+      "decision": "accept",
+      "reason": "This is the runtime's to fix, recorded as the decision on sprout#389. The world already leaves held things out of any list that holds something else. No new world change."
+    },
+    {
+      "answers": "S8",
+      "decision": "accept",
+      "reason": "Passed on and acted on in the round-3 revision. Nothing new is asked."
+    },
+    {
+      "answers": "S9",
+      "decision": "accept",
+      "reason": "Passed on and acted on in the round-3 revision. Nothing new is asked."
+    },
+    {
+      "answers": "S10",
+      "decision": "accept",
+      "reason": "Everything the new rooms' descriptions name has its own description, written in Zork's voice: the chasm, the narrow passage, the path, the stolen paintings' bare hooks, the vandals, the exits, the paint, the walls, the floor, the door, the fireplace, the chimney, the painting and the manual."
+    },
+    {
+      "answers": "S11",
+      "decision": "accept",
+      "reason": "The dead ends were kept, with a new refusal, for round 3. Round 4 has the expansion: the crawlway opens onto the route home. The Troll Room's east passage and west hole stay as the edge."
+    },
+    {
+      "answers": "S12",
+      "decision": "accept",
+      "reason": "Agreed that the players' Zork knowledge is the likely cause (P6). The world's answer is to put dark rooms on the new route; whether to frame players differently is the studio's decision."
+    },
+    {
+      "answers": "S13",
+      "decision": "accept",
+      "reason": "Confirmed again in round 3: the forest is reachable, and the prose-reader and explorer runs got there. The framing change was the studio's. Round 4's route home lets a visitor who went down first finish the egg."
+    },
+    {
+      "answers": "S14",
+      "decision": "accept",
+      "reason": "A recorded answer from the director's side. Nothing for the world to do."
+    },
+    {
+      "answers": "S15",
+      "decision": "accept",
+      "reason": "A recorded answer. Same as S12."
+    },
+    {
+      "answers": "S16",
+      "decision": "accept",
+      "reason": "A recorded answer: per-run seeds are in place. intent.md's notes already say so."
+    },
+    {
+      "answers": "S17",
+      "decision": "accept",
+      "reason": "A recorded answer: sprout#448. Cross-referenced in friction 11a."
+    },
+    {
+      "answers": "S18",
+      "decision": "accept",
+      "reason": "A recorded answer: sprout#389, option 1. No world change."
+    },
+    {
+      "answers": "S19",
+      "decision": "accept",
+      "reason": "Done for round 4, as S20 deferred it. The axe in the troll's fist is a stand-in, `held_axe`. Examined, it answers that you can't get a good look at it while he is waving it at you, which is the refusal Eric asked for. Taken, it gives Zork's 'white-hot' line. Once it is on the floor it is the real axe with its own description, and the stand-in goes with the troll when he dies. Friction 37 updated; covered in the knockout test."
+    },
+    {
+      "answers": "S20",
+      "decision": "accept",
+      "reason": "Round 3 was played without the axe change. It lands in this round-4 revision, with the wider scope, as the backlog note said."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Opened Zork's route home. The Cellar's crawlway now leads to East of Chasm (dark; going down refuses with 'infernal regions'; jumping there kills), then to the Gallery (lit; the painting worth 4 and 6, with scenery for the stolen paintings, the vandals and the exits), then to the Studio (dark; the ZORK owner's manual, paint, walls, door, fireplace, chimney). The Studio's chimney leads to the Kitchen. The crawlway's refusal is gone and its description now shows the cleared rock.",
+      "files": [
+        "worlds/underground_caverns/world/gallery.sprout",
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/sprout.json",
+        "worlds/underground_caverns/world/room.sprout",
+        "worlds/underground_caverns/world/house.sprout"
+      ],
+      "for": [
+        "P1",
+        "S11",
+        "S10"
+      ]
+    },
+    {
+      "what": "The chimney follows UP-CHIMNEY-FUNCTION: the lamp plus at most one other thing, 'Going up empty-handed is a bad idea.', 'You can't get up there with what you're carrying.' This works through a `depart` guard on Adventurer, an `:at_chimney` flag and the marker kinds ChimneyFoot and ChimneyTop, plus a `permit` on `climb_up` for 'climb chimney'. Coming up the chimney sends `:unbar` (which the world passes), so the next visitor down hears the trap door crash shut and get barred again.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/room.sprout",
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/underground_caverns.sprout",
+        "worlds/underground_caverns/world/verbs.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "Added MUNG ('break', 'destroy', 'damage', 'smash', 'vandalize'). The default answer is 'Nice try.'. The painting gives the vandal's congratulations and becomes a worthless piece of canvas; the egg gives Zork's BAD-EGG line. Treasures now know when they are in the trophy case, and one spoiled there takes back what the case paid for it.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/gallery.sprout",
+        "worlds/underground_caverns/world/tree.sprout",
+        "worlds/underground_caverns/world/items.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout"
+      ],
+      "for": [
+        "P1",
+        "P8"
+      ]
+    },
+    {
+      "what": "A knockout now holds. The troll keeps `:rouse`, his chance in tenths of coming round: the knockout sets it to 0 and each turn he spends out cold adds 1. The pending fight turn finds him unconscious and only counts. The knockout's own wake is 1 minute, no longer 3.",
+      "files": [
+        "worlds/underground_caverns/world/troll.sprout"
+      ],
+      "for": [
+        "P3",
+        "P5"
+      ]
+    },
+    {
+      "what": "The disarm line names the lost weapon as literal text, one tell per weapon, before the move. The `weapon_name` passage is removed.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "Added Zork's POUR (`pour`, `pour_in`, `pour_on`) with WATER-F's lines; anything else answers 'You can't pour that.'. Added `dig_with` ('Digging with a ... is silly.'). Each new verb counts a move.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/items.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "Fixed a stale 'The glass bottle contains:' header left after the water was destroyed (by drinking or pouring): the header now also needs something in the container.",
+      "files": [
+        "worlds/underground_caverns/world/box.sprout"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "The troll's held axe answers `examine` with a refusal in voice ('You can't get a good look at the axe while the troll is waving it at you...') and `take` with Zork's white-hot line. It is the real axe once it is on the floor.",
+      "files": [
+        "worlds/underground_caverns/world/cellar.sprout"
+      ],
+      "for": [
+        "S19",
+        "S20"
+      ]
+    },
+    {
+      "what": "On a death, treasures now also scatter to East of Chasm and the Studio, the dark rooms built so far.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Tests: new route_home.json (the route, both chimney refusals, scoring the painting in the case and losing it when ruined, re-barring), knockout.json (held axe; knockout then the killing blow), disarm.json, pour.json, egg.json and chasm.json. In trap_door.json the old crawlway refusal step is now 'x crawlway'.",
+      "files": [
+        "worlds/underground_caverns/world/tests/route_home.json",
+        "worlds/underground_caverns/world/tests/knockout.json",
+        "worlds/underground_caverns/world/tests/disarm.json",
+        "worlds/underground_caverns/world/tests/pour.json",
+        "worlds/underground_caverns/world/tests/egg.json",
+        "worlds/underground_caverns/world/tests/chasm.json",
+        "worlds/underground_caverns/world/tests/trap_door.json"
+      ],
+      "for": [
+        "P1",
+        "P3",
+        "P4",
+        "P8",
+        "S19"
+      ]
+    },
+    {
+      "what": "friction.md: new entries 38 (a wake cannot be taken back), 39 (a line rendered after its handler moved what it names), 40 (a shut glass bottle hides its contents from range), 41 (a tool with no target needs its own verb), 42 (an exit cannot ask who is going or what they carry), 43 (a declared object cannot be compared with ==) and 44 (relative phrases take 'pour water in bottle'). Entry 11a updated with round 3's evidence and the ask to Sprout; entry 37 updated for the axe line; Differences chosen updated for MUNG, POUR, the chimney's re-barring, spoiled treasures and the edges.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P2",
+        "P3",
+        "P4",
+        "P8",
+        "S1",
+        "S19"
+      ]
+    },
+    {
+      "what": "intent.md: the arc gains the route home, 'done' and the score ceiling become 55 points, and new secrets are listed (the chimney's rule, the painting, the knockout as a second chance, water). Added an 'After round 3' section with the round-4 watch list.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P3",
+        "P6",
+        "S11",
+        "S12"
+      ]
+    }
+  ]
+}

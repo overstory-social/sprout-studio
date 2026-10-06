@@ -8,7 +8,10 @@ Zork I, ported as faithfully as Sprout allows, beginning with the v1 slice
 the brief names: the fields and forest around the white house, the
 clearings and the grating, the tree and its egg, the house (kitchen, attic,
 living room with its trophy case, rug and trap door, lamp and sword), the
-cellar, and the Troll Room with its troll. Every room's name and description
+cellar, and the Troll Room with its troll; and, from round 4, by the
+director's word, Zork's own way home from the cellar: the crawlway south to
+East of Chasm, the Gallery with its painting, and the Studio, whose chimney
+climbs to the Kitchen. Every room's name and description
 is the original's, word for word, from the ZIL source (`dungeon.zil`,
 `actions.zil`, and the shared substrate's `verbs.zil`). The narrator is
 Zork's narrator: "Taken.", "Dropped.", "Opened.", the YUKS, "A hollow voice
@@ -38,7 +41,7 @@ written down. That log is a product of the world as much as the rooms are.
    staircase. Going down at all: the trap door crashes shut and someone
    bars it (25 points for the Cellar). Going down without a light: "You
    have moved into a dark place." and "It is pitch black. You are likely to
-   be eaten by a grue." The way back up is gone, as in Zork.
+   be eaten by a grue." The way back up the stairs is gone, as in Zork.
 6. The Troll Room. The troll fends the visitor off every passage but the
    one they came by, and fights: with the sword (best), the knife or the
    axe, on Zork's own melee tables, with Zork's own melee lines. He swings
@@ -46,11 +49,23 @@ written down. That log is a product of the world as much as the rooms are.
    besides, but never twice in one move, as in Zork. Dying sends the
    visitor back to the Forest with their possessions scattered and ten
    points lost; a third death ends their welcome.
+7. The way home, south of the Cellar: the crawlway to East of Chasm (dark;
+   the chasm goes "straight to the infernal regions", and jumping there is
+   fatal), east along the edge to the Gallery (lit), where the vandals left
+   one painting of unparalleled beauty (4 points taken, 6 in the case), and
+   north to the Studio (dark), with the ZORK owner's manual loosely attached
+   to a wall and a chimney up out of the fireplace. The chimney takes only
+   a visitor with the lamp and at most one thing besides, as Zork's
+   UP-CHIMNEY-FUNCTION does, and lets them out in the Kitchen. The trap door
+   is still barred; whoever opens it from above and goes down hears it
+   crash shut and barred behind them again.
 
-"Done", for this slice, is: the egg in the trophy case (or ruined and in
-it anyway), the visitor in the cellar with a light, and the troll dead or
-out cold with the passages beyond him open onto country not yet built.
-45 points is the ceiling with the egg intact.
+"Done", for this slice, is: the egg and the painting in the trophy case
+(the egg ruined or not), the visitor having been down, round by the
+Gallery and up the chimney, and the troll dead or out cold with the
+passages beyond him open onto country not yet built. 55 points is the
+ceiling with both treasures intact: the Kitchen 10, the Cellar 25, the
+egg 5 and 5, the painting 4 and 6.
 
 ## Secrets and interactions I hope players find
 
@@ -83,10 +98,25 @@ out cold with the passages beyond him open onto country not yet built.
 - **The house can be walked around** (`walk around house`), a side at a
   time, and knocked on ("Nobody's home.").
 - **The trophy case** pays a treasure's value when it goes in and takes it
-  back when it comes out; `score` reports Zork's ranks.
+  back when it comes out; `score` reports Zork's ranks. A treasure spoiled
+  in the case (an egg broken, a painting slashed) takes back the
+  difference there and then.
+- **The chimney is narrow.** Up it only with the lamp and one other thing:
+  so the egg or the painting, not both, and the sword stays below. Going
+  home with both treasures means two trips, or one by the stairs and the
+  trap door after the first.
+- **The painting can be ruined.** `break painting` (with anything, or
+  nothing) earns the vandal's congratulations and leaves a worthless piece
+  of canvas. `break egg` is Zork's BAD-EGG.
+- **A knockout is a second chance.** The troll out cold never comes round
+  on his first turn after the blow, and a tenth likelier on each turn
+  after, so the next blow almost always finds him helpless.
+- **Water pours.** Into anything but its bottle it leaks away, onto
+  anything it spills and evaporates; nothing else pours.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
-  chimney`, `eat lunch`, `drink water`, `smell sack`, `wind canary`.
+  chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
+  `wind canary`, `dig with axe`, `read manual`, `close door` in the Studio.
 
 ## Things deliberately left out of this slice
 
@@ -103,7 +133,9 @@ out cold with the passages beyond him open onto country not yet built.
   grue's warning as the `dark` line and "You can't go that way." as
   `no_way`), and the gate by which a body or a thing crosses the map in one
   turn.
-- `above_ground.sprout`, `house.sprout`, `cellar.sprout`: the rooms and
+- `above_ground.sprout`, `house.sprout`, `cellar.sprout`, `gallery.sprout`
+  (East of Chasm, the Gallery and its painting, the Studio and its
+  chimney): the rooms and
   what is in them. A shut way is an exit that refuses in Zork's own words,
   or, for country not yet built, in a passage of its room in Zork's voice.
 - `nowhere.sprout`: the Land of the Living Dead.
@@ -128,9 +160,9 @@ out cold with the passages beyond him open onto country not yet built.
   studio gives each run its own seed. `sprout test` does
   not: a script's turns share one seed until a seed step changes it, so the
   tests that fight carry seed steps.
-- Being trapped in the cellar is Zork's design: once the trap door is barred
-  the only ways on lead to unbuilt country, and the only way back to the
-  surface is to die. Playtesters will find this; it is the edge of the slice.
+- Being barred in the cellar is Zork's design. Until round 4 the only ways
+  on led to unbuilt country, and the only way back to the surface was to
+  die; from round 4 the crawlway leads round to the Studio's chimney.
 
 ## After round 1
 
@@ -182,3 +214,27 @@ out cold with the passages beyond him open onto country not yet built.
   with his pending wake, and no fog left standing in his room; no pick in
   the east passage, and the crawlway refuses in a different way from the
   other edges.
+
+## After round 3
+
+- The barred trap door ended every run that went down, for the third
+  round: four players were walled in, two only got out by dying, and no
+  one with a goal reached it. The brief and the director both put the
+  widening at round 4, so round 4 opens Zork's own route home (the crawlway,
+  East of Chasm, the Gallery, the Studio, the chimney), all Zork's, none of
+  it needing the troll. The trap door stays barred, as Zork's is.
+- The troll's knockout now holds: the turn he had already asked for finds
+  him out cold and only counts (friction 38). The tables are not retuned.
+- The disarm line names the weapon lost, not a fallback read after it had
+  gone (friction 39).
+- `pour`, `dig with`, and MUNG (`break`, `destroy` and the rest) are
+  Zork's; the crawlway's digging is gone with the rock that choked it, and
+  the cleared rock and pick marks are what is left of it.
+- The troll's axe, in his fist, answers `examine` that you cannot get a
+  good look at it while he is waving it at you, and `take` with Zork's
+  white-hot axe, as the director asked for round 4.
+- Still to watch: whether anyone finds the crawlway now that it goes
+  somewhere; whether the chimney's rule reads as a puzzle or a wall;
+  whether the painting is slashed; darkness and the grue (East of Chasm and
+  the Studio are dark, so a visitor who leaves the lamp behind meets them
+  now); and the attic, still unvisited in eighteen runs.

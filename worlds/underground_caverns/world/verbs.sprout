@@ -107,6 +107,38 @@ verb dig {
   "dig in [target]"  "dig [target]"  "dig in [target] with [tool]"  "dig [target] with [tool]"
 }
 verb dig_here { "dig" }
+// `dig with the axe`, with nothing to dig in: Zork would ask what in, and
+// the parser here cannot ask, so the answer is the one Zork gives once it
+// knows.
+verb dig_with { role tool carried  "dig with [tool]"  "dig using [tool]" }
+
+// Zork's POUR: alone it is DROP, into something it is PUT, onto something
+// it is POUR-ON. Only water pours.
+verb pour_in {
+  role item
+  role container
+  "pour [item] in [container]"  "pour [item] into [container]"
+  "spill [item] in [container]"  "spill [item] into [container]"
+}
+verb pour_on {
+  role item
+  role target
+  "pour [item] on [target]"  "pour [item] onto [target]"  "pour [item] over [target]"
+  "spill [item] on [target]"  "spill [item] over [target]"
+}
+
+verb pour { role target  "pour [target]"  "pour out [target]"  "spill [target]" }
+
+// Zork's MUNG: breaking, destroying, damaging. Zork wants something to do
+// it with and asks what; the parser here cannot ask, so a bare `break`
+// is taken as the hands.
+verb mung {
+  role target
+  role tool carried
+  "break [target] with [tool]"  "break [target]"  "destroy [target] with [tool]"
+  "destroy [target]"  "damage [target] with [tool]"  "smash [target] with [tool]"
+  "smash [target]"  "vandalize [target]"
+}
 
 verb walk_around {
   role target
@@ -190,3 +222,4 @@ message :die
 message :grue
 message :travel with Dest
 message :wall_look with integer
+message :unbar

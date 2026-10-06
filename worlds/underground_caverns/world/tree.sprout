@@ -10,7 +10,7 @@ import {Box, Bag} from 'box'
 import {Treasure, Weapon} from 'items'
 import {Forest} from 'room'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, wind, :fall, :landed, :smash, :open_gate, :gate_open, :close_gate} from 'verbs'
+import {open, close, look_in, wind, :fall, :landed, :smash, :open_gate, :gate_open, :close_gate, :scored, mung} from 'verbs'
 import {forest_path} from 'above_ground'
 
 kind TreeTop is Forest {
@@ -97,8 +97,24 @@ kind Egg is Box, Treasure {
     }
   }
 
+  // Zork's BAD-EGG: broken open by force, it opens, and is ruined.
+  without as target for mung from Thing
+  as target for mung {
+    do {
+      if (self.get(:broken)) { say "Nice try." }
+      else {
+        say "Your rather indelicate handling of the egg has caused it damage, although you have succeeded in opening it. {self.spill}"
+        send self :smash
+      }
+    }
+  }
+
   on :smash {
     if (!self.get(:broken)) {
+      // Spoiled in the trophy case, it takes back what the case paid.
+      if (self.get(:cased)) {
+        each a: Adventurer in underground_caverns.living_room { send a :scored with 2 - self.get(:tvalue) }
+      }
       self.set(:broken, true)
       self.set(:open, true)
       self.set(:tvalue, 2)

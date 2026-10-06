@@ -1,0 +1,126 @@
+{
+  "reached": true,
+  "doc": "https://claude.ai/code/artifact/d28e7b50-f273-4d3f-ab09-5938c155fd6d",
+  "comments": [
+    {
+      "id": "16293526-3039",
+      "tab": "Round 02",
+      "on": "Commands joined with 'and' or 'then' are read as one noun phrase and answered 'You can't see any such thing.' This covers Zork'…",
+      "words": "we should add functionality to the sprout runtime to parse \"take x and y\" or \"take x, y and z\" into three joined \"take x\" \"take y\" \"take z\".  I think \"take x and take y and take z\" should work but that is unnatural"
+    },
+    {
+      "id": "bf6c5661-39fb",
+      "tab": "Round 02",
+      "on": "The line invites an action the world then denies with 'You can't see any such thing.'",
+      "words": "good feedback to the author for round three"
+    },
+    {
+      "id": "94152e9b-d08f",
+      "tab": "Round 02",
+      "on": "seed 1 and",
+      "words": "agree, let's run new seeds on each run in the future. file it as a bug against studio for the future"
+    },
+    {
+      "id": "016a784c-4c34",
+      "tab": "Round 02",
+      "on": "o not retune ye",
+      "words": "agreed"
+    },
+    {
+      "id": "ad184a17-33c8",
+      "tab": "Round 02",
+      "on": "d Zork's KNOCK and",
+      "words": "agreed - give this feedback to the author to refine"
+    },
+    {
+      "id": "750dae59-9b35",
+      "tab": "Round 02",
+      "on": "ork's 'brown sack: Taken.' prefix",
+      "words": "yeah, take all should list out what was taken"
+    },
+    {
+      "id": "b8e3de30-6526",
+      "tab": "Round 02",
+      "on": "It also counts things already carried ('You already have that!' for the leaflet in hand), which Zork's 'all' leaves out",
+      "words": "this is a sprout runtime bug. take all should attempt to take all in range that is takeable, and something that is already carried is not takeable"
+    },
+    {
+      "id": "2ea0b366-0f89",
+      "tab": "Round 02",
+      "on": "Recommendation",
+      "words": "pass to author"
+    },
+    {
+      "id": "6f7ee33b-78fe",
+      "tab": "Round 02",
+      "on": "Recommendation",
+      "words": "pass to author"
+    },
+    {
+      "id": "976439ff-2104",
+      "tab": "Round 02",
+      "on": "Recommendation",
+      "words": "pass to author, but ask the author to expand on the prose whenever it feels needed. If we are adding new scenery, it should be well-described."
+    },
+    {
+      "id": "efde3430-3f64",
+      "tab": "Round 02",
+      "on": "Recommendation",
+      "words": "agreed. keep the dead ends for one more round, with a different refusal. round 4 will have the expansion"
+    },
+    {
+      "id": "e5804456-e833",
+      "tab": "Round 02",
+      "on": "Every player lit the lamp before going down",
+      "words": "is the problem here that all the agents know too much about Zork in general, and they know to light the lamp?"
+    },
+    {
+      "id": "0a25a261-ef05",
+      "tab": "Round 02",
+      "on": "s. Nobody reached the forest, the tree, the egg, the attic or the trophy case, in this round or in round 1. That is 12 runs, an…",
+      "words": "Why did nobody go to the forest? It is reachable, right? A correct pathing would get there? Can you confirm that?\n\nCan we shape the instructions to tell the players that this is a modified version of zork and that things will be a little different and they should explore fully?"
+    },
+    {
+      "id": "d8850d77-6ed2",
+      "tab": "Round 02",
+      "on": "",
+      "words": "Yes, the forest is reachable: n, n, climb tree reaches the egg in 3 moves. Five of six players opened S, E, open window, Zork's canonical route, then the barred trap door kept them below. Round 3 will tell players it is a changed Zork and give some of them goals."
+    },
+    {
+      "id": "11233711-227c",
+      "tab": "Round 02",
+      "on": "",
+      "words": "Very likely. Their opening moves follow Zork's walkthrough almost exactly, so the lamp was lit from memory, not from the room. Round 3's goals and framing test this."
+    },
+    {
+      "id": "e94e4ed2-9aae",
+      "tab": "Round 02",
+      "on": "",
+      "words": "Filed as sprout#449 (studio label). I'm fixing it before round 3, so each run gets its own seed."
+    },
+    {
+      "id": "bc91f223-0c2b",
+      "tab": "Round 02",
+      "on": "",
+      "words": "Filed as sprout#448: a list of things in a one-thing role runs the verb once for each."
+    },
+    {
+      "id": "900acf34-c452",
+      "tab": "Round 02",
+      "on": "",
+      "words": "Recorded as your decision on sprout#389 (option 1 there: all leaves out what would be refused)."
+    },
+    {
+      "id": "53592f5a-f641",
+      "tab": "Round 02",
+      "on": "",
+      "words": "From Eric, in chat, for the author: \"If someone attempts to examine the troll's axe while the troll is alive and is holding it, that should be a refusal on the axe 'you can't see it easily while the troll is wielding it' or something.\" It can be modelled: the troll's own `pass any (false)` is what hides the axe. Let it be reached, have the axe refuse examine while a live troll holds it, and guard release."
+    },
+    {
+      "id": "9c54e172-92c6",
+      "tab": "Round 02",
+      "on": "",
+      "words": "Eric, in chat: not for round 3. Leave the axe as it is in this revision; it goes on the backlog for round 4, with the wider scope."
+    }
+  ]
+}

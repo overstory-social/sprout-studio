@@ -267,6 +267,15 @@ entries' first text is kept as it was written against 61f02bb.
   refused as Zork refuses it was wrong. Zork's WHITE-HOUSE-F walks the
   visitor to the next side of the house; the world now does that: see
   Differences chosen.)
+  **After round 3:** all six players met it, five of them on `take leaflet
+  and read it` at the mailbox, which answered that the leaflet they could
+  see was not there; two never read the leaflet for it. Sprout's `not_here`
+  is the answer for a noun nothing answers to, and the parser does not
+  know "and read it" held a verb; the world cannot route around it. Asked
+  of Sprout: where `and` is followed by a known verb, split the line into
+  two commands, or failing that answer with `unknown` rather than a
+  refusal that says the thing is not there. Lists of things in a one-thing
+  role are sprout#448.
 
 ### 12. The engine's lines have no slot for the word
 
@@ -635,6 +644,138 @@ entries' first text is kept as it was written against 61f02bb.
 - **Spec:** Parsing › Sequences, again and all; Limits.
 - **Status: open.**
 
+### 37. What a person holds cannot be looked at
+
+- **Wanted:** `examine axe` while the troll brandishes it answering with
+  the axe's own description, and `take axe` with Zork's AXE-FUNCTION, "The
+  troll's axe seems white-hot. You can't hold on to it."; the axe one
+  object throughout, in his fist, on the floor, in the visitor's hands.
+- **Found:** the troll passes nothing, so that what he has eaten stays out
+  of sight, and so the axe inside him is out of range: `examine axe`
+  answered `not_here`. A pass rule cannot open him for one thing and not
+  another, and sight reads through a person's hands only for `lit`.
+  `examine` has no consent pass, so a stand-in left in the room could not
+  step aside for the real axe on the floor; the two would be drawn between.
+- **Wrote instead:** a scenery `held_axe`, named as the axe is, stands in
+  the Troll Room while the axe is inside the troll and waits inside him
+  while it is not; the troll's own `:entered` and `:left` move it as the
+  axe comes and goes, and it goes with him when he dies. By the director's
+  steering, examined in his fist it answers that you cannot get a good look
+  at it while he is waving it at you; taken, it is Zork's white-hot axe.
+- **Spec:** Range; Sight; Events › Containers route; Engine verbs;
+  Parsing › Choosing a reading.
+- **Status: open.**
+
+## Found after round 3
+
+### 38. A turn already asked for cannot be taken back
+
+- **Wanted:** Zork's knockout: the troll out cold, his I-FIGHT turns
+  passing him by while V-PROB rises from nothing by a tenth a turn, so the
+  next blow, "The unconscious troll cannot defend himself: He dies.", is
+  almost always there to be struck.
+- **Found:** mid-fight the troll always has a one-minute turn pending (each
+  swing asks for the next), an object may hold one pending wake, and a wake
+  cannot be cancelled or replaced, only dropped by destroying its object.
+  The knockout's own three-minute wake was never asked, the pending turn
+  fell at the next tick, and two times in three brought him round swinging
+  before the visitor could act. One round-3 player knocked him out twice and
+  never got the second blow, and died.
+- **Wrote instead:** the troll keeps `:rouse`, his chance in tenths of
+  coming round, set to nothing by the knockout and raised by one on each of
+  his turns that finds him out; the pending turn arrives, finds the chance
+  nothing, and only counts. That is Zork's own rule, so it is no loss; what
+  is lost is the plain way of writing it, "this replaces his next turn".
+- **Spec:** Time › Wakes; Limits (pending wakes per object: 1).
+- **Status: open.**
+
+### 39. A line that reads what its own handler moves names the wrong thing
+
+- **Wanted:** "The axe knocks your sword out of your hand." from one line
+  that names whichever weapon the visitor held, through a passage that asks
+  the visitor's hands.
+- **Found:** a turn's lines are rendered once its work is done, so the
+  passage asked the hands after the sword had gone to the floor and named
+  the fallback, "your bloody axe". A round-3 player read that and then
+  "You don't have the sword.", and called it a fight they could not read.
+  The spec says so plainly; it is a trap all the same, since the line is
+  written before the move.
+- **Wrote instead:** one `tell` per weapon, each naming it in the words,
+  before the move.
+- **Spec:** Properties and values (a turn's lines are rendered once its
+  work is done); Prose › Slots.
+- **Status: open** (by design; noted as a hazard).
+
+### 40. A glass bottle shows what it holds and will not let it be named
+
+- **Wanted:** Zork's bottle (TRANSBIT): the water seen through the glass,
+  and `give water to troll` or `pour water` answered about the water, or
+  "The bottle is closed.", while the bottle is shut.
+- **Found:** a shut container is out of range, whatever its glass, so the
+  water cannot be named and every command about it reads "You can't see any
+  such thing." A round-3 player was told so with the water in hand. The
+  bottle's look-inside lines do show the water, so the world says it is
+  there and then that it is not.
+- **Wrote instead:** nothing; the visitor must open the bottle first.
+- **Spec:** Range ("A key in a shut chest cannot be named until the chest
+  is open"); Containers route.
+- **Status: open.**
+
+### 41. A tool with no target is a verb of its own
+
+- **Wanted:** `dig with axe` read as DIG with a tool and no object, as
+  Zork reads it before asking what to dig in.
+- **Found:** a verb's target is never optional, so `dig`'s "dig [target]
+  with [tool]" cannot drop its target, and "dig with axe" read "with axe"
+  as a thing and answered "You can't see any such thing."
+- **Wrote instead:** a verb `dig_with`, whose one role is the carried tool,
+  answered by the visitor: "Digging with a bloody axe is silly."
+- **Spec:** Verbs › Optional tools ("the target is never optional").
+- **Status: open.**
+
+### 42. A way out cannot ask who is going, or what they carry
+
+- **Wanted:** Zork's UP-CHIMNEY-FUNCTION as the Studio's way up: it goes
+  to the Kitchen for whoever carries the lamp and at most one thing more,
+  and refuses anyone else, "Going up empty-handed is a bad idea." or "You
+  can't get up there with what you're carrying."
+- **Found:** an exit's `when` is over the place, with no actor bound, and
+  the Studio cannot see into the visitor's hands; a guard that could see
+  them, the visitor's own `depart`, is told only where they are going, not
+  where from or by which way.
+- **Wrote instead:** the Studio's way up is an ordinary exit to the
+  Kitchen; the visitor's kind keeps `:at_chimney`, set as they arrive in a
+  place marked `ChimneyFoot`, and its `depart` refuses a move to a place
+  marked `ChimneyTop` from there by Zork's rule. `climb chimney` by name
+  goes through the gate, so the visitor's own `permit` for `climb_up` asks
+  the rule again first, where its refusal can be read.
+- **Spec:** Exits › An exit may be conditional; Movement and consent › The
+  three roles; Object identity.
+- **Status: open.**
+
+### 43. A declared object cannot be compared with `==`
+
+- **Wanted:** `if (to == kitchen)` in a guard.
+- **Found:** identity compares bindings (a role, an `each` variable,
+  `mover`, a `let` of one of these), and a declared object's path is not one.
+- **Wrote instead:** marker kinds, `ChimneyFoot` on the Studio and
+  `ChimneyTop` on the Kitchen, asked with `is`.
+- **Spec:** Object identity.
+- **Status: open.**
+
+### 44. `pour water in bottle` is the water in the bottle
+
+- **Wanted:** Zork's POUR ... IN, "The water slips through your fingers."
+  for water poured into the bottle it is already in.
+- **Found:** "in the bottle" is also one of the relative phrases that
+  narrow a name, so the line reads as `pour` of "the water in the bottle",
+  and that reading wins over `pour_in`'s.
+- **Wrote instead:** nothing; the water is poured out on the floor, a fair
+  reading of the line. `pour water into bottle` reaches `pour_in`.
+- **Spec:** Parsing › Matching a line (relative phrases); Choosing a
+  reading.
+- **Status: open.**
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, not thrown them.** After round 2 the
@@ -659,9 +800,9 @@ entries' first text is kept as it was written against 61f02bb.
 - **Weight.** Zork's load is weights against 100, as here, but wounds do not
   lower it, and there is no fumbling.
 - **No `throw`, `break`, `burn`, `tie`, `swim`.** Not in this slice.
-- **The unbuilt edges** (east of the Clearing, south of the Cellar, east and
-  west of the Troll Room) refuse in new prose in the Empire's voice, as the
-  brief asks. After round 2 each refuses in a different way, so they do not
+- **The unbuilt edges** (east of the Clearing, east and west of the Troll
+  Room; south of the Cellar until round 4 opened the crawlway) refuse in
+  new prose in the Empire's voice, as the brief asks. After round 2 each refuses in a different way, so they do not
   read as one joke told three times: a sign at the canyon, a note from the
   Management in the east passage, a choked crawlway with someone digging
   beyond it, a hole you think better of. The pick the east passage used to
@@ -682,6 +823,22 @@ entries' first text is kept as it was written against 61f02bb.
   own answers from `gverbs.zil` and `actions.zil`. The forest's own WALK
   AROUND (FOREST-AROUND) is not built: every forest room now has a forest
   to examine, but walking around it still says to use compass directions.
+- **Breaking things (MUNG).** `break`, `destroy`, `damage`, `smash` and
+  `vandalize` answer "Nice try." save for the painting (Zork's vandal's
+  congratulations, and it is worth nothing after) and the egg (BAD-EGG).
+  Zork wants something to break a thing with and asks what; here a bare
+  `break painting` is taken as the hands (see 32). Zork's own MUNG of the
+  troll is an attack; here it is "Nice try.", and `attack` is the way.
+- **POUR.** Zork's POUR is DROP, PUT or POUR-ON by its preposition, and
+  only water is anything but "You can't pour that."; that is built, with
+  WATER-F's lines. The bottle must be open (see 40).
+- **The Studio's chimney** clears the barred trap door, as Zork's does: the
+  next one down through it hears it crash shut and barred again.
+- **Treasures spoiled in the trophy case** take back what the case paid for
+  them, so a painting slashed or an egg broken in the case is worth what
+  it is now worth.
+- **Scattered treasures** go, on a death, to the Attic, the Cellar, East of
+  Chasm, the Studio or the Troll Room: the dark places built so far.
 - **The intact canary's aria and the brass bauble** are not built: only the
   thief opens the egg intact, and he is not in this slice. Winding the
   ruined canary gives Zork's "unpleasant grinding noise".

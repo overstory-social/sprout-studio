@@ -13,15 +13,16 @@ import {Thing, Portable} from 'thing'
 import {Box} from 'box'
 import {Lamp} from 'lamp'
 import {Weapon, Sword, Knife, Axe, Treasure, Food, Water} from 'items'
-import {Room, DarkRoom, Forest, Perilous} from 'room'
+import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
 import {go, look, examine, inventory, wait} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :struck, :troll_gone, :glow, :die, :claimed, :settle, :travel} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :struck, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
 import {land_of_the_living_dead} from 'nowhere'
+import {east_of_chasm, studio, StudioChimney} from 'gallery'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -38,6 +39,8 @@ kind Adventurer is sprout.Visitor {
   :devoured false
   :own_light false
   :mode Mode default brief
+  // Standing at the foot of the Studio's chimney.
+  :at_chimney false
   // Zork's MOVES: every command but the ones about the game itself.
   :moves 0 min 0 max 1000000
   // Scratch for taking several things in one command: the load so far, and
@@ -46,6 +49,17 @@ kind Adventurer is sprout.Visitor {
   :fresh 0 min 0 max 50
 
   passage hands_full { You're holding too many things already! }
+
+  // Zork's UP-CHIMNEY-FUNCTION: up the Studio's chimney only with a light
+  // and at most one thing besides.
+  passage empty_handed { Going up empty-handed is a bad idea. }
+  passage overloaded { You can't get up there with what you're carrying. }
+  depart (to) {
+    if (self.get(:at_chimney) && to.is(ChimneyTop)) {
+      if (self.count(Thing) == 0) { refuse empty_handed }
+      else if (self.count(Thing) > 2 || self.count(Lamp) == 0) { refuse overloaded }
+    }
+  }
 
   // Zork has no HELP; the Empire answers it in its own voice rather than
   // with every verb against every thing in sight.
@@ -145,6 +159,10 @@ kind Adventurer is sprout.Visitor {
   // Arriving somewhere: the sword's glow, and in the forest, now and then,
   // the songbird.
   on :moved (from, to) {
+    // Up the chimney with the trap door shut: whoever bars it will bar it
+    // again behind the next one down.
+    if (self.get(:at_chimney) && to.is(ChimneyTop)) { broadcast :unbar }
+    self.set(:at_chimney, to.is(ChimneyFoot))
     if (to.is(Room) && !self.get(:devoured)) {
       if (!to.is(DarkRoom)) { self.set(:room_dark, false) }
       send self :settle with to.get(:glow)
@@ -175,7 +193,6 @@ kind Adventurer is sprout.Visitor {
   // The troll's blow, and what it does. `value` is Zork's blow result:
   // 1 missed, 2 knocked out, 3 killed, 4 lightly wounded, 6 staggered.
   // The line is drawn from Zork's own for that result.
-  passage weapon_name {{if self.count(Sword) > 0}sword{else if self.count(Knife) > 0}nasty knife{else}bloody axe{/if}}
   on :struck (from, value) {
     if (value == 1) {
       tell self "{one of}The troll swings his axe, but it misses.{or}The troll's axe barely misses your ear.{or}The axe sweeps past as you jump aside.{or}The axe crashes against the rock, throwing sparks!{/one of}"
@@ -206,12 +223,16 @@ kind Adventurer is sprout.Visitor {
     } else {
       // Staggered, or one time in four disarmed (Zork's LOSE-WEAPON).
       if (self.count(Weapon) > 0 && chance(4)) {
-        tell self "{one of}The axe hits your {self.weapon_name} and knocks it spinning.{or}The axe knocks your {self.weapon_name} out of your hand. It falls to the floor.{/one of}"
+        // The weapon is named before it goes: a line is rendered once the
+        // turn's work is done, when the hand it was in is empty.
         if (self.count(Sword) > 0) {
+          tell self "{one of}The axe hits your sword and knocks it spinning.{or}The axe knocks your sword out of your hand. It falls to the floor.{/one of}"
           each w: Sword in self { move w to troll_room }
         } else if (self.count(Knife) > 0) {
+          tell self "{one of}The axe hits your nasty knife and knocks it spinning.{or}The axe knocks your nasty knife out of your hand. It falls to the floor.{/one of}"
           each w: Knife in self { move w to troll_room }
         } else {
+          tell self "{one of}The axe hits your bloody axe and knocks it spinning.{or}The axe knocks your bloody axe out of your hand. It falls to the floor.{/one of}"
           each w: Axe in self { move w to troll_room }
         }
       } else {
@@ -276,9 +297,11 @@ kind Adventurer is sprout.Visitor {
         if (t.is(Lamp)) {
           move t to living_room
         } else if (t.is(Treasure)) {
-          let r = random(3)
+          let r = random(5)
           if (r == 0) { move t to attic }
           else if (r == 1) { move t to cellar }
+          else if (r == 2) { move t to east_of_chasm }
+          else if (r == 3) { move t to studio }
           else { move t to troll_room }
         } else {
           let n = random(10)
@@ -469,7 +492,6 @@ kind Adventurer is sprout.Visitor {
   as actor for tally      { do { self.adjust(:moves, 1) } }
   as actor for smell      { do { self.adjust(:moves, 1) } }
   as actor for listen     { do { self.adjust(:moves, 1) } }
-  as actor for climb_up   { do { self.adjust(:moves, 1) } }
   as actor for climb_down { do { self.adjust(:moves, 1) } }
   as actor for unlock     { do { self.adjust(:moves, 1) } }
   as actor for knock      { do { self.adjust(:moves, 1) } }
@@ -499,6 +521,27 @@ kind Adventurer is sprout.Visitor {
     }
   }
   as actor for dig_here { do { self.adjust(:moves, 1)  say "Digging with a pair of hands is silly." } }
+  as actor for dig_with {
+    do {
+      self.adjust(:moves, 1)
+      if (tool.is(Thing)) { say "Digging with a {tool.short} is silly." }
+      else { say "Digging with a pair of hands is silly." }
+    }
+  }
+  as actor for pour    { do { self.adjust(:moves, 1) } }
+  as actor for pour_in { do { self.adjust(:moves, 1) } }
+  as actor for pour_on { do { self.adjust(:moves, 1) } }
+  as actor for mung    { do { self.adjust(:moves, 1) } }
+  // Climbing the Studio's chimney by name is going up it, on the same terms.
+  as actor for climb_up {
+    permit {
+      if (target.is(StudioChimney)) {
+        if (self.count(Thing) == 0) { refuse empty_handed }
+        else if (self.count(Thing) > 2 || self.count(Lamp) == 0) { refuse overloaded }
+      }
+    }
+    do { self.adjust(:moves, 1) }
+  }
   as actor for lock       { do { self.adjust(:moves, 1) } }
   as actor for verbose    { do { self.set(:mode, :verbose)  say "Maximum verbosity." } }
   as actor for brief      { do { self.set(:mode, :brief)  say "Brief descriptions." } }

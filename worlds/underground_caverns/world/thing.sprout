@@ -6,7 +6,7 @@
 // has been moved, and by its long one (LDESC) after, or by "There is a ...
 // here." when it has none; `here_line` is that rule. A thing marked `:ndesc`
 // (Zork's NDESCBIT) is never listed.
-import {take, knock, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, :fall, :landed} from 'verbs'
+import {take, knock, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, :fall, :landed} from 'verbs'
 
 kind Thing {
   grammar { article the }
@@ -63,6 +63,10 @@ kind Thing {
       else { say "Why knock on a {self.short}?" }
     }
   }
+  as target for pour       { do { say "You can't pour that." } }
+  as item for pour_in      { do { say "You can't pour that." } }
+  as item for pour_on      { do { say "You can't pour that." } }
+  as target for mung       { do { say "Nice try." } }
   as target for walk_around { do { say "Use compass directions for movement." } }
   as target for through { do { say "You hit your head against the {self.short} as you attempt this feat." } }
   as recipient for give {

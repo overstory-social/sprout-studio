@@ -32,6 +32,10 @@ kind Troll is Thing {
   :last 0 min 0 max 9
   // Whether he died of what he was given, which says so itself.
   :gorged false
+  // Out cold, his chance of coming round on one of his turns, in tenths:
+  // nothing on the first turn after the blow, then a tenth more each turn,
+  // as Zork's I-FIGHT raises a villain's V-PROB.
+  :rouse 0 min 0 max 10
 
   passage short { troll }
   passage ldesc {
@@ -139,9 +143,10 @@ kind Troll is Thing {
     if (value == 2) {
       self.set(:strength, 0 - self.get(:strength))
       self.set(:fighting, false)
+      self.set(:rouse, 0)
       each x: Axe in self { move x to underground_caverns.troll_room }
       send underground_caverns.troll_room :troll_flag with true
-      if (!self.get(:waking)) { self.set(:waking, true)  wake in 3 minutes }
+      if (!self.get(:waking)) { self.set(:waking, true)  wake in 1 minutes }
     } else if (value == 3) {
       send self :expire
     } else if (value == 4) {
@@ -203,13 +208,17 @@ kind Troll is Thing {
     }
   }
 
-  // His own turns: a swing while he fights, coming round while he is out,
-  // and, one time in three, a first strike at somebody standing there.
+  // His own turns: a swing while he fights, coming round while he is out
+  // (never on the turn after the blow, then a tenth likelier each turn), and,
+  // one time in three, a first strike at somebody standing there. A pending
+  // turn cannot be taken back, so a knockout does not replace it: the turn
+  // that was already asked for finds him out cold and only counts.
   on :woke (elapsed) {
     self.set(:waking, false)
     if (!self.get(:dead)) {
       if (self.get(:strength) < 0) {
-        if (underground_caverns.troll_room.count(Adventurer) == 0 || !chance(3)) {
+        if (underground_caverns.troll_room.count(Adventurer) == 0 || random(10) < self.get(:rouse)) {
+          self.set(:rouse, 0)
           self.set(:strength, 0 - self.get(:strength))
           self.set(:fighting, true)
           each x: Axe in underground_caverns.troll_room { move x to self }
@@ -218,6 +227,7 @@ kind Troll is Thing {
           each a: Adventurer in underground_caverns.troll_room { tell a "The troll stirs, quickly resuming a fighting stance." }
           send self :swing
         } else {
+          self.adjust(:rouse, 1)
           self.set(:waking, true)
           wake in 1 minutes
         }

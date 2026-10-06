@@ -7,7 +7,7 @@ import {Thing, Portable, Scenery} from 'thing'
 import {Box, Bag} from 'box'
 import {Lamp} from 'lamp'
 import {Sword, Knife, Treasure, Food, Water, Lunch, Garlic} from 'items'
-import {Room, DarkRoom, Perilous} from 'room'
+import {Room, DarkRoom, Perilous, ChimneyTop} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'scenery'
 import {open, close, look_in, read, shift, raise, look_under, smell, eat, through, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored} from 'verbs'
@@ -73,7 +73,7 @@ kind KitchenWindow is Scenery {
   }
 }
 
-object kitchen is Room, Perilous in underground_caverns {
+object kitchen is Room, Perilous, ChimneyTop in underground_caverns {
   grammar {
     name "Kitchen"
     exit east "window"  -> behind_house when (self.get(:window_open))

@@ -2,7 +2,9 @@
 // food and drink, and things with writing on them.
 import {Portable, Thing} from 'thing'
 import {Adventurer} from 'adventurer'
-import {eat, drink, read, :glow, :claimed} from 'verbs'
+import {eat, drink, read, pour, pour_in, pour_on, :glow, :claimed} from 'verbs'
+import {TrophyCase} from 'house'
+import {Box} from 'box'
 
 // A weapon, and which one: Zork's melee tables care whether it is the
 // sword (which the troll fears most), the knife or the axe.
@@ -24,7 +26,11 @@ kind Axe is Weapon { :wcode 3 }
 kind Treasure is Portable {
   :value 0 min 0 max 50
   :tvalue 0 min 0 max 50
+  // Whether it sits in the trophy case: a treasure spoiled there takes
+  // back what the case paid for it.
+  :cased false
   on :claimed { self.set(:value, 0) }
+  on :moved (from, to) { self.set(:cased, to.is(TrophyCase)) }
 }
 
 // Something to eat. Eaten, it is gone for good, as in Zork.
@@ -89,6 +95,42 @@ kind Water is Thing {
   as target for drink {
     do {
       say "Thank you very much. I was rather thirsty (from all this talking, probably)."
+      destroy self
+    }
+  }
+
+  // Poured, as Zork's WATER-F takes it: on the floor, into anything but
+  // the bottle it is in, or over something, it is gone.
+  without as target for pour from Thing
+  as target for pour {
+    do {
+      say "The water spills to the floor and evaporates."
+      destroy self
+    }
+  }
+  without as item for pour_in from Thing
+  as item for pour_in {
+    do {
+      if (container.is(Box)) {
+        if (container.holds(self)) { say "The water slips through your fingers." }
+        else {
+          say "The water leaks out of the {container.short} and evaporates immediately."
+          destroy self
+        }
+      } else if (container.is(Thing)) {
+        say "The water leaks out of the {container.short} and evaporates immediately."
+        destroy self
+      } else {
+        say "The water spills to the floor and evaporates."
+        destroy self
+      }
+    }
+  }
+  without as item for pour_on from Thing
+  as item for pour_on {
+    do {
+      if (target.is(Thing)) { say "The water spills over the {target.short}, to the floor, and evaporates." }
+      else { say "The water spills to the floor and evaporates." }
       destroy self
     }
   }
