@@ -71,11 +71,16 @@ describe('a round on disk', () => {
     const ticket = JSON.parse(readFileSync(join(DOORS, `${door}.json`), 'utf8'));
     assert.deepEqual(ticket, {
       world: join('worlds', 'shed', 'world'),
-      seed: 7,
+      seed: 42,
       record: join('worlds', 'shed', 'rounds', '01', 'runs', 'explorer-7.json'),
       turnCap: 3,
       advancePerTurn: 30,
     });
+    // Another persona's run of the same seed draws from a stream of its own, and the same run from the same one.
+    const seedOf = (one) => JSON.parse(readFileSync(join(DOORS, `${one.door}.json`), 'utf8')).seed;
+    const casual = open('shed', '01', 'casual', 7);
+    assert.notEqual(seedOf(casual), ticket.seed);
+    assert.equal(seedOf(open('shed', '01', 'casual', 7)), seedOf(casual));
     assert.throws(() => open('shed', '1', 'explorer', 7), /a round is two digits/);
     assert.throws(() => open('shed', '01', 'critic', 7), /a persona is one of/);
   });
@@ -105,7 +110,7 @@ describe('a round on disk', () => {
       refused: true,
     });
     const recorded = JSON.parse(readFileSync(join(root, 'worlds', 'shed', 'rounds', '01', 'runs', 'explorer-7.json'), 'utf8'));
-    assert.deepEqual(recorded.steps[0], { seed: 7 });
+    assert.deepEqual(recorded.steps[0], { seed: 42 });
     // Each look, then a tick and time moved on, every turn after a seed of its own.
     // A step of `slice(1)` at i follows `recorded.steps[i]`, the opening seed for the first.
     assert.ok(recorded.steps.slice(1).every((step, i) => 'seed' in step || 'seed' in recorded.steps[i]));
