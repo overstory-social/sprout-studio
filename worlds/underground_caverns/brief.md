@@ -6,15 +6,19 @@ see it._
 
 ## Direction
 
-Recreate Zork I: The Great Underground Empire in Sprout, as faithfully as
-possible: its geography, its objects and puzzles, its parser conventions,
-and its prose, word for word wherever the original has words. The visitor
+Recreate Zork I: The Great Underground Empire in Sprout: its geography,
+its objects and puzzles, its parser conventions, and its prose. The map,
+the objects and the puzzles stay faithful. The prose starts from Zork's
+own words, but it need not stop there: the author may extend or tweak it
+to give the place more life, and every piece of scenery a description
+names deserves a description of its own. Later cycles will mutate the
+whole space; for now, a little spice, in Zork's voice. The visitor
 starts in an open field west of a white house with a boarded front door,
 and the Great Underground Empire is beneath them.
 
 The point is to pressure-test Sprout as a language: what it can build,
 and what it cannot, measured against a titan of the genre. Faithfulness
-is the yardstick. Where Sprout cannot do what Zork does, the author writes
+to Zork's map and mechanics is the yardstick. Where Sprout cannot do what Zork does, the author writes
 the nearest thing Sprout can do, and logs what was lost in `friction.md`.
 That log is as much a product of this world as the world itself.
 
@@ -76,16 +80,20 @@ an unbuilt region), is written in that same voice.
   ZORK is a game of adventure, danger, and low cunning. In it you will explore some of the most amazing territory ever seen by mortals. No computer should be without one!"
   ```
 
-- Every room in scope has its name and description as the original's,
-  word for word, except where `friction.md` says why not.
+- Every room in scope has Zork's name, and its description keeps what
+  Zork's says is there and which ways lead out; added or changed prose is
+  in Zork's voice.
+- Every thing a room's description names can be examined, and answers
+  with a description of its own.
 - Zork's movement abbreviations work: `n`, `s`, `e`, `w`, `ne`, `nw`,
   `se`, `sw`, `u`, `d`, and `l` for look and `i` for inventory.
 - An exit to a part of Zork not built yet answers with an in-world line,
   never a fault or a silent refusal.
 - No fault in any run.
 - The world is playable alone; nothing needs two visitors to finish.
-- Every difference from the original that the author chose or was forced
+- Every difference from Zork's map or mechanics that the author was forced
   into is logged in `friction.md`, with the spec section it touches.
+  Differences in prose need no entry.
 
 ## Showcase goal
 
@@ -99,7 +107,7 @@ built as Zork has it, that is a finding, not a failure.
 
 ## Budget
 
-- Rounds: 3
+- Rounds: 4 (round 3 keeps the round 1–2 slice; round 4 widens it)
 - Playtests per round: 6 (one per persona)
 - Turn cap per run: 150
 - Spend ceiling: the workflow's default, about 400k tokens a round
