@@ -27,6 +27,8 @@ object east_of_chasm is DarkRoom, Perilous in underground_caverns {
     describe { text "The chasm drops away from your feet into a dark that your lamp does not so much light as annoy. A pebble kicked over the edge is never heard from again. Neither, by the look of it, was whoever kicked the last one." }
     without as target for climb_down from Thing
     as target for climb_down { do { say "The chasm probably leads straight to the infernal regions." } }
+    without as target for look_in from Thing
+    as target for look_in { do { say "You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down. It probably leads straight to the infernal regions." } }
   }
   object narrow_passage is Scenery {
     grammar { name "narrow passage"  nouns "crawlway", "passageway", "crawl"  adjectives "narrow", "north" }

@@ -124,6 +124,7 @@ kind Troll is Thing, sprout.Actor {
 
   without as target for talk from Thing
   as target for talk { do { say "The troll isn't much of a conversationalist." } }
+  without as target for ask from Thing
   as target for ask { do { say "The troll isn't much of a conversationalist." } }
   without as target for greet from Thing
   as target for greet {

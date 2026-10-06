@@ -52,7 +52,12 @@ kind FrontDoor is Scenery {
   as target for open    { do { say "The door cannot be opened." } }
   as target for read    { do { say "There is no writing on this side." } }
   as target for look_in { do { say "The door is closed." } }
-  describe { text "The door is closed." }
+  passage view {
+    The front door is solid oak and painted white, like the rest of the house, and is boarded across with planks nailed every which way, by someone in more of a hurry than a carpenter. Whatever the owners meant by it, they did not mean visitors.
+
+    The door is closed.
+  }
+  describe { text view }
 }
 
 kind Tree is Scenery {
@@ -76,9 +81,13 @@ kind TreeAbove is Tree {
   as target for climb_down { do { send actor :travel with :path  say "" } }
 }
 
+// Zork's STAIRS. Climbing them goes the way they lead, as Zork's
+// V-CLIMB-UP and V-CLIMB-DOWN walk; each room's own says which way that is.
 kind Stairs is Scenery {
   grammar { name "stairs"  nouns "steps", "staircase", "stairway"  adjectives "dark", "rickety" }
   passage short { stairs }
   passage view default { The stairs are old, wooden and a little rickety, as stairs in old houses are. }
   describe { text view }
+  without as target for climb_up from Thing
+  without as target for climb_down from Thing
 }

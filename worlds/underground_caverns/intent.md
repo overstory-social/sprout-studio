@@ -65,8 +65,10 @@ written down. That log is a product of the world as much as the rooms are.
    to a wall and a chimney up out of the fireplace. The chimney takes only
    a visitor with the lamp and at most one thing besides, as Zork's
    UP-CHIMNEY-FUNCTION does, and lets them out in the Kitchen. The trap door
-   is still barred; whoever opens it from above and goes down hears it
-   crash shut and barred behind them again.
+   bars itself once, as Zork's does (TOUCHBIT): after a climb up the
+   chimney, or a death (JIGS-UP), whoever opens it from above and goes down
+   hears it crash shut and barred behind them again; otherwise, once barred
+   and opened again from above, it stays open.
 8. The Maze, west through the forbidding hole once the troll is dead or
    out cold: fifteen rooms of twisty little passages, all alike, and four
    dead ends, all dark, joined as `dungeon.zil` joins them, loops and
@@ -178,9 +180,15 @@ ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the egg
   is dark again. The chimney takes the lamp and one thing; the grating
   takes everything, so a visitor with all three treasures goes home this
   way.
+- **Stairs are climbed by name.** `climb up the stairs` and `go down the
+  stairs` go the way the stairs lead, as `up` and `down` do, the trap
+  door's crash and all; the wrong way, "The stairs don't lead downward."
+- **Take means the one lying there.** Where a name fits a thing in hand and
+  a thing on the floor (the sack and the bag of coins, the two lanterns),
+  `take` takes the one on the floor, as Zork's TAKE does.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
-  chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
+  chimney` and `climb down chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
   `wind canary`, `dig with axe`, `read manual`, `close door` in the Studio.
 
 ## Things deliberately left out of this slice
@@ -479,3 +487,44 @@ ROB).
   earlier rounds: whether they come back to it with the key and are told
   the lock is out of reach.
 
+## After round 5
+
+- **The maze ate the budget, as Zork's does.** All six runs went west;
+  three reached the remains and took the key; none found the Grating Room,
+  and three ran out of turns in the maze. The maze stays exactly as
+  `dungeon.zil` joins it: the synthesis and I agree that rooms all alike are
+  the puzzle, and five players solved it Zork's way, by dropping markers.
+  **For the director:** at 150 turns a visitor who also wants the egg and
+  the painting cannot reach this slice's "done"; raising the turn cap for
+  this world is the brief's budget, and so the director's call. Until it
+  changes, the grating from below, the skeleton key in its lock, the
+  leaves falling through and the second way home are covered only by
+  `grating.json` and `coins.json`; no player has reached them.
+- **Fixed:** the troll, asked, says he is no conversationalist once, not
+  after Thing's refusal (`take_which.json`). The stairs, the cellar's
+  among them, climb by name, and the kitchen chimney answers `climb down`
+  with Santa Claus (`climbing.json`). `listen` alone is answered. SEARCH is
+  Zork's own verb. The front door names its boards. The chasm can be looked
+  into. The canyon rope answers being climbed, crossed or ducked under.
+  `take` prefers what is not in hand (`take bag` in Maze 5 takes the
+  coins). A death clears the barred trap door as JIGS-UP does, and puts a
+  glowing sword out (`death_trap.json`).
+- **Kept, by choice:** the maze; Zork's "Done." at the trophy case, whose
+  listing does the celebrating; no inventory synonyms or `exits`, as in
+  Zork.
+- **To Sprout:** a trailing `here` read as a thing (friction 63),
+  `troll, hello` addressing (64), a staircase that cannot take its exit
+  (65), and 59 again, for the bag and the sack.
+
+### What round 6 should watch (carried, still unmet in 30 runs)
+
+- The Grating Room, the key in the grating from below, the leaves falling,
+  the Clearing reached from below, all three treasures home that way.
+- The grue: darkness was met once (the Attic, harmlessly); nobody has let
+  the lamp go out in the maze or been eaten.
+- The skeleton touched and the ghost's banishing; the rusty knife turned
+  on anything.
+- Dropping things from the tree (the fall and the landing).
+- Throwing things at the troll, waking him, putting the egg at risk.
+- Whether anyone climbs the stairs by name, and whether a death and a
+  second descent now read as Zork's barred trap door.

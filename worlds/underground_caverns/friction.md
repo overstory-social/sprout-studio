@@ -1129,8 +1129,21 @@ area by area, including what it did not find hard.
 - **Wrote instead:** the burned-out lantern refuses `turn on` in its
   `permit`, so `turn on lamp` always means the brass one. Its own
   adjectives (`useless`, `burned-out`, `rusty`, `dead`) name it outright.
-- **Spec:** Parsing › Choosing a reading.
-- **Status: open.**
+- **Round 5:** the same gap cost a player a turn and nearly the treasure:
+  `take bag` in Maze 5 with the brown sack in hand ("bag" is Zork's word
+  for both) was "You already have that!", the sack being nearer. Zork's
+  TAKE syntax looks on the ground and in the room first, so it takes the
+  coins. Sprout has no way for a verb to say which things it prefers.
+- **Wrote instead, after round 5:** the adventurer's part of `take`
+  refuses, in its `permit`, a reading of one thing already held, with
+  Zork's "You already have that!"; a reading that is allowed beats one
+  that is refused, so `take bag` takes the coins and `take lamp` the
+  burned-out lantern (`take_which.json`). What is lost: the refusal now
+  counts no move (23), where Zork counts it. Asked of Sprout still: a way
+  for a role to prefer what is not carried (Zork's ON-GROUND IN-ROOM), or
+  for the parser to ask.
+- **Spec:** Parsing › Choosing a reading; Verbs › Carried roles.
+- **Status: open,** worked around.
 
 ### 60. The ghost cannot take what the visitor carries
 
@@ -1170,6 +1183,68 @@ area by area, including what it did not find hard.
   objects with "examine"."), so nothing is lost but a surprise.
 - **Spec:** Parsing › Sequences, again and all.
 - **Status: open,** noted.
+
+## Found in round 5
+
+### 63. A trailing `here` is read as a thing
+
+- **Wanted:** Zork's `drop the leaflet here`, which drops the leaflet.
+- **Found:** a player with the leaflet in hand typed exactly that and was
+  answered "You can't see any such thing.": `here` was read as part of the
+  noun, and the noun named nothing in reach, so the line fell to
+  `not_here`, which says something false (the leaflet was right there).
+  The same line without `here` worked two turns later. `on the ground` and
+  `on the floor` after `drop` would go the same way.
+- **Wrote instead:** nothing; the world has no say in how a noun is read,
+  and a world phrase `drop [target] here` would only move the problem to
+  `put`, `throw` and the rest. Asked of Sprout: let a trailing `here` (and
+  `on the ground`, `on the floor`) after a verb's last role be dropped as
+  articles are, or answer the line with `unknown` rather than `not_here`.
+  An engine bug to file with Sprout.
+- **Spec:** Parsing › Matching a line (Articles); When nothing matches.
+- **Status: open.**
+
+### 64. `troll, hello` is not a sentence
+
+- **Wanted:** Zork's way of speaking to an actor, `<actor>, <command>`:
+  `troll, hello`, `troll, give me the axe`, each answered by the actor (the
+  troll's own TROLL-FCN answers "The troll isn't much of a
+  conversationalist."). One player tried it before and after disarming the
+  troll.
+- **Found:** a comma joins nothing in Sprout's parser (51), and there is
+  no addressing form: `troll, hello` is answered "That sentence isn't one I
+  recognize.", while `hello troll` works. A world verb cannot write a
+  phrase that begins with a role and a comma as a way of addressing,
+  because what follows is a whole command, not a role.
+- **Wrote instead:** nothing; `hello troll`, `talk to troll` and `ask
+  troll` all answer in the troll's words.
+- **Spec:** Parsing › Sequences, again and all; Verbs (phrases); Actors
+  and visitors.
+- **Status: open,** with 51.
+
+### 65. A staircase climbed by name cannot take its own exit
+
+- **Wanted:** Zork's V-CLIMB-UP and V-CLIMB-DOWN: `climb up the stairs`
+  is DO-WALK UP, the same walk as `up`, with everything a walk brings (the
+  dark, the trap door crashing shut, the grue).
+- **Found:** `go` is the only way along an exit, and only a visitor's
+  typed line names one; `act go` is refused, and a visitor's handler
+  cannot act anyway. A world synonym (`synonyms go: "climb down"`) would
+  read `climb down stairs` as the attic's way labelled "stairs", but it
+  ties with `climb_down` on the stairs themselves, and a tie is drawn
+  (52). So two players who typed `go down the stairs` and `climb down the
+  chimney` were told "You can't do that!".
+- **Wrote instead:** each room's stairs (the kitchen's, the attic's, the
+  living room's and, new, the cellar's, Zork's global STAIRS) answers
+  `climb_up` and `climb_down` with Zork's "The stairs don't lead
+  upward/downward." the wrong way, and the right way sends the visitor
+  through the world's gate (6) to where the exit leads. The gate's move is
+  not `go`, so the adventurer says again what `go` would: "You have moved
+  into a dark place." and the crash of the trap door. Two copies of one
+  walk, to keep in step by hand.
+- **Spec:** Actors and visitors › Acting ("`act go` is refused"); Exits;
+  Parsing › Choosing a reading.
+- **Status: open.**
 
 ## Differences chosen, not forced
 
@@ -1274,3 +1349,26 @@ area by area, including what it did not find hard.
   knife's will, as Zork's parser would choose it.
 - **The ghost's curse spares what has no trophy value,** as ROB does, and
   what lies in a container, which ROB never reaches.
+- **A death clears the barred trap door,** as Zork's JIGS-UP clears its
+  TOUCHBIT: whoever next opens it from above and goes down hears it crash
+  shut and barred behind them again. Until round 5 only the chimney did
+  (`death_trap.json`). A death also puts out a glowing sword, which was
+  still glowing, and said so, when picked up above ground.
+- **`climb down chimney` in the Kitchen** is "Only Santa Claus climbs down
+  chimneys.", the kitchen's own way down; Zork's V-CLIMB-DOWN answers a
+  string exit with "The chimney doesn't lead downward.", which it keeps for
+  `climb up chimney` there.
+- **SEARCH is Zork's,** "You find nothing unusual.", a verb of its own;
+  until round 5 it was a phrase of LOOK INSIDE, so `search the walls` was
+  answered as if the walls were a container. `search sack` now finds
+  nothing unusual, as in Zork; `look in sack` still shows what is in it.
+- **`listen` alone** is answered: the songbird in the forest, the maze's
+  sameness in the maze, nothing out of the ordinary elsewhere. Zork asks
+  what to listen to, which the parser here cannot (32).
+- **The canyon rope** answers being climbed, crossed, stepped or jumped
+  over and ducked or crawled under, all with one line from the Frobozz
+  Magic Scenery Company; Zork has no rope there. CROSS is Zork's ("You
+  can't cross that!") everywhere else.
+- **The chasm** answers `look into` with a line of its own.
+- **The front door** has a description of its own, naming the boards,
+  before Zork's "The door is closed."

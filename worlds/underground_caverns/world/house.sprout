@@ -10,7 +10,7 @@ import {Sword, Knife, Treasure, Food, Water, Lunch, Garlic} from 'items'
 import {Room, DarkRoom, Perilous, ChimneyTop} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'scenery'
-import {open, close, look_in, read, shift, raise, look_under, smell, eat, through, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored} from 'verbs'
+import {open, close, look_in, read, shift, raise, look_under, smell, eat, through, climb_up, climb_down, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored} from 'verbs'
 import {behind_house} from 'above_ground'
 import {cellar} from 'cellar'
 
@@ -155,6 +155,8 @@ object kitchen is Room, Perilous, ChimneyTop in underground_caverns {
   object window is KitchenWindow
   object stairs is Stairs {
     passage view { The staircase is dark and narrow, and leads upward to somewhere darker still. }
+    as target for climb_up   { do { send actor :travel with :attic  say "" } }
+    as target for climb_down { do { say "The stairs don't lead downward." } }
   }
   object west_passage is Scenery {
     grammar { name "passage"  nouns "passageway"  adjectives "west" }
@@ -165,6 +167,10 @@ object kitchen is Room, Perilous, ChimneyTop in underground_caverns {
     grammar { name "chimney"  adjectives "dark", "narrow" }
     passage short { chimney }
     describe { text "The chimney leads downward, and looks climbable." }
+    without as target for climb_down from Thing
+    without as target for climb_up from Thing
+    as target for climb_down { do { say "Only Santa Claus climbs down chimneys." } }
+    as target for climb_up   { do { say "The chimney doesn't lead upward." } }
   }
 }
 
@@ -208,6 +214,8 @@ object attic is DarkRoom in underground_caverns {
   }
   object stairs is Stairs {
     passage view { The stairway leads down to the kitchen. It is the only way out, unless you count the window, and there is no window. }
+    as target for climb_up   { do { say "The stairs don't lead upward." } }
+    as target for climb_down { do { send actor :travel with :kitchen  say "" } }
   }
 }
 
@@ -274,6 +282,14 @@ object living_room is Room in underground_caverns {
   }
   object stairs is Stairs {
     passage view { {if living_room.get(:trap_open)}A rickety staircase descends from the trap door into darkness. It does not look as if it was built with a return trip in mind.{else}The only stairs in sight are the ones in the kitchen, and they are in the kitchen.{/if} }
+    as target for climb_up   { do { say "The stairs don't lead upward." } }
+    as target for climb_down {
+      do {
+        if (living_room.get(:trap_open)) { send actor :travel with :cellar  say "" }
+        else if (living_room.get(:rug_moved)) { say "The trap door is closed." }
+        else { say "The stairs don't lead downward." }
+      }
+    }
   }
   object doorway is Scenery {
     grammar { name "doorway"  nouns "opening", "arch"  adjectives "east" }

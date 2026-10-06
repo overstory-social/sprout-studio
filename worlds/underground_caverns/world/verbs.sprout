@@ -43,8 +43,12 @@ verb read { role target  "read [target]"  "skim [target]"  "peruse [target]" }
 verb look_in {
   role target
   "look in [target]"  "look inside [target]"  "look into [target]"
-  "search [target]"  "look through [target]"
+  "look through [target]"
 }
+
+// Zork's SEARCH, which finds nothing unusual: a verb of its own, not LOOK
+// INSIDE, so `search the walls` is not answered as a container.
+verb search { role target  "search [target]"  "search in [target]"  "rummage in [target]" }
 
 verb look_under {
   role target
@@ -90,6 +94,9 @@ verb tally { role target  "count [target]" }
 verb smell { role target  "smell [target]"  "sniff [target]" }
 
 verb listen { role target  "listen to [target]"  "listen for [target]" }
+// `listen` alone: Zork would ask to what; the parser here cannot ask, so the
+// visitor is told what there is to hear.
+verb listen_here { "listen"  "listen carefully" }
 
 verb climb_up { role target  "climb up [target]"  "go up [target]"  "scale [target]" }
 verb climb_down { role target  "climb down [target]"  "go down [target]"  "descend [target]" }
@@ -199,6 +206,9 @@ verb alarm { role target  "wake [target]"  "wake up [target]"  "awaken [target]"
 // Zork's TELL, and HELLO said to someone.
 verb talk { role target  "talk to [target]"  "speak to [target]"  "tell [target]"  "ask [target]"  "chat with [target]" }
 verb greet { role target  "hello [target]"  "hi [target]"  "greet [target]"  "say hello to [target]" }
+// Zork's CROSS, and the ways of getting past a rope a visitor might try,
+// which only the rope adds to it.
+verb cross { role target  "cross [target]"  "ford [target]" }
 verb pray { "pray" }
 verb swim { "swim"  "bathe"  "wade" }
 
@@ -226,7 +236,7 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { forest_1, path, up_a_tree, kitchen, living_dead, west_side, north_side, behind, south_side, banish }
+enum Dest { forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.
@@ -262,7 +272,10 @@ message :die
 message :grue
 message :travel with Dest
 message :wall_look with integer
-message :unbar
+// The trap door is free to be barred again behind the next one down: up
+// the chimney while it is shut (false), or a death (true), as Zork clears
+// its TOUCHBIT in UP-CHIMNEY-FUNCTION and JIGS-UP.
+message :unbar with boolean
 message :sealed with boolean
 // Which room a visitor last came into, by its number (`Room`'s `:num`):
 // how the adventurer's own part of `go` tells a maze's one-way tunnel from

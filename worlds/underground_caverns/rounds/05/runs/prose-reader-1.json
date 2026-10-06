@@ -1,0 +1,1351 @@
+{
+  "steps": [
+    { "seed": 9 },
+    { "seed": 853534204 },
+    { "arrive": "Dell", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "West of House" },
+      { "reader": "Dell", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Dell", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "seed": 3655922532 },
+    { "as": "Dell", "type": "look", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "West of House" },
+      { "reader": "Dell", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Dell", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "seed": 608880792 },
+    { "tick": true, "expect": [] },
+    { "seed": 3529053154 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3108716229 },
+    { "as": "Dell", "type": "examine the mailbox", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The small mailbox stands on a post at the edge of the field, painted to match the house and a good deal less weathered. Its little flag is down." },
+      { "reader": "Dell", "kind": "described", "words": "The small mailbox is closed." }
+    ] },
+    { "seed": 2958638087 },
+    { "tick": true, "expect": [] },
+    { "seed": 1128367080 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3949025947 },
+    { "as": "Dell", "type": "open the mailbox", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Opening the small mailbox reveals a leaflet." }
+    ] },
+    { "seed": 562046525 },
+    { "tick": true, "expect": [] },
+    { "seed": 2715667106 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2997954918 },
+    { "as": "Dell", "type": "take the leaflet and read it", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." },
+      { "reader": "Dell", "kind": "said", "words": "\"WELCOME TO ZORK!" },
+      { "reader": "Dell", "kind": "said", "words": "ZORK is a game of adventure, danger, and low cunning. In it you will explore some of the most amazing territory ever seen by mortals. No computer should be without one!\"" }
+    ] },
+    { "seed": 2522371549 },
+    { "tick": true, "expect": [] },
+    { "seed": 1217321642 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4027892162 },
+    { "as": "Dell", "type": "examine the house", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The house is a beautiful colonial house which is painted white. It is clear that the owners must have been extremely wealthy." }
+    ] },
+    { "seed": 1232752176 },
+    { "tick": true, "expect": [] },
+    { "seed": 3136491386 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2757257720 },
+    { "as": "Dell", "type": "examine the boarded door", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The door is closed." }
+    ] },
+    { "seed": 1575981240 },
+    { "tick": true, "expect": [] },
+    { "seed": 2300153573 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3854468244 },
+    { "as": "Dell", "type": "open the door", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The door cannot be opened." }
+    ] },
+    { "seed": 3717546984 },
+    { "tick": true, "expect": [] },
+    { "seed": 1955618786 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3752460204 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "North of House" },
+      { "reader": "Dell", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "seed": 815253435 },
+    { "tick": true, "expect": [] },
+    { "seed": 2908904160 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1432631155 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Behind House" },
+      { "reader": "Dell", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "seed": 206566038 },
+    { "tick": true, "expect": [] },
+    { "seed": 3763730880 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 878477069 },
+    { "as": "Dell", "type": "examine the window", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The window is slightly ajar, but not enough to allow entry." }
+    ] },
+    { "seed": 2260682765 },
+    { "tick": true, "expect": [] },
+    { "seed": 2122104082 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 320989984 },
+    { "as": "Dell", "type": "open the window", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "seed": 3582974239 },
+    { "tick": true, "expect": [] },
+    { "seed": 3022475510 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 845240649 },
+    { "as": "Dell", "type": "enter the window", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Kitchen" },
+      { "reader": "Dell", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Dell", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Dell", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Dell", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Dell", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "seed": 293481143 },
+    { "tick": true, "expect": [] },
+    { "seed": 2099378430 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1330153052 },
+    { "as": "Dell", "type": "examine the table", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The kitchen table is a sturdy, scrubbed affair of plain wood, scarred by knives and stained here and there by whatever was prepared on it recently. Someone has been eating well, and has not been tidying up." },
+      { "reader": "Dell", "kind": "described", "words": "Sitting on the kitchen table is:" },
+      { "reader": "Dell", "kind": "described", "words": "A brown sack" },
+      { "reader": "Dell", "kind": "described", "words": "A glass bottle" }
+    ] },
+    { "seed": 2829222530 },
+    { "tick": true, "expect": [] },
+    { "seed": 1254782621 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2376621794 },
+    { "as": "Dell", "type": "examine the sack", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is an elongated sack of coarse brown paper, folded over at the top and spotted with grease. It smells of hot peppers, and has clearly been somebody's lunch." },
+      { "reader": "Dell", "kind": "described", "words": "The brown sack is closed." }
+    ] },
+    { "seed": 4110580879 },
+    { "tick": true, "expect": [] },
+    { "seed": 2439051183 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 687732792 },
+    { "as": "Dell", "type": "examine the bottle", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a clear glass bottle with a stopper, of the kind made to carry water on long walks." },
+      { "reader": "Dell", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Dell", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "seed": 2222814462 },
+    { "tick": true, "expect": [] },
+    { "seed": 1397288032 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2305369943 },
+    { "as": "Dell", "type": "open the sack", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Opening the brown sack reveals a lunch, and a clove of garlic." }
+    ] },
+    { "seed": 3434887872 },
+    { "tick": true, "expect": [] },
+    { "seed": 2478482009 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2635793589 },
+    { "as": "Dell", "type": "take the bottle", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 2291499079 },
+    { "tick": true, "expect": [] },
+    { "seed": 2820067325 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2133890592 },
+    { "as": "Dell", "type": "examine the lunch", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "There's nothing special about the lunch." }
+    ] },
+    { "seed": 772026408 },
+    { "tick": true, "expect": [] },
+    { "seed": 3992972143 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2563721938 },
+    { "as": "Dell", "type": "take the garlic", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 2753754049 },
+    { "tick": true, "expect": [] },
+    { "seed": 2375136294 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2820862748 },
+    { "as": "Dell", "type": "take the sack", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 4219930371 },
+    { "tick": true, "expect": [] },
+    { "seed": 3940526617 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 92055293 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Living Room" },
+      { "reader": "Dell", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Dell", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Dell", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "seed": 3142849586 },
+    { "tick": true, "expect": [] },
+    { "seed": 408201491 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2859814346 },
+    { "as": "Dell", "type": "examine the wooden door", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The engravings translate to \"This space intentionally left blank.\"" }
+    ] },
+    { "seed": 2749205992 },
+    { "tick": true, "expect": [] },
+    { "seed": 4186898886 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3154722689 },
+    { "as": "Dell", "type": "examine the rug", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a large oriental rug, very fine and very heavy, laid squarely in the center of the room. It lies a little unevenly, as if something beneath it were not quite flat." }
+    ] },
+    { "seed": 3886306324 },
+    { "tick": true, "expect": [] },
+    { "seed": 3412448164 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 997578151 },
+    { "as": "Dell", "type": "examine the trophy case", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The trophy case is a handsome thing of polished wood and glass, fastened securely to the wall and plainly built to hold treasures. It has the patient air of something that expects to be filled." },
+      { "reader": "Dell", "kind": "described", "words": "The trophy case is empty." }
+    ] },
+    { "seed": 2946867681 },
+    { "tick": true, "expect": [] },
+    { "seed": 4111005930 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 527044306 },
+    { "as": "Dell", "type": "examine the sword", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The blade is long, keen and elvish, its hilt worked with vines and runes. It is very old, and has plainly been in worse places than a living room." }
+    ] },
+    { "seed": 4044099063 },
+    { "tick": true, "expect": [] },
+    { "seed": 2943773866 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3406659592 },
+    { "as": "Dell", "type": "examine the lantern", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a battery-powered brass lantern, dented here and there but sound, with a stout handle and a glass that someone has kept clean." },
+      { "reader": "Dell", "kind": "described", "words": "The lamp is turned off." }
+    ] },
+    { "seed": 1485792438 },
+    { "tick": true, "expect": [] },
+    { "seed": 3303337259 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1386285352 },
+    { "as": "Dell", "type": "take the lantern", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 3071040421 },
+    { "tick": true, "expect": [] },
+    { "seed": 3682425726 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 298136845 },
+    { "as": "Dell", "type": "take the sword", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 2506340357 },
+    { "tick": true, "expect": [] },
+    { "seed": 2391713203 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1375149799 },
+    { "as": "Dell", "type": "move the rug", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "seed": 2295431511 },
+    { "tick": true, "expect": [] },
+    { "seed": 1218546844 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2095788818 },
+    { "as": "Dell", "type": "examine the trap door", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a square trap door of heavy planks, set flush into the floor where the rug used to hide it, with an iron ring to lift it by. A good deal of dust has settled on it, and nobody has disturbed it lately." },
+      { "reader": "Dell", "kind": "described", "words": "The trap door is closed." }
+    ] },
+    { "seed": 799416718 },
+    { "tick": true, "expect": [] },
+    { "seed": 3519315287 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2974557701 },
+    { "as": "Dell", "type": "open the trap door", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "seed": 2454018355 },
+    { "tick": true, "expect": [] },
+    { "seed": 4051806114 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3613194416 },
+    { "as": "Dell", "type": "turn on the lantern", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "seed": 149337255 },
+    { "tick": true, "expect": [] },
+    { "seed": 923560984 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2558801108 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Kitchen" }
+    ] },
+    { "seed": 2943375072 },
+    { "tick": true, "expect": [] },
+    { "seed": 849393008 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1128356435 },
+    { "as": "Dell", "type": "up", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Attic" },
+      { "reader": "Dell", "kind": "described", "words": "This is the attic. The only exit is a stairway leading down." },
+      { "reader": "Dell", "kind": "described", "words": "A large coil of rope is lying in the corner." },
+      { "reader": "Dell", "kind": "described", "words": "On a table is a nasty-looking knife." }
+    ] },
+    { "seed": 3840888257 },
+    { "tick": true, "expect": [] },
+    { "seed": 2759515330 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 11394456 },
+    { "as": "Dell", "type": "examine the rope", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a good length of stout hemp rope, coiled with more care than anything else in the attic was put away. Someone expected to need it." }
+    ] },
+    { "seed": 1979783609 },
+    { "tick": true, "expect": [] },
+    { "seed": 390665836 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 823648061 },
+    { "as": "Dell", "type": "examine the knife", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a nasty-looking knife, short and broad in the blade and none too clean. It was not made for buttering bread." }
+    ] },
+    { "seed": 480018732 },
+    { "tick": true, "expect": [] },
+    { "seed": 758479799 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 823136287 },
+    { "as": "Dell", "type": "take the rope", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 1239687560 },
+    { "tick": true, "expect": [] },
+    { "seed": 3548460048 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 629884487 },
+    { "as": "Dell", "type": "take the knife", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 3673527970 },
+    { "tick": true, "expect": [] },
+    { "seed": 2962276909 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3575544863 },
+    { "as": "Dell", "type": "down", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Kitchen" }
+    ] },
+    { "seed": 1627035345 },
+    { "tick": true, "expect": [] },
+    { "seed": 4071709155 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2281731343 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Living Room" }
+    ] },
+    { "seed": 4093510865 },
+    { "tick": true, "expect": [] },
+    { "seed": 3556721980 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2072413072 },
+    { "as": "Dell", "type": "down", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Dell", "kind": "described", "words": "Cellar" },
+      { "reader": "Dell", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Dell", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "seed": 1085754038 },
+    { "tick": true, "expect": [] },
+    { "seed": 3954407625 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4044546520 },
+    { "as": "Dell", "type": "examine the ramp", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The bottom of a steep metal ramp comes down out of the dark on the west side of the cellar. It is polished smooth by everything that has ever slid down it, and it is unclimbable." }
+    ] },
+    { "seed": 356314148 },
+    { "tick": true, "expect": [] },
+    { "seed": 1542732721 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1484707556 },
+    { "as": "Dell", "type": "examine the trap door", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "High overhead is the underside of the trap door: rough planks and iron bands, and not a handle or a ring to be had from this side." },
+      { "reader": "Dell", "kind": "described", "words": "The trap door is closed." }
+    ] },
+    { "seed": 3873683704 },
+    { "tick": true, "expect": [] },
+    { "seed": 1871119685 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1797969533 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Dell", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Dell", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Dell", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "seed": 3514713850 },
+    { "tick": true, "expect": [] },
+    { "seed": 3169762778 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2372204001 },
+    { "as": "Dell", "type": "examine the troll", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The troll is squat, greenish and nearly as wide as he is tall, with small red eyes and a great many teeth, not all of them his own. The bloody axe is clenched in his fist, and he swings it idly back and forth, the way other people tap a foot. He is watching you the way a cook watches a chicken." }
+    ] },
+    { "seed": 3550560222 },
+    { "tick": true, "expect": [] },
+    { "seed": 301759416 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 25997731 },
+    { "as": "Dell", "type": "hello troll", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The troll bows his head to you in greeting." }
+    ] },
+    { "seed": 4050928183 },
+    { "tick": true, "expect": [] },
+    { "seed": 3764803084 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3931851648 },
+    { "as": "Dell", "type": "ask the troll about the axe", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "You can't talk to the troll!" },
+      { "reader": "Dell", "kind": "said", "words": "The troll isn't much of a conversationalist." }
+    ] },
+    { "seed": 3556770637 },
+    { "tick": true, "expect": [] },
+    { "seed": 3794698685 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" },
+      { "reader": "Dell", "kind": "told", "words": "The axe gets you right in the side. Ouch!" }
+    ] },
+    { "seed": 3345289193 },
+    { "as": "Dell", "type": "ask the troll about the trap door", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "You can't talk to the troll!" },
+      { "reader": "Dell", "kind": "said", "words": "The troll isn't much of a conversationalist." }
+    ] },
+    { "seed": 3733520702 },
+    { "tick": true, "expect": [] },
+    { "seed": 1532529602 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1995675054 },
+    { "as": "Dell", "type": "give the lunch to the troll", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and not having the most discriminating tastes, gleefully eats it." }
+    ] },
+    { "seed": 3494120539 },
+    { "tick": true, "expect": [] },
+    { "seed": 701844740 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" },
+      { "reader": "Dell", "kind": "told", "words": "The flat of the troll's axe hits you delicately on the head, knocking you out." },
+      { "reader": "Dell", "kind": "told", "words": "Conquering his fears, the troll puts you to death." },
+      { "reader": "Dell", "kind": "told", "words": "It appears that that last blow was too much for you. I'm afraid you are dead." },
+      { "reader": "Dell", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Dell", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Dell", "kind": "told", "words": "Your belongings, such as they were, have not come with you. They are scattered about the Empire, though somebody tidy has put the lamp back in the living room." },
+      { "reader": "Dell", "kind": "described", "words": "Forest" },
+      { "reader": "Dell", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "seed": 1710643772 },
+    { "as": "Dell", "type": "look", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Forest" },
+      { "reader": "Dell", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "seed": 2412340701 },
+    { "tick": true, "expect": [] },
+    { "seed": 2241592837 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3822833455 },
+    { "as": "Dell", "type": "inventory", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "You are empty-handed." }
+    ] },
+    { "seed": 165572015 },
+    { "tick": true, "expect": [] },
+    { "seed": 2190769072 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 493973156 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Forest Path" },
+      { "reader": "Dell", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "seed": 3098319894 },
+    { "tick": true, "expect": [] },
+    { "seed": 1730891868 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2852831993 },
+    { "as": "Dell", "type": "examine the tree", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a particularly large tree, older than the house and in no hurry, with some low branches that all but invite climbing." }
+    ] },
+    { "seed": 2702882192 },
+    { "tick": true, "expect": [] },
+    { "seed": 812084293 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1226733624 },
+    { "as": "Dell", "type": "climb the tree", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Up a Tree" },
+      { "reader": "Dell", "kind": "described", "words": "You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach." },
+      { "reader": "Dell", "kind": "described", "words": "Beside you on the branch is a small bird's nest." },
+      { "reader": "Dell", "kind": "described", "words": "In the bird's nest is a large egg encrusted with precious jewels, apparently scavenged by a childless songbird. The egg is covered with fine gold inlay, and ornamented in lapis lazuli and mother-of-pearl. Unlike most eggs, this one is hinged and closed with a delicate looking clasp. The egg appears extremely fragile." }
+    ] },
+    { "seed": 2845303443 },
+    { "tick": true, "expect": [] },
+    { "seed": 1355437110 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3836922092 },
+    { "as": "Dell", "type": "examine the nest", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The nest is a neat cup of twigs, grass and down, wedged into the fork of a branch by a songbird with better taste in treasure than in architecture." },
+      { "reader": "Dell", "kind": "described", "words": "The bird's nest contains:" },
+      { "reader": "Dell", "kind": "described", "words": "A jewel-encrusted egg" }
+    ] },
+    { "seed": 465514434 },
+    { "tick": true, "expect": [] },
+    { "seed": 2369326311 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2986340053 },
+    { "as": "Dell", "type": "examine the egg", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The egg is covered with fine gold inlay and ornamented in lapis lazuli and mother-of-pearl. Unlike most eggs, it is hinged, and closed with a delicate looking clasp. It looks extremely fragile, and extremely valuable, in that order." },
+      { "reader": "Dell", "kind": "described", "words": "The jewel-encrusted egg is closed." }
+    ] },
+    { "seed": 77299553 },
+    { "tick": true, "expect": [] },
+    { "seed": 562998755 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 723648734 },
+    { "as": "Dell", "type": "take the egg", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 2248979032 },
+    { "tick": true, "expect": [] },
+    { "seed": 4010154491 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1982696783 },
+    { "as": "Dell", "type": "down", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Forest Path" }
+    ] },
+    { "seed": 774603945 },
+    { "tick": true, "expect": [] },
+    { "seed": 2006125376 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1059547191 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "North of House" }
+    ] },
+    { "seed": 3341078778 },
+    { "tick": true, "expect": [] },
+    { "seed": 4079483493 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2032012077 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Behind House" }
+    ] },
+    { "seed": 3898856019 },
+    { "tick": true, "expect": [] },
+    { "seed": 2616050457 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 560536228 },
+    { "as": "Dell", "type": "enter the window", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Kitchen" }
+    ] },
+    { "seed": 360259584 },
+    { "tick": true, "expect": [] },
+    { "seed": 867673031 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2719548376 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Living Room" },
+      { "reader": "Dell", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
+    ] },
+    { "seed": 3013988093 },
+    { "tick": true, "expect": [] },
+    { "seed": 2532212876 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1751004196 },
+    { "as": "Dell", "type": "take the lantern", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 2635568233 },
+    { "tick": true, "expect": [] },
+    { "seed": 3549011544 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 444758497 },
+    { "as": "Dell", "type": "look", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Living Room" },
+      { "reader": "Dell", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a closed trap door at your feet." }
+    ] },
+    { "seed": 1388166874 },
+    { "tick": true, "expect": [] },
+    { "seed": 4221811192 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3703523290 },
+    { "as": "Dell", "type": "put the egg in the trophy case", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "The trophy case isn't open." }
+    ] },
+    { "seed": 1277605135 },
+    { "tick": true, "expect": [] },
+    { "seed": 3258760739 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 213570987 },
+    { "as": "Dell", "type": "open the trap door", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "seed": 2565272312 },
+    { "tick": true, "expect": [] },
+    { "seed": 730572824 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2792889699 },
+    { "as": "Dell", "type": "turn on the lantern", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "It is already on." }
+    ] },
+    { "seed": 1303937409 },
+    { "tick": true, "expect": [] },
+    { "seed": 3160399976 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "underground_caverns#1 woke, 600 seconds after it asked" }
+    ] },
+    { "seed": 2074854024 },
+    { "as": "Dell", "type": "open the trophy case", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Opened." }
+    ] },
+    { "seed": 2183213073 },
+    { "tick": true, "expect": [] },
+    { "seed": 3985533215 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3330351331 },
+    { "as": "Dell", "type": "put the egg in the trophy case", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Done." }
+    ] },
+    { "seed": 1340608789 },
+    { "tick": true, "expect": [] },
+    { "seed": 912319454 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4003405737 },
+    { "as": "Dell", "type": "down", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Cellar" }
+    ] },
+    { "seed": 3532319385 },
+    { "tick": true, "expect": [] },
+    { "seed": 4256794457 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 170404932 },
+    { "as": "Dell", "type": "look", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Cellar" },
+      { "reader": "Dell", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
+    ] },
+    { "seed": 719629197 },
+    { "tick": true, "expect": [] },
+    { "seed": 2689326436 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 529584287 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "East of Chasm" },
+      { "reader": "Dell", "kind": "described", "words": "You are on the east edge of a chasm, the bottom of which cannot be seen. A narrow passage goes north, and the path you are on continues to the east." }
+    ] },
+    { "seed": 3813835637 },
+    { "tick": true, "expect": [] },
+    { "seed": 3187810177 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3431493012 },
+    { "as": "Dell", "type": "examine the chasm", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The chasm drops away from your feet into a dark that your lamp does not so much light as annoy. A pebble kicked over the edge is never heard from again. Neither, by the look of it, was whoever kicked the last one." }
+    ] },
+    { "seed": 217653474 },
+    { "tick": true, "expect": [] },
+    { "seed": 3803493159 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3150435097 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Gallery" },
+      { "reader": "Dell", "kind": "described", "words": "This is an art gallery. Most of the paintings have been stolen by vandals with exceptional taste. The vandals left through either the north or west exits." },
+      { "reader": "Dell", "kind": "described", "words": "Fortunately, there is still one chance for you to be a vandal, for on the far wall is a painting of unparalleled beauty." }
+    ] },
+    { "seed": 3861304196 },
+    { "tick": true, "expect": [] },
+    { "seed": 775771295 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 185187303 },
+    { "as": "Dell", "type": "examine the painting", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a painting of a sunlit valley, done with such tenderness that it is hard to look at it for long, and harder to look away. The signature in the corner is too modest to read. The artist was a neglected genius, and it shows." }
+    ] },
+    { "seed": 1567370156 },
+    { "tick": true, "expect": [] },
+    { "seed": 2756040472 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3294786803 },
+    { "as": "Dell", "type": "take the painting", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 1036073417 },
+    { "tick": true, "expect": [] },
+    { "seed": 4260946825 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1416242824 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Studio" },
+      { "reader": "Dell", "kind": "described", "words": "This appears to have been an artist's studio. The walls and floors are splattered with paints of 69 different colors. Strangely enough, nothing of value is hanging here. At the south end of the room is an open door (also covered with paint). A dark and narrow chimney leads up from a fireplace; although you might be able to get up it, it seems unlikely you could get back down." },
+      { "reader": "Dell", "kind": "described", "words": "Loosely attached to a wall is a small piece of paper." }
+    ] },
+    { "seed": 2527593475 },
+    { "tick": true, "expect": [] },
+    { "seed": 2851539091 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3184174386 },
+    { "as": "Dell", "type": "examine the paper", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Congratulations!" },
+      { "reader": "Dell", "kind": "described", "words": "You are the privileged owner of ZORK I: The Great Underground Empire, a self-contained and self-maintaining universe. If used and maintained in accordance with normal operating practices for small universes, ZORK will provide many months of trouble-free operation." }
+    ] },
+    { "seed": 268611898 },
+    { "tick": true, "expect": [] },
+    { "seed": 3305910995 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2276233267 },
+    { "as": "Dell", "type": "read the paper", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "(Taken)" },
+      { "reader": "Dell", "kind": "said", "words": "Congratulations!" },
+      { "reader": "Dell", "kind": "said", "words": "You are the privileged owner of ZORK I: The Great Underground Empire, a self-contained and self-maintaining universe. If used and maintained in accordance with normal operating practices for small universes, ZORK will provide many months of trouble-free operation." }
+    ] },
+    { "seed": 1968145280 },
+    { "tick": true, "expect": [] },
+    { "seed": 1476300040 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3098770681 },
+    { "as": "Dell", "type": "examine the chimney", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The chimney is dark and narrow and leads up out of the fireplace. You might just get up it, if you travelled light and had a light to travel by. Getting back down it is another matter." }
+    ] },
+    { "seed": 3237181860 },
+    { "tick": true, "expect": [] },
+    { "seed": 3062716928 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3858935531 },
+    { "as": "Dell", "type": "examine the fireplace", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The fireplace is cold and swept, the only clean thing in the room. Above it the chimney goes up into the dark, narrow and sooty and not built for traffic." }
+    ] },
+    { "seed": 3136738759 },
+    { "tick": true, "expect": [] },
+    { "seed": 793192217 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1598200475 },
+    { "as": "Dell", "type": "up", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "You can't get up there with what you're carrying. The chimney has room for you, a light to climb by and one thing more, and not an inch besides." }
+    ] },
+    { "seed": 128708429 },
+    { "tick": true, "expect": [] },
+    { "seed": 1353217941 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2901815127 },
+    { "as": "Dell", "type": "drop the paper", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Dropped." }
+    ] },
+    { "seed": 3380014461 },
+    { "tick": true, "expect": [] },
+    { "seed": 83179937 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3011717834 },
+    { "as": "Dell", "type": "up", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Kitchen" }
+    ] },
+    { "seed": 1437116303 },
+    { "tick": true, "expect": [] },
+    { "seed": 2605045041 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4249853367 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Living Room" },
+      { "reader": "Dell", "kind": "described", "words": "Your collection of treasures consists of:" },
+      { "reader": "Dell", "kind": "described", "words": "A jewel-encrusted egg" }
+    ] },
+    { "seed": 4185726479 },
+    { "tick": true, "expect": [] },
+    { "seed": 3942153772 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1541583059 },
+    { "as": "Dell", "type": "put the painting in the trophy case", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Done." }
+    ] },
+    { "seed": 3438265790 },
+    { "tick": true, "expect": [] },
+    { "seed": 2076643492 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1243857341 },
+    { "as": "Dell", "type": "score", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Your score is 45 (total of 350 points), in 83 moves." },
+      { "reader": "Dell", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "seed": 143487794 },
+    { "tick": true, "expect": [] },
+    { "seed": 2302849926 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1155005323 },
+    { "as": "Dell", "type": "examine the trophy case", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The trophy case is a handsome thing of polished wood and glass, fastened securely to the wall and plainly built to hold treasures. It has the patient air of something that expects to be filled." },
+      { "reader": "Dell", "kind": "described", "words": "Your collection of treasures consists of:" },
+      { "reader": "Dell", "kind": "described", "words": "A jewel-encrusted egg" },
+      { "reader": "Dell", "kind": "described", "words": "A painting" }
+    ] },
+    { "seed": 3176067433 },
+    { "tick": true, "expect": [] },
+    { "seed": 3773362564 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2713952076 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Kitchen" }
+    ] },
+    { "seed": 3288270408 },
+    { "tick": true, "expect": [] },
+    { "seed": 2155589327 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1257184672 },
+    { "as": "Dell", "type": "out", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Behind House" }
+    ] },
+    { "seed": 869346300 },
+    { "tick": true, "expect": [] },
+    { "seed": 2803469550 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1431275545 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Clearing" },
+      { "reader": "Dell", "kind": "described", "words": "You are in a small clearing in a well marked forest path that extends to the east and west." },
+      { "reader": "Dell", "kind": "described", "words": "There is a sword here." }
+    ] },
+    { "seed": 1632037615 },
+    { "tick": true, "expect": [] },
+    { "seed": 4016405965 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 615266259 },
+    { "as": "Dell", "type": "take the sword", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 1535786463 },
+    { "tick": true, "expect": [] },
+    { "seed": 1715538040 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1455303056 },
+    { "as": "Dell", "type": "examine the clearing", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "You can't see any such thing." }
+    ] },
+    { "seed": 531404741 },
+    { "tick": true, "expect": [] },
+    { "seed": 289306117 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3105399936 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "The path to the east is roped off. A sign hanging from the rope reads: \"CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience.\"" }
+    ] },
+    { "seed": 2117908076 },
+    { "tick": true, "expect": [] },
+    { "seed": 2296870134 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2328127913 },
+    { "as": "Dell", "type": "examine the sign", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The sign reads: \"CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience.\"" }
+    ] },
+    { "seed": 2810695331 },
+    { "tick": true, "expect": [] },
+    { "seed": 3248270070 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2661173917 },
+    { "as": "Dell", "type": "examine the rope", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "A length of rope is strung across the path to the east, at about the height of a disappointed adventurer's waist. A sign hangs from it." }
+    ] },
+    { "seed": 897419102 },
+    { "tick": true, "expect": [] },
+    { "seed": 1768228500 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1036533455 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Forest" },
+      { "reader": "Dell", "kind": "described", "words": "This is a dimly lit forest, with large trees all around." },
+      { "reader": "Dell", "kind": "described", "words": "There is a rope here." },
+      { "reader": "Dell", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 2063568955 },
+    { "tick": true, "expect": [] },
+    { "seed": 2415748073 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3468767214 },
+    { "as": "Dell", "type": "take the rope", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 2678705589 },
+    { "tick": true, "expect": [] },
+    { "seed": 3591470863 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4212687420 },
+    { "as": "Dell", "type": "examine the trees", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The trees are large and old and stand close about you, as trees in a forest will, each one much like the next. None has a branch low enough to climb, which saves a good deal of argument." }
+    ] },
+    { "seed": 2082434610 },
+    { "tick": true, "expect": [] },
+    { "seed": 3661683263 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 599345617 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Forest Path" }
+    ] },
+    { "seed": 1019776998 },
+    { "tick": true, "expect": [] },
+    { "seed": 3699326353 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3634843244 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Clearing" },
+      { "reader": "Dell", "kind": "described", "words": "You are in a clearing, with a forest surrounding you on all sides. A path leads south." },
+      { "reader": "Dell", "kind": "described", "words": "On the ground is a pile of leaves." },
+      { "reader": "Dell", "kind": "described", "words": "There is a brown sack here." }
+    ] },
+    { "seed": 1880784125 },
+    { "tick": true, "expect": [] },
+    { "seed": 905334113 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 343655190 },
+    { "as": "Dell", "type": "take the sack", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 3559790702 },
+    { "tick": true, "expect": [] },
+    { "seed": 3304968736 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2375809763 },
+    { "as": "Dell", "type": "examine the leaves", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a pile of dead leaves, brown and damp, of the sort a forest produces without being asked. It is rather deeper than leaves usually lie, as though someone had swept them together on purpose." }
+    ] },
+    { "seed": 113000541 },
+    { "tick": true, "expect": [] },
+    { "seed": 2479928077 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 595780871 },
+    { "as": "Dell", "type": "move the leaves", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Done." },
+      { "reader": "Dell", "kind": "said", "words": "In disturbing the pile of leaves, a grating is revealed." }
+    ] },
+    { "seed": 1750963052 },
+    { "tick": true, "expect": [] },
+    { "seed": 2126804347 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2061791633 },
+    { "as": "Dell", "type": "examine the grating", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a heavy iron grating, set securely into the ground and rusted to the colour of the leaves that hid it. Below it is only darkness." },
+      { "reader": "Dell", "kind": "described", "words": "The grating is closed." }
+    ] },
+    { "seed": 4280023472 },
+    { "tick": true, "expect": [] },
+    { "seed": 1278816315 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1833015819 },
+    { "as": "Dell", "type": "open the grating", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The grating is locked." }
+    ] },
+    { "seed": 444122332 },
+    { "tick": true, "expect": [] },
+    { "seed": 1107084236 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2642081687 },
+    { "as": "Dell", "type": "examine the sack", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is an elongated sack of coarse brown paper, folded over at the top and spotted with grease. It smells of hot peppers, and has clearly been somebody's lunch." },
+      { "reader": "Dell", "kind": "described", "words": "The brown sack is empty." }
+    ] },
+    { "seed": 1092751205 },
+    { "tick": true, "expect": [] },
+    { "seed": 1151748219 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3965694587 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Forest Path" }
+    ] },
+    { "seed": 2688017183 },
+    { "tick": true, "expect": [] },
+    { "seed": 3598636005 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2309296145 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "North of House" }
+    ] },
+    { "seed": 3173438605 },
+    { "tick": true, "expect": [] },
+    { "seed": 1646357054 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1572040709 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "West of House" },
+      { "reader": "Dell", "kind": "described", "words": "There is a small mailbox here." },
+      { "reader": "Dell", "kind": "described", "words": "There is a glass bottle here." },
+      { "reader": "Dell", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Dell", "kind": "described", "words": "A quantity of water" },
+      { "reader": "Dell", "kind": "described", "words": "There is a clove of garlic here." },
+      { "reader": "Dell", "kind": "described", "words": "There is a nasty knife here." }
+    ] },
+    { "seed": 2088614424 },
+    { "tick": true, "expect": [] },
+    { "seed": 1242773183 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 175325813 },
+    { "as": "Dell", "type": "take the bottle", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 4153513507 },
+    { "tick": true, "expect": [] },
+    { "seed": 1208206104 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2078361755 },
+    { "as": "Dell", "type": "take the garlic", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 3641940743 },
+    { "tick": true, "expect": [] },
+    { "seed": 2180211052 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1688000368 },
+    { "as": "Dell", "type": "take the knife", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 1554172568 },
+    { "tick": true, "expect": [] },
+    { "seed": 4206022152 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1380063393 },
+    { "as": "Dell", "type": "inventory", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Dell", "kind": "said", "words": "A brass lantern (providing light)" },
+      { "reader": "Dell", "kind": "said", "words": "A sword" },
+      { "reader": "Dell", "kind": "said", "words": "A rope" },
+      { "reader": "Dell", "kind": "said", "words": "A brown sack" },
+      { "reader": "Dell", "kind": "said", "words": "A glass bottle" },
+      { "reader": "Dell", "kind": "said", "words": "The glass bottle contains:" },
+      { "reader": "Dell", "kind": "said", "words": "A quantity of water" },
+      { "reader": "Dell", "kind": "said", "words": "A clove of garlic" },
+      { "reader": "Dell", "kind": "said", "words": "A nasty knife" }
+    ] },
+    { "seed": 3078617835 },
+    { "tick": true, "expect": [] },
+    { "seed": 1666650914 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2795943428 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "South of House" },
+      { "reader": "Dell", "kind": "described", "words": "You are facing the south side of a white house. There is no door here, and all the windows are boarded." },
+      { "reader": "Dell", "kind": "described", "words": "A small leaflet is on the ground." }
+    ] },
+    { "seed": 721983218 },
+    { "tick": true, "expect": [] },
+    { "seed": 2038673909 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2131725197 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Behind House" }
+    ] },
+    { "seed": 1866442814 },
+    { "tick": true, "expect": [] },
+    { "seed": 665649983 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2597794562 },
+    { "as": "Dell", "type": "enter the window", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Kitchen" }
+    ] },
+    { "seed": 3718720409 },
+    { "tick": true, "expect": [] },
+    { "seed": 1348375260 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1502882146 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Living Room" },
+      { "reader": "Dell", "kind": "described", "words": "Your collection of treasures consists of:" },
+      { "reader": "Dell", "kind": "described", "words": "A jewel-encrusted egg" },
+      { "reader": "Dell", "kind": "described", "words": "A painting" }
+    ] },
+    { "seed": 456058168 },
+    { "tick": true, "expect": [] },
+    { "seed": 3671609768 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2473705471 },
+    { "as": "Dell", "type": "down", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Cellar" },
+      { "reader": "Dell", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "seed": 3743880304 },
+    { "tick": true, "expect": [] },
+    { "seed": 256390516 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4282563887 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Dell", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Dell", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "seed": 3156239738 },
+    { "tick": true, "expect": [] },
+    { "seed": 1345984874 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2006674882 },
+    { "as": "Dell", "type": "attack the troll with the sword", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The troll is knocked out!" }
+    ] },
+    { "seed": 1549039377 },
+    { "tick": true, "expect": [] },
+    { "seed": 3069571892 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 1971908412 },
+    { "as": "Dell", "type": "attack the troll with the sword", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The unconscious troll cannot defend himself: He dies." },
+      { "reader": "Dell", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Dell", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 4080259770 },
+    { "tick": true, "expect": [] },
+    { "seed": 3459148444 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 203871908 },
+    { "as": "Dell", "type": "look", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Dell", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Dell", "kind": "described", "words": "There is a bloody axe here." }
+    ] },
+    { "seed": 2876141505 },
+    { "tick": true, "expect": [] },
+    { "seed": 2550172827 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2412277999 },
+    { "as": "Dell", "type": "take the axe", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Your load is too heavy." }
+    ] },
+    { "seed": 118438667 },
+    { "tick": true, "expect": [] },
+    { "seed": 501505795 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 841564259 },
+    { "as": "Dell", "type": "examine the axe", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The axe is a heavy, ugly, single-bitted thing, its haft wrapped in greasy leather and its edge notched from use. The blood on the blade is not all old." }
+    ] },
+    { "seed": 3772964459 },
+    { "tick": true, "expect": [] },
+    { "seed": 3513300642 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1856265325 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "The passage to the east has not been finished. A note is pinned to the rock: \"Back soon. -- The Management.\"" }
+    ] },
+    { "seed": 790389015 },
+    { "tick": true, "expect": [] },
+    { "seed": 2001279245 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3205492685 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" },
+      { "reader": "Dell", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "seed": 2746934876 },
+    { "tick": true, "expect": [] },
+    { "seed": 4064526190 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1709232844 },
+    { "as": "Dell", "type": "examine the passages", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The passages are twisty, they are little, and they are all alike: the same rough walls, the same low ceiling, the same turnings that turn just far enough to hide where they are going. Whoever made this maze had one idea, and saw it through." }
+    ] },
+    { "seed": 1237168504 },
+    { "tick": true, "expect": [] },
+    { "seed": 3966225525 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 714801239 },
+    { "as": "Dell", "type": "look", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" },
+      { "reader": "Dell", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "seed": 4118649276 },
+    { "tick": true, "expect": [] },
+    { "seed": 4030029497 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2289207393 },
+    { "as": "Dell", "type": "drop the sack", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Dropped." }
+    ] },
+    { "seed": 4095925712 },
+    { "tick": true, "expect": [] },
+    { "seed": 2907246119 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4260761052 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" },
+      { "reader": "Dell", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "seed": 3633205923 },
+    { "tick": true, "expect": [] },
+    { "seed": 1785297109 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3797289375 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" },
+      { "reader": "Dell", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "seed": 3786885036 },
+    { "tick": true, "expect": [] },
+    { "seed": 1717485240 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3038387847 },
+    { "as": "Dell", "type": "up", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" },
+      { "reader": "Dell", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike. A skeleton, probably the remains of a luckless adventurer, lies here." },
+      { "reader": "Dell", "kind": "described", "words": "The deceased adventurer's useless lantern is here." },
+      { "reader": "Dell", "kind": "described", "words": "Beside the skeleton is a rusty knife." },
+      { "reader": "Dell", "kind": "described", "words": "There is a skeleton key here." },
+      { "reader": "Dell", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
+    ] },
+    { "seed": 1869291607 },
+    { "tick": true, "expect": [] },
+    { "seed": 3122269335 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1180259623 },
+    { "as": "Dell", "type": "examine the skeleton", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The skeleton lies where its owner fell, slumped against the wall of the passage as though he had sat down for a moment's rest and found the moment longer than expected. It is picked quite clean, and has been for some time. Whatever he came into the maze looking for, the maze found him first." }
+    ] },
+    { "seed": 1812295494 },
+    { "tick": true, "expect": [] },
+    { "seed": 891507461 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1406433686 },
+    { "as": "Dell", "type": "take the skeleton key", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 1563101509 },
+    { "tick": true, "expect": [] },
+    { "seed": 1284684178 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1280186897 },
+    { "as": "Dell", "type": "take the bag", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 1050965126 },
+    { "tick": true, "expect": [] },
+    { "seed": 3410542460 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4118661063 },
+    { "as": "Dell", "type": "examine the rusty knife", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a short knife, rusted nearly black, with a plain wooden grip worn smooth by a hand that is no longer in a position to hold it. The rust has not touched the edge. That is not a thing rust usually overlooks." }
+    ] },
+    { "seed": 697082157 },
+    { "tick": true, "expect": [] },
+    { "seed": 3447530178 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2419678488 },
+    { "as": "Dell", "type": "examine the useless lantern", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a lantern of the old kind, rusted at every seam, its glass smoked black from the inside. Its batteries gave out some time before its owner did, which, down here, is the usual order of things." }
+    ] },
+    { "seed": 1140235134 },
+    { "tick": true, "expect": [] },
+    { "seed": 1779855753 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4021928964 },
+    { "as": "Dell", "type": "examine the bag", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is an old leather bag, cracked with age and drawn tight at the neck with a knotted thong, and it bulges in the way that only coins make a bag bulge. There are lots of coins in there." }
+    ] },
+    { "seed": 1794941360 },
+    { "tick": true, "expect": [] },
+    { "seed": 617925698 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2131614293 },
+    { "as": "Dell", "type": "examine the skeleton key", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a heavy iron key, long in the shank, with a bow worked into the shape of a small grinning skull. Whatever lock it fits is a lock that wanted a key like this one, and is unlikely to be anywhere cheerful." }
+    ] },
+    { "seed": 555493525 },
+    { "tick": true, "expect": [] },
+    { "seed": 3844815709 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3934383171 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" }
+    ] },
+    { "seed": 1075795905 },
+    { "tick": true, "expect": [] },
+    { "seed": 524583517 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3317396557 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" },
+      { "reader": "Dell", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "seed": 672605056 },
+    { "tick": true, "expect": [] },
+    { "seed": 211869013 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3483069381 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Dead End" },
+      { "reader": "Dell", "kind": "described", "words": "You have come to a dead end in the maze." }
+    ] },
+    { "seed": 1376038322 },
+    { "tick": true, "expect": [] },
+    { "seed": 62868134 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2992696854 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "notice", "words": "You can't go that way." }
+    ] },
+    { "seed": 1306082933 },
+    { "tick": true, "expect": [] },
+    { "seed": 3372433079 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 863954587 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" }
+    ] },
+    { "seed": 3479810283 },
+    { "tick": true, "expect": [] },
+    { "seed": 1378728573 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1531844456 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" }
+    ] },
+    { "seed": 2223978925 },
+    { "tick": true, "expect": [] },
+    { "seed": 3896446754 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1129962998 },
+    { "as": "Dell", "type": "up", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" },
+      { "reader": "Dell", "kind": "described", "words": "The deceased adventurer's useless lantern is here." },
+      { "reader": "Dell", "kind": "described", "words": "Beside the skeleton is a rusty knife." }
+    ] },
+    { "seed": 2255070041 },
+    { "tick": true, "expect": [] },
+    { "seed": 289446922 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2352226742 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "notice", "words": "You can't go that way." }
+    ] },
+    { "seed": 403910126 },
+    { "tick": true, "expect": [] },
+    { "seed": 2106881499 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 736936361 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Dead End" },
+      { "reader": "Dell", "kind": "described", "words": "You have come to a dead end in the maze." }
+    ] },
+    { "seed": 3349323568 },
+    { "tick": true, "expect": [] },
+    { "seed": 2710186709 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1348232181 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maze" },
+      { "reader": "Dell", "kind": "described", "words": "The deceased adventurer's useless lantern is here." },
+      { "reader": "Dell", "kind": "described", "words": "Beside the skeleton is a rusty knife." }
+    ] },
+    { "seed": 3864551827 },
+    { "tick": true, "expect": [] },
+    { "seed": 607991489 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2701332082 },
+    { "leave": "Dell", "expect": [
+      { "reader": "Dell", "kind": "notice", "words": "You leave, and take what you carry with you." }
+    ] }
+  ]
+}

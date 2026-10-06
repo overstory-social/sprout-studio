@@ -17,13 +17,13 @@ import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
 import {go, look, examine, inventory, wait} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :spot, :banish, :spend} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, listen_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :spot, :banish, :spend} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
 import {land_of_the_living_dead} from 'nowhere'
 import {east_of_chasm, studio, StudioChimney} from 'gallery'
-import {maze_5} from 'maze'
+import {maze_5, Maze, DeadEnd} from 'maze'
 import {Skeleton, RustyKnife, SkeletonKey} from 'remains'
 
 kind Adventurer is sprout.Visitor {
@@ -190,7 +190,7 @@ kind Adventurer is sprout.Visitor {
   on :moved (from, to) {
     // Up the chimney with the trap door shut: whoever bars it will bar it
     // again behind the next one down.
-    if (self.get(:at_chimney) && to.is(ChimneyTop)) { broadcast :unbar }
+    if (self.get(:at_chimney) && to.is(ChimneyTop)) { broadcast :unbar with false }
     self.set(:at_chimney, to.is(ChimneyFoot))
     if (to.is(Room) && !self.get(:devoured)) {
       if (!to.is(DarkRoom)) { self.set(:room_dark, false) }
@@ -300,6 +300,11 @@ kind Adventurer is sprout.Visitor {
     self.set(:fight, 2)
     self.set(:staggered, false)
     tell self "****  You have died  ****"
+    // JIGS-UP clears the trap door's TOUCHBIT: whoever next goes down it
+    // from above hears it barred behind them again. A sword that was
+    // glowing stops, wherever it is scattered to.
+    broadcast :unbar with true
+    each s: Sword in self { send s :glow with 0 }
     if (self.get(:deaths) >= 3) {
       tell self "You clearly are a suicidal maniac.  We don't allow psychotics in the cave, since they may harm other adventurers.  Your remains will be installed in the Land of the Living Dead, where your fellow adventurers may gloat over them."
       tell self score_line
@@ -328,6 +333,26 @@ kind Adventurer is sprout.Visitor {
       move self to up_a_tree
     } else if (self.get(:dest) == :kitchen) {
       move self to kitchen
+    } else if (self.get(:dest) == :attic || self.get(:dest) == :cellar) {
+      // Along a staircase by name, as `up` or `down` would go. A lamp lights
+      // the way in the hand or in an open bag, as in `go`.
+      self.set(:own_light, self.get(:light) > 0)
+      each b: Box in self {
+        if (b.get(:open)) {
+          each l: Lamp in b { if (l.get(:lit)) { self.set(:own_light, true) } }
+        }
+      }
+      if (self.get(:dest) == :attic) {
+        if (!self.get(:own_light) && !underground_caverns.attic.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to attic
+      } else {
+        // Down the rickety staircase: the crash, and all.
+        if (!self.get(:own_light) && !underground_caverns.cellar.get(:alight)) { tell self "You have moved into a dark place." }
+        if (underground_caverns.cellar.get(:crash)) { tell self "The trap door crashes shut, and you hear someone barring it." }
+        move self to cellar
+      }
+    } else if (self.get(:dest) == :living_room) {
+      move self to living_room
     } else if (self.get(:dest) == :behind) {
       move self to behind_house
     } else if (self.get(:dest) == :west_side) {
@@ -378,7 +403,19 @@ kind Adventurer is sprout.Visitor {
   // with its name before it. Zork's `all` leaves out what is already held;
   // here `all` and a list of names arrive alike, so what is already held is
   // left out of any list that has something else in it.
+  // Zork's TAKE looks for what is on the ground or in the room, not in
+  // hand: so a name that fits both a thing held and a thing lying here
+  // (the sack and the bag of coins, the brass lantern and the burned-out
+  // one) means the one lying here. A reading of one thing already held is
+  // refused, and the parser prefers the reading that is not.
   as actor for take {
+    permit {
+      if (target.count == 1) {
+        each t of target {
+          if (t.is(Thing)) { if (self.holds(t)) { refuse "You already have that!" } }
+        }
+      }
+    }
     do {
       self.adjust(:moves, 1)
       self.set(:carry, self.get(:load))
@@ -575,6 +612,18 @@ kind Adventurer is sprout.Visitor {
   as actor for tally      { do { self.adjust(:moves, 1) } }
   as actor for smell      { do { self.adjust(:moves, 1) } }
   as actor for listen     { do { self.adjust(:moves, 1) } }
+  as actor for search     { do { self.adjust(:moves, 1) } }
+  as actor for cross      { do { self.adjust(:moves, 1) } }
+  // `listen` with nothing named. In the forest, the songbird the forest
+  // keeps mentioning; in the maze, the maze; elsewhere, nothing much.
+  as actor for listen_here {
+    do {
+      self.adjust(:moves, 1)
+      if (here.is(Forest)) { say "You hear in the distance the chirping of a song bird." }
+      else if (here.is(Maze) || here.is(DeadEnd)) { say "You hear nothing. The silence is the same silence as in every other part of the maze, which is no help at all." }
+      else { say "You hear nothing out of the ordinary." }
+    }
+  }
   as actor for climb_down { do { self.adjust(:moves, 1) } }
   as actor for unlock     { do { self.adjust(:moves, 1) } }
   as actor for knock      { do { self.adjust(:moves, 1) } }
