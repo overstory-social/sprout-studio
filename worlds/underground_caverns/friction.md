@@ -942,6 +942,45 @@ with `act throw`. These are what the NPC model would not let me say.
 - **Spec:** The compiler › Lexical rules.
 - **Status: open** (a naming nuisance only).
 
+## Found in round 4
+
+### 51. A comma does not join two commands
+
+- **Wanted:** Zork's own chaining, where a comma between two commands
+  joins them as THEN does: `open trap door, turn on lantern, go down`.
+- **Found:** the spec chains on `then`, a full stop, and `and` before a
+  verb (sprout#453), and splits a run of things on `and` and commas; a
+  comma before a verb is neither. One player in round 4 typed exactly that
+  line: the trap door opened, and the rest was answered "You can't see any
+  such thing.", as if "turn on lantern" and "go down" were more things to
+  open. The answer says something false (the lantern was in hand) and does
+  not say the rest went unrun.
+- **Wrote instead:** nothing; the world has no say in how a line is split.
+  Asked of Sprout: let a comma before a known verb chain as `and` does, or
+  answer the unread rest with `unknown` rather than `not_here`.
+- **Spec:** Parsing › Sequences, again and all; Verbs › Set roles
+  ("Parsing splits on `and` and commas literally").
+- **Status: open.**
+
+### 52. `enter <a way that is not here>` blames the sentence
+
+- **Wanted:** Zork's answer to `enter window` where there is no window:
+  "You can't see any window here." The noun is the trouble, not the
+  grammar.
+- **Found:** `enter window` reads only as `go` by the label of a way out,
+  so where no way out is labelled "window" (the Clearing) it is answered
+  with `unknown`, "That sentence isn't one I recognize.", while the same
+  line at Behind House goes in. That is what the spec says ("Words in
+  `go`'s phrases that are neither a direction nor the label of a way out
+  that applies are answered with `unknown`"), but it tells a player who
+  has just used the sentence that it is not one. A world verb `enter
+  [target]` would give `not_here` instead, but at Behind House it would
+  tie with the way out labelled "house" against the white house itself,
+  and a tie is drawn from the seed, so I did not add one.
+- **Wrote instead:** nothing.
+- **Spec:** Exits; Parsing › Choosing a reading; Range ("`not_here`").
+- **Status: open.**
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -979,7 +1018,9 @@ with `act throw`. These are what the NPC model would not let me say.
   read as one joke told three times: a sign at the canyon, a note from the
   Management in the east passage, a choked crawlway with someone digging
   beyond it, a hole you think better of. The pick the east passage used to
-  mention is gone: it could not be named, and three players tried.
+  mention is gone: it could not be named, and three players tried. After
+  round 4 the canyon's rope and sign, and the Management's note, are
+  things in their rooms that can be examined and read and not taken.
 - **The surrounding wall** is in every room, as Zork's WALL is a global
   object, and is named "surrounding wall". Zork has nothing to say about
   it; the brief asks that every named thing answer in its own words, so
@@ -1010,6 +1051,14 @@ with `act throw`. These are what the NPC model would not let me say.
 - **Treasures spoiled in the trophy case** take back what the case paid for
   them, so a painting slashed or an egg broken in the case is worth what
   it is now worth.
+- **A death says where the belongings went.** Zork says nothing; after
+  round 4, where both players who died woke empty-handed and gave up, the
+  narrator adds that they are scattered, and that the lamp is back in the
+  living room when it was carried. The scattering itself is Zork's.
+- **The troll, examined,** has a description of his own (awake and armed,
+  out cold, or disarmed), where Zork repeats nothing but his room line.
+- **The chimney's refusal** keeps Zork's line and adds its rule: the
+  chimney has room for a light and one thing more.
 - **Scattered treasures** go, on a death, to the Attic, the Cellar, East of
   Chasm, the Studio or the Troll Room: the dark places built so far.
 - **The intact canary's aria and the brass bauble** are not built: only the

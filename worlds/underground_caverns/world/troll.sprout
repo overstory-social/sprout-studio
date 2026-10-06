@@ -69,7 +69,12 @@ kind Troll is Thing, sprout.Actor {
     {if self.get(:strength) < 0}An unconscious troll is sprawled on the floor. All passages out of the room are open.{else if self.count(Axe) > 0}A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.{else}A pathetically babbling troll is here.{/if}
   }
   passage no_take { The troll spits in your face, grunting "Better luck next time" in a rather barbarous accent. }
-  describe { text ldesc }
+  // Looked at, rather than walked in on: Zork's troll has only his room
+  // line, and the brief asks for more.
+  passage examined {
+    {if self.get(:strength) < 0}The troll lies sprawled where he fell, out cold and breathing like a blocked drain. Asleep, he looks almost harmless, which is the only time he does.{if self.count(Axe) > 0} His fist has not let go of the axe.{/if}{else if self.count(Axe) > 0}The troll is squat, greenish and nearly as wide as he is tall, with small red eyes and a great many teeth, not all of them his own. The bloody axe is clenched in his fist, and he swings it idly back and forth, the way other people tap a foot. He is watching you the way a cook watches a chicken.{else}Without his axe the troll looks smaller, and knows it. He babbles, wrings his empty hands and keeps glancing about the floor for it.{/if}
+  }
+  describe { text examined }
 
   // His hands are his own (`sprout.Actor`'s guards): nobody takes what he
   // holds, and nobody carries him off. The only thing he holds is his axe,

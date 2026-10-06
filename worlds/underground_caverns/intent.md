@@ -94,7 +94,8 @@ egg 5 and 5, the painting 4 and 6.
   inside; the ruined egg is still worth two points in the trophy case.
 - **The sword glows** faint blue in the Cellar while the troll lives next
   door, and very brightly in the Troll Room.
-- **The troll** spits in the face of anyone who tries to take him, can be
+- **The troll** looks you over (examine him: his axe is in his fist). He
+  spits in the face of anyone who tries to take him, can be
   knocked out (and wakes up later, angry), disarmed (and recovers his axe
   if it is still on the floor), staggered, or killed, when the black fog
   takes the body. He takes gifts as Zork's does: he eats the lunch, the
@@ -334,3 +335,40 @@ The director's steering for this pass, and what came of it.
   Studio are dark, so the route home is where a visitor who has let the
   lamp go first meets the grue.
 
+
+## After round 4
+
+- **The way home works.** All four players barred in the Cellar who lived
+  went down the crawlway, round by the Gallery and up the chimney; one went
+  back down for a second trip and came home the same way. Kept as built.
+  The two-treasure trip up the chimney is still unmet, because the egg is
+  above ground; it waits for a second treasure below.
+- **The chimney says its rule.** Zork's refusal now goes on: "The chimney
+  has room for you, a light to climb by and one thing more, and not an inch
+  besides." The explorer, who examined it first, already read the rule;
+  now a player who climbs first does too.
+- **The troll has his own description**, awake and armed (the axe in his
+  fist, said plainly, as a pointer to the axe's own answers), out cold, or
+  disarmed. His room line is unchanged. The fight is not retuned: the
+  director keeps Zork's randomness.
+- **A death says where things went.** Both players who died woke
+  empty-handed in the Forest and stopped. The scattering is Zork's (the
+  lamp back in the living room, treasures to the dark rooms, the rest
+  above ground); the narrator now says so after "another chance".
+- **What a refusal names can be named.** The canyon's rope and sign in the
+  Clearing, and the Management's note in the Troll Room, are things there,
+  to examine and read and not to take.
+- **The trap door's dust remembers.** Once opened, it is scuffed, not
+  undisturbed.
+- **Kept, by choice:** the forest's one-way exits (Zork's map); the shut
+  trophy case and its "isn't open"; the "yet" on the west hole, which is
+  true; the edges' voices, which players quote. Comma chaining and `enter
+  <no such way>` are Sprout's (friction 51, 52).
+- **Still unmet after 24 runs:** darkness and the grue in play (every run
+  lit the lamp first and kept it), a lamp left in the Cellar, dropping
+  things from the tree, the painting slashed, `verbose`. These stay
+  tested by script only. The troll's come-round, the axe's guard, throwing
+  at him and waking him are tested only by script too.
+- **The slice is now smaller than its players.** Both treasure-hunters
+  reached 55 points by turn 80 and walked the edges after. Widening further
+  is the director's call; the brief's budget ends at round 4.

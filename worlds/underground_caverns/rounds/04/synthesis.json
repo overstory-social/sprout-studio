@@ -1,0 +1,541 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "The way home works and reads as Zork's puzzle. Round 4 had to test this, and it passed. All four runs that were barred in the Cellar and lived went south down the crawlway, through East of Chasm and the Gallery, and up the Studio chimney into the Kitchen. Nobody did this in rounds 1 to 3. The goal-seeker also went back down for a second trip (opened the trap door from above, went down, came home by the chimney again), and the explorer reopened the trap door from above to check the loop.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 19,
+          "quote": "go south -> East of Chasm"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 28,
+          "quote": "go up -> Kitchen"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 36,
+          "quote": "The trap door crashes shut, and you hear someone barring it. (second descent)"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 52,
+          "quote": "go up -> Kitchen (second chimney climb)"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 76,
+          "quote": "up -> Kitchen"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 133,
+          "quote": "The door reluctantly opens to reveal a rickety staircase descending into darkness."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 35,
+          "quote": "go up -> Kitchen"
+        },
+        {
+          "run": "casual-1",
+          "turn": 30,
+          "quote": "go up -> Kitchen"
+        }
+      ],
+      "recommendation": "Keep the route as built. The two-treasure case is still untested: nobody had to bring the egg and the painting up the chimney together, because the egg is above ground. Watch for that once a second underground treasure exists."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "Three of the four players who climbed the chimney first got its refusal, \"You can't get up there with what you're carrying.\" Two of them reported they couldn't tell which item was the problem. The goal-seeker dropped four things and was refused again before dropping the sword. The explorer examined the chimney first, read its rule (\"if you travelled light and had a light to travel by\"), never hit the refusal, and named that line as the moment the puzzle made sense. Everyone solved it within one or two turns, so it plays as a puzzle, not a wall. The teaching only reaches players who type `examine chimney`.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 24,
+          "quote": "You can't get up there with what you're carrying."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 26,
+          "quote": "You can't get up there with what you're carrying. (after dropping sack, bottle, manual, leaflet)"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 27,
+          "quote": "drop sword"
+        },
+        {
+          "run": "casual-1",
+          "turn": 28,
+          "quote": "You can't get up there with what you're carrying."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 33,
+          "quote": "You can't get up there with what you're carrying."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 63,
+          "quote": "You might just get up it, if you travelled light and had a light to travel by."
+        }
+      ],
+      "recommendation": "Keep Zork's refusal. The brief allows added prose in Zork's voice, so follow it with a short hint about the lamp and one thing more, as the chimney's own description words it. Then players who climb without examining learn the rule too."
+    },
+    {
+      "id": "P3",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "The troll fight is short and swings to extremes. Three players killed him in one or two blows. One took five rounds, with a stagger, a disarm and his recovery. Two died. Both deaths came after the player spent turns on talking or giving him the sack, while the troll took free swings. Both dead players woke empty-handed in the Forest and stopped within three turns. Four of six rated difficulty \"too easy\" and one \"too hard\". The knockout's second chance showed up twice, each a knockout then a kill. Since every knockout was finished at once, he never came round (that handler never ran). These are Zork's tables at 0 points, as the intent records.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 15,
+          "quote": "The fatal blow strikes the troll square in the heart: He dies."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 46,
+          "quote": "The troll is knocked out!"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 47,
+          "quote": "The unconscious troll cannot defend himself: He dies."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 16,
+          "quote": "The unconscious troll cannot defend himself: He dies."
+        },
+        {
+          "run": "casual-1",
+          "turn": 19,
+          "quote": "The troll is disarmed by a subtle feint past his guard. / The troll, angered and humiliated, recovers his weapon."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 21,
+          "quote": "Conquering his fears, the troll puts you to death."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 22,
+          "quote": "You are empty-handed."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 20,
+          "quote": "You are still recovering from that last blow, so your attack is ineffective. / The troll's axe stroke cleaves you from the nave to the chops."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 21,
+          "quote": "You are empty-handed."
+        }
+      ],
+      "recommendation": "Don't retune the tables. Death is what ended the two short runs, so check that a dead visitor's kit lands somewhere findable, as in Zork's death scattering (the lamp back in the house). Neither revived player went looking. If the world allows it, the arrival in the Forest could say the belongings are elsewhere."
+    },
+    {
+      "id": "P4",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "Few players tried the troll's new NPC behaviour. Four talked to him, two gave him the sack (eaten, as in Zork) and one tried to give him water from the shut bottle. Nobody examined or took the axe in his fist, threw anything at him, woke him or gave him water from an open bottle. The parser-breaker couldn't tell what the gift had changed. That player also wished the shut bottle would give its water, though \"The bottle is closed.\" is the intended answer. Talking costs a turn and gives the troll a swing, which fed P3's deaths.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 45,
+          "quote": "The troll isn't much of a conversationalist."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 14,
+          "quote": "The troll isn't much of a conversationalist."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 18,
+          "quote": "The troll, who is not overly proud, graciously accepts the gift and not having the most discriminating tastes, gleefully eats it."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 20,
+          "quote": "The bottle is closed."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 17,
+          "quote": "The troll isn't much of a conversationalist."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 18,
+          "quote": "The troll ... gleefully eats it. (then an axe hit)"
+        }
+      ],
+      "recommendation": "Nothing is broken. The axe's guard, throwing, waking and the come-round are known only from `sprout test`. If the author wants players to find them, the troll's own description (P5) could point at the axe in his fist."
+    },
+    {
+      "id": "P5",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "`examine troll` repeats the room's line about the troll instead of giving a description of his own. The brief requires every named thing to have one. Troll.short also never fired.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 16,
+          "quote": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room."
+        }
+      ],
+      "recommendation": "Give the troll an examine description in Zork's voice: his axe in his fist, and his state (awake, out cold, disarmed)."
+    },
+    {
+      "id": "P6",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The Clearing's east refusal describes a sign hanging from a rope, but the next turn the sign can't be named.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 113,
+          "quote": "A sign hanging from the rope reads: \"CANYON VIEW CLOSED FOR REPAIRS...\""
+        },
+        {
+          "run": "explorer-1",
+          "turn": 114,
+          "quote": "You can't see any such thing."
+        }
+      ],
+      "recommendation": "Add the rope and sign as scenery in the Clearing. `examine`/`read sign` should repeat the notice, and `take` should refuse."
+    },
+    {
+      "id": "P7",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The trap door's description doesn't change with use. After the player has opened it, gone down and heard it barred, it still says nobody has disturbed it lately.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 80,
+          "quote": "A good deal of dust has settled on it, and nobody has disturbed it lately."
+        }
+      ],
+      "recommendation": "Make the dust line conditional on the trap door never having been opened."
+    },
+    {
+      "id": "P8",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "Commands chained with commas are misread. The parser ran the first clause, then answered the rest with \"You can't see any such thing.\", as if \"turn on lantern\" and \"go down\" were more objects of `open`. The player had to retype both. `and`-chaining (sprout#453) works in every run that used it.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 10,
+          "quote": "open trap door, turn on lantern, go down -> The door reluctantly opens... / You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 11,
+          "quote": "turn on lantern"
+        }
+      ],
+      "recommendation": "File in overstory-social/sprout. A comma before a verb should chain clauses as `and` does, or be refused in words that say the rest was not run."
+    },
+    {
+      "id": "P9",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "`enter window` gets \"That sentence isn't one I recognize.\" when no window is in scope (in the Clearing). The same sentence works at Behind House. The refusal blames the grammar when the real problem is that the noun isn't in scope.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 128,
+          "quote": "That sentence isn't one I recognize."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 131,
+          "quote": "enter window -> Kitchen"
+        }
+      ],
+      "recommendation": "File in Sprout. A known verb with an object that is out of scope should get not_here (\"You can't see any such thing.\"), not the unknown-sentence line."
+    },
+    {
+      "id": "P10",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "The slice now runs out before the players do. Both runs that chased treasure reached the 55-point ceiling (goal-seeker by turn 75, explorer by turn 79). They spent the rest on edges: the locked grating, the unfinished passages, the forest walls. The goal-seeker stopped \"stuck\". The explorer stopped \"exhausted\" after about 50 turns of edge-walking. The in-world refusals at the edges are liked: four runs quote \"Back soon. -- The Management.\" The \"yet\" on the west hole made the explorer expect it to open later.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 75,
+          "quote": "Your score is 55 (total of 350 points), in 66 moves."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 68,
+          "quote": "The grating is locked."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 79,
+          "quote": "Your score is 55 (total of 350 points), in 75 moves."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 54,
+          "quote": "it does not seem to go anywhere yet"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 17,
+          "quote": "Back soon. -- The Management."
+        },
+        {
+          "run": "casual-1",
+          "turn": 21,
+          "quote": "Back soon. -- The Management."
+        }
+      ],
+      "recommendation": "Widening further is the director's call. The edges are doing their job; keep their voice."
+    },
+    {
+      "id": "P11",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "Some of the slice's secrets are still unmet after 24 runs. Every run lit the lamp before going down and never put it down, so no one saw a dark room, the grue or a lamp left in the Cellar (the grue handler and \"You have moved into a dark place.\" never fired). Nobody dropped anything from the tree, broke the painting or used `verbose`/`brief`. The attic was reached for the first time (goal-seeker, explorer), and the ranks were seen: Beginner, Amateur, Novice.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 12,
+          "quote": "turn on lantern"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 53,
+          "quote": "Attic"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 21,
+          "quote": "Attic"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 41,
+          "quote": "This gives you the rank of Beginner."
+        },
+        {
+          "run": "casual-1",
+          "turn": 13,
+          "quote": "turn on lantern"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 11,
+          "quote": "turn on lantern"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 14,
+          "quote": "turn on lantern"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 13,
+          "quote": "turn on lantern"
+        }
+      ],
+      "recommendation": "Nothing to fix. These are Zork's hidden mechanics, and the evidence for them is `sprout test`. Count the darkness and grue paths as tested by script only, not by play."
+    },
+    {
+      "id": "P12",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The forest's one-way exits confused the explorer: going west and then east doesn't return you to where you started. This is Zork's own map (Forest 3 west to Forest 1, Forest 1 east to the Forest Path), so it is faithful.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 92,
+          "quote": "east -> Forest Path"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 126,
+          "quote": "north -> Clearing"
+        }
+      ],
+      "recommendation": "Keep the map. If anything, a Forest room's description could mention that the trees all look alike, in Zork's voice."
+    },
+    {
+      "id": "P13",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "The shut trophy case reads clearly. Each of the three players who reached it first tried `put`, got \"The trophy case isn't open.\", and opened it the next turn. Its listing (\"Your collection of treasures consists of:\") shows on entering the Living Room.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 30,
+          "quote": "The trophy case isn't open."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 37,
+          "quote": "The trophy case isn't open."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 37,
+          "quote": "The trophy case isn't open."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 77,
+          "quote": "Your collection of treasures consists of: / A jewel-encrusted egg"
+        }
+      ],
+      "recommendation": "Keep as is."
+    }
+  ],
+  "legibility": {
+    "verdict": "legible",
+    "why": "Every player read the world as Zork I, cut down. Four saw the treasure-and-trophy-case arc, and three (the goal-seeker, explorer and newcomer) got the underground loop back through the gallery, studio and chimney. The common misreading comes from the briefing, not the world: told things may have moved, several believed the lamp, sword, gallery or studio had been rearranged, though all are where Zork puts them. Goals: the goal-seeker reached the 55-point ceiling of this slice (painting by turn 32, egg by turn 74), stopped only by unbuilt edges and the keyless grating. The explorer put the egg in the case at turn 39, added the painting at turn 78, and then walked the edges for about 50 more turns. The newcomer put the painting in the case at turn 39; the only obstacle was the barred trap door, beaten by the crawlway and the chimney. All three reached their goals. How the models played: the explorer, played by fable, was the most thorough by far. It played 133 turns, examined scenery before acting (so it read the chimney's rule and never hit the refusal), dropped things one at a time, kept going long after its goal, and its report's turn numbers match the transcript exactly. The other five, on the playtester's own model, were brisk (22 to 78 turns). They used multi-object commands such as `take x and y` and `drop a, b, c`, and spent less time examining things. Their reports' turn numbers drift by about 3 from the transcripts, and the parser-breaker tested few edge cases.",
+    "runs": [
+      {
+        "run": "goal-seeker-1",
+        "understood": "A cut-down Zork I: collect treasures into the living-room trophy case; the underground is mostly unfinished, with 'Back soon' signs.",
+        "matches": "yes"
+      },
+      {
+        "run": "explorer-1",
+        "understood": "A trimmed, self-aware slice of Zork: house, attic, tree and egg, and a small underground pocket (cellar, troll, chasm, gallery, studio) that loops back up the chimney to the kitchen; collect treasures into the case.",
+        "matches": "yes"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "A reworked Zork: enter the house, go down past the troll to a gallery and studio, and bring treasure back to the trophy case.",
+        "matches": "yes"
+      },
+      {
+        "run": "casual-1",
+        "understood": "A cut-down, rearranged Zork with the house, trap door, cellar, a troll fight and a gallery painting; parts unfinished and marked with notes. Thought the lantern and sword had been moved.",
+        "matches": "partly"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A reshuffled Zork I where the lantern and sword are moved, the troll is bribed with food, and a cave leads down. Saw little beyond the troll and the tree.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "A close retelling of Zork: house, lantern, sword and sack, the cellar, and a troll that answers back and kills careless players.",
+        "matches": "yes"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.16,
+      "after": 0.08
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.01,
+      "after": 0
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 4,
+      "after": 3
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 3,
+      "after": 1
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 82,
+      "after": 85
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 35,
+      "after": 54
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 9,
+      "after": 8
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 317,
+      "after": 381
+    }
+  ]
+}

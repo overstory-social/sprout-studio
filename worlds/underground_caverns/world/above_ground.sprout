@@ -10,7 +10,7 @@ import {Adventurer} from 'adventurer'
 import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, TreeBelow} from 'scenery'
 import {KitchenWindow, Outdoors} from 'house'
 import {Leaves, Ground, Grating} from 'grating'
-import {take, open, :window_sync, :reveal, :travel} from 'verbs'
+import {take, open, read, :window_sync, :reveal, :travel} from 'verbs'
 import {kitchen} from 'house'
 
 object west_of_house is Room in underground_caverns {
@@ -346,6 +346,22 @@ object clearing is Forest in underground_caverns {
     grammar { name "forest path"  nouns "path", "trail"  adjectives "forest", "well", "marked" }
     passage short { forest path }
     describe { text "The path is well marked, as forest paths go, and runs east and west through the clearing. Someone has gone to the trouble of keeping it clear, which is more than can be said for the rest of the forest." }
+  }
+  // What the canyon's refusal names, so it can be named back.
+  object rope is Scenery {
+    grammar { name "rope"  nouns "cord", "barrier"  adjectives "east" }
+    passage short { rope }
+    passage no_take { The rope is knotted to a tree at either end by someone who meant it. }
+    describe { text "A length of rope is strung across the path to the east, at about the height of a disappointed adventurer's waist. A sign hangs from it." }
+  }
+  object sign is Scenery {
+    grammar { name "sign"  nouns "notice", "placard"  adjectives "hanging", "wooden" }
+    passage short { sign }
+    passage words { The sign reads: "CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience." }
+    passage no_take { The sign is tied to the rope, and the rope is tied to the trees, and the Frobozz Magic Scenery Company would rather you left all three where they are. }
+    describe { text words }
+    without as target for read from Thing
+    as target for read { do { say words } }
   }
   passage canyon {
     The path to the east is roped off. A sign hanging from the rope reads: "CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience."

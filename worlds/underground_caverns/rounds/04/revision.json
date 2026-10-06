@@ -1,0 +1,199 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The route home is the brief's v2 requirement, and it played as Zork's puzzle in 4 of 6 runs. I kept it as built. The two-treasure chimney trip is still untested, and intent.md records that it waits for a second underground treasure."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "The brief allows added prose in Zork's voice. Zork's refusal stays word for word, and a sentence after it now states the chimney's rule (a light and one thing more), so players who climb before examining learn what the explorer learned."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The tables are not retuned: S5 keeps Zork's randomness and the intent says the same. The death scattering is already Zork's (the lamp goes back to the living room, treasures to the dark rooms, the rest above ground). The narrator now says so after 'another chance', so a revived player knows the kit can be found."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Nothing is broken. As the synthesis recommends, the troll's new description (P5) names the axe clenched in his fist, which points players at the axe's own answers. The intent records that the come-round, the axe's guard, throwing and waking are tested only by script."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "The brief says every named thing answers with a description of its own. The troll now has one for each state (armed, out cold, disarmed), and his room line is unchanged."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "A refusal that names a thing should let that thing be named. The Clearing now has the rope and the sign, which can be examined and read and refuse to be taken. The Troll Room's 'Back soon' note had the same gap, so it got the same fix."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "This was a real continuity bug. The trap door remembers being opened, by the visitor or by a sync from below, and its shut description then says the dust is scuffed."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "This is a Sprout parser matter. The spec chains on then, a full stop, and 'and' before a verb, and not on a comma, so the world cannot route around it. I logged it as friction 51 with the ask for Sprout."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The behaviour follows the spec (go's unlabelled words get unknown), but the answer misleads the player. I logged it as friction 52. I did not add a world 'enter [target]' verb, because at Behind House it would tie with the exit labelled 'house' against the white house, and a tie is drawn from the seed."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "I accepted the recommendation, which is to keep the edges' voice and leave widening to the director. The 'yet' on the west hole is true, since the world grows over rounds, so it stays. The brief says the scope widens only by the director's steering."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "There is nothing to fix. These are Zork's hidden mechanics, and players are not pushed toward them. intent.md now lists them as tested by script only."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "I accepted keeping the map, since the one-way forest exits are Zork's. I made no prose change: one confused run does not justify rewording Zork's forest description."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "The shut trophy case reads clearly. Kept as is."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "Done before round 4, and confirmed by round 4's P1. The crawlway, East of Chasm, the Gallery, the Studio and the chimney bring a barred visitor home alive."
+    },
+    {
+      "answers": "S2",
+      "decision": "accept",
+      "reason": "Round 4 ran at Sprout 26e6124, after sprout#450 to #453 were merged. 'and'-chaining worked in every run that used it."
+    },
+    {
+      "answers": "S3",
+      "decision": "accept",
+      "reason": "Done before round 4. The knockout holds: the pending turn only counts, and the rouse chance rises a tenth each turn. In round 4 both knockouts were followed straight away by a killing blow, so the second chance was found and used."
+    },
+    {
+      "answers": "S4",
+      "decision": "accept",
+      "reason": "Addressed before round 4: the disarm line names the weapon before it moves (friction 39). Round 4 showed no confusion there. Round 4's similar confusions (an unnameable sign, the stale trap-door dust) are fixed in this pass."
+    },
+    {
+      "answers": "S5",
+      "decision": "accept",
+      "reason": "The tuning is kept, and P3's fix is prose only. The fight's randomness is Zork's."
+    },
+    {
+      "answers": "S6",
+      "decision": "accept",
+      "reason": "This is a studio and playtester matter, and the world does not change. Round 4 ran the explorer on fable, and the synthesis notes it was the most thorough player."
+    },
+    {
+      "answers": "S7",
+      "decision": "accept",
+      "reason": "This was already taken up in the pre-round-4 pass. There is no further world change."
+    },
+    {
+      "answers": "S8",
+      "decision": "accept",
+      "reason": "Done before round 4: THROW, KICK, WAVE, SHAKE, FILL, TIE, WAKE, TALK TO and more. Giving water from the open bottle works through pass rules, and a shut bottle answers 'The bottle is closed.' (tested in bottle.json and npc_troll.json). What the NPC model would not allow is friction 45-50."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Kept Zork's chimney refusal and added a sentence stating its rule: 'The chimney has room for you, a light to climb by and one thing more, and not an inch besides.' route_home.json expects it.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/route_home.json",
+        "worlds/underground_caverns/world/tests/edges.json"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "Gave the troll an examine description of his own for each state: armed (the axe clenched in his fist), out cold, or disarmed. His room line is unchanged. Updated the expected lines in the troll, knockout and NPC tests.",
+      "files": [
+        "worlds/underground_caverns/world/troll.sprout",
+        "worlds/underground_caverns/world/tests/troll.json",
+        "worlds/underground_caverns/world/tests/knockout.json",
+        "worlds/underground_caverns/world/tests/npc_troll.json",
+        "worlds/underground_caverns/world/tests/edges.json"
+      ],
+      "for": [
+        "P5",
+        "P4"
+      ]
+    },
+    {
+      "what": "Added a death line after 'another chance' saying the belongings are scattered, and that the lamp is back in the living room when it was carried. The scattering itself is unchanged and the fight tables are not retuned.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/edges.json"
+      ],
+      "for": [
+        "P3",
+        "S5"
+      ]
+    },
+    {
+      "what": "Added the rope and the sign to the Clearing (examine, read, take refused) and the Management's note to the Troll Room (examine, read, take refused), so whatever a refusal names can be named.",
+      "files": [
+        "worlds/underground_caverns/world/above_ground.sprout",
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/tests/edges.json"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "The trap door now remembers being opened, by the visitor or by a sync from below. Once opened, its shut description says the dust is scuffed instead of undisturbed.",
+      "files": [
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/tests/edges.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Logged friction 51 (a comma does not join two commands) and 52 ('enter <a way not here>' answered with unknown). Added notes on the new chosen differences: the death line, the troll's description, the chimney's rule and the nameable edge signs.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P8",
+        "P9",
+        "P6",
+        "P3",
+        "P5",
+        "P2"
+      ]
+    },
+    {
+      "what": "Added an 'After round 4' section to intent.md: the route home is confirmed, what changed and why, what is kept by choice (forest map, trophy case, the 'yet', the edges' voices), the secrets still met only in tests, and that the slice is now smaller than its players. Widening is left to the director. The troll's secrets entry now points at examining him.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P4",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "S1",
+        "S3",
+        "S6"
+      ]
+    }
+  ]
+}

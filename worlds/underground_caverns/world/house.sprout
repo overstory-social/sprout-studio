@@ -362,8 +362,10 @@ kind TrapDoor is Scenery {
 
     The trap door is open, but I can't tell what's beyond it.
   }
+  // Whether it has ever been opened: the dust remembers.
+  :disturbed false
   passage shut_view {
-    It is a square trap door of heavy planks, set flush into the floor where the rug used to hide it, with an iron ring to lift it by. A good deal of dust has settled on it, and nobody has disturbed it lately.
+    It is a square trap door of heavy planks, set flush into the floor where the rug used to hide it, with an iron ring to lift it by. {if self.get(:disturbed)}The dust on it has been scuffed and smeared by somebody's comings and goings, and nobody has thought to sweep it.{else}A good deal of dust has settled on it, and nobody has disturbed it lately.{/if}
 
     The trap door is closed.
   }
@@ -380,6 +382,7 @@ kind TrapDoor is Scenery {
     permit { if (self.get(:open)) { refuse "It is already open." } }
     do {
       self.set(:open, true)
+      self.set(:disturbed, true)
       say "The door reluctantly opens to reveal a rickety staircase descending into darkness."
       send living_room :trap with true
     }
@@ -388,6 +391,7 @@ kind TrapDoor is Scenery {
     permit { if (self.get(:open)) { refuse "It is already open." } }
     do {
       self.set(:open, true)
+      self.set(:disturbed, true)
       say "The door reluctantly opens to reveal a rickety staircase descending into darkness."
       send living_room :trap with true
     }
@@ -406,5 +410,8 @@ kind TrapDoor is Scenery {
       else { say "It's closed." }
     }
   }
-  on :trap_sync (from, value) { self.set(:open, value) }
+  on :trap_sync (from, value) {
+    self.set(:open, value)
+    if (value) { self.set(:disturbed, true) }
+  }
 }

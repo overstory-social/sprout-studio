@@ -53,7 +53,7 @@ kind Adventurer is sprout.Visitor {
   // Zork's UP-CHIMNEY-FUNCTION: up the Studio's chimney only with a light
   // and at most one thing besides.
   passage empty_handed { Going up empty-handed is a bad idea. }
-  passage overloaded { You can't get up there with what you're carrying. }
+  passage overloaded { You can't get up there with what you're carrying. The chimney has room for you, a light to climb by and one thing more, and not an inch besides. }
   depart (to) {
     if (self.get(:at_chimney) && to.is(ChimneyTop)) {
       if (self.count(Thing) == 0) { refuse empty_handed }
@@ -275,6 +275,8 @@ kind Adventurer is sprout.Visitor {
       self.set(:dest, :living_dead)
     } else {
       tell self "Now, let's take a look here... Well, you probably deserve another chance.  I can't quite fix you up completely, but you can't have everything."
+      if (self.count(Lamp) > 0) { tell self "Your belongings, such as they were, have not come with you. They are scattered about the Empire, though somebody tidy has put the lamp back in the living room." }
+      else if (self.count(Thing) > 0) { tell self "Your belongings, such as they were, have not come with you. They are scattered about the Empire." }
       self.set(:dest, :forest_1)
     }
     send underground_caverns :open_gate
