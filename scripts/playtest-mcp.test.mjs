@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { after, before, describe, it } from 'node:test';
@@ -108,5 +108,20 @@ describe('the door server', () => {
     } finally {
       await second.close();
     }
+  });
+
+  it('says which process it is and which Sprout it loaded while it runs, and takes that back as it stops', async () => {
+    const servers = join(root, '.studio', 'servers');
+    const before = new Set(existsSync(servers) ? readdirSync(servers) : []);
+    const one = await connect();
+    const cards = readdirSync(servers).filter((file) => !before.has(file));
+    assert.equal(cards.length, 1);
+    const card = JSON.parse(readFileSync(join(servers, cards[0]), 'utf8'));
+    const pin = JSON.parse(readFileSync(join(REPO, 'sprout.pin.json'), 'utf8')).commit;
+    assert.deepEqual(card, { pid: Number(cards[0].replace('.json', '')), pin });
+    process.kill(card.pid, 'SIGTERM');
+    await one.close();
+    for (let i = 0; i < 50 && existsSync(join(servers, cards[0])); i++) await new Promise((resolve) => setTimeout(resolve, 20));
+    assert.equal(existsSync(join(servers, cards[0])), false);
   });
 });

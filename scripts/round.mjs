@@ -37,6 +37,16 @@ export function pinned() {
   return JSON.parse(readFileSync(join(REPO, 'sprout.pin.json'), 'utf8')).commit;
 }
 
+/** Whether the process `pid` is running and is a door server, as `ps` names its command. */
+function isDoorServer(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    return execFileSync('ps', ['-o', 'command=', '-p', String(pid)], { encoding: 'utf8' }).includes('playtest-mcp');
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Stop every door server still running a Sprout other than the pinned one.
  * The client keeps a server for as long as it likes, and one started before
@@ -55,9 +65,12 @@ export function stopStaleServers() {
       continue;
     }
     if (server.pin === now) continue;
-    try {
-      process.kill(server.pid, 'SIGTERM');
-    } catch {}
+    // A card outlives a server that died without its exit handler, and its pid may since be another process's.
+    if (isDoorServer(server.pid)) {
+      try {
+        process.kill(server.pid, 'SIGTERM');
+      } catch {}
+    }
     rmSync(join(SERVERS, file), { force: true });
   }
 }

@@ -252,21 +252,28 @@ describe('a round on disk', () => {
   it('stops a door server still running a Sprout other than the pinned one, and leaves a current one', async () => {
     const servers = join(root, '.studio', 'servers');
     mkdirSync(servers, { recursive: true });
-    const sleeper = () => spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' });
-    const stale = sleeper();
-    const current = sleeper();
+    // Stand-ins whose command names the door server, as `ps` shows a real one, and one that does not.
+    const sleeper = (...named) => spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)', ...named], { stdio: 'ignore' });
+    const stale = sleeper('playtest-mcp.mjs');
+    const current = sleeper('playtest-mcp.mjs');
+    const stranger = sleeper();
     writeFileSync(join(servers, `${stale.pid}.json`), JSON.stringify({ pid: stale.pid, pin: 'an-older-commit' }));
     writeFileSync(join(servers, `${current.pid}.json`), JSON.stringify({ pid: current.pid, pin: pinned() }));
+    // A card left by a server that died unannounced, its pid since another process's.
+    writeFileSync(join(servers, `${stranger.pid}.json`), JSON.stringify({ pid: stranger.pid, pin: 'an-older-commit' }));
     const stopped = new Promise((resolve) => stale.once('exit', (_code, signal) => resolve(signal)));
     try {
       open('shed', '01', 'explorer', '9');
       assert.equal(await stopped, 'SIGTERM');
       assert.equal(existsSync(join(servers, `${stale.pid}.json`)), false);
       assert.equal(existsSync(join(servers, `${current.pid}.json`)), true);
+      assert.equal(existsSync(join(servers, `${stranger.pid}.json`)), false);
+      await new Promise((resolve) => setTimeout(resolve, 100));
       assert.equal(current.exitCode, null);
+      assert.equal(stranger.exitCode, null);
+      assert.equal(stranger.signalCode, null);
     } finally {
-      stale.kill();
-      current.kill();
+      for (const one of [stale, current, stranger]) one.kill();
     }
   });
 
