@@ -405,8 +405,18 @@ verb curse { "damn"  "curse"  "shit"  "fuck" }
 // (friction 68).
 intent squeeze_through {
   "squeeze through [x]"  "squeeze in through [x]"  "squeeze into [x]"  "go through [x]"
-  "go into [x]"  "walk into [x]"  "crawl into [x]"
+  "go into [x]"  "walk into [x]"  "crawl into [x]"  "go in [x]"
   do through (target: x)
+}
+// Up and down the stairs, said as a house is said: Zork has no UPSTAIRS,
+// and its stairs go where CLIMB UP and CLIMB DOWN take them.
+verb upstairs { "go upstairs"  "upstairs"  "climb upstairs"  "walk upstairs"  "run upstairs"  "head upstairs" }
+verb downstairs { "go downstairs"  "downstairs"  "climb downstairs"  "walk downstairs"  "run downstairs"  "head downstairs" }
+// Mercy, as players offer it to the disarmed troll: Zork has no SPARE.
+verb spare {
+  role target
+  "spare [target]"  "let [target] go"  "let [target] live"  "show mercy to [target]"
+  "have mercy on [target]"  "forgive [target]"  "spare the life of [target]"
 }
 // Going back the way one came, said as players say it.
 intent go_back_up {

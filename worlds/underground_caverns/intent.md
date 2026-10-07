@@ -1853,3 +1853,56 @@ because Zork's refusal is the same whatever is in hand.
   Room and the key from below; the grue in play; the ghost; the tree's
   drop; the egg broken; the Cyclops, the lair and the Egyptian Room; the
   canyon; the slide as the way home.
+
+## After round 14
+
+Six runs (five opus, one fable); legible, five matching the intent and one
+in part. The thief chain was solved end to end for the first time (P10).
+The mine's puzzle was read as meant, "a second light", but the diamond went
+unmade again: nobody had the torch at the shaft, two having cased it as a
+treasure before they ever reached the mine, and the runs that reach the
+mine reach it near turn 200 of 250.
+
+- **P1, accepted, the world's bug.** "book" was a noun of the matchbook,
+  which Zork's MATCH is not; in a list, the book's item was read as the
+  matchbook in hand, and a held thing in a line that takes something else
+  is passed over in silence. The noun is gone. The engine's half (a tied
+  item in a run not read on its own turn) is friction 119.
+- **P2, accepted.** The shaft's line now says to send down a light one can
+  spare, something that burns on its own and has never gone out; the
+  torch, examined, would go on lighting a place nobody is in. The two
+  lines point at each other. Whether a goal aimed at the mine, or a longer
+  cap, is needed to test v7 is the director's call; no steering came.
+- **P3, accepted.** The cave-ins, examined, name the ways left open, as the
+  passages already did. Zork's room text is unchanged.
+- **P4, rejected for the world, logged** (friction 94 again).
+- **P5, accepted in part.** `go in [x]` is THROUGH (the window);
+  `upstairs` and `downstairs` climb the room's stairs; `spare`, `let [x]
+  go`, `have mercy on [x]` are answered, the disarmed troll with a long
+  look at his axe. Adverbs and "go back to" are logged (friction 120).
+- **P6, P7, P10, kept** as built. P7 is still the intent's own design: the
+  rumble is the only clue.
+- **P8, checked and kept.** A plain thing such as the sack goes to one of
+  the ten rooms around the house and forest; the code does so, and the
+  scattering is Zork's.
+- **P9, rejected.** The Altar hole and the slab say Hades is closed at its
+  doors, in their own jokes; a hint on the book or the candles would say it
+  before the joke.
+- **P11, accepted.** An empty TAKE ALL says Zork's "It's not clear what
+  you're referring to." (friction 36, again, on why it is a guess).
+- **P12, decided: Zork's 350 stays.** SCORE's "total of 350 points" and
+  the ranks it sets are Zork's lines; this slice's true ceiling is 330,
+  the crystal skull and its Hades being unbuilt. The gap is deliberate:
+  the score is the original's yardstick, and the world is a slice of it.
+
+### What round 15 should watch
+
+- **The torch at the shaft:** whether the shaft's new sentence turns anyone
+  to the torch, and whether anyone keeps it out of the case for the mine.
+- **The Drafty Room lit and the machine,** still unmet in two rounds.
+- **The cave-ins:** whether the Round Room's ways are now found without
+  guessing.
+- **The new words:** `upstairs`, `go in the window`, `spare the troll`.
+- Carried, still unmet: the egg given to the thief; DIAGNOSE; the Grating
+  Room and the key from below; the grue in play; the ghost; the tree's
+  drop; the egg broken; the canyon; the slide as the way home.

@@ -80,7 +80,7 @@ object round_room is DarkRoom in underground_caverns {
   object cave_ins is Rubble {
     grammar { name "cave-ins"  nouns "cave-in", "rubble", "rocks", "rock", "rockfall", "boulders", "stones", "debris"  adjectives "fallen", "blocked", "a", "south" }
     passage short { cave-ins }
-    describe { text "Fallen rock fills most of the passages out of the room, ceiling and all. At the mouth of the passage to the southwest somebody has sorted the nearest of it into neat heaps, smallest nearest, the way some people tidy a room they have no intention of using. Behind the heaps the roof has come down to the floor, and grit still trickles from it now and then." }
+    describe { text "Fallen rock fills most of the passages out of the room, ceiling and all. At the mouth of the passage to the southwest somebody has sorted the nearest of it into neat heaps, smallest nearest, the way some people tidy a room they have no intention of using. Behind the heaps the roof has come down to the floor, and grit still trickles from it now and then. What the rock has left open goes east, west, north, south and southeast." }
   }
   // The heaps, looked at closer: somebody has been here, and no further.
   object heaps is Rubble {

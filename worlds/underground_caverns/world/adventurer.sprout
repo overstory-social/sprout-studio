@@ -20,7 +20,7 @@ import {Thief, Stiletto} from 'thief'
 import {Cyclops, CyclopsRoom, TreasureRoom, Chalice, :flee} from 'cyclops'
 import {treasure_room, cyclops_room, strange_passage} from 'cyclops'
 import {go, look, examine, inventory, wait, help} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall, board, disembark, disembark_here, launch, launch_here, land, land_here, inflate, deflate, plug, turn_with, oil, :where, :berth, :wreck, :flung, :match_out, :rainbow, ashore, lower, rub_with, :shatter, :bad_luck, :bats, :gas, :boom, :gust, :blow_out} from 'verbs'
+import {spare, upstairs, downstairs, take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall, board, disembark, disembark_here, launch, launch_here, land, land_here, inflate, deflate, plug, turn_with, oil, :where, :berth, :wreck, :flung, :match_out, :rainbow, ashore, lower, rub_with, :shatter, :bad_luck, :bats, :gas, :boom, :gust, :blow_out} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -31,6 +31,7 @@ import {Skeleton, RustyKnife, SkeletonKey} from 'remains'
 import {east_west_passage, north_south_passage, chasm_room, loud_room, deep_canyon, Abyss} from 'east'
 import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, Torch, Candles, DomeRoom, AltarRoom, TempleRoom} from 'temple'
 import {Leaves} from 'grating'
+import {Stairs} from 'scenery'
 import {Sharp, Rejecting} from 'items'
 import {MagicBoat, Vessel, :put_out, :come_ashore, :hurry} from 'boat'
 import {Pump, reservoir_north, atlantis_room} from 'reservoir'
@@ -897,7 +898,16 @@ kind Adventurer is sprout.Visitor {
           }
         }
       }
-      each t of target {
+      // Zork's TAKE ALL with nothing left to take: ALL leaves out what is
+      // held, finds nothing, and the parser says so. Here `all` arrives as a
+      // list (friction 36), so a line of several with nothing new in it
+      // that names everything in hand, or as much of it as a line may
+      // bind, is taken for `all`; a shorter list of held things is answered
+      // thing by thing, as Zork answers one.
+      if (several && self.get(:fresh) == 0 && (target.count >= self.count(Thing) || target.count >= 8)) {
+        say "It's not clear what you're referring to."
+      }
+      else { each t of target {
         if (t.is(Thing)) {
           self.set(:nested, false)
           if (several) { each u of target { if (u != t && u.is(Box)) { if (u.holds(t)) { self.set(:nested, true) } } } }
@@ -939,7 +949,7 @@ kind Adventurer is sprout.Visitor {
           }
         }
         else { say yuk }
-      }
+      } }
     }
   }
 
@@ -1617,6 +1627,34 @@ kind Adventurer is sprout.Visitor {
     do { self.adjust(:moves, 1) }
   }
   as actor for lock       { do { self.adjust(:moves, 1) } }
+  // UPSTAIRS and DOWNSTAIRS: the stairs of the room, climbed the way they
+  // are asked, as CLIMB UP and CLIMB DOWN climb them; where there are none,
+  // the way does not go.
+  as actor for upstairs {
+    do {
+      if (here.count(Stairs) > 0) { each s: Stairs in here { act climb_up (target: s) } }
+      else { say "You can't go that way." }
+    }
+  }
+  as actor for downstairs {
+    do {
+      if (here.count(Stairs) > 0) { each s: Stairs in here { act climb_down (target: s) } }
+      else { say "You can't go that way." }
+    }
+  }
+  // Mercy: the troll, disarmed and pleading, takes it as a troll would.
+  as actor for spare {
+    do {
+      self.adjust(:moves, 1)
+      if (target.is(Troll)) {
+        if (target.count(Axe) == 0) { say "You lower your weapon. The troll stops pleading at once, and looks, gratefully and for a long time, at the axe on the floor." }
+        else { say "The troll, who is holding the axe, does not appear to be the one in need of mercy." }
+      }
+      else if (target.is(Thief)) { say "The thief inclines his head, as though you had done him a courtesy he fully intends to repay in kind, and makes sure his bag is still with him." }
+      else if (target.is(Cyclops)) { say "The cyclops has never been in any danger from you, and is not much moved." }
+      else { say "It is in no danger from you." }
+    }
+  }
   as actor for verbose    { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "verbose verbose ..." } } } do { self.set(:mode, :verbose)  say "Maximum verbosity." } }
   as actor for brief      { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "brief brief ..." } } } do { self.set(:mode, :brief)  say "Brief descriptions." } }
   as actor for superbrief { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "superbrief superbrief ..." } } } do { self.set(:mode, :superbrief)  say "Superbrief descriptions." } }

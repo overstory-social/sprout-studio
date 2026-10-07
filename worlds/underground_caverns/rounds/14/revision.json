@@ -1,0 +1,148 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "I replayed goal-seeker-1 to turn 156 as a script and the problem came back. The matchbook answered to \"book\", which Zork's MATCH does not (its synonyms are MATCH, MATCHES and MATCHBOOK). In the list, the book's item was read as the matchbook already in hand, and the world's take skips a held thing without a word when the line also takes something else. That silence is how `all` leaves out what is held. So the bug is the world's and is fixed there. The engine's share is that a tied item in a run is not read on its own turn as the spec says. That goes to Sprout as friction 119."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Players worked out that they needed a second light but never connected it to the torch. The shaft's line now says to send down a light you can spare, something that burns on its own and has never gone out, and the torch's examine says it would keep lighting a place nobody is in. The two lines point at each other in the dry voice, and Zork's puzzle is unchanged. Whether the mine needs a goal aimed at it or a longer turn cap is the director's call, and is noted in the intent since there was no steering."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The passages' examine already named the open ways but the cave-ins' examine did not, and that was the one players read. The cave-ins now end by naming east, west, north, south and southeast. Zork's room text stays word for word."
+    },
+    {
+      "answers": "P4",
+      "decision": "reject",
+      "reason": "How the parser answers a line is the engine's job, and the world cannot change unknown into not_here. Logged as friction 94 again, with both cases, for the existing Sprout issue."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Accepted in part, as recommended. `go in [x]` now reads as THROUGH, so `go in the window` works. UPSTAIRS and DOWNSTAIRS climb the room's own stairs, and elsewhere say \"You can't go that way.\". SPARE, LET [x] GO and HAVE MERCY ON [x] get a Zork-voiced answer, and the disarmed troll's looks at his axe. Adverbs and \"go back to\" are outside Zork's grammar, so they are logged as friction 120 and not built."
+    },
+    {
+      "answers": "P6",
+      "decision": "reject",
+      "reason": "No change, as the synthesis itself recommends. The load line is Zork's limit, it names what to drop, and players called it the game's voice."
+    },
+    {
+      "answers": "P7",
+      "decision": "reject",
+      "reason": "No change. The rumble as the only clue is the intent's deliberate design, and half the players who rubbed the mirror followed it through. I will watch it next round."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Accepted as a check only, with no change to the world. The death handler sends every plain thing that is not a lamp or a treasure, the sack included, to one of the ten rooms around the house and forest, as Zork's RANDOMIZE-OBJECTS does. The prose-reader just never found the room it landed in. Zork's scattering stays."
+    },
+    {
+      "answers": "P9",
+      "decision": "reject",
+      "reason": "The Altar hole and the chalked slab tell you Hades is closed at its doors, each with its own joke, and players praised them as writing. A hint on the book or the candles would tell a Zork player before the joke lands. One run of six hit it."
+    },
+    {
+      "answers": "P10",
+      "decision": "reject",
+      "reason": "No change, as recommended. The thief chain was solved end to end, and the canary singing only among the trees is Zork's own behaviour."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Zork's TAKE ALL leaves out what is held, and with nothing left its parser says \"It's not clear what you're referring to.\" The world cannot tell `all` from a written list (friction 36). So a line of several with nothing new in it, naming everything in hand or eight things, gets Zork's line. A shorter list of held things is still answered thing by thing. Logged as friction 36 again."
+    },
+    {
+      "answers": "P12",
+      "decision": "reject",
+      "reason": "I chose this on purpose and kept Zork's 350. \"total of 350 points\" and the ranks built on it are the original's lines, and this slice is part of that game, not a smaller one. The intent now says the true ceiling is 330, because the crystal skull and its Hades are not built."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Removed \"book\" from the matchbook's nouns, as Zork's MATCH has it, so \"book\" in a list means the black book. Verified by replaying goal-seeker-1's list take: the book is now taken. The engine's half (a tied item in a run) is logged as friction 119.",
+      "files": [
+        "worlds/underground_caverns/world/dam.sprout",
+        "worlds/underground_caverns/friction.md",
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The Shaft Room's shaft line now goes on to say: send down a light you can spare, something that burns on its own and has never gone out. The torch's examine now says it would go on lighting a place nobody is in. The test goldens for both lines are updated.",
+      "files": [
+        "worlds/underground_caverns/world/mine.sprout",
+        "worlds/underground_caverns/world/temple.sprout",
+        "worlds/underground_caverns/world/tests/basket.json",
+        "worlds/underground_caverns/world/tests/dome.json",
+        "worlds/underground_caverns/friction.md",
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "The Round Room's cave-ins, examined, now name the ways left open: east, west, north, south and southeast. The goldens are updated.",
+      "files": [
+        "worlds/underground_caverns/world/east.sprout",
+        "worlds/underground_caverns/world/tests/barriers.json",
+        "worlds/underground_caverns/world/tests/heaps.json",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "New words: `go in [x]` reads as THROUGH. UPSTAIRS and DOWNSTAIRS are new verbs, and the adventurer climbs the room's Stairs with them, or is told \"You can't go that way.\" where there are none. SPARE, LET [x] GO, LET [x] LIVE and HAVE MERCY ON [x] are answered by the adventurer (the troll, the thief, the cyclops, anything else). A new test, stairs_and_mercy.json, covers them.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/stairs_and_mercy.json",
+        "worlds/underground_caverns/friction.md",
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "A TAKE ALL with nothing new to take now says Zork's \"It's not clear what you're referring to.\". A shorter list of held things is still answered thing by thing. The take_all, npc_troll and parser goldens are updated, the new test covers both cases, and friction 36 is logged again.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/take_all.json",
+        "worlds/underground_caverns/world/tests/npc_troll.json",
+        "worlds/underground_caverns/world/tests/parser.json",
+        "worlds/underground_caverns/world/tests/stairs_and_mercy.json",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "Logged in friction.md the cases the world cannot fix: unknown answered where not_here belongs (friction 94 again), and adverbs and 'go back to' (friction 120).",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "Added 'After round 14' and 'What round 15 should watch' to the intent. It records the decision to keep Zork's 350 (the true ceiling is 330), the sack check, the rejections and why, and that the mine goal is left to the director.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P8"
+      ]
+    }
+  ]
+}

@@ -2802,6 +2802,71 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
   drink` is the water's own noun. Not friction; logged so the steering's
   "if it cannot be built" has its answer.
 
+## Found in round 14
+
+### 119. A tied name in a run, settled silently
+
+- **Round 14:** `take bell, book, candles, lantern` in the Egyptian Room,
+  the black book on the floor and the matchbook in hand, answered for the
+  bell, the candles and the lantern and said nothing for the book. Replayed
+  as a script, the book's item was read as the matchbook, which was held,
+  and the world's `take` says nothing for a held thing in a line that takes
+  something else (that is how `all` leaves out what is held: friction 36).
+  `take book` alone took the black book; `take book, bell` drew between
+  the two readings ("the line read 2 ways that tied") and took the
+  matchbook.
+- **The world's half:** the matchbook answered to "book", which Zork's
+  MATCH does not (MATCH, MATCHES, MATCHBOOK). Removed, so "book" is the
+  black book's alone.
+- **The engine's half:** a run's item that names things that tie is to be
+  read on its own turn, its own words alone (Parsing › Sequences, again
+  and all), where `take book` reads the black book; inside the run it was
+  settled at the line, once with a draw and once without a word of it.
+- **Wrote instead:** the noun removed; the silence for a held thing in a
+  line of several kept, since `all` needs it.
+- **Spec:** Parsing › Sequences, again and all; Matching a line.
+- **Status: open,** to raise with Sprout with the replayed script: a tied
+  item in a run should be read on its own turn, as the spec says.
+
+### 36, again: `all` and a list arrive alike
+
+- **Round 14:** `take all` with nothing left to take answered "You
+  already have that!" for everything in hand. Zork's ALL leaves out what is
+  held, finds nothing, and says "It's not clear what you're referring to."
+- **Found:** the world cannot tell `take all` from `take sack and bottle`;
+  both arrive as a set of things.
+- **Wrote instead:** a line of several with nothing new in it that names
+  everything in hand, or eight things, is taken for `all` and answered
+  "It's not clear what you're referring to."; a shorter list of held
+  things is answered thing by thing. A list naming every held thing gets
+  the `all` line where Zork would answer each.
+- **Spec:** Parsing › Sequences, again and all.
+- **Status: open,** with 36 and 108: `all` for `take` should leave out
+  what is held, or the role should know it was filled by `all`.
+
+### 94, again: the verb understood, the place wrong
+
+- **Round 14:** `climb the rope` and `pray at the altar`, typed in the
+  Clearing, were "That sentence isn't one I recognize." though `climb down
+  the rope` and `pray` are read. The phrase matched but for a noun out of
+  reach; the answer should be `not_here`, so the player learns the place is
+  wrong, not the words.
+- **Wrote instead:** nothing; how a line is answered is the engine's.
+- **Spec:** The parser › When nothing matches (`not_here`, `unknown`).
+- **Status: open,** with 68 and 94, added to the same issue.
+
+### 120. Adverbs and "go back"
+
+- **Round 14:** `gently take the egg` and `go back to the house` were
+  unrecognized. Zork's grammar has neither; a phrase per adverb is not a
+  fix, and "back to" names a place by memory, which no phrase can bind.
+- **Wrote instead:** nothing. `go upstairs` and `go downstairs` are now
+  verbs of the adventurer's that climb the room's stairs; `go in [x]` is
+  THROUGH; `spare [x]` is answered.
+- **Spec:** Verbs › phrases; The parser › When nothing matches.
+- **Status: open,** low: an adverb the parser could drop, as it drops
+  articles, would carry the first.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -3161,4 +3226,17 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
   examined, read and not moved; Zork has no slab.
 - **Names:** the Narrow Passage's identifier is `narrow_corridor`, since the
   Gallery already has a `narrow_passage`; the players see Zork's name.
-
+- **Round 14: the shaft names the torch.** Its line goes on, "Better,
+  then, to send down a light you can spare than the one you see by:
+  something that burns on its own, and has never been known to go out.";
+  the torch, examined, would go on lighting a place nobody was in. Zork
+  has neither.
+- **Round 14: the cave-ins say what is open.** Examined, the Round Room's
+  cave-ins end "What the rock has left open goes east, west, north, south
+  and southeast." Zork's room text is unchanged.
+- **Round 14: words Zork lacks.** UPSTAIRS and DOWNSTAIRS climb a room's
+  stairs, and elsewhere "You can't go that way."; GO IN [x] is THROUGH;
+  SPARE (LET [x] GO, HAVE MERCY ON [x]) is answered, by the disarmed troll
+  with a look at his axe. Each costs a move where it does anything.
+- **Round 14: an empty TAKE ALL** says "It's not clear what you're
+  referring to.", as Zork's parser does (friction 36, again).

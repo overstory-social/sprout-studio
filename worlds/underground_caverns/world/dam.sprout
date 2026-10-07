@@ -487,9 +487,11 @@ kind Leak is Box, Rejecting {
 
 // The matchbook from the Dam Lobby: five matches, each burning a minute
 // (two moves at the host's half-minute; Zork's I-MATCH is two), as a light
-// and a flame (MATCH-FUNCTION).
+// and a flame (MATCH-FUNCTION). Zork's MATCH is MATCH, MATCHES and
+// MATCHBOOK, and not BOOK: "book" is the black book's alone, so a line that
+// names the book in the Egyptian Room never means the matchbook in hand.
 kind Matchbook is Readable, Flame {
-  grammar { name "matchbook"  nouns "match", "matches", "book"  adjectives "match" }
+  grammar { name "matchbook"  nouns "match", "matches"  adjectives "match" }
   :size 2
   :has_fdesc true
   // Zork's MATCH-COUNT: one more than the matches left.
