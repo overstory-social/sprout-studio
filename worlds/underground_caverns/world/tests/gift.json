@@ -94,7 +94,10 @@
     { "as": "Marta", "type": "give sword to troll", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and eats it hungrily. Poor troll, he dies from an internal hemorrhage and his carcass disappears in a sinister black fog." }
     ] },
-    { "advance": "2 minutes", "expect": [] },
+    { "advance": "2 minutes", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
     { "as": "Marta", "type": "examine troll", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
     ] },

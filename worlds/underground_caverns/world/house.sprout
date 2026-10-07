@@ -11,7 +11,8 @@ import {Room, DarkRoom, Perilous, ChimneyTop} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'scenery'
 import {Rope} from 'temple'
-import {open, close, look_in, read, shift, raise, look_under, smell, eat, through, climb_up, climb_down, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored} from 'verbs'
+import {open, close, look_in, read, shift, raise, look_under, smell, eat, through, climb_up, climb_down, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored, :magic} from 'verbs'
+import {strange_passage} from 'cyclops'
 import {behind_house} from 'above_ground'
 import {cellar} from 'cellar'
 
@@ -218,14 +219,19 @@ object living_room is Room in underground_caverns {
   grammar {
     name "Living Room"
     exit east "east"      -> kitchen
+    exit west "opening"   -> strange_passage when (self.get(:magic))
     exit west "west"      refuse "The door is nailed shut."
     exit down "trap door" -> cellar when (self.get(:trap_open))
     exit down "trap door" refuse "The trap door is closed." when (self.get(:rug_moved))
   }
   :rug_moved false
   :trap_open false
+  // The Cyclops has gone out through the wooden door, leaving a hole in it
+  // (Zork's MAGIC-FLAG).
+  :magic false
+  on :magic { self.set(:magic, true) }
   passage body {
-    You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, {if self.get(:rug_moved) && self.get(:trap_open)}and a rug lying beside an open trap door.{else if self.get(:rug_moved)}and a closed trap door at your feet.{else if self.get(:trap_open)}and an open trap door at your feet.{else}and a large oriental rug in the center of the room.{/if}
+    You are in the living room. There is a doorway to the east{if self.get(:magic)}. To the west is a cyclops-shaped opening in an old wooden door, above which is some strange gothic lettering, {else}, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, {/if}a trophy case, {if self.get(:rug_moved) && self.get(:trap_open)}and a rug lying beside an open trap door.{else if self.get(:rug_moved)}and a closed trap door at your feet.{else if self.get(:trap_open)}and an open trap door at your feet.{else}and a large oriental rug in the center of the room.{/if}
   }
 
   on :rug_moved (from) { self.set(:rug_moved, true) }
@@ -260,14 +266,24 @@ object living_room is Room in underground_caverns {
     object trap_door is TrapDoor
   }
   object wooden_door is Scenery {
-    grammar { name "wooden door"  nouns "door", "lettering", "writing", "engravings"  adjectives "wooden", "gothic", "strange", "west" }
+    grammar { name "wooden door"  nouns "door", "lettering", "writing", "engravings", "opening"  adjectives "wooden", "gothic", "strange", "west", "cyclops-shaped" }
     passage short { wooden door }
     :door true
     without as target for open from Thing
     without as target for read from Thing
     as target for open { do { say "The door cannot be opened." } }
     as target for read { do { say "The engravings translate to \"This space intentionally left blank.\"" } }
-    describe { text "The engravings translate to \"This space intentionally left blank.\"" }
+    describe {
+      if (living_room.get(:magic)) { text "The engravings translate to \"This space intentionally left blank.\" Below them, somebody very large has gone through the door without opening it, and left a cyclops-shaped hole in the middle of it, with the nails still in the frame." }
+      else { text "The engravings translate to \"This space intentionally left blank.\"" }
+    }
+    without as target for through from Thing
+    as target for through {
+      do {
+        if (living_room.get(:magic)) { send actor :travel with :strange  say "" }
+        else { say "You hit your head against the wooden door as you attempt this feat." }
+      }
+    }
   }
   object nails is Scenery {
     grammar { nouns "nails", "nail" }

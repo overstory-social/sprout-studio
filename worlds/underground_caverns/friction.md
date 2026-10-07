@@ -1741,6 +1741,259 @@ contributing once, as the spec says. No NPC is new in v4.
 - **Spec:** Parsing › Intents; Exits.
 - **Status: open,** beside 79.
 
+## Found before round 9: the thief and the Cyclops
+
+v5 adds Zork's thief and its Cyclops, both NPCs composing `sprout.Actor`,
+with the troll three in one world. The thief is written from ROBBER-FUNCTION,
+I-THIEF, THIEF-VS-ADVENTURER, ROB, ROB-MAZE, STEAL-JUNK, DROP-JUNK,
+DEPOSIT-BOOTY, THIEF-IN-TREASURE, TREASURE-ROOM-FCN and the melee; the
+Cyclops from CYCLOPS-FCN, I-CYCLOPS, CYCLOPS-ROOM-FCN and V-ODYSSEUS. What the
+model let me say plainly: his blows are his own acts, told to the one they
+fall on with `tell target` (sprout#456), and the visitor's own part does
+what they do; his clock is wakes he asks for, put off with `cancel wakes`
+(sprout#458); the Cyclops guards the stairs through the room's own exit,
+which reads the room's own note of him (sprout#457). What it would not let
+me say is below.
+
+### 83. An NPC in a handler does not know where it is
+
+- **Wanted:** Zork's I-THIEF: each move, the thief looks at the room he is
+  in (is the visitor here? is it dark? has anyone been here? what lies on
+  the floor?), acts on it, and moves on to the next room.
+- **Found:** `here` is bound only where somebody is acting (Prose; The
+  compiler, What it refuses), and an NPC acts in wakes and handlers, so in
+  every turn of his own the thief cannot name the place he stands in. A
+  property cannot hold an object, so he cannot keep it either (Properties,
+  types and values; Object identity).
+- **Wrote instead:** each turn he broadcasts `:prowl`; his own place hears
+  it (the room passes it to him and his neighbours, and the world does
+  not let it further), and every room answers a thief with `:survey`, in
+  whose handler `from` is his room. His whole turn is written inside that
+  one handler, against `from`. It works, and it costs a message round trip
+  every turn and a phase flag to say which part of his turn a survey
+  answers.
+- **Spec:** Prose (`actor` and `here` are bound only where someone is
+  acting); Acting; Events › Receiving ("A sender binding is live for the
+  length of the handler and cannot be stored").
+- **Status: open.**
+
+### 84. An NPC cannot walk the map on its own
+
+- **Wanted:** the thief moving himself from room to room. (Zork's thief
+  does not walk exits at all: I-THIEF moves him to the next room in the
+  ROOMS list that is on land and not sacred, wherever on the map it is.)
+- **Found:** an NPC may `move self to` a place that is an exit's
+  destination from his own place, or in his range (Acting). He cannot name
+  "where an exit of this room leads", nor pick one of his room's exits at
+  random: a `move` names its destination statically. With 83, he does not
+  even know which room's exits to choose from.
+- **Wrote instead:** each room in his round keeps its index (`:tour`, 1 to
+  39, in `1dungeon.zil`'s order, leaving out the house, above ground and
+  the two temple rooms Zork holds sacred). The thief keeps the index of
+  the room he is in (`:at`, read from his survey), and goes to the next by
+  the world's gate (the same gate the deaths and the prayer use) and a
+  39-branch `if` that names every room. Faithful to Zork, which teleports
+  him, but every new room in later versions must be added to the chain.
+- **Spec:** Acting ("It changes place with `move self to <place>`…");
+  Moving something; Exits.
+- **Status: open.** A way to move along "this exit" (the exit as a value,
+  as friction 82 also wants for an intent's slot) would let an NPC walk;
+  a place-valued binding for "where I am" (83) would let him choose.
+
+### 85. An unseen actor is announced as he comes and goes
+
+- **Wanted:** Zork's INVISIBLE thief: in the room, robbing it, and not
+  there to be seen, named, or noticed arriving.
+- **Found:** an actor's move is announced by the engine to every visitor
+  in range, `arrives` and `leaves`, and an actor in a room is in range and
+  nameable. Sprout has no unseen object.
+- **Wrote instead:** the rooms' `arrives` and `leaves` passages say nothing
+  of a thief; he is `:ndesc` while unseen, so the room does not list him;
+  his pass rule is his `:shown`, so his stiletto is out of reach; and
+  wildcard permits (`as target for any`, `as tool for any`) refuse
+  anything aimed at him while unseen in the world's own `not_here` words.
+  To a visitor he is not there. Writing invisibility took four mechanisms,
+  each of which a later verb or kind could forget.
+- **Spec:** The world model › Places (the arrival and departure notices);
+  Range; Roles compose (wildcards).
+- **Status: open.**
+
+### 86. Taking from a person's hands, and knowing what is in them
+
+- **Wanted:** Zork's ROB of the WINNER: the thief takes every treasure the
+  visitor carries; and THIEF-VS-ADVENTURER's choice, to rob the room, or,
+  finding nothing on its floor, the visitor, with a line for each outcome
+  ("robbed you blind first", or "finding nothing of value, left
+  disgusted"); STOLE-LIGHT?'s "The thief seems to have left you in the
+  dark."
+- **Found:** a person's hands release only to their own move
+  (`sprout.Actor`'s `release`), and what they hold is out of everyone
+  else's range, so the thief can neither take nor count it. The same wall
+  keeps the Cyclops from seeing the water in a bottle a visitor hands him.
+- **Wrote instead:** the thief sends `:rob` to every visitor in his room,
+  and each visitor's own handler hands over its treasures (`move t to
+  from`), says the thief's line for what was found, and checks its own
+  light. Zork's "lean and hungry" ending stops the thief where he is; here
+  he cannot know he found nothing, so he goes on. For the Cyclops, the
+  visitor's part of `give` puts a bottle with water in it down on the
+  floor, where the Cyclops can see into it; not thirsty, he hands it back.
+  A lit torch handed or robbed into the thief's bag would never tell the
+  visitor it went (its `:light` message is out of range inside the bag),
+  so the visitor counts it gone itself.
+- **Spec:** Movement and consent › The three roles; Range ("what another
+  visitor carries is out of range").
+- **Status: open.** Related to sprout#477 (a carried thing and its
+  holder): a rule that let a person's own NPC-facing guard consent to a
+  take, or let an actor see into another's hands as `lit` does, would put
+  ROB back in the thief's own body.
+
+### 87. A bag that shows nothing hides it from its owner too
+
+- **Wanted:** the thief's large bag: nobody can see into it, but he can
+  take out of it what he likes (DEPOSIT-BOOTY, DROP-JUNK, the frightened
+  thief whose bag spills).
+- **Found:** a pass rule refuses in both directions: a container that
+  passes nothing is "reached as a surface from inside and is a wall beyond
+  that". The thief reaches his bag, not what is in it; he can put things
+  in, and cannot walk, count or move them out.
+- **Wrote instead:** the bag empties itself on request (`:disgorge with
+  1|2|3`: his treasures, now and then a worthless thing, everything) into
+  his hands, and replies when it is done (`:unloaded`); what lands in his
+  hands from the bag he lets fall with `act drop`. He keeps his own count
+  of what he has bagged (`:loot`), to know whether "the contents of his
+  bag fall on the floor". Dying, he cannot say what he drops (the lines are
+  rendered when the turn is done, and the bag is empty by then), so in his
+  lair the room lists what lies on its floor, which is what Zork's F-DEAD
+  does anyway.
+- **Spec:** Range; Containers route; Prose (a turn's lines are rendered
+  once its work is done).
+- **Status: open.**
+
+### 88. A held thing cannot set anything down in the room around its holder
+
+- **Wanted:** CANARY-OBJECT: wound in the forest, the canary's song brings
+  a songbird, which drops a brass bauble.
+- **Found:** `spawn Bauble in here` in the canary's own `do` faulted, the
+  first time a visitor tried it in a test: the room is out of the canary's
+  range, because the visitor holding it passes nothing.
+  ```
+  LifecycleFault: `underground_caverns.forest_path` is out of range of
+  `underground_caverns.up_a_tree.nest.egg.canary`, so nothing could be
+  spawned in it.
+  ```
+- **Wrote instead:** the canary's part sings; the winder's own part of
+  `wind` (`adventurer.sprout`) spawns the bauble, since a person reaches
+  the place they stand in.
+- **Spec:** Spawning ("in a container in range"); Range.
+- **Status: open.** The same wall as sprout#477, from the other side.
+
+### 89. A description that reads another room faults the turn
+
+- **Wanted:** the Treasure Room's staircase describing what is at its foot
+  (the Cyclops, or the hole he left).
+- **Found:** a `describe` that reads a property of another place faults,
+  and on arrival the visitor is not admitted; an exit's `when` that reads
+  the same property quietly does not apply (An exit may be conditional:
+  "A guard that reads through something out of the place's range does not
+  fault the poll"). Both are polls. Minimal repro, at 6c440f5:
+  ```sprout
+  import * as sprout from 'sprout'
+  kind Person is sprout.Visitor { }
+  world rp is sprout.World {
+    visitors are Person
+    visitors arrive at hall
+    object hall is sprout.Place {
+      grammar { exit north "north" -> yard when (yard.get(:open)) }
+      describe { text "A hall.{if yard.get(:open)} The yard door is open.{/if}" }
+    }
+    object yard is sprout.Place { :open true  grammar { exit south "south" -> hall } }
+  }
+  ```
+  Arriving faults ("not admitted: … NameOutOfRange: `rp.yard` is out of
+  range of `rp.hall`"); with the `describe` reading nothing else, `north`
+  is "You can't go that way." though the guard's own destination is open.
+- **Wrote instead:** each room keeps its own note of what it needs to
+  describe (the Treasure Room's `:fled`, the Cyclops Room's `:cstate`,
+  the Living Room's `:magic`), sent to it by world-passing messages.
+- **Spec:** Range; Exits › An exit may be conditional; The runtime ›
+  Faults. Related to friction 80.
+- **Status: open.**
+
+### 90. A voice in another room
+
+- **Wanted:** ROB-MAZE: robbing a maze room, the thief is overheard by a
+  visitor elsewhere in the maze ("My, I wonder what this fine sword is
+  doing here.").
+- **Found:** `tell` reaches only the teller's place, and the thief knows
+  neither where the visitor is nor (83) where he is.
+- **Wrote instead:** the thing he has his eye on is sent `:pinch`; it
+  broadcasts `:far_voice`, which the world lets through, and then, if he
+  means to, moves itself into his hands. Every visitor hears the
+  broadcast; one whose own last move was into the maze (`:in_maze`, kept
+  on `:moved`, since a handler has no `here` for a visitor either) tells
+  itself the line, naming the thing (`{from.short}`, which renders though
+  the thing is by then in the thief's bag). Zork chooses ROB-MAZE over
+  STEAL-JUNK only when the visitor too is in the maze; the thief cannot
+  know that, so in the maze he always uses ROB-MAZE's odds.
+- **Spec:** Other people › Who hears it; Events › Sending (broadcast);
+  the world's pass rule.
+- **Status: open.**
+
+### 91. Three NPCs share one die, and the host's minute
+
+- **Wanted:** the thief, the troll and the Cyclops each on Zork's clock,
+  every move, each rolling its own dice.
+- **Found:** each NPC's turn is a wake, no sooner than the host's floor (60
+  seconds, so every other move at the studio's 30 seconds a turn; 47); and
+  a script seeds each wake that falls due in one `advance` with the next
+  seed after the last. Adding the thief, whose clock starts at the first
+  descent into the Cellar, shifted the troll's draws in every test that
+  waits for him: `troll_turns.json` had both its seeds moved down by one,
+  and the "expected silence" steps of `descent.json` and `gift.json` now
+  expect the thief's wake.
+- **Wrote instead:** the tests, re-seeded. Nothing in the world.
+- **Spec:** Time › Wakes; Chance › The seed; the test harness (2b).
+- **Status: open,** and only a cost: any NPC added later will move every
+  other NPC's dice in every test that advances time.
+
+### 92. A thief who rushes in is already in the room's description
+
+- **Noted, not forced:** the Treasure Room's description on arrival lists
+  the thief who has rushed to defend it in the same turn, since the
+  description is "derived from the turn's state once the queue is empty",
+  and before his scream is told. Zork prints the scream (M-ENTER) before
+  the room; here the room comes first, with him in it, then the scream and
+  his gesture. The order is the spec's; the effect reads well, so it is
+  kept.
+- **Spec:** Movement and consent › After the move.
+
+### What sprout#456–458, #477 and #478 change for the thief
+
+- **#456 (closed):** used as written. The thief's and the Cyclops's blows
+  are told by them, `tell target`, from their own `as actor for attack`;
+  the visitor's part does what `:dealt` says. The one line each of them
+  cannot tell is a stagger that costs the visitor a weapon, since which
+  weapon is in the visitor's hand is out of their range (86): the visitor
+  tells it, in the thief's or the Cyclops's words.
+- **#457 (closed):** used as written: the Cyclops guards the stairs through
+  the Cyclops Room's exit, reading the room's `:cstate`. The thief guards
+  nothing by the place: the chalice refuses `take` itself while he stands
+  over it, fighting (CHALICE-FCN), which a permit can say.
+- **#458 (closed):** both new clocks are wakes put off by `cancel wakes`;
+  a blow struck at the thief puts his next turn a minute on, as the troll's.
+  Ticks stay place-only: an NPC `:tick` while he shares a place with a
+  visitor would not help the thief, whose turns matter most when nobody is
+  with him.
+- **#477 (open):** would change 86 and 88 if a carried thing could reach
+  through its holder: the canary could set down its own bauble; a lit
+  torch in the thief's bag could still tell its former holder it went.
+  It would not open the thief's own bag to him (87), which is the reverse
+  wall.
+- **#478 (open):** no change needed for the thief, whose bag has no limit in
+  Zork either. The visitor's load stays right when robbed or giving,
+  because the visitor's own `:left` subtracts what leaves; weight on the
+  standard library's hands would make that bookkeeping go away.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -1846,6 +2099,8 @@ contributing once, as the spec says. No NPC is new in v4.
 - **The Temple's words TREASURE and TEMPLE** (V-TREASURE) are heard: in the
   Temple the air leans toward somewhere else and thinks better of it,
   since the thief's lair is not built; anywhere else, "Nothing happens.".
+  *v5:* the lair is built, and the words now carry the visitor between the
+  Temple and the Treasure Room, as V-TREASURE does.
 - **The candles burn down by time, not turns** (73), and only once
   disturbed (taken, moved), where Zork starts them on any verb.
 - **Things that burn** are Zork's BURNBIT things in scope: the black book,
@@ -1861,12 +2116,14 @@ contributing once, as the spec says. No NPC is new in v4.
   the river without a boat; the hole in the Altar breathes up from Hades.
 - **The intact canary's aria and the brass bauble** are not built: only the
   thief opens the egg intact, and he is not in this slice. Winding the
-  ruined canary gives Zork's "unpleasant grinding noise".
+  ruined canary gives Zork's "unpleasant grinding noise". *v5:* built; see
+  "Differences chosen in v5".
 - **The Maze has no thief.** Zork's thief walks the maze and is out of
   scope by the brief; the dead adventurer's remains lie undisturbed until
   a visitor finds them. The way southeast from Maze 15 to the Cyclops Room
   refuses with a sign from the Management, in the voice of the Troll
-  Room's note.
+  Room's note. *v5:* the thief walks the maze, the sign is gone, and the
+  way southeast leads to the Cyclops Room.
 - **The grating opens from above as "The grating opens."** Zork's
   GRATE-FUNCTION compares HERE with CLEARING, the other clearing, so in
   Zork the line from the Grating Clearing is the one meant for below, "The
@@ -1933,3 +2190,43 @@ contributing once, as the spec says. No NPC is new in v4.
 - **With the torch and the lamp both in hand,** a load too heavy names the
   lamp, though the torch weighs more: down there, where the torch never
   goes out, the lamp is the one a visitor can spare.
+
+## Differences chosen in v5
+
+- **The thief's clock starts at the Cellar.** Zork's I-THIEF runs from the
+  first move; here it starts the first time anyone goes down into the
+  Cellar, since above ground there is nothing he may enter, and starting
+  it there keeps the above-ground tests his. He begins, as in Zork, in the
+  Round Room.
+- **His round is `1dungeon.zil`'s order of the rooms built,** 39 of them,
+  one a turn, from the Cellar to the Torch Room, leaving out the house,
+  above ground and the two temple rooms, all of which Zork holds sacred.
+- **Treasures only vanish in his lair.** THIEF-IN-TREASURE makes everything
+  in the Treasure Room but the chalice invisible while he defends it; here
+  he puts its treasures (not the chalice) in his bag, which comes to the
+  same thing, and anything else a visitor left there stays in sight. When
+  he is next alone there he empties his bag again, as HACK-TREASURES and
+  DEPOSIT-BOOTY have it.
+- **"The thief gestures mysteriously, and the treasures in the room
+  suddenly vanish."** is said every time he comes to defend his lair, as
+  Zork's test (at least two objects in the room, the visitor and the thief
+  among them) always passes.
+- **His stiletto answers only to "stiletto"** (and "dagger"), as Zork's
+  does; "knife" means the nasty knife or the rusty one.
+- **The visitor's strength grows with the score** in fights with the thief
+  and the Cyclops, as Zork's FIGHT-STRENGTH does (2, and one more for
+  every 70 points). The troll's fight is as round 8 left it.
+- **The bauble falls to the Forest Path** when the canary is wound up the
+  tree, as Zork's does, and the canary's aria and the bauble are as
+  CANARY-OBJECT has them. The canary, intact or broken, now has a
+  description of its own.
+- **The Cyclops answers `listen` asleep with Zork's default** ("The cyclops
+  makes no sound."), as CYCLOPS-FCN's sleeping branch does not catch it;
+  and a thing thrown at him asleep, he ducks, as V-THROW has it.
+- **Fighting the Cyclops** is CYCLOPS-FCN's: a blow at him awake he shrugs
+  off, and his clock starts; asleep, it wakes him, and he fights with his
+  fists on Zork's tables until the visitor leaves. He cannot be killed, as
+  he cannot in Zork.
+- **The Living Room's way west is labelled "opening"** once the Cyclops has
+  gone through the door, and the door and the Strange Passage's end of it
+  can be gone through by name.

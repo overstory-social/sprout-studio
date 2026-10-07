@@ -18,6 +18,7 @@ import {troll_room} from 'cellar'
 import {dome_room} from 'temple'
 
 object east_west_passage is DarkRoom in underground_caverns {
+  :tour 29
   grammar {
     name "East-West Passage"
     exit east  "east"     -> round_room
@@ -46,6 +47,7 @@ object east_west_passage is DarkRoom in underground_caverns {
 }
 
 object round_room is DarkRoom in underground_caverns {
+  :tour 30
   grammar {
     name "Round Room"
     exit east      "east"      -> loud_room
@@ -91,6 +93,7 @@ object round_room is DarkRoom in underground_caverns {
 // be had. In Zork the noise throws the visitor out only while the dam's
 // gates are open, and the dam is not built (friction 71).
 object loud_room is DarkRoom in underground_caverns {
+  :tour 33
   grammar {
     name "Loud Room"
     exit east      "east"     -> damp_cave
@@ -117,6 +120,7 @@ object loud_room is DarkRoom in underground_caverns {
     :size 20
     :value 10
     :tvalue 5
+    :sacred true
     passage short { platinum bar }
     passage ldesc { On the ground is a large platinum bar. }
     passage echoed { bar bar ... }
@@ -151,6 +155,7 @@ object loud_room is DarkRoom in underground_caverns {
 }
 
 object deep_canyon is DarkRoom, CanyonEdge in underground_caverns {
+  :tour 31
   grammar {
     name "Deep Canyon"
     exit northwest "northwest" refuse reservoir_way
@@ -228,6 +233,7 @@ object deep_canyon is DarkRoom, CanyonEdge in underground_caverns {
 }
 
 object damp_cave is DarkRoom in underground_caverns {
+  :tour 32
   grammar {
     name "Damp Cave"
     exit west  "west"  -> loud_room
@@ -255,6 +261,7 @@ object damp_cave is DarkRoom in underground_caverns {
 }
 
 object north_south_passage is DarkRoom in underground_caverns {
+  :tour 34
   grammar {
     name "North-South Passage"
     exit north     "north"     -> chasm_room
@@ -270,6 +277,7 @@ object north_south_passage is DarkRoom in underground_caverns {
 }
 
 object chasm_room is DarkRoom, Perilous, ChasmEdge in underground_caverns {
+  :tour 35
   grammar {
     name "Chasm"
     exit northeast "northeast" refuse reservoir_way
@@ -315,6 +323,7 @@ object chasm_room is DarkRoom, Perilous, ChasmEdge in underground_caverns {
 }
 
 object engravings_cave is DarkRoom in underground_caverns {
+  :tour 36
   grammar {
     name "Engravings Cave"
     exit northwest "northwest" -> round_room

@@ -6,6 +6,7 @@ import {Box} from 'box'
 import {Readable, Treasure} from 'items'
 import {Room, Forest, Woodland, Woods, Trees} from 'room'
 import {TreeTop, Nest, Egg, Canary} from 'tree'
+import {Songful} from 'room'
 import {Adventurer} from 'adventurer'
 import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, TreeBelow} from 'scenery'
 import {KitchenWindow, Outdoors} from 'house'
@@ -225,7 +226,7 @@ object forest_3 is Woodland in underground_caverns {
   object house is DistantHouse
 }
 
-object forest_path is Forest in underground_caverns {
+object forest_path is Forest, Songful in underground_caverns {
   grammar {
     name "Forest Path"
     exit up    "tree"  -> up_a_tree

@@ -15,7 +15,8 @@ import {Thing, Scenery} from 'thing'
 import {DarkRoom} from 'room'
 import {Skeleton, BurnedLantern, RustyKnife, SkeletonKey, CoinBag} from 'remains'
 import {GratingBelow} from 'grating'
-import {read, :grate_open, :grate_unlock} from 'verbs'
+import {read, :grate_open, :grate_unlock, :cyclops_gone} from 'verbs'
+import {cyclops_room} from 'cyclops'
 import {troll_room} from 'cellar'
 import {grating_clearing} from 'above_ground'
 
@@ -48,6 +49,7 @@ kind MazePassages is Scenery {
 }
 
 object maze_1 is Maze in underground_caverns {
+  :tour 6
   grammar {
     exit east  "east"  -> troll_room
     exit north "north" -> maze_1
@@ -57,6 +59,7 @@ object maze_1 is Maze in underground_caverns {
 }
 
 object maze_2 is Maze in underground_caverns {
+  :tour 7
   grammar {
     exit south "south" -> maze_1
     exit down  "down"  -> maze_4 say diode
@@ -65,6 +68,7 @@ object maze_2 is Maze in underground_caverns {
 }
 
 object maze_3 is Maze in underground_caverns {
+  :tour 8
   grammar {
     exit west  "west"  -> maze_2
     exit north "north" -> maze_4
@@ -73,6 +77,7 @@ object maze_3 is Maze in underground_caverns {
 }
 
 object maze_4 is Maze in underground_caverns {
+  :tour 9
   grammar {
     exit west  "west"  -> maze_3
     exit north "north" -> maze_1
@@ -81,11 +86,13 @@ object maze_4 is Maze in underground_caverns {
 }
 
 object dead_end_1 is DeadEnd in underground_caverns {
+  :tour 10
   grammar { exit south "south" -> maze_4 }
 }
 
 // Where the last adventurer to try the maze without a map stopped trying.
 object maze_5 is Maze in underground_caverns {
+  :tour 11
   grammar {
     exit east      "east"      -> dead_end_2
     exit north     "north"     -> maze_3
@@ -103,10 +110,12 @@ object maze_5 is Maze in underground_caverns {
 }
 
 object dead_end_2 is DeadEnd in underground_caverns {
+  :tour 12
   grammar { exit west "west" -> maze_5 }
 }
 
 object maze_6 is Maze in underground_caverns {
+  :tour 13
   grammar {
     exit down "down" -> maze_5
     exit east "east" -> maze_7
@@ -116,6 +125,7 @@ object maze_6 is Maze in underground_caverns {
 }
 
 object maze_7 is Maze in underground_caverns {
+  :tour 14
   grammar {
     exit up    "up"    -> maze_14
     exit west  "west"  -> maze_6
@@ -126,6 +136,7 @@ object maze_7 is Maze in underground_caverns {
 }
 
 object maze_8 is Maze in underground_caverns {
+  :tour 15
   grammar {
     exit northeast "northeast" -> maze_7
     exit west      "west"      -> maze_8
@@ -134,10 +145,12 @@ object maze_8 is Maze in underground_caverns {
 }
 
 object dead_end_3 is DeadEnd in underground_caverns {
+  :tour 16
   grammar { exit north "north" -> maze_8 }
 }
 
 object maze_9 is Maze in underground_caverns {
+  :tour 17
   grammar {
     exit north     "north"     -> maze_6
     exit down      "down"      -> maze_11 say diode
@@ -149,6 +162,7 @@ object maze_9 is Maze in underground_caverns {
 }
 
 object maze_10 is Maze in underground_caverns {
+  :tour 18
   grammar {
     exit east "east" -> maze_9
     exit west "west" -> maze_13
@@ -157,6 +171,7 @@ object maze_10 is Maze in underground_caverns {
 }
 
 object maze_11 is Maze in underground_caverns {
+  :tour 19
   grammar {
     exit northeast "northeast" -> grating_room
     exit down      "down"      -> maze_10
@@ -166,6 +181,7 @@ object maze_11 is Maze in underground_caverns {
 }
 
 object maze_12 is Maze in underground_caverns {
+  :tour 21
   grammar {
     exit down      "down"      -> maze_5 say diode
     exit southwest "southwest" -> maze_11
@@ -176,10 +192,12 @@ object maze_12 is Maze in underground_caverns {
 }
 
 object dead_end_4 is DeadEnd in underground_caverns {
+  :tour 22
   grammar { exit south "south" -> maze_12 }
 }
 
 object maze_13 is Maze in underground_caverns {
+  :tour 23
   grammar {
     exit east  "east"  -> maze_9
     exit down  "down"  -> maze_12
@@ -189,6 +207,7 @@ object maze_13 is Maze in underground_caverns {
 }
 
 object maze_14 is Maze in underground_caverns {
+  :tour 24
   grammar {
     exit west      "west"      -> maze_15
     exit northwest "northwest" -> maze_14
@@ -197,30 +216,23 @@ object maze_14 is Maze in underground_caverns {
   }
 }
 
-// The way on to the Cyclops Room, which is not built.
+// Southeast, the Cyclops Room. The cyclops is near enough for an elvish
+// sword to know it.
 object maze_15 is Maze in underground_caverns {
+  :tour 25
   grammar {
     exit west      "west"      -> maze_14
     exit south     "south"     -> maze_7
-    exit southeast "southeast" refuse cyclops
+    exit southeast "southeast" -> cyclops_room
   }
-  passage cyclops {
-    A sign is propped across the passage to the southeast: "CYCLOPS ROOM CLOSED UNTIL FURTHER NOTICE. Do not feed the cyclops. -- The Management." From somewhere beyond it comes a smell of old mutton and a snore like a rockslide. You decide the Management has a point.
-  }
-  object sign is Scenery {
-    grammar { name "sign"  nouns "notice", "placard"  adjectives "propped", "southeast" }
-    passage short { sign }
-    passage words { The sign reads: "CYCLOPS ROOM CLOSED UNTIL FURTHER NOTICE. Do not feed the cyclops. -- The Management." }
-    passage no_take { The sign is wedged across the passage, and whatever is snoring behind it would notice it gone. }
-    describe { text "A board is wedged across the passage to the southeast, lettered in the same patient hand as every other notice from the Management: \"CYCLOPS ROOM CLOSED UNTIL FURTHER NOTICE. Do not feed the cyclops.\"" }
-    without as target for read from Thing
-    as target for read { do { say words } }
-  }
+  :glow 1
+  on :cyclops_gone { self.set(:glow, 0) }
 }
 
 // Under the Clearing: dark while the grating is shut, and lit by the day
 // while it is open, as Zork's GRATE-FUNCTION sets and clears its ONBIT.
 object grating_room is DarkRoom in underground_caverns {
+  :tour 20
   grammar {
     name "Grating Room"
     exit southwest "southwest" -> maze_11

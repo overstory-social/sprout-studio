@@ -9,7 +9,7 @@ import * as sprout from 'sprout'
 import {Person} from 'person'
 import {go} from 'sprout'
 import {west_of_house} from 'above_ground'
-import {:open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone, :unbar, :grate_unlock, :grate_open, :grate_revealed, :dome_rope} from 'verbs'
+import {:open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone, :unbar, :grate_unlock, :grate_open, :grate_revealed, :dome_rope, :thief_start, :summon, :far_voice, :magic, :cyclops_gone} from 'verbs'
 
 world underground_caverns is sprout.World {
   visitors are Person
@@ -26,6 +26,13 @@ world underground_caverns is sprout.World {
   pass :grate_open (true)
   pass :grate_revealed (true)
   pass :dome_rope (true)
+  // The thief's clock starting, his lair calling him home, and a voice in
+  // the maze; the Cyclops through the wall, and the sword that knew him.
+  pass :thief_start (true)
+  pass :summon (true)
+  pass :far_voice (true)
+  pass :magic (true)
+  pass :cyclops_gone (true)
 
   on :open_gate (from) {
     self.set(:gate, true)

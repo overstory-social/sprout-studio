@@ -12,6 +12,7 @@ import {kitchen, living_room} from 'house'
 import {Abyss} from 'east'
 
 object east_of_chasm is DarkRoom, Perilous, ChasmEdge in underground_caverns {
+  :tour 3
   grammar {
     name "East of Chasm"
     exit north "passage" -> cellar
@@ -41,6 +42,7 @@ object east_of_chasm is DarkRoom, Perilous, ChasmEdge in underground_caverns {
 }
 
 object gallery is Room in underground_caverns {
+  :tour 4
   grammar {
     name "Gallery"
     exit west  "west"  -> east_of_chasm
@@ -101,6 +103,7 @@ kind Painting is Treasure {
 }
 
 object studio is DarkRoom, ChimneyFoot in underground_caverns {
+  :tour 5
   grammar {
     name "Studio"
     exit south "door"    -> gallery

@@ -1,12 +1,12 @@
 {
-  "about": "Walking the Maze west of the Troll Room to the dead adventurer's remains: the loop that leads back to itself, one of the one-way tunnels down, the skeleton and what lies beside it, the sword's pulse at the rusty knife, a thing dropped to mark a room and seen there again among rooms all alike, and the way to the Cyclops closed in the Management's voice.",
+  "about": "The thief, losing a fight in his lair, decides that discretion is the better part of valor and steps back into the gloom (THIEF-VS-ADVENTURER and WINNING?); unseen, he guards nothing, and the chalice can be had.",
   "steps": [
+    { "seed": 0 },
     { "arrive": "Marta", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West of House" },
       { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
       { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
     ] },
-    { "seed": 0 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North of House" },
       { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
@@ -26,6 +26,12 @@
       { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
       { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
     ] },
+    { "as": "Marta", "type": "take sack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Living Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
@@ -38,14 +44,34 @@
     { "as": "Marta", "type": "take sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You have moved into a dark place." },
+      { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." },
+      { "reader": "Marta", "kind": "said", "words": "Attic" },
+      { "reader": "Marta", "kind": "said", "words": "This is the attic. The only exit is a stairway leading down." },
+      { "reader": "Marta", "kind": "said", "words": "A large coil of rope is lying in the corner." },
+      { "reader": "Marta", "kind": "said", "words": "On a table is a nasty-looking knife." }
+    ] },
+    { "as": "Marta", "type": "take rope", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
     { "as": "Marta", "type": "move rug", "expect": [
       { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
     ] },
     { "as": "Marta", "type": "open trap door", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
-    ] },
-    { "as": "Marta", "type": "turn on lamp", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
@@ -59,6 +85,11 @@
       { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
       { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The force of your blow knocks the troll back, stunned." },
+      { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
+    ] },
     { "seed": 1 },
     { "as": "Marta", "type": "kill troll", "expect": [
       { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
@@ -71,19 +102,11 @@
       { "reader": "Marta", "kind": "described", "words": "Maze" },
       { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
-    { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Maze" }
-    ] },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Maze" },
       { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
-    { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You won't be able to get back up to the tunnel you are going through when it gets to the next room." },
-      { "reader": "Marta", "kind": "described", "words": "Maze" },
-      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
-    ] },
-    { "as": "Marta", "type": "w", "expect": [
+    { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Maze" },
       { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
@@ -95,51 +118,6 @@
       { "reader": "Marta", "kind": "described", "words": "There is a skeleton key here." },
       { "reader": "Marta", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
     ] },
-    { "as": "Marta", "type": "x skeleton", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The skeleton lies where its owner fell, slumped against the wall of the passage as though he had sat down for a moment's rest and found the moment longer than expected. It is picked quite clean, and has been for some time. Whatever he came into the maze looking for, the maze found him first." }
-    ] },
-    { "as": "Marta", "type": "x useless lantern", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is a lantern of the old kind, rusted at every seam, its glass smoked black from the inside. Its batteries gave out some time before its owner did, which, down here, is the usual order of things." }
-    ] },
-    { "as": "Marta", "type": "x knife", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is a short knife, rusted nearly black, with a plain wooden grip worn smooth by a hand that is no longer in a position to hold it. The rust has not touched the edge. That is not a thing rust usually overlooks." }
-    ] },
-    { "as": "Marta", "type": "x key", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is a heavy iron key, long in the shank, with a bow worked into the shape of a small grinning skull over a pair of crossed bones. Its owner carried it this far into the maze and no further. Whatever lock it fits wears the same skull, is somewhere down here, and is unlikely to be anywhere cheerful." }
-    ] },
-    { "as": "Marta", "type": "x coins", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is an old leather bag, cracked with age and drawn tight at the neck with a knotted thong, and it bulges in the way that only coins make a bag bulge. There are lots of coins in there." }
-    ] },
-    { "as": "Marta", "type": "look in coins", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "There are lots of coins in there." }
-    ] },
-    { "as": "Marta", "type": "open coins", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The coins are safely inside; there's no need to do that." }
-    ] },
-    { "as": "Marta", "type": "turn on burned-out lantern", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You can't turn that on." }
-    ] },
-    { "as": "Marta", "type": "turn on lamp", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "It is already on." }
-    ] },
-    { "as": "Marta", "type": "take knife", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "As you touch the rusty knife, your sword gives a single pulse of blinding blue light." },
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "take key", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "take useless lantern", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "i", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
-      { "reader": "Marta", "kind": "said", "words": "A brass lantern (providing light)" },
-      { "reader": "Marta", "kind": "said", "words": "A sword" },
-      { "reader": "Marta", "kind": "said", "words": "A rusty knife" },
-      { "reader": "Marta", "kind": "said", "words": "A skeleton key" },
-      { "reader": "Marta", "kind": "said", "words": "A burned-out lantern" }
-    ] },
     { "as": "Marta", "type": "sw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Maze" },
       { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
@@ -148,45 +126,49 @@
       { "reader": "Marta", "kind": "described", "words": "Maze" },
       { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
-    { "as": "Marta", "type": "drop burned-out lantern", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Dropped." }
-    ] },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Maze" },
-      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cyclops Room" },
-      { "reader": "Marta", "kind": "described", "words": "A cyclops, who looks prepared to eat horses (much less mere adventurers), blocks the staircase. From his state of health, and the bloodstains on the walls, you gather that he is not very friendly, though he likes people." }
+      { "reader": "Marta", "kind": "described", "words": "This room has an exit on the northwest, and a staircase leading up." },
+      { "reader": "Marta", "kind": "described", "words": "A cyclops, who looks prepared to eat horses (much less mere adventurers), blocks the staircase. From his state of health, and the bloodstains on the walls, you gather that he is not very friendly, though he likes people." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
-    { "as": "Marta", "type": "nw", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Maze" }
+    { "as": "Marta", "type": "ulysses", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The cyclops, hearing the name of his father's deadly nemesis, flees the room by knocking down the wall on the east of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Maze" },
-      { "reader": "Marta", "kind": "described", "words": "There is a burned-out lantern here." }
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Treasure Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room, whose east wall is solid granite. A number of discarded bags, which crumble at your touch, are scattered about on the floor. There is an exit down a staircase." },
+      { "reader": "Marta", "kind": "described", "words": "There is a silver chalice, intricately engraved, here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a suspicious-looking individual, holding a large bag, leaning against one wall. He is armed with a deadly stiletto." },
+      { "reader": "Marta", "kind": "told", "words": "You hear a scream of anguish as you violate the robber's hideaway. Using passages unknown to you, he rushes to its defense." },
+      { "reader": "Marta", "kind": "told", "words": "The thief gestures mysteriously, and the treasures in the room suddenly vanish." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
-    { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Maze" }
+    { "seed": 5 },
+    { "as": "Marta", "type": "attack thief with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You charge, but the thief jumps nimbly aside." },
+      { "reader": "Marta", "kind": "told", "words": "Your opponent, determining discretion to be the better part of valor, decides to terminate this little contretemps. With a rueful nod of his head, he steps backward into the gloom and disappears." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
-    { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Maze" }
+    { "as": "Marta", "type": "x thief", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Treasure Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room, whose east wall is solid granite. A number of discarded bags, which crumble at your touch, are scattered about on the floor. There is an exit down a staircase." },
+      { "reader": "Marta", "kind": "described", "words": "There is a silver chalice, intricately engraved, here." }
+    ] },
+    { "as": "Marta", "type": "take chalice", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Maze" },
-      { "reader": "Marta", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
-    ] },
-    { "as": "Marta", "type": "l", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Maze" },
-      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike. A skeleton, probably the remains of a luckless adventurer, lies here." },
-      { "reader": "Marta", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
-    ] },
-    { "as": "Marta", "type": "x maze", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The passages are twisty, they are little, and they are all alike: the same rough walls, the same low ceiling, the same turnings that turn just far enough to hide where they are going. Whoever made this maze had one idea, and saw it through." }
-    ] },
-    { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 42 moves." },
-      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+      { "reader": "Marta", "kind": "described", "words": "Cyclops Room" }
     ] }
   ]
 }

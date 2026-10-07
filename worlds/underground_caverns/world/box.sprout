@@ -10,7 +10,7 @@
 // a first description: whatever was here from the start without one, and
 // whatever has arrived since.
 import {Thing, Portable} from 'thing'
-import {open, close, look_in, shake, :sealed} from 'verbs'
+import {open, close, look_in, shake, :sealed, :uncork} from 'verbs'
 import {Adventurer} from 'adventurer'
 import {Light} from 'lamp'
 
@@ -37,6 +37,9 @@ kind Box is Thing {
     self.adjust(:plain, 1)
     if (item.is(Thing)) { send item :sealed with !self.get(:open) && self.get(:transparent) }
   }
+  // Opened by somebody else's hands: the Cyclops, checking that the bottle
+  // is open before he drinks from it.
+  on :uncork { self.set(:open, true) }
   changed :open (was) {
     each t: Thing in self { send t :sealed with !self.get(:open) && self.get(:transparent) }
   }

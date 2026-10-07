@@ -299,8 +299,11 @@ verb leap_at {
 }
 // Zork's TURN, which pages a book and turns little else.
 verb turn { role target  "turn [target]"  "turn page of [target]"  "turn pages of [target]"  "flip through [target]"  "leaf through [target]" }
-// Zork's TREASURE and TEMPLE: words the Temple knows.
-verb treasure { "treasure"  "temple" }
+// Zork's TREASURE and TEMPLE: words the Temple and the Treasure Room know,
+// each the way to the other.
+verb treasure { "treasure"  "temple"  "say treasure"  "say temple" }
+// Zork's ODYSSEUS: the name the Cyclops's father had cause to remember.
+verb odysseus { "ulysses"  "odysseus"  "say ulysses"  "say odysseus"  "yell ulysses"  "yell odysseus"  "shout ulysses"  "shout odysseus" }
 
 verb score { "score" }
 verb diagnose { "diagnose" }
@@ -361,7 +364,7 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt }
+enum Dest { forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.
@@ -426,3 +429,39 @@ message :snuffed
 message :candle_burn with integer
 // The rope, let go of at the Dome's rail.
 message :let_go
+// The thief (thief.sprout). His clock starts the first time anyone goes
+// down into the Cellar; each of his turns he asks the room he is in to
+// show itself (`:prowl`, answered `:survey`), since a handler has no
+// `here`; he walks the Empire by the world's gate.
+message :thief_start
+message :prowl
+message :survey
+// The thief robs a visitor, who hands over what he takes (the hands are
+// the visitor's own): 1 while he passes unseen, 2 as he leaves, seen.
+message :rob with integer
+// The Treasure Room, entered: the thief comes to defend it, from wherever
+// he is (`:summon`, through the world) or from where he stood unseen in it
+// (`:defend`).
+message :summon
+message :defend
+// In the maze, a thing the thief has his eye on, and whether he takes it;
+// and the voice a visitor elsewhere in the maze hears saying so.
+message :pinch with boolean
+// The thief, dead: a sword that knew him knows it.
+message :thief_gone
+message :far_voice
+// Dying in the Treasure Room, the thief lets it show what he hid there.
+message :unveil
+// The egg, opened by someone with the tools and the expertise.
+message :pry
+// A stoppered bottle opened by somebody else's hands.
+message :uncork
+// The Cyclops: his clock (I-CYCLOPS), the state the Cyclops Room describes
+// him in (0 hungry, 1 wary, 2 gasping, 3 asleep, 4 gone), and his leaving
+// by the east wall, which opens the Strange Passage to the Living Room.
+message :clock
+message :cyc_state with integer
+message :magic
+message :cyclops_gone
+// Something dropped from the tree top by somebody other than a visitor.
+message :shed

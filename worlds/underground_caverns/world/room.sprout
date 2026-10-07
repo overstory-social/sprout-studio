@@ -13,7 +13,8 @@ import {Thing, Scenery} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
-import {listen, search, look_in, look_under, look_behind, :scored, :relight, :room_lit, :wall_look, :hush, :snuffed} from 'verbs'
+import {Thief} from 'thief'
+import {listen, search, look_in, look_under, look_behind, :scored, :relight, :room_lit, :wall_look, :hush, :snuffed, :prowl, :survey} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -33,8 +34,9 @@ kind Room is sprout.Place {
   object grue is Grue
   // Which walls these are, for the wall to describe: plain, the Cellar's
   // damp stone, the Troll Room's scarred rock, the Studio's paint, the
-  // Engravings Cave's carved rock, or the Temple's granite.
-  :walls 0 min 0 max 5
+  // Engravings Cave's carved rock, the Temple's granite, the Cyclops Room's
+  // bloodstains, or the Treasure Room's granite.
+  :walls 0 min 0 max 8
 
   // The Loud Room's noise, until somebody says the word: every thing there
   // answers whatever is done to it with an echo (thing.sprout).
@@ -44,6 +46,21 @@ kind Room is sprout.Place {
   // How many times each visitor has come in, up to twice: Zork's TOUCHBIT,
   // kept per visitor.
   remembers { :visits 0 min 0 max 2 }
+  // Whether any visitor has been here, which is what the thief asks of a
+  // room before he goes through it (Zork's TOUCHBIT, as I-THIEF reads it).
+  :visited false
+  // Where the room comes in the thief's round of the Empire, or 0 for a
+  // room he never enters (Zork's SACREDBIT, above ground, and the house).
+  :tour 0 min 0 max 60
+
+  // The thief comes and goes unseen, as Zork's INVISIBLE thief does: the
+  // engine's notice of an actor arriving and leaving says nothing of him.
+  passage arrives { {if item.is(Thief)}{else}{item} arrives{if bound from} from {from}{/if}.{/if} }
+  passage leaves  { {if item.is(Thief)}{else}{item} leaves{if bound to} for {to}{/if}.{/if} }
+
+  // A handler has no `here`, so the thief asks the room he is in to show
+  // itself, and works on it from its answer (thief.sprout).
+  on :prowl (from) { if (from.is(Thief)) { send from :survey } }
 
   passage title default { {self} }
   passage body default { {if false}.{/if} }
@@ -84,7 +101,9 @@ kind Room is sprout.Place {
   as tool for any { permit { refuse "You can't see any such thing." } }
 
   on :entered (item, from) {
+    if (item.is(Thief)) { send item :survey }
     if (item.is(Adventurer)) {
+      self.set(:visited, true)
       send wall :wall_look with self.get(:walls)
       // A visit counts only where there is light to see the room by.
       let seen_by = !self.is(DarkRoom) || item.get(:light) > 0
@@ -139,8 +158,12 @@ kind Forest is Room {
   object forest is Woods
 }
 
+// Where the canary's song carries to a songbird (Zork's FOREST-ROOM?): the
+// three Forests, the Forest Path and the tree above it.
+kind Songful { }
+
 // A forest room whose trees are only trees: none of them the climbing kind.
-kind Woodland is Forest {
+kind Woodland is Forest, Songful {
   object trees is Trees
 }
 
@@ -181,9 +204,9 @@ kind ChimneyTop { }
 // inherits a line of its own, so it tells the wall, as a visitor comes in,
 // which walls these are.
 kind Wall is Scenery {
-  grammar { name "surrounding wall"  nouns "wall", "walls"  adjectives "surrounding" }
+  grammar { name "surrounding wall"  nouns "wall", "walls"  adjectives "surrounding", "east", "west", "north", "south" }
   passage short { surrounding wall }
-  :look 0 min 0 max 5
+  :look 0 min 0 max 8
   on :wall_look (from, value) { self.set(:look, value) }
   passage plain { The surrounding wall is solid, plain and entirely uninterested in you. }
   passage damp { The cellar walls are damp, rough stone, sweating quietly in the dark. }
@@ -191,12 +214,18 @@ kind Wall is Scenery {
   passage painted { The walls are splattered with paint, sixty-nine colors of it by the count of someone who had the time. Some of the splashes look deliberate. None of them looks finished. }
   passage carved { The walls of the cave are cut all over with old engravings, in a style that took its time and expected to be looked at. }
   passage granite { The west wall is solid granite, smooth and blank and very sure of itself. The east wall bears an ancient inscription, cut deep. }
+  passage bloodied { The walls are rough rock, spattered with old bloodstains from the floor to well above head height: higher than most people bleed, and lower than a cyclops eats. The east wall is solid rock, polished smooth where something very large has leaned on it. }
+  passage broken { The walls are rough rock, spattered with old bloodstains from the floor to well above head height. The east wall has a cyclops-sized hole in it, and most of the rest of the east wall is lying beyond it. }
+  passage hoard { The east wall is solid granite, smooth and blank and entirely without a door, which is the point of it. The other walls are rough rock, and somebody has knocked a row of iron pegs into them to hang bags on. }
   describe {
     if (self.get(:look) == 1) { text damp }
     else if (self.get(:look) == 2) { text scarred }
     else if (self.get(:look) == 3) { text painted }
     else if (self.get(:look) == 4) { text carved }
     else if (self.get(:look) == 5) { text granite }
+    else if (self.get(:look) == 6) { text bloodied }
+    else if (self.get(:look) == 7) { text hoard }
+    else if (self.get(:look) == 8) { text broken }
     else { text plain }
   }
 }

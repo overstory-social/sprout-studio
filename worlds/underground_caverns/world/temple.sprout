@@ -25,6 +25,7 @@ kind AltarRoom is Room { }
 kind TempleRoom is Room { }
 
 object dome_room is DomeRoom in underground_caverns {
+  :tour 38
   grammar {
     name "Dome Room"
     exit west "west" -> engravings_cave
@@ -62,6 +63,7 @@ object dome_room is DomeRoom in underground_caverns {
 }
 
 object torch_room is DarkRoom in underground_caverns {
+  :tour 39
   grammar {
     name "Torch Room"
     exit up    "rope"      refuse "You cannot reach the rope."
@@ -211,6 +213,7 @@ object altar is AltarRoom in underground_caverns {
 }
 
 object egyptian_room is DarkRoom in underground_caverns {
+  :tour 37
   grammar {
     name "Egyptian Room"
     exit west "west"      -> temple
@@ -240,6 +243,7 @@ object egyptian_room is DarkRoom in underground_caverns {
 // Dome untied, it goes over the edge (ROPE-FUNCTION).
 kind Rope is Portable {
   grammar { name "rope"  nouns "hemp", "coil"  adjectives "large" }
+  :sacred true
   :has_fdesc true
   :size 10
   :tied false
@@ -572,6 +576,7 @@ kind Coffin is Box, Treasure {
   :size 55
   :value 10
   :tvalue 15
+  :sacred true
   :capacity 35
   passage short { gold coffin }
   passage ldesc { The solid-gold coffin used for the burial of Ramses II is here. }

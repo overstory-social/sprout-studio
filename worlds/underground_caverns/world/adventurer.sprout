@@ -12,12 +12,15 @@ import * as sprout from 'sprout'
 import {Thing, Portable, Flame} from 'thing'
 import {Box, Bag} from 'box'
 import {Lamp, Light} from 'lamp'
-import {Weapon, Sword, Knife, Axe, Treasure, Food, Water} from 'items'
-import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop, ChasmEdge, CanyonEdge} from 'room'
-import {TreeTop, Nest, Egg} from 'tree'
+import {Weapon, Sword, Knife, Axe, Treasure, Food, Water, Lunch} from 'items'
+import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop, ChasmEdge, CanyonEdge, Songful} from 'room'
+import {TreeTop, Nest, Egg, Canary, Bauble} from 'tree'
 import {Troll} from 'troll'
+import {Thief, Stiletto} from 'thief'
+import {Cyclops, CyclopsRoom, TreasureRoom, :flee} from 'cyclops'
+import {treasure_room, cyclops_room, strange_passage} from 'cyclops'
 import {go, look, examine, inventory, wait, help} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -60,6 +63,20 @@ kind Adventurer is sprout.Visitor {
   // how many of them are not already held.
   :carry 0 min 0 max 900
   :fresh 0 min 0 max 50
+  // Somewhere in the maze, where a thief's voice carries from room to room.
+  :in_maze false
+  // How brightly the sword should glow here, with nobody visiting: what the
+  // room says, for when the thief who made it blaze is gone.
+  :room_glow 0 min 0 max 2
+  // Scratch, for being robbed: how much went, and whether a light went.
+  :robbed 0 min 0 max 50
+  :lost_light false
+  :still_lit false
+  // Zork's FIGHT-STRENGTH, for the thief and the Cyclops: the visitor's
+  // strength grows with the score.
+  :might 0 min -20 max 20
+  // What the thief's or the Cyclops's last blow did, as he decided it.
+  :hurt 1 min 1 max 8
 
   passage hands_full { You're holding too many things already! }
 
@@ -207,10 +224,12 @@ kind Adventurer is sprout.Visitor {
   // Arriving somewhere: the sword's glow, and in the forest, now and then,
   // the songbird.
   on :moved (from, to) {
+    self.set(:in_maze, to.is(Maze) || to.is(DeadEnd))
     // Up the chimney with the trap door shut: whoever bars it will bar it
     // again behind the next one down.
     if (self.get(:at_chimney) && to.is(ChimneyTop)) { broadcast :unbar with false }
     self.set(:at_chimney, to.is(ChimneyFoot))
+    if (to.is(Room)) { self.set(:room_glow, to.get(:glow)) }
     if (to.is(Room) && !self.get(:devoured)) {
       if (!to.is(DarkRoom)) { self.set(:room_dark, false) }
       send self :settle with to.get(:glow)
@@ -229,7 +248,16 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
+  on :thief_gone { send self :settle with self.get(:room_glow) }
+  // The Cyclops gone through the wall: nothing near is left for the sword to
+  // know (the troll went before him).
+  on :cyclops_gone {
+    self.set(:room_glow, 0)
+    send self :settle with 0
+  }
+
   on :troll_gone {
+    self.set(:room_glow, 0)
     each s: Sword in self {
       if (s.get(:glow) > 0) {
         tell self "Your sword is no longer glowing."
@@ -279,7 +307,100 @@ kind Adventurer is sprout.Visitor {
             self.set(:staggered, true)
           }
         }
+      } else if (actor.is(Thief) || actor.is(Cyclops)) {
+        // The thief's stiletto or the Cyclops's fist: decided and told by
+        // him (`:dealt`: 1 missed, 2 knocked out and spared, 3 killed, 4 a
+        // light wound, 5 knocked out and put to death, 6 staggered, 7 a
+        // serious wound, 8 a wound that kills); done here.
+        if (actor.is(Thief)) { self.set(:hurt, actor.get(:dealt)) }
+        if (actor.is(Cyclops)) { self.set(:hurt, actor.get(:dealt)) }
+        let v = self.get(:hurt)
+        if (v == 3 || v == 5 || v == 8) {
+          send self :die
+        } else if (v == 4 || v == 7) {
+          self.adjust(:wounds, 1)
+          if (v == 4) { self.adjust(:fight, -1) } else { self.adjust(:fight, -2) }
+          if (!self.get(:healing)) {
+            self.set(:healing, true)
+            wake in 10 minutes
+          }
+        } else if (v == 6) {
+          // Staggered, or one time in four disarmed (LOSE-WEAPON): which
+          // weapon is in hand is theirs to see, and so theirs to say.
+          if (self.count(Weapon) > 0 && chance(4)) {
+            if (self.count(Sword) > 0) {
+              if (actor.is(Thief)) { tell self "{one of}A long, theatrical slash. You catch it on your sword, but the thief twists his knife, and the sword goes flying.{or}The thief neatly flips your sword out of your hands, and it drops to the floor.{or}You parry a low thrust, and your sword slips out of your hand.{/one of}" }
+              else { tell self "{one of}The Cyclops grabs your sword, tastes it, and throws it to the ground in disgust.{or}The monster grabs you on the wrist, squeezes, and you drop your sword in pain.{/one of}" }
+              each w: Sword in self { move w to here }
+            } else if (self.count(Knife) > 0) {
+              if (actor.is(Thief)) { tell self "{one of}A long, theatrical slash. You catch it on your nasty knife, but the thief twists his knife, and the nasty knife goes flying.{or}The thief neatly flips your nasty knife out of your hands, and it drops to the floor.{or}You parry a low thrust, and your nasty knife slips out of your hand.{/one of}" }
+              else { tell self "{one of}The Cyclops grabs your nasty knife, tastes it, and throws it to the ground in disgust.{or}The monster grabs you on the wrist, squeezes, and you drop your nasty knife in pain.{/one of}" }
+              each w: Knife in self { move w to here }
+            } else if (self.count(Axe) > 0) {
+              if (actor.is(Thief)) { tell self "{one of}A long, theatrical slash. You catch it on your bloody axe, but the thief twists his knife, and the bloody axe goes flying.{or}The thief neatly flips your bloody axe out of your hands, and it drops to the floor.{or}You parry a low thrust, and your bloody axe slips out of your hand.{/one of}" }
+              else { tell self "{one of}The Cyclops grabs your bloody axe, tastes it, and throws it to the ground in disgust.{or}The monster grabs you on the wrist, squeezes, and you drop your bloody axe in pain.{/one of}" }
+              each w: Axe in self { move w to here }
+            } else if (self.count(Stiletto) > 0) {
+              if (actor.is(Thief)) { tell self "{one of}A long, theatrical slash. You catch it on your stiletto, but the thief twists his knife, and the stiletto goes flying.{or}The thief neatly flips your stiletto out of your hands, and it drops to the floor.{or}You parry a low thrust, and your stiletto slips out of your hand.{/one of}" }
+              else { tell self "{one of}The Cyclops grabs your stiletto, tastes it, and throws it to the ground in disgust.{or}The monster grabs you on the wrist, squeezes, and you drop your stiletto in pain.{/one of}" }
+              each w: Stiletto in self { move w to here }
+            } else if (self.count(RustyKnife) > 0) {
+              if (actor.is(Thief)) { tell self "{one of}A long, theatrical slash. You catch it on your rusty knife, but the thief twists his knife, and the rusty knife goes flying.{or}The thief neatly flips your rusty knife out of your hands, and it drops to the floor.{or}You parry a low thrust, and your rusty knife slips out of your hand.{/one of}" }
+              else { tell self "{one of}The Cyclops grabs your rusty knife, tastes it, and throws it to the ground in disgust.{or}The monster grabs you on the wrist, squeezes, and you drop your rusty knife in pain.{/one of}" }
+              each w: RustyKnife in self { move w to here }
+            }
+          } else {
+            if (actor.is(Thief)) {
+              tell self "{one of}The butt of his stiletto cracks you on the skull, and you stagger back.{or}The thief rams the haft of his blade into your stomach, leaving you out of breath.{or}The thief attacks, and you fall back desperately.{/one of}"
+            } else {
+              tell self "{one of}The Cyclops lands a punch that knocks the wind out of you.{or}Heedless of your weapons, the Cyclops tosses you against the rock wall of the room.{/one of}"
+            }
+            self.set(:staggered, true)
+          }
+        }
       }
+    }
+  }
+
+
+  // The thief robs them: whatever of value is in their hands goes into his
+  // (Zork's ROB of the WINNER), and the thief's line is theirs to tell,
+  // since only they know whether he found anything (1 while he passes
+  // unseen, 2 as he leaves, seen; THIEF-VS-ADVENTURER).
+  on :rob (from, value) {
+    if (from.is(Thief)) {
+      self.set(:robbed, 0)
+      self.set(:lost_light, false)
+      self.set(:still_lit, false)
+      each t: Treasure in self {
+        if (t.get(:tvalue) > 0 && !t.get(:sacred)) {
+          if (t.is(Light)) {
+            if (t.get(:lit)) {
+              self.set(:lost_light, true)
+              send self :light with -1
+            }
+          }
+          move t to from
+          self.adjust(:robbed, 1)
+        }
+      }
+      each l: Light in self { if (l.get(:lit)) { self.set(:still_lit, true) } }
+      if (value == 1) {
+        if (self.get(:robbed) > 0) { tell self "A seedy-looking individual with a large bag just wandered through the room. On the way through, he quietly abstracted some valuables from your possession, mumbling something about \"Doing unto others before...\"" }
+        else { tell self "A \"lean and hungry\" gentleman just wandered through, carrying a large bag. Finding nothing of value, he left disgruntled." }
+      } else {
+        if (self.get(:robbed) > 0) { tell self "The thief just left, still carrying his large bag. You may not have noticed that he robbed you blind first." }
+        else { tell self "The thief, finding nothing of value, left disgusted." }
+      }
+      // Zork's STOLE-LIGHT?.
+      if (self.get(:lost_light) && !self.get(:still_lit) && self.get(:room_dark)) { tell self "The thief seems to have left you in the dark." }
+    }
+  }
+
+  // In the maze, the thief's voice carries (Zork's ROB-MAZE).
+  on :far_voice (from) {
+    if (self.get(:in_maze) && from.is(Thing)) {
+      tell self "You hear, off in the distance, someone saying \"My, I wonder what this fine {from.short} is doing here.\""
     }
   }
 
@@ -360,7 +481,7 @@ kind Adventurer is sprout.Visitor {
       move self to forest_1
     } else if (self.get(:dest) == :temple) {
       move self to temple
-    } else if (self.get(:dest) == :torch_room || self.get(:dest) == :ew_passage || self.get(:dest) == :chasm || self.get(:dest) == :loud_room || self.get(:dest) == :deep_canyon || self.get(:dest) == :egypt) {
+    } else if (self.get(:dest) == :torch_room || self.get(:dest) == :ew_passage || self.get(:dest) == :chasm || self.get(:dest) == :loud_room || self.get(:dest) == :deep_canyon || self.get(:dest) == :egypt || self.get(:dest) == :treasure || self.get(:dest) == :cyclops || self.get(:dest) == :strange) {
       // Down a rope, or along a staircase by name, into the dark: as `go`
       // goes, the warning first where there is no light to see by.
       self.set(:own_light, self.get(:light) > 0)
@@ -384,6 +505,15 @@ kind Adventurer is sprout.Visitor {
       } else if (self.get(:dest) == :deep_canyon) {
         if (!self.get(:own_light) && !underground_caverns.deep_canyon.get(:alight)) { tell self "You have moved into a dark place." }
         move self to deep_canyon
+      } else if (self.get(:dest) == :treasure) {
+        if (!self.get(:own_light) && !underground_caverns.treasure_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to treasure_room
+      } else if (self.get(:dest) == :cyclops) {
+        if (!self.get(:own_light) && !underground_caverns.cyclops_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to cyclops_room
+      } else if (self.get(:dest) == :strange) {
+        if (!self.get(:own_light) && !underground_caverns.strange_passage.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to strange_passage
       } else {
         if (!self.get(:own_light) && !underground_caverns.egyptian_room.get(:alight)) { tell self "You have moved into a dark place." }
         move self to egyptian_room
@@ -479,9 +609,12 @@ kind Adventurer is sprout.Visitor {
           // In the troll's fist, or behind a shut glass lid, a thing is seen
           // and in reach of a name but not of a hand; `all` and a run leave
           // it out, and taken alone, the move says why.
-          else if (several && (t.get(:sealed) || t.is(Axe) && t.get(:wielded))) { }
+          else if (several && (t.get(:sealed) || t.is(Axe) && t.get(:wielded) || t.is(Stiletto) && t.get(:wielded))) { }
           else if (self.holds(t)) { say "{if several}{t.short}: {/if}You already have that!" }
           else if (t.is(Rope) && t.get(:tied)) { say "{if several}{t.short}: {/if}The rope is tied to the railing." }
+          // The thief's stiletto, on the floor while he is anywhere in the
+          // room, is white-hot (Zork's WEAPON-FUNCTION).
+          else if (t.is(Stiletto) && !t.get(:wielded) && here.count(Thief) > 0) { say "{if several}{t.short}: {/if}The stiletto seems white-hot. You can't hold on to it." }
           else if (t.is(Portable)) {
             if (self.get(:carry) + t.get(:size) > 100) { say "{if several}{t.short}: {/if}{self.too_heavy}" }
             else {
@@ -578,7 +711,7 @@ kind Adventurer is sprout.Visitor {
       self.set(:suicide, false)
       if (bound weapon) {
         if (weapon.is(RustyKnife)) { self.set(:suicide, true) }
-      } else if (target.is(Troll) && self.count(Sword) == 0 && self.count(Knife) == 0 && self.count(Axe) == 0 && self.count(RustyKnife) > 0) {
+      } else if ((target.is(Troll) || target.is(Thief)) && self.count(Sword) == 0 && self.count(Knife) == 0 && self.count(Axe) == 0 && self.count(Stiletto) == 0 && self.count(RustyKnife) > 0) {
         say "(with the rusty knife)"
         self.set(:suicide, true)
       }
@@ -613,6 +746,39 @@ kind Adventurer is sprout.Visitor {
           say "{target.hit_line}"
         } else {
           say "Trying to attack a troll with your bare hands is suicidal."
+        }
+      } else if (target.is(Cyclops)) {
+        // The Cyclops answers for himself (CYCLOPS-FCN): no blow lands.
+      } else if (target.is(Thief)) {
+        if (self.get(:staggered)) {
+          self.set(:staggered, false)
+          say "You are still recovering from that last blow, so your attack is ineffective."
+          send target :blow with 0
+        } else if (bound weapon) {
+          if (weapon.is(Weapon)) {
+            send target :blow with weapon.get(:wcode)
+            say "{target.hit_line}"
+          }
+          else if (weapon.is(Thing)) { say "Trying to attack the thief with a {weapon.short} is suicidal." }
+          else { say "Trying to attack a thief with your bare hands is suicidal." }
+        } else if (self.count(Sword) > 0) {
+          say "(with the sword)"
+          send target :blow with 1
+          say "{target.hit_line}"
+        } else if (self.count(Knife) > 0) {
+          say "(with the nasty knife)"
+          send target :blow with 2
+          say "{target.hit_line}"
+        } else if (self.count(Axe) > 0) {
+          say "(with the bloody axe)"
+          send target :blow with 3
+          say "{target.hit_line}"
+        } else if (self.count(Stiletto) > 0) {
+          say "(with the stiletto)"
+          send target :blow with 4
+          say "{target.hit_line}"
+        } else {
+          say "Trying to attack a thief with your bare hands is suicidal."
         }
       } else if (target.is(Thing)) {
         say "I've known strange people, but fighting a {target.short}?"
@@ -682,7 +848,24 @@ kind Adventurer is sprout.Visitor {
   as actor for raise      { do { self.adjust(:moves, 1) } }
   as actor for eat        { do { self.adjust(:moves, 1) } }
   as actor for drink      { do { self.adjust(:moves, 1) } }
-  as actor for wind       { do { self.adjust(:moves, 1) } }
+  // Winding the canary in the forest the first time: its own part sings,
+  // and the songbird's bauble is set down here by the winder, since what is
+  // in a hand cannot reach the room around it. Up the tree, it falls.
+  as actor for wind {
+    do {
+      self.adjust(:moves, 1)
+      let songful = here.is(Songful)
+      if (target.is(Canary) && songful) {
+        if (!target.get(:broken) && !target.get(:sung)) {
+          let b = spawn Bauble in here
+          if (here.is(TreeTop)) {
+            send b :fall
+            send here :shed
+          }
+        }
+      }
+    }
+  }
   as actor for tally      { do { self.adjust(:moves, 1) } }
   as actor for smell      { do { self.adjust(:moves, 1) } }
   as actor for listen     { do { self.adjust(:moves, 1) } }
@@ -738,6 +921,21 @@ kind Adventurer is sprout.Visitor {
     do {
       self.adjust(:moves, 1)
       if (recipient.is(Troll)) { move item to recipient }
+      else if (recipient.is(Thief)) {
+        // Into his hands, and so his bag: a light that goes with it lights
+        // these hands no longer.
+        if (item.is(Light) && self.holds(item)) { if (item.get(:lit)) { send self :light with -1 } }
+        move item to recipient
+      } else if (recipient.is(Cyclops)) {
+        // The lunch he takes while he is not yet hot from it. The water he
+        // takes bottle and all, to see whether he wants it, since he cannot
+        // see into these hands (CYCLOPS-FCN; his own part decides).
+        if (!recipient.get(:asleep)) {
+          if (item.is(Lunch)) { if (recipient.get(:wrath) >= 0) { move item to recipient } }
+          else if (item.is(Water)) { each b: Bag in self { if (b.holds(item)) { move b to here } } }
+          else if (item.is(Bag)) { if (item.count(Water) > 0) { move item to here } }
+        }
+      }
     }
   }
 
@@ -749,6 +947,17 @@ kind Adventurer is sprout.Visitor {
       if (bound aim) {
         if (aim.is(Troll)) { move target to aim }
         else if (target.is(Water)) { }
+        // At the thief, he catches it, as a gift, unless it is the nasty
+        // knife and he is not yet fighting, when it falls short; at the
+        // Cyclops, it falls short.
+        else if (aim.is(Thief)) {
+          if (target.is(Knife) && !aim.get(:fighting)) { move target to here }
+          else {
+            if (target.is(Light) && self.holds(target)) { if (target.get(:lit)) { send self :light with -1 } }
+            move target to aim
+          }
+        }
+        else if (aim.is(Cyclops)) { move target to here }
         else if (aim.is(Abyss)) {
           move target to aim
           if (target.is(Thing)) { say "The {target.short} drops out of sight into the chasm." }
@@ -829,13 +1038,33 @@ kind Adventurer is sprout.Visitor {
       } else { say "echo echo ..." }
     }
   }
-  // Zork's TREASURE and TEMPLE, the Temple's words for the way to the
-  // thief's lair, which is not built.
+  // Zork's TREASURE and TEMPLE (V-TREASURE): in the Temple, the way to the
+  // thief's lair; in the lair, the way back.
   as actor for treasure { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "treasure treasure ..." } } }
     do {
       self.adjust(:moves, 1)
-      if (here.is(TempleRoom)) { say "For a moment the air of the temple seems to lean toward somewhere else, somewhere close and crowded and full of other people's things. Then it thinks better of it, and the temple is only a temple." }
-      else { say "Nothing happens." }
+      if (here.is(TempleRoom)) {
+        self.set(:dest, :treasure)
+        send underground_caverns :open_gate
+        say ""
+      } else if (here.is(TreasureRoom)) {
+        self.set(:dest, :temple)
+        send underground_caverns :open_gate
+        say ""
+      } else { say "Nothing happens." }
+    }
+  }
+  // Zork's ODYSSEUS: in the Cyclops's hearing, the name his father had
+  // cause to remember, and he goes, through the east wall.
+  as actor for odysseus { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "ulysses ulysses ..." } } }
+    do {
+      self.adjust(:moves, 1)
+      if (here.is(CyclopsRoom)) {
+        if (here.get(:cstate) <= 2) {
+          each c: Cyclops in here { send c :flee }
+          say "The cyclops, hearing the name of his father's deadly nemesis, flees the room by knocking down the wall on the east of the room."
+        } else { say "Wasn't he a sailor?" }
+      } else { say "Wasn't he a sailor?" }
     }
   }
   as actor for ring    { do { self.adjust(:moves, 1) } }

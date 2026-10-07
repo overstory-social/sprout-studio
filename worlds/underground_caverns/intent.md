@@ -21,7 +21,10 @@ North-South Passage, the Engravings Cave, the Dome Room and its railing,
 the Torch Room with the ivory torch, the Temple with its bell, the Altar
 with the black book and the candles, and the Egyptian Room with the gold
 coffin and the sceptre in it; the way out of the temple is a prayer, up to
-the Forest. Every room's name and description
+the Forest; and, from round 9, the thief, who walks all of it unseen and
+robs it, his lair the Treasure Room with the silver chalice, and the
+Cyclops beyond Maze 15, who guards the stairs up to it and leaves, when he
+leaves, through the wall into the Living Room. Every room's name and description
 is the original's, word for word, from the ZIL source (`dungeon.zil`,
 `actions.zil`, and the shared substrate's `verbs.zil`). The narrator is
 Zork's narrator: "Taken.", "Dropped.", "Opened.", the YUKS, "A hollow voice
@@ -115,17 +118,48 @@ written down. That log is a product of the world as much as the rooms are.
    coffin in any case ("You haven't a prayer of getting the coffin down
    there.").
 
-"Done", for this slice, is: the egg, the painting, the bag of coins, the
-platinum bar, the torch, the gold coffin and the sceptre in the trophy
-case (the egg ruined or not, the sceptre on its own, not in the coffin),
-the visitor having been past the troll both ways, through the maze to the
-remains and up through the grating, round by the Gallery and up the
-chimney, and down the rope and up by prayer. 145 points is the ceiling
-with every treasure intact: the Kitchen 10, the Cellar 25, the East-West
-Passage 5, the egg 5 and 5, the painting 4 and 6, the coins 10 and 5, the
+13. The thief (v5, `thief.sprout`), from the first descent into the Cellar:
+   unseen, he goes round the 39 rooms underground that Zork does not hold
+   sacred, one a turn, robbing treasures off the floor of any room a
+   visitor has been in, and now and then a lesser thing. In a dark room
+   with a visitor in it he sometimes lets himself be seen, leaning on a wall
+   with his large bag, and sometimes robs the visitor instead, seen or
+   unseen; seen, he may start a fight, with his stiletto, on Zork's tables,
+   and he fights hard: against a fresh visitor two blows in nine kill
+   outright, and one in nine knocks out, which is usually worse.
+   Given a treasure he stops to admire it and fights the worse for it.
+   Killed, he leaves his stiletto and his treasures where he fell. Alone in
+   his lair he empties his bag, and opens the jewel-encrusted egg, as only
+   he can, so the clockwork canary inside it is whole.
+14. The Cyclops Room, southeast of Maze 15 (dark): the Cyclops blocks the
+   stairs. Fed the lunch he wants a drink, and grows agitated while he
+   waits; given the water (the bottle, open or not), he falls asleep, and
+   the stairs are free. Provoked, he grows angry on his own clock until he
+   eats the visitor. "Ulysses" (or "Odysseus") sends him through the east
+   wall, which opens the Strange Passage to the Living Room's nailed door,
+   now a cyclops-shaped hole: a third way home, and the shortest.
+15. The Treasure Room, up the stairs (dark, 25 points the first time): the
+   thief rushes to defend it from wherever he is and makes its treasures
+   vanish into his bag; while he stands over it, fighting, the silver
+   chalice is not to be had. Killed there, his hoard reappears. The words
+   TREASURE and TEMPLE carry the visitor between it and the Temple.
+16. The canary, wound in the forest (the three Forests, the Forest Path, up
+   the tree), sings an aria, and a songbird drops a brass bauble.
+
+"Done", for this slice, is: the egg (whole), the canary, the bauble, the
+painting, the bag of coins, the platinum bar, the torch, the gold coffin,
+the sceptre and the chalice in the trophy case (the sceptre on its own,
+not in the coffin), the thief dead, the visitor having been past the troll
+both ways, through the maze, round by the Gallery and up the chimney, down
+the rope and up by prayer, and past the Cyclops to the lair. 197 points is
+the ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the
+East-West Passage 5, the Treasure Room 25; the egg 5 and 5, the canary 6
+and 4, the bauble 1 and 1, the painting 4 and 6, the coins 10 and 5, the
 bar 10 and 5, the torch 14 and 6, the coffin 10 and 15, the sceptre 4 and
-6. A single visit cannot carry it all: the coffin, the torch and the bar
-together are 95 of the 100, so the lamp and the sword stay below.
+6, the chalice 10 and 5. Until round 9 it was 145, with the canary
+unreachable whole. A single visit cannot carry it all: the coffin, the
+torch and the bar together are 95 of the 100, so the lamp and the sword
+stay below.
 
 ## Secrets and interactions I hope players find
 
@@ -262,9 +296,36 @@ together are 95 of the 100, so the lamp and the sword stay below.
   Dome's railing is Zork's leap, and its end.
 - **The chasm takes things.** Put or thrown into the Chasm's chasm (or East
   of Chasm's), anything is gone for good, treasures included.
-- **The Temple knows a word,** TREASURE (or TEMPLE), for the way to the
-  thief's lair, which is not built: the air leans toward somewhere else
-  and thinks better of it.
+- **The Temple knows a word,** TREASURE (or TEMPLE), and since v5 it is the
+  way to the thief's lair and back, past the Cyclops and the maze.
+- **The thief is everywhere and nowhere.** A treasure left on a floor
+  anywhere underground is likely gone the next time you look; carried, it
+  may go anyway. "Someone carrying a large bag is casually leaning against
+  one of the walls here" means a fight is coming, or a robbery, and the
+  sword blazes while he is in sight. In the maze, his voice carries ("My, I
+  wonder what this fine sword is doing here.").
+- **Gifts disarm him, a little.** Given a treasure he stops to admire it;
+  struck while he admires it, he defends at a strength of two, not five,
+  and stays there: Zork's own strategy. Given the egg, he opens it, which nobody else can do
+  without ruining it; the way to the canary is through him.
+- **The nasty knife is his bane** (one less to his defence), and thrown at
+  him before a fight it either misses and angers him or, one time in ten,
+  frightens him off with his bag spilling. Disarmed, he picks his stiletto
+  up again unless you take it first; unarmed, the next blow kills him. Out
+  cold, he lies on his bag, and a gift brings him round.
+- **His lair hides what he takes.** Going up to the Treasure Room brings him
+  running; he makes its treasures vanish, guards the chalice, and flees
+  when the fight goes against him, which leaves the chalice free. Killed
+  there, everything he hid reappears, the egg open, the canary whole.
+- **The Cyclops wants feeding,** and Zork says so only in his hungry looks.
+  The lunch makes him thirsty; the water, given in the bottle, sleeps him.
+  "Ulysses" is the other way, and only Zork's lore (or the name of his
+  father's nemesis) points to it.
+- **A third way home.** With the Cyclops gone through the wall, the Strange
+  Passage runs from his room to the Living Room: the lair's treasures can
+  be carried straight to the trophy case.
+- **The canary sings once,** in the forest, and the songbird's bauble is
+  worth a point in the hand and a point in the case.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
   chimney` and `climb down chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
@@ -276,17 +337,13 @@ together are 95 of the 100, so the lamp and the sword stay below.
 
 - The lamp's battery life (Zork's lamp lasts several hundred turns; a run
   here is capped well short of it).
-- The thief, who is the only one who can open the egg intact, and so the
-  intact canary's song and the brass bauble.
 - Putting things through the grating (Zork lets a small one fall into
   the Grating Room).
-- The thief, who walks the maze in Zork, and the Cyclops beyond it.
 - The map in the trophy case, which only appears at 350 points.
 - East of the troll (v4): the dam and its gates, so the Loud Room's
   throw-out (friction 71); the reservoir, the river and the White Cliffs;
   the mirrors south of the Round Room; Hades below the Altar, and the
-  exorcism the bell, the book and the candles are for (v8); the thief's
-  lair the Temple's word would reach; the matchbook, so the candles cannot
+  exorcism the bell, the book and the candles are for (v8); the matchbook, so the candles cannot
   be lit again once out; the hot bell.
 
 ## Two voices, and the Management
@@ -310,7 +367,11 @@ together are 95 of the 100, so the lamp and the sword stay below.
   Zork's own barring, and Zork has a someone, the thief, who walks the
   dungeon and tidies it into his bag. It pays off when he arrives (v5,
   round 9). Until then the caretaker is never seen and never followed, and
-  no line should promise more than that someone has been here.
+  no line should promise more than that someone has been here. Since v5
+  the someone is there to meet: the thief is never named as the caretaker,
+  and needs no more than the player's own conclusion. The Management's
+  sign at Maze 15 is gone with the edge it marked; its notice at the dam
+  stays, and stays the Management's.
 
 ## The shape of the source
 
@@ -355,6 +416,17 @@ together are 95 of the 100, so the lamp and the sword stay below.
   (friction 70).
 - `verbs.sprout`: Zork's verbs, the messages, the enums of gate
   destinations and description modes.
+- `thief.sprout` (v5): the `Thief` NPC, his `LargeBag` and `Stiletto`, his
+  turns (`:prowl` and `:survey`), his round of the rooms (`:tour`, and the
+  39-branch move through the world's gate), his robbing, his fights on
+  Zork's tables, his gifts, his lair and his death. The thief himself sits
+  in the Round Room, where Zork's starts. Each room keeps `:visited` and
+  `:tour` (`room.sprout`), and hides his comings and goings.
+- `cyclops.sprout` (v5): the Cyclops Room (`CyclopsRoom`, keeping
+  `:cstate` and `:magic`), the `Cyclops` NPC, the Strange Passage, the
+  Treasure Room (`TreasureRoom`) and the `Chalice`. The visitor's side of
+  their blows, gifts, robberies and the bauble is in `adventurer.sprout`;
+  the egg the thief opens and the canary's aria are in `tree.sprout`.
 
 ## Notes to self for revisions
 
@@ -948,3 +1020,114 @@ and nothing about the slice's shape changes. What changed is small answers.
 - Carried, still unmet: the Grating Room and the key from below; the grue
   in play; the skeleton's ghost; the tree's drop; the egg broken; the
   prayer found by a player who does not know Zork.
+
+## Before round 9: v5, the thief and the Cyclops
+
+The director widened the scope to v5. Built from `1dungeon.zil` (THIEF,
+LARGE-BAG, STILETTO, CYCLOPS, CHALICE, BAUBLE, CYCLOPS-ROOM, STRANGE-PASSAGE,
+TREASURE-ROOM, LIVING-ROOM's west way) and `1actions.zil` (ROBBER-FUNCTION,
+THIEF-VS-ADVENTURER, I-THIEF, ROB, ROB-MAZE, STEAL-JUNK, DROP-JUNK,
+DEPOSIT-BOOTY, RECOVER-STILETTO, LARGE-BAG-F, CHALICE-FCN,
+TREASURE-ROOM-FCN, THIEF-IN-TREASURE, CYCLOPS-FCN, I-CYCLOPS,
+CYCLOPS-ROOM-FCN, CANARY-OBJECT, THIEF-MELEE, CYCLOPS-MELEE, HERO-BLOW,
+VILLAIN-BLOW, WINNING?, the DEF tables), and `gverbs.zil` (V-ODYSSEUS,
+V-TREASURE).
+
+- **Rooms (3):** the Cyclops Room (southeast of Maze 15), the Strange
+  Passage, the Treasure Room; all dark. Maze 15's way southeast opens, and
+  its sign is gone; the Living Room's nailed door opens west once the
+  Cyclops has gone through it. The Treasure Room and the Temple are joined
+  by the words TREASURE and TEMPLE.
+- **NPCs (2 more):** the thief and the Cyclops, each composing
+  `sprout.Actor`, each acting by `act` and telling his blows with
+  `tell target`. With the troll, three.
+- **Objects:** the thief's large bag and stiletto; the silver chalice; the
+  brass bauble; and the scenery the new rooms name (the stairs, the
+  bloodstains, the east wall and its opening, the exit, the wooden door and
+  its opening, the long passage, the discarded bags, the granite), each
+  with a description of its own. The canary has one now too.
+- **Points:** the Treasure Room 25; the chalice 10 and 5; the canary, whole,
+  6 and 4; the bauble 1 and 1. The ceiling is 197.
+- **How the thief is built.** Every turn of his (a wake a minute, or a blow
+  struck at him) he broadcasts `:prowl`; his room answers `:survey`, and in
+  that handler `from` is his room, against which the whole of I-THIEF and
+  his share of I-FIGHT run, in Zork's order: in his lair alone, he empties
+  his bag (`:disgorge`) and so opens the egg; with a visitor in a dark room
+  without the troll, THIEF-VS-ADVENTURER (show himself, flee, leave, or rob
+  the room or the visitor, who hands over by `:rob`); anywhere else he
+  robs the room unseen (ROB at three in four, then ROB-MAZE in the maze and
+  STEAL-JUNK elsewhere); then, seen and with company, he fights (`act
+  attack`, on Zork's tables, his lines told to the one hit); then, unseen,
+  he moves on, through the world's gate, to the next room of his round
+  (`:tour`), whose `:entered` surveys it for him in turn; and he drops a
+  worthless thing now and then (DROP-JUNK). He is unseen as Zork's
+  INVISIBLE thief is: in the room, unlisted, unnamable, his hands out of
+  reach, his arrivals unannounced. The visitor's blow at him is `:blow`
+  (HERO-BLOW, with his defence written back as VILLAIN-RESULT does), and
+  dying (`:expire`) he drops his stiletto and his treasures where he falls;
+  in his lair, the room lists them as they reappear. The Treasure Room
+  summons him (`:summon`, through the world) or rouses him where he stands
+  unseen (`:defend`). What the model would not let him do, and how he does
+  it anyway, is friction 83 to 92.
+- **The Cyclops** keeps his wrath (`:wrath`) and his sleep, tells the room
+  what to say of him (`:cyc_state`), runs I-CYCLOPS and his fists on wakes
+  while a visitor is with him, and on "Ulysses" broadcasts `:magic` (the
+  wall, the passage and the door) and `:cyclops_gone` (the sword) and goes.
+- **The tests:** `thief_seen.json` (he shows himself, is looked at and
+  refused, and leaves robbing the visitor blind), `thief_unseen.json` (he
+  robs unseen in the Round Room, and in the maze is overheard taking the
+  sword), `thief_hungry.json` (nothing to rob), `thief_fight.json` (given a
+  treasure, fought and killed: the booty remains, and the stiletto is
+  anyone's), `thief_flee.json` (losing in his lair, he flees, and the
+  chalice is free), `thief_egg.json` (the egg given, the thief killed, the
+  egg open and the canary whole, carried up the chimney and wound on the
+  Forest Path for the bauble), `thief_hoard.json` (the egg given, his round
+  through the maze for the coins, his lair emptied and the egg opened, the
+  rush, the vanishing, his death there and the hoard reappearing),
+  `treasure_room.json` (25 points, the chalice guarded, the thief killed,
+  the chalice home by the Strange Passage, TREASURE and TEMPLE),
+  `cyclops_sleep.json` (the bottle refused, the garlic, the lunch, the
+  agitation, the water and the sleep, the stairs), `cyclops_wake.json`
+  (kicked awake, he fights), `cyclops_wrath.json` (provoked, he eats you),
+  `cyclops_ulysses.json` (the wall, the passage, the door, the sailor),
+  `v5_score.json` (the new points, into the case). `coffin.json` and
+  `hole.json` no longer say TREASURE in the Temple, and `maze.json` goes
+  southeast into the Cyclops Room instead of reading the sign.
+
+### What round 9 should test
+
+- **Does anyone meet the thief, and what do they make of him?** He passes
+  any one room every 39 turns of his and comes forward only a third of the
+  times he finds somebody in a dark room; at the studio's 30 seconds a
+  turn he moves every other turn. A 150-turn run underground meets him
+  perhaps twice. Watch whether players read the unseen robbery ("A
+  seedy-looking individual…") as theft by someone, and go after him;
+  whether they notice treasures missing from floors; whether the caretaker
+  reading settles on him.
+- **The fight.** He is deadly to a fresh visitor (two in nine of his blows
+  kill outright at a score under 70). Whether players fight him, die, and come back;
+  whether anyone gives him a treasure first (and finds that it weakens him),
+  throws the knife, takes his dropped stiletto, or lets him leave.
+- **The egg.** Whether anyone gives him the egg, or carries it underground
+  where he can take it, and then finds it open in his lair or where he
+  fell; whether anyone winds the whole canary in the forest.
+- **The Cyclops.** Whether players feed him the lunch and then think of the
+  water; whether "Ulysses" is found without knowing Zork (nothing in this
+  world points at it but his father, and the Cyclops himself, which is
+  Zork's own hint); whether anyone attacks him, or waits too long.
+- **The lair.** Whether anyone reaches the Treasure Room, by the stairs or
+  by the Temple's word, and what they do when the treasures vanish; whether
+  the chalice's "stabbed in the back" reads as a puzzle, and whether
+  anyone kills him there.
+- **The way home by the Strange Passage,** and whether the hole in the
+  Living Room's door is noticed from the house side.
+- **Faults:** none in 25 fuzzed runs of 120 to 200 random commands with
+  random waits, from the Troll Room, with the thief in sight, in his lair
+  and before the Cyclops.
+  Watch for any fault in play with three NPCs and the gate in use by more
+  than one of them in a turn.
+- Carried, still unmet: the Grating Room and the key from below; the grue
+  in play; the skeleton's ghost; the tree's drop; the egg broken; the
+  prayer found by a player who does not know Zork. The thief now makes
+  the egg's fate and the maze's coins less certain.
+

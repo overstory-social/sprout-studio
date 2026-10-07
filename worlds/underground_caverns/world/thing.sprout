@@ -9,7 +9,8 @@
 import {ask} from 'sprout'
 import {Light} from 'lamp'
 import {Weapon} from 'items'
-import {take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die} from 'verbs'
+import {Thief} from 'thief'
+import {take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die, :pinch, :far_voice} from 'verbs'
 import {Room} from 'room'
 import {Abyss} from 'east'
 import {Adventurer} from 'adventurer'
@@ -28,6 +29,8 @@ kind Thing {
   :sealed false
   // Zork's BURNBIT: it catches fire.
   :burnable false
+  // Zork's SACREDBIT: the thief never lays a finger on it.
+  :sacred false
 
   passage short default { thing }
   passage fdesc default { {self.ldesc} }
@@ -180,6 +183,14 @@ kind Thing {
 // A thing that can be carried off. Only these answer `take all`.
 kind Portable is Thing {
   as target for take { permit { if (false) { refuse "" } } }
+
+  // The thief, in the maze, has his eye on it (Zork's ROB-MAZE): it is
+  // talked about, where anyone in the maze can hear, and, if he means to,
+  // it goes into his hands (he is the only one it is ever sent from).
+  on :pinch (from, value) {
+    broadcast :far_voice
+    if (value && from.is(Thief)) { move self to from }
+  }
 
   without as target for shift from Thing
   as target for shift { do { say "Moving the {self.short} reveals nothing." } }
