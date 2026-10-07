@@ -113,7 +113,7 @@ kind GratingAbove is Grating {
   passage view {
     It is a heavy iron grating, set securely into the ground and rusted to the colour of the leaves that hid it. Below it is only darkness.
 
-    {if self.get(:open)}The grating is open.{else}The grating is closed.{/if}
+    {if self.get(:open)}The grating is open.{else if self.get(:unlocked)}The grating is closed.{else}The grating is closed, and fastened from beneath: whatever lock holds it faces down into the dark, well out of reach of anyone up here.{/if}
   }
   describe { text view }
 
@@ -176,8 +176,7 @@ kind GratingBelow is Grating {
         else if (self.get(:open)) { say dummy }
         else {
           self.set(:open, true)
-          self.set(:open, true)
-        say opens
+          say opens
           if (!self.get(:revealed)) {
             say leaves_fall
             send underground_caverns :open_gate

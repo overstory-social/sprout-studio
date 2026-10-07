@@ -33,8 +33,8 @@ written down. That log is a product of the world as much as the rooms are.
    window` takes great effort; `enter house` or `w` goes in.
 3. The forest: four Forest rooms, the Forest Path with its climbable tree,
    Up a Tree with the bird's nest and the jewel-encrusted egg, the two
-   Clearings, the pile of leaves hiding a grating (locked; its key lies
-   in a part of the Empire not yet built).
+   Clearings, the pile of leaves hiding a grating (locked from beneath;
+   its key lies with the remains in the Maze).
 4. The house: the Kitchen (10 points the first time), its table with the
    brown sack (lunch, garlic) and the bottle of water; the dark Attic with
    the rope and the nasty knife; the Living Room with the trophy case, the
@@ -201,6 +201,29 @@ ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the egg
   the Grating Room).
 - The thief, who walks the maze in Zork, and the Cyclops beyond it.
 - The map in the trophy case, which only appears at 350 points.
+
+## Two voices, and the Management
+
+- **Zork's voice in the rooms, the author's in the things.** Every room's
+  name and description is Zork's, word for word. Zork gives most of its
+  objects no description at all; the examine layer is mine, in Zork's dry
+  voice, and it is what players quote most (the chasm, the skeleton, the
+  knife, the dead lantern, the trophy case). It is deliberate, and it is
+  where the brief's "a little spice" lives. Every thing a player can carry
+  answers `examine` with a sentence of its own; Zork's "There's nothing
+  special about…" is kept only for what a sentence would not improve.
+- **The caretaker is deliberate.** Zork gives one hint of someone else
+  down here: the trap door barred behind you. This world adds a few more,
+  on purpose: the Management's notes on the unbuilt passages, the
+  crawlway someone "has cleared lately", the trap door's dust scuffed by
+  "somebody's comings and goings", the leaves swept together "as though
+  someone had swept them together on purpose", and the lamp put back after
+  a death by "somebody tidy". Players read the world as being about this
+  presence, and that reading is welcome: it is the faithful explanation of
+  Zork's own barring, and Zork has a someone, the thief, who walks the
+  dungeon and tidies it into his bag. It pays off when he arrives (v5,
+  round 9). Until then the caretaker is never seen and never followed, and
+  no line should promise more than that someone has been here.
 
 ## The shape of the source
 
@@ -579,3 +602,46 @@ No scope changed. Sprout fixed most of what the port had asked of it
 As carried above, and: whether the troll's fight reads as his now that
 his blows come from him; whether anyone chains commands with commas;
 whether the tunnels' warning is noticed.
+
+## After round 6
+
+- **The grating has a pointer now.** For a second round nobody reached the
+  Grating Room, and three of four key-holders went looking for a lock
+  above ground. The key's description now says the lock it fits wears its
+  skull and is somewhere down here, past where its owner fell; the
+  grating from the Clearing, locked, says its lock faces down into the
+  dark. The rooms are joined as `dungeon.zil` joins them, and the grating
+  is still Zork's secret, only less of one. `unlock grating with key` from
+  the Clearing already gave Zork's "You can't reach the lock from here."
+- **The caretaker is written down** (above, "Two voices, and the
+  Management"), kept, and not extended.
+- **Names the room text uses answer:** the open field at West of House,
+  the forest path behind the house and north of it, the lunch and the
+  garlic (each a sentence of its own, as the sack has). `smell` alone is
+  answered as `listen` alone is.
+- **Prepositions:** `squeeze through`, `climb down into` and `walk around
+  to (the back of)` are read (`names_and_ways.json`); the general case is
+  friction 68.
+- **The chimney's drops:** `drop all except <one thing>` works; a list
+  after `except`, and `but`, do not (friction 69). The chimney is kept.
+- **Kept, by choice:** the barred trap door on every return (TOUCHBIT),
+  which all six players read as Zork's one-way door; the maze as
+  `dungeon.zil` joins it, BRIEF and all (the skeleton is part of Maze 5's
+  description, as in Zork, so BRIEF hides it on a return visit); the
+  troll's fight on Zork's tables. All six read his blows as his.
+- **Not the world's:** the goal-seeker's run stopped at 136 lines with no
+  report; that is the studio's playtest harness, for the director.
+
+### What round 7 should watch (carried, still unmet in 36 runs)
+
+- The Grating Room: whether the key's pointer sends anyone looking for the
+  skull lock below; the key in the grating, the leaves falling, the
+  Clearing reached from below. A goal such as "find another way out of the
+  maze" would test it directly.
+- The grue (its handler has never fired in play); the skeleton's ghost and
+  banishing; dropping things from the tree; the egg broken.
+- Throwing things at the troll, waking him, his coming round.
+- Off the list, met and reading as intended: the rusty knife and its
+  pulse, the stairs by name, comma chaining, the tunnels' warning, the
+  troll's blows as his, the re-barred trap door.
+

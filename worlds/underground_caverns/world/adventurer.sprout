@@ -17,7 +17,7 @@ import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
 import {go, look, examine, inventory, wait} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, listen_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -592,6 +592,15 @@ kind Adventurer is sprout.Visitor {
       if (here.is(Forest)) { say "You hear in the distance the chirping of a song bird." }
       else if (here.is(Maze) || here.is(DeadEnd)) { say "You hear nothing. The silence is the same silence as in every other part of the maze, which is no help at all." }
       else { say "You hear nothing out of the ordinary." }
+    }
+  }
+  // `smell` alone, as `listen` alone: the forest, the maze, or nothing much.
+  as actor for smell_here {
+    do {
+      self.adjust(:moves, 1)
+      if (here.is(Forest)) { say "You smell pine, damp earth and leaf mould, as forests do." }
+      else if (here.is(Maze) || here.is(DeadEnd)) { say "The air smells of cold, damp stone. It smells the same in every part of the maze, which is no help at all." }
+      else { say "You smell nothing out of the ordinary." }
     }
   }
   as actor for climb_down { do { self.adjust(:moves, 1) } }

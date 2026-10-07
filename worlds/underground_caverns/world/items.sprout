@@ -82,12 +82,14 @@ kind Lunch is Food {
   grammar { name "lunch"  nouns "food", "sandwich", "dinner"  adjectives "hot", "pepper" }
   passage short { lunch }
   passage ldesc { A hot pepper sandwich is here. }
+  describe { text "It is a hot pepper sandwich, wrapped in waxed paper that has long since given up trying to contain it. It smells of hot peppers from across the room, and of more hot peppers from closer to." }
 }
 
 kind Garlic is Food {
   grammar { name "clove of garlic"  nouns "garlic", "clove" }
   :size 4
   passage short { clove of garlic }
+  describe { text "It is a single clove of garlic, plump and papery and very much itself. It is the sort of thing that keeps certain company at a distance, and most other company too." }
   without as target for eat from Food
   as target for eat {
     permit { if (!actor.holds(self)) { refuse "You're not holding that." } }

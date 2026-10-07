@@ -53,6 +53,11 @@ object west_of_house is Room in underground_caverns {
   object front_door is FrontDoor
   object house is WhiteHouse
   object boards is Boards
+  object field is Scenery {
+    grammar { name "open field"  nouns "field", "grass", "meadow"  adjectives "open" }
+    passage short { open field }
+    describe { text "The field is open, grassy and entirely without incident, which is what fields are for. It runs up to the white house on the east, gives out at the forest on the west, and keeps the mailbox company in between." }
+  }
 }
 
 object north_of_house is Room in underground_caverns {
@@ -75,7 +80,7 @@ object north_of_house is Room in underground_caverns {
     passage view { Beyond the path the trees begin, large and close together and darker the further in you look. The path is the only polite way into them. }
   }
   object path is Scenery {
-    grammar { name "narrow path"  nouns "path", "trail"  adjectives "narrow", "winding" }
+    grammar { name "narrow path"  nouns "path", "trail"  adjectives "narrow", "winding", "forest" }
     passage short { narrow path }
     describe { text "The narrow path winds north, away from the house and into the trees, as though it had somewhere better to be." }
   }
@@ -139,7 +144,7 @@ object behind_house is Room, Outdoors in underground_caverns {
     passage view { The trees of the forest stand off to the east, beyond a strip of grass, large and old and not inclined to come any closer. }
   }
   object path is Scenery {
-    grammar { name "path"  nouns "trail"  adjectives "east" }
+    grammar { name "path"  nouns "trail"  adjectives "east", "forest" }
     passage short { path }
     describe { text "The path leads east, away from the house and into the forest. It is well trodden, though not, apparently, by anyone you will meet soon." }
   }

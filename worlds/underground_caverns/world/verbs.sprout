@@ -94,6 +94,9 @@ verb wind { role target  "wind [target]"  "wind up [target]" }
 verb tally { role target  "count [target]" }
 
 verb smell { role target  "smell [target]"  "sniff [target]" }
+// `smell` alone: Zork would ask what; the parser here cannot ask, so the
+// visitor is told what there is to smell, as `listen` alone is.
+verb smell_here { "smell"  "sniff"  "smell the air"  "sniff the air" }
 
 verb listen { role target  "listen to [target]"  "listen for [target]" }
 // `listen` alone: Zork would ask to what; the parser here cannot ask, so the
@@ -229,6 +232,24 @@ verb restart { "restart" }
 verb save { "save" }
 verb restore { "restore" }
 verb curse { "damn"  "curse"  "shit"  "fuck" }
+
+// The ways in English a verb the world knows is followed by a preposition
+// its own phrases do not take. Without them the preposition is read as the
+// start of a name, and a thing in plain sight is answered `not_here`
+// (friction 68).
+intent squeeze_through {
+  "squeeze through [x]"  "squeeze in through [x]"  "squeeze into [x]"
+  do through (target: x)
+}
+intent climb_into {
+  "climb down into [x]"  "go down into [x]"  "lower yourself into [x]"
+  do climb_down (target: x)
+}
+intent walk_around_to {
+  "walk around to the back of [x]"  "go around to the back of [x]"
+  "walk round [x]"  "go round [x]"  "walk around to [x]"
+  do walk_around (target: x)
+}
 
 // The library's `open [y] with [x]` intent stands for its own `open`, which
 // this world replaces; this one stands for this world's.

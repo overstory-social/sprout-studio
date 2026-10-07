@@ -1358,6 +1358,47 @@ area by area, including what it did not find hard.
   contents in range of `self`").
 - **Status: open,** as 33.
 
+## Found in round 6
+
+### 68. A known verb before a preposition it does not take reads the rest as a name
+
+- **Wanted:** `squeeze through the window` (the window just opened), `climb
+  down into the chasm` (standing at its edge), `walk around to the back of
+  the house`, each read as Zork's parser would read it, or at worst told
+  that the sentence is not understood.
+- **Found:** `squeeze [target]`, `climb down [target]` and `walk around
+  [target]` match, with "through the window", "into the chasm" and "to the
+  back of the house" as the name; that names nothing in reach, so the line
+  is `not_here`, "You can't see any such thing.", about a thing in plain
+  sight. That is the spec (a line that names nothing in reach is
+  `not_here`), but to a player it reads as the world pretending not to
+  see. Two players met it four times in round 6.
+- **Wrote instead:** three intents, `squeeze_through` (to THROUGH),
+  `climb_into` (to CLIMB DOWN) and `walk_around_to` (to WALK AROUND), for
+  the phrasings players used. Every other verb-and-preposition a player
+  might try still falls to `not_here`. Asked of Sprout: where a verb's
+  phrase matches only by taking a leading preposition into a name that
+  then names nothing, answer `unknown` rather than `not_here`.
+- **Spec:** Parsing › Matching a line; When nothing matches.
+- **Status: open.**
+
+### 69. `except` takes one thing, and `but` is not `except`
+
+- **Wanted:** at the chimney, which takes the visitor, the lamp and one
+  thing more, `drop all but the painting and the lamp` (or `except`), as
+  Zork's parser reads ALL BUT and ALL EXCEPT with a list. Two players
+  dropped five and seven things one at a time instead.
+- **Found:** `drop all except sack` works; `drop all except sack and
+  bottle` and `drop everything except the sack and the bottle` are
+  `not_here`; `drop all but sack` is `unknown`. The spec's `except` leaves
+  things out "by kind or by name", one name, and `but` is not one of the
+  parser's words; a world cannot add it, since `all` and `except` are the
+  parser's own.
+- **Wrote instead:** nothing; the chimney's rule is kept, and `drop all
+  except <one thing>` is what a player can type.
+- **Spec:** Parsing › Sequences, again and all.
+- **Status: open.**
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -1484,3 +1525,14 @@ area by area, including what it did not find hard.
 - **The chasm** answers `look into` with a line of its own.
 - **The front door** has a description of its own, naming the boards,
   before Zork's "The door is closed."
+- **`smell` alone** is answered, as `listen` alone is: the forest, the
+  maze's sameness, nothing out of the ordinary elsewhere. Zork asks what
+  to smell, which the parser here cannot (32).
+- **The open field** at West of House is a thing, to examine; Zork has no
+  field object, but the brief asks that everything a room's description
+  names answer with a description of its own.
+- **The grating from above, locked,** says its lock is beneath, and the
+  skeleton key's description says the lock it fits wears its skull and is
+  somewhere below the remains. Zork's key and grating have no
+  descriptions; the lock and the key are still joined only as
+  GRATE-FUNCTION joins them.
