@@ -314,8 +314,8 @@ stay below.
   up again unless you take it first; unarmed, the next blow kills him. Out
   cold, he lies on his bag, and a gift brings him round.
 - **His lair hides what he takes.** Going up to the Treasure Room brings him
-  running; he makes its treasures vanish, guards the chalice, and flees
-  when the fight goes against him, which leaves the chalice free. Killed
+  running; he makes its treasures vanish, guards the chalice, and in his own
+  lair he does not run: the chalice is had only over his dead body. Killed
   there, everything he hid reappears, the egg open, the canary whole.
 - **The Cyclops wants feeding,** and Zork says so only in his hungry looks.
   The lunch makes him thirsty; the water, given in the bottle, sleeps him.
@@ -1078,8 +1078,10 @@ V-TREASURE).
   robs unseen in the Round Room, and in the maze is overheard taking the
   sword), `thief_hungry.json` (nothing to rob), `thief_fight.json` (given a
   treasure, fought and killed: the booty remains, and the stiletto is
-  anyone's), `thief_flee.json` (losing in his lair, he flees, and the
-  chalice is free), `thief_egg.json` (the egg given, the thief killed, the
+  anyone's), `thief_lair.json` (after round 9: in his lair he stands
+  and fights, neither fleeing nor leaving, and the chalice stays guarded;
+  this replaced `thief_flee.json`, which had him flee there, against
+  THIEF-VS-ADVENTURER), `thief_egg.json` (the egg given, the thief killed, the
   egg open and the canary whole, carried up the chimney and wound on the
   Forest Path for the bauble), `thief_hoard.json` (the egg given, his round
   through the maze for the coins, his lair emptied and the egg opened, the
@@ -1131,3 +1133,65 @@ V-TREASURE).
   prayer found by a player who does not know Zork. The thief now makes
   the egg's fate and the maze's coins less certain.
 
+## After round 9
+
+Six runs; every one met the thief, and everyone who reported read him as
+meant: a robber who roams, a caretaker's tidiness that is probably his.
+Nobody killed him, nobody saw the hoard come back, nobody wound the
+canary, nobody fed the Cyclops (one player who knew Zork said "odysseus").
+
+- **The lair was wrong, and is fixed.** He fled from the strong
+  goal-seeker in his own lair after every exchange (WINNING? lost), with
+  the egg in his bag, so the hoard could never be won there. Zork's
+  THIEF-VS-ADVENTURER does nothing at all while the visitor is in the
+  Treasure Room: he neither runs, nor robs, nor leaves in disgust. Now he
+  stands and fights there until one of them is dead, and the hoard and the
+  open egg are there for whoever kills him. That was the canary arc's
+  one door, and it was shut; it is open now. The discretion clause stays
+  where Zork has it, which in practice almost never comes up: he must be
+  seen without having announced himself.
+- **The lair's arrival reads in Zork's order.** The scream and the gesture
+  are told by the visitor as they come in, before the room is described,
+  so the room is then described as it is after the treasures have gone;
+  and the gesture is told only when there is something besides the
+  chalice to vanish. The lair keeps `:keeper` (the thief tells it whether
+  he is alive and awake) so that the visitor knows whether he will come.
+  Friction 92 is resolved this way.
+- **DIAGNOSE says when the wound will heal,** as V-DIAGNOSE does: "which
+  will be cured after N moves", twenty moves a point (ten minutes at the
+  host's half-minute a turn), and what is left counts the score as Zork's
+  FIGHT-STRENGTH does. Wounds are now counted in Zork's points: a serious
+  wound from the thief or the Cyclops is two, and heals as two, where it
+  used to cost two strength and give back one.
+- **The thief's double blow is Zork's.** DO-FIGHT repeats the villain's
+  blow, one to three more times, when the first knocks the visitor out,
+  in the same move, and every repeat but a stagger is the sitting-duck
+  death. It stays. What changed is the death's own line, which is mine:
+  it now says where things went (the plain things about the forest and
+  fields around the house, anything of value into a dark corner in or
+  under it, the lamp to the living room), so a player who loses the lunch
+  or the sword knows where to look.
+- **BLOW OUT** turns things off, as Zork's syntax has it ("You nearly burn
+  your hand trying to extinguish the flame."). EVERYTHING is not Zork's
+  word for ALL, and stays unknown.
+- **Kept as they are:** the thief's voice and the caretaker (P5); a
+  staggered thief may still leave in disgust in the same move, since
+  Zork's STAGGERED costs him only his blow and I-THIEF's 30 per cent leave
+  runs regardless; the maze (P9); the sack in the case counts nothing
+  (OTVAL-FROB, as the sceptre in the coffin); the echo, the prayer, the
+  chimney's rule, the lamp named in the load.
+
+### What round 10 should watch
+
+- **Whether anyone kills the thief in his lair,** now that he stays, and
+  wins the hoard, the open egg and the canary; and whether players at a
+  low score read the lair as a place to come back to later, stronger.
+- **Whether DIAGNOSE's number changes what wounded players do.**
+- **Whether the new death line sends anyone back for the lunch or the
+  sword.**
+- Carried, still unmet after 54 runs: feeding the Cyclops (lunch, then
+  water); the Grating Room and the key from below; the grue in play; the
+  ghost; the tree's drop; the egg broken; winding the canary. A goal aimed
+  at them (getting past the one-eyed guard without a fight; finding where
+  stolen things went; another way out of the maze) is the director's to
+  give.

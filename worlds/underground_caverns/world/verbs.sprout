@@ -79,6 +79,7 @@ verb lamp_off {
   role target
   "turn off [target]"  "turn [target] off"  "extinguish [target]"
   "switch off [target]"  "switch [target] off"  "douse [target]"
+  "blow out [target]"  "blow [target] out"
 }
 
 verb attack {
@@ -444,6 +445,9 @@ message :rob with integer
 // (`:defend`).
 message :summon
 message :defend
+// The thief tells his lair whether he is there to come to its defense:
+// false while he lies out cold and once he is dead.
+message :keeper with boolean
 // In the maze, a thing the thief has his eye on, and whether he takes it;
 // and the voice a visitor elsewhere in the maze hears saying so.
 message :pinch with boolean

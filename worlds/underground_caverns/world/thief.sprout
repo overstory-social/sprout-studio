@@ -33,7 +33,7 @@ import {Egg} from 'tree'
 import {Chalice, TreasureRoom} from 'cyclops'
 import {ask} from 'sprout'
 import {examine} from 'sprout'
-import {take, drop, open, close, look_in, search, attack, give, throw, listen, talk, greet, alarm, shift, :blow, :expire, :open_gate, :gate_open, :close_gate, :settle, :thief_start, :prowl, :survey, :rob, :summon, :defend, :pinch, :unveil, :pry, :thief_gone} from 'verbs'
+import {take, drop, open, close, look_in, search, attack, give, throw, listen, talk, greet, alarm, shift, :blow, :expire, :open_gate, :gate_open, :close_gate, :settle, :thief_start, :prowl, :survey, :rob, :summon, :defend, :pinch, :unveil, :pry, :thief_gone, :keeper} from 'verbs'
 import {cellar, troll_room} from 'cellar'
 import {east_of_chasm, gallery, studio} from 'gallery'
 import {maze_1, maze_2, maze_3, maze_4, dead_end_1, maze_5, dead_end_2, maze_6, maze_7, maze_8, dead_end_3, maze_9, maze_10, maze_11, grating_room, maze_12, dead_end_4, maze_13, maze_14, maze_15} from 'maze'
@@ -135,7 +135,6 @@ kind Thief is Thing, sprout.Actor {
   :at 30 min 0 max 60
   :next 0 min 0 max 60
   :rushing false
-  :rushed false
   // Whether a visitor stands in his room, as the last survey found.
   :company false
   // Scratch: how many treasures he took, whether he is done, whether he
@@ -216,6 +215,7 @@ kind Thief is Thing, sprout.Actor {
         if (self.get(:strength) < 0) {
           say "Your proposed victim suddenly recovers consciousness."
           self.set(:strength, 0 - self.get(:strength))
+          send treasure_room :keeper with true
           self.set(:rouse, 0)
           each b: LargeBag in self { send b :pinned with false }
         }
@@ -250,6 +250,7 @@ kind Thief is Thing, sprout.Actor {
           if (self.get(:strength) < 0) {
             say "Your proposed victim suddenly recovers consciousness."
             self.set(:strength, 0 - self.get(:strength))
+            send treasure_room :keeper with true
             self.set(:rouse, 0)
             each b: LargeBag in self { send b :pinned with false }
           }
@@ -325,7 +326,6 @@ kind Thief is Thing, sprout.Actor {
     if (!self.get(:dead) && self.get(:strength) > 0) {
       self.set(:started, true)
       self.set(:rushing, true)
-      self.set(:rushed, true)
       self.set(:announced, false)
       self.set(:phase, 3)
       send underground_caverns :open_gate
@@ -341,11 +341,10 @@ kind Thief is Thing, sprout.Actor {
       self.set(:at, from.get(:tour))
       self.set(:company, from.count(Adventurer) > 0)
       if (ph == 3) {
-        // TREASURE-ROOM-FCN and THIEF-IN-TREASURE.
-        if (self.get(:rushed)) {
-          self.set(:rushed, false)
-          tell "You hear a scream of anguish as you violate the robber's hideaway. Using passages unknown to you, he rushes to its defense."
-        }
+        // TREASURE-ROOM-FCN and THIEF-IN-TREASURE. The scream and the
+        // gesture are the visitor's to tell, as they come in, so that they
+        // come before the room (friction 92); the lair keeps `:keeper` so
+        // that they know he is there to come.
         self.set(:shown, true)
         self.set(:ndesc, false)
         self.set(:fighting, true)
@@ -356,7 +355,6 @@ kind Thief is Thing, sprout.Actor {
             self.adjust(:loot, 1)
           }
         }
-        tell "The thief gestures mysteriously, and the treasures in the room suddenly vanish."
         each a: Adventurer in from { send a :settle with 2 }
       } else if (self.get(:strength) < 0) {
         // Out cold (I-FIGHT's AWAKEN): with somebody watching, a growing
@@ -366,12 +364,14 @@ kind Thief is Thing, sprout.Actor {
             tell "The robber revives, briefly feigning continued unconsciousness, and, when he sees his moment, scrambles away from you."
             self.set(:rouse, 0)
             self.set(:strength, 0 - self.get(:strength))
+            send treasure_room :keeper with true
             self.set(:fighting, true)
             each s: Stiletto in from { move s to self }
           } else { self.adjust(:rouse, 25) }
         } else {
           self.set(:rouse, 0)
           self.set(:strength, 0 - self.get(:strength))
+          send treasure_room :keeper with true
           each s: Stiletto in from { move s to self }
         }
       } else {
@@ -385,6 +385,10 @@ kind Thief is Thing, sprout.Actor {
           }
           each s: Stiletto in from { move s to self }
           each b: LargeBag in self { send b :disgorge with 1 }
+        } else if (self.get(:company) && from.is(TreasureRoom)) {
+          // THIEF-VS-ADVENTURER's first clause: in his own lair, with a
+          // visitor in it, he neither shows himself, nor robs, nor leaves,
+          // nor runs; he stands and fights until one of them is dead.
         } else if (self.get(:company) && from.is(DarkRoom) && from.count(Troll) == 0) {
           // THIEF-VS-ADVENTURER. First, Zork's WINNING?: his strength
           // against the visitor's, and a chance.
@@ -769,6 +773,7 @@ kind Thief is Thing, sprout.Actor {
         let r = self.get(:mres)
         self.set(:last, r)
         if (r == 2) {
+          send treasure_room :keeper with false
           self.set(:strength, 0 - self.get(:md))
           self.set(:fighting, false)
           self.set(:rouse, 0)
@@ -802,6 +807,7 @@ kind Thief is Thing, sprout.Actor {
       self.set(:dead, true)
       self.set(:fighting, false)
       self.set(:booty, false)
+      send treasure_room :keeper with false
       tell "Almost as soon as the thief breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared."
       broadcast :thief_gone
       each s: Stiletto in self { act drop (target: s) }

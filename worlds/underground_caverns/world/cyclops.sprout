@@ -22,7 +22,7 @@ import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
 import {Thief} from 'thief'
 import {ask} from 'sprout'
-import {take, put, open, close, look_in, attack, give, throw, listen, talk, greet, alarm, mung, kick, burn, tie, climb_up, climb_down, through, shift, :travel, :clock, :cyc_state, :magic, :cyclops_gone, :uncork, :consume, :summon, :defend, :unveil, :wall_look, :die, search} from 'verbs'
+import {take, put, open, close, look_in, attack, give, throw, listen, talk, greet, alarm, mung, kick, burn, tie, climb_up, climb_down, through, shift, :travel, :clock, :cyc_state, :magic, :cyclops_gone, :uncork, :consume, :summon, :defend, :keeper, :unveil, :wall_look, :die, search} from 'verbs'
 import {maze_15} from 'maze'
 import {living_room} from 'house'
 
@@ -36,7 +36,12 @@ kind CyclopsRoom is DarkRoom {
   :cstate 0 min 0 max 4
   :magic false
 }
-kind TreasureRoom is DarkRoom { }
+kind TreasureRoom is DarkRoom {
+  // Whether its owner is alive and awake to come to its defense, as he
+  // tells it (a room cannot read him out of its range).
+  :keeper true
+  on :keeper (from, value) { self.set(:keeper, value) }
+}
 
 object cyclops_room is CyclopsRoom in underground_caverns {
   grammar {

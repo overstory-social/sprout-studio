@@ -1,5 +1,5 @@
 {
-  "about": "The thief's hoard: given the egg, he goes on his round unseen, robbing the maze of the dead adventurer's coins on the way, and empties his bag in his lair, opening the egg (DEPOSIT-BOOTY). The visitor who comes up to the lair (by the Living Room and the Strange Passage, the Cyclops gone) sees the treasures vanish as he gestures; killed there, he lets them reappear: the egg, open, the canary in it, the coins, and the chalice safe to take.",
+  "about": "The thief in his lair stands and fights: THIEF-VS-ADVENTURER does nothing while a visitor is in the Treasure Room, so he neither runs from a losing fight, nor robs, nor leaves in disgust, and while he stands over it the chalice is not to be had. His scream and his gesture come before the room is described, and the gesture only when there is something besides the chalice to vanish.",
   "steps": [
     {
       "seed": 0
@@ -37,81 +37,6 @@
           "reader": "Marta",
           "kind": "described",
           "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "n",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Forest Path"
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "u",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Up a Tree"
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach."
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Beside you on the branch is a small bird's nest."
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "In the bird's nest is a large egg encrusted with precious jewels, apparently scavenged by a childless songbird. The egg is covered with fine gold inlay, and ornamented in lapis lazuli and mother-of-pearl. Unlike most eggs, this one is hinged and closed with a delicate looking clasp. The egg appears extremely fragile."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "take egg",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "said",
-          "words": "Taken."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "d",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Forest Path"
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "s",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "North of House"
         }
       ]
     },
@@ -180,6 +105,28 @@
     },
     {
       "as": "Marta",
+      "type": "take sack",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take bottle",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
       "type": "w",
       "expect": [
         {
@@ -228,6 +175,97 @@
     },
     {
       "as": "Marta",
+      "type": "e",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Kitchen"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "u",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "You have moved into a dark place."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "It is pitch black. You are likely to be eaten by a grue."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "turn on lamp",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The brass lantern is now on."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Attic"
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "This is the attic. The only exit is a stairway leading down."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "A large coil of rope is lying in the corner."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "On a table is a nasty-looking knife."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take rope",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "d",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Kitchen"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "w",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Living Room"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
       "type": "move rug",
       "expect": [
         {
@@ -245,17 +283,6 @@
           "reader": "Marta",
           "kind": "said",
           "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "turn on lamp",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "said",
-          "words": "The brass lantern is now on."
         }
       ]
     },
@@ -361,115 +388,6 @@
     },
     {
       "seed": 0
-    },
-    {
-      "as": "Marta",
-      "type": "e",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "East-West Passage"
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "e",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Round Room"
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins."
-        }
-      ]
-    },
-    {
-      "seed": 4
-    },
-    {
-      "advance": "1 minutes",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "Someone carrying a large bag is casually leaning against one of the walls here. He does not speak, but it is clear from his aspect that the bag will be taken only over his dead body."
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "Your sword has begun to glow very brightly."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "give egg to thief",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "said",
-          "words": "The thief is taken aback by your unexpected generosity, but accepts the jewel-encrusted egg and stops to admire its beauty."
-        }
-      ]
-    },
-    {
-      "seed": 4
-    },
-    {
-      "advance": "1 minutes",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "The thief, finding nothing of value, left disgusted."
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "Your sword is no longer glowing."
-        }
-      ]
-    },
-    {
-      "seed": 0
-    },
-    {
-      "as": "Marta",
-      "type": "w",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "East-West Passage"
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "w",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "The Troll Room"
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "There is a bloody axe here."
-        }
-      ]
     },
     {
       "as": "Marta",
@@ -652,69 +570,12 @@
     },
     {
       "as": "Marta",
-      "type": "e",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Strange Passage"
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "This is a long passage. To the west is one entrance. On the east there is an old wooden door, with a large opening in it (about cyclops sized)."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "e",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Living Room"
-        }
-      ]
-    },
-    {
-      "advance": "40 minutes"
-    },
-    {
-      "as": "Marta",
-      "type": "w",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Strange Passage"
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "w",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "Cyclops Room"
-        }
-      ]
-    },
-    {
-      "as": "Marta",
       "type": "u",
       "expect": [
         {
           "reader": "Marta",
           "kind": "said",
           "words": "You hear a scream of anguish as you violate the robber's hideaway. Using passages unknown to you, he rushes to its defense."
-        },
-        {
-          "reader": "Marta",
-          "kind": "said",
-          "words": "The thief gestures mysteriously, and the treasures in the room suddenly vanish."
         },
         {
           "reader": "Marta",
@@ -744,7 +605,7 @@
       ]
     },
     {
-      "seed": 1
+      "seed": 5
     },
     {
       "as": "Marta",
@@ -753,99 +614,62 @@
         {
           "reader": "Marta",
           "kind": "said",
-          "words": "The blow lands, making a shallow gash in the thief's arm!"
+          "words": "A good stroke, but it's too slow; the thief dodges."
         },
         {
           "reader": "Marta",
           "kind": "told",
-          "words": "You dodge as the thief comes in low."
+          "words": "The butt of his stiletto cracks you on the skull, and you stagger back."
         }
       ]
     },
     {
-      "seed": 1
-    },
-    {
       "as": "Marta",
-      "type": "attack thief with sword",
+      "type": "x thief",
       "expect": [
         {
           "reader": "Marta",
-          "kind": "said",
-          "words": "The blow lands, making a shallow gash in the thief's arm!"
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "You dodge as the thief comes in low."
+          "kind": "described",
+          "words": "The thief is a slippery character with beady eyes that flit back and forth. He carries, along with an unmistakable arrogance, a large bag over his shoulder and a vicious stiletto, whose blade is aimed menacingly in your direction. I'd watch out if I were you."
         }
       ]
     },
     {
-      "seed": 1
+      "seed": 18
     },
     {
-      "as": "Marta",
-      "type": "attack thief with sword",
+      "advance": "1 minutes",
       "expect": [
         {
           "reader": "Marta",
-          "kind": "said",
-          "words": "The blow lands, making a shallow gash in the thief's arm!"
-        },
-        {
-          "reader": "Marta",
           "kind": "told",
-          "words": "You dodge as the thief comes in low."
+          "words": "The thief tries to sneak past your guard, but you twist away."
         }
       ]
     },
     {
-      "seed": 0
+      "seed": 18
     },
     {
-      "as": "Marta",
-      "type": "attack thief with sword",
+      "advance": "1 minutes",
       "expect": [
         {
           "reader": "Marta",
-          "kind": "said",
-          "words": "The fatal blow strikes the thief square in the heart: He dies."
-        },
+          "kind": "told",
+          "words": "The thief tries to sneak past your guard, but you twist away."
+        }
+      ]
+    },
+    {
+      "seed": 18
+    },
+    {
+      "advance": "1 minutes",
+      "expect": [
         {
           "reader": "Marta",
           "kind": "told",
-          "words": "Almost as soon as the thief breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared."
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "Your sword is no longer glowing."
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "As the thief dies, the power of his magic decreases, and his treasures reappear:"
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "A stiletto"
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "A jewel-encrusted egg"
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "A leather bag of coins"
-        },
-        {
-          "reader": "Marta",
-          "kind": "told",
-          "words": "The chalice is now safe to take."
+          "words": "The thief tries to sneak past your guard, but you twist away."
         }
       ]
     },
@@ -871,54 +695,7 @@
         {
           "reader": "Marta",
           "kind": "described",
-          "words": "There is a stiletto here."
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "There is a jewel-encrusted egg here."
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "There is a golden clockwork canary nestled in the egg. It has ruby eyes and a silver beak. Through a crystal window below its left wing you can see intricate machinery inside. It appears to have wound down."
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "An old leather bag, bulging with coins, is here."
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "x egg",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "The egg is covered with fine gold inlay and ornamented in lapis lazuli and mother-of-pearl. It is hinged, and its delicate clasp has been undone by somebody with the tools and the expertise: it stands open without a scratch on it, as though it had been waiting for him."
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "The jewel-encrusted egg contains:"
-        },
-        {
-          "reader": "Marta",
-          "kind": "described",
-          "words": "A golden clockwork canary"
-        }
-      ]
-    },
-    {
-      "as": "Marta",
-      "type": "take canary",
-      "expect": [
-        {
-          "reader": "Marta",
-          "kind": "said",
-          "words": "Taken."
+          "words": "There is a suspicious-looking individual, holding a large bag, leaning against one wall. He is armed with a deadly stiletto."
         }
       ]
     },
@@ -928,24 +705,24 @@
       "expect": [
         {
           "reader": "Marta",
-          "kind": "said",
-          "words": "Taken."
+          "kind": "refused",
+          "words": "You'd be stabbed in the back first."
         }
       ]
     },
     {
       "as": "Marta",
-      "type": "score",
+      "type": "d",
       "expect": [
         {
           "reader": "Marta",
-          "kind": "said",
-          "words": "Your score is 86 (total of 350 points), in 46 moves."
+          "kind": "described",
+          "words": "Cyclops Room"
         },
         {
           "reader": "Marta",
-          "kind": "said",
-          "words": "This gives you the rank of Novice Adventurer."
+          "kind": "told",
+          "words": "Your sword is no longer glowing."
         }
       ]
     }

@@ -1966,6 +1966,52 @@ me say is below.
   his gesture. The order is the spec's; the effect reads well, so it is
   kept.
 - **Spec:** Movement and consent › After the move.
+- **Resolved after round 9,** without the language: a player read the
+  order as a fault (the treasures "vanish" while the chalice stays listed),
+  and in Zork the scream and the gesture come first. The visitor's own
+  part of `go` (and of the TREASURE word) now says both before the move is
+  described, which a `do` may; the room keeps `:keeper`, which the thief
+  sets, so that the visitor knows whether he is alive and awake to come.
+  The lines are the visitor's because only a `say` in the mover's own
+  `do` lands before the room's description; the thief's own `tell`
+  lands after it. What is still lost: the line is the visitor's, not the
+  thief's, and a world that wanted the NPC to speak first could not.
+
+### 93. A wake's time cannot be read, and a number cannot be multiplied
+
+- **Wanted:** Zork's V-DIAGNOSE, "You have a serious wound, which will be
+  cured after 25 moves.", whose number is CURE-WAIT times the points still
+  to heal after this one, plus what is left of I-CURE's tick.
+- **Found:** a pending wake's time is not readable, so the world cannot
+  ask how long until the healing wake falls; and Sprout has no `*` and no
+  conditional expression, so `20 * (wounds - 1)` and a clamp are not
+  expressions.
+- **Wrote instead:** the adventurer keeps `:cure_at`, the move count by
+  which the next point heals, set whenever the healing wake is asked; the
+  number is counted in the adventurer's own moves, which skip the commands
+  about the game itself, so it can run a little ahead of the host's
+  clock. The multiplication is eight `if`s, one for each further point
+  of wound, adding twenty; the clamp is an `if` on a scratch property.
+- **Spec:** Time › Wakes; Expressions.
+- **Status: open,** and small: a readable `wakes` (the soonest pending) or
+  a `*` would each remove half of it.
+
+### 94. A trailing word turns a thing present into one not here
+
+- **Wanted:** `attack the troll again` and `get on pedestal` answered as
+  Zork would (the first as an attack, or "I don't know the word"; the
+  second "You can't climb onto the pedestal.").
+- **Found (round 9):** both answered "You can't see any such thing." with
+  the troll and the pedestal in plain sight: the trailing `again`, and
+  `get on` read as `get` with `on pedestal` as its noun, leave words the
+  noun does not match, and the line falls to `not_here`, which says
+  something false. This is 63 again, for words other than `here`.
+- **Wrote instead:** nothing; the world has no say in how a noun phrase
+  that leaves words unmatched is answered. Asked of Sprout: answer such a
+  line with `unknown` rather than `not_here`. An engine bug to file with
+  Sprout, alongside sprout#464.
+- **Spec:** Parsing › Matching a line; When nothing matches.
+- **Status: open.**
 
 ### What sprout#456–458, #477 and #478 change for the thief
 
@@ -2208,9 +2254,10 @@ me say is below.
   he is next alone there he empties his bag again, as HACK-TREASURES and
   DEPOSIT-BOOTY have it.
 - **"The thief gestures mysteriously, and the treasures in the room
-  suddenly vanish."** is said every time he comes to defend his lair, as
-  Zork's test (at least two objects in the room, the visitor and the thief
-  among them) always passes.
+  suddenly vanish."** is said, after round 9, only when there is a
+  treasure besides the chalice to vanish. Zork's test (at least two
+  objects in the room, the visitor and the thief among them) always
+  passes, and a player read the line over a lone chalice as a fault.
 - **His stiletto answers only to "stiletto"** (and "dagger"), as Zork's
   does; "knife" means the nasty knife or the rusty one.
 - **The visitor's strength grows with the score** in fights with the thief
@@ -2230,3 +2277,6 @@ me say is below.
 - **The Living Room's way west is labelled "opening"** once the Cyclops has
   gone through the door, and the door and the Strange Passage's end of it
   can be gone through by name.
+- **DIAGNOSE's cure time counts twenty moves a point** (ten minutes at the
+  host's half-minute a turn) where Zork's CURE-WAIT is thirty, as friction
+  24 has healing; it is counted in the adventurer's moves (93).

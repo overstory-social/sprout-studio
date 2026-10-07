@@ -17,7 +17,7 @@ import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop, ChasmEdge, Ca
 import {TreeTop, Nest, Egg, Canary, Bauble} from 'tree'
 import {Troll} from 'troll'
 import {Thief, Stiletto} from 'thief'
-import {Cyclops, CyclopsRoom, TreasureRoom, :flee} from 'cyclops'
+import {Cyclops, CyclopsRoom, TreasureRoom, Chalice, :flee} from 'cyclops'
 import {treasure_room, cyclops_room, strange_passage} from 'cyclops'
 import {go, look, examine, inventory, wait, help} from 'sprout'
 import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall} from 'verbs'
@@ -59,6 +59,13 @@ kind Adventurer is sprout.Visitor {
   :coffins 0 min 0 max 9
   // Zork's MOVES: every command but the ones about the game itself.
   :moves 0 min 0 max 1000000
+  // The move by which the next wound point heals (Zork's I-CURE tick, read
+  // by DIAGNOSE): a wake's own time cannot be read, so the hands keep it.
+  :cure_at 0 min 0 max 1000000
+  // Scratch for DIAGNOSE: the moves until every wound is cured, and the
+  // strength to spare (Zork's FIGHT-STRENGTH less the wounds).
+  :cure_left 0 min -1000000 max 1000000
+  :spare 0 min -20 max 20
   // Scratch for taking several things in one command: the load so far, and
   // how many of them are not already held.
   :carry 0 min 0 max 900
@@ -212,8 +219,18 @@ kind Adventurer is sprout.Visitor {
       if (here.is(Room)) {
         if (here.get(:crash)) { say "The trap door crashes shut, and you hear someone barring it." }
       }
+      // The thief's lair, entered (TREASURE-ROOM-FCN's M-ENTER): his scream
+      // and his gesture come before the room is described, as in Zork.
+      if (here.is(TreasureRoom)) {
+        if (here.get(:keeper)) {
+          if (here.count(Thief) == 0) { say scream }
+          if (here.count(Treasure) > here.count(Chalice)) { say vanish }
+        }
+      }
     }
   }
+  passage scream { You hear a scream of anguish as you violate the robber's hideaway. Using passages unknown to you, he rushes to its defense. }
+  passage vanish { The thief gestures mysteriously, and the treasures in the room suddenly vanish. }
 
   on :grue {
     self.set(:devoured, false)
@@ -284,6 +301,7 @@ kind Adventurer is sprout.Visitor {
             send self :die
           } else if (!self.get(:healing)) {
             self.set(:healing, true)
+            self.set(:cure_at, self.get(:moves) + 20)
             wake in 10 minutes
           }
         } else if (v == 6) {
@@ -318,10 +336,18 @@ kind Adventurer is sprout.Visitor {
         if (v == 3 || v == 5 || v == 8) {
           send self :die
         } else if (v == 4 || v == 7) {
-          self.adjust(:wounds, 1)
-          if (v == 4) { self.adjust(:fight, -1) } else { self.adjust(:fight, -2) }
+          // Wounds are counted as Zork counts them, in points of strength
+          // lost: a light wound one, a serious wound two.
+          if (v == 4) {
+            self.adjust(:wounds, 1)
+            self.adjust(:fight, -1)
+          } else {
+            self.adjust(:wounds, 2)
+            self.adjust(:fight, -2)
+          }
           if (!self.get(:healing)) {
             self.set(:healing, true)
+            self.set(:cure_at, self.get(:moves) + 20)
             wake in 10 minutes
           }
         } else if (v == 6) {
@@ -404,7 +430,8 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  // Wounds heal, a light wound at a time.
+  // Wounds heal, a point at a time (Zork's I-CURE), one every ten minutes,
+  // which at the host's half-minute a turn is twenty moves.
   on :woke (elapsed) {
     self.set(:healing, false)
     if (self.get(:wounds) > 0) {
@@ -412,6 +439,7 @@ kind Adventurer is sprout.Visitor {
       self.adjust(:fight, 1)
       if (self.get(:wounds) > 0) {
         self.set(:healing, true)
+        self.set(:cure_at, self.get(:moves) + 20)
         wake in 10 minutes
       }
     }
@@ -436,8 +464,8 @@ kind Adventurer is sprout.Visitor {
       self.set(:dest, :living_dead)
     } else {
       tell self "Now, let's take a look here... Well, you probably deserve another chance.  I can't quite fix you up completely, but you can't have everything."
-      if (self.count(Lamp) > 0) { tell self "Your belongings, such as they were, have not come with you. They are scattered about the Empire, though somebody tidy has put the lamp back in the living room." }
-      else if (self.count(Thing) > 0) { tell self "Your belongings, such as they were, have not come with you. They are scattered about the Empire." }
+      if (self.count(Lamp) > 0) { tell self "Your belongings, such as they were, have not come with you. The plain things are strewn about the forest and the fields around the house, anything of value has rolled into some dark corner in or under it, and somebody tidy has put the lamp back in the living room." }
+      else if (self.count(Thing) > 0) { tell self "Your belongings, such as they were, have not come with you. The plain things are strewn about the forest and the fields around the house, and anything of value has rolled into some dark corner in or under it." }
       self.set(:dest, :forest_1)
     }
     send underground_caverns :open_gate
@@ -507,6 +535,10 @@ kind Adventurer is sprout.Visitor {
         move self to deep_canyon
       } else if (self.get(:dest) == :treasure) {
         if (!self.get(:own_light) && !underground_caverns.treasure_room.get(:alight)) { tell self "You have moved into a dark place." }
+        if (underground_caverns.treasure_room.get(:keeper)) {
+          if (underground_caverns.treasure_room.count(Thief) == 0) { tell self scream }
+          if (underground_caverns.treasure_room.count(Treasure) > underground_caverns.treasure_room.count(Chalice)) { tell self vanish }
+        }
         move self to treasure_room
       } else if (self.get(:dest) == :cyclops) {
         if (!self.get(:own_light) && !underground_caverns.cyclops_room.get(:alight)) { tell self "You have moved into a dark place." }
@@ -810,8 +842,29 @@ kind Adventurer is sprout.Visitor {
   as actor for diagnose { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "diagnose diagnose ..." } } }
     do {
       self.adjust(:moves, 1)
-      say "{if self.get(:wounds) == 0}You are in perfect health.{else if self.get(:wounds) == 1}You have a light wound.{else if self.get(:wounds) == 2}You have a serious wound.{else if self.get(:wounds) == 3}You have several wounds.{else}You have serious wounds.{/if}"
-      say "You can {if self.get(:fight) <= 0}expect death soon{else if self.get(:fight) == 1}be killed by one more light wound{else if self.get(:fight) == 2}be killed by a serious wound{else if self.get(:fight) == 3}survive one serious wound{else}survive several wounds{/if}."
+      // Zork's V-DIAGNOSE: the wound, the moves until it is cured (the
+      // points still to heal after this one, twenty moves each, and what is
+      // left of this one), and what strength is left, the score counting.
+      self.set(:cure_left, self.get(:cure_at) - self.get(:moves))
+      if (self.get(:cure_left) < 1) { self.set(:cure_left, 1) }
+      if (self.get(:wounds) >= 2) { self.adjust(:cure_left, 20) }
+      if (self.get(:wounds) >= 3) { self.adjust(:cure_left, 20) }
+      if (self.get(:wounds) >= 4) { self.adjust(:cure_left, 20) }
+      if (self.get(:wounds) >= 5) { self.adjust(:cure_left, 20) }
+      if (self.get(:wounds) >= 6) { self.adjust(:cure_left, 20) }
+      if (self.get(:wounds) >= 7) { self.adjust(:cure_left, 20) }
+      if (self.get(:wounds) >= 8) { self.adjust(:cure_left, 20) }
+      if (self.get(:wounds) >= 9) { self.adjust(:cure_left, 20) }
+      self.set(:spare, self.get(:fight))
+      if (self.get(:score) >= 70) { self.adjust(:spare, 1) }
+      if (self.get(:score) >= 140) { self.adjust(:spare, 1) }
+      if (self.get(:score) >= 210) { self.adjust(:spare, 1) }
+      if (self.get(:score) >= 280) { self.adjust(:spare, 1) }
+      if (self.get(:score) >= 350) { self.adjust(:spare, 1) }
+      let left = self.get(:cure_left)
+      let rs = self.get(:spare)
+      say "{if self.get(:wounds) == 0}You are in perfect health.{else}You have {if self.get(:wounds) == 1}a light wound{else if self.get(:wounds) == 2}a serious wound{else if self.get(:wounds) == 3}several wounds{else}serious wounds{/if}, which will be cured after {left} moves.{/if}"
+      say "You can {if rs <= 0}expect death soon{else if rs == 1}be killed by one more light wound{else if rs == 2}be killed by a serious wound{else if rs == 3}survive one serious wound{else}survive several wounds{/if}."
       if (self.get(:deaths) == 1) { say "You have been killed once." }
       else if (self.get(:deaths) == 2) { say "You have been killed twice." }
     }
