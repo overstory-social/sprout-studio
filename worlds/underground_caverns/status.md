@@ -1,15 +1,38 @@
 # Where underground_caverns stands
 
-_Last updated 2026-10-07: rounds 1-10 done, paused on the usage limit. Pick
-up at round 11 (widen, v6: the dam and river). Playtesters never see this file._
+_Last updated 2026-10-07: rounds 1-14 done; paused by Eric after round 14.
+Pick up at round 15 (widen, v8: the last of Zork I). Playtesters never see
+this file._
 
-**Since the first pause:** pin bumped to Sprout `6c440f5` and the world
-ported; rounds 6-10 played and committed (v4 east of the troll in round 7,
-v5 the thief and the Cyclops in round 9; ceiling 197). Run settings now:
-`turnCap: 250`, every persona on `opus` except `casual` on `fable`, because
-Fable's safety filter kept cutting off long runs. Next: check Sprout `main`
-for a pin bump, write v6 into brief.md's Scope (the round-11 row below),
-run the `author` pre-round pass, verify, commit, push, play round 11.
+**Where it stands.** Rounds 1-14 are committed and pushed (the last is
+`ef62c0a`). v7 is built: about 140 rooms, everything in Zork I but Hades,
+the crystal skull and the endgame, with a 330-point ceiling (Zork's is
+350). Round 7 added v4 (east of the troll), round 9 v5 (the thief and the
+Cyclops), round 11 v6 (the dam, reservoir, river, rainbow and canyon),
+round 13 v7 (the Mirror Rooms and the coal mine). The pin is still Sprout
+`6c440f5`; check Sprout `main` before round 15.
+
+**Run settings:** `turnCap: 250`, every persona on `opus` except `casual`
+on `fable` (Fable's safety filter kept cutting off long runs), with the
+framing and goals below.
+
+**Round 14 ended by hand.** Its clerk paraphrased the revision plan's save
+output, the workflow crashed on the JSON, and the save had been refused
+(the plan cited rejected points). The plan was re-asked once of the
+author, saved through `round.mjs save`, verified and committed. Filed as
+sprout#487 (studio label): `clerk()` should re-ask on non-JSON stdout.
+Friction 119 (a tied item in a run of things is not read on its own turn)
+is not yet filed in Sprout.
+
+**Next: round 15.** Write v8 into brief.md's Scope (the round-15 row
+below: the Entrance to Hades and the exorcism with bell, book and candles,
+the Land of the Dead and the crystal skull, the ancient map, and the
+endgame Stone Barrow at 350 points), run the `author` pre-round pass,
+verify, commit, push, play. Round 16 refines the whole game.
+
+**Sprout issues filed from the port since the first pause:** #475-#486
+(bugs #476, #480, #483, #484, #486; parser #475, #479; features #477,
+#478, #481, #482, #485), #460 reopened, #487 for the studio.
 
 ## State
 
