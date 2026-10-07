@@ -6,8 +6,9 @@ entry: what Zork does (what I wanted), what the world does instead, and the
 spec section it touches. Section names are `sprout-design-spec.md`'s.
 
 Each entry carries a **Status** as of the port to Sprout fe916a5, brought
-up to date after each round where the round touched it, and before round 4
-for Sprout 26e6124 (sprout#450 to #453) and the troll's rebuild as an NPC:
+up to date after each round where the round touched it, before round 4
+for Sprout 26e6124 (sprout#450 to #453) and the troll's rebuild as an NPC,
+and before round 6 for Sprout 6c440f5 (sprout#466 to #474):
 **resolved** (by which change), **corrected** (the entry was my misreading),
 **changed** (the answer moved but something remains), or **open**. The
 entries' first text is kept as it was written against 61f02bb.
@@ -482,7 +483,14 @@ entries' first text is kept as it was written against 61f02bb.
 - **Spec:** Time › Wakes; The runtime › Turns (a world has no turn
   number).
 - **Spec:** Time › Wakes; Limits (`shortestWakeSeconds`).
-- **Status: open.**
+- **Status: changed** before round 6 (sprout#469). `:swung` is gone: a
+  swing, his own or one struck back, takes back the turn he had asked for
+  and asks the next a minute on (`cancel wakes`), so he still swings at
+  most once between two of his own turns, and the turn after a blow comes
+  a minute after it. A turn can now be taken back, so destroying the troll
+  is no longer what drops his last wake; it stays, with its warning (26),
+  because the fog takes him for good. Still open: no turns, only time; the
+  lamp does not burn out.
 
 ### 25. A game cannot end
 
@@ -712,7 +720,9 @@ entries' first text is kept as it was written against 61f02bb.
   his stomach, a container inside him that passes nothing, since a pass
   rule cannot open a person to one of his things and not another. The
   `held_axe` stand-in is gone. The cost is under 48: `examine all` in his
-  room now stops on the axe.
+  room now stops on the axe. **Before round 6** (sprout#474) that cost is
+  gone too: `examine all` examines everything else in his room, and leaves
+  out the axe in his fist, as it leaves out the troll.
 
 ## Found after round 3
 
@@ -735,7 +745,10 @@ entries' first text is kept as it was written against 61f02bb.
   nothing, and only counts. That is Zork's own rule, so it is no loss; what
   is lost is the plain way of writing it, "this replaces his next turn".
 - **Spec:** Time › Wakes; Limits (pending wakes per object: 1).
-- **Status: open.**
+- **Status: resolved** before round 6, by `cancel wakes` (sprout#469). The
+  knockout takes back the turn he had asked for and asks its own, a minute
+  on, which finds him out cold. `:rouse` stays: it is Zork's V-PROB, the
+  rule itself, not a workaround.
 
 ### 39. A line that reads what its own handler moves names the wrong thing
 
@@ -871,7 +884,16 @@ with `act throw`. These are what the NPC model would not let me say.
   live in `adventurer.sprout`, beside the effects, rather than with him.
 - **Spec:** Acting ("Nobody is behind it to read its `say` lines…"); Other
   people › Who hears it.
-- **Status: open.**
+- **Status: resolved** before round 6 (sprout#466, which made `tell
+  <role>` in the actor's own part the spec's way, and found it already
+  worked, as this entry had checked). The troll tells the blow to the one
+  it falls on, `tell target`, in his own `as actor for attack`: the miss,
+  the wound, the knockout and whether he spares them, the killing stroke,
+  and the death line after it. The visitor's part only does what `:dealt`
+  says to them. One line stays theirs: a stagger costs them their weapon
+  one time in four, and which weapon is in their hand is out of his range
+  (33), so the stagger-or-disarm line is told by the visitor, who can see
+  it.
 
 ### 46. An NPC cannot stand in a doorway
 
@@ -885,7 +907,13 @@ with `act throw`. These are what the NPC model would not let me say.
   dies.
 - **Spec:** Movement and consent › The three roles; Exits › An exit may be
   conditional.
-- **Status: open.**
+- **Status: decided** before round 6 (sprout#466, for sprout#457): blocking
+  a way is the place's to do, and an NPC guards through the place's exits,
+  as the spec's new Movement and consent › A way an NPC guards shows with
+  this very troll. The room's guard is kept as written. Its `when` reads
+  the room's own `:troll_flag`, which the troll sends, rather than the
+  troll's state as the spec's example does, because the troll is destroyed
+  when he dies, and the way stays open after.
 
 ### 47. An NPC's turns are wakes it keeps asking for
 
@@ -898,7 +926,15 @@ with `act throw`. These are what the NPC model would not let me say.
   for a wake a minute on; the wake swings, or passes if he swung back at a
   blow since. The knockout's second chance is kept, as round 3 left it.
 - **Spec:** Time › Ticks; Time › Wakes; Actors and visitors (NPCs).
-- **Status: open.**
+- **Status: changed** before round 6 (sprout#469; ticks stay place-only by
+  Sprout's decision on sprout#458). His turns are still wakes he asks for,
+  which is now the spec's way for an NPC's clock. What is gone is the
+  bookkeeping: each turn he asks for takes back the one he had asked for
+  (`cancel wakes`), so a swing struck back at a blow puts his next turn a
+  minute on, and the `:swung` flag that told a wake to pass, and the
+  `:waking` flag that kept him to one, are gone. The one visible change is
+  Zork's: he swings once a move, a minute after his last swing of either
+  kind.
 
 ### 48. `all` in a one-thing role stops at a refusal before what comes ahead of it
 
@@ -917,7 +953,13 @@ with `act throw`. These are what the NPC model would not let me say.
   now, so that a fix shows up as a failing test. Sprout's sprout#389 option
   1 (leave out of `all` what consent refuses) would also answer it.
 - **Spec:** Parsing › Sequences, again and all.
-- **Status: open.**
+- **Status: resolved** before round 6 (sprout#474, for sprout#455): `all`
+  in an engine verb's open role takes every thing in reach that is not a
+  person. `gift.json` failed as it was meant to, and now expects the sack,
+  the lamp, the sword, the lunch, the garlic, the walls, the Management's
+  note and the passages, in that order. The axe in the troll's fist is not
+  among them, so nothing refuses; a thing a person holds is not one `all`
+  takes, which reads right.
 
 ### 49. A container in someone's hands cannot pour itself out
 
@@ -960,7 +1002,10 @@ with `act throw`. These are what the NPC model would not let me say.
   answer the unread rest with `unknown` rather than `not_here`.
 - **Spec:** Parsing › Sequences, again and all; Verbs › Set roles
   ("Parsing splits on `and` and commas literally").
-- **Status: open.**
+- **Status: resolved** before round 6 (sprout#471, for sprout#459): a comma
+  before a verb, or before a direction, chains as `and` does, and a run of
+  things keeps its commas. `open trap door, turn on lantern, go down`, `n,
+  n, n` and `take sack, w` each run as Zork runs them (`commas.json`).
 
 ### 52. `enter <a way that is not here>` blames the sentence
 
@@ -979,7 +1024,18 @@ with `act throw`. These are what the NPC model would not let me say.
   and a tie is drawn from the seed, so I did not add one.
 - **Wrote instead:** nothing.
 - **Spec:** Exits; Parsing › Choosing a reading; Range ("`not_here`").
-- **Status: open.**
+- **Status: open,** after sprout#472. That change answers `not_here` where
+  a phrase an object's synonym gives would read the line with the object
+  in reach, and its description says `enter window` in this world's
+  Clearing now gets `not_here`. It does not: here `enter` is a phrase of
+  `go`, "enter [way]", read by the label of a way out, and no object's
+  synonym is involved, so the line is still "That sentence isn't one I
+  recognize." (`commas.json` pins it, so a fix will show). An object's
+  synonym cannot stand in: `synonyms through: "enter"` on the window
+  replaces the word `through` in `through`'s phrases ("climb enter
+  [target]"), and gives no "enter [target]". Asked of Sprout still: the
+  same `not_here` for a word in `go`'s phrases that is the label of a way
+  out somewhere in the world but not here.
 
 ## Found before round 5: the Maze and the grating
 
@@ -1017,7 +1073,15 @@ area by area, including what it did not find hard.
   bound in the actor's part of `go`.
 - **Spec:** Exits; Engine verbs (`go`); Object identity; Movement and
   consent › After the move.
-- **Status: open.**
+- **Status: resolved** before round 6 (sprout#468, for sprout#462): each
+  diode is `exit down "down" -> maze_4 say diode`, the `Maze` kind's
+  passage. The rooms' numbers, the `:spot` message and the adventurer's
+  four pairs are gone. The line comes before the new room, and before the
+  adventurer's "You have moved into a dark place." or the grue, as Zork's
+  exit routine prints it before GOTO (`diode_dark.json`). The trap door's
+  crash is not moved onto the Living Room's way down: Zork prints it after
+  the dark line, from the Cellar's M-ENTER, and an exit's line comes
+  before.
 
 ### 54. A place's name beats a thing's noun, even when the place refuses
 
@@ -1040,7 +1104,10 @@ area by area, including what it did not find hard.
   maze object).
 - **Spec:** Parsing › Choosing a reading; Range; Names › Addressing and
   display.
-- **Status: open.**
+- **Status: resolved** before round 6 (sprout#470, for sprout#461): an
+  allowed reading beats a refused one whatever names the other in full.
+  The passages answer to "maze" again, and `x maze` describes them
+  (`maze.json`).
 
 ### 55. Rooms all alike, written once
 
@@ -1143,7 +1210,12 @@ area by area, including what it did not find hard.
   for a role to prefer what is not carried (Zork's ON-GROUND IN-ROOM), or
   for the parser to ask.
 - **Spec:** Parsing › Choosing a reading; Verbs › Carried roles.
-- **Status: open,** worked around.
+- **Status: changed** before round 6. sprout#470 (for sprout#463) made rule
+  1 hold even against a reading that names its thing in full; it asked
+  whether the studio's refusal is in a `permit`. It is, so the adventurer's
+  refusal is the spec's own way to say "not what is in hand", not a
+  workaround, and it stays; `take_which.json` passes unchanged at 6c440f5.
+  Still open: the parser does not ask, and the refusal counts no move.
 
 ### 60. The ghost cannot take what the visitor carries
 
@@ -1182,7 +1254,8 @@ area by area, including what it did not find hard.
   the spec. Zork itself refuses the line ("You can't use multiple direct
   objects with "examine"."), so nothing is lost but a surprise.
 - **Spec:** Parsing › Sequences, again and all.
-- **Status: open,** noted.
+- **Status: resolved** before round 6 (sprout#474): `examine all` takes
+  every thing in reach that is not a person, whatever plays `examine`.
 
 ## Found in round 5
 
@@ -1202,7 +1275,12 @@ area by area, including what it did not find hard.
   articles are, or answer the line with `unknown` rather than `not_here`.
   An engine bug to file with Sprout.
 - **Spec:** Parsing › Matching a line (Articles); When nothing matches.
-- **Status: open.**
+- **Status: resolved** before round 6 (sprout#473, for sprout#464), by
+  phrases rather than by the parser: the standard library's `drop` writes
+  `drop [target] here`, `put down [target] here` and `put [target] down
+  here`. This world's `drop` replaces the library's, so it writes the same
+  three (66). `drop the leaflet here` drops it (`commas.json`); `on the
+  floor` and `on the ground` are still not read, as Sprout decided.
 
 ### 64. `troll, hello` is not a sentence
 
@@ -1220,7 +1298,10 @@ area by area, including what it did not find hard.
   troll` all answer in the troll's words.
 - **Spec:** Parsing › Sequences, again and all; Verbs (phrases); Actors
   and visitors.
-- **Status: open,** with 51.
+- **Status: decided** before round 6 (sprout#471, for sprout#465): a line
+  has no addressee. `troll, hello` is read as the command `troll` and then
+  `hello`, and since nothing reads `troll` alone the line is `unknown`.
+  Kept as Sprout decided; `commas.json` pins it beside `hello troll`.
 
 ### 65. A staircase climbed by name cannot take its own exit
 
@@ -1245,6 +1326,37 @@ area by area, including what it did not find hard.
 - **Spec:** Actors and visitors › Acting ("`act go` is refused"); Exits;
   Parsing › Choosing a reading.
 - **Status: open.**
+
+## Found in the port to 6c440f5
+
+### 66. A world's verb that replaces the library's keeps none of its phrases
+
+- **Wanted:** `drop the leaflet here` dropping it, now that the standard
+  library reads it (sprout#473).
+- **Found:** this world writes its own `drop` (several things at once,
+  Zork's words), which replaces the library's whole, phrases and all, so
+  the library's new `here` phrases never reached it and the line was still
+  `not_here`. That is the spec (a world's verb of a library verb's name
+  replaces it), but a fix made in the library's phrases misses every world
+  that replaced the verb, silently.
+- **Wrote instead:** the same three phrases in the world's `drop`, which
+  brings it to eight, the cap.
+- **Spec:** Kinds, composition and libraries; Verbs (phrases); Limits
+  (eight phrases a verb, 34).
+- **Status: open,** noted.
+
+### 67. What the troll cannot see, he cannot say
+
+- **Wanted:** every line of the troll's blow told by him (45).
+- **Found:** one of Zork's blow results, the stagger, costs the visitor
+  their weapon one time in four, and its line names the weapon. The troll
+  cannot count what is in the visitor's hands: `count` sees only what is
+  in range of the one asking, and `sprout.Actor` passes nothing (33).
+- **Wrote instead:** the troll decides the stagger; the visitor decides
+  whether it disarms them, and tells that line, or the stagger's, itself.
+- **Spec:** Range; Properties and values (`count` "a container counts only
+  contents in range of `self`").
+- **Status: open,** as 33.
 
 ## Differences chosen, not forced
 

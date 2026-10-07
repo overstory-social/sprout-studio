@@ -2,15 +2,15 @@
 // twisty little passages, all alike, four dead ends, and the Grating Room
 // under the Clearing. Every room of the maze is a `Maze` or a `DeadEnd`,
 // which gives it its name, its description, its dark and its passages; each
-// room writes only its own number and its own ways out, which are Zork's,
-// loops and one-way tunnels and all. Exits do not compose, so no kind can
+// room writes only its own ways out, which are Zork's, loops and one-way
+// tunnels and all. Exits do not compose, so no kind can
 // write them.
 //
 // Four of the ways down are Zork's MAZE-DIODES, one-way tunnels with no way
 // back up: from Maze 2 to Maze 4, Maze 7 to the first Dead End, Maze 9 to
-// Maze 11 and Maze 12 to Maze 5. The warning is the adventurer's to say,
-// in their own part of `go`, which knows the room they came from by its
-// number.
+// Maze 11 and Maze 12 to Maze 5. Each says Zork's warning as the visitor
+// goes through it; Maze 6's way down into Maze 5 is an ordinary one, and
+// says nothing.
 import {Thing, Scenery} from 'thing'
 import {DarkRoom} from 'room'
 import {Skeleton, BurnedLantern, RustyKnife, SkeletonKey, CoinBag} from 'remains'
@@ -22,6 +22,8 @@ import {grating_clearing} from 'above_ground'
 kind Maze is DarkRoom {
   grammar { name "Maze" }
   passage body default { This is part of a maze of twisty little passages, all alike. }
+  // What a one-way tunnel says on the way down it.
+  passage diode { You won't be able to get back up to the tunnel you are going through when it gets to the next room. }
   object passages is MazePassages
 }
 
@@ -38,7 +40,7 @@ kind DeadEnd is DarkRoom {
 
 // The maze itself, and its passages, wherever they are.
 kind MazePassages is Scenery {
-  grammar { name "twisty little passages"  nouns "passages", "passage", "tunnels", "passageways"  adjectives "twisty", "little", "alike", "twisting" }
+  grammar { name "twisty little passages"  nouns "passages", "passage", "tunnels", "passageways", "maze"  adjectives "twisty", "little", "alike", "twisting" }
   passage short { twisty little passages }
   describe {
     text "The passages are twisty, they are little, and they are all alike: the same rough walls, the same low ceiling, the same turnings that turn just far enough to hide where they are going. Whoever made this maze had one idea, and saw it through."
@@ -46,7 +48,6 @@ kind MazePassages is Scenery {
 }
 
 object maze_1 is Maze in underground_caverns {
-  :num 1
   grammar {
     exit east  "east"  -> troll_room
     exit north "north" -> maze_1
@@ -56,16 +57,14 @@ object maze_1 is Maze in underground_caverns {
 }
 
 object maze_2 is Maze in underground_caverns {
-  :num 2
   grammar {
     exit south "south" -> maze_1
-    exit down  "down"  -> maze_4
+    exit down  "down"  -> maze_4 say diode
     exit east  "east"  -> maze_3
   }
 }
 
 object maze_3 is Maze in underground_caverns {
-  :num 3
   grammar {
     exit west  "west"  -> maze_2
     exit north "north" -> maze_4
@@ -74,7 +73,6 @@ object maze_3 is Maze in underground_caverns {
 }
 
 object maze_4 is Maze in underground_caverns {
-  :num 4
   grammar {
     exit west  "west"  -> maze_3
     exit north "north" -> maze_1
@@ -83,13 +81,11 @@ object maze_4 is Maze in underground_caverns {
 }
 
 object dead_end_1 is DeadEnd in underground_caverns {
-  :num 16
   grammar { exit south "south" -> maze_4 }
 }
 
 // Where the last adventurer to try the maze without a map stopped trying.
 object maze_5 is Maze in underground_caverns {
-  :num 5
   grammar {
     exit east      "east"      -> dead_end_2
     exit north     "north"     -> maze_3
@@ -107,12 +103,10 @@ object maze_5 is Maze in underground_caverns {
 }
 
 object dead_end_2 is DeadEnd in underground_caverns {
-  :num 17
   grammar { exit west "west" -> maze_5 }
 }
 
 object maze_6 is Maze in underground_caverns {
-  :num 6
   grammar {
     exit down "down" -> maze_5
     exit east "east" -> maze_7
@@ -122,18 +116,16 @@ object maze_6 is Maze in underground_caverns {
 }
 
 object maze_7 is Maze in underground_caverns {
-  :num 7
   grammar {
     exit up    "up"    -> maze_14
     exit west  "west"  -> maze_6
-    exit down  "down"  -> dead_end_1
+    exit down  "down"  -> dead_end_1 say diode
     exit east  "east"  -> maze_8
     exit south "south" -> maze_15
   }
 }
 
 object maze_8 is Maze in underground_caverns {
-  :num 8
   grammar {
     exit northeast "northeast" -> maze_7
     exit west      "west"      -> maze_8
@@ -142,15 +134,13 @@ object maze_8 is Maze in underground_caverns {
 }
 
 object dead_end_3 is DeadEnd in underground_caverns {
-  :num 18
   grammar { exit north "north" -> maze_8 }
 }
 
 object maze_9 is Maze in underground_caverns {
-  :num 9
   grammar {
     exit north     "north"     -> maze_6
-    exit down      "down"      -> maze_11
+    exit down      "down"      -> maze_11 say diode
     exit east      "east"      -> maze_10
     exit south     "south"     -> maze_13
     exit west      "west"      -> maze_12
@@ -159,7 +149,6 @@ object maze_9 is Maze in underground_caverns {
 }
 
 object maze_10 is Maze in underground_caverns {
-  :num 10
   grammar {
     exit east "east" -> maze_9
     exit west "west" -> maze_13
@@ -168,7 +157,6 @@ object maze_10 is Maze in underground_caverns {
 }
 
 object maze_11 is Maze in underground_caverns {
-  :num 11
   grammar {
     exit northeast "northeast" -> grating_room
     exit down      "down"      -> maze_10
@@ -178,9 +166,8 @@ object maze_11 is Maze in underground_caverns {
 }
 
 object maze_12 is Maze in underground_caverns {
-  :num 12
   grammar {
-    exit down      "down"      -> maze_5
+    exit down      "down"      -> maze_5 say diode
     exit southwest "southwest" -> maze_11
     exit east      "east"      -> maze_13
     exit up        "up"        -> maze_9
@@ -189,12 +176,10 @@ object maze_12 is Maze in underground_caverns {
 }
 
 object dead_end_4 is DeadEnd in underground_caverns {
-  :num 19
   grammar { exit south "south" -> maze_12 }
 }
 
 object maze_13 is Maze in underground_caverns {
-  :num 13
   grammar {
     exit east  "east"  -> maze_9
     exit down  "down"  -> maze_12
@@ -204,7 +189,6 @@ object maze_13 is Maze in underground_caverns {
 }
 
 object maze_14 is Maze in underground_caverns {
-  :num 14
   grammar {
     exit west      "west"      -> maze_15
     exit northwest "northwest" -> maze_14
@@ -215,7 +199,6 @@ object maze_14 is Maze in underground_caverns {
 
 // The way on to the Cyclops Room, which is not built.
 object maze_15 is Maze in underground_caverns {
-  :num 15
   grammar {
     exit west      "west"      -> maze_14
     exit south     "south"     -> maze_7
@@ -238,7 +221,6 @@ object maze_15 is Maze in underground_caverns {
 // Under the Clearing: dark while the grating is shut, and lit by the day
 // while it is open, as Zork's GRATE-FUNCTION sets and clears its ONBIT.
 object grating_room is DarkRoom in underground_caverns {
-  :num 20
   grammar {
     name "Grating Room"
     exit southwest "southwest" -> maze_11

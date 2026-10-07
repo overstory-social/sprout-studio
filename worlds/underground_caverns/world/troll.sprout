@@ -43,17 +43,14 @@ kind Troll is Thing, sprout.Actor {
   :dead false
   :staggered false
   :fighting false
-  :waking false
-  // Whether he has already swung back at a blow since his last own turn:
-  // Zork's troll swings once a move, so a wake that finds this set passes.
-  :swung false
   // The weapon last swung at him: 1 the sword, 2 the knife, 3 the axe.
   :wep 1 min 1 max 3
   // What the last blow at him did (Zork's blow results, 1 to 7), or 8 and 9
   // for a troll who could not defend himself, or 0 for no blow at all.
   :last 0 min 0 max 9
   // What his own blow does to whoever he swings at, decided as he swings:
-  // 1 missed, 2 knocked out, 3 killed, 4 lightly wounded, 6 staggered.
+  // 1 missed, 2 knocked out and spared, 3 killed, 4 lightly wounded, 5
+  // knocked out and put to death, 6 staggered.
   :dealt 1 min 1 max 6
   // Whether he means to eat the weapon he has just been given, and whether
   // he died of it, which says so itself.
@@ -208,15 +205,17 @@ kind Troll is Thing, sprout.Actor {
         each b: Belly in self { move t to b }
       }
     }
-    if (self.get(:fighting) && !self.get(:waking)) {
-      self.set(:waking, true)
+    if (self.get(:fighting)) {
+      cancel wakes
       wake in 1 minutes
     }
   }
 
-  // His own parts of the verbs he acts by. Nobody is behind him to read
-  // what he says, so he says nothing: what his blow does is told by the
-  // part of whoever it falls on.
+  // His own parts of the verbs he acts by. His blow he decides here, on
+  // Zork's tables, and tells to the one it falls on (`tell target`), in
+  // Zork's own words for it; what it does to them, the wound, the stagger,
+  // the lost weapon or the death, is theirs to write, and their own part of
+  // `attack` reads it from `:dealt`. A stagger is the exception (below).
   as actor for attack {
     do {
       if (target.is(Adventurer)) {
@@ -238,9 +237,34 @@ kind Troll is Thing, sprout.Actor {
             if (r < 3) { self.set(:dealt, 1) } else if (r < 5) { self.set(:dealt, 6) } else if (r < 8) { self.set(:dealt, 4) } else { self.set(:dealt, 2) }
           }
         }
+        let v = self.get(:dealt)
+        if (v == 1) {
+          tell target "{one of}The troll swings his axe, but it misses.{or}The troll's axe barely misses your ear.{or}The axe sweeps past as you jump aside.{or}The axe crashes against the rock, throwing sparks!{/one of}"
+        } else if (v == 2) {
+          // Out cold, the visitor is at his mercy: two times in nine he
+          // wonders whether they are magically protected, and lets them be.
+          tell target "The flat of the troll's axe hits you delicately on the head, knocking you out."
+          if (random(9) < 2) {
+            tell target "{one of}The troll hesitates, fingering his axe.{or}The troll scratches his head ruminatively:  Might you be magically protected, he wonders?{/one of}"
+          } else {
+            self.set(:dealt, 5)
+            tell target "Conquering his fears, the troll puts you to death."
+            tell target dead_line
+          }
+        } else if (v == 3) {
+          tell target "{one of}The troll neatly removes your head.{or}The troll's axe stroke cleaves you from the nave to the chops.{or}The troll's axe removes your head.{/one of}"
+          tell target dead_line
+        } else if (v == 4) {
+          tell target "{one of}The axe gets you right in the side. Ouch!{or}The flat of the troll's axe skins across your forearm.{or}The troll's swing almost knocks you over as you barely parry in time.{or}The troll swings his axe, and it nicks your arm as you dodge.{/one of}"
+          if (d <= 1) { tell target dead_line }
+        }
+        // A stagger, 6, he leaves to the one it falls on: one time in four
+        // it costs them their weapon (Zork's LOSE-WEAPON), and what is in
+        // their hand is out of his range (33), so they tell it themselves.
       }
     }
   }
+  passage dead_line { It appears that that last blow was too much for you. I'm afraid you are dead. }
   as actor for take {
     do { each t of target { move t to self } }
   }
@@ -253,7 +277,6 @@ kind Troll is Thing, sprout.Actor {
   on :blow (from, value) {
     if (from.is(Adventurer)) {
       self.set(:fighting, true)
-      self.set(:swung, true)
       self.set(:last, 0)
       if (value == 0) { send self :swing }
       else if (self.get(:strength) < 0) {
@@ -303,7 +326,10 @@ kind Troll is Thing, sprout.Actor {
       self.set(:rouse, 0)
       each x: Axe in self { move x to underground_caverns.troll_room }
       send underground_caverns.troll_room :troll_flag with true
-      if (!self.get(:waking)) { self.set(:waking, true)  wake in 1 minutes }
+      // Out cold, the turn he had asked for is not coming: his next is a
+      // minute on, and finds him out.
+      cancel wakes
+      wake in 1 minutes
     } else if (value == 3) {
       send self :expire
     } else if (value == 4) {
@@ -340,8 +366,11 @@ kind Troll is Thing, sprout.Actor {
           each x: Axe in self { act attack (target: a, weapon: x) }
         }
       }
-      if (self.get(:fighting) && !self.get(:waking) && underground_caverns.troll_room.count(Adventurer) > 0) {
-        self.set(:waking, true)
+      // Zork's troll swings once a move: a swing, his own or one struck
+      // back at a blow, puts his next turn a minute on, in place of the one
+      // he had asked for.
+      if (self.get(:fighting) && underground_caverns.troll_room.count(Adventurer) > 0) {
+        cancel wakes
         wake in 1 minutes
       }
     }
@@ -355,7 +384,6 @@ kind Troll is Thing, sprout.Actor {
       self.set(:rouse, 0)
       self.set(:strength, 0 - self.get(:strength))
       self.set(:fighting, true)
-      self.set(:swung, false)
       each x: Axe in underground_caverns.troll_room { act take (target: x) }
       send underground_caverns.troll_room :troll_flag with false
     }
@@ -363,11 +391,10 @@ kind Troll is Thing, sprout.Actor {
 
   // His own turns: a swing while he fights, coming round while he is out
   // (never on the turn after the blow, then a tenth likelier each turn), and,
-  // one time in three, a first strike at somebody standing there. A pending
-  // turn cannot be taken back, so a knockout does not replace it: the turn
-  // that was already asked for finds him out cold and only counts.
+  // one time in three, a first strike at somebody standing there. Each turn
+  // he asks for replaces any he had asked for (`cancel wakes`), so he has
+  // one turn coming at most.
   on :woke (elapsed) {
-    self.set(:waking, false)
     if (!self.get(:dead)) {
       if (self.get(:strength) < 0) {
         if (underground_caverns.troll_room.count(Adventurer) == 0 || random(10) < self.get(:rouse)) {
@@ -376,25 +403,15 @@ kind Troll is Thing, sprout.Actor {
           send self :swing
         } else {
           self.adjust(:rouse, 1)
-          self.set(:waking, true)
           wake in 1 minutes
         }
       } else if (self.get(:fighting)) {
-        // He has swung back at a blow since his last turn: that was this
-        // turn's swing, and he waits for the next.
-        if (self.get(:swung)) {
-          self.set(:swung, false)
-          self.set(:waking, true)
-          wake in 1 minutes
-        } else {
-          send self :swing
-        }
+        send self :swing
       } else if (underground_caverns.troll_room.count(Adventurer) > 0) {
         if (chance(3)) {
           self.set(:fighting, true)
           send self :swing
         } else {
-          self.set(:waking, true)
           wake in 1 minutes
         }
       }
@@ -403,14 +420,14 @@ kind Troll is Thing, sprout.Actor {
 
   // Somebody comes in: he may strike first, on one of his own turns.
   on :arrived (actor, from) {
-    if (actor.is(Adventurer) && !self.get(:dead) && !self.get(:waking)) {
-      self.set(:waking, true)
+    if (actor.is(Adventurer) && !self.get(:dead)) {
+      cancel wakes
       wake in 1 minutes
     }
   }
 
   // Dead: the fog takes him, his axe stays behind, and he is gone for
-  // good, with whatever he ate and any wake he had asked for.
+  // good, with whatever he ate and any turn he had asked for.
   on :expire {
     self.set(:dead, true)
     self.set(:fighting, false)

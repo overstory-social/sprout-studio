@@ -1,12 +1,12 @@
 {
-  "about": "The troll and his gifts: he eats what he is given, throws a weapon back, and one time in five eats it and dies of it, leaving his axe; there is no fog about the room before he dies, and no troll at all after.",
+  "about": "A one-way tunnel says so on the way, in the dark as in the light: Zork's warning first, then the dark place, or the grue.",
   "steps": [
-    { "seed": 2 },
     { "arrive": "Marta", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West of House" },
       { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
       { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
     ] },
+    { "seed": 0 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North of House" },
       { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
@@ -25,12 +25,6 @@
       { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
       { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
       { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
-    ] },
-    { "as": "Marta", "type": "take sack", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "open sack", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Opening the brown sack reveals a lunch, and a clove of garlic." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Living Room" },
@@ -65,56 +59,57 @@
       { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
       { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
-    { "as": "Marta", "type": "examine all", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is an elongated sack of coarse brown paper, folded over at the top and spotted with grease. It smells of hot peppers, and has clearly been somebody's lunch." },
-      { "reader": "Marta", "kind": "described", "words": "The brown sack contains:" },
-      { "reader": "Marta", "kind": "described", "words": "A lunch" },
-      { "reader": "Marta", "kind": "described", "words": "A clove of garlic" },
-      { "reader": "Marta", "kind": "described", "words": "It is a battery-powered brass lantern, dented here and there but sound, with a stout handle and a glass that someone has kept clean." },
-      { "reader": "Marta", "kind": "described", "words": "The lamp is on." },
-      { "reader": "Marta", "kind": "described", "words": "Your sword is glowing very brightly." },
-      { "reader": "Marta", "kind": "described", "words": "There's nothing special about the lunch." },
-      { "reader": "Marta", "kind": "described", "words": "There's nothing special about the clove of garlic." },
-      { "reader": "Marta", "kind": "described", "words": "The walls are rough rock, marred by old bloodstains and by deep scratches, perhaps made by an axe." },
-      { "reader": "Marta", "kind": "described", "words": "A scrap of paper is pinned to the rock at the mouth of the east passage. It reads: \"Back soon. -- The Management.\" It does not say when." },
-      { "reader": "Marta", "kind": "described", "words": "Passages lead east and south out of the room. The one to the south goes back toward the cellar; the one to the east goes somewhere the troll would rather you did not." }
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
-    { "as": "Marta", "type": "give lunch to troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and not having the most discriminating tastes, gleefully eats it." }
+    { "seed": 0 },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
-    { "as": "Marta", "type": "give garlic to troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and not having the most discriminating tastes, gleefully eats it." }
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
-    { "as": "Marta", "type": "give sword to troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and, being for the moment sated, throws it back. Fortunately, the troll has poor control, and the sword falls to the floor. He does not look pleased." }
-    ] },
-    { "as": "Marta", "type": "take sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    { "as": "Marta", "type": "turn off lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now off." },
+      { "reader": "Marta", "kind": "said", "words": "It is now pitch black." }
     ] },
     { "seed": 4 },
-    { "as": "Marta", "type": "give sword to troll", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll, who is not overly proud, graciously accepts the gift and eats it hungrily. Poor troll, he dies from an internal hemorrhage and his carcass disappears in a sinister black fog." }
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You won't be able to get back up to the tunnel you are going through when it gets to the next room." },
+      { "reader": "Marta", "kind": "said", "words": "You have moved into a dark place." },
+      { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
     ] },
-    { "advance": "2 minutes", "expect": [] },
-    { "as": "Marta", "type": "examine troll", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." },
+      { "reader": "Marta", "kind": "said", "words": "Maze" },
+      { "reader": "Marta", "kind": "said", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
-    { "as": "Marta", "type": "l", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
-      { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
     ] },
-    { "as": "Marta", "type": "take axe", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" }
     ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage to the east has not been finished. A note is pinned to the rock: \"Back soon. -- The Management.\"" }
+    { "as": "Marta", "type": "turn off lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now off." },
+      { "reader": "Marta", "kind": "said", "words": "It is now pitch black." }
     ] },
-    { "as": "Marta", "type": "take pick", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
-    ] },
-    { "as": "Marta", "type": "dig", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Digging with a pair of hands is silly." }
+    { "seed": 0 },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You won't be able to get back up to the tunnel you are going through when it gets to the next room." },
+      { "reader": "Marta", "kind": "told", "words": "Oh, no! A lurking grue slithered into the room and devoured you!" },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Marta", "kind": "told", "words": "Your belongings, such as they were, have not come with you. They are scattered about the Empire, though somebody tidy has put the lamp back in the living room." },
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
     ] }
   ]
 }

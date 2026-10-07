@@ -354,7 +354,8 @@ The director's steering for this pass, and what came of it.
 - **The troll as an NPC.** `kind Troll is Thing, sprout.Actor`. He swings
   by `act attack (target: a, weapon: axe)`, deciding the blow on Zork's
   tables in his own part (`:dealt`); the visitor's `as target for attack`
-  tells them the line and wounds, stuns, disarms or kills them. He picks up
+  tells them the line and wounds, stuns, disarms or kills them (since
+  round 6 he tells the line himself; see below). He picks up
   his axe with `act take` and throws back a weapon with `act throw`. He
   passes, so his axe is in reach in his fist; the axe's own `examine`
   refuses while he wields it, and `sprout.Actor`'s `release` refuses `take`
@@ -450,9 +451,10 @@ ROB).
   70.
 - **How the maze is written:** two kinds, `Maze` and `DeadEnd`, each a
   `DarkRoom`, give a room its name, description and passages; each room
-  writes its number and its own exits, since exits do not compose. The
-  one-way tunnels' warning is the adventurer's, read in its part of `go`
-  from the number of the room it left (friction 53).
+  writes its own exits, since exits do not compose. The one-way tunnels'
+  warning was the adventurer's, read in its part of `go` from the number of
+  the room it left (friction 53); since round 6 it is the tunnel's own,
+  an exit that says it as the visitor goes.
 - **Darkness** in the maze is the Cellar's: `maze_dark.json`.
 - **Tests:** `maze.json` (the walk to the remains, a loop, a one-way
   tunnel, the knife's pulse, a dropped marker seen again, the Cyclops
@@ -528,3 +530,52 @@ ROB).
 - Throwing things at the troll, waking him, putting the egg at risk.
 - Whether anyone climbs the stairs by name, and whether a death and a
   second descent now read as Zork's barred trap door.
+
+## Before round 6: the port to Sprout 6c440f5
+
+No scope changed. Sprout fixed most of what the port had asked of it
+(sprout#466 to #474), and the world now says those things the plain way:
+
+- **The one-way tunnels say their own warning,** an exit with a `say`
+  (#468), so the rooms have no numbers and the adventurer no longer
+  remembers where it came from. The warning comes first, before the dark
+  place or the grue, as Zork's exit routine prints it before GOTO
+  (`diode_dark.json`). The trap door's crash stays the visitor's: Zork
+  prints it after "You have moved into a dark place.", and an exit's line
+  comes before.
+- **The troll says his own blows,** `tell target` in his own part of
+  `attack` (#466): the misses, the wounds, the knockout and his
+  hesitation over it, the killing strokes. The visitor's part only does
+  what the blow does to them. A stagger is the one exception: one time in
+  four it costs the visitor their weapon, the troll cannot see into their
+  hands, so that line is still theirs. The Troll Room keeps its guard on
+  the ways out, which is now the spec's own way for an NPC to guard.
+- **The troll's turns are taken back, not skipped** (`cancel wakes`,
+  #469). A swing, his own or one struck back, puts his next turn a minute
+  on; the knockout takes back the turn he had asked for and asks its own.
+  So he swings once a move, as Zork's troll does, and the flags that told
+  a wake to pass are gone. One visible change: after a blow struck back,
+  his next own swing is a minute after it, not at the turn asked for
+  before it (`descent.json`).
+- **`x maze` examines the passages again** (#470): the room named Maze no
+  longer beats a thing that answers to "maze". `take bag` with the sack in
+  hand takes the coins by the same rule; the adventurer's refusal of what
+  it already holds was always the way to say so, and stays.
+- **`examine all`** in the Troll Room examines everything there, and no
+  longer stops at the troll's axe (#474); the axe in his fist is his, and
+  `all` leaves it out, as it leaves out the troll.
+- **Commas chain** (#471): `open trap door, turn on lantern, go down` is
+  three commands. `troll, hello` stays unread by Sprout's decision
+  (`commas.json`).
+- **`drop leaflet here`** drops it (#473). The world's own `drop` replaces
+  the library's, so it writes the same three `here` phrases.
+- **Not changed:** `enter window` where there is no window is still "That
+  sentence isn't one I recognize." (friction 52): #472 answers `not_here`
+  for an object's synonym out of reach, and this world's `enter` is `go`'s,
+  by the label of a way out.
+
+### What round 6 should watch
+
+As carried above, and: whether the troll's fight reads as his now that
+his blows come from him; whether anyone chains commands with commas;
+whether the tunnels' warning is noticed.

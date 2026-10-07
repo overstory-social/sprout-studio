@@ -17,7 +17,7 @@ import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
 import {go, look, examine, inventory, wait} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, listen_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :spot, :banish, :spend} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, listen_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -43,10 +43,6 @@ kind Adventurer is sprout.Visitor {
   :mode Mode default brief
   // Standing at the foot of the Studio's chimney.
   :at_chimney false
-  // The number of the room last come into (`Room`'s `:num`). The new room
-  // tells it on arrival, from the queue, so while the adventurer's own part
-  // of `go` runs it is still the number of the room just left.
-  :spot 0 min 0 max 40
   // Attacking with the rusty knife.
   :suicide false
   // How many skeleton keys are in hand: a grating cannot look into the
@@ -113,7 +109,6 @@ kind Adventurer is sprout.Visitor {
   }
 
   on :scored (from, value) { self.adjust(:score, value) }
-  on :spot (from, value) { self.set(:spot, value) }
 
   // The skeleton's ghost: through the world's gate, the valuables to the
   // Land of the Living Dead.
@@ -148,16 +143,6 @@ kind Adventurer is sprout.Visitor {
       // A lamp lights the way in the hand or in an open bag, as the room's
       // own `lit` sees it.
       self.set(:own_light, self.get(:light) > 0)
-      // Down one of the maze's one-way tunnels, Zork's MAZE-DIODES: from
-      // Maze 2 to Maze 4, Maze 7 to the first Dead End, Maze 9 to Maze 11,
-      // Maze 12 to Maze 5.
-      if (here.is(Room)) {
-        let was = self.get(:spot)
-        let now = here.get(:num)
-        if ((was == 2 && now == 4) || (was == 7 && now == 16) || (was == 9 && now == 11) || (was == 12 && now == 5)) {
-          say "You won't be able to get back up to the tunnel you are going through when it gets to the next room."
-        }
-      }
       each b: Box in self {
         if (b.get(:open)) {
           each l: Lamp in b { if (l.get(:lit)) { self.set(:own_light, true) } }
@@ -220,46 +205,31 @@ kind Adventurer is sprout.Visitor {
   }
 
   // The troll's blow, which he deals by acting: `attack`, with this visitor
-  // as its target. He has decided what it does (`:dealt`, Zork's blow
-  // result: 1 missed, 2 knocked out, 3 killed, 4 lightly wounded, 6
-  // staggered); this is the visitor's own part of it, told to them, since
-  // the one acting is the troll. The line is drawn from Zork's own for that
-  // result.
+  // as its target. He has decided what it does and told them so in his own
+  // part (`:dealt`: 1 missed, 2 knocked out and spared, 3 killed, 4 lightly
+  // wounded, 5 knocked out and put to death, 6 staggered); this is what it
+  // does to them, which only they may write.
   as target for attack {
     do {
       if (actor.is(Troll)) {
         let v = actor.get(:dealt)
-        if (v == 1) {
-          tell self "{one of}The troll swings his axe, but it misses.{or}The troll's axe barely misses your ear.{or}The axe sweeps past as you jump aside.{or}The axe crashes against the rock, throwing sparks!{/one of}"
-        } else if (v == 2) {
-          tell self "The flat of the troll's axe hits you delicately on the head, knocking you out."
-          if (random(9) < 2) {
-            tell self "{one of}The troll hesitates, fingering his axe.{or}The troll scratches his head ruminatively:  Might you be magically protected, he wonders?{/one of}"
-          } else {
-            tell self "Conquering his fears, the troll puts you to death."
-            tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
-            send self :die
-          }
-        } else if (v == 3) {
-          tell self "{one of}The troll neatly removes your head.{or}The troll's axe stroke cleaves you from the nave to the chops.{or}The troll's axe removes your head.{/one of}"
-          tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
+        if (v == 3 || v == 5) {
           send self :die
         } else if (v == 4) {
-          tell self "{one of}The axe gets you right in the side. Ouch!{or}The flat of the troll's axe skins across your forearm.{or}The troll's swing almost knocks you over as you barely parry in time.{or}The troll swings his axe, and it nicks your arm as you dodge.{/one of}"
           self.adjust(:wounds, 1)
           self.adjust(:fight, -1)
           if (self.get(:fight) <= 0) {
-            tell self "It appears that that last blow was too much for you. I'm afraid you are dead."
             send self :die
           } else if (!self.get(:healing)) {
             self.set(:healing, true)
             wake in 10 minutes
           }
-        } else {
-          // Staggered, or one time in four disarmed (Zork's LOSE-WEAPON).
+        } else if (v == 6) {
+          // Staggered, or one time in four disarmed (Zork's LOSE-WEAPON). The
+          // troll cannot see into these hands (33), so this line is the
+          // visitor's own, and names the weapon before it goes: a line is
+          // rendered once the turn's work is done, when the hand is empty.
           if (self.count(Weapon) > 0 && chance(4)) {
-            // The weapon is named before it goes: a line is rendered once
-            // the turn's work is done, when the hand it was in is empty.
             if (self.count(Sword) > 0) {
               tell self "{one of}The axe hits your sword and knocks it spinning.{or}The axe knocks your sword out of your hand. It falls to the floor.{/one of}"
               each w: Sword in self { move w to here }

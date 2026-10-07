@@ -12,18 +12,13 @@ import * as sprout from 'sprout'
 import {Thing, Scenery} from 'thing'
 import {Lamp} from 'lamp'
 import {Adventurer} from 'adventurer'
-import {:scored, :relight, :room_lit, :wall_look, :spot} from 'verbs'
+import {:scored, :relight, :room_lit, :wall_look} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
 
   :value 0 min 0 max 100
   :glow 0 min 0 max 2
-  // The maze's rooms are numbered as Zork's are (MAZE-1 to MAZE-15, the
-  // dead ends after them, the Grating Room last); every other room is 0.
-  // A visitor is told the number of each room they come into, so that,
-  // going on, they know where they came from.
-  :num 0 min 0 max 40
   // The Cellar's: the trap door is open above and not yet barred, so the
   // next to come down will hear it crash shut.
   :crash false
@@ -81,7 +76,6 @@ kind Room is sprout.Place {
   on :entered (item, from) {
     if (item.is(Adventurer)) {
       send wall :wall_look with self.get(:walls)
-      send item :spot with self.get(:num)
       // A visit counts only where there is light to see the room by.
       let seen_by = !self.is(DarkRoom) || item.get(:light) > 0
       if (item.recall(:visits) < 2 && seen_by) { item.adjust(:visits, 1) }

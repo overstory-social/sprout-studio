@@ -14,10 +14,12 @@ verb take {
   synonyms "steal", "seize"
 }
 
+// A trailing `here` is the standard library's (sprout#473), and this
+// `drop` replaces the library's, so it writes the same three.
 verb drop {
   role target: Portable carried many
   "drop [target]"  "put down [target]"  "put [target] down"  "discard [target]"
-  "release [target]"
+  "release [target]"  "drop [target] here"  "put down [target] here"  "put [target] down here"
 }
 
 verb put {
@@ -277,10 +279,6 @@ message :wall_look with integer
 // its TOUCHBIT in UP-CHIMNEY-FUNCTION and JIGS-UP.
 message :unbar with boolean
 message :sealed with boolean
-// Which room a visitor last came into, by its number (`Room`'s `:num`):
-// how the adventurer's own part of `go` tells a maze's one-way tunnel from
-// an ordinary way into the same room.
-message :spot with integer
 // The grating, one grating seen from two rooms: whether it is unlocked and
 // whether it is open, kept in step on both sides, and the leaves that hid
 // it gone from above.
