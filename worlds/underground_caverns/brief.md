@@ -78,6 +78,22 @@ slice:
   east wall into the Living Room. The Strange Passage joins the Cyclops
   Room to the Living Room. The dam, river, coal mine, mirrors and Hades
   stay out of scope.
+- **v6, from round 11:** v5, plus the Flood Control Dam and the river as
+  Zork has them: the Dam, Dam Lobby (the matchbook, the guidebook) and
+  Dam Base; the Maintenance Room (the wrench, the screwdriver, the tube
+  of putty, the four buttons, the leak that floods it); the control
+  panel's bolt and the green bubble, so the sluice gates open and the
+  Reservoir drains over time (the trunk of jewels on its bed, the pump
+  from Reservoir North), and refills when they close; Reservoir North and
+  South, Stream View, the Stream and Atlantis (the crystal trident); the
+  Loud Room's noise when the gates are open; the Frigid River in the
+  inflatable boat (inflated with the pump, punctured by sharp things,
+  launched and landed, carried downstream on its own turns, and over
+  Aragain Falls to your death); the White Cliffs, Sandy Beach (the
+  shovel, the scarab dug from the sand), Shore, Aragain Falls, the
+  Rainbow (the sceptre waved makes it solid) and End of Rainbow (the pot
+  of gold), and Canyon View, Rocky Ledge and Canyon Bottom up to the
+  Forest. The coal mine, mirrors and Hades stay out of scope.
 - Exits into territory not built yet are present, as in Zork, and turn the
   visitor back with an in-world line.
 
@@ -144,7 +160,7 @@ built as Zork has it, that is a finding, not a failure.
 
 ## Budget
 
-- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll, round 9 the thief and the Cyclops), even rounds refine; see status.md
+- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll, round 9 the thief and the Cyclops, round 11 the dam and the river), even rounds refine; see status.md
 - Playtests per round: 6 (one per persona)
 - Turn cap per run: 150
 - Spend ceiling: the workflow's default, about 400k tokens a round
