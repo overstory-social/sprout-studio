@@ -26,6 +26,7 @@ verb drop {
   role target: Portable carried many
   "drop [target]"  "put down [target]"  "put [target] down"  "discard [target]"
   "release [target]"  "drop [target] here"  "put down [target] here"  "put [target] down here"
+  synonyms "leave"
 }
 
 verb put {
@@ -310,6 +311,66 @@ verb treasure { "treasure"  "temple"  "say treasure"  "say temple" }
 // Zork's ODYSSEUS: the name the Cyclops's father had cause to remember.
 verb odysseus { "ulysses"  "odysseus"  "say ulysses"  "say odysseus"  "yell ulysses"  "yell odysseus"  "shout ulysses"  "shout odysseus" }
 
+// The boat (v6): getting in and out, launching, landing, and blowing it
+// up. A bare "launch" and "land" in the boat are the boat's own ways out
+// (boat.sprout); these take the words a player says with the boat named,
+// and answer them anywhere else.
+verb board {
+  role target
+  "board [target]"  "get in [target]"  "get into [target]"  "get on [target]"
+  "sit in [target]"  "embark on [target]"  "take in [target]"
+}
+// Not ENTER: any verb that reads `enter [target]` answers `enter house`
+// with its own words where the house's way in refuses (friction 101).
+verb disembark {
+  role target
+  "get out of [target]"  "disembark [target]"  "disembark from [target]"  "exit [target]"
+  "climb out of [target]"  "step out of [target]"  "get off [target]"  "take out [target]"
+  // Zork's LEAVE is DROP, and of the vehicle one is in, DISEMBARK: an
+  // intent that chose between them would fault (friction 105), so `leave`
+  // is a word of both, and the reading that is allowed wins.
+  synonyms "leave"
+}
+verb disembark_here { "get out"  "disembark"  "climb out"  "step out"  "alight"  "stand up" }
+verb launch { role target  "launch [target]"  "push off in [target]"  "push [target] off"  "row [target] out" }
+verb launch_here { "launch" }
+verb land { role target  "land [target]"  "beach [target]"  "ground [target]"  "row [target] ashore" }
+verb land_here { "land" }
+verb ashore { "go ashore"  "row ashore"  "come ashore"  "head for shore"  "head for the shore"  "push off"  "make for the shore" }
+verb inflate {
+  role target
+  role tool
+  "inflate [target] with [tool]"  "inflate [target]"  "blow up [target] with [tool]"
+  "blow up [target]"  "blow into [target]"  "pump up [target] with [tool]"  "pump up [target]"
+  "pump [target]"
+}
+verb deflate { role target  "deflate [target]"  "let air out of [target]"  "let the air out of [target]" }
+// Zork's PLUG, and its GLUE, PATCH, REPAIR and FIX.
+verb plug {
+  role target
+  role tool carried
+  "plug [target] with [tool]"  "plug [target]"  "plug up [target] with [tool]"
+  "stop [target] with [tool]"  "seal [target] with [tool]"  "stuff [tool] into [target]"
+  synonyms "glue", "patch", "repair", "fix", "mend"
+}
+// Spreading something on something is plugging it, as Zork's PUT of the
+// putty on the leak is.
+intent smear {
+  "apply [x] to [y]"  "spread [x] on [y]"  "smear [x] on [y]"  "squeeze [x] on [y]"
+  "squeeze [x] onto [y]"  "rub [x] on [y]"  "press [x] into [y]"
+  do plug (target: y, tool: x)
+}
+// Zork's TURN ... WITH: the bolt, and the wrench to turn it.
+verb turn_with {
+  role target
+  role tool carried
+  "turn [target] with [tool]"  "turn [target] using [tool]"  "rotate [target] with [tool]"
+  "twist [target] with [tool]"  "tighten [target] with [tool]"  "loosen [target] with [tool]"
+  "unscrew [target] with [tool]"  "screw [target] with [tool]"
+}
+// Zork's OIL, LUBRICATE and GREASE.
+verb oil { role target  role tool carried  "oil [target] with [tool]"  "lubricate [target] with [tool]"  "grease [target] with [tool]" }
+
 verb score { "score" }
 verb diagnose { "diagnose" }
 verb xyzzy { "xyzzy"  "plugh" }
@@ -375,7 +436,12 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { ns_passage, forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange }
+enum Dest { ns_passage, forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange, damp_cave, round_room, canyon_view, ledge, canyon_bottom, falls, rainbow_end, on_rainbow, atlantis, dam_room, dam_base }
+
+// Where on the water a boat is, or which shore it may put out from (v6):
+// the rooms the Frigid River, the stream and the reservoir touch, and
+// `nowhere` for everywhere else.
+enum Reach { nowhere, dam_base, river_1, river_2, river_3, river_4, river_5, white_cliffs_north, white_cliffs_south, sandy_beach, shore, reservoir_south, reservoir_north, reservoir, stream_view, in_stream }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.
@@ -479,3 +545,26 @@ message :magic
 message :cyclops_gone
 // Something dropped from the tree top by somebody other than a visitor.
 message :shed
+// The dam (v6). The state of the sluice gates and the water behind them,
+// which the bolt keeps and tells every room that cares, through the world:
+// 0 gates shut and the reservoir full, 1 gates open and still full, 2 gates
+// open and the reservoir drained, 3 gates shut and refilling.
+message :tide with integer
+// The yellow and brown buttons, which free and lock the bolt (GATE-FLAG).
+message :gate_flag with boolean
+// The red button: the Maintenance Room's lights.
+message :lights
+// The Maintenance Room, full of water: its doors open no more.
+message :flooded
+// The Loud Room, roaring with the gates open, throws its visitor out.
+message :flung with boolean
+// The rainbow over Aragain Falls, solid (true) or only light (false).
+message :rainbow with boolean
+// Somebody in a boat asks the room it lies in for a way out of it (a
+// handler has no `here`): the room answers with itself, `:berth`. A room
+// told `:wreck` swaps the inflated boat in it for a punctured one.
+message :where
+message :berth
+message :wreck
+// A burning match, gone out in somebody's hand.
+message :match_out

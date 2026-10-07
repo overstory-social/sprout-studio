@@ -24,7 +24,13 @@ coffin and the sceptre in it; the way out of the temple is a prayer, up to
 the Forest; and, from round 9, the thief, who walks all of it unseen and
 robs it, his lair the Treasure Room with the silver chalice, and the
 Cyclops beyond Maze 15, who guards the stairs up to it and leaves, when he
-leaves, through the wall into the Living Room. Every room's name and description
+leaves, through the wall into the Living Room; and, from round 11, Flood
+Control Dam #3 and the river below it: the Dam, its Lobby and Maintenance
+Room, the bolt that opens the sluice gates and drains the reservoir, the
+reservoir's shores, its stream and the Atlantis Room, the magic boat on
+the Frigid River, the White Cliffs, Sandy Beach and its cave, the Shore,
+Aragain Falls and the rainbow over them, and the canyon up to the forest.
+Every room's name and description
 is the original's, word for word, from the ZIL source (`dungeon.zil`,
 `actions.zil`, and the shared substrate's `verbs.zil`). The narrator is
 Zork's narrator: "Taken.", "Dropped.", "Opened.", the YUKS, "A hollow voice
@@ -146,18 +152,64 @@ written down. That log is a product of the world as much as the rooms are.
 16. The canary, wound in the forest (the three Forests, the Forest Path, up
    the tree), sings an aria, and a songbird drops a brass bauble.
 
+17. The dam (v6, `dam.sprout`), east of the Deep Canyon: the Dam (lit),
+   with its control panel, bolt and green bubble; north, the Dam Lobby (lit)
+   with the guidebooks and the matchbook; north again, the Maintenance Room
+   (dark until its red button works the lights), with the wrench, the
+   screwdriver, the tube of gunk, the rusting tool chests and four buttons.
+   The yellow button frees the bolt (the bubble glows) and the brown locks
+   it; the blue one bursts a pipe, and the room fills over seven minutes
+   and drowns whoever is in it, unless the gunk, squeezed from the tube,
+   is put on the leak. Turned with the wrench, the bolt opens the sluice
+   gates, and four minutes later (eight moves) the reservoir has drained;
+   turned again, it fills four minutes after.
+18. The reservoir (v6, `reservoir.sprout`): Reservoir South (west of the
+   Dam, and northwest of the Deep Canyon and northeast of the Chasm), a
+   lake too deep to cross until it drains; then the Reservoir itself is a
+   mud pile with the trunk of jewels half buried in it (15 and 5), and
+   Reservoir North beyond it, with the hand-held air pump, and up a slimy
+   stairway the Atlantis Room, with Poseidon's crystal trident (4 and 11).
+   West of Reservoir South, Stream View; the Stream above it is for the
+   boat. Caught on the lake bed as it refills, the visitor goes over the
+   dam. The Loud Room follows the dam: with the gates open and the water
+   high it throws its visitor out; with the gates shut and the water low
+   it is quiet, and the bar can be had without the word.
+19. The river (v6, `boat.sprout`, `river.sprout`): at the Dam Base, below
+   the dam, a folded pile of plastic; the pump blows it up into the magic
+   boat, with a tan label in it. Something sharp in hand (the sword, the
+   knives, the axe, the stiletto, the sceptre) punctures it as the visitor
+   gets in; the gunk mends it. In it, LAUNCH puts out onto the Frigid River,
+   and the current carries the boat on by itself, reach by reach (two
+   minutes, two, a minute and a half, one, one), past a red buoy with an
+   emerald in it (5 and 10), and over Aragain Falls, the end of it. LAND,
+   or the way to a shore, brings it in: west to the Dam Base or the White
+   Cliffs Beach, east to Sandy Beach or the Shore. The White Cliffs' paths
+   are too narrow for an inflated boat; it deflates.
+20. Sandy Beach has the shovel; northeast, the Sandy Cave, whose sand, dug
+   four times, shows a jeweled scarab (5 and 5), and a fifth time falls in.
+   South, the Shore and Aragain Falls (lit), with a rainbow over them.
+21. The sceptre, waved at the Falls or at the End of Rainbow (reached from
+   the canyon, below Canyon View), makes the rainbow solid, and a pot of
+   gold appears at its end (10 and 10); the rainbow crosses between the two.
+   Waved again, it is light; waved on the rainbow, it drops the waver into
+   the Falls. Canyon View joins the Clearing east of the house and the
+   forest: a way home with whatever the rainbow side holds.
+
 "Done", for this slice, is: the egg (whole), the canary, the bauble, the
 painting, the bag of coins, the platinum bar, the torch, the gold coffin,
 the sceptre and the chalice in the trophy case (the sceptre on its own,
 not in the coffin), the thief dead, the visitor having been past the troll
 both ways, through the maze, round by the Gallery and up the chimney, down
-the rope and up by prayer, and past the Cyclops to the lair. 197 points is
-the ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the
-East-West Passage 5, the Treasure Room 25; the egg 5 and 5, the canary 6
-and 4, the bauble 1 and 1, the painting 4 and 6, the coins 10 and 5, the
-bar 10 and 5, the torch 14 and 6, the coffin 10 and 15, the sceptre 4 and
-6, the chalice 10 and 5. Until round 9 it was 145, with the canary
-unreachable whole. A single visit cannot carry it all: the coffin, the
+the rope and up by prayer, and past the Cyclops to the lair; and, since
+v6, the trunk, the trident, the emerald, the scarab and the pot of gold in
+the case too, the dam opened and the river run. 277 points is the ceiling
+with every treasure intact: the Kitchen 10, the Cellar 25, the East-West
+Passage 5, the Treasure Room 25; the egg 5 and 5, the canary 6 and 4, the
+bauble 1 and 1, the painting 4 and 6, the coins 10 and 5, the bar 10 and
+5, the torch 14 and 6, the coffin 10 and 15, the sceptre 4 and 6, the
+chalice 10 and 5; the trunk 15 and 5, the trident 4 and 11, the pot of
+gold 10 and 10, the scarab 5 and 5, the emerald 5 and 10. Until round 11
+it was 197; until round 9, 145, with the canary unreachable whole. A single visit cannot carry it all: the coffin, the
 torch and the bar together are 95 of the 100, so the lamp and the sword
 stay below.
 
@@ -326,12 +378,39 @@ stay below.
   be carried straight to the trophy case.
 - **The canary sings once,** in the forest, and the songbird's bauble is
   worth a point in the hand and a point in the case.
+- **The dam is a clock.** The bolt opens the gates at once and drains the
+  lake over eight moves; the Dam, the shores, the Deep Canyon and the
+  Loud Room all say how the water stands, and change as it does. The
+  bubble glows while the bolt is free.
+- **The Loud Room has three moods.** Roaring with the gates open (out you
+  go, to one of three rooms), echoing as ever with the reservoir full or
+  drained, and quiet, the bar free without the word, while the drained
+  reservoir refills; when it is full the roar comes back all at once.
+- **The lake bed is a trap.** Walk out onto the drained reservoir, shut the
+  gates, and stay: "Staying here seems quite perilous!", and then the dam.
+- **The leak is a puzzle with no reward.** The blue button floods the
+  Maintenance Room; the gunk stops it, and the button stays jammed. The
+  gunk is also the only way to mend a punctured boat, so squeezing it out
+  on the leak first is a waste worth noticing.
+- **Sharp things and plastic.** Getting into the boat with the sword in hand
+  punctures it, as Zork's does ("Oops! Something sharp seems to have
+  slipped..."); so does letting go of a knife in it, which on the water is
+  the end of you.
+- **The boat goes by itself.** Out on the river, waiting is travel; the
+  current gives the visitor two minutes at the first reach and one at the
+  last, and the label's "Land" is the only thing between them and the
+  Falls.
+- **The rainbow is a switch.** The sceptre makes it solid and ordinary in
+  turn; the pot of gold appears once. Waving it while standing on the
+  rainbow is Zork's best joke and its last.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
   chimney` and `climb down chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
   `wind canary`, `dig with axe`, `read manual`, `close door` in the Studio,
   `count candles`, `kiss dome`, `turn page`, `close book`, `ring bell`,
-  `wave sceptre`, `pour water on torch`.
+  `wave sceptre`, `pour water on torch`; and, since v6, `oil bolt`,
+  `plug dam`, `read buttons`, `open tool chests`, `put gunk in sack`,
+  `count matches`, `jump` at Canyon View, `cross rainbow` from it.
 
 ## Things deliberately left out of this slice
 
@@ -340,11 +419,13 @@ stay below.
 - Putting things through the grating (Zork lets a small one fall into
   the Grating Room).
 - The map in the trophy case, which only appears at 350 points.
-- East of the troll (v4): the dam and its gates, so the Loud Room's
-  throw-out (friction 71); the reservoir, the river and the White Cliffs;
-  the mirrors south of the Round Room; Hades below the Altar, and the
-  exorcism the bell, the book and the candles are for (v8); the matchbook, so the candles cannot
-  be lit again once out; the hot bell.
+- The mirrors south of the Round Room and up from the Atlantis Room (v8);
+  the coal mine (v7); Hades below the Altar, and the exorcism the bell, the
+  book and the candles are for (v8); the hot bell.
+- Filling the bottle at the river or the reservoir (Zork's FILL with
+  GLOBAL-WATER): the bottle's water is the Kitchen's only.
+- The thief on the drained Reservoir (Zork's I-THIEF goes there once it is
+  land); his round is fixed, and skips it.
 
 ## Two voices, and the Management
 
@@ -427,6 +508,32 @@ stay below.
   Treasure Room (`TreasureRoom`) and the `Chalice`. The visitor's side of
   their blows, gifts, robberies and the bauble is in `adventurer.sprout`;
   the egg the thief opens and the canary's aria are in `tree.sprout`.
+
+- `dam.sprout` (v6): the Dam (its panel, the bolt that keeps the dam's
+  clock and broadcasts `:tide`, the bubble), the Dam Lobby, the Maintenance
+  Room and its buttons, the Dam Base; the `Tidal` kind every room that
+  follows the water composes; the `Wrench`, `Screwdriver`, `Tube`,
+  `Putty`, `ToolChests`, `Button`, `Leak` (spawned by the blue button, the
+  room's flood clock) and `Matchbook` kinds.
+- `reservoir.sprout` (v6): Reservoir South, the Reservoir, Reservoir North,
+  Stream View, the Stream (`in_stream`), the Atlantis Room; the `Lake`,
+  `Stream`, `Mud` (which hides the trunk while the water is up), `Trunk`,
+  `Pump` and `Trident` kinds.
+- `river.sprout` (v6): the five reaches of the Frigid River, the White
+  Cliffs Beaches, Sandy Beach, the Sandy Cave, the Shore, Aragain Falls, On
+  the Rainbow, End of Rainbow, Canyon Bottom, Rocky Ledge (`cliff_middle`)
+  and Canyon View; the `River`, `WaterAbout`, `Cliffs`, `ClimbableCliff`,
+  `Falls`, `Rainbow`, `Buoy`, `Emerald`, `Shovel`, `Sand` (which hides the
+  scarab), `Scarab`, `PotOfGold` and `FarDam` kinds, and the marker kinds
+  `Riverside`, `OnTheRiver`, `Narrows`, `RainbowFoot`, `RainbowTop`,
+  `RainbowEnd`, `CanyonRim`, `SandyCave` and `CliffCave`.
+- `boat.sprout` (v6): the `Pile`, the `MagicBoat` (a place and a bag at
+  once: its reach, its errands through the gate, its current, its own ways
+  out), the `Wreck` and the `BoatLabel`, and the boat itself, declared
+  folded in the Dam Base's pile. Every room keeps `:reach` (`room.sprout`)
+  and answers `:where` (a visitor getting out) and `:wreck` (a boat
+  punctured on its floor). The visitor's side of boarding, getting out,
+  launching, landing and the puncture is `adventurer.sprout`'s.
 
 ## Notes to self for revisions
 
@@ -1245,3 +1352,115 @@ for the first time in sixty runs.
 - Carried, still unmet: the Grating Room and the key from below; the grue
   in play; the ghost; the tree's drop; the egg broken. A goal aimed at
   them is the director's to give.
+
+## Before round 11: v6, the dam and the river
+
+The director widened the scope to v6. Built from `1dungeon.zil` (DAM-ROOM,
+DAM-LOBBY, MAINTENANCE-ROOM, DAM-BASE, RESERVOIR-SOUTH, RESERVOIR,
+RESERVOIR-NORTH, STREAM-VIEW, IN-STREAM, ATLANTIS-ROOM, RIVER-1 to RIVER-5,
+WHITE-CLIFFS-NORTH and -SOUTH, SANDY-BEACH, SANDY-CAVE, SHORE,
+ARAGAIN-FALLS, ON-RAINBOW, END-OF-RAINBOW, CANYON-BOTTOM, CLIFF-MIDDLE,
+CANYON-VIEW, and their objects), `1actions.zil` (DAM-ROOM-FCN, BOLT-F,
+BUBBLE-F, DAM-FUNCTION, BUTTON-F, TOOL-CHEST-FCN, I-MAINT-ROOM,
+LEAK-FUNCTION, PUTTY-FCN, TUBE-FUNCTION, I-REMPTY, I-RFILL, the three
+RESERVOIR functions, LOUD-ROOM-FCN, DEEP-CANYON-F, RBOAT-FUNCTION,
+IBOAT-FUNCTION, DBOAT-FUNCTION, RIVER-FUNCTION, I-RIVER, RIVR4-ROOM,
+WHITE-CLIFFS-FUNCTION, SAND-FUNCTION, FALLS-ROOM, RAINBOW-FCN,
+SCEPTRE-FUNCTION, CANYON-VIEW-F, CLIFF-OBJECT, WCLIF-OBJECT, LAKE-PSEUDO,
+STREAM-PSEUDO, TRUNK-F, MATCH-FUNCTION, I-MATCH, CANDLES-FCN) and
+`gverbs.zil` (PRE-BOARD, V-BOARD, V-DISEMBARK, V-LAUNCH, V-INFLATE,
+V-DEFLATE, V-PLUG, V-PUMP, V-OIL, PRE-TURN, V-DIG, V-SWIM, GOTO's
+vehicle rules, NO-GO-TELL). The brief puts the scarab on Sandy Beach; the
+ZIL puts it in the sand of the Sandy Cave, northeast of the beach, with the
+shovel on the beach, and so does this world. The buoy and its emerald are
+Zork's, on the fourth reach, though the brief does not name them.
+
+- **Rooms (27):** the Dam, Dam Lobby, Maintenance Room and Dam Base;
+  Reservoir South, the Reservoir, Reservoir North, Stream View, the Stream
+  and the Atlantis Room; the Frigid River's five reaches; the two White
+  Cliffs Beaches, Sandy Beach, the Sandy Cave and the Shore; Aragain Falls,
+  On the Rainbow and End of Rainbow; Canyon Bottom, Rocky Ledge and Canyon
+  View. Dark as Zork has them: the Maintenance Room (until its lights), the
+  reservoir's rooms, Stream View, the Stream, Atlantis, the second to fourth
+  reaches, both White Cliffs Beaches, Sandy Beach and its cave. The Deep
+  Canyon, the Chasm and the Damp Cave now lead there; the Clearing east of
+  the house leads to Canyon View. Atlantis's staircase up refuses (the
+  mirrors are not built).
+- **Objects:** the control panel, the bolt, the green bubble and the dam;
+  the guidebook, the matchbook (five matches, a minute each; they light the
+  candles), the reception desk; the wrench, the screwdriver, the tube and
+  its gunk, the tool chests, four buttons and the group of them, the leak;
+  the pile of plastic, the magic boat and its tan label, the punctured
+  boat; the trunk, the pump, the trident; the red buoy and the emerald, the
+  shovel, the sand and the scarab, the pot of gold; and the scenery every
+  new room names (the lake, the stream, the mud, the river, the water, the
+  White Cliffs, the canyon wall, the falls, the rainbow and the rest), each
+  with a description of its own.
+- **Points:** the trunk 15 and 5, the trident 4 and 11, the pot of gold 10
+  and 10, the scarab 5 and 5, the emerald 5 and 10. The ceiling is 277.
+- **How the dam is built.** The bolt keeps the dam's state (0 shut and
+  full, 1 open and full, 2 open and drained, 3 shut and refilling) and its
+  clock, a wake four minutes on; it broadcasts `:tide`, which the world
+  lets through, and every room that cares keeps its own note (`Tidal`) and
+  says what its own room hears of the change (`changed :tide`), since no
+  room may read another's (friction 89). The folded boat hears it too, by a
+  pass rule on the pile, so it knows the lake when it is blown up. The
+  yellow and brown buttons broadcast `:gate_flag` to the bolt, the bubble
+  and the Dam; the red one asks its room to switch its `:daylight`; the
+  blue one spawns the leak, whose own wakes fill the room.
+- **How the boat is built.** The magic boat is a place (`sprout.Place`) and
+  a bag at once, declared folded in the pile at the Dam Base, and swapped in
+  and out of a spawned pile or punctured boat by being moved into them. It
+  keeps its reach (`:at`, from the room's `:reach`) and goes by the world's
+  gate on four errands: put out or land or row on (a way out of the boat
+  that leads back into itself, taken by the visitor; its own `:entered`
+  says which by its reach), drift (its own wake), land or launch by name
+  (`launch boat`, `land`, which are messages), and follow (a visitor who
+  steps ashore by a real way out). It describes the room it lies in by
+  naming each room it can lie in, and a visitor gets out of it by asking
+  the room it lies in (`:where`, answered `:berth`). What Sprout would not
+  let it do directly is friction 95 to 105.
+- **The tests:** `dam_bolt.json` (the bolt, the buttons, the gates, the
+  draining and the trunk, the refilling), `leak.json` (the lights, the
+  chests, the tube, the leak and the gunk), `leak_drown.json` (the room
+  fills and drowns; the lobby's doors shut), `atlantis.json` (across the
+  lake bed to the pump and the trident), `loud_noise.json` (thrown out,
+  echoing, quiet, and the roar returning), `river.json` (the boat blown up,
+  punctured, mended, launched, carried down the river, landed and over the
+  Falls), `scarab.json` (the buoy and the emerald, the shovel, the scarab,
+  the hole falling in), `rainbow.json` (the sceptre, the solid rainbow, the
+  pot of gold, the death on it), `v6_score.json` (the pot and the sceptre
+  home by Canyon View and into the case). `barriers.json`,
+  `chasm_room.json`, `climbing.json` and `edges.json` lost the dam's board,
+  the flood and the canyon rope and now walk through to the new rooms; the
+  thief's round is eight rooms longer, so `thief_hoard.json`,
+  `v5_score.json` and `thief_unseen.json` wait eight minutes more (seven in
+  the last).
+
+### What round 11 should test
+
+- **Does anyone open the dam?** The bolt says only that it will not turn;
+  the bubble is dark until the yellow button; the guidebook and the
+  maintenance room's "group of buttons" are the only hints, as in Zork.
+  Watch whether players press every button (and flood the room), find the
+  wrench and connect the bubble to the bolt, and what they make of the
+  draining: whether they wait, and whether they notice the trunk.
+- **The boat.** Whether anyone fetches the pump across the drained lake,
+  blows up the pile at the Dam Base, reads the label, and gets in with the
+  sword in hand (and so punctures it, and whether the gunk on the leak was
+  then already spent); whether anyone realizes the current will not wait,
+  and lands; whether the Falls kill anyone, and whether that reads as fair.
+- **The Loud Room's moods.** Whether players who opened the gates are
+  confused at being thrown out, and whether anyone takes the bar while the
+  room is quiet without saying the word.
+- **The rainbow.** Whether anyone carries the sceptre to the Falls or the
+  End of Rainbow and waves it (nothing in this world points there but the
+  "dazzling display of color", which is Zork's own hint), and whether
+  anyone finds the canyon from Canyon View, east of the Clearing.
+- **Faults:** none in the new tests or in fuzzed walks through the dam,
+  the reservoir, the boat's whole run and the rainbow route. Watch the
+  boat above all: a visitor in a place that moves is the newest thing the
+  world asks of the engine.
+- Carried from round 10, still unmet: the egg given to the thief; the sack's
+  weight; DIAGNOSE; the Grating Room and the key from below; the grue in
+  play; the ghost; the tree's drop; the egg broken.

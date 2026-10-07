@@ -9,9 +9,17 @@ import {examine} from 'sprout'
 import {Box} from 'box'
 import {Torch} from 'temple'
 
+// Something sharp, which the magic boat does not agree with: Zork's
+// WEAPONBIT, and the sceptre's point (RBOAT-FUNCTION).
+kind Sharp is Thing { }
+
+// Something nothing can be put into, which answers a `put` itself: the
+// leak, the punctured boat, the tube, the tool chests (v6).
+kind Rejecting { }
+
 // A weapon, and which one: Zork's melee tables care whether it is the
 // sword (which the troll fears most), the knife or the axe.
-kind Weapon is Portable {
+kind Weapon is Portable, Sharp {
   :wcode 1 min 1 max 4
 }
 

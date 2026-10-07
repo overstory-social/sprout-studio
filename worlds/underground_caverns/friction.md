@@ -1464,7 +1464,15 @@ contributing once, as the spec says. No NPC is new in v4.
   will have to hang off the visitor's own part of every verb they play,
   as the move count does (23), behind a `:roaring` the dam keeps.
 - **Spec:** Time › Ticks; Verbs › The two passes; Range.
-- **Status: open.**
+- **Status: changed** before round 11 (v6). The dam is built, and the
+  throw-out does not need a part that runs after every command after all:
+  a visitor can only be in the Loud Room while it roars by walking in, or
+  by being there when the water changes. So the room's own `:entered`
+  sends the visitor `:flung` when the gates are open and the water high,
+  and its `changed :tide` does when the gates open with somebody inside,
+  or the drained reservoir fills again (I-RFILL's "All of a sudden...");
+  the visitor goes through the world's gate to the Damp Cave, the Round
+  Room or the Deep Canyon. What is lost is 100.
 
 ### 72. The hole in the Altar cannot see the coffin in the hand
 
@@ -1917,7 +1925,12 @@ me say is below.
   the Living Room's `:magic`), sent to it by world-passing messages.
 - **Spec:** Range; Exits › An exit may be conditional; The runtime ›
   Faults. Related to friction 80.
-- **Status: open.**
+- **Status: open.** Found again before round 11: the Deep Canyon's
+  stairway, examined, read the Loud Room's `:deafening` and faulted, and
+  had since v4 (a fuzzed walk found it; no playtester had examined it). It
+  now reads the canyon's own note of the dam. v6 leans on this entry's
+  workaround everywhere: six rooms and the boat keep their own copy of the
+  dam's state (96), three rooms their own copy of the rainbow's (99).
 
 ### 90. A voice in another room
 
@@ -2116,6 +2129,293 @@ me say is below.
   question; the visitor must then say the whole sentence, `feed lunch to
   cyclops`, since the parser cannot take an answer (32).
 - **Status: open,** as 32.
+
+## Found before round 11: the dam and the river
+
+v6 adds Flood Control Dam #3 and the Frigid River: a dam that is global
+state on a clock, a room that floods, a lake that drains and fills, a
+rainbow three rooms share, and a boat the visitor sits in while it moves.
+What the language let me say plainly: the clocks are wakes (`wake in 4
+minutes`, `cancel wakes` when the bolt turns back), every room's change
+of shape is a conditional exit over its own property (the reservoir's
+shores, the Falls and the End of Rainbow), the boat is a place inside a
+place (Places inside places) that a visitor can board, be carried in and
+get out of, and the gate (6) carries it, the visitor and all, across the
+map. What it would not let me say is below. Issues sprout#481 (an NPC that
+knows where it is and walks by an exit) and sprout#482 (a thing present but
+unseen) are named where they would have helped.
+
+### 95. A vehicle the visitor is inside, moving between places
+
+- **Wanted:** Zork's magic boat (RBOAT-FUNCTION, V-LAUNCH, V-DISEMBARK,
+  GOTO's vehicle rules, I-RIVER). The visitor gets in; in it, LAUNCH puts
+  out onto the river, LAND or a direction to a shore brings it in, and
+  the visitor stays in the boat ("Sandy Beach, in the magic boat") until
+  they get out; the current carries boat and visitor on by itself; any
+  other direction is "Read the label for the boat's instructions."
+- **Found:** the boat can be a place (`sprout.Place`, and a `Bag` so things
+  go in it and it can be carried), and boarding, being carried and getting
+  out all work. Six things did not come for free.
+  (a) **A way out of a moving place moves only the one who takes it.** In
+  the boat, the visitor's place is the boat, so `east` is one of the
+  boat's exits; an exit can only move the visitor, never the boat with the
+  visitor in it.
+  (b) **Nobody can tell which way was taken.** The way around (a) is an
+  exit that leads back into the boat itself (`exit east "east" -> boat`):
+  the visitor moves from the boat to the boat, and the boat's `:entered`,
+  from itself, sets off the boat's own move through the gate. But
+  `:entered` is told only where from, the visitor's own part of `go` binds
+  no `way` (only `arrives` and `leaves` do, and they are prose), and an
+  exit's `say` is words, not an act. So the boat knows only that some way
+  back into itself was taken, and at any reach at most one such way can
+  apply. At the fourth reach (west to the White Cliffs, east to Sandy
+  Beach) and on the lake (west to the stream, north and south to the
+  shores) there is more than one; there, the one Zork's players use most
+  (east to Sandy Beach, west up the stream) is the boat's own, and the
+  others are ordinary exits to the shore: the visitor steps out, and the
+  boat, told by its `:left` where they went (`to.get(:reach)`), follows
+  them through the gate. Zork leaves them sitting in it.
+  (c) **Eight ways out, counting every guarded one.** The boat needs one
+  per reach and direction; seven fit (launch, land, west, east, and the
+  three shores), with the refusals, which do not count, after them.
+  (d) **A place that moves tells its occupants nothing.** When the current
+  carries the boat on, the visitor in it does not move, so the engine
+  describes nothing; the boat tells them the room it has come to, as a
+  `tell inside` (read as told, not described), and decides for itself
+  whether they can see it.
+  (e) **A place cannot describe the room it lies in.** The boat's
+  `describe` cannot render its container's description (a describe has no
+  name for "where I am", and reading another place faults, 89); it names
+  each of the fifteen rooms it can lie in by world path, by its reach, and
+  says something general anywhere else (the boat may be carried into the
+  Kitchen and boarded there, as in Zork).
+  (f) **Nobody can get out.** Getting out is a move to the room the boat
+  lies in, which neither the visitor nor the boat can name. The visitor
+  broadcasts `:where`; the room it reaches answers `:berth`, and in that
+  answer `from` is the room, so the visitor moves there. A punctured boat
+  is swapped by its room the same way (`:wreck`).
+- **Wrote instead:** all of the above: `boat.sprout`, and the visitor's
+  parts of `board`, `disembark`, `launch` and `land` in `adventurer.sprout`.
+  LAUNCH and LAND said bare are the boat's own ways out (labelled "launch"
+  and "land"); said with the boat named they are verbs, whose effect is the
+  same errand by message (an intent cannot name a way out, 82). The
+  difference a player sees: landing at the fourth reach's west bank or on
+  the lake's shores leaves them standing beside the boat, not in it, and
+  the river's rooms reached by the current are told, not described.
+- **Spec:** Places inside places; Exits; Movement and consent › After the
+  move; Range; Engine verbs (`go`'s own part); Limits (`exitsPerPlace`).
+- **Status: open.** sprout#481 is half of it: a place that knows where it
+  stands (a `container`, or `here` in a handler) would make (e) and (f)
+  one line each, and a `move` along an exit by its direction (`move self
+  by east`) would let the boat take the visitor's way itself, which is (a)
+  and (b). What remains is (d): a vehicle wants its occupants to read where
+  it has come to as the engine reads a new place.
+
+### 96. Global state that many rooms read
+
+- **Wanted:** Zork's GATES-OPEN and LOW-TIDE: two globals that the Dam, the
+  three reservoir rooms, the Deep Canyon, the Loud Room and the boat read in
+  their descriptions, exits and turns.
+- **Found:** a describe and an exit's `when` cannot read another place (89),
+  and a world property is out of range of every place, since the world
+  passes nothing (Range). So there is no global.
+- **Wrote instead:** the bolt keeps the state and broadcasts it (`:tide`)
+  through a world pass rule; each room that cares keeps its own copy
+  (`Tidal`) and says its own lines in `changed :tide`. Every listener must
+  be reachable by the broadcast: the folded boat, in a pile that passes
+  nothing, needed `pass :tide (true)` on the pile and the punctured boat,
+  or it woke up thinking the lake was full; and the sceptre's `:rainbow`,
+  waved in a hand, needed the adventurer to pass `:rainbow` (73 again). A
+  room added later that forgets to compose `Tidal` describes a lake that
+  is not there.
+- **Spec:** Range; The world model (the world's pass rule); Events ›
+  Sending (broadcast); Containers route.
+- **Status: open.** A property of the world readable from everywhere (or
+  places allowed to read the world, as every object reads its own
+  container's surface) would be the global Zork has.
+
+### 97. A room that changes as the water drains, and things the water hides
+
+- **Wanted:** the reservoir's shores, which open across the lake bed while
+  it is drained; descriptions in four states; the trunk, INVISIBLE in the
+  Reservoir until it drains and again when it fills; the leak, INVISIBLE
+  until the blue button; the scarab, INVISIBLE in the sand until dug; the
+  pot of gold, INVISIBLE until the rainbow is first made solid.
+- **Found:** the shapes were the easy part: an exit's `when` over the room's
+  own `:tide`, and a description over the same, are exactly what Exits ›
+  An exit may be conditional promises. What is present and unseen is not
+  (sprout#482, friction 85).
+- **Wrote instead:** each hidden thing a different way: the trunk lies in
+  the mud, a scenery container that passes nothing, which moves it out onto
+  the lake bed when the water goes down and back in when it comes up and
+  the trunk is still lying there; the scarab lies in the Sandy Cave's sand
+  the same way; the leak is spawned when the blue button is pushed, and
+  the pot of gold when the rainbow is first solid. The mud and the sand are
+  nameable things in their own right, which is lucky; a hider with nothing
+  in the room to be would need a name nobody types.
+- **Spec:** Range; Spawning; Containment is a declaration.
+- **Status: open,** with sprout#482.
+
+### 98. A room that floods, and a river that runs, on a clock coarser than a move
+
+- **Wanted:** Zork's I-MAINT-ROOM: the water rises a level every move,
+  thirteen messages from the ankles to the neck, and then you drown;
+  I-RIVER: the current moves the boat after 4, 4, 3, 2 and 1 moves.
+- **Found:** a wake is no sooner than the host's floor, a minute: every
+  other move at the studio's half-minute a turn (47, 91). And a line is
+  rendered when the turn is done (Properties and values), so a leak whose
+  handler says "The water level here is now {level}" and then raises the
+  level says the next level.
+- **Wrote instead:** the leak rises two levels a minute, so the room
+  floods in seven messages over seven minutes (fourteen moves); each
+  message is chosen by an `if` before the level changes, not by a slot.
+  The current waits two minutes, two, ninety seconds, one, and one (the
+  last is Zork's single move, raised to the floor). The dam drains and
+  fills in four minutes, Zork's eight moves.
+- **Spec:** Time › Wakes; Limits (`shortestWakeSeconds`); Properties and
+  values (lines rendered against what the turn wrote).
+- **Status: open,** and the same as 24.
+
+### 99. The rainbow, one bit for three rooms
+
+- **Wanted:** RAINBOW-FLAG, read by Aragain Falls' and the End of Rainbow's
+  ways onto the rainbow and their descriptions, and cleared by the sceptre
+  waved again; with whatever is on the rainbow falling when it goes.
+- **Found:** as 96: no room can read another's state, and the sceptre, in
+  a hand, cannot reach any room at all.
+- **Wrote instead:** the Falls and the End of Rainbow each keep `:solid`;
+  the sceptre reads its own room's, and broadcasts `:rainbow`, which the
+  adventurer and the world let through; On the Rainbow, told it is light
+  again, drops whatever and whoever is on it. The exits up are labelled
+  "rainbow", so `climb rainbow` is going up it, and refuse "Can you walk on
+  water vapor?" while it is not solid.
+- **Spec:** as 96; Exits (labels).
+- **Status: open.**
+
+### 100. A room passed through in one turn is never described
+
+- **Wanted:** LOUD-ROOM-FCN with the gates open: the Loud Room's description,
+  then "It is unbearably loud here...", then the room the visitor scrambles
+  into.
+- **Found:** the visitor walks in, and the room's `:entered` sends them on
+  through the gate in the same turn; a description is derived once the
+  queue is empty (Movement and consent › After the move), so only the last
+  place is described, and the Loud Room never is.
+- **Wrote instead:** the roar, told, then the room the visitor lands in.
+  The player learns they were in the Loud Room only from the roar.
+- **Spec:** Movement and consent › After the move.
+- **Status: open,** and small.
+
+### 101. A world verb that answers a bare direction overrules the rooms' own refusals
+
+- **Wanted:** in the boat, `east`, `west` and `land` steering the boat,
+  as one world verb with phrases "east", "e", "go east".
+- **Found:** a world verb whose phrase is a bare direction is read beside
+  `go` everywhere. Where a room's way refuses ("The mountains are
+  impassable."), the verb's own refusal was the answer instead (no draw
+  was logged); where a room's way leads, the two allowed readings tied and
+  one was drawn. So no world verb may say a direction.
+- **Wrote instead:** the boat's own ways out (95). Where a bare word is
+  both a label of the boat's ways and a verb's phrase (`launch`, `land`,
+  which also answer when not in a boat), the verb refuses in the boat with
+  exactly the words the boat's own way would, so that whichever reading
+  wins, the visitor reads the same thing. The same ranking cost `enter
+  boat`: a verb that reads `enter [target]`, even one whose target must be
+  a boat, answers `enter house` at Behind House, with the window shut,
+  with its own refusal or its `cannot`, where the house's way in says "The
+  kitchen window is closed."; a refusing way is not a reading, and any
+  reading, even a partial one, outranks it. So ENTER is left to `go`, and
+  the boat is boarded by BOARD, GET IN, CLIMB IN and SIT IN.
+- **Spec:** Parsing › Choosing a reading; Exits; Engine verbs.
+- **Status: open.** Either an exit's refusal outranking a verb's, or a way
+  for a place's exits to win the direction words outright, would do.
+
+### 102. Four buttons and the word "button"
+
+- **Wanted:** `push button` answered as Zork's parser answers it, by asking
+  which; `push yellow button`, `push yellow` pushing the yellow one.
+- **Found:** four things that answer to "button" tie, and one is drawn
+  (32, 59): `push button` pressed a random button, and the blue one floods
+  the room.
+- **Wrote instead:** each button is named by its color, with "button" an
+  adjective, and the group of buttons is the only thing whose noun is
+  "button"; so `push button` names the group, which says "You'll have to say
+  which: blue, yellow, brown, or red.", and a color named outranks it.
+- **Spec:** Parsing › Choosing a reading; Addressing and display.
+- **Status: open** (32).
+
+### 103. A message and a verb may not share a name
+
+- **Found:** `message :launch` in the file that imports `verb launch` is
+  refused ("`launch` is imported, and this file declares a `launch` of its
+  own"). The boat's messages are `:put_out` and `:come_ashore`.
+- **Spec:** Names › Identifiers and scope.
+- **Status: open,** and only a naming matter.
+
+### 104. A kind's body naming the place its instance stands in faults
+
+- **Found, building the boat:** a name in a kind's body that names the
+  place the instance stands in compiles, and reading through it faults at
+  run time with an internal error, not the out-of-range fault the spec
+  describes ("a name no object in the bundle declares is refused; ... one
+  that reaches nothing when it runs is out of range, so a `get` through it
+  faults"). Here the place is in range (an object reaches its own
+  container's surface). Minimal repro, at 6c440f5:
+  ```sprout
+  import * as sprout from 'sprout'
+  kind Person is sprout.Visitor { }
+  kind Hall is sprout.Place { :lamps 2 }
+  kind Plaque {
+    describe { if (hall.is(Hall)) { text "The hall has {hall.get(:lamps)} lamps." } else { text "No hall." } }
+  }
+  world rp is sprout.World {
+    visitors are Person
+    visitors arrive at hall
+    object hall is Hall {
+      object plaque is Plaque { grammar { name "plaque" } }
+    }
+  }
+  ```
+  `sprout check` says "ok"; `x plaque` faults: "Error: `hall`, which
+  nothing binds, reached the evaluator, which the checker refuses." The
+  world path `rp.hall` works.
+- **Wrote instead:** world paths (`underground_caverns.maintenance_room`)
+  wherever a kind names a room.
+- **Spec:** Names › Identifiers and scope; The runtime › Faults.
+- **Status: open.** It looks like a Sprout bug.
+
+### 105. An intent that gives its slot to a set role faults
+
+- **Wanted:** Zork's LEAVE, which is DROP, and of the vehicle the visitor
+  is in, DISEMBARK: an intent, `"leave [x]"`, `do disembark (target: x)
+  when (x.is(Vessel)) then drop (target: x) when (!x.is(Vessel))`.
+- **Found:** `drop`'s target is a set role (`many`), and any line the intent
+  reads faults ("a reading of `drop` fills `target` with what it does not
+  take"); `sprout check` says nothing. Minimal repro, at 6c440f5:
+  ```sprout
+  import * as sprout from 'sprout'
+  kind Person is sprout.Visitor { }
+  kind Toy { }
+  verb toss { role target many  "toss [target]" }
+  intent fling { "fling [x]"  do toss (target: x) }
+  kind Tosser is sprout.Actor { as actor for toss { do { say "Tossed." } } }
+  kind Pal is Person, Tosser { }
+  world rp is sprout.World {
+    visitors are Pal
+    visitors arrive at hall
+    object hall is sprout.Place { object ball is Toy { grammar { name "ball" } } }
+  }
+  ```
+  `toss ball` says "Tossed."; `fling ball` faults. (`act toss (target: x)`
+  with one object is fine; the troll and the thief do it.) And a slot
+  given to a carried role in any step takes only what is carried (Intents),
+  so even without the fault `leave boat` could not have reached
+  `disembark` through it.
+- **Wrote instead:** "leave" is a synonym of both `drop` and `disembark`,
+  and the reading that is allowed wins: `leave boat` from inside it gets out,
+  `leave sword` drops it.
+- **Spec:** Parsing › Intents; Verbs › Set roles; The runtime › Faults.
+- **Status: open.** It looks like a Sprout bug.
 
 ## Differences chosen, not forced
 
@@ -2357,3 +2657,52 @@ me say is below.
 - **DIAGNOSE's cure time counts twenty moves a point** (ten minutes at the
   host's half-minute a turn) where Zork's CURE-WAIT is thirty, as friction
   24 has healing; it is counted in the adventurer's moves (93).
+
+## Differences chosen in v6
+
+- **The scarab is in the Sandy Cave,** as the ZIL has it, not on Sandy Beach
+  as the brief has it; the shovel is on the beach. The red buoy and its
+  emerald are Zork's, on the fourth reach.
+- **The boat's ways and the visitor's place.** Landing west at the fourth
+  reach or on the lake's north and south shores puts the visitor ashore
+  beside the boat; everywhere else they stay in it, as in Zork (95). The
+  boat is described from inside as Zork's DESCRIBE-ROOM shows a room from a
+  vehicle ("Dam Base, in the magic boat"), and what it holds after.
+- **IN and OUT in the boat** mean LAUNCH and LAND, being the directions
+  those ways are written in; Zork answers them "Read the label for the
+  boat's instructions." OUT, where there is nowhere to land, still does.
+- **Getting in and out** answer to BOARD, GET IN, CLIMB IN and SIT IN the
+  boat (not ENTER, 101), and to GET OUT, DISEMBARK, CLIMB OUT, EXIT BOAT, LEAVE BOAT
+  and GET OUT OF BOAT. Not in anything, a bare GET OUT says "You are
+  already on your own two feet."
+- **The punctured boat on the water.** Something sharp let go of in the
+  boat on the river or the lake drowns the visitor, as in Zork, and the
+  boat stays where it was, inflated, out of reach; Zork leaves a punctured
+  boat there, equally out of reach.
+- **The rising water and the boat.** I-MAINT-ROOM carries a visitor sitting
+  in the boat in the Maintenance Room, the Lobby or the Dam over the dam;
+  here the flood drowns whoever is in the Maintenance Room, boat or no.
+- **The gunk is put in nothing but the leak and the punctured boat:**
+  PUTTY-FCN's "The all-purpose gunk isn't a lubricant." answers every other
+  PUT, as in Zork. "Putty", "glue" and "goo" are added to its names.
+- **The dam's clock** is four minutes for Zork's eight moves; the leak's,
+  seven minutes for thirteen; the current's, as 98 has it.
+- **On the lake bed with the water rising,** RESERVOIR-FCN warns after every
+  command; here the warning comes on arrival and when the gates close.
+- **The thief's round** takes in the eight new rooms Zork does not hold
+  sacred and that are always land (Reservoir South and North, Stream View,
+  Atlantis, the Dam, the Lobby, the Maintenance Room and the Sandy Cave),
+  after the Torch Room; the Reservoir itself, land only while drained, is
+  left out.
+- **Matches** last a minute (two moves, Zork's I-MATCH); STRIKE MATCH and
+  LIGHT MATCH both light one, and BURN MATCH says to light it.
+- **The rainbow's way up** is labelled "rainbow", so CLIMB RAINBOW and UP
+  are the same way, and both refuse "Can you walk on water vapor?" while it
+  is light; Zork's UP there is "You can't go that way."
+- **The canyon wall** climbs by name (CLIMB UP CLIFF, CLIMB DOWN CLIFF) as
+  well as UP and DOWN; JUMP at Canyon View is CANYON-VIEW-F's "Nice view,
+  lousy place to jump.", and death.
+- **The Clearing's rope and sign** (the edge of the map since round 4) are
+  gone: the Clearing leads east to Canyon View, as in Zork. The Deep
+  Canyon's board and its flooded passage, the Chasm's standing water and
+  the Damp Cave's ledge over the river went the same way.

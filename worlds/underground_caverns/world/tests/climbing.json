@@ -1,5 +1,5 @@
 {
-  "about": "Climbing and looking by name: the front door's boards; listen alone, in the forest and out of it; search; the canyon rope got past in every way; the kitchen chimney and stairs climbed by name; the rickety staircase down from the living room, with the crash, and up from the cellar; looking into the chasm.",
+  "about": "Climbing and looking by name: the front door's boards; listen alone, in the forest and out of it; search; the canyon wall climbed down and up by name, from Canyon View; the kitchen chimney and stairs climbed by name; the rickety staircase down from the living room, with the crash, and up from the cellar; looking into the chasm.",
   "steps": [
     { "arrive": "Marta", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West of House" },
@@ -38,17 +38,22 @@
       { "reader": "Marta", "kind": "described", "words": "Clearing" },
       { "reader": "Marta", "kind": "described", "words": "You are in a small clearing in a well marked forest path that extends to the east and west." }
     ] },
-    { "as": "Marta", "type": "climb over rope", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Over the rope or under it, the Frobozz Magic Scenery Company is a step ahead of you: past it there is nothing yet to stand on but a view still in pieces, and the view is closed. You stay on this side, where the path at least has the decency to be finished." }
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Canyon View" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the top of the Great Canyon on its west wall. From here there is a marvelous view of the canyon and parts of the Frigid River upstream. Across the canyon, the walls of the White Cliffs join the mighty ramparts of the Flathead Mountains to the east. Following the Canyon upstream to the north, Aragain Falls may be seen, complete with rainbow. The mighty Frigid River flows out from a great dark cavern. To the west and south can be seen an immense forest, stretching for miles around. A path leads northwest. It is possible to climb down into the canyon from here." }
     ] },
-    { "as": "Marta", "type": "duck under rope", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Over the rope or under it, the Frobozz Magic Scenery Company is a step ahead of you: past it there is nothing yet to stand on but a view still in pieces, and the view is closed. You stay on this side, where the path at least has the decency to be finished." }
+    { "as": "Marta", "type": "climb down cliff", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Rocky Ledge" },
+      { "reader": "Marta", "kind": "described", "words": "You are on a ledge about halfway up the wall of the river canyon. You can see from here that the main flow from Aragain Falls twists along a passage which it is impossible for you to enter. Below you is the canyon bottom. Above you is more cliff, which appears climbable." }
     ] },
-    { "as": "Marta", "type": "climb rope", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Over the rope or under it, the Frobozz Magic Scenery Company is a step ahead of you: past it there is nothing yet to stand on but a view still in pieces, and the view is closed. You stay on this side, where the path at least has the decency to be finished." }
+    { "as": "Marta", "type": "climb up cliff", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Canyon View" }
     ] },
-    { "as": "Marta", "type": "cross rope", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Over the rope or under it, the Frobozz Magic Scenery Company is a step ahead of you: past it there is nothing yet to stand on but a view still in pieces, and the view is closed. You stay on this side, where the path at least has the decency to be finished." }
+    { "as": "Marta", "type": "climb up cliff", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are at the top already." }
+    ] },
+    { "as": "Marta", "type": "nw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Clearing" }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Behind House" }

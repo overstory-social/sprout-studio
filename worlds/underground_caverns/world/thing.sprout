@@ -10,9 +10,11 @@ import {ask} from 'sprout'
 import {Light} from 'lamp'
 import {Weapon} from 'items'
 import {Thief} from 'thief'
-import {take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die, :pinch, :far_voice} from 'verbs'
+import {board, disembark, launch, land, inflate, deflate, plug, turn_with, oil, take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die, :pinch, :far_voice} from 'verbs'
 import {Room} from 'room'
 import {Abyss} from 'east'
+import {River} from 'river'
+import {Vessel} from 'boat'
 import {Adventurer} from 'adventurer'
 
 kind Thing {
@@ -48,8 +50,8 @@ kind Thing {
     self.set(:touched, true)
     self.set(:falling, false)
     self.set(:sealed, false)
-    // Into a chasm: gone for good.
-    if (to.is(Abyss)) { finally destroy self }
+    // Into a chasm or the river: gone for good.
+    if (to.is(Abyss) || to.is(River)) { finally destroy self }
   }
   on :sealed (from, value) { self.set(:sealed, value) }
   // Burned, vaporized, or dropped into the chasm: gone for good, as Zork's
@@ -169,6 +171,18 @@ kind Thing {
       } else { say "You'll have to say what to cut the {self.short} with." }
     }
   }
+  // The boat's verbs (v6), as Zork answers them of anything that is not a
+  // boat: PRE-BOARD, V-DISEMBARK, V-LAUNCH, V-INFLATE, V-DEFLATE, V-PLUG,
+  // PRE-TURN and V-OIL.
+  as target for board     { permit { if (!self.is(Vessel)) { refuse "You have a theory on how to board a {self.short}, perhaps?" } } }
+  as target for disembark { permit { if (!self.is(Vessel)) { refuse "You're not in that!" } } }
+  as target for launch    { do { say "That's pretty weird." } }
+  as target for land      { do { say "That's pretty weird." } }
+  as target for inflate   { do { say "How can you inflate that?" } }
+  as target for deflate   { do { say "Come on, now!" } }
+  as target for plug      { do { say "This has no effect." } }
+  as target for turn_with { do { say "You can't turn that!" } }
+  as target for oil       { do { say "You probably put spinach in your gas tank, too." } }
   as target for talk    { do { say "You can't talk to the {self.short}!" } }
   as target for ask     { do { say "You can't talk to the {self.short}!" } }
   as target for greet   { do { say "It's a well known fact that only schizophrenics say \"Hello\" to a {self.short}." } }

@@ -40,6 +40,9 @@ import {maze_1, maze_2, maze_3, maze_4, dead_end_1, maze_5, dead_end_2, maze_6, 
 import {cyclops_room, strange_passage, treasure_room} from 'cyclops'
 import {east_west_passage, round_room, deep_canyon, damp_cave, loud_room, north_south_passage, chasm_room, engravings_cave} from 'east'
 import {egyptian_room, dome_room, torch_room} from 'temple'
+import {reservoir_south, reservoir_north, stream_view, atlantis_room} from 'reservoir'
+import {dam_room, dam_lobby, maintenance_room} from 'dam'
+import {sandy_cave} from 'river'
 
 message :disgorge with integer
 message :unloaded with integer
@@ -553,7 +556,7 @@ kind Thief is Thing, sprout.Actor {
         // On to the next room, unseen, unless something here keeps him.
         if (ph == 1 && !self.get(:shown) && !self.get(:stay)) {
           each s: Stiletto in from { move s to self }
-          if (from.get(:tour) >= 39 || from.get(:tour) == 0) { self.set(:next, 1) }
+          if (from.get(:tour) >= 47 || from.get(:tour) == 0) { self.set(:next, 1) }
           else { self.set(:next, from.get(:tour) + 1) }
           self.set(:phase, 2)
           self.set(:announced, false)
@@ -612,6 +615,14 @@ kind Thief is Thing, sprout.Actor {
       } else if (self.get(:next) == 37) { move self to egyptian_room
       } else if (self.get(:next) == 38) { move self to dome_room
       } else if (self.get(:next) == 39) { move self to torch_room
+      } else if (self.get(:next) == 40) { move self to reservoir_south
+      } else if (self.get(:next) == 41) { move self to reservoir_north
+      } else if (self.get(:next) == 42) { move self to stream_view
+      } else if (self.get(:next) == 43) { move self to atlantis_room
+      } else if (self.get(:next) == 44) { move self to dam_room
+      } else if (self.get(:next) == 45) { move self to dam_lobby
+      } else if (self.get(:next) == 46) { move self to maintenance_room
+      } else if (self.get(:next) == 47) { move self to sandy_cave
       }
     }
     send underground_caverns :close_gate

@@ -5,17 +5,23 @@
 // descriptions are Zork's; the Loud Room's echo is LOUD-ROOM-FCN's, the
 // chasm's answers CHASM-PSEUDO's, the crack's CRACK-FCN's.
 //
-// The ways on to the dam, the reservoir, the river and the mirrors are
-// Zork's, and refuse in Zork's voice: those parts are not built yet.
+// Since v6 the ways on to the dam, the reservoir and the White Cliffs lead
+// there (dam.sprout, reservoir.sprout, river.sprout). The Loud Room and the
+// Deep Canyon follow the dam: each keeps its own note of the sluice gates
+// and the water (`Tidal`). The way on to the mirrors refuses in Zork's
+// voice: that part is not built yet.
 import {Thing, Portable, Scenery} from 'thing'
 import {Box} from 'box'
 import {Treasure} from 'items'
 import {DarkRoom, Perilous, ChasmEdge, CanyonEdge} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, climb_up, climb_down, cross, leap_at, through, read, listen, smell, take, shift, raise, dig, mung, clear, climb_over, duck_under, cut, kick, rub, search, look_behind, look_under, :travel, :troll_gone} from 'verbs'
+import {open, close, look_in, climb_up, climb_down, cross, leap_at, through, read, listen, smell, take, shift, raise, dig, mung, clear, climb_over, duck_under, cut, kick, rub, search, look_behind, look_under, :travel, :troll_gone, :hush, :flung, :tide} from 'verbs'
 import {troll_room} from 'cellar'
 import {dome_room} from 'temple'
+import {Tidal, dam_room} from 'dam'
+import {reservoir_south} from 'reservoir'
+import {white_cliffs_north, CliffCave} from 'river'
 
 object east_west_passage is DarkRoom in underground_caverns {
   :tour 29
@@ -86,13 +92,16 @@ object round_room is DarkRoom in underground_caverns {
   }
 }
 
-// Zork's Loud Room. Until somebody says "echo" (the adventurer's part of
-// `echo`), the room is deafening: whatever is done to anything in it, the
-// room says back (thing.sprout), and the only things that work are the
-// ways out. Said, the room falls quiet for good, and the platinum bar can
-// be had. In Zork the noise throws the visitor out only while the dam's
-// gates are open, and the dam is not built (friction 71).
-object loud_room is DarkRoom in underground_caverns {
+// Zork's Loud Room (LOUD-ROOM-FCN). With the dam's gates shut and the
+// reservoir full, water pours over the dam, and until somebody says "echo"
+// (the adventurer's part of `echo`) the room is deafening: whatever is done
+// to anything in it, the room says back (thing.sprout), and the only things
+// that work are the ways out. Said, the room falls quiet for good, and the
+// platinum bar can be had. With the gates open and the water still high,
+// the roar is unbearable, and throws whoever is in it out, into the Damp
+// Cave, the Round Room or the Deep Canyon (friction 71); with the gates
+// shut and the reservoir drained, the room is quiet without the word.
+object loud_room is DarkRoom, Tidal in underground_caverns {
   :tour 33
   grammar {
     name "Loud Room"
@@ -110,9 +119,32 @@ object loud_room is DarkRoom in underground_caverns {
     exit in        "in"        refuse "in in ..." when (self.get(:deafening))
     exit out       "out"       refuse "out out ..." when (self.get(:deafening))
   }
+  // Zork's LOUD-FLAG: somebody has said the word.
+  :hushed false
   :deafening true
+  on :hush {
+    self.set(:hushed, true)
+    self.set(:deafening, false)
+  }
+  changed :tide (was) {
+    self.set(:deafening, !self.get(:hushed) && self.get(:tide) != 3 && self.get(:tide) != 1)
+    // The gates open while somebody is in here; or the reservoir full again
+    // and pouring over the dam (I-RFILL): out they go.
+    if (self.get(:tide) == 1) {
+      each a: Adventurer in self { send a :flung with true }
+    } else if (self.get(:tide) == 0 && was == 3) {
+      each a: Adventurer in self {
+        tell a "All of a sudden, an alarmingly loud roaring sound fills the room. Filled with fear, you scramble away."
+        send a :flung with false
+      }
+    }
+  }
+  // In with the gates open and the water high: the room, then the roar.
+  on :entered (item, from) {
+    if (item.is(Adventurer) && self.get(:tide) == 1) { send item :flung with true }
+  }
   passage body {
-    This is a large room with a ceiling which cannot be detected from the ground. There is a narrow passage from east to west and a stone stairway leading upward. {if self.get(:deafening)}The room is deafeningly loud with an undetermined rushing sound. The sound seems to reverberate from all of the walls, making it difficult even to think.{else}The room is eerie in its quietness.{/if}
+    This is a large room with a ceiling which cannot be detected from the ground. There is a narrow passage from east to west and a stone stairway leading upward. {if self.get(:hushed) || self.get(:tide) == 3}The room is eerie in its quietness.{else}The room is deafeningly loud with an undetermined rushing sound. The sound seems to reverberate from all of the walls, making it difficult even to think.{/if}
   }
 
   object bar is Treasure {
@@ -154,29 +186,27 @@ object loud_room is DarkRoom in underground_caverns {
   }
 }
 
-object deep_canyon is DarkRoom, CanyonEdge in underground_caverns {
+object deep_canyon is DarkRoom, CanyonEdge, Tidal in underground_caverns {
   :tour 31
   grammar {
     name "Deep Canyon"
-    exit northwest "northwest" refuse reservoir_way
-    exit east      "east"      refuse dam_way
+    exit northwest "northwest" -> reservoir_south
+    exit east      "east"      -> dam_room
     exit southwest "southwest" -> north_south_passage
     exit down      "stairway"  -> loud_room
   }
   passage body {
-    You are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. A stairway leads down. You can hear the sound of flowing water from below.
+    You are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. A stairway leads down.{if self.get(:tide) == 1} You can hear a loud roaring sound, like that of rushing water, from below.{else if self.get(:tide) == 3}{else} You can hear the sound of flowing water from below.{/if}
   }
-  // The ways on to the reservoir and the dam, which are not built.
-  passage reservoir_way {
-    The passage northwest grows wet underfoot, and then wetter, and then the floor goes down under black water lying perfectly still, and does not come up again anywhere your light can reach. Whatever is beyond is under it. You step back out of the puddle you were standing in.
-  }
-  passage dam_way {
-    The passage east climbs toward a deep, steady hum, the sound of a great deal of water being held back by something that would rather not be disturbed. A board is nailed across it: "FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management." You leave the dam to its inspection.
+  // I-REMPTY and I-RFILL, heard from the canyon's edge.
+  changed :tide (was) {
+    if (self.get(:tide) == 2) { tell "The roar of rushing water is quieter now." }
+    else if (self.get(:tide) == 0 && was == 3) { tell "A sound, like that of flowing water, starts to come from below." }
   }
   object canyon is Scenery {
     grammar { name "canyon"  nouns "edge", "gorge", "ravine", "drop"  adjectives "deep", "south" }
     passage short { canyon }
-    describe { text "The canyon falls away to the north, sheer and black, too deep for your light to find the bottom. From somewhere far below comes the sound of water, going about its business." }
+    describe { text "The canyon falls away to the north, sheer and black, too deep for your light to find the bottom.{if deep_canyon.get(:tide) == 3} From far below there is no sound at all.{else} From somewhere far below comes the sound of water, going about its business.{/if}" }
     without as target for climb_down from Thing
     as target for climb_down { do { say "The canyon walls are sheer, and the bottom is a very long way down. You decide against it." } }
     without as target for look_in from Thing
@@ -185,40 +215,13 @@ object deep_canyon is DarkRoom, CanyonEdge in underground_caverns {
   object passages is Scenery {
     grammar { name "passages"  nouns "passage", "passageways"  adjectives "east", "northwest", "southwest" }
     passage short { passages }
-    describe { text "Passages lead off east, northwest and southwest. The one to the east hums; the one to the northwest is wet, and further on is nothing but wet; the one to the southwest is merely a passage, which down here counts as a recommendation." }
-  }
-  object flood is Scenery {
-    grammar { name "flooded passage"  nouns "flood", "puddle", "pool"  adjectives "flooded", "black", "still", "standing", "northwest" }
-    passage short { flooded passage }
-    describe { text "A little way up the northwest passage the floor goes down under black, still water and stays there. The water fills the passage wall to wall and, as far as your light can tell, roof to floor. It is very cold and entirely uninterested in you." }
-    without as target for cross from Thing
-    as target for cross { do { say "The water fills the passage to the roof. Crossing it would be a matter of swimming underneath it, a long way, in the dark, holding your breath, and you decline." } }
-  }
-  object board is Scenery {
-    grammar { name "board"  nouns "sign", "notice", "plank"  adjectives "nailed", "east" }
-    passage short { board }
-    passage words { The board reads: "FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management." }
-    passage no_take { The board is nailed across the passage by somebody who expected it to be argued with, and used a great many nails to say so. }
-    passage beyond { You could get past the board easily enough; it is only a board. But the passage beyond it hums with a great deal of water held back by something that would rather not be disturbed, and you find you would rather not disturb it. }
-    describe { text "A plank is nailed across the east passage at about the height of a disappointed adventurer's waist, lettered in a patient hand. {self.words}" }
-    without as target for read from Thing
-    as target for read { do { say words } }
-    without as target for shift from Thing
-    as target for shift { do { say no_take } }
-    without as target for mung from Thing
-    as target for mung { do { say no_take } }
-    without as target for cut from Thing
-    as target for cut { do { say no_take } }
-    without as target for climb_over from Thing
-    as target for climb_over { do { say beyond } }
-    without as target for duck_under from Thing
-    as target for duck_under { do { say beyond } }
-    without as target for cross from Thing
-    as target for cross { do { say beyond } }
+    describe { text "Passages lead off east, northwest and southwest. The one to the east climbs toward a deep, steady hum; the one to the northwest is wet underfoot and smells of standing water; the one to the southwest is merely a passage, which down here counts as a recommendation." }
   }
   object stairs is Stairs {
     grammar { nouns "stairway" }
-    passage view { The stairway goes down into a roaring dark. {if loud_room.get(:deafening)}The roar comes up it to meet you.{else}It is quiet down there now.{/if} }
+    // The canyon cannot see into the Loud Room (friction 89); it goes by
+    // its own note of the dam.
+    passage view { The stairway goes down into a roaring dark. {if deep_canyon.get(:tide) == 3}It is quiet down there now.{else if deep_canyon.get(:tide) == 1}The roar comes up it, louder than you would have thought possible.{else}The roar comes up it to meet you.{/if} }
     as target for climb_up   { do { say "The stairs don't lead upward." } }
     as target for climb_down { do { send actor :travel with :loud_room  say "" } }
   }
@@ -226,26 +229,22 @@ object deep_canyon is DarkRoom, CanyonEdge in underground_caverns {
     grammar { name "flowing water"  nouns "water", "sound", "river", "stream"  adjectives "flowing", "rushing" }
     passage short { flowing water }
     passage no_take { It is a long way below you, and in no mood to be taken anywhere. }
-    describe { text "You cannot see the water from here. You can only hear it, far below, flowing steadily and with great conviction toward somewhere else." }
+    describe { text "You cannot see the water from here. You can only hear it, far below, {if deep_canyon.get(:tide) == 1}roaring{else}flowing steadily and with great conviction{/if} toward somewhere else." }
     without as target for listen from Thing
-    as target for listen { do { say "You can hear the sound of flowing water from below." } }
+    as target for listen { do { if (deep_canyon.get(:tide) == 1) { say "You can hear a loud roaring sound, like that of rushing water, from below." } else if (deep_canyon.get(:tide) == 3) { say "You hear nothing out of the ordinary." } else { say "You can hear the sound of flowing water from below." } } }
   }
 }
 
-object damp_cave is DarkRoom in underground_caverns {
+object damp_cave is DarkRoom, CliffCave in underground_caverns {
   :tour 32
   grammar {
     name "Damp Cave"
     exit west  "west"  -> loud_room
-    exit east  "east"  refuse cliffs_way
+    exit east  "east"  -> white_cliffs_north
     exit south "crack" refuse "It is too narrow for most insects."
   }
   passage body {
     This cave has exits to the west and east, and narrows to a crack toward the south. The earth is particularly damp here.
-  }
-  // The way on to the White Cliffs and the river, which is not built.
-  passage cliffs_way {
-    The passage east comes out on a ledge high above a broad, cold river that is going somewhere in a hurry. There is no way down that does not involve the river at the bottom of it, and without a boat that is as far as this way goes.
   }
   object crack is Crack
   object earth is Scenery {
@@ -280,7 +279,7 @@ object chasm_room is DarkRoom, Perilous, ChasmEdge in underground_caverns {
   :tour 35
   grammar {
     name "Chasm"
-    exit northeast "northeast" refuse reservoir_way
+    exit northeast "northeast" -> reservoir_south
     exit southwest "southwest" -> east_west_passage
     exit up        "stairway"  -> east_west_passage
     exit south     "crack"     -> north_south_passage
@@ -289,24 +288,13 @@ object chasm_room is DarkRoom, Perilous, ChasmEdge in underground_caverns {
   passage body {
     A chasm runs southwest to northeast and the path follows it. You are on the south side of the chasm, where a crack opens into a passage.
   }
-  // The way on to the reservoir, which is not built.
-  passage reservoir_way {
-    The path follows the chasm northeast toward a smell of standing water, and the smell gets there first: a little way on, the path runs down into water, black and still and very cold, and your light finds no other side to it. You go back the way you came, with wet feet.
-  }
   object chasm is Abyss {
     describe { text "The chasm runs southwest to northeast, a black slot in the floor of the world, too deep for any light to find the bottom. A cold air comes up out of it, smelling of nothing at all." }
   }
   object path is Scenery {
     grammar { name "path"  nouns "ledge", "trail"  adjectives "chasm" }
     passage short { path }
-    describe { text "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast it runs down into standing water and does not come up again." }
-  }
-  object standing_water is Scenery {
-    grammar { name "standing water"  nouns "water", "flood", "pool", "smell"  adjectives "standing", "black", "still", "cold", "northeast" }
-    passage short { standing water }
-    describe { text "To the northeast the path goes down into black water lying perfectly still, as though it had been there a long time and meant to stay. It smells of cold stone and of nothing having moved in it for years." }
-    without as target for cross from Thing
-    as target for cross { do { say "Your light finds no other side to it, and the chasm is right beside it. You decline." } }
+    describe { text "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast it climbs toward a smell of standing water." }
   }
   object crack is Crack {
     grammar { nouns "passage", "passageway" }

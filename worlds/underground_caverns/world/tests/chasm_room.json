@@ -50,7 +50,7 @@
       { "reader": "Marta", "kind": "described", "words": "The chasm runs southwest to northeast, a black slot in the floor of the world, too deep for any light to find the bottom. A cold air comes up out of it, smelling of nothing at all." }
     ] },
     { "as": "Marta", "type": "x path", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast it runs down into standing water and does not come up again." }
+      { "reader": "Marta", "kind": "described", "words": "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast it climbs toward a smell of standing water." }
     ] },
     { "as": "Marta", "type": "x crack", "expect": [
       { "reader": "Marta", "kind": "described", "words": "The crack in the south side of the chasm is wide enough for a person, just, and opens into a passage that leads away south." }
@@ -59,7 +59,9 @@
       { "reader": "Marta", "kind": "described", "words": "The crack in the south side of the chasm is wide enough for a person, just, and opens into a passage that leads away south." }
     ] },
     { "as": "Marta", "type": "go into the crack", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "North-South Passage" }
+      { "level": "info", "text": "step: underground_caverns.through" },
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a high north-south passage, which forks to the northeast." }
     ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Chasm" }
@@ -97,7 +99,12 @@
       { "reader": "Marta", "kind": "refused", "words": "Are you out of your mind?" }
     ] },
     { "as": "Marta", "type": "ne", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The path follows the chasm northeast toward a smell of standing water, and the smell gets there first: a little way on, the path runs down into water, black and still and very cold, and your light finds no other side to it. You go back the way you came, with wet feet." }
+      { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a long room on the south shore of a large lake, far too deep and wide for crossing." },
+      { "reader": "Marta", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" }
     ] },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North-South Passage" }
@@ -133,14 +140,20 @@
     { "as": "Marta", "type": "listen to water", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You can hear the sound of flowing water from below." }
     ] },
-    { "as": "Marta", "type": "x board", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "A plank is nailed across the east passage at about the height of a disappointed adventurer's waist, lettered in a patient hand. The board reads: \"FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management.\"" }
-    ] },
     { "as": "Marta", "type": "nw", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage northwest grows wet underfoot, and then wetter, and then the floor goes down under black water lying perfectly still, and does not come up again anywhere your light can reach. Whatever is beyond is under it. You step back out of the puddle you were standing in." }
+      { "reader": "Marta", "kind": "described", "words": "Reservoir South" }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Deep Canyon" }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage east climbs toward a deep, steady hum, the sound of a great deal of water being held back by something that would rather not be disturbed. A board is nailed across it: \"FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management.\" You leave the dam to its inspection." }
+      { "reader": "Marta", "kind": "described", "words": "Dam" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
+      { "reader": "Marta", "kind": "described", "words": "The sluice gates on the dam are closed. Behind the dam, there can be seen a wide reservoir. Water is pouring over the top of the now abandoned dam." },
+      { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Deep Canyon" }
     ] },
     { "as": "Marta", "type": "climb down stairs", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Loud Room" },
@@ -172,7 +185,11 @@
       { "reader": "Marta", "kind": "refused", "words": "It is too narrow for most insects." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage east comes out on a ledge high above a broad, cold river that is going somewhere in a hurry. There is no way down that does not involve the river at the bottom of it, and without a boat that is as far as this way goes." }
+      { "reader": "Marta", "kind": "described", "words": "White Cliffs Beach" },
+      { "reader": "Marta", "kind": "described", "words": "You are on a narrow strip of beach which runs along the base of the White Cliffs. There is a narrow path heading south along the Cliffs and a tight passage leading west into the cliffs themselves." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Damp Cave" }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Loud Room" },

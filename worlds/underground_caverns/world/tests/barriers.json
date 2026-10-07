@@ -1,5 +1,5 @@
 {
-  "about": "After round 7: the Round Room's cave-in answers every way of shifting it with the roof that is still coming down; the Deep Canyon's one board, and the flooded way to the reservoir; the Chasm's standing water; `look down` and `look over` at the edges; `crawl` as `go`; moving the rug out of the way; `take X from Y`; the load naming its heaviest part; and a treasure scored the first time it leaves a box in hand.",
+  "about": "After round 7: the Round Room's cave-in answers every way of shifting it with the roof that is still coming down; the ways on from the Deep Canyon and the Chasm, open since v6 to the reservoir and the dam; `look down` and `look over` at the edges; `crawl` as `go`; moving the rug out of the way; `take X from Y`; the load naming its heaviest part; and a treasure scored the first time it leaves a box in hand.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -154,31 +154,22 @@
       { "reader": "Marta", "kind": "described", "words": "Deep Canyon" },
       { "reader": "Marta", "kind": "described", "words": "You are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. A stairway leads down. You can hear the sound of flowing water from below." }
     ] },
-    { "as": "Marta", "type": "x board", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "A plank is nailed across the east passage at about the height of a disappointed adventurer's waist, lettered in a patient hand. The board reads: \"FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management.\"" }
-    ] },
-    { "as": "Marta", "type": "pull the board off", "expect": [
-      { "level": "info", "text": "step: underground_caverns.shift" },
-      { "reader": "Marta", "kind": "said", "words": "The board is nailed across the passage by somebody who expected it to be argued with, and used a great many nails to say so." }
-    ] },
-    { "as": "Marta", "type": "climb over the board", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You could get past the board easily enough; it is only a board. But the passage beyond it hums with a great deal of water held back by something that would rather not be disturbed, and you find you would rather not disturb it." }
-    ] },
-    { "as": "Marta", "type": "duck under the board", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You could get past the board easily enough; it is only a board. But the passage beyond it hums with a great deal of water held back by something that would rather not be disturbed, and you find you would rather not disturb it." }
-    ] },
-    { "as": "Marta", "type": "cut the board with the sword", "expect": [
-      { "level": "info", "text": "step: underground_caverns.cut" },
-      { "reader": "Marta", "kind": "said", "words": "The board is nailed across the passage by somebody who expected it to be argued with, and used a great many nails to say so." }
-    ] },
-    { "as": "Marta", "type": "x flooded passage", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "A little way up the northwest passage the floor goes down under black, still water and stays there. The water fills the passage wall to wall and, as far as your light can tell, roof to floor. It is very cold and entirely uninterested in you." }
-    ] },
     { "as": "Marta", "type": "nw", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage northwest grows wet underfoot, and then wetter, and then the floor goes down under black water lying perfectly still, and does not come up again anywhere your light can reach. Whatever is beyond is under it. You step back out of the puddle you were standing in." }
+      { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a long room on the south shore of a large lake, far too deep and wide for crossing." },
+      { "reader": "Marta", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Deep Canyon" }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage east climbs toward a deep, steady hum, the sound of a great deal of water being held back by something that would rather not be disturbed. A board is nailed across it: \"FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management.\" You leave the dam to its inspection." }
+      { "reader": "Marta", "kind": "described", "words": "Dam" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
+      { "reader": "Marta", "kind": "described", "words": "The sluice gates on the dam are closed. Behind the dam, there can be seen a wide reservoir. Water is pouring over the top of the now abandoned dam." },
+      { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Deep Canyon" }
     ] },
     { "as": "Marta", "type": "look down", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The canyon falls away below you, sheer and black, too deep for your light to find the bottom. Far down, water is flowing." }
@@ -191,13 +182,13 @@
       { "reader": "Marta", "kind": "described", "words": "A chasm runs southwest to northeast and the path follows it. You are on the south side of the chasm, where a crack opens into a passage." }
     ] },
     { "as": "Marta", "type": "x path", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast it runs down into standing water and does not come up again." }
-    ] },
-    { "as": "Marta", "type": "x water", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "To the northeast the path goes down into black water lying perfectly still, as though it had been there a long time and meant to stay. It smells of cold stone and of nothing having moved in it for years." }
+      { "reader": "Marta", "kind": "described", "words": "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast it climbs toward a smell of standing water." }
     ] },
     { "as": "Marta", "type": "ne", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The path follows the chasm northeast toward a smell of standing water, and the smell gets there first: a little way on, the path runs down into water, black and still and very cold, and your light finds no other side to it. You go back the way you came, with wet feet." }
+      { "reader": "Marta", "kind": "described", "words": "Reservoir South" }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" }
     ] },
     { "as": "Marta", "type": "look down", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down." }
@@ -272,14 +263,14 @@
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 64 (total of 350 points), in 64 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 64 (total of 350 points), in 63 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
     ] },
     { "as": "Marta", "type": "drop sceptre", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 68 (total of 350 points), in 65 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 68 (total of 350 points), in 64 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
     ] },
     { "as": "Marta", "type": "put sceptre in coffin", "expect": [
@@ -292,7 +283,7 @@
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 68 (total of 350 points), in 67 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 68 (total of 350 points), in 66 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
     ] },
     { "as": "Marta", "type": "put sceptre in coffin", "expect": [

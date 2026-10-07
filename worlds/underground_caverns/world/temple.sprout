@@ -12,11 +12,13 @@ import * as sprout from 'sprout'
 import {Thing, Portable, Scenery, Flame} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
-import {Treasure, Readable, Water} from 'items'
+import {Treasure, Readable, Water, Sharp} from 'items'
+import {RainbowFoot, RainbowTop, RainbowEnd} from 'river'
+import {Matchbook} from 'dam'
 import {Room, DarkRoom} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, read, climb_over, leap_at, through, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, :travel, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go} from 'verbs'
+import {open, close, look_in, read, climb_over, leap_at, through, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, :travel, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go, :rainbow, :light} from 'verbs'
 import {engravings_cave} from 'east'
 
 // The rooms the rope and the coffin and the prayer care about.
@@ -499,6 +501,22 @@ kind Candles is Flame {
             say "The heat from the torch is so intense that the candles are vaporized."
             send self :consume
           }
+        } else if (tool.is(Matchbook)) {
+          if (!tool.get(:lit)) { say "You have to light them with something that's burning, you know." }
+          else if (self.get(:lit)) { say "The candles are already lit." }
+          else {
+            // CANDLES-FCN, lit by the match: they burn down from where they
+            // were.
+            self.set(:lit, true)
+            self.set(:started, true)
+            cancel wakes
+            if (self.get(:stage) == 0) { wake in 20 minutes }
+            else if (self.get(:stage) == 1) { wake in 10 minutes }
+            else if (self.get(:stage) == 2) { wake in 5 minutes }
+            else { wake in 150 seconds }
+            say "The candles are lit."
+            if (actor.holds(self)) { send actor :light with 1 } else { send here :relight }
+          }
         } else if (tool.is(Flame)) { say "You have to light them with something that's burning, you know." }
         else if (tool.is(Thing)) { say "With a {tool.short}??!?" }
         else { say "With that??!?" }
@@ -587,8 +605,12 @@ kind Coffin is Box, Treasure {
   }
 }
 
-// The sceptre in the coffin: a treasure, and a show of color when waved.
-kind Sceptre is Treasure {
+// The sceptre in the coffin: a treasure, a show of color when waved, and,
+// waved at Aragain Falls or the End of Rainbow, the thing that makes the
+// rainbow solid, or ordinary again (SCEPTRE-FUNCTION). Waved on the rainbow
+// itself, it is the end of the rainbow, and of the one standing on it. Its
+// point is sharp, which the magic boat does not care for.
+kind Sceptre is Treasure, Sharp {
   grammar { name "sceptre"  nouns "scepter", "treasure"  adjectives "sharp", "egyptian", "ancient", "enameled", "ornamented" }
   :has_fdesc true
   :size 3
@@ -598,8 +620,45 @@ kind Sceptre is Treasure {
   passage fdesc { A sceptre, possibly that of ancient Egypt itself, is in the coffin. The sceptre is ornamented with colored enamel, and tapers to a sharp point. }
   passage ldesc { An ornamented sceptre, tapering to a sharp point, is here. }
   describe { text "The sceptre is a rod of gold as long as your forearm, ornamented with bands of colored enamel, blue and red and green, that seem to shift a little as you turn it. It tapers to a sharp point, which suggests that whoever held it was not always asked twice." }
+  passage solid { Suddenly, the rainbow appears to become solid and, I venture, walkable (I think the giveaway was the stairs and bannister). }
+  passage dazzle { A dazzling display of color briefly emanates from the sceptre. }
+  passage collapse { The structural integrity of the rainbow is severely compromised, leaving you hanging in midair, supported only by water vapor. Bye. }
   without as target for wave from Thing
-  as target for wave { do { say "A dazzling display of color briefly emanates from the sceptre." } }
+  as target for wave {
+    do {
+      if (here.is(RainbowFoot)) {
+        if (here.get(:solid)) {
+          say "The rainbow seems to have become somewhat run-of-the-mill."
+          broadcast :rainbow with false
+        } else {
+          say solid
+          if (here.is(RainbowEnd)) { if (!here.get(:pot_shown)) { say "A shimmering pot of gold appears at the end of the rainbow." } }
+          broadcast :rainbow with true
+        }
+      } else if (here.is(RainbowTop)) {
+        // The rainbow's own fall takes whoever is on it (river.sprout).
+        say collapse
+        broadcast :rainbow with false
+      } else { say dazzle }
+    }
+  }
   without as target for raise from Thing
-  as target for raise { do { say "A dazzling display of color briefly emanates from the sceptre." } }
+  as target for raise {
+    do {
+      if (here.is(RainbowFoot)) {
+        if (here.get(:solid)) {
+          say "The rainbow seems to have become somewhat run-of-the-mill."
+          broadcast :rainbow with false
+        } else {
+          say solid
+          if (here.is(RainbowEnd)) { if (!here.get(:pot_shown)) { say "A shimmering pot of gold appears at the end of the rainbow." } }
+          broadcast :rainbow with true
+        }
+      } else if (here.is(RainbowTop)) {
+        // The rainbow's own fall takes whoever is on it (river.sprout).
+        say collapse
+        broadcast :rainbow with false
+      } else { say dazzle }
+    }
+  }
 }

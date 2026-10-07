@@ -1,5 +1,5 @@
 {
-  "about": "Round 4's loose ends: the Clearing's rope and sign can be named, and the troll fends the visitor off the passage east; the trap door's dust remembers being opened; the troll is examined in his own words; the chimney's refusal says its rule; a death says where the belongings went.",
+  "about": "Round 4's loose ends: the Clearing leads east to Canyon View since v6, and the troll fends the visitor off the passage east; the trap door's dust remembers being opened; the troll is examined in his own words; the chimney's refusal says its rule; a death says where the belongings went.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -20,19 +20,17 @@
       { "reader": "Marta", "kind": "described", "words": "You are in a small clearing in a well marked forest path that extends to the east and west." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The path to the east is roped off. A sign hanging from the rope reads: \"CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience.\"" }
+      { "reader": "Marta", "kind": "described", "words": "Canyon View" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the top of the Great Canyon on its west wall. From here there is a marvelous view of the canyon and parts of the Frigid River upstream. Across the canyon, the walls of the White Cliffs join the mighty ramparts of the Flathead Mountains to the east. Following the Canyon upstream to the north, Aragain Falls may be seen, complete with rainbow. The mighty Frigid River flows out from a great dark cavern. To the west and south can be seen an immense forest, stretching for miles around. A path leads northwest. It is possible to climb down into the canyon from here." }
     ] },
-    { "as": "Marta", "type": "x rope", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "A length of rope is strung across the path to the east, at about the height of a disappointed adventurer's waist. A sign hangs from it." }
+    { "as": "Marta", "type": "x canyon", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Great Canyon falls away below you, a vast gash in the earth with the Frigid River at the bottom of it, so far down that the river looks like a thread somebody dropped. It is a marvelous view, and you are standing on the edge of it." }
     ] },
-    { "as": "Marta", "type": "x sign", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The sign reads: \"CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience.\"" }
+    { "as": "Marta", "type": "jump over canyon", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Wheeeeeeeeee!!!!!" }
     ] },
-    { "as": "Marta", "type": "read sign", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The sign reads: \"CANYON VIEW CLOSED FOR REPAIRS. The Frobozz Magic Scenery Company regrets any inconvenience.\"" }
-    ] },
-    { "as": "Marta", "type": "take sign", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The sign is tied to the rope, and the rope is tied to the trees, and the Frobozz Magic Scenery Company would rather you left all three where they are." }
+    { "as": "Marta", "type": "nw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Clearing" }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Behind House" }

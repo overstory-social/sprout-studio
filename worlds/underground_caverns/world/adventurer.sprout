@@ -20,7 +20,7 @@ import {Thief, Stiletto} from 'thief'
 import {Cyclops, CyclopsRoom, TreasureRoom, Chalice, :flee} from 'cyclops'
 import {treasure_room, cyclops_room, strange_passage} from 'cyclops'
 import {go, look, examine, inventory, wait, help} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall, board, disembark, disembark_here, launch, launch_here, land, land_here, inflate, deflate, plug, turn_with, oil, :where, :berth, :wreck, :flung, :match_out, :rainbow, ashore} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -31,6 +31,12 @@ import {Skeleton, RustyKnife, SkeletonKey} from 'remains'
 import {east_west_passage, north_south_passage, chasm_room, loud_room, deep_canyon, Abyss} from 'east'
 import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, Torch, DomeRoom, AltarRoom, TempleRoom} from 'temple'
 import {Leaves} from 'grating'
+import {Sharp, Rejecting} from 'items'
+import {MagicBoat, Vessel, :put_out, :come_ashore} from 'boat'
+import {Pump, reservoir_north, atlantis_room} from 'reservoir'
+import {Matchbook, dam_room, dam_base} from 'dam'
+import {:dig_sand, River, Shovel, Narrows, CliffCave, CanyonRim, SandyCave, Sand, Riverside, OnTheRiver, canyon_view, cliff_middle, canyon_bottom, aragain_falls, end_of_rainbow, on_rainbow} from 'river'
+import {damp_cave, round_room} from 'east'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -84,6 +90,18 @@ kind Adventurer is sprout.Visitor {
   :might 0 min -20 max 20
   // What the thief's or the Cyclops's last blow did, as he decided it.
   :hurt 1 min 1 max 8
+  // How many air pumps and shovels are in hand: the pile of plastic and the
+  // sand cannot look into the hands of the one working them (friction 33).
+  :pumps 0 min 0 max 9
+  :shovels 0 min 0 max 9
+  // On a White Cliffs Beach, where the paths are too narrow for an
+  // inflated boat (WHITE-CLIFFS-FUNCTION's DEFLATE).
+  :at_narrows false
+  // Getting out of a boat something sharp has just got at: once out, the
+  // room is asked to swap it for the punctured boat.
+  :wrecking false
+  // Attacking with something sharp from the magic boat.
+  :spiked false
 
   passage hands_full { You're holding too many things already! }
 
@@ -102,6 +120,9 @@ kind Adventurer is sprout.Visitor {
   // light to climb a chimney by.
   passage lampless { You can't get up there with what you're carrying. The draught up the chimney would have any flame out before you were halfway, and nothing else you have would see you to the top; it is a climb for a lamp. }
   depart (to) {
+    if (self.get(:at_narrows) && self.count(MagicBoat) > 0 && to.is(Room)) {
+      if (to.is(Narrows) || to.is(CliffCave)) { refuse "The path is too narrow." }
+    }
     if (self.get(:at_chimney) && to.is(ChimneyTop)) {
       if (self.count(Thing) == 0) { refuse empty_handed }
       else if (self.count(Lamp) == 0) { refuse lampless }
@@ -138,6 +159,8 @@ kind Adventurer is sprout.Visitor {
     if (item.is(Thing)) { self.adjust(:load, item.get(:size)) }
     if (item.is(SkeletonKey)) { self.adjust(:keys, 1) }
     if (item.is(Coffin)) { self.adjust(:coffins, 1) }
+    if (item.is(Pump)) { self.adjust(:pumps, 1) }
+    if (item.is(Shovel)) { self.adjust(:shovels, 1) }
     if (item.is(Treasure)) {
       if (item.get(:value) > 0) {
         self.adjust(:score, item.get(:value))
@@ -149,6 +172,8 @@ kind Adventurer is sprout.Visitor {
     if (item.is(Thing)) { self.adjust(:load, 0 - item.get(:size)) }
     if (item.is(SkeletonKey)) { self.adjust(:keys, -1) }
     if (item.is(Coffin)) { self.adjust(:coffins, -1) }
+    if (item.is(Pump)) { self.adjust(:pumps, -1) }
+    if (item.is(Shovel)) { self.adjust(:shovels, -1) }
   }
 
   on :scored (from, value) { self.adjust(:score, value) }
@@ -157,6 +182,29 @@ kind Adventurer is sprout.Visitor {
   // Land of the Living Dead.
   on :banish {
     self.set(:dest, :banish)
+    send underground_caverns :open_gate
+  }
+
+  // Out of the magic boat: the room it lies in has answered with itself.
+  // Out of a boat something sharp has just got at, the room is asked to
+  // put the punctured boat in its place.
+  on :berth (from) {
+    move self to from
+    if (self.get(:wrecking)) {
+      self.set(:wrecking, false)
+      send from :wreck
+    }
+  }
+
+  // The Loud Room with the gates open (LOUD-ROOM-FCN's M-END), or roaring
+  // again (I-RFILL): out, through the world's gate, into the Damp Cave, the
+  // Round Room or the Deep Canyon (LOUD-RUNS).
+  on :flung (from, value) {
+    if (value) { tell self "It is unbearably loud here, with an ear-splitting roar seeming to come from all around you. There is a pounding in your head which won't stop. With a tremendous effort, you scramble out of the room." }
+    let r = random(3)
+    if (r == 0) { self.set(:dest, :damp_cave) }
+    else if (r == 1) { self.set(:dest, :round_room) }
+    else { self.set(:dest, :deep_canyon) }
     send underground_caverns :open_gate
   }
 
@@ -179,6 +227,11 @@ kind Adventurer is sprout.Visitor {
   // let through it, for the hand that holds them to hear (friction 73).
   pass :candle_burn (true)
   pass :snuffed (true)
+  pass :match_out (true)
+  // The sceptre, waved in hand at the rainbow: its news has to get out of
+  // the pocket to reach the rooms the rainbow joins.
+  pass :rainbow (true)
+  on :match_out (from) { if (self.holds(from)) { tell self "The match has gone out." } }
   on :candle_burn (from, value) {
     if (value == 1) { tell self "The candles grow shorter." }
     else if (value == 2) { tell self "The candles are becoming quite short." }
@@ -246,6 +299,7 @@ kind Adventurer is sprout.Visitor {
     // again behind the next one down.
     if (self.get(:at_chimney) && to.is(ChimneyTop)) { broadcast :unbar with false }
     self.set(:at_chimney, to.is(ChimneyFoot))
+    self.set(:at_narrows, to.is(Narrows))
     if (to.is(Room)) { self.set(:room_glow, to.get(:glow)) }
     if (to.is(Room) && !self.get(:devoured)) {
       if (!to.is(DarkRoom)) { self.set(:room_dark, false) }
@@ -559,6 +613,40 @@ kind Adventurer is sprout.Visitor {
         if (!self.get(:own_light) && !underground_caverns.egyptian_room.get(:alight)) { tell self "You have moved into a dark place." }
         move self to egyptian_room
       }
+    } else if (self.get(:dest) == :damp_cave || self.get(:dest) == :round_room || self.get(:dest) == :atlantis) {
+      // Thrown out of the Loud Room, or up a slimy stairway, into the dark.
+      self.set(:own_light, self.get(:light) > 0)
+      each b: Box in self {
+        if (b.get(:open)) {
+          each l: Light in b { if (l.get(:lit)) { self.set(:own_light, true) } }
+        }
+      }
+      if (self.get(:dest) == :damp_cave) {
+        if (!self.get(:own_light) && !underground_caverns.damp_cave.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to damp_cave
+      } else if (self.get(:dest) == :round_room) {
+        if (!self.get(:own_light) && !underground_caverns.round_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to round_room
+      } else {
+        if (!self.get(:own_light) && !underground_caverns.atlantis_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to atlantis_room
+      }
+    } else if (self.get(:dest) == :canyon_view) {
+      move self to canyon_view
+    } else if (self.get(:dest) == :ledge) {
+      move self to cliff_middle
+    } else if (self.get(:dest) == :canyon_bottom) {
+      move self to canyon_bottom
+    } else if (self.get(:dest) == :falls) {
+      move self to aragain_falls
+    } else if (self.get(:dest) == :rainbow_end) {
+      move self to end_of_rainbow
+    } else if (self.get(:dest) == :on_rainbow) {
+      move self to on_rainbow
+    } else if (self.get(:dest) == :dam_room) {
+      move self to dam_room
+    } else if (self.get(:dest) == :dam_base) {
+      move self to dam_base
     } else if (self.get(:dest) == :living_room) {
       move self to living_room
     } else if (self.get(:dest) == :behind) {
@@ -707,6 +795,24 @@ kind Adventurer is sprout.Visitor {
           move t to here
           say "{if several}{t.short}: {/if}The rope drops gently to the floor below."
         }
+        // Something sharp, let go of in the magic boat (RBOAT-FUNCTION).
+        else if (here.is(MagicBoat)) {
+          if (t.is(Sharp)) {
+            move t to here
+            say "{if several}{t.short}: {/if}It seems that the {t.short} didn't agree with the boat, as evidenced by the loud hissing noise issuing therefrom. With a pathetic sputter, the boat deflates, leaving you without."
+            if (here.get(:afloat)) {
+              if (here.get(:at) == :reservoir || here.get(:at) == :in_stream) { say "Another pathetic sputter, this time from you, heralds your drowning." }
+              else { say "In other words, fighting the fierce currents of the Frigid River. You manage to hold your own for a bit, but then you are carried over a waterfall and into some nasty rocks. Ouch!" }
+              send self :die
+            } else {
+              self.set(:wrecking, true)
+              broadcast :where
+            }
+          } else {
+            move t to here
+            say "{if several}{t.short}: {/if}Dropped."
+          }
+        }
         else {
           move t to here
           say "{if several}{t.short}: {/if}Dropped."
@@ -715,10 +821,38 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
+
   as actor for put {
     do {
       self.adjust(:moves, 1)
       if (item == container) { say "How can you do that?" }
+      // The leak, the punctured boat, the tube, the tool chests: each
+      // answers for itself, and nothing goes in.
+      else if (container.is(Rejecting)) { }
+      // Something sharp, put in the magic boat by one sitting in it.
+      else if (container.is(MagicBoat) && item.is(Sharp) && item.is(Thing) && self.holds(item) && here.is(MagicBoat)) {
+        move item to container
+        if (item.is(Thing)) { say "It seems that the {item.short} didn't agree with the boat, as evidenced by the loud hissing noise issuing therefrom. With a pathetic sputter, the boat deflates, leaving you without." }
+        if (here.is(MagicBoat)) {
+          if (here.get(:afloat)) {
+            if (here.get(:at) == :reservoir || here.get(:at) == :in_stream) { say "Another pathetic sputter, this time from you, heralds your drowning." }
+            else { say "In other words, fighting the fierce currents of the Frigid River. You manage to hold your own for a bit, but then you are carried over a waterfall and into some nasty rocks. Ouch!" }
+            send self :die
+          } else {
+            self.set(:wrecking, true)
+            broadcast :where
+          }
+        }
+      }
+      // Into the Frigid River: gone for good (RIVER-FUNCTION).
+      else if (container.is(River)) {
+        if (item.is(MagicBoat)) { say "You should get in the boat then launch it." }
+        else if (item.is(Thing)) {
+          if (item.get(:burnable)) { say "The {item.short} floats for a moment, then sinks." }
+          else { say "The {item.short} splashes into the water and is gone forever." }
+          move item to container
+        }
+      }
       else if (item.is(Portable)) {
         // Zork's PUT takes its item first (HAVE): a treasure put somewhere
         // straight out of a box in hand, or off the floor, has been held,
@@ -750,13 +884,28 @@ kind Adventurer is sprout.Visitor {
       // Zork's RUSTY-KNIFE-FCN: whatever it is turned on, it turns on its
       // bearer. Named, or the only weapon in hand against the troll.
       self.set(:suicide, false)
+      self.set(:spiked, false)
       if (bound weapon) {
+        if (weapon.is(Sharp) && here.is(MagicBoat)) { self.set(:spiked, true) }
         if (weapon.is(RustyKnife)) { self.set(:suicide, true) }
       } else if ((target.is(Troll) || target.is(Thief)) && self.count(Sword) == 0 && self.count(Knife) == 0 && self.count(Axe) == 0 && self.count(Stiletto) == 0 && self.count(RustyKnife) > 0) {
         say "(with the rusty knife)"
         self.set(:suicide, true)
       }
-      if (self.get(:suicide)) {
+      if (self.get(:spiked)) {
+        // A weapon swung in the magic boat (RBOAT-FUNCTION).
+        if (bound weapon) { if (weapon.is(Thing)) { say "It seems that the {weapon.short} didn't agree with the boat, as evidenced by the loud hissing noise issuing therefrom. With a pathetic sputter, the boat deflates, leaving you without." } }
+        if (here.is(MagicBoat)) {
+          if (here.get(:afloat)) {
+            if (here.get(:at) == :reservoir || here.get(:at) == :in_stream) { say "Another pathetic sputter, this time from you, heralds your drowning." }
+            else { say "In other words, fighting the fierce currents of the Frigid River. You manage to hold your own for a bit, but then you are carried over a waterfall and into some nasty rocks. Ouch!" }
+            send self :die
+          } else {
+            self.set(:wrecking, true)
+            broadcast :where
+          }
+        }
+      } else if (self.get(:suicide)) {
         say "As the knife approaches its victim, your mind is submerged by an overmastering will. Slowly, your hand turns, until the rusty blade is an inch from your neck. The knife seems to sing as it savagely slits your throat."
         each k: RustyKnife in self { send k :spend }
         send self :die
@@ -821,6 +970,8 @@ kind Adventurer is sprout.Visitor {
         } else {
           say "Trying to attack a thief with your bare hands is suicidal."
         }
+      } else if (target.is(Matchbook)) {
+        // STRIKE, for a match: the matchbook's own part lights one.
       } else if (target.is(Thing)) {
         say "I've known strange people, but fighting a {target.short}?"
       } else {
@@ -836,6 +987,9 @@ kind Adventurer is sprout.Visitor {
         say "In a feat of unaccustomed daring, you manage to land on your feet without killing yourself."
         self.set(:dest, :path)
         send underground_caverns :open_gate
+      } else if (here.is(CanyonRim)) {
+        say "Nice view, lousy place to jump."
+        send self :die
       } else if (here.is(Perilous) || (here.is(DomeRoom) && !here.get(:roped)) || (here.is(AltarRoom) && self.count(Coffin) > 0)) {
         say "This was not a very safe place to try jumping."
         say "{one of}You should have looked before you leaped.{or}In the movies, your life would be passing before your eyes.{or}Geronimo...{/one of}"
@@ -982,7 +1136,27 @@ kind Adventurer is sprout.Visitor {
   as actor for unlock     { do { self.adjust(:moves, 1) } }
   as actor for knock      { do { self.adjust(:moves, 1) } }
   as actor for walk_around { do { self.adjust(:moves, 1) } }
-  as actor for through    { do { self.adjust(:moves, 1) } }
+  // Climbing into the magic boat is boarding it.
+  as actor for through {
+    permit {
+      if (target.is(MagicBoat)) {
+        if (here.is(MagicBoat)) { refuse "You are already in the magic boat!" }
+        else if (!here.holds(target)) { refuse "The magic boat must be on the ground to be boarded." }
+      }
+    }
+    do {
+      self.adjust(:moves, 1)
+      if (target.is(MagicBoat)) {
+        if (self.count(Sharp) > 0) {
+          say "Oops! Something sharp seems to have slipped and punctured the boat. The boat deflates to the sounds of hissing, sputtering, and cursing."
+          send here :wreck
+        } else {
+          move self to target
+          say "You are now in the magic boat."
+        }
+      }
+    }
+  }
   // A gift to the troll goes from the visitor's hand (or the open bottle in
   // it) into his; what he does with it is his part of the reading.
   as actor for give {
@@ -1029,6 +1203,13 @@ kind Adventurer is sprout.Visitor {
         else if (aim.is(Abyss)) {
           move target to aim
           if (target.is(Thing)) { say "The {target.short} drops out of sight into the chasm." }
+        }
+        else if (aim.is(River)) {
+          if (target.is(Thing)) {
+            if (target.get(:burnable)) { say "The {target.short} floats for a moment, then sinks." }
+            else { say "The {target.short} splashes into the water and is gone forever." }
+          }
+          move target to aim
         }
         else if (aim.is(sprout.Actor)) {
           move target to here
@@ -1140,26 +1321,54 @@ kind Adventurer is sprout.Visitor {
   as actor for burn    { do { self.adjust(:moves, 1) } }
   as actor for leap_at { do { self.adjust(:moves, 1) } }
   as actor for turn    { do { self.adjust(:moves, 1) } }
-  as actor for swim  { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "swim swim ..." } } } do { self.adjust(:moves, 1)  say "Go jump in a lake!" } }
+  as actor for swim  { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "swim swim ..." } } }
+    do {
+      self.adjust(:moves, 1)
+      if (here.is(Riverside) || here.is(OnTheRiver) || here.is(MagicBoat)) { say "Swimming isn't usually allowed in the dungeon." }
+      else { say "Go jump in a lake!" }
+    }
+  }
   as actor for walk_about { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "walk walk ..." } } } do { self.adjust(:moves, 1)  say "Use compass directions for movement." } }
 
   // Zork's DIG: with nothing else to dig with, a pair of hands. Zork asks
   // what to dig in when told only `dig`; the parser here cannot ask, so the
   // answer is the one Zork gives once it knows.
+  // The sand of the Sandy Cave answers for itself (river.sprout); with the
+  // shovel found in hand, the digger says so first. Anywhere else the
+  // shovel finds no reason (V-DIG).
   as actor for dig {
     do {
       self.adjust(:moves, 1)
-      if (bound tool) {
-        if (tool.is(Thing)) { say "Digging with a {tool.short} is silly." }
+      if (target.is(Sand)) {
+        if (!bound tool && self.get(:shovels) > 0) { say "(with the shovel)" }
+      } else if (bound tool) {
+        if (tool.is(Shovel)) { say "There's no reason to be digging here." }
+        else if (tool.is(Thing)) { say "Digging with a {tool.short} is silly." }
         else { say "Digging with a pair of hands is silly." }
       } else { say "Digging with a pair of hands is silly." }
     }
   }
-  as actor for dig_here { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "dig dig ..." } } } do { self.adjust(:moves, 1)  say "Digging with a pair of hands is silly." } }
+  as actor for dig_here { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "dig dig ..." } } }
+    do {
+      self.adjust(:moves, 1)
+      if (self.get(:shovels) > 0) {
+        if (here.is(SandyCave)) {
+          say "(with the shovel)"
+          each d: Sand in here { send d :dig_sand }
+        } else { say "There's no reason to be digging here." }
+      } else { say "Digging with a pair of hands is silly." }
+    }
+  }
   as actor for dig_with {
     do {
       self.adjust(:moves, 1)
-      if (tool.is(Thing)) { say "Digging with a {tool.short} is silly." }
+      if (tool.is(Shovel)) {
+        if (here.is(SandyCave)) {
+          say "(in the sand)"
+          each d: Sand in here { send d :dig_sand }
+        } else { say "There's no reason to be digging here." }
+      }
+      else if (tool.is(Thing)) { say "Digging with a {tool.short} is silly." }
       else { say "Digging with a pair of hands is silly." }
     }
   }
@@ -1182,6 +1391,131 @@ kind Adventurer is sprout.Visitor {
   as actor for verbose    { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "verbose verbose ..." } } } do { self.set(:mode, :verbose)  say "Maximum verbosity." } }
   as actor for brief      { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "brief brief ..." } } } do { self.set(:mode, :brief)  say "Brief descriptions." } }
   as actor for superbrief { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "superbrief superbrief ..." } } } do { self.set(:mode, :superbrief)  say "Superbrief descriptions." } }
+  // The magic boat (v6, boat.sprout): in, out, out on the water and back.
+  // PRE-BOARD: on the ground, and not already in it; something sharp in
+  // hand punctures it (RBOAT-FUNCTION).
+  as actor for board {
+    permit {
+      if (target.is(MagicBoat)) {
+        if (here.is(MagicBoat)) { refuse "You are already in the magic boat!" }
+        else if (!here.holds(target)) { refuse "The magic boat must be on the ground to be boarded." }
+      }
+    }
+    do {
+      self.adjust(:moves, 1)
+      if (target.is(MagicBoat)) {
+        if (self.count(Sharp) > 0) {
+          say "Oops! Something sharp seems to have slipped and punctured the boat. The boat deflates to the sounds of hissing, sputtering, and cursing."
+          send here :wreck
+        } else {
+          move self to target
+          say "You are now in the magic boat."
+        }
+      }
+    }
+  }
+  // V-DISEMBARK: on land, on your own feet; on the water, no. The way out
+  // is the room's, asked for (`:where`), since the visitor cannot name it.
+  as actor for disembark {
+    permit {
+      if (here.is(MagicBoat)) {
+        if (!target.is(MagicBoat)) { refuse "You're not in that!" }
+        else if (here.get(:afloat)) { refuse "You realize that getting out here would be fatal." }
+      } else { refuse "You're not in that!" }
+    }
+    do {
+      self.adjust(:moves, 1)
+      say "You are on your own feet again."
+      broadcast :where
+    }
+  }
+  as actor for disembark_here {
+    permit {
+      if (here.is(MagicBoat)) {
+        if (here.get(:afloat)) { refuse "You realize that getting out here would be fatal." }
+      } else { refuse "You are already on your own two feet." }
+    }
+    do {
+      self.adjust(:moves, 1)
+      say "You are on your own feet again."
+      broadcast :where
+    }
+  }
+  // LAUNCH and LAND said with the boat named: the boat's own errand. Said
+  // bare, they are the boat's own ways out, and these answer only where
+  // those do not.
+  as actor for launch {
+    permit {
+      if (here.is(MagicBoat)) {
+        if (here.get(:afloat)) { refuse "{here.afloat_line}" }
+        else if (!here.get(:launch_ok)) { refuse "You can't launch it here." }
+      } else { refuse "You're not in the boat!" }
+    }
+    do {
+      self.adjust(:moves, 1)
+      send here :put_out
+      say ""
+    }
+  }
+  as actor for launch_here {
+    permit {
+      if (here.is(MagicBoat)) {
+        if (here.get(:afloat)) { refuse "{here.afloat_line}" }
+        else if (here.get(:launch_ok)) { refuse "" }
+        else { refuse "You can't launch it here." }
+      } else { refuse "You're not in the boat!" }
+    }
+    do { say "" }
+  }
+  as actor for land {
+    permit {
+      if (here.is(MagicBoat)) {
+        if (here.get(:at) == :river_2) { refuse "There is no safe landing spot here." }
+        else if (here.get(:at) == :river_4) { refuse "You can land either to the east or the west." }
+        else if (!(here.get(:at) == :river_1 || here.get(:at) == :river_3 || here.get(:at) == :river_5 || here.get(:at) == :in_stream)) { refuse "You can't go that way." }
+      } else { refuse "You can't go that way." }
+    }
+    do {
+      self.adjust(:moves, 1)
+      send here :come_ashore
+      say ""
+    }
+  }
+  as actor for ashore {
+    permit {
+      if (here.is(MagicBoat)) {
+        if (here.get(:at) == :river_2) { refuse "There is no safe landing spot here." }
+        else if (here.get(:at) == :river_4) { refuse "You can land either to the east or the west." }
+        else if (!(here.get(:at) == :river_1 || here.get(:at) == :river_3 || here.get(:at) == :river_5 || here.get(:at) == :in_stream)) { refuse "You can't go that way." }
+      } else { refuse "You can't go that way." }
+    }
+    do {
+      self.adjust(:moves, 1)
+      send here :come_ashore
+      say ""
+    }
+  }
+  as actor for land_here {
+    permit {
+      if (here.is(MagicBoat)) {
+        if (here.get(:at) == :river_2) { refuse "There is no safe landing spot here." }
+        else if (here.get(:at) == :river_4) { refuse "You can land either to the east or the west." }
+        else if (here.get(:at) == :river_1 || here.get(:at) == :river_3 || here.get(:at) == :river_5) { refuse "" }
+        else if (here.get(:at) != :in_stream) { refuse "You can't go that way." }
+      } else { refuse "You can't go that way." }
+    }
+    do {
+      self.adjust(:moves, 1)
+      send here :come_ashore
+      say ""
+    }
+  }
+  as actor for inflate   { do { self.adjust(:moves, 1) } }
+  as actor for deflate   { do { self.adjust(:moves, 1) } }
+  as actor for plug      { do { self.adjust(:moves, 1) } }
+  as actor for turn_with { do { self.adjust(:moves, 1) } }
+  as actor for oil       { do { self.adjust(:moves, 1) } }
+
   as actor for quit {
     do {
       say score_line
