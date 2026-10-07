@@ -1514,3 +1514,60 @@ way up than the chimney (praying with the coffin); nobody found the canyon.
 - Carried, still unmet: the egg given to the thief; DIAGNOSE; the Grating
   Room and the key from below; the grue in play; the ghost; the tree's
   drop; the egg broken.
+
+## After round 12
+
+Six runs, all of them spent on the dam and the river. WAIT in the boat,
+the death's scatter line and "the sword not least of it" landed (P10).
+Three runs died at the Falls, every one by launching from the Shore onto
+the last reach, two of them trying to cross west toward the rainbow's
+beach (P1, P2). Nobody reached the canyon, the Cyclops, the lair or the
+Egyptian Room.
+
+- **The last reach says what it is** (P1). Launching from the Shore, the
+  boat says the current takes it at once and the roar is very close; WEST
+  there is the sheer bank and "The only landing left is the one on the east
+  shore." The map and the one-move current stay Zork's: the Shore is a
+  known risk now, not a parser turn wasted. `shore_launch.json`.
+- **The rainbow's far side is reached by land** (P2). The Falls' rainbow
+  line now goes on: a path from that beach down the canyon, under walls a
+  person might climb, to somewhere with trees on it, and nothing that
+  floats gets there in one piece. It points at the Clearing without naming
+  it; the sceptre's hint stays Zork's.
+- **Names given back** (P4): the Atlantis Room's carvings, the knee marks
+  at the heaps (a thing of their own: whoever knelt there is tidy even
+  about leaving), a pebble, the bird's nest, the back of the pile.
+  `named_back.json`.
+- **The rumbling is heard** (P5), by name and with LISTEN alone in the
+  boat on the third to fifth reaches, louder as the Falls come nearer.
+- **The reservoir from the Dam follows the tide** (P6): gates open and the
+  water still high, it runs out through the gates and no longer over the
+  top.
+- **TAKE ALL** (P7). The v6 water, mud, sand, rainbow, bolt, bubble and
+  leak refused take in a `permit`, which put them in `all` and refused the
+  whole line; they are `no_take` passages now. The sack is taken whole and
+  nothing comes out of a held one (108). With eight things in hand the cap
+  still never reaches the floor (36, open with Sprout). `take_all.json`.
+- **The chimney names the load** (P9): "...with what you're carrying,
+  which is the brass lantern, the tan label and the trunk of jewels." The
+  rule and the re-barring stay.
+- **Kept:** the unseen robbing (P8). STEAL-JUNK may take the pump, as Zork's
+  takes any lesser thing, and DROP-JUNK lets it fall somewhere later; a
+  dropped tool gone from its room is the thief's signature, to be
+  concluded and not told. The Loud Room's echo and the beach's swimming
+  (P11). Logged, not worked round: 94 again (P3).
+
+### What round 13 should watch
+
+- **The Shore:** whether anyone still launches from it, and whether a
+  death there now reads as fair.
+- **The canyon:** whether the rainbow line sends anyone east from the
+  Clearing, and whether the sceptre ever reaches the rainbow.
+- **The chimney's line:** whether naming the load shortens the ferrying,
+  or sends anyone looking for a heavier way up.
+- **The thief and the pump:** whether a player who loses a tool to him
+  works out where it went.
+- Carried, still unmet: the egg given to the thief; DIAGNOSE; the Grating
+  Room and the key from below; the grue in play; the ghost; the tree's
+  drop; the egg broken; the Cyclops, the lair and the Egyptian Room. These
+  now need goals aimed at them (P12), which is the director's call.

@@ -1,0 +1,166 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "Keep Zork's map and the one-move current, but the last reach should say it is the last reach. Launching from the Shore now says the current takes the boat at once and the roar is very close. WEST there names the sheer bank and points at the east landing, which is the only way out. A death there becomes a known risk, not a wasted parser turn."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "The rainbow line was sending players into the boat. It now says that a path leaves the far beach down the canyon, under climbable walls, to somewhere with trees on it, and that nothing that floats gets there in one piece. That points overland toward the Clearing without naming it, and the sceptre's hint stays Zork's own."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "This is friction 94 again: Sprout answers leftover words with not_here. It is logged in friction.md with the round's four lines. The world does not work around it, as the house rules require."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The brief requires that every thing a description names can be examined. Carvings, knee marks (now a thing of their own), pebble, bird's nest and the back of the pile all answer now. Two noun lists had to be trimmed to stay under Sprout's 8-noun limit."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "A sound the room names should be hearable. The Rumble kind answers LISTEN TO by name. Bare LISTEN in the boat on the third, fourth and fifth reaches gives that reach's own rumbling, louder as the Falls come closer."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "This was a plain state bug. The Dam's reservoir view now has a text for gates open with the water still high, matching the room line."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "Part of this was the world's own bug. Seven v6 scenery things (water, mud, sand, rainbow, bolt, bubble, leak) refused take in a permit, which put them in ALL, and one refusal stopped the whole line. They are now no_take passages. The sack is now taken whole, as in Zork's ALL. The 8-thing cap filling up with held things first is Sprout's, logged as friction 36 again. Taking from open boxes is logged as friction 108, with the world's fix described there."
+    },
+    {
+      "answers": "P8",
+      "decision": "reject",
+      "reason": "Unseen robbing is Zork's and the intent's: a missing tool is the thief's signature, to be worked out by the player, not narrated. A trace in every room's examine text would be the new narration the synthesis itself warns against. STEAL-JUNK may take the pump as Zork's does, and DROP-JUNK lets it turn up again later. The choice is recorded in intent.md, and round 13 will watch whether a robbed player works it out."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The rule and the re-barring stay, since the hauling is the puzzle. The refusal now lists what the player is carrying, in the same voice, so a forgotten tan label is seen at once."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "WAIT drifting, the death scatter line and the overload line are kept exactly as they are."
+    },
+    {
+      "answers": "P11",
+      "decision": "reject",
+      "reason": "The echo and the 'Swimming isn't usually allowed' line are Zork's, and the echo is meant to be found by trying. A 30-turn visitor stopping there is the nature of a short visit, not a defect. Nothing changes, as the synthesis itself recommends."
+    },
+    {
+      "answers": "P12",
+      "decision": "reject",
+      "reason": "There is nothing to change in the world: the older country works and simply went unvisited. Goals aimed at it (the egg, the Cyclops, the coffin) are the director's call. They are carried as watch items in intent.md."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The last reach. A WEST refusal on river_5 names the sheer bank and the east landing, and a last_reach line plays when the boat is put out from the Shore. It covers both bare LAUNCH (through the rowing passage) and LAUNCH BOAT (through :moved). New test.",
+      "files": [
+        "worlds/underground_caverns/world/boat.sprout",
+        "worlds/underground_caverns/world/tests/shore_launch.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The rainbow line at Aragain Falls now adds the overland path from the far beach, up the canyon to somewhere with trees on it, and says no boat gets there. The rainbow test's expected text is updated.",
+      "files": [
+        "worlds/underground_caverns/world/river.sprout",
+        "worlds/underground_caverns/world/tests/rainbow.json"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "Friction logged: 94 again (adverbs and trailing phrases answered not_here), 36 again (the take-all cap is filled by held things first), and new 108 (ALL reaches into open boxes). The v6 'Differences chosen' notes are extended for round 12.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P3",
+        "P7"
+      ]
+    },
+    {
+      "what": "Names given back: 'carvings' on the Atlantis chamber; 'pebble' on the heaps and a new knee-marks scenery object with its own text; bird's, bird and small on the nest; 'back' on the pile. Two noun lists were trimmed to stay under the 8-noun cap. New test.",
+      "files": [
+        "worlds/underground_caverns/world/reservoir.sprout",
+        "worlds/underground_caverns/world/east.sprout",
+        "worlds/underground_caverns/world/above_ground.sprout",
+        "worlds/underground_caverns/world/boat.sprout",
+        "worlds/underground_caverns/world/tests/named_back.json"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "The rumbling can be heard. The Rumble kind has a default sound passage and answers LISTEN TO. The river_4 and river_5 rumblings have their own louder sounds. Bare LISTEN in the boat on reaches 3 to 5 gives that reach's sound.",
+      "files": [
+        "worlds/underground_caverns/world/river.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "The Dam's reservoir view has a tide-1 text: still full, running out through the open gates and no longer over the top. Covered in named_back.json.",
+      "files": [
+        "worlds/underground_caverns/world/dam.sprout",
+        "worlds/underground_caverns/world/tests/named_back.json"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "TAKE ALL fixed. The take-refusing scenery (water, mud, sand, rainbow, bolt, bubble, leak) became no_take passages, so it stays out of ALL and no longer refuses the whole line. The adventurer's take skips anything inside a box that is in the same line, so the sack is taken whole and nothing comes out of a held sack. Taking those scenery things now costs a move, so dam_bolt's move count goes up by one; the take-all expectations in npc_troll are updated. New test covers the Kitchen and the trunk on the drained lake bed.",
+      "files": [
+        "worlds/underground_caverns/world/dam.sprout",
+        "worlds/underground_caverns/world/reservoir.sprout",
+        "worlds/underground_caverns/world/river.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/take_all.json",
+        "worlds/underground_caverns/world/tests/npc_troll.json",
+        "worlds/underground_caverns/world/tests/dam_bolt.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "The chimney's overload refusal now lists what the player is carrying ('...which is the brass lantern, the tan label and the trunk of jewels.'). The route_home and edges tests are updated.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/route_home.json",
+        "worlds/underground_caverns/world/tests/edges.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "intent.md gains an 'After round 12' section: each decision, the kept choices (P8's unseen robbing and the pump, P10's lines, P11), and what round 13 should watch, including the carried items that need director-set goals.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P10"
+      ]
+    }
+  ]
+}

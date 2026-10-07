@@ -14,7 +14,7 @@ import {Treasure} from 'items'
 import {Room, DarkRoom, Perilous} from 'room'
 import {Adventurer} from 'adventurer'
 import {Vessel} from 'boat'
-import {cross, through, climb_up, climb_down, dig, look_in, look_under, take, leap_at, drink, swim, open, close, Dest, :travel, :rainbow, :die, :consume} from 'verbs'
+import {cross, listen, through, climb_up, climb_down, dig, look_in, look_under, take, leap_at, drink, swim, open, close, Dest, :travel, :rainbow, :die, :consume} from 'verbs'
 import {damp_cave} from 'east'
 import {clearing, forest_3} from 'above_ground'
 
@@ -97,7 +97,10 @@ object river_4 is DarkRoom, OnTheRiver in underground_caverns {
     passage short { beaches }
     describe { text "On the east shore is a broad sandy beach; on the west, a small patch of beach tucked in below the White Cliffs. Either would take a boat." }
   }
-  object rumbling is Rumble
+  object rumbling is Rumble {
+    describe { text "The rumbling ahead has become the sound of rushing water, a great deal of it, and it is getting louder." }
+    passage sound { The rumbling ahead has become the sound of rushing water, a great deal of it, and it is getting louder. }
+  }
 }
 
 object river_5 is Room, OnTheRiver in underground_caverns {
@@ -112,6 +115,7 @@ object river_5 is Room, OnTheRiver in underground_caverns {
   }
   object rumbling is Rumble {
     describe { text "Ahead, and not far ahead, the river goes over something with a noise like the end of the world. The noise is nearly unbearable." }
+    passage sound { Ahead, and not far ahead, the river goes over something with a noise like the end of the world. The noise is nearly unbearable. }
   }
 }
 
@@ -448,7 +452,7 @@ kind River is Box {
   as target for through { do { say swim_no } }
   without as target for leap_at from Thing
   as target for leap_at { do { say swim_no } }
-  as target for take { permit { refuse "The water slips through your fingers." } }
+  passage no_take { The water slips through your fingers. }
   without as target for drink from Thing
   as target for drink { do { say "Thank you very much. I was rather thirsty (from all this talking, probably)." } }
 }
@@ -459,7 +463,7 @@ kind WaterAbout is Scenery {
   grammar { name "water"  nouns "water", "quantity" }
   passage short { water }
   describe { text "The water is cold and clear and moving, as water down here mostly is." }
-  as target for take { permit { refuse "The water slips through your fingers." } }
+  passage no_take { The water slips through your fingers. }
   without as target for drink from Thing
   as target for drink { do { say "Thank you very much. I was rather thirsty (from all this talking, probably)." } }
   without as target for through from Thing
@@ -509,7 +513,7 @@ kind Rainbow is Scenery {
     if (here.is(RainbowFoot)) {
       if (here.get(:solid)) { text "The rainbow arches over the falls from one bank to the other, and it is solid: you can see steps in it, and a bannister, in seven colors, which is the giveaway." }
       else if (here.is(RainbowEnd)) { text "A beautiful rainbow hangs in the spray over the falls, every color there is and some that are not, arching away to the east. It is made, as rainbows are, of light and water vapor, and you can see the river through it." }
-      else { text "A beautiful rainbow hangs in the spray over the falls, every color there is and some that are not, arching away to the west to come down on a little sunlit beach on the far side, where the canyon opens to the sky. It is made, as rainbows are, of light and water vapor, and you can see the river through it." }
+      else { text "A beautiful rainbow hangs in the spray over the falls, every color there is and some that are not, arching away to the west to come down on a little sunlit beach on the far side, where the canyon opens to the sky. It is made, as rainbows are, of light and water vapor, and you can see the river through it. From the beach on the far side a path goes off down the canyon, under walls a person might climb, to somewhere with trees on it: whatever comes to that beach comes down to it by land, since nothing that floats gets there in one piece." }
     } else if (here.is(RainbowTop)) { text "Underfoot the rainbow is firm, faintly warm, and colored in broad bands from red at one edge to violet at the other. It does not bear thinking about, so you don't." }
     else { text "Far up the canyon a rainbow hangs over Aragain Falls, small and perfect, like a painting of a rainbow." }
   }
@@ -547,7 +551,7 @@ kind Rainbow is Scenery {
   }
   without as target for look_under from Thing
   as target for look_under { do { say "The Frigid River flows under the rainbow." } }
-  as target for take { permit { refuse "You reach for it, and there is nothing there but color." } }
+  passage no_take { You reach for it, and there is nothing there but color. }
 }
 
 // The dam, seen from the river below it.
@@ -561,6 +565,11 @@ kind Rumble is Scenery {
   grammar { name "rumbling"  nouns "rumble", "roar", "sound", "noise"  adjectives "faint", "distant" }
   passage short { rumbling }
   describe { text "Somewhere downstream something is making a long, low, rumbling roar, the sound of a great deal of water doing something sudden." }
+  // What it sounds like, listened to: each reach that names it says how
+  // near it has come.
+  passage sound default { Somewhere downstream something is making a long, low, rumbling roar, the sound of a great deal of water doing something sudden. }
+  without as target for listen from Thing
+  as target for listen { do { say sound } }
 }
 
 // The red buoy in the river, with the emerald in it (RIVR4-ROOM).
@@ -612,7 +621,7 @@ kind Sand is Scenery {
   :digs -1 min -1 max 4
   passage short { sand }
   describe { text "The cave is half full of fine, dry sand, drifted in from the beach in long smooth slopes.{if self.get(:digs) >= 0} There is a hole in it, which you dug.{/if}" }
-  as target for take { permit { refuse "The sand runs through your fingers and is sand again." } }
+  passage no_take { The sand runs through your fingers and is sand again. }
   // Dug with the shovel by name, the digger is answered here; with the
   // shovel found in hand (`dig`, `dig sand`, `dig with shovel`), the
   // digger's own part says so and sends `:dig_sand`, whose lines are told.

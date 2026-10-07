@@ -261,7 +261,7 @@ object up_a_tree is TreeTop in underground_caverns {
   object house is DistantHouse
 
   object nest is Nest {
-    grammar { nouns "nest"  adjectives "birds" }
+    grammar { nouns "nest"  adjectives "birds", "bird's", "bird", "small" }
     :has_fdesc true
     :capacity 20
     passage fdesc { Beside you on the branch is a small bird's nest. }

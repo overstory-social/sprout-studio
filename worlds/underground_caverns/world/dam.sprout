@@ -95,7 +95,6 @@ object dam_room is Room, Tidal, Riverside in underground_caverns {
     on :gate_flag (from, value) { self.set(:free, value) }
     passage no_take { It is an integral part of the control panel. }
     describe { text "It is a large metal bolt, a good two inches across the head, mounted on the control panel and connected by unseen machinery to the sluice gates below. Its flats are worn bright, the way bolts get when the only way to turn them is with a wrench. {if self.get(:free)}The bubble above it glows a serene green.{else}The bubble above it is dark.{/if}" }
-    as target for take { permit { refuse no_take } }
     without as target for shift from Thing
     as target for shift { do { say "Your bare hands don't appear to be enough." } }
     without as target for turn_with from Thing
@@ -145,7 +144,6 @@ object dam_room is Room, Tidal, Riverside in underground_caverns {
     on :gate_flag (from, value) { self.set(:glowing, value) }
     passage no_take { It is an integral part of the control panel. }
     describe { text "It is a small green plastic bubble, about the size of a hen's egg, set into the panel directly above the bolt. {if self.get(:glowing)}It is glowing serenely, the calm, untroubled green of a machine that is ready when you are.{else}It is dark, and has the patient look of something waiting to be told it may begin.{/if}" }
-    as target for take { permit { refuse no_take } }
     without as target for mung from Thing
     as target for mung { do { say "The bubble is tougher than it looks. It is an integral part of the control panel, and intends to stay one." } }
   }
@@ -162,6 +160,7 @@ object dam_room is Room, Tidal, Riverside in underground_caverns {
     describe {
       if (dam_room.get(:tide) == 2) { text "Behind the dam, where the reservoir was, is a wide expanse of mud with a stream wandering across it, looking sheepish." }
       else if (dam_room.get(:tide) == 3) { text "Behind the dam the reservoir is low, a broad stream between banks of mud, but the water is rising quickly." }
+      else if (dam_room.get(:tide) == 1) { text "Behind the dam a wide reservoir stretches away to the west, still flat and dark and very full, but it no longer comes over the top: it is running out through the open sluice gates below you instead, with a sound like a very large bath being let out." }
       else { text "Behind the dam a wide reservoir stretches away to the west, flat and dark and very full. It comes right up to the top of the dam and goes over it." }
     }
   }
@@ -482,7 +481,7 @@ kind Leak is Box, Rejecting {
       } else if (item.is(Thing)) { say "With a {item.short}?" }
     }
   }
-  as target for take { permit { refuse "You can't take a leak. Not here, anyway." } }
+  passage no_take { You can't take a leak. Not here, anyway. }
 }
 
 // The matchbook from the Dam Lobby: five matches, each burning a minute

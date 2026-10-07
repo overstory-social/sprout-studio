@@ -81,9 +81,16 @@ object round_room is DarkRoom in underground_caverns {
   }
   // The heaps, looked at closer: somebody has been here, and no further.
   object heaps is Rubble {
-    grammar { name "heaps"  nouns "heap", "piles", "pile", "pebbles", "grit", "dust", "cone"  adjectives "sorted", "neat", "nearest", "small", "smallest", "little" }
+    grammar { name "heaps"  nouns "heap", "piles", "pile", "pebbles", "pebble", "grit", "dust", "cone"  adjectives "sorted", "neat", "nearest", "small", "smallest", "little" }
     passage short { heaps }
     describe { text "There are five heaps, graded as carefully as a builder grades gravel: fist-sized stones at the back, then smaller ones, then pebbles, then grit, and nearest of all a little cone of dust that has been swept up rather than kicked. Not one stone is on the wrong heap. Whoever did it knelt to do it; the dust in front of the smallest heap still has the marks of two knees in it, and nothing to say which way they went after." }
+  }
+  // Where whoever sorted the heaps knelt to do it.
+  object marks is Scenery {
+    grammar { name "marks"  nouns "marks", "mark", "knees", "dents", "prints"  adjectives "knee", "two", "kneeling" }
+    passage short { marks }
+    describe { text "Two shallow dents in the dust in front of the smallest heap, side by side, a little apart: somebody knelt here a long while, sorting, and then got up without putting a hand down, and the dust around them has not a footprint in it. Whoever it was is tidy even about leaving." }
+    passage no_take { There is nothing to take but dust, and the dust is part of the marks. }
   }
   object stone is Scenery {
     grammar { name "stone"  nouns "room", "circle", "floor"  adjectives "circular", "round" }

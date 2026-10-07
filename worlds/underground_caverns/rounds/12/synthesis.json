@@ -1,0 +1,463 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "Launching from the Shore kills. Launching there puts the boat on the last reach (\"The sound of rushing water is nearly unbearable here\"). The only way off it is east, and the very next turn of anything else goes over Aragain Falls. Three of the six runs died exactly this way, and two of them were trying to cross to the west bank. The refusal they got is the generic \"You can't go that way.\", and then they died. The prose-reader's \"go upstream\" got the correct river line and still died on the same tick. All three went down holding the round's treasures (emerald, scarab, trunk, bar) and lost them to the scatter. Nobody died on the river by drifting from the Dam Base, so the round-11 timing works. The Shore is the trap. This is faithful to Zork (RIVER-5 has only EAST, and I-RIVER gives it one move), but no player has yet read it as fair.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 234,
+          "quote": "launch -> \"The sound of rushing water is nearly unbearable here. On the east shore is a large landing area.\""
+        },
+        {
+          "run": "explorer-1",
+          "turn": 235,
+          "quote": "go west -> \"You can't go that way.\" then \"Unfortunately, the magic boat doesn't provide protection from the rocks and boulders...\""
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 101,
+          "quote": "launch from the Shore, same reach"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 102,
+          "quote": "west -> \"You can't go that way.\", then dead; score 65 -> 55"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 148,
+          "quote": "go upstream -> \"You cannot go upstream due to strong currents.\" then over the Falls"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 135,
+          "quote": "went over on purpose after the buoy, as a control"
+        }
+      ],
+      "recommendation": "Keep Zork's map and the one-move current. Give the last reach's own refusals Zork's voice instead of the generic no_way: west should name the sheer far bank and the current, and up already does. Consider a line when you launch from the Shore saying the current takes hold at once, so a single-move death reads as a known risk and not a parser turn wasted. Next round, watch whether anyone still launches from the Shore."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "Round 11's new rainbow line is being read as an invitation to cross the river, not as a pointer to the canyon. Three runs examined the rainbow at the Falls and read about \"a little sunlit beach on the far side\". None of them had the sceptre: it is still in the coffin, behind the Dome's rope, and nobody reached the Egyptian Room. Nobody reached Canyon View, End of Rainbow or the pot of gold, and nobody went east from the Clearing. Both players who then tried to reach the far side went by boat from the Shore (P1), and both named crossing west as their top wish.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 220,
+          "quote": "examine rainbow -> \"...come down on a little sunlit beach on the far side, where the canyon opens to the sky.\""
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 98,
+          "quote": "look at rainbow; three turns later launches from the Shore and tries west"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 122,
+          "quote": "cross rainbow -> \"Can you walk on water vapor?\""
+        }
+      ],
+      "recommendation": "Make the far side say it is reached by land, not by water. For example, the beach can be seen to have a path going up the canyon wall, \"to somewhere with trees on it\" (that text already exists on the far-side thing; put it in the rainbow line players actually read). Leave the sceptre's hint as Zork's own. Next round's watch is still the canyon from the Clearing."
+    },
+    {
+      "id": "P3",
+      "category": "engine-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The parser misreports what it failed to read. A command with an extra adverb or a trailing phrase answers \"You can't see any such thing.\" even when the object is in plain sight. The player is told the object is absent when the real problem was a word. The same commands without the extra words work.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 1,
+          "quote": "kick the mailbox gently -> \"You can't see any such thing.\" (kick mailbox works next turn)"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 4,
+          "quote": "read leaflet aloud to the house -> \"You can't see any such thing.\""
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 13,
+          "quote": "go in through the window backwards -> \"You can't see any such thing.\""
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 95,
+          "quote": "push open the trap door -> \"You can't see any such thing.\" in the Cellar, under the trap door"
+        }
+      ],
+      "recommendation": "File it with Sprout. When an unknown word sits in a noun phrase, the answer should be that the word is not known (Zork's \"I don't know the word ...\") or the sentence is not recognised, never not_here. Log it in friction.md, and do not work round it in the world."
+    },
+    {
+      "id": "P4",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "Some things the descriptions name cannot be named back. The Atlantis Room's examine text names the carvings, but \"carvings\" is not among the chamber's nouns. The heaps' text names the marks of two knees and pebbles, but \"knee marks\" and \"pebble\" fail. The nest answers to the adjective \"birds\" but not to \"bird's\", which is how the room line spells it. The pile's instructions are on its back, but \"read the back\" fails. The heaps were the prose-reader's favourite mystery, and they stopped playing because of it.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 90,
+          "quote": "examine carvings -> \"You can't see any such thing.\""
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 188,
+          "quote": "examine knee marks -> \"You can't see any such thing.\""
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 189,
+          "quote": "take pebble -> \"You can't see any such thing.\""
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 141,
+          "quote": "throw egg at the bird's nest -> \"You can't see any such thing.\" Up a Tree, beside the nest"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 86,
+          "quote": "turn the pile over and read the back -> the instructions, then \"You can't see any such thing.\""
+        }
+      ],
+      "recommendation": "Add \"carvings\" to the Atlantis chamber (reservoir.sprout). Add \"marks\", \"knees\" and \"pebble\" to the heaps (east.sprout); their no_take refusal already covers taking a stone. Add \"bird's\" to the nest's adjectives. Add \"back\" and \"instructions\" to the pile. The brief requires that every thing a description names can be examined."
+    },
+    {
+      "id": "P5",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The river's rumbling cannot be heard. The second reach says \"In the distance a faint rumbling can be heard\". Typing `listen` there gets \"You hear nothing out of the ordinary.\", and `listen to the rumbling` gets Thing's default, \"The rumbling makes no sound.\"",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 108,
+          "quote": "listen -> \"You hear nothing out of the ordinary.\""
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 121,
+          "quote": "listen to the rumbling -> \"The rumbling makes no sound.\""
+        }
+      ],
+      "recommendation": "Give the Rumble kind (river.sprout) an `as target for listen` built from its own description, and have `listen` alone, on the reaches that name the sound, answer with it."
+    },
+    {
+      "id": "P6",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The reservoir's examine text lags the dam. With the gates open and the water still high (bolt state 1), the Dam's room line correctly says the level is still high. But `examine reservoir` still says the water \"comes right up to the top of the dam and goes over it\", which is the shut-and-full text.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 70,
+          "quote": "\"flat and dark and very full. It comes right up to the top of the dam and goes over it.\" two turns after the gates opened"
+        }
+      ],
+      "recommendation": "Give the reservoir thing a state-1 variant (gates open, water still high and running out through them) that follows `:tide` the way the room line does."
+    },
+    {
+      "id": "P7",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "`take all` reaches the wrong things. At the drained Reservoir it answered \"You already have that!\" for each of the eight things the player was carrying and never tried the trunk lying half-buried there. In the Kitchen it took the lunch and the garlic out of the open sack as well as the sack, which Zork's ALL does not.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 93,
+          "quote": "take all -> eight lines of \"You already have that!\", no trunk"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 19,
+          "quote": "take all -> sack, bottle, lunch, clove of garlic"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 10,
+          "quote": "take all -> sack, bottle, lunch, clove of garlic"
+        }
+      ],
+      "recommendation": "Check whether `all`'s scope is the world's take or Sprout's. If it is Sprout's, file it: for take, `all` should mean what is in the room, not what is held or nested, and should include something lying visible in an open scenery holder like the mud. Either way, add a test with the trunk on the lake bed."
+    },
+    {
+      "id": "P8",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The thief cost one run its whole second half. The newcomer left the trident in Atlantis (too heavy at the time) and dropped the pump in the Studio. Both were gone when they came back. With nothing said and no lead, they wandered for about fifty turns, then met the thief and were killed in two exchanges. The parser-breaker was robbed of the painting in the Studio. That robbery was announced, with Zork's own line, so robbery in the player's presence reads. Unseen robbery of a floor does not, though the intent means it to be found out only by the player's own conclusion.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 142,
+          "quote": "take the trident -> \"You can't see any such thing.\""
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 143,
+          "quote": "where did the trident go? -> \"That sentence isn't one I recognize.\""
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 163,
+          "quote": "take the pump -> \"You can't see any such thing.\" in the Studio where it was dropped"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 216,
+          "quote": "\"The thief, a pragmatist, dispatches you as a threat to his livelihood.\""
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 165,
+          "quote": "\"A seedy-looking individual with a large bag just wandered through the room...\""
+        }
+      ],
+      "recommendation": "Keep the unseen robbing; it is Zork's and the intent's. The lair, where stolen things go, is never pointed at except by the Temple's word. The cheapest faithful help is in Zork's voice where the gap is: a dropped-and-gone tool is a non-treasure STEAL-JUNK took, and its room could keep a trace in the room's own examine (scuffed dust, as the trap door has). Do not add new narration. Decide whether the pump, which the river depends on, should be among the junk he takes; Zork's rule allows it, and that is a choice worth logging."
+    },
+    {
+      "id": "P9",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "The chimney's rule reads as a puzzle, but this round nobody found any heavier way up. The prayer, the grating, the canyon and the Strange Passage all went unused, so every treasure cost its own loop: trap door, re-barred, crawlway, Gallery, Studio, chimney. That ate the goal-seeker's budget, about five loops between turns 118 and 205. The refusal states the rule but does not say what is over it, and the explorer spent four turns finding a forgotten tan label.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 106,
+          "quote": "\"The chimney has room for you, your lamp and one thing more, and not an inch besides.\""
+        },
+        {
+          "run": "explorer-1",
+          "turn": 112,
+          "quote": "drop label, after two refusals with only lamp, label and trunk"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 127,
+          "quote": "first of the per-treasure chimney loops"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 102,
+          "quote": "climb up the chimney; the newcomer worked out the ferrying plan from the line"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 166,
+          "quote": "up the chimney with the painting"
+        }
+      ],
+      "recommendation": "Keep the rule and the re-barring. In the same voice, consider having the refusal name what is too much (\"...and not an inch besides, which leaves out the tan label\"). The ways up the intent hopes for remain the director's watch items."
+    },
+    {
+      "id": "P10",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "Round 11's changes landed. WAIT in the boat now reads as drifting: every player who rode the river waited down it reach by reach, and nobody was confused. The death scatter line was quoted by four players as a promise that was kept, and all four recovered their valuables from the dark corners under the house. \"Your load is too heavy, the sword not least of it\" told three players what to drop. These lines drew the round's highest praise.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 211,
+          "quote": "wait -> \"The flow of the river carries you downstream.\""
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 76,
+          "quote": "three waits to the buoy"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 159,
+          "quote": "the trunk found at East of Chasm, as the death line said"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 171,
+          "quote": "take trunk at East of Chasm after the death"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 67,
+          "quote": "\"Your load is too heavy, the sword not least of it.\""
+        }
+      ],
+      "recommendation": "Keep all three as they are."
+    },
+    {
+      "id": "P11",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The casual player's 30 turns ended on a dead end. Their only fresh lead was the river from the White Cliffs Beach, reached on foot from the Damp Cave, where only \"Swimming isn't usually allowed\" waits. The Loud Room's \"Bar bar ...\" refused them the bar and gave no hint. Both are Zork's, and Zork's echo is meant to be found by trying. A 30-turn visitor does not get far enough to try.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 24,
+          "quote": "take bar -> \"Bar bar ...\""
+        },
+        {
+          "run": "casual-1",
+          "turn": 30,
+          "quote": "swim -> \"Swimming isn't usually allowed in the dungeon.\""
+        }
+      ],
+      "recommendation": "Keep both. Note that the casual's budget reaches only the troll and the Round Room's ring. Nothing to change."
+    },
+    {
+      "id": "P12",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "The carried watch items are still unmet, and this round also skipped the v5 country. Nobody gave the thief the egg, though the explorer read the clasp as pointing at him and wished to. Nobody typed DIAGNOSE, reached the Grating Room, met the grue, woke the ghost or broke the egg. The one attempt at the tree's drop, throwing the egg at the nest, failed to parse (P4). Nobody went to the Cyclops, the lair, the Egyptian Room or the canyon. Every long run spent itself on the dam and the river.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 26,
+          "quote": "examine egg -> the clasp's \"not entirely honest ones\"; the egg was already in the case"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 141,
+          "quote": "throw egg at the bird's nest -> unread"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 250,
+          "quote": "run ended at the Altar with torch, bell, book and candles, never reaching the coffin"
+        }
+      ],
+      "recommendation": "Coverage of the older country now needs goals aimed at it, which is the director's call. For example: open the egg without breaking it; get past the one-eyed guard; bring the gold coffin home."
+    }
+  ],
+  "legibility": {
+    "verdict": "legible",
+    "why": "Five of six players read the world as the intent describes it: Zork's house and dungeon, faithfully ported, now centred on the dam and the river, with the hauling of treasure home as the puzzle and someone tidy, or a thief, moving through it. The casual run got as far as the house, the barring and the troll, and guessed at the dam story from the river. Goals: the explorer reached theirs at turn 24 (egg in the case) with nothing in the way. The newcomer reached theirs (trunk, painting, bar and egg in the case, 85 points) despite the thief taking the pump and trident and then killing them. The goal-seeker had last confirmed 125 of 277 when the 250-turn cap hit. What stood in their way was the death at the Falls from the Shore (P1), which cost 10 points and the carried treasures, the one-treasure chimney loops (P9), and the cap. Models: the opus runs (explorer, goal-seeker, prose-reader, parser-breaker, newcomer) played 171 to 250 turns. They queued several commands at once and paid for it: six attacks on a vanished troll (explorer 35-40), a maze misroute (explorer 122-157), four bare-handed digs (prose-reader 127-130). They often typed Zork's answers straight away, such as \"echo\" (prose-reader 40, goal-seeker, explorer). The fable casual run played 30 single plain commands, did not know the echo, and stopped at a dead-end beach.",
+    "runs": [
+      {
+        "run": "casual-1",
+        "understood": "A white house over caves; someone bars the trap door behind you; kill the troll; a damaged cave system with a rushing-water sound and a river, and probably a dam story they never reached.",
+        "matches": "partly"
+      },
+      {
+        "run": "explorer-1",
+        "understood": "Zork rewritten, with Flood Control Dam #3 at its centre: drain the reservoir, raise the trunk, trident and pump, ride the boat toward the Falls. The chimney carries one treasure, a thief haunts the edges, and the egg's clasp points at him.",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A treasure hunt into the trophy case, centred on the dam and the Frigid River, strict about carrying, with the old map bent by cave-ins and a one-thing chimney.",
+        "matches": "yes"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "Caves under an old house; the trap door is barred, so the chimney is the way home, one treasure a trip. A quiet thief takes what you leave lying around, and the trophy case is the one safe place.",
+        "matches": "yes"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "Zork again, with the most new work on the dam and the river: working an old machine and riding out what you let loose, while a tidy caretaker puts your things back when you die.",
+        "matches": "yes"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "Zork's dam and river rewritten with wry care. It is about neglected things left waiting, under a quieter story of someone very tidy who sorts the rubble and carries your lamp home.",
+        "matches": "yes"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.09,
+      "after": 0.09
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.01,
+      "after": 0.02
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 32,
+      "after": 31
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 38,
+      "after": 32
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 409,
+      "after": 406
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 63,
+      "after": 60
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 69,
+      "after": 63
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 1332,
+      "after": 1316
+    }
+  ]
+}

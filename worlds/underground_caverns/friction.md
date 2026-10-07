@@ -2475,6 +2475,65 @@ unseen) are named where they would have helped.
 - **Spec:** Places (a place inside a place); the host's reach metrics.
 - **Status: open,** to raise with Sprout's reporter.
 
+## Found in round 12
+
+### 94, again: an adverb or a trailing phrase
+
+- **Round 12:** two players, four lines, each about a thing in plain
+  sight: `kick the mailbox gently`, `read leaflet aloud to the house`, `go
+  in through the window backwards`, `push open the trap door` (in the
+  Cellar, under it). Each answered "You can't see any such thing.", and
+  the same commands without the extra words work.
+- **Wrote instead:** nothing. The world cannot change how leftover words
+  are answered, and a phrase for every adverb is not a fix.
+- **Status: open,** an engine bug, with 68 and 94: an unknown word in a
+  noun phrase should be answered `unknown` ("I don't know the word ..."),
+  never `not_here`.
+
+### 36, again: `take all` with eight things in hand
+
+- **Round 12:** at the drained Reservoir, carrying eight things, `take
+  all` answered "You already have that!" eight times and never reached the
+  trunk lying half buried in front of the visitor. The range walk reaches
+  what the visitor holds first, and the cap on a set role is filled by
+  held things before anything on the floor; Zork's TAKE ALL leaves out
+  what is held, so the trunk would have been the first thing it took.
+- **Also found, the world's own:** v6 gave the water, the mud, the sand,
+  the rainbow, the bolt, the bubble and the leak `as target for take`
+  with a `permit` that refuses. Any thing with a part in `take` is in
+  `all`, and in a set role one refusal refuses the whole line, so with
+  fewer things in hand `take all` at the Reservoir answered only "It
+  squelches through your fingers..." and took nothing. Those refusals are
+  now `no_take` passages, as the rug's and the trophy case's are, so they
+  stay out of `all` and are still answered when named.
+- **Wrote instead:** nothing for the cap or the order. A visitor with
+  fewer than eight things in hand now gets the trunk (`take_all.json`).
+- **Spec:** Parsing › Sequences, again and all ("for a role only the actor
+  plays, as `take`'s target, every thing in reach..."); Limits.
+- **Status: open.** Asked of Sprout: for `take`, let `all` leave out what
+  the actor already holds, or walk the place before the actor, so the cap
+  is spent on what can be taken.
+
+### 108. `all` reaches into open boxes
+
+- **Wanted:** Zork's TAKE ALL in the Kitchen: "brown sack: Taken." and
+  "glass bottle: Taken.", the lunch and the garlic coming along inside the
+  sack; and in the Troll Room, with the open sack in hand, nothing taken
+  out of it.
+- **Found:** `all` is every thing in reach, and what is in an open box is
+  in reach, so `take all` took the sack and then the lunch and the garlic
+  out of it, and with the sack in hand took them out of that too. Two
+  players noticed.
+- **Wrote instead:** the adventurer's `take` leaves out of a line of
+  several anything inside a box that is also in the line, so the sack is
+  taken whole, and what is in a held sack stays there (`take_all.json`,
+  `npc_troll.json`). `drop all` still drops what is in a held open sack
+  one by one; nobody has met it.
+- **Spec:** Parsing › Sequences, again and all; Range.
+- **Status: open.** Asked of Sprout: `all` for a verb whose target is the
+  actor's only (`take`) might take only what lies loose in the place, as
+  Zork's does, rather than everything in reach.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -2782,3 +2841,15 @@ unseen) are named where they would have helped.
   treasure he takes from under the visitor's eyes is told with STEAL-JUNK's
   own line, "You suddenly notice that the painting vanished." The robbery
   and its odds are Zork's.
+- **Round 12: the last reach.** RIVER-5 has only EAST, and WEST there is
+  "You can't go that way."; here it is "The west bank is sheer rock straight
+  down into the water, and the current will not let you near it. The only
+  landing left is the one on the east shore." Launching from the Shore,
+  the boat says the current takes it at once. The one-move current is
+  Zork's and stays.
+- **Round 12: the rumbling** on the third, fourth and fifth reaches can be
+  listened to, by name or with LISTEN alone in the boat; Zork has no such
+  object.
+- **Round 12: taking scenery** that refuses (the water, the mud, the bolt)
+  is answered by the adventurer, as the rug is, and costs a move, as Zork's
+  TAKE of a non-takeable thing does.

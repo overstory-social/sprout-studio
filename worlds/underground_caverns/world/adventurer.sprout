@@ -76,6 +76,9 @@ kind Adventurer is sprout.Visitor {
   // how many of them are not already held.
   :carry 0 min 0 max 900
   :fresh 0 min 0 max 50
+  // Whether the thing `take all` has come to is inside another it is
+  // taking: Zork's ALL takes the sack, not the lunch out of it.
+  :nested false
   // Somewhere in the maze, where a thief's voice carries from room to room.
   :in_maze false
   // How brightly the sword should glow here, with nobody visiting: what the
@@ -115,7 +118,7 @@ kind Adventurer is sprout.Visitor {
   // Zork's UP-CHIMNEY-FUNCTION: up the Studio's chimney only with a light
   // and at most one thing besides.
   passage empty_handed { Going up empty-handed is a bad idea. }
-  passage overloaded { You can't get up there with what you're carrying. The chimney has room for you, your lamp and one thing more, and not an inch besides. }
+  passage overloaded { You can't get up there with what you're carrying, which is {for u: Thing in self}{if !$first}{if $last} and {else}, {/if}{/if}the {u.short}{/for}. The chimney has room for you, your lamp and one thing more, and not an inch besides. }
   // Zork's chimney wants the brass lamp itself: a flame in the open is no
   // light to climb a chimney by.
   passage lampless { You can't get up there with what you're carrying. The draught up the chimney would have any flame out before you were halfway, and nothing else you have would see you to the top; it is a climb for a lamp. }
@@ -726,7 +729,9 @@ kind Adventurer is sprout.Visitor {
       let several = target.count > 1
       each t of target {
         if (t.is(Thing)) {
-          if (!self.holds(t) && !t.get(:sealed)) {
+          self.set(:nested, false)
+          if (several) { each u of target { if (u != t && u.is(Box)) { if (u.holds(t)) { self.set(:nested, true) } } } }
+          if (!self.holds(t) && !t.get(:sealed) && !self.get(:nested)) {
             if (t.is(Axe)) { if (!t.get(:wielded)) { self.adjust(:fresh, 1) } }
             else { self.adjust(:fresh, 1) }
           }
@@ -734,7 +739,10 @@ kind Adventurer is sprout.Visitor {
       }
       each t of target {
         if (t.is(Thing)) {
-          if (several && self.holds(t) && self.get(:fresh) > 0) { }
+          self.set(:nested, false)
+          if (several) { each u of target { if (u != t && u.is(Box)) { if (u.holds(t)) { self.set(:nested, true) } } } }
+          if (several && self.get(:nested)) { }
+          else if (several && self.holds(t) && self.get(:fresh) > 0) { }
           // In the troll's fist, or behind a shut glass lid, a thing is seen
           // and in reach of a name but not of a hand; `all` and a run leave
           // it out, and taken alone, the move says why.
@@ -1105,6 +1113,13 @@ kind Adventurer is sprout.Visitor {
       if (here.is(Forest)) { say "You hear in the distance the chirping of a song bird." }
       else if (here.is(Maze) || here.is(DeadEnd)) { say "You hear nothing. The silence is the same silence as in every other part of the maze, which is no help at all." }
       else if (here.is(CanyonEdge)) { say "You can hear the sound of flowing water from below, a long way down, going somewhere in a hurry." }
+      // On the reaches that name the Falls' rumbling, it is what you hear.
+      else if (here.is(MagicBoat)) {
+        if (here.get(:at) == :river_3) { say "{underground_caverns.river_3.rumbling.sound}" }
+        else if (here.get(:at) == :river_4) { say "{underground_caverns.river_4.rumbling.sound}" }
+        else if (here.get(:at) == :river_5) { say "{underground_caverns.river_5.rumbling.sound}" }
+        else { say "You hear nothing out of the ordinary." }
+      }
       else { say "You hear nothing out of the ordinary." }
     }
   }

@@ -56,7 +56,7 @@ kind Pile is Portable {
   // The folded boat still hears the dam, so it knows the lake when it is
   // blown up.
   pass :tide (true)
-  grammar { name "pile of plastic"  nouns "plastic", "pile", "boat", "valve", "instructions", "words", "print"  adjectives "folded", "inflatable", "plastic", "small", "printed" }
+  grammar { name "pile of plastic"  nouns "pile", "boat", "valve", "instructions", "words", "print", "back"  adjectives "folded", "inflatable", "plastic", "small", "printed" }
   :size 20
   :burnable true
   passage short { pile of plastic }
@@ -140,13 +140,16 @@ kind MagicBoat is sprout.Place, Bag, Vessel {
 
   // The words a way taken in the boat says as it goes: rendered once the
   // turn is done, so a boat now on a shore has landed.
-  passage rowing {{if self.get(:afloat)}{else}The magic boat comes to a rest on the shore.{/if}}
+  passage rowing {{if self.get(:afloat)}{if self.get(:at) == :river_5}{self.last_reach}{/if}{else}The magic boat comes to a rest on the shore.{/if}}
   passage ashore { The magic boat comes to a rest on the shore, and you clamber out of it onto dry land. }
   passage label_line { Read the label for the boat's instructions. }
   passage beached_line { You can't go anywhere on foot while you are sitting in a magic boat. Get out of it first. }
   passage upstream_line { You cannot go upstream due to strong currents. }
   passage downstream_line { The current needs no help from you. It will carry you downstream in its own good time, and sooner than you might like. }
   passage afloat_line { You are on the {if self.get(:at) == :reservoir}reservoir{else if self.get(:at) == :in_stream}stream{else}river{/if}, or have you forgotten? }
+  passage falls_west { The west bank is sheer rock straight down into the water, and the current will not let you near it. The only landing left is the one on the east shore. }
+  // Put out from the Shore, the boat is on the last reach at once.
+  passage last_reach { The current takes the boat the moment it leaves the shore, and the shore is already slipping away behind you. The roar ahead is very close. }
   passage falls_line { Unfortunately, the magic boat doesn't provide protection from the rocks and boulders one meets at the bottom of waterfalls. Including this one. }
 
   without as target for close from Box
@@ -309,6 +312,7 @@ kind MagicBoat is sprout.Place, Bag, Vessel {
     // is told where it now is, as the room would describe itself.
     if (e == :drift || e == :launch || e == :land) {
       if (e == :land) { tell inside "The magic boat comes to a rest on the shore." }
+      if (e == :launch && self.get(:at) == :river_5) { tell inside last_reach }
       self.set(:seeing, self.get(:daylight))
       each l: Light in self { if (l.get(:lit)) { self.set(:seeing, true) } }
       each r: Adventurer in self { if (r.get(:light) > 0) { self.set(:seeing, true) } }
@@ -428,6 +432,7 @@ object boat is MagicBoat in dam_base.pile {
     exit west  "west"   -> boat say rowing when (self.get(:at) == :river_1 || self.get(:at) == :river_3 || (self.get(:at) == :reservoir && self.get(:full)))
     exit west  "west"   -> white_cliffs_south say ashore when (self.get(:at) == :river_4)
     exit west  "west"   refuse "Just in time you steer away from the rocks." when (self.get(:at) == :river_2)
+    exit west  "west"   refuse falls_west when (self.get(:at) == :river_5)
     exit west  "west"   refuse "The channel is too narrow." when (self.get(:at) == :in_stream)
     exit west  "west"   refuse beached_line when (!self.get(:afloat))
     exit west  "west"   refuse "You can't go that way."

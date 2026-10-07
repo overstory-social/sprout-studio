@@ -201,7 +201,7 @@ object atlantis_room is DarkRoom in underground_caverns {
     as target for climb_down { do { say "The stairs don't lead downward." } }
   }
   object chamber is Scenery {
-    grammar { name "ancient room"  nouns "room", "chamber", "barnacles", "weed", "pillars", "columns"  adjectives "ancient", "drowned" }
+    grammar { name "ancient room"  nouns "room", "chamber", "barnacles", "weed", "pillars", "columns", "carvings", "carving"  adjectives "ancient", "drowned" }
     passage short { ancient room }
     describe { text "The room is very old and has been under water for most of that time. Its pillars are crusted with something like barnacles, its floor slopes down to a little shore of silt at the south end, and weed hangs from the carvings in long, dry, disappointed strands." }
   }
@@ -229,7 +229,7 @@ kind Lake is Scenery {
   without as target for through from Thing
   as target for through { do { if (self.get(:low)) { say dry } else { say "You can't swim in this lake." } } }
   as target for leap_at { do { if (self.get(:low)) { say dry } else { say "You can't swim in this lake." } } }
-  as target for take { permit { refuse "The water slips through your fingers." } }
+  passage no_take { The water slips through your fingers. }
 }
 
 kind Stream is Scenery {
@@ -241,7 +241,7 @@ kind Stream is Scenery {
   without as target for through from Thing
   as target for through { do { say "You can't swim in the stream." } }
   as target for leap_at { do { say "You can't swim in the stream." } }
-  as target for take { permit { refuse "The water slips through your fingers." } }
+  passage no_take { The water slips through your fingers. }
 }
 
 // The mud on the lake bed: while the water is up, nothing in it can be seen
@@ -262,7 +262,7 @@ kind Mud is Scenery {
     if (value == 2 || value == 3) { each t: Trunk in self { move t to underground_caverns.reservoir } }
     else { each t: Trunk in underground_caverns.reservoir { move t to self } }
   }
-  as target for take { permit { refuse "It squelches through your fingers and goes back where it was." } }
+  passage no_take { It squelches through your fingers and goes back where it was. }
 }
 
 // The trunk of jewels on the lake bed (TRUNK-F's STUPID-CONTAINER).
