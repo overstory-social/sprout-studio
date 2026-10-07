@@ -94,6 +94,19 @@ slice:
   Rainbow (the sceptre waved makes it solid) and End of Rainbow (the pot
   of gold), and Canyon View, Rocky Ledge and Canyon Bottom up to the
   Forest. The coal mine, mirrors and Hades stay out of scope.
+- **v7, from round 13:** v6, plus the Coal Mine as Zork has it: the way
+  in from the Round Room's country (the Mirror Room's north and the
+  Atlantis side as Zork joins them), the Mine Entrance, Squeaky Room, Bat
+  Room (the vampire bat, who carries you off unless you hold the garlic;
+  the jade figurine), the Shaft Room and its basket on a chain, the
+  Smelly Room, the Gas Room (the sapphire bracelet, and the gas that
+  explodes at an open flame), the coal mine's maze of passages, the
+  Ladder Top and Bottom, the Dead End with the coal, the Timber Room, the
+  Drafty Room, the Lower Shaft, the Machine Room (the machine, its lid
+  and switch, and the screwdriver: coal in, diamond out) and the Slide
+  back down to the Cellar. Where the mine's only way in passes through
+  the Mirror Rooms, build the Mirror Rooms too. Hades and the endgame
+  stay out of scope.
 - Exits into territory not built yet are present, as in Zork, and turn the
   visitor back with an in-world line.
 
@@ -160,7 +173,7 @@ built as Zork has it, that is a finding, not a failure.
 
 ## Budget
 
-- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll, round 9 the thief and the Cyclops, round 11 the dam and the river), even rounds refine; see status.md
+- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll, round 9 the thief and the Cyclops, round 11 the dam and the river, round 13 the coal mine), even rounds refine; see status.md
 - Playtests per round: 6 (one per persona)
 - Turn cap per run: 150
 - Spend ceiling: the workflow's default, about 400k tokens a round
