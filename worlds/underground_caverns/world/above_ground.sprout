@@ -11,7 +11,7 @@ import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, T
 import {KitchenWindow, Outdoors} from 'house'
 import {Leaves, Ground, GratingAbove} from 'grating'
 import {grating_room} from 'maze'
-import {take, open, read, cross, :window_sync, :reveal, :travel, :grate_open, :grate_revealed} from 'verbs'
+import {take, open, read, cross, climb_over, duck_under, :window_sync, :reveal, :travel, :grate_open, :grate_revealed} from 'verbs'
 import {kitchen} from 'house'
 
 object west_of_house is Room in underground_caverns {
@@ -368,9 +368,14 @@ object clearing is Forest in underground_caverns {
     describe { text "A length of rope is strung across the path to the east, at about the height of a disappointed adventurer's waist. A sign hangs from it." }
     // Over it, under it, across it: all one to the rope, and to the
     // Frobozz Magic Scenery Company.
-    synonyms cross: "climb", "climb over", "step over", "jump over", "hop over", "duck under", "crawl under", "go under"
+    synonyms cross: "climb", "jump over"
+    passage past { Over the rope or under it, the Frobozz Magic Scenery Company is a step ahead of you: past it there is nothing yet to stand on but a view still in pieces, and the view is closed. You stay on this side, where the path at least has the decency to be finished. }
+    without as target for climb_over from Thing
+    as target for climb_over { do { say past } }
+    without as target for duck_under from Thing
+    as target for duck_under { do { say past } }
     without as target for cross from Thing
-    as target for cross { do { say "Over the rope or under it, the Frobozz Magic Scenery Company is a step ahead of you: past it there is nothing yet to stand on but a view still in pieces, and the view is closed. You stay on this side, where the path at least has the decency to be finished." } }
+    as target for cross { do { say past } }
   }
   object sign is Scenery {
     grammar { name "sign"  nouns "notice", "placard"  adjectives "hanging", "wooden" }

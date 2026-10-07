@@ -254,6 +254,12 @@ together are 95 of the 100, so the lamp and the sword stay below.
   as a drop). The sceptre in it shows its colors when waved; in the
   coffin in the trophy case it scores nothing, as Zork's OTVAL-FROB
   reckons, and on its own it scores 6.
+- **What a barrier names answers.** The Round Room's cave-in, cleared,
+  dug, shifted, taken a rock of or climbed, answers with the roof that is
+  still coming down; the dam's board, pulled, cut, climbed over or ducked
+  under, with the hum of the water behind it. `look down` and `look over`
+  show the drop at the Dome, the chasm and the canyon; climbing over the
+  Dome's railing is Zork's leap, and its end.
 - **The chasm takes things.** Put or thrown into the Chasm's chasm (or East
   of Chasm's), anything is gone for good, treasures included.
 - **The Temple knows a word,** TREASURE (or TEMPLE), for the way to the
@@ -767,7 +773,8 @@ V-TURN, V-UNTIE, V-RING).
   someone has begun to sort), east and northwest of the Deep Canyon (the
   Flood Control Dam's notices), northeast of the Chasm (a card), east of
   the Damp Cave (the river, without a boat), down the Altar's hole (Hades
-  sighs up it, and the coffin never fits).
+  sighs up it, and the coffin never fits). Since round 7 only the dam's is
+  a notice; see "After round 7".
 - **The language as it now stands:** the refusing and one-way exits are
   plain exits; the candles' clock is wakes put off by `cancel wakes`; the
   coffin is a `Box, Treasure` diamond. What it made hard is friction 70 to
@@ -811,3 +818,68 @@ V-TURN, V-UNTIE, V-RING).
   bug (it is Zork's own rule).
 - Carried, still unmet: the Grating Room and the key from below; the grue;
   the skeleton's ghost; the tree's drop; the egg broken.
+
+## After round 7
+
+- **The Round Room's cave-in stops promising a passage.** Four of six
+  players read the old refusal ("you decide not to be the one who does") as
+  the world taking a choice from them, and three tried to finish the job.
+  The heaps stay, sorted, and stay the caretaker's; the refusal now ends on
+  the world's own reason, a roof that is still coming down, and the
+  cave-ins answer CLEAR, DIG, TAKE (a rock), MOVE, PULL, KICK, BREAK and
+  CLIMB OVER with that same reason. The caretaker thread is otherwise
+  untouched until round 9: no line promises more than that someone has been
+  here.
+- **One Management notice in the east, not three.** The dam's board stays.
+  The reservoir, from the Deep Canyon and from the Chasm, is now water:
+  a flooded passage and a flooded path, prose of the place in Zork's voice,
+  each something to examine. The Chasm's cord and card are gone with the
+  notice that named them. The dam's board is one board, and answers being
+  pulled, cut, climbed over and ducked under.
+- **The edges can be looked over.** `look down` (and `look over the
+  edge`) at the Dome, the chasm's two edges, the Deep Canyon and Up a Tree;
+  `look over the railing`; `climb over the railing` (and `jump over` it) at
+  the Dome is Zork's leap, "I'm afraid that the leap you attempted has done
+  you in."
+- **The Dome leans once more toward the rope**, without naming it: the
+  railing's posts are "the sort of thing a careful person makes something
+  fast to before trusting the drop." The puzzle is Zork's and stays.
+- **The load says what weighs.** "Your load is too heavy, the sword not
+  least of it." names the heaviest of the heavy things in hand (friction
+  75); the axe's description owns its heft; `read` with a refused implicit
+  take says it tried: "(Taking the black book first) ...".
+- **A treasure scores the first time it is held in any way.** Put or
+  dropped straight out of a box in hand (the sceptre from the coffin into
+  the case), it pays what taking it pays, as Zork's PUT and DROP take it
+  first (`treasures.json`, `barriers.json`).
+- **Parser:** `take X from Y` and `take X out of Y` (with Zork's PRE-TAKE
+  refusal, unnamed, friction 78); `crawl <direction>`; `go through X`;
+  moving a thing aside, out of the way, or off; CUT (Zork's V-CUT, short of
+  slicing what burns; turned on the troll it is an attack); CLEAR, CLIMB
+  OVER and DUCK UNDER for every thing, in Zork's voice. `go <direction>
+  through X` could not be written (79).
+- **Kept, by choice:** the echo (five of six got the bar, four by trying);
+  the rope puzzle; Zork's weights and the limit of 100; the trophy case's
+  "Done."; the four alike Forest rooms; the grating pointer.
+- **For the director:** the slice no longer fits 150 turns. All four
+  150-turn runs ended mid-plan, and the most efficient run reached 126 of
+  145 with the maze and the coins untouched. Nobody has reached the Grating
+  Room in 42 runs. Raising this world's turn cap (250 to 300) is the
+  brief's budget, and so the director's call; until then the grating from
+  below and the coins are known only from `grating.json` and `coins.json`.
+- **To Sprout:** 68 and 69 again (round 7's misreadings), 70 (the echo of
+  the typed word), 78 (a refusal in `each` faults), 79 (an intent's unused
+  slot), 80 (identity out of range).
+
+### What round 8 should watch
+
+- Whether anyone now goes back for the rope after seeing the Dome, and how
+  long it takes; whether `look down` at the Dome is tried.
+- Whether the cave-in still reads as a door to open, or as the caretaker's
+  tidiness at a dead end.
+- Whether the reservoir's water reads as a place rather than a fence, and
+  the dam's one notice still as a joke.
+- Whether the load's named weight changes what players drop.
+- Carried, still unmet: the Grating Room and the key from below; the grue;
+  the skeleton's ghost; the tree's drop; the egg broken; the prayer found
+  by a player who does not know Zork.

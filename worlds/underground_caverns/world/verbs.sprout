@@ -2,16 +2,21 @@
 // the same name (take, drop, put, open, close, look_in, unlock), this one
 // replaces it, so that the words and the refusals are Zork's own.
 import {Box} from 'box'
+import * as sprout from 'sprout'
 import {Portable} from 'thing'
 
 // `take` and `drop` take several things at once, as Zork's do: `take lamp
 // and sword`, `take all`. Each is answered with its name before it, as
 // Zork answers more than one.
+// Zork's TAKE ... FROM and TAKE ... OUT OF: the box says only where to
+// look, and the take is the plain one.
 verb take {
   role target many
+  role source: Box
   "take [target]"  "get [target]"  "pick up [target]"  "pick [target] up"
-  "grab [target]"  "carry [target]"  "hold [target]"
-  synonyms "steal", "seize"
+  "take [target] from [source]"  "take [target] out of [source]"  "get [target] from [source]"
+  "get [target] out of [source]"
+  synonyms "steal", "seize", "grab", "carry", "hold", "remove"
 }
 
 // A trailing `here` is the standard library's (sprout#473), and this
@@ -86,6 +91,12 @@ verb shift {
   role target
   "move [target]"  "push [target]"  "pull [target]"  "slide [target]"
   "roll up [target]"  "shove [target]"  "press [target]"
+}
+// Moving a thing aside, or out of the way, or off: SHIFT all the same.
+intent shift_aside {
+  "move [x] aside"  "push [x] aside"  "pull [x] aside"  "move [x] out of the way"
+  "push [x] out of the way"  "pull [x] out of the way"  "pull [x] off"  "pull off [x]"
+  do shift (target: x)
 }
 
 verb raise { role target  "raise [target]"  "lift [target]"  "lift up [target]" }
@@ -221,6 +232,40 @@ verb greet { role target  "hello [target]"  "hi [target]"  "greet [target]"  "sa
 // which only the rope adds to it.
 verb cross { role target  "cross [target]"  "ford [target]" }
 verb pray { "pray" }
+
+// Not Zork's words, but the ones players reach for at a barrier: over it,
+// under it, clearing it away. Each thing answers in Zork's voice.
+verb climb_over {
+  role target
+  "climb over [target]"  "step over [target]"  "hop over [target]"  "vault over [target]"
+  "vault [target]"  "clamber over [target]"
+}
+verb duck_under {
+  role target
+  "duck under [target]"  "crawl under [target]"  "go under [target]"  "slip under [target]"
+  "squeeze under [target]"
+}
+verb clear {
+  role target
+  "clear [target]"  "clear away [target]"  "clear [target] away"  "clear out [target]"
+  "shift [target] aside"
+}
+// Zork's CUT. Turned on someone, Zork's CUT is an attack (`cut_with`).
+verb cut {
+  role target
+  role tool carried
+  "cut [target]"  "slice [target]"  "chop [target]"
+}
+intent cut_with {
+  "cut [x] with [y]"  "slice [x] with [y]"  "chop [x] with [y]"  "hack at [x] with [y]"
+  do attack (target: x, weapon: y) when (x.is(sprout.Actor)) then cut (target: x, tool: y) when (!x.is(sprout.Actor))
+}
+// `look down`, where there is somewhere to look down to.
+verb look_down { "look down"  "look below"  "peer down"  "look over the edge"  "look over the side" }
+intent look_over {
+  "look over [x]"  "peer over [x]"  "lean over [x]"  "look down over [x]"
+  do look_in (target: x)
+}
 verb swim { "swim"  "bathe"  "wade" }
 
 // Zork's ECHO: a word the Loud Room listens for. Anywhere else, the echo
@@ -277,7 +322,7 @@ verb curse { "damn"  "curse"  "shit"  "fuck" }
 // start of a name, and a thing in plain sight is answered `not_here`
 // (friction 68).
 intent squeeze_through {
-  "squeeze through [x]"  "squeeze in through [x]"  "squeeze into [x]"
+  "squeeze through [x]"  "squeeze in through [x]"  "squeeze into [x]"  "go through [x]"
   do through (target: x)
 }
 intent climb_into {

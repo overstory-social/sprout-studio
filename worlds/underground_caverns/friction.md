@@ -1589,6 +1589,99 @@ contributing once, as the spec says. No NPC is new in v4.
 - **Spec:** The world model › Destroying; Events › Containers route.
 - **Status: open,** as 26.
 
+## Found in round 7
+
+### 68, again: trailing words that name nothing read as a missing thing
+
+- **Round 7:** three players met it a dozen times, and read it as the world
+  saying a thing was absent: `open the mailbox and see what's inside`
+  (the first command opens the mailbox, the rest is "You can't see any such
+  thing."), `pull the rug out of the way` (the newcomer guessed the parser
+  was looking for a thing called "way"), `tell the troll I won't hurt him
+  if he lets me pass`, `pull the board off`, `go south through the
+  crawlway`, `go west into the hole`, `crawl south`.
+- **Wrote instead:** a `shift_aside` intent (`move/push/pull [x] aside`,
+  `... out of the way`, `pull [x] off`); `crawl` as a world synonym of
+  `go`; `go through [x]` beside `squeeze through`. Not written: `go
+  <direction> through <thing>`, which wants a slot that names the thing
+  gone through and gives it no role (79).
+- **Asked of Sprout, again:** where a phrase matches only by swallowing
+  words that name nothing in reach, answer `unknown`, or name the word that
+  could not be placed, rather than `not_here`.
+
+### 69, again: `drop everything except the lantern and the painting`
+
+- **Round 7:** the newcomer, at the chimney, typed a list after `except`
+  and was told "You can't see any such thing." As 69.
+
+### 70, again: the echo is of the word the parser settled on
+
+- **Round 7:** three players noticed that `shout` comes back as "Yell yell
+  ..." and `examine stairway` as "Stairs stairs ...": the permit can say
+  only the verb's own name or the thing's short name, never the word typed.
+  Zork's V-ECHO says the line's last word as typed. One player named it as
+  the one place the room did not seem to hear them.
+- **Asked of Sprout:** a handler's access to the raw last word of the
+  command (or the whole line), read-only, for exactly this; with it the
+  twenty-five permits would also go.
+
+### 75, again: naming the heaviest thing carried
+
+- **Wanted:** "Your load is too heavy" to say which of what is carried
+  weighs the most, so a player knows what to put down.
+- **Found:** a passage does no arithmetic and cannot pick a largest; a
+  handler's own writes hold still within its body, so a loop cannot keep a
+  running maximum to read back.
+- **Wrote instead:** a passage that names the first of the heavy kinds in
+  hand, in order of Zork's weights: the coffin (55), the sword (30), the
+  axe and the leaves (25), the torch (20); otherwise the plain line.
+- **Spec:** Prose › Slots; Events (a body's own state holds still).
+- **Status: open,** as 75.
+
+### 78. A refusal inside `each` faults on the loop's own name
+
+- **Wanted:** Zork's PRE-TAKE for TAKE ... FROM: "The sword isn't in the
+  gold coffin.", named, from the visitor's `permit` on `take`, whose
+  target is a set role walked with `each t of target`.
+- **Found:** `each t of target { if (...) { refuse "The {t.short} isn't
+  in the {source.short}." } }` compiles, and at run time faults: "`t`,
+  which nothing binds, reached the evaluator, which the checker refuses."
+  The refusal's words are rendered after the loop has let go of its name.
+  The checker and the runtime disagree, so it is Sprout's bug.
+- **Wrote instead:** "That isn't in the gold coffin.", which names nothing
+  bound by the loop.
+- **Spec:** Verbs › The two passes; Prose › Slots; Walking contents.
+- **Status: open,** for an issue in Sprout.
+
+### 79. An intent's slot must be given a role, even one nothing needs
+
+- **Wanted:** `go south through the crawlway`, `go west into the hole`:
+  an intent whose phrases name the way (`[d]`) and the thing gone through
+  (`[x]`), and whose one step is `go (exit: d)`.
+- **Found:** every slot a phrase names must be given to a role in some
+  step ("names `x`, and no step gives it a role"). `go`'s one role is the
+  exit, so there is nowhere to put the thing. For `take X from Y` the same
+  rule was met by giving `take` a role of its own, `source`, that only its
+  new phrases fill; the engine's `go` cannot be given one.
+- **Wrote instead:** nothing for `go <direction> through <thing>`; the
+  plain direction works, and `go through <thing>` is THROUGH.
+- **Spec:** Parsing › Intents; Exits.
+- **Status: open.**
+
+### 80. Comparing `here` to a room out of range faults
+
+- **Wanted:** `look down`, answered by where the visitor stands: `if (here
+  == chasm_room || here == east_of_chasm)`.
+- **Found:** compiled, and at run time, anywhere but the Chasm, faulted
+  with NameOutOfRange: reading `chasm_room` to compare it is reading it,
+  and from the Dome it is out of range. Identity against an out-of-range
+  object might have been simply false.
+- **Wrote instead:** marker kinds, `ChasmEdge` and `CanyonEdge`, on the
+  rooms, and `here.is(...)`, as `Perilous` already is.
+- **Spec:** Range; Object identity.
+- **Status: open,** a question for Sprout rather than a bug: the spec's
+  range rule is what faulted.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the

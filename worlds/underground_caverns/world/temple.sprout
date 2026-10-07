@@ -15,7 +15,7 @@ import {Treasure, Readable, Water} from 'items'
 import {Room, DarkRoom} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, read, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, :travel, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go} from 'verbs'
+import {open, close, look_in, read, climb_over, leap_at, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, :travel, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go} from 'verbs'
 import {engravings_cave} from 'east'
 
 // The rooms the rope and the coffin and the prayer care about.
@@ -51,7 +51,8 @@ object dome_room is DomeRoom in underground_caverns {
   }
 
   object railing is Railing {
-    passage view { The railing is of dark, polished wood, waist-high, running all the way round the edge of the dome. Beyond it is a precipitous drop to the floor of a room below, a good twenty feet down. The railing is very solid. It is the most reassuring thing you have seen in some time. }
+    passage view { The railing is of dark, polished wood, waist-high, running all the way round the edge of the dome. Beyond it is a precipitous drop to the floor of a room below, a good twenty feet down. The railing is very solid, its posts as thick as a wrist and sunk deep in the stone, the sort of thing a careful person makes something fast to before trusting the drop. It is the most reassuring thing you have seen in some time. }
+    passage below { You lean over the railing. The dome falls away beneath you to the floor of a room below, a good twenty feet down: too far to drop, and nothing between you and it but air.{if dome_room.get(:roped)} The rope hangs into it from the rail and ends some ten feet short of the floor.{/if} }
   }
   object dome is Dome {
     grammar { nouns "drop", "room" }
@@ -293,7 +294,29 @@ kind Railing is Scenery {
   grammar { name "wooden railing"  nouns "railing", "rail", "banister"  adjectives "wooden" }
   passage short { wooden railing }
   passage view default { It is a wooden railing. }
+  passage below default { The railing is twenty feet over your head, and so is everything beyond it. }
   describe { text view }
+  without as target for look_in from Thing
+  as target for look_in { do { say below } }
+  // Over the Dome's rail is Zork's leap, and its end (DOME-ROOM-FCN).
+  without as target for climb_over from Thing
+  as target for climb_over {
+    do {
+      if (here.is(DomeRoom)) {
+        say "I'm afraid that the leap you attempted has done you in."
+        if (actor.is(Adventurer)) { send actor :die }
+      } else { say "The railing is twenty feet over your head." }
+    }
+  }
+  without as target for leap_at from Thing
+  as target for leap_at {
+    do {
+      if (here.is(DomeRoom)) {
+        say "I'm afraid that the leap you attempted has done you in."
+        if (actor.is(Adventurer)) { send actor :die }
+      } else { say "The railing is twenty feet over your head." }
+    }
+  }
 }
 
 // The dome, from its rim or from the floor beneath it.

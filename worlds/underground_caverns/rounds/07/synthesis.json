@@ -1,0 +1,638 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "The Round Room's south refusal ('Whoever it was has not finished, and you decide not to be the one who does.') sets up a puzzle and then shuts it in the player's own voice. Five runs met it. Four quoted it as the moment the world took a decision away from them, and three tried to act on it. 'clear rubble' is not read at all ('That sentence isn't one I recognize.'), 'take a rock' says no such thing is here, and 'move rubble' says 'You can't move the cave-ins.' For the casual run the sorter was what the whole world was about. Intent says no caretaker line should promise more than that someone has been here, and this one promises a passage.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 27,
+          "quote": "It stung. The world built up the one new mystery and then closed the door on it in my own voice."
+        },
+        {
+          "run": "casual-1",
+          "turn": 29,
+          "quote": "clear rubble -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 112,
+          "quote": "I'd rather be told why I can't than be told I've decided not to."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 113,
+          "quote": "clear rubble -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 79,
+          "quote": "move rubble -> You can't move the cave-ins."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 132,
+          "quote": "clear the rubble -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 133,
+          "quote": "take a rock -> You can't see any such thing."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 90
+        }
+      ],
+      "recommendation": "Keep the sorted heaps, which every player quoted with pleasure, but end the refusal on the world's reason and not on the player's choice: the roof is still coming down, or the heaps are someone else's work and in the way. Have the cave-ins answer CLEAR, DIG, TAKE ROCK and MOVE with that same reason in Zork's voice. Then nothing reads as a half-finished passage the player is supposed to finish."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "The Loud Room's echo works as a puzzle. Five of six runs got the bar. One knew the word at once (goal-seeker), and the other four found it by trying, in three to twelve turns. Nobody read 'Bar bar ...' as a fault for long. Only the casual run gave up, after a single try.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 27,
+          "quote": "echo -> The acoustics of the room change subtly."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 92
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 52,
+          "quote": "The reward for the one guess that felt like my own idea."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 85
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 111
+        },
+        {
+          "run": "casual-1",
+          "turn": 25,
+          "quote": "Two words that cost me a treasure and told me nothing about why."
+        }
+      ],
+      "recommendation": "Keep it as built. Next round, watch whether players who don't know Zork spend more than about ten turns on it."
+    },
+    {
+      "id": "P3",
+      "category": "language-gap",
+      "severity": "low",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "The echo repeats the word the parser settled on, not the word the player typed. 'shout' comes back as 'Yell yell ...' and 'examine stairway' as 'Stairs stairs ...'. Zork's LOUD-ROOM-FCN echoes the last word of the raw input. The parser-breaker noticed.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 108,
+          "quote": "it echoed the word it understood, not the one I typed"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 50,
+          "quote": "shout -> Yell yell ..."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 84,
+          "quote": "examine stairway -> Stairs stairs ..."
+        }
+      ],
+      "recommendation": "Add this to friction 70. If Sprout gives a handler no access to the typed text, raise an issue in Sprout asking for the raw last word of the command."
+    },
+    {
+      "id": "P4",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The sceptre's 4 points for being taken are never scored when it travels to the case inside the coffin. The Adventurer's `on :entered` only scores a treasure that enters the visitor directly. The sceptre went from the coffin, held, straight into the case, so the goal-seeker scored 126 where 130 was possible without the coins. In Zork, PUT's HAVE flag would have taken it first and scored it.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 111,
+          "quote": "put coffin, sceptre and candles in case -> Done. Done. Done."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 112,
+          "quote": "Your score is 126 (total of 350 points), in 102 moves."
+        }
+      ],
+      "recommendation": "Score a treasure's take value the first time the visitor comes to hold it in any way: directly, or moved from a container they carry, or put somewhere from one. Alternatively, make PUT take its item first, as Zork's HAVE does. Add the coffin-to-case path to `coffin.json` and `treasures.json`."
+    },
+    {
+      "id": "P5",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "`take X from Y` is not one of the world's `take` patterns, so 'take sceptre from coffin', with the open coffin in hand, answered 'You can't see any such thing.' Zork reads TAKE ... FROM and TAKE ... OUT OF.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 110,
+          "quote": "'Take sceptre from coffin' said it couldn't see the sceptre, but then 'put coffin, sceptre and candles in case' put all three in."
+        }
+      ],
+      "recommendation": "Add \"take [target] from [container]\", \"take [target] out of [container]\" and \"get [target] out of [container]\" to `verbs.sprout`'s take."
+    },
+    {
+      "id": "P6",
+      "category": "engine-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "When a command has words the parser can't place, the answer is 'You can't see any such thing.' and not 'That sentence isn't one I recognize.' Players read it as an object being absent. This happened with trailing clauses ('and see what's inside'), particles ('out of the way', 'off'), speech ('tell the troll I won't...'), 'except' lists, and 'from'. The newcomer guessed the parser was looking for a thing called 'way'.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 1,
+          "quote": "open the mailbox and see what's inside -> Opening the small mailbox reveals a leaflet. / You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 14,
+          "quote": "pull the rug out of the way -> You can't see any such thing. I think it tried to find a 'way'."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 21,
+          "quote": "tell the troll I won't hurt him if he lets me pass -> You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 89,
+          "quote": "drop everything except the lantern and the painting -> You can't see any such thing."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 110
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 121,
+          "quote": "pull the board off -> You can't see any such thing."
+        }
+      ],
+      "recommendation": "Raise an issue in Sprout: when a noun slot only matches because it swallowed words that name nothing, Sprout should say it didn't understand, or name the word it couldn't use, and not report a missing object. Note the 'except' list under friction 69."
+    },
+    {
+      "id": "P7",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "Every long run met three Management notices in a row: the dam and the reservoir from the Deep Canyon, and Reservoir South from the Chasm, often right after the river ledge. Players enjoyed the first and tired of the run of them. They read the east as 'a ring of boards and cords' and 'the familiar game with walls added'.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 101,
+          "quote": "Three fences in a row from The Management; funny once, wearing by the third."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 100,
+          "quote": "Funny once; by the reservoir cord at turn 120 it was the fourth fence."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 34,
+          "quote": "Funny, but a whole branch was gone."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 32
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 119
+        }
+      ],
+      "recommendation": "Keep one Management notice in the east (the dam's is the best). Turn the reservoir and Reservoir South edges back into Zork-voice prose of the place itself: water, a flooded floor, a smell, as the river ledge already does well. Signs should stay rare enough to stay funny."
+    },
+    {
+      "id": "P8",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The barriers a refusal names can't be handled. The Chasm's cord and card are not objects. The Deep Canyon's board reads, but 'pull the board off', 'climb over the board' and 'cut the board' are unread or answered 'can't see'. 'cut the cord' and 'duck under the cord' are unread, though the Clearing's canyon rope answers 'duck under'. Round 4's rule was that what a refusal names can be named.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 120,
+          "quote": "read the board -> (both notices read)"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 122,
+          "quote": "climb over the board -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 127,
+          "quote": "cut the cord with the sword -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 128,
+          "quote": "duck under the cord -> That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "Make the Chasm's cord and card things to examine and read, and give the cord and the boards Zork-voice answers to pull, cut, climb over and duck under, the way the Clearing's canyon rope answers."
+    },
+    {
+      "id": "P9",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "At the Dome, 'look down', 'look over the railing' and 'climb over the railing' are not read, though the room is all about the drop. Only 'examine railing' tells players what is below. 'look down' also failed at East of Chasm.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 67,
+          "quote": "look over the railing -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 68,
+          "quote": "look down -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 111,
+          "quote": "'look down' at the dome rail ... Everything else about the railing had invited exactly that."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 140
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 142,
+          "quote": "climb over the railing -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 47,
+          "quote": "look down (East of Chasm) -> That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "Read `look down` and `look over [railing]` at the Dome as the railing's view, and `look down` at the chasm edges as the chasm's view. Read `climb over railing` as Zork's leap, with its death."
+    },
+    {
+      "id": "P10",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "The Dome stopped every run that came without the rope. That was three of the five who reached it: newcomer, prose-reader and parser-breaker. The two who went down (explorer and goal-seeker) had taken the rope from the Attic early, by habit, before they knew what it was for. The parser-breaker reached the Attic but only in the dark. This is Zork's puzzle, faithfully built, and it decides who sees the torch, the temple and the prayer.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 70,
+          "quote": "climb down -> You cannot go down without fracturing many bones."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 112
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 141,
+          "quote": "the dome is a dead end without something I never found"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 21,
+          "quote": "go up the dark staircase (Attic, no light)"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 121,
+          "quote": "tie rope to railing -> The rope drops over the side and comes within ten feet of the floor."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 41
+        }
+      ],
+      "recommendation": "Keep the puzzle. If the author wants a nudge in Zork's voice, the railing's description could lean once more toward something being tied to it, without naming rope. Watch next round whether anyone fetches the rope after seeing the Dome."
+    },
+    {
+      "id": "P11",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "Zork's 100-point load was the main friction in four runs. 'Your load is too heavy.' came with no sense of how close they were, and the troll's axe, a non-treasure, used up three players' capacity: explorer, newcomer and prose-reader. The prose-reader lost the turns it needed to bank the painting. 'read book' with the book on the altar answered only 'Your load is too heavy.' and said nothing about the implicit take behind it.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 83,
+          "quote": "take axe -> Your load is too heavy."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 146,
+          "quote": "take coffin -> Your load is too heavy."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 52,
+          "quote": "Black book: Your load is too heavy. / Pair of candles: Your load is too heavy."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 53,
+          "quote": "read book -> Your load is too heavy."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 53
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 135,
+          "quote": "'Your load is too heavy' for the painting, after I'd been encouraged to carry the troll's axe."
+        }
+      ],
+      "recommendation": "Keep Zork's weights and the limit. Use the prose freedom the brief allows: have the refusal name the heaviest thing carried, in Zork's dry voice. Give the axe's examine a line about its heft. Have 'read' with a failed implicit take say what it tried (\"(Taking the book first.) Your load is too heavy.\")."
+    },
+    {
+      "id": "P12",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "With v4 the slice no longer fits 150 turns. All four 150-turn runs ended at the cap in the middle of a plan. The explorer was at the Altar about to pray. The prose-reader was in the Studio, two moves from casing the painting. The parser-breaker had treasure but no way up yet. The goal-seeker was heading for the maze. The goal-seeker played the most efficient route possible and still reached only 126 of the 145 ceiling, with the maze and the coins untouched. Nobody reached the Grating Room, Maze 5 or the skeleton.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 150,
+          "quote": "Turn cap hit mid-batch, just as I was about to try praying at the altar."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 150,
+          "quote": "Turn cap landed between dropping the sword and climbing the chimney, two moves from the case."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 150
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 150,
+          "quote": "I ran out of turns in the kitchen, on my way to the maze"
+        }
+      ],
+      "recommendation": "For the director: raise this world's turn cap (250 to 300) before round 9 widens it again, or give goals that each aim at one region. Until then the maze, the grating from below and the coins can only be tested by script."
+    },
+    {
+      "id": "P13",
+      "category": "language-gap",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "Movement phrased with a preposition or a manner verb is not read: 'go south through the crawlway', 'go west into the hole', 'go through the crack', 'crawl south', 'keep going around the house'. The plain direction always worked on the next try.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 4
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 33,
+          "quote": "go through the crack -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 76,
+          "quote": "go west into the hole -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 82,
+          "quote": "go south through the crawlway -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 44,
+          "quote": "crawl south -> That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "Add these to friction 68 (general prepositional phrases). Locally, read 'crawl <dir>' as go, and 'go <dir> through/into <thing>' wherever the thing names that exit."
+    },
+    {
+      "id": "P14",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "All six players took up the caretaker thread as written and named it: the barred trap door, the lamp put back (and left lit), the swept leaves, the cleared crawlway, the sorted heaps, the Management. Four wished they could meet or follow whoever it is. Intent welcomes this reading and holds the payoff for round 9. The one line that over-promises is P1's.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 74,
+          "quote": "Turned a treasure hunt into being trapped. Who is down here with me?"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 58,
+          "quote": "The lamp was already on when I picked it back up. The tidy someone left it burning."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 85
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 113
+        },
+        {
+          "run": "casual-1",
+          "turn": 23
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 90
+        }
+      ],
+      "recommendation": "Keep it, and don't extend it before round 9. Fix P1 so the rubble stops reading as a door the player is meant to open."
+    },
+    {
+      "id": "P15",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The grating pointer added after round 6 works from above. Both players who uncovered the grating read the lock as reachable only from below, and the goal-seeker went off to the maze for the key. Neither reached the Grating Room, but that was the turn cap, not confusion.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 52,
+          "quote": "Clear enough that the way in is from below, but no idea yet where."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 142,
+          "quote": "open grating -> The grating is locked."
+        }
+      ],
+      "recommendation": "Keep as built. The Grating Room is still unvisited in 42 runs; see P12."
+    },
+    {
+      "id": "P16",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "Two outliers, both Zork as written. The trophy case's bare 'Done.' felt flat after the egg hunt. The four alike Forest rooms cost the explorer about thirty turns before it found the climbable tree on the Forest Path.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 70,
+          "quote": "Putting the egg in the trophy case just says 'Done.'"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 45,
+          "quote": "climb tree -> There is no tree here suitable for climbing."
+        }
+      ],
+      "recommendation": "Keep both, as round 5 decided for 'Done.'. The case's listing on examine already does the celebrating, and the explorer noticed it."
+    }
+  ],
+  "legibility": {
+    "verdict": "legible",
+    "why": "Every player read the world as intent describes it: a trimmed, faithful Zork. You loot the house and the caves, take treasures to the trophy case, and the edges are fenced off. Over that sits the caretaker reading intent welcomes. Only the casual run, which saw just the house, the troll and the Round Room in 30 turns, took the sorted rubble as the world's central mystery. That comes from P1's line over-promising.\n\nGoals:\n- Explorer (egg into the trophy case): reached it at turn 70, then spent the rest underground and hit the cap at the Altar.\n- Goal-seeker (highest score): no ending; 126 of 350, against this slice's ceiling of 145. The maze's coins were never reached, 4 points were lost to the sceptre bug (P4), and the turn cap and weight juggling stood in the way.\n- Newcomer (find treasure and keep it safe): reached it. The painting and the bar went into the case, which it closed, and it stopped at 115 turns. Parser misreadings (P6, P13) and the Loud Room cost turns.\n\nHow the models played: the opus goal-seeker played from memory and to the score. It took the rope at turn 15, said 'echo' on entering the Loud Room, prayed at the Altar on its first visit, and chained commands. It seldom examined anything, and so met the least prose and the fewest refusals. The fable runs (explorer, casual, prose-reader, parser-breaker, newcomer) read and examined much more. They tried natural sentences (newcomer), pushed against the edges and the caretaker's traces (parser-breaker), solved the echo by trying, and wandered more (explorer's forest, prose-reader's walk back). Of the two runs that went down the rope, only the explorer was a fable run, and only the goal-seeker found the prayer.",
+    "runs": [
+      {
+        "run": "explorer-1",
+        "understood": "A trimmed Zork: a treasure hunt for the trophy case, the map fenced off on purpose by 'The Management', and an absent someone underground (the barred trap door, the sorted rubble, the axe scratches).",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A cut-down Great Underground Empire: loot the house and caves for the trophy case, with every far edge roped off, and prayer and the chimney as the ways back up.",
+        "matches": "yes"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "An empty house with a trophy case that expects to be filled, and caves of treasure under it, tended by an unseen somebody who bars the door and closes passages with Management signs.",
+        "matches": "yes"
+      },
+      {
+        "run": "casual-1",
+        "understood": "Zork's house, cellar and troll, but really about the absent somebody slowly clearing the Round Room's rubble, and what lies behind it.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "A trimmed, rewritten slice of Zork, with a tidy unseen caretaker under the treasure hunt who bars doors, puts the lamp back, sorts rubble and clears crawlways.",
+        "matches": "yes"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A treasure hunt through a ring of caves under a white house, really about the unseen inhabitant who bars, tidies, sorts and signs as 'The Management'. You are a trespasser being tolerated.",
+        "matches": "yes"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.12,
+      "after": 0.13
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.01,
+      "after": 0.03
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 19,
+      "after": 6
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 15,
+      "after": 21
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 118,
+      "after": 168
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 52,
+      "after": 50
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 17,
+      "after": 24
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 424,
+      "after": 631
+    }
+  ]
+}

@@ -10,10 +10,10 @@
 import {Thing, Portable, Scenery} from 'thing'
 import {Box} from 'box'
 import {Treasure} from 'items'
-import {DarkRoom, Perilous} from 'room'
+import {DarkRoom, Perilous, ChasmEdge, CanyonEdge} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, climb_up, climb_down, cross, leap_at, through, read, listen, smell, :travel, :troll_gone} from 'verbs'
+import {open, close, look_in, climb_up, climb_down, cross, leap_at, through, read, listen, smell, take, shift, raise, dig, mung, clear, climb_over, duck_under, cut, kick, :travel, :troll_gone} from 'verbs'
 import {troll_room} from 'cellar'
 import {dome_room} from 'temple'
 
@@ -59,18 +59,34 @@ object round_room is DarkRoom in underground_caverns {
   }
   // The way on to the mirrors, which is not built.
   passage narrow_way {
-    The passage south narrows almost at once and then stops, choked by one of the cave-ins. Somebody has made a start on clearing it: the rubble is sorted into neat heaps by size, smallest nearest. Whoever it was has not finished, and you decide not to be the one who does.
+    The passage south narrows almost at once and then stops, choked by one of the cave-ins. Somebody has sorted the near end of the rubble into neat heaps by size, smallest nearest. Behind the heaps the roof has come down all the way to the floor, and it has not finished coming down: grit is still trickling from it as you watch. There is no way through.
   }
   object passages is Scenery {
     grammar { name "passages"  nouns "passage", "passageways", "openings", "directions"  adjectives "all", "radiating" }
     passage short { passages }
-    describe { text "Passages leave the room in every direction, like spokes from a hub. Most of them do not get far. The ones that do go east, west, north and southeast; the one to the south looks as though it means to, and is being helped." }
+    describe { text "Passages leave the room in every direction, like spokes from a hub. Most of them do not get far. The ones that do go east, west, north and southeast; the one to the south starts out bravely and gives up under a heap of fallen roof." }
   }
   object cave_ins is Scenery {
-    grammar { name "cave-ins"  nouns "cave-in", "rubble", "rocks", "rockfall", "heaps", "heap"  adjectives "fallen", "sorted", "blocked" }
+    grammar { name "cave-ins"  nouns "cave-in", "rubble", "rocks", "rock", "rockfall", "heaps", "pebbles", "boulders"  adjectives "fallen", "sorted", "blocked", "a" }
     passage short { cave-ins }
-    passage no_take { The rubble is not going anywhere. It has been sorted by somebody, and they would notice. }
-    describe { text "Fallen rock fills most of the passages out of the room, ceiling and all. In the passage to the south somebody has started clearing it: the rubble is sorted into neat heaps, smallest nearest, as though its sorter had stepped out for a moment, some time ago." }
+    // The one reason, whatever is tried: the roof is still coming down.
+    passage no_take { You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them. }
+    describe { text "Fallen rock fills most of the passages out of the room, ceiling and all. At the mouth of the passage to the south somebody has sorted the nearest of it into neat heaps, smallest nearest, the way some people tidy a room they have no intention of using. Behind the heaps the roof has come down to the floor, and grit still trickles from it now and then." }
+    without as target for shift from Thing
+    as target for shift { do { say no_take } }
+    without as target for raise from Thing
+    as target for raise { do { say no_take } }
+    without as target for clear from Thing
+    as target for clear { do { say no_take } }
+    without as target for kick from Thing
+    as target for kick { do { say no_take } }
+    without as target for mung from Thing
+    as target for mung { do { say no_take } }
+    without as target for climb_over from Thing
+    as target for climb_over { do { say "The heaps are easy enough to climb; it is the cave-in behind them that goes all the way up to the roof, and the roof is still coming down." } }
+    as target for dig { do { say no_take } }
+    without as target for through from Thing
+    as target for through { do { say "There is no way through. The roof came down all the way to the floor, and it is still coming." } }
   }
   object stone is Scenery {
     grammar { name "stone"  nouns "room", "circle", "floor"  adjectives "circular", "round" }
@@ -145,7 +161,7 @@ object loud_room is DarkRoom in underground_caverns {
   }
 }
 
-object deep_canyon is DarkRoom in underground_caverns {
+object deep_canyon is DarkRoom, CanyonEdge in underground_caverns {
   grammar {
     name "Deep Canyon"
     exit northwest "northwest" refuse reservoir_way
@@ -158,7 +174,7 @@ object deep_canyon is DarkRoom in underground_caverns {
   }
   // The ways on to the reservoir and the dam, which are not built.
   passage reservoir_way {
-    The passage northwest grows wet underfoot, and then wetter, and then you can hear a great deal of water lying very still somewhere ahead. A board is nailed across the passage at shin height: "RESERVOIR CLOSED. -- Flood Control Dam #3, by order of the Management." You step back over the puddle you were standing in.
+    The passage northwest grows wet underfoot, and then wetter, and then the floor goes down under black water lying perfectly still, and does not come up again anywhere your light can reach. Whatever is beyond is under it. You step back out of the puddle you were standing in.
   }
   passage dam_way {
     The passage east climbs toward a deep, steady hum, the sound of a great deal of water being held back by something that would rather not be disturbed. A board is nailed across it: "FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management." You leave the dam to its inspection.
@@ -175,16 +191,36 @@ object deep_canyon is DarkRoom in underground_caverns {
   object passages is Scenery {
     grammar { name "passages"  nouns "passage", "passageways"  adjectives "east", "northwest", "southwest" }
     passage short { passages }
-    describe { text "Passages lead off east, northwest and southwest. The one to the east hums; the one to the northwest is wet; the one to the southwest is merely a passage, which down here counts as a recommendation." }
+    describe { text "Passages lead off east, northwest and southwest. The one to the east hums; the one to the northwest is wet, and further on is nothing but wet; the one to the southwest is merely a passage, which down here counts as a recommendation." }
   }
-  object boards is Scenery {
-    grammar { name "boards"  nouns "board", "sign", "signs", "notice", "notices"  adjectives "nailed" }
-    passage short { boards }
-    passage words { The board across the east passage reads: "FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management." The one across the northwest passage reads: "RESERVOIR CLOSED. -- Flood Control Dam #3, by order of the Management." }
-    passage no_take { The boards are nailed across the passages by somebody who expected them to be argued with. }
-    describe { text words }
+  object flood is Scenery {
+    grammar { name "flooded passage"  nouns "flood", "puddle", "pool"  adjectives "flooded", "black", "still", "standing", "northwest" }
+    passage short { flooded passage }
+    describe { text "A little way up the northwest passage the floor goes down under black, still water and stays there. The water fills the passage wall to wall and, as far as your light can tell, roof to floor. It is very cold and entirely uninterested in you." }
+    without as target for cross from Thing
+    as target for cross { do { say "The water fills the passage to the roof. Crossing it would be a matter of swimming underneath it, a long way, in the dark, holding your breath, and you decline." } }
+  }
+  object board is Scenery {
+    grammar { name "board"  nouns "sign", "notice", "plank"  adjectives "nailed", "east" }
+    passage short { board }
+    passage words { The board reads: "FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management." }
+    passage no_take { The board is nailed across the passage by somebody who expected it to be argued with, and used a great many nails to say so. }
+    passage beyond { You could get past the board easily enough; it is only a board. But the passage beyond it hums with a great deal of water held back by something that would rather not be disturbed, and you find you would rather not disturb it. }
+    describe { text "A plank is nailed across the east passage at about the height of a disappointed adventurer's waist, lettered in a patient hand. {self.words}" }
     without as target for read from Thing
     as target for read { do { say words } }
+    without as target for shift from Thing
+    as target for shift { do { say no_take } }
+    without as target for mung from Thing
+    as target for mung { do { say no_take } }
+    without as target for cut from Thing
+    as target for cut { do { say no_take } }
+    without as target for climb_over from Thing
+    as target for climb_over { do { say beyond } }
+    without as target for duck_under from Thing
+    as target for duck_under { do { say beyond } }
+    without as target for cross from Thing
+    as target for cross { do { say beyond } }
   }
   object stairs is Stairs {
     grammar { nouns "stairway" }
@@ -244,7 +280,7 @@ object north_south_passage is DarkRoom in underground_caverns {
   }
 }
 
-object chasm_room is DarkRoom, Perilous in underground_caverns {
+object chasm_room is DarkRoom, Perilous, ChasmEdge in underground_caverns {
   grammar {
     name "Chasm"
     exit northeast "northeast" refuse reservoir_way
@@ -258,15 +294,22 @@ object chasm_room is DarkRoom, Perilous in underground_caverns {
   }
   // The way on to the reservoir, which is not built.
   passage reservoir_way {
-    The path follows the chasm northeast toward a smell of standing water, and stops at a cord strung across it between two spikes. From the cord hangs a card: "RESERVOIR SOUTH. CLOSED. -- The Management." You go back the way you came.
+    The path follows the chasm northeast toward a smell of standing water, and the smell gets there first: a little way on, the path runs down into water, black and still and very cold, and your light finds no other side to it. You go back the way you came, with wet feet.
   }
   object chasm is Abyss {
     describe { text "The chasm runs southwest to northeast, a black slot in the floor of the world, too deep for any light to find the bottom. A cold air comes up out of it, smelling of nothing at all." }
   }
   object path is Scenery {
-    grammar { name "path"  nouns "ledge", "trail", "cord", "card", "spikes"  adjectives "chasm" }
+    grammar { name "path"  nouns "ledge", "trail"  adjectives "chasm" }
     passage short { path }
-    describe { text "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast a cord is strung across it between two spikes, with a card hanging from it: \"RESERVOIR SOUTH. CLOSED. -- The Management.\"" }
+    describe { text "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast it runs down into standing water and does not come up again." }
+  }
+  object standing_water is Scenery {
+    grammar { name "standing water"  nouns "water", "flood", "pool", "smell"  adjectives "standing", "black", "still", "cold", "northeast" }
+    passage short { standing water }
+    describe { text "To the northeast the path goes down into black water lying perfectly still, as though it had been there a long time and meant to stay. It smells of cold stone and of nothing having moved in it for years." }
+    without as target for cross from Thing
+    as target for cross { do { say "Your light finds no other side to it, and the chasm is right beside it. You decline." } }
   }
   object crack is Crack {
     grammar { nouns "passage", "passageway" }

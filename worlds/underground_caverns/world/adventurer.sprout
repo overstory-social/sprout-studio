@@ -13,11 +13,11 @@ import {Thing, Portable, Flame} from 'thing'
 import {Box, Bag} from 'box'
 import {Lamp, Light} from 'lamp'
 import {Weapon, Sword, Knife, Axe, Treasure, Food, Water} from 'items'
-import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop} from 'room'
+import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop, ChasmEdge, CanyonEdge} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
 import {go, look, examine, inventory, wait, help} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -26,7 +26,8 @@ import {east_of_chasm, studio, StudioChimney} from 'gallery'
 import {maze_5, Maze, DeadEnd} from 'maze'
 import {Skeleton, RustyKnife, SkeletonKey} from 'remains'
 import {east_west_passage, chasm_room, loud_room, deep_canyon, Abyss} from 'east'
-import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, DomeRoom, AltarRoom, TempleRoom} from 'temple'
+import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, Torch, DomeRoom, AltarRoom, TempleRoom} from 'temple'
+import {Leaves} from 'grating'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -61,6 +62,11 @@ kind Adventurer is sprout.Visitor {
   :fresh 0 min 0 max 50
 
   passage hands_full { You're holding too many things already! }
+
+  // Zork's "Your load is too heavy.", and which of what is carried weighs
+  // the most, where it is one of the heavy ones.
+  passage heaviest {{if self.count(Coffin) > 0}{for t: Coffin in self}{t.short}{/for}{else if self.count(Sword) > 0}{for t: Sword in self}{t.short}{/for}{else if self.count(Axe) > 0}{for t: Axe in self}{t.short}{/for}{else if self.count(Leaves) > 0}{for t: Leaves in self}{t.short}{/for}{else if self.count(Torch) > 0}{for t: Torch in self}{t.short}{/for}{/if}}
+  passage too_heavy { Your load is too heavy{if self.count(Coffin) > 0 || self.count(Sword) > 0 || self.count(Axe) > 0 || self.count(Leaves) > 0 || self.count(Torch) > 0}, the {self.heaviest} not least of it{/if}. }
 
   // Zork's UP-CHIMNEY-FUNCTION: up the Studio's chimney only with a light
   // and at most one thing besides.
@@ -435,6 +441,13 @@ kind Adventurer is sprout.Visitor {
   // refused, and the parser prefers the reading that is not.
   as actor for take {
     permit {
+      // Zork's PRE-TAKE: taken from a box, it has to be in that box. Zork
+      // names the thing; a refusal inside `each` cannot (friction 78).
+      if (bound source) {
+        each t of target {
+          if (t.is(Thing)) { if (!source.holds(t)) { refuse "That isn't in the {source.short}." } }
+        }
+      }
       if (target.count == 1) {
         each t of target {
           if (t.is(Thing)) { if (self.holds(t)) { refuse "You already have that!" } }
@@ -464,7 +477,7 @@ kind Adventurer is sprout.Visitor {
           else if (self.holds(t)) { say "{if several}{t.short}: {/if}You already have that!" }
           else if (t.is(Rope) && t.get(:tied)) { say "{if several}{t.short}: {/if}The rope is tied to the railing." }
           else if (t.is(Portable)) {
-            if (self.get(:carry) + t.get(:size) > 100) { say "{if several}{t.short}: {/if}Your load is too heavy." }
+            if (self.get(:carry) + t.get(:size) > 100) { say "{if several}{t.short}: {/if}{self.too_heavy}" }
             else {
               move t to self
               self.adjust(:carry, t.get(:size))
@@ -489,6 +502,13 @@ kind Adventurer is sprout.Visitor {
       self.adjust(:moves, 1)
       let several = target.count > 1
       each t of target {
+        // Dropped out of a box in hand, a treasure has been held.
+        if (t.is(Treasure)) {
+          if (!self.holds(t) && t.get(:value) > 0) {
+            self.adjust(:score, t.get(:value))
+            send t :claimed
+          }
+        }
         if (here.is(TreeTop)) {
           if (t.is(Nest)) {
             if (t.count(Egg) > 0) { say "{if several}{t.short}: {/if}The nest falls to the ground, and the egg spills out of it, seriously damaged." }
@@ -520,6 +540,15 @@ kind Adventurer is sprout.Visitor {
       self.adjust(:moves, 1)
       if (item == container) { say "How can you do that?" }
       else if (item.is(Portable)) {
+        // Zork's PUT takes its item first (HAVE): a treasure put somewhere
+        // straight out of a box in hand, or off the floor, has been held,
+        // and pays what taking it pays.
+        if (item.is(Treasure)) {
+          if (!self.holds(item) && !container.holds(item) && item.get(:value) > 0) {
+            self.adjust(:score, item.get(:value))
+            send item :claimed
+          }
+        }
         if (container.holds(item)) { say "The {item.short} is already in the {container.short}." }
         else if (container.is(Abyss)) {
           move item to container
@@ -673,6 +702,25 @@ kind Adventurer is sprout.Visitor {
     }
   }
   as actor for climb_down { do { self.adjust(:moves, 1) } }
+  as actor for climb_over { do { self.adjust(:moves, 1) } }
+  as actor for duck_under { do { self.adjust(:moves, 1) } }
+  as actor for clear      { do { self.adjust(:moves, 1) } }
+  as actor for cut        { do { self.adjust(:moves, 1) } }
+  // `look down`: over the Dome's rail, into a chasm or a canyon, out of a
+  // tree; anywhere else, at the floor.
+  as actor for look_down { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "down down ..." } } }
+    do {
+      self.adjust(:moves, 1)
+      if (here.is(DomeRoom)) {
+        if (here.get(:roped)) { say "Beyond the railing the dome falls away to the floor of a room below, a good twenty feet down. The rope hangs into it from the rail and ends some ten feet short of the floor." }
+        else { say "Beyond the railing the dome falls away to the floor of a room below, a good twenty feet down: too far to drop, and nothing between you and it but air." }
+      }
+      else if (here.is(ChasmEdge)) { say "You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down." }
+      else if (here.is(CanyonEdge)) { say "The canyon falls away below you, sheer and black, too deep for your light to find the bottom. Far down, water is flowing." }
+      else if (here.is(TreeTop)) { say "Far below, through the branches, is the forest path. It is a long way down for anything that falls." }
+      else { say "You see the floor, where you left it." }
+    }
+  }
   as actor for unlock     { do { self.adjust(:moves, 1) } }
   as actor for knock      { do { self.adjust(:moves, 1) } }
   as actor for walk_around { do { self.adjust(:moves, 1) } }

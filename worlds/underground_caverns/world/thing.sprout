@@ -8,7 +8,8 @@
 // (Zork's NDESCBIT) is never listed.
 import {ask} from 'sprout'
 import {Light} from 'lamp'
-import {take, knock, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die} from 'verbs'
+import {Weapon} from 'items'
+import {take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die} from 'verbs'
 import {Room} from 'room'
 import {Abyss} from 'east'
 import {Adventurer} from 'adventurer'
@@ -148,6 +149,21 @@ kind Thing {
         } else if (tool.is(Thing)) { say "With a {tool.short}??!?" }
         else { say "With that??!?" }
       } else { say "You didn't say with what!" }
+    }
+  }
+  // Over it, under it, clearing it away, cutting it: not Zork's words, but
+  // the ones a barrier invites, and answered as Zork answers the rest.
+  as target for climb_over { do { say "You can't do that!" } }
+  as target for duck_under { do { say "There's no getting under the {self.short}." } }
+  as target for clear      { do { say "The {self.short} is as clear as it is going to get." } }
+  // Zork's V-CUT, short of the slicing of what burns.
+  as target for cut {
+    do {
+      if (bound tool) {
+        if (tool.is(Weapon)) { say "Strange concept, cutting the {self.short}...." }
+        else if (tool.is(Thing)) { say "I doubt that the \"cutting edge\" of a {tool.short} is adequate." }
+        else { say "With your bare hands?" }
+      } else { say "You'll have to say what to cut the {self.short} with." }
     }
   }
   as target for talk    { do { say "You can't talk to the {self.short}!" } }

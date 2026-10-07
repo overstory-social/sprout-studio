@@ -4,14 +4,14 @@
 // from dungeon.zil; the chimney's rule is UP-CHIMNEY-FUNCTION's.
 import {Thing, Scenery} from 'thing'
 import {Treasure, Readable} from 'items'
-import {Room, DarkRoom, Perilous, ChimneyFoot} from 'room'
+import {Room, DarkRoom, Perilous, ChimneyFoot, ChasmEdge} from 'room'
 import {Adventurer} from 'adventurer'
 import {open, close, climb_up, climb_down, look_in, mung, :travel, :scored} from 'verbs'
 import {cellar} from 'cellar'
 import {kitchen, living_room} from 'house'
 import {Abyss} from 'east'
 
-object east_of_chasm is DarkRoom, Perilous in underground_caverns {
+object east_of_chasm is DarkRoom, Perilous, ChasmEdge in underground_caverns {
   grammar {
     name "East of Chasm"
     exit north "passage" -> cellar
