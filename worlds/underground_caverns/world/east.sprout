@@ -8,8 +8,9 @@
 // Since v6 the ways on to the dam, the reservoir and the White Cliffs lead
 // there (dam.sprout, reservoir.sprout, river.sprout). The Loud Room and the
 // Deep Canyon follow the dam: each keeps its own note of the sluice gates
-// and the water (`Tidal`). The way on to the mirrors refuses in Zork's
-// voice: that part is not built yet.
+// and the water (`Tidal`). Since v7 the way south of the Round Room goes on
+// to the Narrow Passage and the mirrors (mirror.sprout); the heaps that
+// once blocked it sit in a passage southwest that Zork never opened.
 import {Thing, Portable, Scenery} from 'thing'
 import {Box} from 'box'
 import {Treasure} from 'items'
@@ -18,6 +19,7 @@ import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
 import {open, close, look_in, climb_up, climb_down, cross, leap_at, through, read, listen, smell, take, shift, raise, dig, mung, clear, climb_over, duck_under, cut, kick, rub, search, look_behind, look_under, :travel, :troll_gone, :hush, :flung, :tide} from 'verbs'
 import {troll_room} from 'cellar'
+import {narrow_corridor} from 'mirror'
 import {dome_room} from 'temple'
 import {Tidal, dam_room} from 'dam'
 import {reservoir_south} from 'reservoir'
@@ -59,25 +61,26 @@ object round_room is DarkRoom in underground_caverns {
     exit east      "east"      -> loud_room
     exit west      "west"      -> east_west_passage
     exit north     "north"     -> north_south_passage
-    exit south     "south"     refuse narrow_way
+    exit south     "south"     -> narrow_corridor
+    exit southwest "southwest" refuse blocked_way
     exit southeast "southeast" -> engravings_cave
   }
   passage body {
     This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins.
   }
-  // The way on to the mirrors, which is not built.
-  passage narrow_way {
-    The passage south narrows almost at once and then stops, choked by one of the cave-ins. Somebody has sorted the near end of the rubble into neat heaps by size, smallest nearest. Behind the heaps the roof has come down all the way to the floor, and it has not finished coming down: grit is still trickling from it as you watch. There is no way through.
+  // One of the cave-ins, tidied.
+  passage blocked_way {
+    The passage southwest narrows almost at once and then stops, choked by one of the cave-ins. Somebody has sorted the near end of the rubble into neat heaps by size, smallest nearest. Behind the heaps the roof has come down all the way to the floor, and it has not finished coming down: grit is still trickling from it as you watch. There is no way through.
   }
   object passages is Scenery {
     grammar { name "passages"  nouns "passage", "passageways", "openings", "directions"  adjectives "all", "radiating" }
     passage short { passages }
-    describe { text "Passages leave the room in every direction, like spokes from a hub. Most of them do not get far. The ones that do go east, west, north and southeast; the one to the south starts out bravely and gives up under a heap of fallen roof." }
+    describe { text "Passages leave the room in every direction, like spokes from a hub. Most of them do not get far. The ones that do go east, west, north, south and southeast; the one to the southwest starts out bravely and gives up under a heap of fallen roof." }
   }
   object cave_ins is Rubble {
     grammar { name "cave-ins"  nouns "cave-in", "rubble", "rocks", "rock", "rockfall", "boulders", "stones", "debris"  adjectives "fallen", "blocked", "a", "south" }
     passage short { cave-ins }
-    describe { text "Fallen rock fills most of the passages out of the room, ceiling and all. At the mouth of the passage to the south somebody has sorted the nearest of it into neat heaps, smallest nearest, the way some people tidy a room they have no intention of using. Behind the heaps the roof has come down to the floor, and grit still trickles from it now and then." }
+    describe { text "Fallen rock fills most of the passages out of the room, ceiling and all. At the mouth of the passage to the southwest somebody has sorted the nearest of it into neat heaps, smallest nearest, the way some people tidy a room they have no intention of using. Behind the heaps the roof has come down to the floor, and grit still trickles from it now and then." }
   }
   // The heaps, looked at closer: somebody has been here, and no further.
   object heaps is Rubble {

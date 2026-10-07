@@ -9,7 +9,7 @@ import * as sprout from 'sprout'
 import {Person} from 'person'
 import {go} from 'sprout'
 import {west_of_house} from 'above_ground'
-import {:open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone, :unbar, :grate_unlock, :grate_open, :grate_revealed, :dome_rope, :thief_start, :summon, :far_voice, :magic, :cyclops_gone, :tide, :gate_flag, :rainbow, :flooded} from 'verbs'
+import {:shatter, :open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone, :unbar, :grate_unlock, :grate_open, :grate_revealed, :dome_rope, :thief_start, :summon, :far_voice, :magic, :cyclops_gone, :tide, :gate_flag, :rainbow, :flooded} from 'verbs'
 
 world underground_caverns is sprout.World {
   visitors are Person
@@ -40,6 +40,8 @@ world underground_caverns is sprout.World {
   pass :gate_flag (true)
   pass :rainbow (true)
   pass :flooded (true)
+  // The mirror broken, heard in both Mirror Rooms (v7).
+  pass :shatter (true)
 
   on :open_gate (from) {
     self.set(:gate, true)

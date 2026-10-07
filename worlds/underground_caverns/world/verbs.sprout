@@ -102,7 +102,9 @@ intent shift_aside {
   do shift (target: x)
 }
 
-verb raise { role target  "raise [target]"  "lift [target]"  "lift up [target]" }
+verb raise { role target  "raise [target]"  "lift [target]"  "lift up [target]"  "pull up [target]"  "haul up [target]"  "hoist [target]"  "bring up [target]" }
+// Zork's LOWER, for the basket on its chain (v7).
+verb lower { role target  "lower [target]"  "let down [target]"  "send down [target]"  "lower down [target]" }
 
 verb eat { role target  "eat [target]"  "consume [target]"  "devour [target]"  "taste [target]" }
 
@@ -215,6 +217,8 @@ verb throw {
 // better.
 verb kick { role target  "kick [target]"  "taunt [target]" }
 verb rub { role target  "rub [target]"  "touch [target]"  "feel [target]"  "pat [target]"  "pet [target]"  "caress [target]" }
+// Zork's RUB ... WITH: the mirror, touched with something, only tingles.
+verb rub_with { role target  role tool carried  "rub [target] with [tool]"  "touch [target] with [tool]"  "feel [target] with [tool]"  "pat [target] with [tool]"  "poke [target] with [tool]"  "tap [target] with [tool]" }
 verb wave { role target  "wave [target]"  "brandish [target]"  "flourish [target]" }
 verb shake { role target  "shake [target]" }
 verb squeeze { role target  "squeeze [target]" }
@@ -369,6 +373,13 @@ verb turn_with {
   "twist [target] with [tool]"  "tighten [target] with [tool]"  "loosen [target] with [tool]"
   "unscrew [target] with [tool]"  "screw [target] with [tool]"
 }
+// Zork's TURN ON ... WITH, which for the coal mine's machine is turning its
+// switch (MACHINE-F).
+intent turn_on_with {
+  "turn on [x] with [y]"  "turn [x] on with [y]"  "start [x] with [y]"  "switch on [x] with [y]"
+  "activate [x] with [y]"
+  do turn_with (target: x, tool: y)
+}
 // Zork's OIL, LUBRICATE and GREASE.
 verb oil { role target  role tool carried  "oil [target] with [tool]"  "lubricate [target] with [tool]"  "grease [target] with [tool]" }
 
@@ -437,7 +448,7 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { ns_passage, forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange, damp_cave, round_room, canyon_view, ledge, canyon_bottom, falls, rainbow_end, on_rainbow, atlantis, dam_room, dam_base }
+enum Dest { ns_passage, forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange, damp_cave, round_room, canyon_view, ledge, canyon_bottom, falls, rainbow_end, on_rainbow, atlantis, dam_room, dam_base, bat, mirror_1, mirror_2, small_cave, smelly_room, gas_room, ladder_top, ladder_bottom, mine_1, mine_2, mine_3, mine_4, squeaky_room, mine_entrance }
 
 // Where on the water a boat is, or which shore it may put out from (v6):
 // the rooms the Frigid River, the stream and the reservoir touch, and
@@ -569,3 +580,18 @@ message :berth
 message :wreck
 // A burning match, gone out in somebody's hand.
 message :match_out
+// The coal mine and the mirrors (v7). The mirror broken, both mirrors and
+// both rooms hear it through the world; the one who broke it is unlucky.
+message :shatter
+message :bad_luck
+// The Bat Room, entered: the visitor sees whether there is garlic about,
+// and if not, the bat carries them off (`:bats`).
+message :bats
+// The Gas Room, entered with a flame (`:gas`), or a match struck in it
+// (`:boom`).
+message :gas
+message :boom
+// The Tiny Cave's draught, at the candles in hand, and the candles blown
+// out by it.
+message :gust
+message :blow_out

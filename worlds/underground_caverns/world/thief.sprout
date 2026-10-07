@@ -43,6 +43,8 @@ import {egyptian_room, dome_room, torch_room} from 'temple'
 import {reservoir_south, reservoir_north, stream_view, atlantis_room} from 'reservoir'
 import {dam_room, dam_lobby, maintenance_room} from 'dam'
 import {sandy_cave} from 'river'
+import {narrow_corridor, mirror_room_2, winding_passage, tiny_cave, mirror_room_1, twisting_passage, small_cave, cold_passage} from 'mirror'
+import {slide_room, mine_entrance, squeaky_room, shaft_room, smelly_room, mine_1, mine_2, mine_3, mine_4, ladder_top, ladder_bottom, coal_dead_end, machine_room} from 'mine'
 
 message :disgorge with integer
 message :unloaded with integer
@@ -135,8 +137,8 @@ kind Thief is Thing, sprout.Actor {
   // has come to defend.
   :phase 0 min 0 max 3
   // Where he stands, and where he goes next, by the rooms' `:tour`.
-  :at 30 min 0 max 60
-  :next 0 min 0 max 60
+  :at 30 min 0 max 80
+  :next 0 min 0 max 80
   :rushing false
   // Whether a visitor stands in his room, as the last survey found.
   :company false
@@ -560,7 +562,7 @@ kind Thief is Thing, sprout.Actor {
         // On to the next room, unseen, unless something here keeps him.
         if (ph == 1 && !self.get(:shown) && !self.get(:stay)) {
           each s: Stiletto in from { move s to self }
-          if (from.get(:tour) >= 47 || from.get(:tour) == 0) { self.set(:next, 1) }
+          if (from.get(:tour) >= 68 || from.get(:tour) == 0) { self.set(:next, 1) }
           else { self.set(:next, from.get(:tour) + 1) }
           self.set(:phase, 2)
           self.set(:announced, false)
@@ -627,6 +629,27 @@ kind Thief is Thing, sprout.Actor {
       } else if (self.get(:next) == 45) { move self to dam_lobby
       } else if (self.get(:next) == 46) { move self to maintenance_room
       } else if (self.get(:next) == 47) { move self to sandy_cave
+      } else if (self.get(:next) == 48) { move self to narrow_corridor
+      } else if (self.get(:next) == 49) { move self to mirror_room_2
+      } else if (self.get(:next) == 50) { move self to winding_passage
+      } else if (self.get(:next) == 51) { move self to tiny_cave
+      } else if (self.get(:next) == 52) { move self to mirror_room_1
+      } else if (self.get(:next) == 53) { move self to twisting_passage
+      } else if (self.get(:next) == 54) { move self to small_cave
+      } else if (self.get(:next) == 55) { move self to cold_passage
+      } else if (self.get(:next) == 56) { move self to slide_room
+      } else if (self.get(:next) == 57) { move self to mine_entrance
+      } else if (self.get(:next) == 58) { move self to squeaky_room
+      } else if (self.get(:next) == 59) { move self to shaft_room
+      } else if (self.get(:next) == 60) { move self to smelly_room
+      } else if (self.get(:next) == 61) { move self to mine_1
+      } else if (self.get(:next) == 62) { move self to mine_2
+      } else if (self.get(:next) == 63) { move self to mine_3
+      } else if (self.get(:next) == 64) { move self to mine_4
+      } else if (self.get(:next) == 65) { move self to ladder_top
+      } else if (self.get(:next) == 66) { move self to ladder_bottom
+      } else if (self.get(:next) == 67) { move self to coal_dead_end
+      } else if (self.get(:next) == 68) { move self to machine_room
       }
     }
     send underground_caverns :close_gate

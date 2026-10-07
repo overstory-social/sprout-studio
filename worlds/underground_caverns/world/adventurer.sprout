@@ -12,7 +12,7 @@ import * as sprout from 'sprout'
 import {Thing, Portable, Flame} from 'thing'
 import {Box, Bag} from 'box'
 import {Lamp, Light} from 'lamp'
-import {Weapon, Sword, Knife, Axe, Treasure, Food, Water, Lunch} from 'items'
+import {Weapon, Sword, Knife, Axe, Treasure, Food, Water, Lunch, Garlic} from 'items'
 import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop, ChasmEdge, CanyonEdge, Songful} from 'room'
 import {TreeTop, Nest, Egg, Canary, Bauble} from 'tree'
 import {Troll} from 'troll'
@@ -20,7 +20,7 @@ import {Thief, Stiletto} from 'thief'
 import {Cyclops, CyclopsRoom, TreasureRoom, Chalice, :flee} from 'cyclops'
 import {treasure_room, cyclops_room, strange_passage} from 'cyclops'
 import {go, look, examine, inventory, wait, help} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall, board, disembark, disembark_here, launch, launch_here, land, land_here, inflate, deflate, plug, turn_with, oil, :where, :berth, :wreck, :flung, :match_out, :rainbow, ashore} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall, board, disembark, disembark_here, launch, launch_here, land, land_here, inflate, deflate, plug, turn_with, oil, :where, :berth, :wreck, :flung, :match_out, :rainbow, ashore, lower, rub_with, :shatter, :bad_luck, :bats, :gas, :boom, :gust, :blow_out} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -29,7 +29,7 @@ import {east_of_chasm, studio, StudioChimney} from 'gallery'
 import {maze_5, Maze, DeadEnd} from 'maze'
 import {Skeleton, RustyKnife, SkeletonKey} from 'remains'
 import {east_west_passage, north_south_passage, chasm_room, loud_room, deep_canyon, Abyss} from 'east'
-import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, Torch, DomeRoom, AltarRoom, TempleRoom} from 'temple'
+import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, Torch, Candles, DomeRoom, AltarRoom, TempleRoom} from 'temple'
 import {Leaves} from 'grating'
 import {Sharp, Rejecting} from 'items'
 import {MagicBoat, Vessel, :put_out, :come_ashore, :hurry} from 'boat'
@@ -37,6 +37,8 @@ import {Pump, reservoir_north, atlantis_room} from 'reservoir'
 import {Matchbook, dam_room, dam_base} from 'dam'
 import {:dig_sand, River, Shovel, Narrows, CliffCave, CanyonRim, SandyCave, Sand, Riverside, OnTheRiver, canyon_view, cliff_middle, canyon_bottom, aragain_falls, end_of_rainbow, on_rainbow} from 'river'
 import {damp_cave, round_room} from 'east'
+import {Bat, Chute, Crawlspace, GasRoom, Reeking, Squeaky, bat_room, mine_1, mine_2, mine_3, mine_4, ladder_top, ladder_bottom, squeaky_room, mine_entrance, smelly_room, gas_room} from 'mine'
+import {Mirror, Murmuring, mirror_room_1, mirror_room_2, small_cave} from 'mirror'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -105,6 +107,16 @@ kind Adventurer is sprout.Visitor {
   :wrecking false
   // Attacking with something sharp from the magic boat.
   :spiked false
+  // How many cloves of garlic are in hand, for the bat, who cannot see into
+  // the hands he respects (v7).
+  :garlics 0 min 0 max 9
+  // In the Timber Room or the Drafty Room, between which nothing heavier
+  // than a clove of garlic goes (Zork's EMPTY-HANDED).
+  :in_crawl false
+  // The mirror broken by these hands: Zork's LUCKY, gone.
+  :unlucky false
+  // Scratch, for the Gas Room: a flame in hand.
+  :flaming false
 
   passage hands_full { You're holding too many things already! }
 
@@ -123,6 +135,14 @@ kind Adventurer is sprout.Visitor {
   // light to climb a chimney by.
   passage lampless { You can't get up there with what you're carrying. The draught up the chimney would have any flame out before you were halfway, and nothing else you have would see you to the top; it is a climb for a lamp. }
   depart (to) {
+    // NO-OBJS: between the Timber Room and the Drafty Room, nothing in hand
+    // may weigh more than four, what is in it counting.
+    if (self.get(:in_crawl) && to.is(Crawlspace)) {
+      each t: Thing in self {
+        if (t.get(:size) > 4) { refuse "You cannot fit through this passage with that load." }
+        if (t.is(Box)) { if (t.get(:size) + t.get(:held) > 4) { refuse "You cannot fit through this passage with that load." } }
+      }
+    }
     if (self.get(:at_narrows) && self.count(MagicBoat) > 0 && to.is(Room)) {
       if (to.is(Narrows) || to.is(CliffCave)) { refuse "The path is too narrow." }
     }
@@ -164,6 +184,7 @@ kind Adventurer is sprout.Visitor {
     if (item.is(Coffin)) { self.adjust(:coffins, 1) }
     if (item.is(Pump)) { self.adjust(:pumps, 1) }
     if (item.is(Shovel)) { self.adjust(:shovels, 1) }
+    if (item.is(Garlic)) { self.set(:garlics, self.count(Garlic)) }
     if (item.is(Treasure)) {
       if (item.get(:value) > 0) {
         self.adjust(:score, item.get(:value))
@@ -177,7 +198,69 @@ kind Adventurer is sprout.Visitor {
     if (item.is(Coffin)) { self.adjust(:coffins, -1) }
     if (item.is(Pump)) { self.adjust(:pumps, -1) }
     if (item.is(Shovel)) { self.adjust(:shovels, -1) }
+    if (item.is(Garlic)) { self.set(:garlics, self.count(Garlic)) }
   }
+
+  // The Bat Room, come into (BATS-ROOM's M-ENTER): with no garlic in hand
+  // and none on the floor, the room as it is seen, the bat's swoop, and
+  // FLY-ME. The room passed through is never described (friction 100), so
+  // it is told here.
+  passage fweeps {
+        Fweep!
+        Fweep!
+        Fweep!
+
+    The bat grabs you by the scruff of your neck and lifts you away....
+  }
+  on :bats (from) {
+    self.set(:garlics, self.count(Garlic))
+    if (from.is(DarkRoom)) {
+      if (self.get(:garlics) == 0 && from.count(Garlic) == 0) {
+        if (self.get(:light) > 0 || from.get(:floor_lit)) { tell self "{from.full}" }
+        else { tell self "It is pitch black. You are likely to be eaten by a grue." }
+        tell self fweeps
+        self.set(:dest, :bat)
+        send underground_caverns :open_gate
+      }
+    }
+  }
+  // BOOM-ROOM: a flame in hand, or in an open box in hand, in the Gas Room.
+  on :gas (from) {
+    self.set(:flaming, false)
+    each f: Flame in self { if (f.get(:lit)) { self.set(:flaming, true) } }
+    each b: Box in self {
+      if (b.get(:open)) { each f: Flame in b { if (f.get(:lit)) { self.set(:flaming, true) } } }
+    }
+    if (self.get(:flaming)) {
+      // The room passed through is never described (friction 100): told.
+      if (from.is(DarkRoom)) {
+        if (self.get(:light) > 0 || from.get(:floor_lit)) { tell self "{from.full}" }
+      }
+      tell self "Oh dear. It appears that the smell coming from this room was coal gas. I would have thought twice about carrying flaming objects in here."
+      tell self "** BOOOOOOOOOOOM **"
+      send self :die
+    }
+  }
+  // A match struck in the Gas Room: the match has said how sad it is.
+  on :boom {
+    tell self "** BOOOOOOOOOOOM **"
+    send self :die
+  }
+  // CAVE2-ROOM: the draught up from Hades blows out candles in hand, half
+  // the time, or four times in five for whoever broke the mirror.
+  on :gust (from) {
+    each c: Candles in self {
+      if (c.get(:lit)) {
+        let r = random(10)
+        if (r < 5 || (self.get(:unlucky) && r < 8)) {
+          send c :blow_out
+          tell self "A gust of wind blows out your candles!"
+          if (self.get(:light) <= 1) { tell self "It is now completely dark." }
+        }
+      }
+    }
+  }
+  on :bad_luck { self.set(:unlucky, true) }
 
   on :scored (from, value) { self.adjust(:score, value) }
 
@@ -303,6 +386,7 @@ kind Adventurer is sprout.Visitor {
     if (self.get(:at_chimney) && to.is(ChimneyTop)) { broadcast :unbar with false }
     self.set(:at_chimney, to.is(ChimneyFoot))
     self.set(:at_narrows, to.is(Narrows))
+    self.set(:in_crawl, to.is(Crawlspace))
     if (to.is(Room)) { self.set(:room_glow, to.get(:glow)) }
     if (to.is(Room) && !self.get(:devoured)) {
       if (!to.is(DarkRoom)) { self.set(:room_dark, false) }
@@ -515,6 +599,7 @@ kind Adventurer is sprout.Visitor {
     self.set(:wounds, 0)
     self.set(:fight, 2)
     self.set(:staggered, false)
+    if (self.get(:unlucky)) { tell self "Bad luck, huh?" }
     tell self "****  You have died  ****"
     // JIGS-UP clears the trap door's TOUCHBIT: whoever next goes down it
     // from above hears it barred behind them again. A sword that was
@@ -633,6 +718,73 @@ kind Adventurer is sprout.Visitor {
       } else {
         if (!self.get(:own_light) && !underground_caverns.atlantis_room.get(:alight)) { tell self "You have moved into a dark place." }
         move self to atlantis_room
+      }
+    } else if (self.get(:dest) == :bat || self.get(:dest) == :mirror_1 || self.get(:dest) == :mirror_2 || self.get(:dest) == :small_cave || self.get(:dest) == :smelly_room || self.get(:dest) == :gas_room || self.get(:dest) == :ladder_top || self.get(:dest) == :ladder_bottom || self.get(:dest) == :mine_4) {
+      // The coal mine and the mirrors (v7): carried off by the bat to one of
+      // eight rooms (BAT-DROPS), changed over with a Mirror Room's contents,
+      // or along a staircase or a ladder by name, into the dark.
+      self.set(:own_light, self.get(:light) > 0)
+      each b: Box in self {
+        if (b.get(:open)) {
+          each l: Light in b { if (l.get(:lit)) { self.set(:own_light, true) } }
+        }
+      }
+      if (self.get(:dest) == :bat) {
+        let r = random(8)
+        if (r == 0) { self.set(:dest, :mine_1) }
+        else if (r == 1) { self.set(:dest, :mine_2) }
+        else if (r == 2) { self.set(:dest, :mine_3) }
+        else if (r == 3) { self.set(:dest, :mine_4) }
+        else if (r == 4) { self.set(:dest, :ladder_top) }
+        else if (r == 5) { self.set(:dest, :ladder_bottom) }
+        else if (r == 6) { self.set(:dest, :squeaky_room) }
+        else { self.set(:dest, :mine_entrance) }
+      }
+      // MIRROR-MIRROR: what lies in each room goes to the other, by way of
+      // a room between, and then the one who rubbed.
+      if (self.get(:dest) == :mirror_1 || self.get(:dest) == :mirror_2) {
+        each t: Portable in underground_caverns.mirror_room_1 { move t to underground_caverns.mirror_limbo }
+        each t: Portable in underground_caverns.mirror_room_2 { move t to underground_caverns.mirror_room_1 }
+        each t: Portable in underground_caverns.mirror_limbo { move t to underground_caverns.mirror_room_2 }
+      }
+      if (self.get(:dest) == :mirror_1) {
+        if (!self.get(:own_light) && !underground_caverns.mirror_room_1.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to mirror_room_1
+      } else if (self.get(:dest) == :mirror_2) {
+        move self to mirror_room_2
+      } else if (self.get(:dest) == :small_cave) {
+        if (!self.get(:own_light) && !underground_caverns.small_cave.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to small_cave
+      } else if (self.get(:dest) == :smelly_room) {
+        if (!self.get(:own_light) && !underground_caverns.smelly_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to smelly_room
+      } else if (self.get(:dest) == :gas_room) {
+        if (!self.get(:own_light) && !underground_caverns.gas_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to gas_room
+      } else if (self.get(:dest) == :ladder_top) {
+        if (!self.get(:own_light) && !underground_caverns.ladder_top.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to ladder_top
+      } else if (self.get(:dest) == :ladder_bottom) {
+        if (!self.get(:own_light) && !underground_caverns.ladder_bottom.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to ladder_bottom
+      } else if (self.get(:dest) == :mine_1) {
+        if (!self.get(:own_light) && !underground_caverns.mine_1.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to mine_1
+      } else if (self.get(:dest) == :mine_2) {
+        if (!self.get(:own_light) && !underground_caverns.mine_2.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to mine_2
+      } else if (self.get(:dest) == :mine_3) {
+        if (!self.get(:own_light) && !underground_caverns.mine_3.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to mine_3
+      } else if (self.get(:dest) == :mine_4) {
+        if (!self.get(:own_light) && !underground_caverns.mine_4.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to mine_4
+      } else if (self.get(:dest) == :squeaky_room) {
+        if (!self.get(:own_light) && !underground_caverns.squeaky_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to squeaky_room
+      } else {
+        if (!self.get(:own_light) && !underground_caverns.mine_entrance.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to mine_entrance
       }
     } else if (self.get(:dest) == :canyon_view) {
       move self to canyon_view
@@ -763,6 +915,16 @@ kind Adventurer is sprout.Visitor {
               say "{if several}{t.short}: {/if}Taken."
             }
           }
+          // The bat, reached for (BAT-F): out of reach of garlic, and
+          // otherwise he does the carrying.
+          else if (t.is(Bat)) {
+            if (self.get(:garlics) > 0 || here.count(Garlic) > 0) { say "{if several}{t.short}: {/if}You can't reach him; he's on the ceiling." }
+            else {
+              say fweeps
+              self.set(:dest, :bat)
+              send underground_caverns :open_gate
+            }
+          }
           else {
             say "{if several}{t.short}: {/if}{t.no_take}"
             if (t.is(Skeleton)) { send self :banish }
@@ -876,6 +1038,11 @@ kind Adventurer is sprout.Visitor {
           move item to container
           say "The {item.short} drops out of sight into the chasm."
         }
+        // SLIDER: into the slide, and down it to the Cellar.
+        else if (container.is(Chute)) {
+          move item to container
+          say "The {item.short} falls into the slide and is gone."
+        }
         else {
           move item to container
           say "Done."
@@ -980,6 +1147,16 @@ kind Adventurer is sprout.Visitor {
         }
       } else if (target.is(Matchbook)) {
         // STRIKE, for a match: the matchbook's own part lights one.
+      } else if (target.is(Bat)) {
+        // BAT-F: out of reach of garlic; otherwise he does the carrying.
+        if (self.get(:garlics) > 0 || here.count(Garlic) > 0) { say "You can't reach him; he's on the ceiling." }
+        else {
+          say fweeps
+          self.set(:dest, :bat)
+          send underground_caverns :open_gate
+        }
+      } else if (target.is(Mirror)) {
+        // The mirror answers for itself: it breaks.
       } else if (target.is(Thing)) {
         say "I've known strange people, but fighting a {target.short}?"
       } else {
@@ -1074,7 +1251,11 @@ kind Adventurer is sprout.Visitor {
   as actor for lamp_off   { do { self.adjust(:moves, 1) } }
   as actor for shift      { do { self.adjust(:moves, 1) } }
   as actor for raise      { do { self.adjust(:moves, 1) } }
-  as actor for eat        { do { self.adjust(:moves, 1) } }
+  as actor for lower      { do { self.adjust(:moves, 1) } }
+  as actor for rub_with   { do { self.adjust(:moves, 1) } }
+  // Garlic eaten out of hand is gone from it at once: what it would tell
+  // the hand as it goes is dropped with it.
+  as actor for eat        { do { self.adjust(:moves, 1)  if (target.is(Garlic) && self.holds(target)) { self.adjust(:garlics, -1) } } }
   as actor for drink      { do { self.adjust(:moves, 1) } }
   // Winding the canary in the forest the first time: its own part sings,
   // and the songbird's bauble is set down here by the winder, since what is
@@ -1113,6 +1294,8 @@ kind Adventurer is sprout.Visitor {
       if (here.is(Forest)) { say "You hear in the distance the chirping of a song bird." }
       else if (here.is(Maze) || here.is(DeadEnd)) { say "You hear nothing. The silence is the same silence as in every other part of the maze, which is no help at all." }
       else if (here.is(CanyonEdge)) { say "You can hear the sound of flowing water from below, a long way down, going somewhere in a hurry." }
+      else if (here.is(Squeaky)) { say "A high, thin squeaking, and now and then something that sounds remarkably like \"Fweep!\"" }
+      else if (here.is(Murmuring)) { say "Voices, a great many of them, far below, murmuring. You cannot make out the words, which is probably a kindness." }
       // On the reaches that name the Falls' rumbling, it is what you hear.
       else if (here.is(MagicBoat)) {
         if (here.get(:at) == :river_3) { say "{underground_caverns.river_3.rumbling.sound}" }
@@ -1129,6 +1312,9 @@ kind Adventurer is sprout.Visitor {
       self.adjust(:moves, 1)
       if (here.is(Forest)) { say "You smell pine, damp earth and leaf mould, as forests do." }
       else if (here.is(Maze) || here.is(DeadEnd)) { say "The air smells of cold, damp stone. It smells the same in every part of the maze, which is no help at all." }
+      // GAS-PSEUDO, in the Gas Room and the Smelly Room above it.
+      else if (here.is(GasRoom)) { say "It smells like coal gas in here." }
+      else if (here.is(Reeking)) { say "A foul odor comes up the staircase from below. It smells like coal gas." }
       else { say "You smell nothing out of the ordinary." }
     }
   }
@@ -1219,6 +1405,21 @@ kind Adventurer is sprout.Visitor {
           }
         }
         else if (aim.is(Cyclops)) { move target to here }
+        // At the mirror, it breaks (MIRROR-MIRROR's THROW), both mirrors at
+        // once, and the thrower's luck with it.
+        else if (aim.is(Mirror)) {
+          move target to here
+          if (aim.get(:mung)) { say "Haven't you done enough damage already?" }
+          else {
+            say "You have broken the mirror. I hope you have a seven years' supply of good luck handy."
+            broadcast :shatter
+            self.set(:unlucky, true)
+          }
+        }
+        else if (aim.is(Chute)) {
+          move target to aim
+          if (target.is(Thing)) { say "The {target.short} falls into the slide and is gone." }
+        }
         else if (aim.is(Abyss)) {
           move target to aim
           if (target.is(Thing)) { say "The {target.short} drops out of sight into the chasm." }

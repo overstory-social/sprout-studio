@@ -21,6 +21,7 @@ import {WaterAbout, Riverside, OnTheRiver} from 'river'
 import {cross, through, climb_up, climb_down, dig, look_in, take, swim, leap_at, open, close, Dest, :travel, :tide, :die} from 'verbs'
 import {deep_canyon, chasm_room} from 'east'
 import {dam_room} from 'dam'
+import {small_cave} from 'mirror'
 
 object reservoir_south is DarkRoom, Tidal, Riverside in underground_caverns {
   :tour 40
@@ -184,20 +185,16 @@ object atlantis_room is DarkRoom in underground_caverns {
   grammar {
     name "Atlantis Room"
     exit south "south"     -> reservoir_north
-    exit up    "staircase" refuse mirror_way
+    exit up    "staircase" -> small_cave
   }
   passage body {
     This is an ancient room, long under water. There is an exit to the south and a staircase leading up.
-  }
-  // The way up to the Cave and the Mirror Rooms, which are not built.
-  passage mirror_way {
-    The staircase climbs to a tiny cave, and from it a passage goes on toward a cold draught and a faint glitter, as of a great many mirrors all looking at you at once. A little beyond the cave the roof has come down across the passage, quite recently by the dust, and somebody has chalked an arrow on the rubble pointing back the way you came. You take the hint.
   }
   object trident is Trident
   object stairs is Stairs {
     grammar { adjectives "ancient", "worn" }
     passage view { The staircase climbs out of the room, its steps worn into shallow cups and furred with something that was alive while the water was here. }
-    as target for climb_up   { do { say "{atlantis_room.mirror_way}" } }
+    as target for climb_up   { do { send actor :travel with :small_cave  say "" } }
     as target for climb_down { do { say "The stairs don't lead downward." } }
   }
   object chamber is Scenery {

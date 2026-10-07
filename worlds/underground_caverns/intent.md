@@ -29,7 +29,16 @@ Control Dam #3 and the river below it: the Dam, its Lobby and Maintenance
 Room, the bolt that opens the sluice gates and drains the reservoir, the
 reservoir's shores, its stream and the Atlantis Room, the magic boat on
 the Frigid River, the White Cliffs, Sandy Beach and its cave, the Shore,
-Aragain Falls and the rainbow over them, and the canyon up to the forest.
+Aragain Falls and the rainbow over them, and the canyon up to the forest;
+and, from round 13, the coal mine and the way to it: the Narrow Passage
+south of the Round Room, the two Mirror Rooms and the mirror that changes
+one for the other, the Winding and Twisting Passages, the two Caves (one up
+from the Atlantis Room, one above the stairs to Hades), the Cold Passage,
+the Slide Room and its slide down to the Cellar, the Mine Entrance, the
+Squeaky Room, the Bat Room and its vampire bat, the Shaft Room and the
+basket on its chain, the Smelly Room and the Gas Room, the four rooms of the
+coal mine, the Ladder Top and Bottom, the Dead End and its coal, the Timber
+Room, the Drafty Room and the Machine Room, where coal becomes a diamond.
 Every room's name and description
 is the original's, word for word, from the ZIL source (`dungeon.zil`,
 `actions.zil`, and the shared substrate's `verbs.zil`). The narrator is
@@ -195,6 +204,44 @@ written down. That log is a product of the world as much as the rooms are.
    the Falls. Canyon View joins the Clearing east of the house and the
    forest: a way home with whatever the rainbow side holds.
 
+22. The way to the mine (v7, `mirror.sprout`): south of the Round Room the
+   Narrow Passage (dark) comes to Mirror Room 2 (lit), which leads only to
+   the Winding Passage and the Tiny Cave, whose dark stairs go down to Hades
+   (closed in-world, with a draught that blows candles out). Rubbing the
+   mirror changes the two Mirror Rooms over: the visitor, and whatever lies
+   in either room, are in the other one, which looks exactly the same. From
+   Mirror Room 1 (dark), north is the Cold Passage and the mine; east is the
+   other Cave, down to the Atlantis Room: so the Atlantis Room's stairs, shut
+   since v6, now lead up into it, a second way in that needs no mirror.
+   Broken, the mirror changes nothing again, and its breaker is unlucky.
+23. The Slide Room, west of the Cold Passage, with a steep metal slide down
+   to the Cellar (one way: the ramp is unclimbable from below), and the
+   letters "Granite Wall" on a wall that isn't. North, the Mine Entrance,
+   the Squeaky Room, and the Bat Room: without the clove of garlic in hand
+   (or on the floor), the vampire bat swoops, and carries the visitor off to
+   one of eight rooms of the mine; with it, he holds his nose on the
+   ceiling and the jade figurine (5 and 5) can be had.
+24. The Shaft Room: a basket on a chain over a shaft too narrow for a
+   person. Lowered, it is at the bottom, in the Drafty Room, and raised it
+   comes back, with whatever is in it (up to 50). North, the Smelly Room and
+   down to the Gas Room, with the sapphire-encrusted bracelet (5 and 5), where
+   a flame in hand (the torch, lit candles, a burning match) is
+   ** BOOOOOOOOOOOM **. The lamp is safe. East, the coal mine: four rooms
+   alike, three with a way back into themselves, and down to the Ladder Top.
+25. Down the ladder, the Ladder Bottom; south, the Dead End and its pile of
+   coal; west, the Timber Room, whose very narrow passage west lets nobody
+   through carrying anything heavier than a clove of garlic or a matchbook.
+   Beyond it the Drafty Room (13 points the first time it is seen lit),
+   where the basket comes down, and south the Machine Room: the coal in the
+   machine, the lid shut, the switch turned with the screwdriver, and the
+   lid opens on a huge diamond (10 and 10). Anything else comes out as slag.
+26. So Zork's solution, as here: the torch and the screwdriver (and later
+   the coal) into the basket at the top, the basket down, the visitor down
+   through the gas with the lamp alone, everything left in the Timber Room,
+   the Drafty Room lit by the torch in the basket, the diamond made and put
+   back in the basket with the torch, the basket raised from the top again,
+   and the slide down to the Cellar, a short way home.
+
 "Done", for this slice, is: the egg (whole), the canary, the bauble, the
 painting, the bag of coins, the platinum bar, the torch, the gold coffin,
 the sceptre and the chalice in the trophy case (the sceptre on its own,
@@ -202,14 +249,17 @@ not in the coffin), the thief dead, the visitor having been past the troll
 both ways, through the maze, round by the Gallery and up the chimney, down
 the rope and up by prayer, and past the Cyclops to the lair; and, since
 v6, the trunk, the trident, the emerald, the scarab and the pot of gold in
-the case too, the dam opened and the river run. 277 points is the ceiling
-with every treasure intact: the Kitchen 10, the Cellar 25, the East-West
+the case too, the dam opened and the river run; and, since v7, the jade,
+the bracelet and the diamond in the case, the Drafty Room seen lit and the
+slide gone down. 330 points is the ceiling with every treasure intact,
+which is Zork's 350 less the crystal skull's 20 (v8): the Kitchen 10, the Cellar 25, the East-West
 Passage 5, the Treasure Room 25; the egg 5 and 5, the canary 6 and 4, the
 bauble 1 and 1, the painting 4 and 6, the coins 10 and 5, the bar 10 and
 5, the torch 14 and 6, the coffin 10 and 15, the sceptre 4 and 6, the
 chalice 10 and 5; the trunk 15 and 5, the trident 4 and 11, the pot of
-gold 10 and 10, the scarab 5 and 5, the emerald 5 and 10. Until round 11
-it was 197; until round 9, 145, with the canary unreachable whole. A single visit cannot carry it all: the coffin, the
+gold 10 and 10, the scarab 5 and 5, the emerald 5 and 10; the Drafty
+Room 13, the jade 5 and 5, the bracelet 5 and 5, the diamond 10 and 10.
+Until round 13 it was 277; until round 11, 197; until round 9, 145, with the canary unreachable whole. A single visit cannot carry it all: the coffin, the
 torch and the bar together are 95 of the 100, so the lamp and the sword
 stay below.
 
@@ -403,6 +453,36 @@ stay below.
 - **The rainbow is a switch.** The sceptre makes it solid and ordinary in
   turn; the pot of gold appears once. Waving it while standing on the
   rainbow is Zork's best joke and its last.
+- **The mirror moves you, not the room.** Rubbed, Mirror Room 2 becomes
+  Mirror Room 1 and nothing looks different: the only clue is the rumble,
+  and that the doors now lead somewhere else. A thing dropped before the
+  rub is still at your feet after it, because everything lying in either
+  room changes over too. Breaking it ("a seven years' supply of good luck")
+  cuts the Round Room's side off from the mine for good, leaves only the
+  Atlantis Room's stairs as a way in, and makes the next death "Bad luck,
+  huh?" and the Tiny Cave's draught likelier to have the candles.
+- **Garlic is for the bat.** The clove that has done nothing since the
+  Kitchen is the only thing that keeps the bat on the ceiling; in the sack
+  it does not count, eaten it is gone, and dropped in the Bat Room it works
+  as well as held. Without it the bat drops the visitor somewhere in the
+  mine, which is a way of getting lost and also, if you know, a shortcut.
+- **The gas does not care about the lamp.** Only flames explode: the torch,
+  the candles, a match. The torch, the best light in the game, cannot be
+  carried through the Gas Room; it goes down the shaft in the basket.
+- **The basket is the only way down the shaft, and the passage is the only
+  way to it.** The Timber Room's passage takes empty hands (garlic and
+  matches excepted), so the light, the tools and the coal must go down by
+  basket, and the diamond must come back up the same way. A lit thing in
+  the basket lights the Drafty Room, which is worth 13 points; lowering the
+  only light leaves the Shaft Room pitch black.
+- **Coal is the raw material.** The machine turns the coal into a diamond,
+  and anything else, treasures included, into slag that crumbles at a
+  touch. Burned, or run with something else, the coal is gone, and the
+  diamond with it.
+- **The slide is a short way home.** From the Slide Room, down is the
+  Cellar; things put in the slide arrive there before you. Since the
+  trap door stays open once reopened from above, the coal mine's treasures
+  reach the case by the slide and the stairs.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
   chimney` and `climb down chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
@@ -410,7 +490,9 @@ stay below.
   `count candles`, `kiss dome`, `turn page`, `close book`, `ring bell`,
   `wave sceptre`, `pour water on torch`; and, since v6, `oil bolt`,
   `plug dam`, `read buttons`, `open tool chests`, `put gunk in sack`,
-  `count matches`, `jump` at Canyon View, `cross rainbow` from it.
+  `count matches`, `jump` at Canyon View, `cross rainbow` from it; and,
+  since v7, `read wall` in the Slide Room, `talk to bat`, `turn on machine`,
+  `look in mirror`, `kiss mirror`, `climb down chain`.
 
 ## Things deliberately left out of this slice
 
@@ -419,9 +501,9 @@ stay below.
 - Putting things through the grating (Zork lets a small one fall into
   the Grating Room).
 - The map in the trophy case, which only appears at 350 points.
-- The mirrors south of the Round Room and up from the Atlantis Room (v8);
-  the coal mine (v7); Hades below the Altar, and the exorcism the bell, the
-  book and the candles are for (v8); the hot bell.
+- Hades below the Altar and below the Tiny Cave, and the exorcism the bell,
+  the book and the candles are for (v8); the hot bell; the crystal skull.
+  Both ways down refuse in-world.
 - Filling the bottle at the river or the reservoir (Zork's FILL with
   GLOBAL-WATER): the bottle's water is the Kitchen's only.
 - The thief on the drained Reservoir (Zork's I-THIEF goes there once it is
@@ -527,6 +609,24 @@ stay below.
   scarab), `Scarab`, `PotOfGold` and `FarDam` kinds, and the marker kinds
   `Riverside`, `OnTheRiver`, `Narrows`, `RainbowFoot`, `RainbowTop`,
   `RainbowEnd`, `CanyonRim`, `SandyCave` and `CliffCave`.
+- `mirror.sprout` (v7): the Narrow Passage (`narrow_corridor`, since the
+  Gallery's has the name), the two Mirror Rooms (`MirrorRoom`, `Mirror`),
+  the Winding and Twisting Passages, the two Caves, the Cold Passage, and
+  `mirror_limbo`, a place nobody visits, where the rooms' contents wait for
+  a moment while the mirror changes them over. The change itself is the
+  visitor's, through the gate (`adventurer.sprout`, `:mirror_1` and
+  `:mirror_2`).
+- `mine.sprout` (v7): the Slide Room and `Chute`, the Mine Entrance, the
+  Squeaky Room, the Bat Room and `Bat`, the Shaft Room, the `Basket` and its
+  `FarBasket` (both `Cage`), `Chain`, the Smelly Room, the Gas Room and
+  `Gas`, the four `CoalMine` rooms, the Ladder Top and Bottom and `Ladder`,
+  the Dead End and `Coal`, the Timber Room and `Timber`, the Drafty Room
+  (`lower_shaft`), the Machine Room, `Machine`, `Diamond` and `Slag`, and the
+  `Jade` and `Bracelet` treasures; the marker kinds `Crawlspace` (the
+  narrow passage), `GasRoom`, `ShaftTop`, `Reeking` and `Squeaky`. The
+  visitor's side of the bat (`:bats`), the gas (`:gas`, `:boom`), the
+  draught (`:gust`), the narrow passage (`depart`) and the slide (PUT and
+  THROW) is `adventurer.sprout`'s.
 - `boat.sprout` (v6): the `Pile`, the `MagicBoat` (a place and a bag at
   once: its reach, its errands through the gate, its current, its own ways
   out), the `Wreck` and the `BoatLabel`, and the boat itself, declared
@@ -1571,3 +1671,119 @@ Egyptian Room.
   Room and the key from below; the grue in play; the ghost; the tree's
   drop; the egg broken; the Cyclops, the lair and the Egyptian Room. These
   now need goals aimed at them (P12), which is the director's call.
+
+## Before round 13: v7, the coal mine and the mirrors
+
+The director widened the scope to v7. Built from `1dungeon.zil` (MIRROR-ROOM-1
+and -2, SMALL-CAVE, TINY-CAVE, COLD-PASSAGE, NARROW-PASSAGE,
+WINDING-PASSAGE, TWISTING-PASSAGE, MINE-ENTRANCE, SQUEEKY-ROOM, BAT-ROOM,
+SHAFT-ROOM, SMELLY-ROOM, GAS-ROOM, LADDER-TOP, LADDER-BOTTOM, DEAD-END-5,
+TIMBER-ROOM, LOWER-SHAFT, MACHINE-ROOM, MINE-1 to MINE-4, SLIDE-ROOM, and
+BAT, JADE, RAISED-BASKET, LOWERED-BASKET, BRACELET, COAL, DIAMOND, GUNK,
+TIMBERS, MACHINE, MACHINE-SWITCH, MIRROR-1 and -2, LADDER, SLIDE) and
+`1actions.zil` (MIRROR-ROOM, MIRROR-MIRROR, CAVE2-ROOM, BATS-ROOM, BAT-D,
+BAT-F, FLY-ME, BAT-DROPS, BASKET-F, CHAIN-PSEUDO, BOOM-ROOM, GAS-PSEUDO,
+NO-OBJS, LIGHT-SHAFT, MACHINE-ROOM-FCN, MACHINE-F, MSWITCH-FUNCTION,
+GUNK-FUNCTION, SLIDE-FUNCTION, SLIDER, GRANITE-WALL-F, GARLIC-F, and
+JIGS-UP's LUCKY), with the winning transcript for the order of play.
+
+- **The way in, and why the mirrors are built.** Zork's mine has one door,
+  the Slide Room's north opening, and the Slide Room is reached only from
+  the Cold Passage, north of Mirror Room 1. Mirror Room 1 is reached from
+  the Round Room's country only by the mirror (Narrow Passage, Mirror Room
+  2, rub), and from the Atlantis Room by the Cave. So both Mirror Rooms are
+  built, with the teleport and the breaking; the Winding Passage and the
+  Tiny Cave (Mirror Room 2's other side) come with them, the Tiny Cave's
+  stairs to Hades refusing in-world. The Atlantis Room's stairs up, shut
+  since v6, now lead to the Cave; the Round Room's south passage, blocked
+  since v4, now leads to the Narrow Passage, and its sorted heaps and knee
+  marks now block a southwest passage Zork never opened.
+- **Rooms (25):** the Narrow Passage, Mirror Room 2 (lit), the Winding
+  Passage, the Tiny Cave, Mirror Room 1, the Twisting Passage, the Cave
+  (Small Cave), the Cold Passage, the Slide Room, the Mine Entrance, the
+  Squeaky Room, the Bat Room, the Shaft Room, the Smelly Room, the Gas
+  Room, Coal Mine 1 to 4, the Ladder Top and Bottom, the Dead End, the
+  Timber Room, the Drafty Room and the Machine Room. All dark but Mirror
+  Room 2, as Zork has them.
+- **Objects:** the mirrors, the vampire bat, the jade figurine, the basket
+  and the chain's other end, the chain, the bracelet, the coal, the broken
+  timber, the machine and its switch, the diamond and the slag (spawned),
+  the slide, the ladders; and the scenery each room names (the corridors
+  and passages, the caves' entrances and stairs, the draught and voices
+  from Hades, the letters on the wall that isn't granite, the chamber, the
+  mine shaft and the squeaky sounds, the bat's doors, the shaft and its
+  framework, the gas and the odor, the coal mine's workings, the Dead End's
+  coal face, the draft, the very narrow passageway), each with a
+  description of its own.
+- **Points:** the jade 5 and 5, the bracelet 5 and 5, the diamond 10 and 10,
+  and the Drafty Room 13 the first time it is seen lit. The ceiling is 330.
+- **The bat** is a thing, not an NPC: everything he does, he does on a
+  visitor's arrival or at their hand, and nothing he does needs a turn of
+  his own. The Bat Room asks each visitor who comes in to look in their own
+  hands (`:bats`); one without garlic, in hand or on the floor, tells
+  themselves the room, the swoop and the fweeps, and goes through the
+  world's gate to one of BAT-DROPS's eight rooms. TAKE, ATTACK and BREAK
+  him do the same, or answer "You can't reach him; he's on the ceiling."
+- **The basket** is two objects: the basket, a box at whichever end of the
+  shaft it has been sent to, and the chain's other end, which answers that
+  the basket is there. Raised or lowered from either room, whichever is
+  touched opens the world's gate and moves both, and each keeps its own
+  note of which end is up.
+- **The narrow passage** is the visitor's own `depart`: from the Timber
+  Room or the Drafty Room into the other, refused if anything in hand
+  weighs more than four, what is in a box counting.
+- **The gas** is the visitor's own look in their hands on arriving in the
+  Gas Room, and the match's look at the room it is struck in.
+- **The machine** destroys what it holds and spawns a diamond or slag in
+  itself.
+- **The thief's round** is 21 rooms longer: the new rooms Zork does not hold
+  sacred (all but the Bat Room, the Gas Room, the Timber Room and the
+  Drafty Room), after the Sandy Cave, so a whole round is 68 minutes, not
+  47. `thief_gallery.json`, `thief_hoard.json`, `v5_score.json` and
+  `thief_unseen.json` wait 21 minutes more.
+- **The tests:** `bat.json` (the garlic held, dropped and eaten; the bat
+  swooping and carrying the visitor off), `basket.json` (the canonical load
+  down the shaft, the far end, the narrow passage, the Drafty Room's 13
+  points, the load back up), `gas.json` (the lamp safe, a burning match
+  carried down fatal), `gas_strike.json` (a match struck in the room),
+  `machine.json` (the lid, the switch, the wrong tool, slag, the diamond),
+  `slide.json` (the letters, things put and thrown down the slide, the
+  slide to the Cellar, the ramp from below), `mirror.json` (the teleport
+  with a thing carried over, the Cave and the Atlantis stairs, breaking it,
+  "Bad luck, huh?"), `candles_gust.json` (the Tiny Cave, Hades closed, the
+  draught on the candles), `v7_score.json` (the whole coal mine, Zork's
+  way, and its treasures in the case: 113 of the new ceiling of 330).
+  `atlantis.json` now goes up the stairs to the Cave and back;
+  `barriers.json`, `heaps.json` and `chasm_room.json` meet the heaps at the
+  Round Room's southwest.
+
+### What round 13 should test
+
+- **Does anyone find the way in?** Nothing points to the mirror's rub but
+  Zork's own hint, which is that there are two identical rooms. Watch
+  whether players reach Mirror Room 2, rub or touch the mirror, notice that
+  they moved, and go north; and whether anyone comes up from the Atlantis
+  Room instead. Watch for a broken mirror cutting off the Round Room's way.
+- **The bat.** Whether players without garlic understand being carried off,
+  and connect it to the garlic (the bat holds his nose; nothing else says
+  so). Whether the random drop reads as fair or as a trap.
+- **The gas.** Whether anyone carries the torch or the candles into the Gas
+  Room and dies, whether the Smelly Room's odor and the smell of the gas
+  read as a warning, and whether the death reads as fair.
+- **The basket and the passage.** The heart of the puzzle: whether players
+  understand that the passage takes empty hands, that the basket is the way
+  to send things down, that the Drafty Room needs a light sent down too,
+  and that the machine needs the screwdriver. Watch for players stuck in
+  the dark Drafty Room, and for anyone who raises the basket from below and
+  loses the light.
+- **The machine.** Whether the switch's 1/16 by 1/4 inch reads as the
+  screwdriver; whether anyone runs it with a treasure in it.
+- **The slide** as the way home, and whether the open trap door makes the
+  short trip to the case.
+- **Faults:** none in the new tests or in walks through the mine; watch the
+  gate's new errands (the bat, the mirror, the basket, the slide) above all,
+  each a move across the map.
+- Carried, still unmet: the egg given to the thief; DIAGNOSE; the Grating
+  Room and the key from below; the grue in play; the ghost; the tree's
+  drop; the egg broken; the Cyclops, the lair and the Egyptian Room; the
+  canyon.

@@ -215,10 +215,17 @@
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
     ] },
     { "as": "Marta", "type": "u", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The staircase climbs to a tiny cave, and from it a passage goes on toward a cold draught and a faint glitter, as of a great many mirrors all looking at you at once. A little beyond the cave the roof has come down across the passage, quite recently by the dust, and somebody has chalked an arrow on the rubble pointing back the way you came. You take the hint." }
+      { "reader": "Marta", "kind": "described", "words": "Cave" },
+      { "reader": "Marta", "kind": "described", "words": "This is a tiny cave with entrances west and north, and a staircase leading down." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Atlantis Room" }
     ] },
     { "as": "Marta", "type": "climb up staircase", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The staircase climbs to a tiny cave, and from it a passage goes on toward a cold draught and a faint glitter, as of a great many mirrors all looking at you at once. A little beyond the cave the roof has come down across the passage, quite recently by the dust, and somebody has chalked an arrow on the rubble pointing back the way you came. You take the hint." }
+      { "reader": "Marta", "kind": "described", "words": "Cave" }
+    ] },
+    { "as": "Marta", "type": "climb down staircase", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Atlantis Room" }
     ] },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Reservoir North" },

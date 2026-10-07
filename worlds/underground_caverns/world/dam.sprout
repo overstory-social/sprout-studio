@@ -21,7 +21,8 @@ import {Adventurer} from 'adventurer'
 import {Pile} from 'boat'
 import {River, Cliffs, WaterAbout, Riverside} from 'river'
 import {Stairs} from 'scenery'
-import {take, open, close, read, look_in, shift, raise, plug, put, turn, turn_with, oil, squeeze, tally, lamp_on, lamp_off, burn, attack, climb_up, climb_down, cross, leap_at, through, mung, kick, rub, search, Dest, :travel, :tide, :gate_flag, :lights, :flooded, :relight, :consume, :light, :snuffed, :match_out, :die} from 'verbs'
+import {take, open, close, read, look_in, shift, raise, plug, put, turn, turn_with, oil, squeeze, tally, lamp_on, lamp_off, burn, attack, climb_up, climb_down, cross, leap_at, through, mung, kick, rub, search, Dest, :travel, :tide, :gate_flag, :lights, :flooded, :relight, :consume, :light, :snuffed, :match_out, :die, :boom} from 'verbs'
+import {GasRoom} from 'mine'
 import {deep_canyon} from 'east'
 import {reservoir_south} from 'reservoir'
 
@@ -525,6 +526,11 @@ kind Matchbook is Readable, Flame {
         say "One of the matches starts to burn."
         if (actor.holds(self)) { send actor :light with 1 } else { send here :relight }
         if (was_dark && here.is(Room)) { say "{here.full}" }
+        // BOOM-ROOM: a match struck in the Gas Room.
+        if (here.is(GasRoom)) {
+          say "How sad for an aspiring adventurer to light a match in a room which reeks of gas. Fortunately, there is justice in the world."
+          send actor :boom
+        }
       }
     }
   }
@@ -554,6 +560,11 @@ kind Matchbook is Readable, Flame {
         say "One of the matches starts to burn."
         if (actor.holds(self)) { send actor :light with 1 } else { send here :relight }
         if (was_dark && here.is(Room)) { say "{here.full}" }
+        // BOOM-ROOM: a match struck in the Gas Room.
+        if (here.is(GasRoom)) {
+          say "How sad for an aspiring adventurer to light a match in a room which reeks of gas. Fortunately, there is justice in the world."
+          send actor :boom
+        }
       }
     }
   }

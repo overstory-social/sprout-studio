@@ -10,7 +10,7 @@ import {ask} from 'sprout'
 import {Light} from 'lamp'
 import {Weapon} from 'items'
 import {Thief} from 'thief'
-import {board, disembark, launch, land, inflate, deflate, plug, turn_with, oil, take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die, :pinch, :far_voice} from 'verbs'
+import {lower, rub_with, board, disembark, launch, land, inflate, deflate, plug, turn_with, oil, take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die, :pinch, :far_voice} from 'verbs'
 import {Room} from 'room'
 import {Abyss} from 'east'
 import {River} from 'river'
@@ -87,6 +87,7 @@ kind Thing {
   as target for lamp_off   { do { say "You can't turn that off." } }
   as target for shift      { do { say "You can't move the {self.short}." } }
   as target for raise      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
+  as target for lower      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
   as target for eat        { do { say "I don't think that the {self.short} would agree with you." } }
   as target for drink      { do { say "I don't think that the {self.short} would agree with you." } }
   as target for wind       { do { say "You cannot wind up a {self.short}." } }
@@ -111,6 +112,7 @@ kind Thing {
   // Zork's HACK-HACK, and the rest of its small change.
   as target for kick    { do { say "Kicking the {self.short} {self.hacked}" } }
   as target for rub     { do { say "Fiddling with the {self.short} {self.hacked}" } }
+  as target for rub_with { do { say "Fiddling with the {self.short} {self.hacked}" } }
   as target for wave    { do { say "Waving the {self.short} {self.hacked}" } }
   as target for shake   { do { say "You can't take it; thus, you can't shake it!" } }
   as target for squeeze { do { say "How singularly useless." } }

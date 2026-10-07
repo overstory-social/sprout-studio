@@ -114,6 +114,9 @@ object cellar is DarkRoom in underground_caverns {
     grammar { name "metal ramp"  nouns "ramp", "chute", "slide"  adjectives "steep", "metal", "twisting" }
     passage short { metal ramp }
     describe { text "The bottom of a steep metal ramp comes down out of the dark on the west side of the cellar. It is polished smooth by everything that has ever slid down it, and it is unclimbable." }
+    // SLIDE-FUNCTION in the Cellar: climbing it is going west, which fails.
+    without as target for climb_up from Thing
+    as target for climb_up { do { say "You try to ascend the ramp, but it is impossible, and you slide back down." } }
   }
   object passageway is Scenery {
     grammar { name "narrow passageway"  nouns "passageway", "passage"  adjectives "narrow", "north" }

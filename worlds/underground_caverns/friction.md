@@ -2534,6 +2534,216 @@ unseen) are named where they would have helped.
   actor's only (`take`) might take only what lies loose in the place, as
   Zork's does, rather than everything in reach.
 
+## Found before round 13: the coal mine and the mirrors
+
+v7 adds the coal mine and the Mirror Rooms that are its only way in. What the
+language let me say plainly: the rooms, the dark, the coal mine's ways that
+lead back into themselves (an exit to its own place is just an exit), the
+ladders and stairs climbed by name, the machine's lid as a box, the slide's
+DOWN with a line of its own (`exit down "slide" -> cellar say ...`), the
+Slide Room's wall that only says it is granite, and the thief's longer
+round. What it would not, below. Five things move or change across the map
+in one turn here, and each of them goes by the world's gate (6): the bat's
+visitor, the mirror's rooms, the basket, what falls down the slide, and the
+machine's coal. The open issues are named where they would have helped:
+sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
+#482 (a thing present but unseen) and #485 (vehicles).
+
+### 109. Something that carries the visitor off
+
+- **Wanted:** Zork's FLY-ME: in the Bat Room without garlic, the room is
+  described (V-LOOK), the bat says "Fweep!" three times, "The bat grabs you
+  by the scruff of your neck and lifts you away....", and the visitor is
+  set down in one of eight rooms of the mine (BAT-DROPS), described there.
+  TAKE, ATTACK and MUNG of the bat do the same.
+- **Found:** four things. (a) `sprout.Actor` departs only when the mover is
+  itself, so nothing, NPC or not, may carry a visitor anywhere: the bat
+  cannot move the one he grabs. (b) The Bat Room cannot reach the mine's
+  rooms. (c) The Bat Room, passed through in one turn, is never described
+  (100 again). (d) What is told is rendered when the turn is done, against
+  the state it leaves (116), by which time the visitor is gone from the Bat
+  Room; so the bat's own line, which is the swoop or the held nose
+  according to whether the one looking has garlic, had nobody to ask, and
+  came out empty.
+- **Wrote instead:** the Bat Room asks each visitor who comes in to look in
+  their own hands (`:bats`); one with no garlic there or on the floor tells
+  themselves the room (`{from.full}`, or the dark line), the fweeps and the
+  grab, and goes through the world's gate to one of the eight rooms drawn
+  with `random(8)`. The bat's line reads "swooping" in a Bat Room with
+  nobody in it. TAKE and ATTACK are the visitor's own parts; BREAK is the
+  bat's, who asks the visitor to go. The bat is a thing, not an NPC: he
+  needs no turns of his own, and an NPC could carry nobody either.
+- **Spec:** Actors and visitors; Movement and consent › The three roles
+  ("it departs only when the mover is itself, so nobody is carried off")
+  and › After the move; The runtime › Effects.
+- **Status: open.** #485 is the nearest: a vehicle the visitor is put into
+  rather than boards. What the bat wants is a consent a visitor's kind can
+  give, a `depart` that allows a named mover, so that a bat, a whirlwind or
+  a bouncer can carry a person by consent rather than by asking them to
+  walk; #481 would let the bat be an NPC who knows his room.
+
+### 110. The bat cannot see the garlic in a hand
+
+- **Wanted:** BAT-D and BATS-ROOM's test, `<EQUAL? <LOC ,GARLIC> ,WINNER
+  ,HERE>`: garlic in hand or on the floor keeps him on the ceiling; in the
+  sack it does not.
+- **Found:** a room or a thing in it cannot see into a visitor's hands
+  (33 again); only a light in them is open to sight. So the Bat Room and
+  the bat's line cannot ask the question. And the garlic, eaten, cannot
+  tell the hand it has gone: a destroyed object's undelivered messages are
+  dropped with it, and with `finally destroy` it is still in the hand when
+  the hand counts.
+- **Wrote instead:** the visitor keeps `:garlics`, a public count of the
+  cloves directly in hand, recounted whenever garlic comes or goes, which
+  the bat's line and the room read; the eater's own part of EAT takes one
+  off, before the garlic's part destroys it.
+- **Spec:** Range; Sight ("Nothing else may read through a person this
+  way"); Destroying.
+- **Status: open.** #477 (carried things speaking) would let the garlic be
+  smelled from the hand, which is the whole of the bat's interest in it.
+
+### 111. A container at two ends of a shaft
+
+- **Wanted:** BASKET-F: one basket on a chain, at the top of the shaft (the
+  Shaft Room) or the bottom (the Drafty Room), raised or lowered from
+  either end, carrying what is in it; at the other end, "From the chain is
+  suspended a basket." and, for anything done to it but raising and
+  lowering, "The basket is at the other end of the chain." Lowering the
+  only light: "It is now pitch black."
+- **Found:** an object is in one place, and neither room reaches the
+  other. Zork's own answer is two objects (RAISED-BASKET, the container,
+  and LOWERED-BASKET, a sign at the other end) that change rooms, and that
+  is what Sprout can do too, but only through the gate, and each needs its
+  own note of which end is up, since neither can read the other from where
+  it hangs. The pitch-black line needs the lights in the Shaft Room counted
+  by hand, as the lamp counts them (33).
+- **Wrote instead:** `Basket` and `FarBasket` (both `Cage`): whichever is
+  raised or lowered opens the world's gate and moves both, and tells both
+  which end is up (`:cage`); the far end refuses to take anything, and
+  answers everything else as Zork does. The basket's contents move with it,
+  and a lit thing in it lights the room at the end it hangs in.
+- **Spec:** Containment is a declaration; Range; Places inside places.
+- **Status: open.** #485 would cover it if a vehicle may carry things with
+  nobody in it: a dumbwaiter is a lift that goes between two fixed places,
+  and a container whose place is one of a set, moved by a statement, is
+  what both want.
+
+### 112. A passage too narrow for a load
+
+- **Wanted:** the Timber Room's way west and the Drafty Room's way east,
+  `IF EMPTY-HANDED ELSE "You cannot fit through this passage with that
+  load."`, where EMPTY-HANDED (NO-OBJS) is true when nothing in hand weighs
+  more than 4, a thing's weight counting what is in it.
+- **Found:** an exit's `when` is polled with no `actor` bound, so a way out
+  cannot ask who is taking it, or what they carry. There is no weight
+  (#478): the world keeps its own `:size` on every thing and `:held` on
+  every box. And a guard has no `here`, so the visitor's own `depart`
+  cannot ask which room it is leaving.
+- **Wrote instead:** the visitor's own `depart`, refusing a move into one of
+  the two rooms (`Crawlspace`) from the other, which it notes on arriving
+  (`:in_crawl`), when anything in hand weighs more than 4. The exits are
+  plain exits, so the way is offered to a loaded visitor and refused when
+  taken; the words are Zork's. Garlic (4) and the matchbook (2) pass.
+- **Spec:** Exits › An exit may be conditional; Range › Sight ("as an
+  exit's `when` is: `actor` and `here` are not bound"); Movement and
+  consent › Guards are read-only.
+- **Status: open.** #478 would give the weight; an exit's `when` that may
+  read the one going would make it Zork's one line.
+
+### 113. Gas that reacts to the flames you carry
+
+- **Wanted:** BOOM-ROOM's M-END: after every command in the Gas Room, if
+  burning candles, the torch or a burning match are HELD (in hand, or in
+  anything in hand, open or not), "Oh dear. It appears that the smell
+  coming from this room was coal gas. I would have thought twice about
+  carrying flaming objects in here." and ** BOOOOOOOOOOOM **; lighting one
+  there gets "How sad for an aspiring adventurer to light a match in a
+  room which reeks of gas. Fortunately, there is justice in the world."
+- **Found:** the room cannot see into hands (33); a room has no hook that
+  runs after each command in it (Zork's M-END); and a flame in hand cannot
+  tell the room it is burning (#477). And, as 100, the Gas Room walked into
+  and out of (dead) in one turn is never described.
+- **Wrote instead:** the Gas Room asks each visitor who comes in to look in
+  their own hands (`:gas`), and in the open boxes in them; one with a flame
+  tells themselves the room, Zork's two lines, and dies. The matchbook,
+  struck in the Gas Room, says how sad it is and asks its holder to explode
+  (`:boom`). Nothing else can be lit there (the candles need a burning
+  match, which is already fatal, and the torch never goes out), so the
+  difference is a flame in a shut box in hand, which Zork's HELD? finds and
+  range does not.
+- **Spec:** Range; Sight; The runtime › Turns (no hook after a command).
+- **Status: open.** #477.
+
+### 114. One thing becoming another
+
+- **Wanted:** MSWITCH-FUNCTION: the coal removed and the diamond, which
+  exists from the start outside the world, moved into the machine;
+  anything else removed and the slag moved in.
+- **Found:** there is nowhere a declared diamond can wait unseen and out of
+  reach (#482); a declared object destroyed is gone for good, and the
+  compiler warns of it.
+- **Wrote instead:** the machine destroys what it holds (the coal is
+  consumed, as a burned thing is) and spawns a `Diamond`, or a `Slag`, in
+  itself. Nothing a player sees differs; the diamond has no identifier, so
+  nothing in the world can name it by path, which nothing needs to.
+- **Spec:** Spawning; Destroying.
+- **Status: open,** and small: #482 would let the diamond be declared.
+
+### 115. A teleport that does not show
+
+- **Wanted:** MIRROR-MIRROR: everything in this Mirror Room goes to the
+  other, everything in the other comes here, and the player with them, by
+  `<GOTO .RM2 <>>`, which does not describe the room: the player reads only
+  "There is a rumble from deep within the earth and the room shakes." and
+  sees an identical room, and finds out by walking.
+- **Found:** the one who moves always reads the new place's description;
+  neither room reaches the other; and moving two rooms' contents past each
+  other needs somewhere to put one lot while the other moves.
+- **Wrote instead:** the rub asks the visitor to go (`:mirror_1`,
+  `:mirror_2`); through the gate, the visitor moves what lies loose in
+  Mirror Room 1 to a room nobody visits (`mirror_limbo`), Mirror Room 2's
+  to Mirror Room 1, and the first lot on to Mirror Room 2, and then goes.
+  The rumble is said, and then the room is described, as an arrival: in
+  full the first time, its name after. Since the rooms are named and
+  described alike, what the player sees differs from Zork's only by the
+  room's name under the rumble.
+- **Spec:** Movement and consent › After the move; Range.
+- **Status: open,** and small: a quiet `move`.
+
+### 116. A line is rendered when the turn is done
+
+- **Found:** a turn's lines are rendered against the state the turn
+  leaves. So the Tiny Cave, walked into with burning candles that its
+  draught blows out in the same turn (CAVE2-ROOM), is described dark,
+  before "A gust of wind blows out your candles!", where Zork describes it
+  lit and then puts them out; and the Bat Room, told as the bat carries a
+  visitor off, is rendered after they have gone (109).
+- **Wrote instead:** nothing for the cave; the bat's line has a fallback.
+- **Spec:** The runtime › Effects ("A turn's lines are rendered once its
+  work is done, against the state it commits"); Properties and values.
+- **Status: open.** A description rendered as the move is made, as an
+  exit's `say` is said, would be Zork's order.
+
+### 117. Luck that belongs to the world
+
+- **Wanted:** LUCKY, a global cleared by breaking the mirror: every later
+  death says "Bad luck, huh?", and CAVE2-ROOM's draught takes the candles
+  four times in five, not one in two.
+- **Found:** as 96: no global. The mirror's breaking is broadcast to both
+  Mirror Rooms and both mirrors (`:shatter`), which keep their own note,
+  but luck is read in deaths and draughts wherever the visitor is.
+- **Wrote instead:** the luck is the breaker's (`:unlucky`), not the
+  world's: another visitor in the same world keeps theirs.
+- **Spec:** Range; The world model.
+- **Status: open,** with 96.
+
+### 84, again: the thief's round
+
+- The new rooms Zork does not hold sacred (21 of the 25) are added to the
+  thief's round after the Sandy Cave, and the `if` that names every room in
+  it is 68 branches long. Each new room had to be added by hand to the
+  chain, as 84 said it would.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -2853,3 +3063,32 @@ unseen) are named where they would have helped.
 - **Round 12: taking scenery** that refuses (the water, the mud, the bolt)
   is answered by the adventurer, as the rug is, and costs a move, as Zork's
   TAKE of a non-takeable thing does.
+
+## Differences chosen in v7
+
+- **The heaps moved.** The Round Room's south passage, blocked by sorted
+  heaps since v4, now goes to the Narrow Passage, as in Zork; the heaps,
+  the cave-in and the knee marks now block a southwest passage, which Zork
+  does not have (there, "You can't go that way."), so that the thing players
+  have studied most in the Round Room is still there.
+- **Hades is closed in-world.** The Tiny Cave's stairs down refuse with a
+  notice chalked on a slab across the third step, in the Management's
+  manner, and the voices below.
+- **The draught** blows out the candles as a visitor comes into the Tiny
+  Cave, not after every command there (CAVE2-ROOM's M-END).
+- **The Drafty Room's 13 points** are paid when the room becomes lit with
+  a visitor in it, or a visitor comes in while it is lit, not at the start
+  of the next command there (NO-OBJS's M-BEG).
+- **The slide says so.** DOWN in the Slide Room says "You tumble down the
+  slide...." as CLIMB DOWN and THROUGH the slide do in Zork; Zork's DOWN
+  says nothing. THROW something down the slide is SLIDER, as PUT is.
+- **The bat's drop** says "You have moved into a dark place." where the
+  visitor has no light, as every other way into the dark here does.
+- **Breaking the mirror** by THROW at it moves the thing thrown to the
+  floor, as Zork's THROW does.
+- **LISTEN and SMELL** with nothing named hear the bat in the Squeaky Room
+  and the Bat Room and the voices in the Tiny Cave, and smell the gas in
+  the Smelly Room and the Gas Room; Zork asks what.
+- **Names:** the Narrow Passage's identifier is `narrow_corridor`, since the
+  Gallery already has a `narrow_passage`; the players see Zork's name.
+

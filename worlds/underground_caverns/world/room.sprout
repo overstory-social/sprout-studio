@@ -14,7 +14,7 @@ import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
 import {Thief} from 'thief'
-import {listen, search, look_in, look_under, look_behind, Reach, :scored, :relight, :room_lit, :wall_look, :hush, :snuffed, :prowl, :survey, :where, :berth, :wreck} from 'verbs'
+import {read, listen, search, look_in, look_under, look_behind, Reach, :scored, :relight, :room_lit, :wall_look, :hush, :snuffed, :prowl, :survey, :where, :berth, :wreck} from 'verbs'
 import {MagicBoat, Wreck} from 'boat'
 
 kind Room is sprout.Place {
@@ -36,8 +36,9 @@ kind Room is sprout.Place {
   // Which walls these are, for the wall to describe: plain, the Cellar's
   // damp stone, the Troll Room's scarred rock, the Studio's paint, the
   // Engravings Cave's carved rock, the Temple's granite, the Cyclops Room's
-  // bloodstains, or the Treasure Room's granite.
-  :walls 0 min 0 max 8
+  // bloodstains, the Treasure Room's granite, or the Slide Room's, which
+  // only says it is.
+  :walls 0 min 0 max 9
 
   // The Loud Room's noise, until somebody says the word: every thing there
   // answers whatever is done to it with an echo (thing.sprout).
@@ -52,7 +53,7 @@ kind Room is sprout.Place {
   :visited false
   // Where the room comes in the thief's round of the Empire, or 0 for a
   // room he never enters (Zork's SACREDBIT, above ground, and the house).
-  :tour 0 min 0 max 60
+  :tour 0 min 0 max 80
 
   // The thief comes and goes unseen, as Zork's INVISIBLE thief does: the
   // engine's notice of an actor arriving and leaving says nothing of him.
@@ -230,9 +231,16 @@ kind ChimneyTop { }
 // inherits a line of its own, so it tells the wall, as a visitor comes in,
 // which walls these are.
 kind Wall is Scenery {
+  without as target for read from Thing
+  as target for read {
+    do {
+      if (self.get(:look) == 9) { say "It only SAYS \"Granite Wall\"." }
+      else { say "How does one read a {self.short}?" }
+    }
+  }
   grammar { name "surrounding wall"  nouns "wall", "walls"  adjectives "surrounding", "east", "west", "north", "south" }
   passage short { surrounding wall }
-  :look 0 min 0 max 8
+  :look 0 min 0 max 9
   on :wall_look (from, value) { self.set(:look, value) }
   passage plain { The surrounding wall is solid, plain and entirely uninterested in you. }
   passage damp { The cellar walls are damp, rough stone, sweating quietly in the dark. }
@@ -242,6 +250,7 @@ kind Wall is Scenery {
   passage granite { The west wall is solid granite, smooth and blank and very sure of itself. The east wall bears an ancient inscription, cut deep. }
   passage bloodied { The walls are rough rock, spattered with old bloodstains from the floor to well above head height: higher than most people bleed, and lower than a cyclops eats. The east wall is solid rock, polished smooth where something very large has leaned on it. }
   passage broken { The walls are rough rock, spattered with old bloodstains from the floor to well above head height. The east wall has a cyclops-sized hole in it, and most of the rest of the east wall is lying beyond it. }
+  passage etched { The walls are dark rock, shot through with seams of coal. On the south wall someone has etched, in careful capitals, the words "Granite Wall". The wall isn't granite. }
   passage hoard { The east wall is solid granite, smooth and blank and entirely without a door, which is the point of it. The other walls are rough rock, and somebody has knocked a row of iron pegs into them to hang bags on. }
   describe {
     if (self.get(:look) == 1) { text damp }
@@ -252,6 +261,7 @@ kind Wall is Scenery {
     else if (self.get(:look) == 6) { text bloodied }
     else if (self.get(:look) == 7) { text hoard }
     else if (self.get(:look) == 8) { text broken }
+    else if (self.get(:look) == 9) { text etched }
     else { text plain }
   }
 }
