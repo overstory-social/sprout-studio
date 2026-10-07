@@ -21,7 +21,7 @@ import {Thing, Scenery, Portable} from 'thing'
 import {Room, DarkRoom} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {take, rub, rub_with, mung, attack, look_in, look_behind, through, climb_up, climb_down, kiss, search, shift, listen, Dest, :travel, :shatter, :bad_luck, :gust} from 'verbs'
+import {take, rub, rub_with, mung, attack, look_in, look_behind, look_under, through, climb_up, climb_down, kiss, search, shift, raise, read, kick, listen, Dest, :travel, :shatter, :bad_luck, :gust} from 'verbs'
 import {round_room} from 'east'
 import {atlantis_room} from 'reservoir'
 import {slide_room} from 'mine'
@@ -193,6 +193,27 @@ object tiny_cave is DarkRoom, Murmuring in underground_caverns {
     as target for climb_up   { do { say "The stairs don't lead upward." } }
   }
   object entrances is CaveEntrances
+  // The slab the Hades refusal tells of, and its notice (round 13, P7):
+  // there to be looked at and read, and not to be moved, by its own say.
+  object slab is Scenery {
+    grammar { name "slab of rock"  nouns "slab", "notice", "sign", "chalk", "writing", "lettering"  adjectives "chalked", "rock", "stone", "grey" }
+    passage short { slab of rock }
+    passage notice { CLOSED UNTIL FURTHER NOTICE. }
+    passage no_take { The slab lies across the third step down, and to reach it you would have to go down the stairs, which are closed. It says so on the slab. }
+    describe { text "Three steps down, a slab of grey rock lies across the staircase from wall to wall, as neatly as if it had been measured for it, which it has. On it, chalked in a neat hand, is a notice. The chalk is fresh. Somebody keeps it fresh." }
+    without as target for read from Thing
+    as target for read { do { say "\"{self.notice}\" Under it, smaller and in the same hand: \"This means you.\"" } }
+    without as target for shift from Thing
+    as target for shift { do { say no_take } }
+    without as target for raise from Thing
+    as target for raise { do { say no_take } }
+    without as target for kick from Thing
+    as target for kick { do { say no_take } }
+    without as target for look_under from Thing
+    as target for look_under { do { say "Under the slab are the rest of the stairs, and under them the voices, and you are not going to look any closer than that." } }
+    without as target for look_behind from Thing
+    as target for look_behind { do { say "On the far side of the slab the stairs go on down, and something on the far side of the notice laughs." } }
+  }
   object draught is Scenery {
     grammar { name "draught"  nouns "draft", "wind", "gust", "breeze", "voices", "voice", "murmur", "murmuring"  adjectives "cold", "steady" }
     passage short { draught }

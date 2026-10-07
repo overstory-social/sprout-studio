@@ -240,7 +240,10 @@ written down. That log is a product of the world as much as the rooms are.
    through the gas with the lamp alone, everything left in the Timber Room,
    the Drafty Room lit by the torch in the basket, the diamond made and put
    back in the basket with the torch, the basket raised from the top again,
-   and the slide down to the Cellar, a short way home.
+   and the slide down to the Cellar, a short way home for a visitor who
+   has come up once by some way other than the chimney (the grating, the
+   Strange Passage, prayer, the canyon); after the chimney, the trap door
+   is barred again and the Cellar is a long way round.
 
 "Done", for this slice, is: the egg (whole), the canary, the bauble, the
 painting, the bag of coins, the platinum bar, the torch, the gold coffin,
@@ -474,15 +477,25 @@ stay below.
   matches excepted), so the light, the tools and the coal must go down by
   basket, and the diamond must come back up the same way. A lit thing in
   the basket lights the Drafty Room, which is worth 13 points; lowering the
-  only light leaves the Shaft Room pitch black.
+  only light leaves the Shaft Room pitch black. Since round 13 the passage
+  says why it refuses, naming what in hand will not go (the lamp among it)
+  and that the slot takes a body and what would go in a pocket, and the
+  shaft, examined or looked down, says the bottom is dark and a light sent
+  down stays down: so lowering the only lamp is a choice made knowingly,
+  and the want of a second light points at the torch.
 - **Coal is the raw material.** The machine turns the coal into a diamond,
   and anything else, treasures included, into slag that crumbles at a
   touch. Burned, or run with something else, the coal is gone, and the
   diamond with it.
-- **The slide is a short way home.** From the Slide Room, down is the
-  Cellar; things put in the slide arrive there before you. Since the
-  trap door stays open once reopened from above, the coal mine's treasures
-  reach the case by the slide and the stairs.
+- **The slide is a short way home, once the trap door is open.** From the
+  Slide Room, down is the Cellar; things put in the slide arrive there
+  before you. The trap door stays open once a visitor has come up by some
+  way other than the chimney (the grating, the Strange Passage, prayer, the
+  canyon) and opened it from above; then the coal mine's treasures reach
+  the case by the slide and the stairs. Climbing out by the chimney does
+  not open it, and the next descent is barred again (Zork's TOUCHBIT), so
+  a visitor who only ever uses the chimney finds the slide a long way
+  round (round 13, P4).
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
   chimney` and `climb down chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
@@ -1787,3 +1800,56 @@ JIGS-UP's LUCKY), with the winning transcript for the order of play.
   Room and the key from below; the grue in play; the ghost; the tree's
   drop; the egg broken; the Cyclops, the lair and the Egyptian Room; the
   canyon.
+
+## After round 13
+
+Six runs (five opus, one fable); legible, every run matching the intent at
+least in part. The way into the mine was found (five of six rubbed the
+mirror at once), and the bat and the garlic were connected; v7's puzzle
+went unsolved. Nobody fetched the torch, and three players treated the
+Timber Room's passage as a wall to strip down for, down to the lamp alone,
+because Zork's refusal is the same whatever is in hand.
+
+- **P1, accepted.** The passage's refusal goes on in the chimney's voice:
+  "What will not go through the slot between the timbers is the brass
+  lantern, and anything else bigger than would go in a pocket." Only what
+  is too big is named, so the garlic and the matchbook are left out of it
+  (friction 118 on how). The Timber Room's passageway, examined, says a
+  lamp would stick and that what comes through the slot comes out of the
+  dark. The rule is Zork's.
+- **P2, accepted.** The Shaft Room's shaft, examined, looked into and
+  looked down (the new `look down` there, and `look down shaft`), says
+  the bottom is dark, that whatever is sent down will want a light of its
+  own, and that a light sent down stays down; and says where the basket
+  is. The grue and the lamp's return are Zork's and stay.
+- **P3, P5, P8, P10, P11, kept** as built. P4: kept; the intent above now
+  says the slide is a short way home only once the trap door is open.
+- **P6, rejected for the world, logged** (friction 94 again): the unknown
+  word blamed on the thing is the engine's.
+- **P7, accepted.** The slab and its chalked notice are in the Tiny Cave,
+  to be examined and read ("This means you."), and not moved, taken or
+  kicked; `look down [x]` and `peer down [x]` look into it, so `look down
+  shaft` is answered. Tested in `candles_gust.json` (the test that walks
+  to the Tiny Cave) and `basket.json`.
+- **P9:** the puzzle is now readable from the passage and the shaft. A goal
+  aimed at the mine is the director's call.
+- **Steering S1** (carried from round 3): the troll takes the water out of
+  the open bottle in hand, as built in round 4; this round adds the ways
+  people say it beyond `give`'s eight phrases (`hand troll the water`,
+  `let the troll drink the water`, `pass the water to the troll`, `give
+  troll a drink`), in `troll_water.json`.
+
+### What round 14 should watch
+
+- **The passage's refusal:** whether players, told the lamp will not go,
+  turn to the basket and to a second light (the torch), or carry the
+  matchbook through; whether anyone still strips down in the Timber Room.
+- **The shaft's line:** whether lowering the only lamp is still a death, or
+  is now done knowingly.
+- **The Drafty Room and the machine:** whether anyone reaches them lit,
+  and whether the switch reads as the screwdriver.
+- **The thief:** whether anyone follows him to the lair after a robbery.
+- Carried, still unmet: the egg given to the thief; DIAGNOSE; the Grating
+  Room and the key from below; the grue in play; the ghost; the tree's
+  drop; the egg broken; the Cyclops, the lair and the Egyptian Room; the
+  canyon; the slide as the way home.

@@ -1,5 +1,5 @@
 {
-  "about": "The Tiny Cave (v7; CAVE2-ROOM): east of Mirror Room 2, the dark stairs down to Hades are closed in-world, with the draught and the voices coming up them. With the altar's candles burning in hand, the draught blows them out half the time a visitor comes in (four times in five once the mirror is broken); with no other light, it is now completely dark. The arrival is described as the turn leaves it, so already dark (friction 116).",
+  "about": "The Tiny Cave (v7; CAVE2-ROOM): east of Mirror Room 2, the dark stairs down to Hades are closed in-world, with the draught and the voices coming up them. With the altar's candles burning in hand, the draught blows them out half the time a visitor comes in (four times in five once the mirror is broken); with no other light, it is now completely dark. The arrival is described as the turn leaves it, so already dark (friction 116). The slab across the stairs and its chalked notice can be looked at and read, and not moved.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -202,6 +202,21 @@
     ] },
     { "as": "Marta", "type": "climb down stairs", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The staircase goes down a long way into a darkness that is darker than the dark, and out of it come a cold draught, a smell of old stone, and voices, a great many of them, all murmuring at once and none of them about anything good. Across the third step somebody has laid a slab of rock, and on it, chalked in a neat hand, CLOSED UNTIL FURTHER NOTICE. Something on the far side of the notice laughs. You decide to take the notice at its word." }
+    ] },
+    { "as": "Marta", "type": "x slab", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Three steps down, a slab of grey rock lies across the staircase from wall to wall, as neatly as if it had been measured for it, which it has. On it, chalked in a neat hand, is a notice. The chalk is fresh. Somebody keeps it fresh." }
+    ] },
+    { "as": "Marta", "type": "read notice", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"CLOSED UNTIL FURTHER NOTICE.\" Under it, smaller and in the same hand: \"This means you.\"" }
+    ] },
+    { "as": "Marta", "type": "move the slab", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The slab lies across the third step down, and to reach it you would have to go down the stairs, which are closed. It says so on the slab." }
+    ] },
+    { "as": "Marta", "type": "take slab", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The slab lies across the third step down, and to reach it you would have to go down the stairs, which are closed. It says so on the slab." }
+    ] },
+    { "as": "Marta", "type": "look under slab", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Under the slab are the rest of the stairs, and under them the voices, and you are not going to look any closer than that." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Winding Passage" },

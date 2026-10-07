@@ -419,7 +419,15 @@ intent go_back_down {
 }
 intent look_down_into {
   "look down into [x]"  "peer down into [x]"  "look down at [x]"
+  "look down [x]"  "peer down [x]"  "look down the [x]"
   do look_in (target: x)
+}
+// Giving, as people say it beyond give's own eight phrases: the troll can
+// be handed his water, or let drink it (steering, round 13).
+intent give_more {
+  "hand [y] [x]"  "pass [x] to [y]"  "pass [y] [x]"  "let [y] have [x]"
+  "let [y] drink [x]"  "let [y] eat [x]"  "give [x] for [y] to drink"
+  do give (item: x, recipient: y)
 }
 intent what_carried {
   "what am i carrying"  "what do i have"  "what have i got"  "what am i holding"

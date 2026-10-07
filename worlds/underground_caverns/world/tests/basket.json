@@ -307,6 +307,15 @@
     { "as": "Marta", "type": "d", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "You wouldn't fit and would die if you could." }
     ] },
+    { "as": "Marta", "type": "x shaft", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The shaft goes straight down through the floor, square and narrow, into a darkness your light does not reach the bottom of. A draught comes up it, smelling of coal. It is wide enough for the basket and not for you. Whatever is at the bottom is in the dark, and will want a light of its own to be seen by; a light that goes down in the basket stays down with it, and is not up here with you." }
+    ] },
+    { "as": "Marta", "type": "look down", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The shaft drops through the floor, square and narrow, into a dark your light cannot follow down. The basket hangs at the top of it, at the end of its chain. Whatever is down there is in the dark." }
+    ] },
+    { "as": "Marta", "type": "look in shaft", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The shaft goes down into the dark further than your light can follow. The chain goes with it. The basket hangs at the top, at the end of it. Down there it is as dark as it is anywhere, and nobody has left a light on." }
+    ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Smelly Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small nondescript room. However, from the direction of a small descending staircase a foul odor can be detected. To the south is a narrow tunnel." }
@@ -398,11 +407,17 @@
       { "reader": "Marta", "kind": "said", "words": "A small pile of coal" }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 64 (total of 350 points), in 92 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 64 (total of 350 points), in 95 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
     ] },
     { "as": "Marta", "type": "lower basket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The basket is lowered to the bottom of the shaft." }
+    ] },
+    { "as": "Marta", "type": "look down shaft", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The shaft goes down into the dark further than your light can follow. The chain goes with it. Somewhere at the bottom, at the end of it, is the basket. Down there it is as dark as it is anywhere, and nobody has left a light on." }
+    ] },
+    { "as": "Marta", "type": "look down", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The shaft drops through the floor, square and narrow, into a dark your light cannot follow down. The chain goes down into it, taut, and somewhere at the bottom is the basket. Whatever is down there is in the dark." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Shaft Room" },
@@ -451,16 +466,16 @@
       { "reader": "Marta", "kind": "described", "words": "There is a broken timber here." }
     ] },
     { "as": "Marta", "type": "x passageway", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "At the west end of the room the passage pinches into a slot between two timbers, barely wider than you are. You could get through it with nothing in your hands; with anything much in them, you would stick." }
+      { "reader": "Marta", "kind": "described", "words": "At the west end of the room the passage pinches into a slot between two timbers, barely wider than you are. You could get through it with nothing in your hands, or nothing much: what would go in a pocket. A lamp would stick, which is a pity, since the draught that comes through the slot comes out of the dark." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You cannot fit through this passage with that load." }
+      { "reader": "Marta", "kind": "refused", "words": "You cannot fit through this passage with that load. What will not go through the slot between the timbers is the brass lantern, the sword, the jade figurine, the sapphire-encrusted bracelet, and anything else bigger than would go in a pocket." }
     ] },
     { "as": "Marta", "type": "drop sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You cannot fit through this passage with that load." }
+      { "reader": "Marta", "kind": "refused", "words": "You cannot fit through this passage with that load. What will not go through the slot between the timbers is the brass lantern, the jade figurine, the sapphire-encrusted bracelet, and anything else bigger than would go in a pocket." }
     ] },
     { "as": "Marta", "type": "drop all", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Clove of garlic: Dropped." },
@@ -487,14 +502,14 @@
       { "reader": "Marta", "kind": "described", "words": "A small pile of coal" }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 77 (total of 350 points), in 112 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 77 (total of 350 points), in 117 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
     ] },
     { "as": "Marta", "type": "take coal", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You cannot fit through this passage with that load." }
+      { "reader": "Marta", "kind": "refused", "words": "You cannot fit through this passage with that load. What will not go through the slot between the timbers is the small pile of coal, and anything else bigger than would go in a pocket." }
     ] },
     { "as": "Marta", "type": "take screwdriver", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
@@ -503,7 +518,7 @@
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You cannot fit through this passage with that load." }
+      { "reader": "Marta", "kind": "refused", "words": "You cannot fit through this passage with that load. What will not go through the slot between the timbers is the small pile of coal, the screwdriver, the torch, and anything else bigger than would go in a pocket." }
     ] },
     { "as": "Marta", "type": "put coal in basket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Done." }

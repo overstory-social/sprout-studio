@@ -393,13 +393,13 @@ object shaft_room is DarkRoom, ShaftTop in underground_caverns {
   object shaft is Scenery {
     grammar { name "small shaft"  nouns "shaft", "hole", "pit"  adjectives "small", "narrow" }
     passage short { small shaft }
-    describe { text "The shaft goes straight down through the floor, square and narrow, into a darkness your light does not reach the bottom of. A draught comes up it, smelling of coal. It is wide enough for the basket and not for you." }
+    describe { text "The shaft goes straight down through the floor, square and narrow, into a darkness your light does not reach the bottom of. A draught comes up it, smelling of coal. It is wide enough for the basket and not for you. Whatever is at the bottom is in the dark, and will want a light of its own to be seen by; a light that goes down in the basket stays down with it, and is not up here with you." }
     without as target for climb_down from Thing
     as target for climb_down { do { say "You wouldn't fit and would die if you could." } }
     without as target for through from Thing
     as target for through { do { say "You wouldn't fit and would die if you could." } }
     without as target for look_in from Thing
-    as target for look_in { do { say "The shaft goes down into the dark further than your light can follow. The chain goes with it." } }
+    as target for look_in { do { say "The shaft goes down into the dark further than your light can follow. The chain goes with it.{if shaft_room.count(Basket) > 0} The basket hangs at the top, at the end of it.{else} Somewhere at the bottom, at the end of it, is the basket.{/if} Down there it is as dark as it is anywhere, and nobody has left a light on." } }
   }
   object framework is Scenery {
     grammar { name "metal framework"  nouns "framework", "frame", "winch", "pulley", "gantry"  adjectives "metal", "iron" }
@@ -616,7 +616,7 @@ object timber_room is DarkRoom, Crawlspace in underground_caverns {
   object passageway is Scenery {
     grammar { name "very narrow passageway"  nouns "passageway", "passage", "crack", "gap"  adjectives "very", "narrow", "west" }
     passage short { very narrow passageway }
-    describe { text "At the west end of the room the passage pinches into a slot between two timbers, barely wider than you are. You could get through it with nothing in your hands; with anything much in them, you would stick." }
+    describe { text "At the west end of the room the passage pinches into a slot between two timbers, barely wider than you are. You could get through it with nothing in your hands, or nothing much: what would go in a pocket. A lamp would stick, which is a pity, since the draught that comes through the slot comes out of the dark." }
   }
 }
 

@@ -37,7 +37,7 @@ import {Pump, reservoir_north, atlantis_room} from 'reservoir'
 import {Matchbook, dam_room, dam_base} from 'dam'
 import {:dig_sand, River, Shovel, Narrows, CliffCave, CanyonRim, SandyCave, Sand, Riverside, OnTheRiver, canyon_view, cliff_middle, canyon_bottom, aragain_falls, end_of_rainbow, on_rainbow} from 'river'
 import {damp_cave, round_room} from 'east'
-import {Bat, Chute, Crawlspace, GasRoom, Reeking, Squeaky, bat_room, mine_1, mine_2, mine_3, mine_4, ladder_top, ladder_bottom, squeaky_room, mine_entrance, smelly_room, gas_room} from 'mine'
+import {Bat, Basket, Chute, Crawlspace, GasRoom, ShaftTop, Reeking, Squeaky, bat_room, mine_1, mine_2, mine_3, mine_4, ladder_top, ladder_bottom, squeaky_room, mine_entrance, smelly_room, gas_room} from 'mine'
 import {Mirror, Murmuring, mirror_room_1, mirror_room_2, small_cave} from 'mirror'
 
 kind Adventurer is sprout.Visitor {
@@ -120,6 +120,14 @@ kind Adventurer is sprout.Visitor {
 
   passage hands_full { You're holding too many things already! }
 
+  // Zork's EMPTY-HANDED refusal, going on as the chimney's does (round 13,
+  // P1): which of the things in hand will not go, the lamp among them
+  // where it is carried, and that the slot takes a body and next to nothing.
+  // Only those are named, so the garlic and the matchbook are left out of it.
+  // A small container is named for holding anything at all: a passage does
+  // no sums (friction).
+  passage crawl_load { You cannot fit through this passage with that load. What will not go through the slot between the timbers is {for u: Thing in self}{if u.get(:size) > 4}the {u.short}, {else if u.is(Box)}{if u.get(:held) > 0}the {u.short} with what is in it, {/if}{/if}{/for}and anything else bigger than would go in a pocket. }
+
   // Zork's "Your load is too heavy.", and which of what is carried weighs
   // the most, where it is one of the heavy ones. With the torch, which
   // never goes out, and the lamp both in hand, the lamp is named: of the
@@ -139,8 +147,8 @@ kind Adventurer is sprout.Visitor {
     // may weigh more than four, what is in it counting.
     if (self.get(:in_crawl) && to.is(Crawlspace)) {
       each t: Thing in self {
-        if (t.get(:size) > 4) { refuse "You cannot fit through this passage with that load." }
-        if (t.is(Box)) { if (t.get(:size) + t.get(:held) > 4) { refuse "You cannot fit through this passage with that load." } }
+        if (t.get(:size) > 4) { refuse crawl_load }
+        if (t.is(Box)) { if (t.get(:size) + t.get(:held) > 4) { refuse crawl_load } }
       }
     }
     if (self.get(:at_narrows) && self.count(MagicBoat) > 0 && to.is(Room)) {
@@ -1334,6 +1342,7 @@ kind Adventurer is sprout.Visitor {
       }
       else if (here.is(ChasmEdge)) { say "You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down." }
       else if (here.is(CanyonEdge)) { say "The canyon falls away below you, sheer and black, too deep for your light to find the bottom. Far down, water is flowing." }
+      else if (here.is(ShaftTop)) { say "The shaft drops through the floor, square and narrow, into a dark your light cannot follow down.{if underground_caverns.shaft_room.count(Basket) > 0} The basket hangs at the top of it, at the end of its chain.{else} The chain goes down into it, taut, and somewhere at the bottom is the basket.{/if} Whatever is down there is in the dark." }
       else if (here.is(TreeTop)) { say "Far below, through the branches, is the forest path. It is a long way down for anything that falls." }
       else { say "You see the floor, where you left it." }
     }

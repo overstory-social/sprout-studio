@@ -2744,6 +2744,64 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
   it is 68 branches long. Each new room had to be added by hand to the
   chain, as 84 said it would.
 
+## Found in round 13
+
+### 94, again: the word is blamed on the thing
+
+- **Round 13:** two players, six lines, each about a thing in plain sight
+  with one word the world does not know: `kick the mailbox gently`, `put
+  leaflet back in mailbox and close it`, `eat the garlic raw`, `go up the
+  trap door again`, `look at myself in the mirror`. Each was answered "You
+  can't see any such thing.", and one player drew the lesson Zork's parser
+  never teaches, that "the parser acts like the object isn't there".
+- **Wrote instead:** nothing, as in round 12: a phrase for every adverb is
+  not a fix, and the world cannot change how a leftover word is answered.
+- **Spec:** The parser › When nothing matches (`not_here`, `unknown`).
+- **Status: open,** an engine bug, with 68 and 94: where matching fails on
+  a word nothing in the world declares, the answer should name the word,
+  as Zork's does (I don't know the word "gently".), and never be
+  `not_here`.
+  To raise with Sprout as its own issue.
+
+### 118. Naming only what will not fit
+
+- **Wanted:** the narrow passage's refusal (EMPTY-HANDED) to name what in
+  hand is too big for it, and only that, as a list: "which is the brass
+  lantern and the jade figurine", leaving out the garlic and the matchbook
+  that would go through, since naming those is the very misreading the
+  refusal has to correct.
+- **Found:** a list's commas and its "and" come from `$first` and `$last`,
+  which count every thing the loop walks, not the ones an `{if}` inside it
+  keeps; a passage does no arithmetic, so it cannot test Zork's size plus
+  contents against four; and the guard that knows which things are too
+  big (`depart`) may not write, so it cannot leave a count or the first
+  one's place for the passage to read.
+- **Wrote instead:** "What will not go through the slot between the
+  timbers is the brass lantern, the jade figurine, and anything else
+  bigger than would go in a pocket.", where each thing named ends in a
+  comma and the closing clause absorbs the last one. A container small
+  enough to pass empty is named for holding anything at all, where Zork
+  would name it only if what it holds brought it over four; no container
+  in this slice is that small, so nobody can see the difference.
+- **Spec:** Prose › Passages (`{for}`'s `$first`, `$last`, `$index`; "A
+  passage reads what is there and does no arithmetic"); Statements, and
+  where each may stand (a guard may not write).
+- **Status: open,** and small: a kind filter or a condition on `{for}`
+  (`{for u: Thing in self where u.get(:size) > 4}`), so that `$first` and
+  `$last` count only what is kept.
+
+### Steering, round 13: the troll's drink
+
+- **Wanted:** the troll given water from the bottle by pass mechanics, as
+  people say it.
+- **Found:** nothing missing. The water sits in the open bottle, which is
+  in hand, and `give`'s carried item reaches it through the open bottle,
+  as round 4 built it; `give` was at its eight phrases, so the new ways of
+  saying it (`hand troll the water`, `let the troll drink the water`, `pass
+  the water to the troll`) are an intent, `give_more`, and `give troll a
+  drink` is the water's own noun. Not friction; logged so the steering's
+  "if it cannot be built" has its answer.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -3089,6 +3147,18 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
 - **LISTEN and SMELL** with nothing named hear the bat in the Squeaky Room
   and the Bat Room and the voices in the Tiny Cave, and smell the gas in
   the Smelly Room and the Gas Room; Zork asks what.
+- **Round 13: the narrow passage says why.** Zork's "You cannot fit
+  through this passage with that load." goes on to name what in hand will
+  not go, and that the slot takes a body and what would go in a pocket;
+  the Timber Room's passageway says a lamp would stick. Zork says only the
+  first sentence.
+- **Round 13: the shaft is dark at the bottom.** Examined, looked into or
+  looked down, the Shaft Room's shaft says whatever is at the bottom will
+  want a light of its own, and that a light sent down in the basket stays
+  there; it says where the basket is. Zork's shaft is a pseudo-object with
+  no such line.
+- **Round 13: the slab and its notice** across the Hades stairs can be
+  examined, read and not moved; Zork has no slab.
 - **Names:** the Narrow Passage's identifier is `narrow_corridor`, since the
   Gallery already has a `narrow_passage`; the players see Zork's name.
 
