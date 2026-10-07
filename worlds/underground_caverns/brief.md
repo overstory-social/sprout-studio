@@ -70,8 +70,9 @@ slice:
   them. The thief is an NPC (`sprout.Actor`) who roams the underground,
   steals treasures and other things, carries them in his bag, fights with
   his stiletto, and can open the jewelled egg (so the clockwork canary can
-  be had). His lair is the Treasure Room, up the Temple's magic word
-  "treasure" and the Strange Passage, with the silver chalice. The Cyclops
+  be had). His lair is the Treasure Room, up from the Cyclops Room, with
+  the silver chalice; the words "treasure" and "temple" join it and the
+  Temple, as Zork has them. The Cyclops
   guards the Cyclops Room (beyond Maze 15): the lunch and the water make
   him sleep, "Ulysses" (or "Odysseus") sends him crashing through the
   east wall into the Living Room. The Strange Passage joins the Cyclops
