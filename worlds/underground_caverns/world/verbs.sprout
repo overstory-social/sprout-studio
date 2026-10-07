@@ -3,6 +3,7 @@
 // replaces it, so that the words and the refusals are Zork's own.
 import {Box} from 'box'
 import * as sprout from 'sprout'
+import {inventory} from 'sprout'
 import {Portable} from 'thing'
 
 // `take` and `drop` take several things at once, as Zork's do: `take lamp
@@ -261,7 +262,7 @@ intent cut_with {
   do attack (target: x, weapon: y) when (x.is(sprout.Actor)) then cut (target: x, tool: y) when (!x.is(sprout.Actor))
 }
 // `look down`, where there is somewhere to look down to.
-verb look_down { "look down"  "look below"  "peer down"  "look over the edge"  "look over the side" }
+verb look_down { "look down"  "look below"  "peer down"  "look over the edge"  "look over the side"  "look down into the room below"  "look into the room below"  "look down below" }
 intent look_over {
   "look over [x]"  "peer over [x]"  "lean over [x]"  "look down over [x]"
   do look_in (target: x)
@@ -324,6 +325,23 @@ verb curse { "damn"  "curse"  "shit"  "fuck" }
 intent squeeze_through {
   "squeeze through [x]"  "squeeze in through [x]"  "squeeze into [x]"  "go through [x]"
   do through (target: x)
+}
+// Going back the way one came, said as players say it.
+intent go_back_up {
+  "go back up [x]"  "climb back up [x]"  "head back up [x]"
+  do climb_up (target: x)
+}
+intent go_back_down {
+  "go back down [x]"  "climb back down [x]"  "head back down [x]"
+  do climb_down (target: x)
+}
+intent look_down_into {
+  "look down into [x]"  "peer down into [x]"  "look down at [x]"
+  do look_in (target: x)
+}
+intent what_carried {
+  "what am i carrying"  "what do i have"  "what have i got"  "what am i holding"
+  do inventory
 }
 intent climb_into {
   "climb down into [x]"  "go down into [x]"  "lower yourself into [x]"

@@ -1,5 +1,5 @@
 {
-  "about": "After round 7: the Round Room's cave-in answers every way of shifting it with the roof that is still coming down; the Deep Canyon's one board, and the flooded way to the reservoir; the Chasm's standing water; `look down` and `look over` at the edges; `crawl` as `go`; moving the rug out of the way; `take X from Y`; the load naming its heaviest part; and a treasure scored the first time it leaves a box in hand.",
+  "about": "Round 8's small answers: the sorted heaps are a thing of their own, looked at closer, and every hand laid on them or on the rocks meets the roof still coming down; Zork's global grue, never here and always nearby; the Deep Canyon's water heard with `listen`; `what am I carrying`; `enter crack` at the Chasm goes through it; `look down into the room below` at the Dome.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -146,6 +146,40 @@
     { "as": "Marta", "type": "x passages", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Passages leave the room in every direction, like spokes from a hub. Most of them do not get far. The ones that do go east, west, north and southeast; the one to the south starts out bravely and gives up under a heap of fallen roof." }
     ] },
+    { "as": "Marta", "type": "x heaps", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "There are five heaps, graded as carefully as a builder grades gravel: fist-sized stones at the back, then smaller ones, then pebbles, then grit, and nearest of all a little cone of dust that has been swept up rather than kicked. Not one stone is on the wrong heap. Whoever did it knelt to do it; the dust in front of the smallest heap still has the marks of two knees in it, and nothing to say which way they went after." }
+    ] },
+    { "as": "Marta", "type": "search heaps", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You find nothing among the heaps but rock, sorted by size." }
+    ] },
+    { "as": "Marta", "type": "look behind heaps", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Behind the heaps the roof has come down all the way to the floor, and grit is still trickling from it." }
+    ] },
+    { "as": "Marta", "type": "move the rocks", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them." }
+    ] },
+    { "as": "Marta", "type": "take stones", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them." }
+    ] },
+    { "as": "Marta", "type": "push heaps", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them." }
+    ] },
+    { "as": "Marta", "type": "touch heaps", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them." }
+    ] },
+    { "as": "Marta", "type": "go through the heaps", "expect": [
+      { "level": "info", "text": "step: underground_caverns.through" },
+      { "reader": "Marta", "kind": "said", "words": "There is no way through. The roof came down all the way to the floor, and it is still coming." }
+    ] },
+    { "as": "Marta", "type": "x grue", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale." }
+    ] },
+    { "as": "Marta", "type": "listen to grue", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It makes no sound but is always lurking in the darkness nearby." }
+    ] },
+    { "as": "Marta", "type": "look under grue", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is no grue here, but I'm sure there is at least one lurking in the darkness nearby. I wouldn't let my light go out if I were you!" }
+    ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North-South Passage" },
       { "reader": "Marta", "kind": "described", "words": "This is a high north-south passage, which forks to the northeast." }
@@ -154,34 +188,15 @@
       { "reader": "Marta", "kind": "described", "words": "Deep Canyon" },
       { "reader": "Marta", "kind": "described", "words": "You are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. A stairway leads down. You can hear the sound of flowing water from below." }
     ] },
-    { "as": "Marta", "type": "x board", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "A plank is nailed across the east passage at about the height of a disappointed adventurer's waist, lettered in a patient hand. The board reads: \"FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management.\"" }
+    { "as": "Marta", "type": "listen", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can hear the sound of flowing water from below, a long way down, going somewhere in a hurry." }
     ] },
-    { "as": "Marta", "type": "pull the board off", "expect": [
-      { "level": "info", "text": "step: underground_caverns.shift" },
-      { "reader": "Marta", "kind": "said", "words": "The board is nailed across the passage by somebody who expected it to be argued with, and used a great many nails to say so." }
-    ] },
-    { "as": "Marta", "type": "climb over the board", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You could get past the board easily enough; it is only a board. But the passage beyond it hums with a great deal of water held back by something that would rather not be disturbed, and you find you would rather not disturb it." }
-    ] },
-    { "as": "Marta", "type": "duck under the board", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You could get past the board easily enough; it is only a board. But the passage beyond it hums with a great deal of water held back by something that would rather not be disturbed, and you find you would rather not disturb it." }
-    ] },
-    { "as": "Marta", "type": "cut the board with the sword", "expect": [
-      { "level": "info", "text": "step: underground_caverns.cut" },
-      { "reader": "Marta", "kind": "said", "words": "The board is nailed across the passage by somebody who expected it to be argued with, and used a great many nails to say so." }
-    ] },
-    { "as": "Marta", "type": "x flooded passage", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "A little way up the northwest passage the floor goes down under black, still water and stays there. The water fills the passage wall to wall and, as far as your light can tell, roof to floor. It is very cold and entirely uninterested in you." }
-    ] },
-    { "as": "Marta", "type": "nw", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage northwest grows wet underfoot, and then wetter, and then the floor goes down under black water lying perfectly still, and does not come up again anywhere your light can reach. Whatever is beyond is under it. You step back out of the puddle you were standing in." }
-    ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage east climbs toward a deep, steady hum, the sound of a great deal of water being held back by something that would rather not be disturbed. A board is nailed across it: \"FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management.\" You leave the dam to its inspection." }
-    ] },
-    { "as": "Marta", "type": "look down", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The canyon falls away below you, sheer and black, too deep for your light to find the bottom. Far down, water is flowing." }
+    { "as": "Marta", "type": "what am i carrying", "expect": [
+      { "level": "info", "text": "step: sprout.inventory" },
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A brass lantern (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "A sword" },
+      { "reader": "Marta", "kind": "said", "words": "A rope" }
     ] },
     { "as": "Marta", "type": "sw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North-South Passage" }
@@ -190,23 +205,13 @@
       { "reader": "Marta", "kind": "described", "words": "Chasm" },
       { "reader": "Marta", "kind": "described", "words": "A chasm runs southwest to northeast and the path follows it. You are on the south side of the chasm, where a crack opens into a passage." }
     ] },
-    { "as": "Marta", "type": "x path", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast it runs down into standing water and does not come up again." }
+    { "as": "Marta", "type": "enter crack", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" }
     ] },
-    { "as": "Marta", "type": "x water", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "To the northeast the path goes down into black water lying perfectly still, as though it had been there a long time and meant to stay. It smells of cold stone and of nothing having moved in it for years." }
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" }
     ] },
-    { "as": "Marta", "type": "ne", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The path follows the chasm northeast toward a smell of standing water, and the smell gets there first: a little way on, the path runs down into water, black and still and very cold, and your light finds no other side to it. You go back the way you came, with wet feet." }
-    ] },
-    { "as": "Marta", "type": "look down", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down." }
-    ] },
-    { "as": "Marta", "type": "squeeze through crack", "expect": [
-      { "level": "info", "text": "step: underground_caverns.through" },
-      { "reader": "Marta", "kind": "said", "words": "The crack opens into the passage to the south. Go south, and you will be in it." }
-    ] },
-    { "as": "Marta", "type": "climb up stairs", "expect": [
+    { "as": "Marta", "type": "sw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "East-West Passage" }
     ] },
     { "as": "Marta", "type": "e", "expect": [
@@ -221,101 +226,8 @@
       { "reader": "Marta", "kind": "described", "words": "Dome Room" },
       { "reader": "Marta", "kind": "described", "words": "You are at the periphery of a large dome, which forms the ceiling of another room below. Protecting you from a precipitous drop is a wooden railing which circles the dome." }
     ] },
-    { "as": "Marta", "type": "look down", "expect": [
+    { "as": "Marta", "type": "look down into the room below", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Beyond the railing the dome falls away to the floor of a room below, a good twenty feet down: too far to drop, and nothing between you and it but air." }
-    ] },
-    { "as": "Marta", "type": "look over the railing", "expect": [
-      { "level": "info", "text": "step: underground_caverns.look_in" },
-      { "reader": "Marta", "kind": "said", "words": "You lean over the railing. The dome falls away beneath you to the floor of a room below, a good twenty feet down: too far to drop, and nothing between you and it but air." }
-    ] },
-    { "as": "Marta", "type": "x railing", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The railing is of dark, polished wood, waist-high, running all the way round the edge of the dome. Beyond it is a precipitous drop to the floor of a room below, a good twenty feet down. The railing is very solid, its posts as thick as a wrist and sunk deep in the stone, the sort of thing a careful person makes something fast to before trusting the drop. It is the most reassuring thing you have seen in some time." }
-    ] },
-    { "as": "Marta", "type": "tie rope to railing", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The rope drops over the side and comes within ten feet of the floor." }
-    ] },
-    { "as": "Marta", "type": "look down", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Beyond the railing the dome falls away to the floor of a room below, a good twenty feet down. The rope hangs into it from the rail and ends some ten feet short of the floor." }
-    ] },
-    { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Torch Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a large room with a prominent doorway leading to a down staircase. Above you is a large dome. Up around the edge of the dome (20 feet up) is a wooden railing. In the center of the room sits a white marble pedestal." },
-      { "reader": "Marta", "kind": "described", "words": "A piece of rope descends from the railing above, ending some five feet above your head." },
-      { "reader": "Marta", "kind": "described", "words": "Sitting on the pedestal is a flaming torch, made of ivory." }
-    ] },
-    { "as": "Marta", "type": "take torch", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Temple" },
-      { "reader": "Marta", "kind": "described", "words": "This is the north end of a large temple. On the east wall is an ancient inscription, probably a prayer in a long-forgotten language. Below the prayer is a staircase leading down. The west wall is solid granite. The exit to the north end of the room is through huge marble pillars." },
-      { "reader": "Marta", "kind": "described", "words": "There is a brass bell here." }
-    ] },
-    { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Egyptian Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a room which looks like an Egyptian tomb. There is an ascending staircase to the west." },
-      { "reader": "Marta", "kind": "described", "words": "The solid-gold coffin used for the burial of Ramses II is here." }
-    ] },
-    { "as": "Marta", "type": "open coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Opening the gold coffin reveals a sceptre." }
-    ] },
-    { "as": "Marta", "type": "take coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your load is too heavy, the sword not least of it." }
-    ] },
-    { "as": "Marta", "type": "drop sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Dropped." }
-    ] },
-    { "as": "Marta", "type": "take coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 64 (total of 350 points), in 63 moves." },
-      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
-    ] },
-    { "as": "Marta", "type": "drop sceptre", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Dropped." }
-    ] },
-    { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 68 (total of 350 points), in 64 moves." },
-      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
-    ] },
-    { "as": "Marta", "type": "put sceptre in coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Done." }
-    ] },
-    { "as": "Marta", "type": "take sword from coffin", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "That isn't in the gold coffin." }
-    ] },
-    { "as": "Marta", "type": "take sceptre from coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 68 (total of 350 points), in 66 moves." },
-      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
-    ] },
-    { "as": "Marta", "type": "put sceptre in coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Done." }
-    ] },
-    { "as": "Marta", "type": "take sceptre out of coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "u", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Temple" },
-      { "reader": "Marta", "kind": "described", "words": "There is a brass bell here." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Altar" },
-      { "reader": "Marta", "kind": "described", "words": "This is the south end of a large temple. In front of you is what appears to be an altar. In one corner is a small hole in the floor which leads into darkness. You probably could not get back up it." },
-      { "reader": "Marta", "kind": "described", "words": "On the altar is a large black book, open to page 569." },
-      { "reader": "Marta", "kind": "described", "words": "On the two ends of the altar are burning candles." }
-    ] },
-    { "as": "Marta", "type": "read book", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "(Taking the black book first) Your load is too heavy, the gold coffin not least of it." }
-    ] },
-    { "as": "Marta", "type": "drop coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Dropped." }
-    ] },
-    { "as": "Marta", "type": "take candles from book", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't take the pair of candles from the black book." }
     ] }
   ]
 }

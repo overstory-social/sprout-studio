@@ -13,7 +13,7 @@ import {Thing, Scenery} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
-import {:scored, :relight, :room_lit, :wall_look, :hush, :snuffed} from 'verbs'
+import {listen, search, look_in, look_under, look_behind, :scored, :relight, :room_lit, :wall_look, :hush, :snuffed} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -28,6 +28,9 @@ kind Room is sprout.Place {
   // room. Sprout has no object that is everywhere at once, so every room
   // holds its own.
   object wall is Wall
+  // Zork's GRUE, another of its GLOBAL-OBJECTS, held the same way: never
+  // here, always nearby.
+  object grue is Grue
   // Which walls these are, for the wall to describe: plain, the Cellar's
   // damp stone, the Troll Room's scarred rock, the Studio's paint, the
   // Engravings Cave's carved rock, or the Temple's granite.
@@ -196,4 +199,23 @@ kind Wall is Scenery {
     else if (self.get(:look) == 5) { text granite }
     else { text plain }
   }
+}
+
+// Zork's GRUE-FUNCTION: what a visitor may learn of a grue without meeting
+// one. Everything else done to it is answered as Zork answers anything.
+kind Grue is Scenery {
+  grammar { name "lurking grue"  nouns "grue", "grues"  adjectives "lurking", "sinister", "hungry", "silent" }
+  passage short { lurking grue }
+  passage absent { There is no grue here, but I'm sure there is at least one lurking in the darkness nearby. I wouldn't let my light go out if I were you! }
+  describe { text "The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale." }
+  without as target for listen from Thing
+  as target for listen { do { say "It makes no sound but is always lurking in the darkness nearby." } }
+  without as target for search from Thing
+  as target for search { do { say absent } }
+  without as target for look_in from Thing
+  as target for look_in { do { say absent } }
+  without as target for look_under from Thing
+  as target for look_under { do { say absent } }
+  without as target for look_behind from Thing
+  as target for look_behind { do { say absent } }
 }

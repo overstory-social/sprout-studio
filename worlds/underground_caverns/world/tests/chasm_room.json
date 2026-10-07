@@ -58,8 +58,15 @@
     { "as": "Marta", "type": "x passage", "expect": [
       { "reader": "Marta", "kind": "described", "words": "The crack in the south side of the chasm is wide enough for a person, just, and opens into a passage that leads away south." }
     ] },
-    { "as": "Marta", "type": "climb through crack", "expect": [
+    { "as": "Marta", "type": "squeeze through crack", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The crack opens into the passage to the south. Go south, and you will be in it." }
+    ] },
+    { "as": "Marta", "type": "enter crack", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a high north-south passage, which forks to the northeast." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" }
     ] },
     { "as": "Marta", "type": "cross chasm", "expect": [
       { "reader": "Marta", "kind": "said", "words": "It's too far to jump, and there's no bridge." }
@@ -91,8 +98,7 @@
       { "reader": "Marta", "kind": "refused", "words": "The path follows the chasm northeast toward a smell of standing water, and the smell gets there first: a little way on, the path runs down into water, black and still and very cold, and your light finds no other side to it. You go back the way you came, with wet feet." }
     ] },
     { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "North-South Passage" },
-      { "reader": "Marta", "kind": "described", "words": "This is a high north-south passage, which forks to the northeast." }
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" }
     ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Chasm" }

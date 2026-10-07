@@ -883,3 +883,68 @@ V-TURN, V-UNTIE, V-RING).
 - Carried, still unmet: the Grating Room and the key from below; the grue;
   the skeleton's ghost; the tree's drop; the egg broken; the prayer found
   by a player who does not know Zork.
+
+## After round 8
+
+The slice holds: all three runs with a goal reached it, 145 in about 170
+moves for a player who knows Zork, about 120 in 250 turns for a careful
+first-timer. The edges read as places, the caretaker as the intent hopes,
+and nothing about the slice's shape changes. What changed is small answers.
+
+- **The heaps are their own thing.** Four players looked closer at the
+  sorted heaps and got the cave-ins' paragraph back. Now `examine heaps`
+  has a line of its own: five heaps graded like gravel, a swept cone of
+  dust, the marks of two knees, and nothing to say which way whoever knelt
+  there went. Someone has been there, and no further; the thief pays it off
+  in round 9. The cave-ins answer to `stones` and `debris` as well, and
+  both they and the heaps meet every hand (move, push, pull, take, touch,
+  kick, break, clear, dig, look under) with the roof still coming down;
+  `search` and `look behind` the heaps say what is there and behind.
+- **The chimney's rule is true.** "a light to climb by" was untrue for the
+  candles, which Zork's chimney never took. The overload line now says
+  "you, your lamp and one thing more", and without the lamp the chimney
+  says its own reason: the draught would have a flame out halfway; it is a
+  climb for a lamp.
+- **The load names the lamp beside the torch.** With both in hand, a load
+  too heavy names the brass lantern: the torch never goes out, and the
+  explorer who dropped both walked home by candles that burned down.
+- **Putting out the candles** says "It's really dark in here...." only when
+  no other light is left, counted as the lamp counts.
+- **The Altar's hole** answers `go down the hole`, `jump into the hole` and
+  `go through the hole` as its way down does: the coffin refused, or
+  Hades' sigh.
+- **Zork's global grue** is in every room, as the wall is: its
+  description, its silence, and "There is no grue here, but I'm sure there
+  is at least one lurking in the darkness nearby." In the dark it cannot
+  be named (friction 81).
+- **The Deep Canyon's water** is heard with `listen` alone.
+- **Parser:** `enter crack` at the Chasm takes the way south (its label is
+  now "crack"); `go back up the stairs` and its kin climb; `look down into
+  X` looks in, and `look down into the room below` at the Dome looks down;
+  `what am I carrying` and its kin are INVENTORY. `go back <direction>`
+  could not be written (82).
+- **Kept, by choice:** the trap door's silence after its TOUCHBIT is
+  cleared, the prayer's unannounced move to the Forest, and the rope's
+  one-way drop, all Zork's; the edges; the caretaker, untouched. The
+  optional dust line on the trap door is not written: from above, there is
+  no bar to see, and it would explain what Zork leaves to be noticed.
+- **For the director:** nobody has reached the Grating Room in 48 runs, and
+  the longer cap did not change it. A run given a goal that leads there
+  ("find another way out of the maze") is the only way left to see the
+  grating from below, the grue, the ghost and the tree's drop met in play.
+  Two of six runs filed no report (the parser-breaker at turn 37, the
+  newcomer at 145); that is the harness, and the parser-breaker is worth
+  running again.
+- **To Sprout:** 11 again (a list and `all`), 68 again, 70 again (what does
+  not parse cannot echo), 81 (naming in the dark), 82 (an intent's slot and
+  a way out).
+
+### What round 9 should watch
+
+- Whether the heaps' closer line satisfies the look, or pulls harder.
+- Whether a player with the candles meets the chimney's lamp line and
+  understands it at once.
+- Whether anyone with the torch drops the lamp when the load names it.
+- Carried, still unmet: the Grating Room and the key from below; the grue
+  in play; the skeleton's ghost; the tree's drop; the egg broken; the
+  prayer found by a player who does not know Zork.

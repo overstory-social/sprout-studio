@@ -1682,6 +1682,65 @@ contributing once, as the spec says. No NPC is new in v4.
 - **Status: open,** a question for Sprout rather than a bug: the spec's
   range rule is what faulted.
 
+## Found in round 8
+
+### 11, again: `take the candles and the book`, the book already held
+
+- **Round 8:** the newcomer, holding the book, typed `take the candles and
+  the book` and was answered for the candles alone. `take book` by itself
+  says "You already have that!".
+- **Found:** as 11: `all` and a list of names arrive alike in a set role,
+  so the world cannot both leave held things out of `take all`, as Zork's
+  does, and name a held thing listed on purpose.
+- **Wrote instead:** nothing new; what is held is still left out of any
+  list that holds something else.
+- **Asked of Sprout:** a way for a set role's handler to tell `all` from a
+  list of names.
+
+### 68, again: `move the rocks in the south passage`
+
+- **Round 8:** the rocks are a name in the Round Room, and `move the rocks`
+  is answered; `move the rocks in the south passage` is "You can't see any
+  such thing.", since the trailing words name nothing and are read as part
+  of the name. As 68.
+
+### 70, again: what does not parse cannot be echoed
+
+- **Round 8:** in the Loud Room, `be quiet` and other lines the parser
+  cannot place get "That sentence isn't one I recognize.", where Zork's
+  LOUD-ROOM-FCN echoes any input at all. A deafening room hears only what
+  parses. `what am I carrying` now parses (an intent for `inventory`).
+- **Asked of Sprout:** as 70, the raw line, and a place's say in the
+  `unknown` answer while someone is in it.
+
+### 81. The grue cannot be named in the dark
+
+- **Wanted:** Zork's global GRUE: `examine grue`, `listen to grue`, and
+  `find grue` answered anywhere, in the dark above all.
+- **Found:** every room now holds a grue, as it holds the wall (Sprout has
+  no object that is everywhere), and it answers in any lit room. In a dark
+  room a visitor can name only what they carry, so where the warning about
+  the grue is printed, `examine grue` is "You can't see any such thing."
+- **Wrote instead:** the grue in every room, answering where there is
+  light; in the dark, the engine's `not_here`.
+- **Spec:** Light and darkness; Range (what a visitor in the dark may name).
+- **Status: open.** A thing that may be named in the dark (a flag on the
+  kind, as `ndesc` is a world's own) would serve the grue, the wall and the
+  walls' sounds alike.
+
+### 82. An intent's slot cannot hold a way out
+
+- **Wanted:** `go back east`, `head back up the stairs`: an intent `"go
+  back [d]"` whose step is `go (way: d)`.
+- **Found:** "`way` of `go` takes a way out, and a slot of an intent holds
+  a thing." The engine's `go` can be reached by its own phrases only.
+- **Wrote instead:** `go back up [x]` and `go back down [x]` (and `climb`,
+  `head`) as CLIMB UP and CLIMB DOWN of a thing, which covers the stairs,
+  the chimney and the trap door's staircase; `go back <direction>` is still
+  not understood.
+- **Spec:** Parsing › Intents; Exits.
+- **Status: open,** beside 79.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -1857,3 +1916,20 @@ contributing once, as the spec says. No NPC is new in v4.
   somewhere below the remains. Zork's key and grating have no
   descriptions; the lock and the key are still joined only as
   GRATE-FUNCTION joins them.
+- **The chimney says why without the lamp.** Zork's UP-CHIMNEY-FUNCTION
+  answers "You can't get up there with what you're carrying." to anyone
+  without the brass lamp, whatever else they hold; here that line goes on
+  to say that the draught would have a flame out and the climb wants a
+  lamp, and the overload line names the lamp, not "a light".
+- **The Chasm's way south is labelled "crack",** so `enter crack` and `go
+  crack` take it; `go south` still does.
+- **The Round Room's heaps** are a thing of their own, beside the
+  cave-ins, with a closer description; both answer every hand laid on them
+  with the roof still coming down. Zork has neither.
+- **The grue is in every room,** as the wall is: Zork's global GRUE, with
+  GRUE-FUNCTION's description, its silence and its absence; it answers
+  only where there is light (81). `examine all` in a lit room includes it,
+  as it includes the wall.
+- **With the torch and the lamp both in hand,** a load too heavy names the
+  lamp, though the torch weighs more: down there, where the torch never
+  goes out, the lamp is the one a visitor can spare.

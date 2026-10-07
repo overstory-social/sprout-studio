@@ -10,12 +10,13 @@
 // coffin, as Zork's COFFIN-CURE does.
 import * as sprout from 'sprout'
 import {Thing, Portable, Scenery, Flame} from 'thing'
+import {Light} from 'lamp'
 import {Box} from 'box'
 import {Treasure, Readable, Water} from 'items'
 import {Room, DarkRoom} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, read, climb_over, leap_at, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, :travel, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go} from 'verbs'
+import {open, close, look_in, read, climb_over, leap_at, through, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, :travel, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go} from 'verbs'
 import {engravings_cave} from 'east'
 
 // The rooms the rope and the coffin and the prayer care about.
@@ -195,6 +196,14 @@ object altar is AltarRoom in underground_caverns {
     describe { text "The hole in the corner of the floor is small and round and goes straight down into darkness. A cold draught comes up out of it, and with it a faint sound, like a great many people sighing a very long way off. You probably could not get back up it." }
     without as target for look_in from Thing
     as target for look_in { do { say "It is dark down there, and a long way down, and something down there is sighing." } }
+    // Down the hole by name, or into it, or through it: the way down's own
+    // answer, the coffin's refusal or Hades' sigh.
+    without as target for climb_down from Thing
+    as target for climb_down { do { say "{altar.hole_way}" } }
+    without as target for through from Thing
+    as target for through { do { say "{altar.hole_way}" } }
+    without as target for leap_at from Thing
+    as target for leap_at { do { say "{altar.hole_way}" } }
   }
   object hall is TempleHall {
     passage view { This end of the temple is plainer than the other, as though everything worth the effort had been saved for the altar. Your footsteps come back to you from the north end a moment late. }
@@ -410,6 +419,8 @@ kind Candles is Flame {
   // shorter, 4 burned out.
   :stage 0 min 0 max 4
   :started false
+  // Scratch, for putting them out: how many other lights are left.
+  :others 0 min 0 max 50
   passage short { pair of candles }
   passage fdesc { On the two ends of the altar are burning candles. }
   passage ldesc { There is a pair of candles here{if self.get(:lit)} (providing light){/if}. }
@@ -452,7 +463,22 @@ kind Candles is Flame {
       if (self.get(:lit)) {
         self.set(:lit, false)
         cancel wakes
-        if (here.is(DarkRoom) && !here.get(:daylight)) { say "The flame is extinguished. It's really dark in here...." }
+        // Zork's line for a room gone dark: only if no other light is left,
+        // counted as the lamp counts it (lamp.sprout).
+        self.set(:others, 0)
+        if (here.is(DarkRoom)) {
+          if (actor.holds(self)) {
+            if (actor.is(Adventurer) && actor.get(:light) > 1) { self.set(:others, 1) }
+            if (here.get(:floor_lit) || here.get(:bearers) > 1) { self.set(:others, 1) }
+          } else {
+            each l: Light in here { if (l != self && l.get(:lit)) { self.adjust(:others, 1) } }
+            each b: Box in here {
+              if (b.get(:open)) { each l: Light in b { if (l != self && l.get(:lit)) { self.adjust(:others, 1) } } }
+            }
+            if (here.get(:bearers) > 0) { self.set(:others, 1) }
+          }
+        }
+        if (here.is(DarkRoom) && !here.get(:daylight) && self.get(:others) == 0) { say "The flame is extinguished. It's really dark in here...." }
         else { say "The flame is extinguished." }
         if (actor.holds(self)) { send actor :snuffed } else { send here :relight }
       } else { say "The candles are not lighted." }

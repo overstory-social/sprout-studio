@@ -64,18 +64,24 @@ kind Adventurer is sprout.Visitor {
   passage hands_full { You're holding too many things already! }
 
   // Zork's "Your load is too heavy.", and which of what is carried weighs
-  // the most, where it is one of the heavy ones.
-  passage heaviest {{if self.count(Coffin) > 0}{for t: Coffin in self}{t.short}{/for}{else if self.count(Sword) > 0}{for t: Sword in self}{t.short}{/for}{else if self.count(Axe) > 0}{for t: Axe in self}{t.short}{/for}{else if self.count(Leaves) > 0}{for t: Leaves in self}{t.short}{/for}{else if self.count(Torch) > 0}{for t: Torch in self}{t.short}{/for}{/if}}
+  // the most, where it is one of the heavy ones. With the torch, which
+  // never goes out, and the lamp both in hand, the lamp is named: of the
+  // two, it is the one a visitor can spare.
+  passage heaviest {{if self.count(Coffin) > 0}{for t: Coffin in self}{t.short}{/for}{else if self.count(Sword) > 0}{for t: Sword in self}{t.short}{/for}{else if self.count(Axe) > 0}{for t: Axe in self}{t.short}{/for}{else if self.count(Leaves) > 0}{for t: Leaves in self}{t.short}{/for}{else if self.count(Torch) > 0 && self.count(Lamp) > 0}{for t: Lamp in self}{t.short}{/for}{else if self.count(Torch) > 0}{for t: Torch in self}{t.short}{/for}{/if}}
   passage too_heavy { Your load is too heavy{if self.count(Coffin) > 0 || self.count(Sword) > 0 || self.count(Axe) > 0 || self.count(Leaves) > 0 || self.count(Torch) > 0}, the {self.heaviest} not least of it{/if}. }
 
   // Zork's UP-CHIMNEY-FUNCTION: up the Studio's chimney only with a light
   // and at most one thing besides.
   passage empty_handed { Going up empty-handed is a bad idea. }
-  passage overloaded { You can't get up there with what you're carrying. The chimney has room for you, a light to climb by and one thing more, and not an inch besides. }
+  passage overloaded { You can't get up there with what you're carrying. The chimney has room for you, your lamp and one thing more, and not an inch besides. }
+  // Zork's chimney wants the brass lamp itself: a flame in the open is no
+  // light to climb a chimney by.
+  passage lampless { You can't get up there with what you're carrying. The draught up the chimney would have any flame out before you were halfway, and nothing else you have would see you to the top; it is a climb for a lamp. }
   depart (to) {
     if (self.get(:at_chimney) && to.is(ChimneyTop)) {
       if (self.count(Thing) == 0) { refuse empty_handed }
-      else if (self.count(Thing) > 2 || self.count(Lamp) == 0) { refuse overloaded }
+      else if (self.count(Lamp) == 0) { refuse lampless }
+      else if (self.count(Thing) > 2) { refuse overloaded }
     }
   }
 
@@ -689,6 +695,7 @@ kind Adventurer is sprout.Visitor {
       self.adjust(:moves, 1)
       if (here.is(Forest)) { say "You hear in the distance the chirping of a song bird." }
       else if (here.is(Maze) || here.is(DeadEnd)) { say "You hear nothing. The silence is the same silence as in every other part of the maze, which is no help at all." }
+      else if (here.is(CanyonEdge)) { say "You can hear the sound of flowing water from below, a long way down, going somewhere in a hurry." }
       else { say "You hear nothing out of the ordinary." }
     }
   }
@@ -868,7 +875,8 @@ kind Adventurer is sprout.Visitor {
     permit {
       if (target.is(StudioChimney)) {
         if (self.count(Thing) == 0) { refuse empty_handed }
-        else if (self.count(Thing) > 2 || self.count(Lamp) == 0) { refuse overloaded }
+        else if (self.count(Lamp) == 0) { refuse lampless }
+        else if (self.count(Thing) > 2) { refuse overloaded }
       }
     }
     do { self.adjust(:moves, 1) }

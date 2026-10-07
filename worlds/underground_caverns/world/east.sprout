@@ -13,7 +13,7 @@ import {Treasure} from 'items'
 import {DarkRoom, Perilous, ChasmEdge, CanyonEdge} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, climb_up, climb_down, cross, leap_at, through, read, listen, smell, take, shift, raise, dig, mung, clear, climb_over, duck_under, cut, kick, :travel, :troll_gone} from 'verbs'
+import {open, close, look_in, climb_up, climb_down, cross, leap_at, through, read, listen, smell, take, shift, raise, dig, mung, clear, climb_over, duck_under, cut, kick, rub, search, look_behind, look_under, :travel, :troll_gone} from 'verbs'
 import {troll_room} from 'cellar'
 import {dome_room} from 'temple'
 
@@ -66,27 +66,16 @@ object round_room is DarkRoom in underground_caverns {
     passage short { passages }
     describe { text "Passages leave the room in every direction, like spokes from a hub. Most of them do not get far. The ones that do go east, west, north and southeast; the one to the south starts out bravely and gives up under a heap of fallen roof." }
   }
-  object cave_ins is Scenery {
-    grammar { name "cave-ins"  nouns "cave-in", "rubble", "rocks", "rock", "rockfall", "heaps", "pebbles", "boulders"  adjectives "fallen", "sorted", "blocked", "a" }
+  object cave_ins is Rubble {
+    grammar { name "cave-ins"  nouns "cave-in", "rubble", "rocks", "rock", "rockfall", "boulders", "stones", "debris"  adjectives "fallen", "blocked", "a", "south" }
     passage short { cave-ins }
-    // The one reason, whatever is tried: the roof is still coming down.
-    passage no_take { You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them. }
     describe { text "Fallen rock fills most of the passages out of the room, ceiling and all. At the mouth of the passage to the south somebody has sorted the nearest of it into neat heaps, smallest nearest, the way some people tidy a room they have no intention of using. Behind the heaps the roof has come down to the floor, and grit still trickles from it now and then." }
-    without as target for shift from Thing
-    as target for shift { do { say no_take } }
-    without as target for raise from Thing
-    as target for raise { do { say no_take } }
-    without as target for clear from Thing
-    as target for clear { do { say no_take } }
-    without as target for kick from Thing
-    as target for kick { do { say no_take } }
-    without as target for mung from Thing
-    as target for mung { do { say no_take } }
-    without as target for climb_over from Thing
-    as target for climb_over { do { say "The heaps are easy enough to climb; it is the cave-in behind them that goes all the way up to the roof, and the roof is still coming down." } }
-    as target for dig { do { say no_take } }
-    without as target for through from Thing
-    as target for through { do { say "There is no way through. The roof came down all the way to the floor, and it is still coming." } }
+  }
+  // The heaps, looked at closer: somebody has been here, and no further.
+  object heaps is Rubble {
+    grammar { name "heaps"  nouns "heap", "piles", "pile", "pebbles", "grit", "dust", "cone"  adjectives "sorted", "neat", "nearest", "small", "smallest", "little" }
+    passage short { heaps }
+    describe { text "There are five heaps, graded as carefully as a builder grades gravel: fist-sized stones at the back, then smaller ones, then pebbles, then grit, and nearest of all a little cone of dust that has been swept up rather than kicked. Not one stone is on the wrong heap. Whoever did it knelt to do it; the dust in front of the smallest heap still has the marks of two knees in it, and nothing to say which way they went after." }
   }
   object stone is Scenery {
     grammar { name "stone"  nouns "room", "circle", "floor"  adjectives "circular", "round" }
@@ -286,7 +275,7 @@ object chasm_room is DarkRoom, Perilous, ChasmEdge in underground_caverns {
     exit northeast "northeast" refuse reservoir_way
     exit southwest "southwest" -> east_west_passage
     exit up        "stairway"  -> east_west_passage
-    exit south     "south"     -> north_south_passage
+    exit south     "crack"     -> north_south_passage
     exit down      "chasm"     refuse "Are you out of your mind?"
   }
   passage body {
@@ -353,6 +342,35 @@ object engravings_cave is DarkRoom in underground_caverns {
 }
 
 // A narrow crack, as Zork's CRACK is: nobody fits through it.
+// The Round Room's cave-in and the heaps sorted from it: whatever is tried
+// on them, the one reason, a roof that is still coming down.
+kind Rubble is Scenery {
+  passage no_take { You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them. }
+  without as target for shift from Thing
+  as target for shift { do { say no_take } }
+  without as target for raise from Thing
+  as target for raise { do { say no_take } }
+  without as target for clear from Thing
+  as target for clear { do { say no_take } }
+  without as target for kick from Thing
+  as target for kick { do { say no_take } }
+  without as target for mung from Thing
+  as target for mung { do { say no_take } }
+  without as target for rub from Thing
+  as target for rub { do { say no_take } }
+  without as target for search from Thing
+  as target for search { do { say "You find nothing among the heaps but rock, sorted by size." } }
+  without as target for look_behind from Thing
+  as target for look_behind { do { say "Behind the heaps the roof has come down all the way to the floor, and grit is still trickling from it." } }
+  without as target for look_under from Thing
+  as target for look_under { do { say no_take } }
+  without as target for climb_over from Thing
+  as target for climb_over { do { say "The heaps are easy enough to climb; it is the cave-in behind them that goes all the way up to the roof, and the roof is still coming down." } }
+  as target for dig { do { say no_take } }
+  without as target for through from Thing
+  as target for through { do { say "There is no way through. The roof came down all the way to the floor, and it is still coming." } }
+}
+
 kind Crack is Scenery {
   grammar { name "crack"  nouns "fissure", "slit"  adjectives "narrow" }
   passage short { crack }
