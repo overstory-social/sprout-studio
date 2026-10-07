@@ -66,6 +66,17 @@ slice:
   score and go in the trophy case. The way past the Round Room to the
   thief, the Cyclops, the dam, the mirrors and Hades stays out of scope:
   those exits refuse in-world.
+- **v5, from round 9:** v4, plus the thief and the Cyclops as Zork has
+  them. The thief is an NPC (`sprout.Actor`) who roams the underground,
+  steals treasures and other things, carries them in his bag, fights with
+  his stiletto, and can open the jewelled egg (so the clockwork canary can
+  be had). His lair is the Treasure Room, up the Temple's magic word
+  "treasure" and the Strange Passage, with the silver chalice. The Cyclops
+  guards the Cyclops Room (beyond Maze 15): the lunch and the water make
+  him sleep, "Ulysses" (or "Odysseus") sends him crashing through the
+  east wall into the Living Room. The Strange Passage joins the Cyclops
+  Room to the Living Room. The dam, river, coal mine, mirrors and Hades
+  stay out of scope.
 - Exits into territory not built yet are present, as in Zork, and turn the
   visitor back with an in-world line.
 
@@ -132,7 +143,7 @@ built as Zork has it, that is a finding, not a failure.
 
 ## Budget
 
-- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll), even rounds refine; see status.md
+- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll, round 9 the thief and the Cyclops), even rounds refine; see status.md
 - Playtests per round: 6 (one per persona)
 - Turn cap per run: 150
 - Spend ceiling: the workflow's default, about 400k tokens a round
