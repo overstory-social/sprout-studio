@@ -1,0 +1,174 @@
+{
+  "persona": "parser-breaker",
+  "seed": 1,
+  "turns": 250,
+  "done": {
+    "reason": "turn-cap",
+    "why": "I hit the 250-turn limit while carrying my recovered sword back toward the Treasure Room for a rematch with the thief. I wasted a lot of turns in the maze and on a run of moves I typed blind after dying."
+  },
+  "about": "It's a cut-down Zork. You start at the white house and go down under it into a small underground area. There's a troll, a deep canyon, and a lot of passages that end in water, cave-ins or a river with no boat. Then comes the twisty maze, a cyclops guarding a staircase, and a thief who defends his hideaway at the top of the stairs. It's about getting past the cyclops and the thief to reach the robber's treasure room.",
+  "ending": {
+    "reached": "no",
+    "what": "I got into the thief's Treasure Room twice and saw the silver chalice. He killed me once and I had to retreat the second time. I never beat him or collected treasure."
+  },
+  "moments": [
+    {
+      "turn": 20,
+      "kind": "delight",
+      "note": "Climbing the chimney got 'Only Santa Claus climbs down chimneys.' Good refusal."
+    },
+    {
+      "turn": 28,
+      "kind": "delight",
+      "note": "The gothic lettering translates to 'This space intentionally left blank.'"
+    },
+    {
+      "turn": 36,
+      "kind": "frustration",
+      "note": "'climb the unclimbable ramp' isn't a sentence it recognizes. A lot of my oddly phrased lines bounced off the parser like this."
+    },
+    {
+      "turn": 44,
+      "kind": "delight",
+      "note": "I handed the troll back his own axe while he was knocked out. He woke up, scratched his head and took it. Funny, and the game was ready for it."
+    },
+    {
+      "turn": 61,
+      "kind": "surprise",
+      "note": "The northwest passage from the canyon sinks under still black water. A new, atmospheric way to say a path is closed."
+    },
+    {
+      "turn": 75,
+      "kind": "delight",
+      "note": "A cave-in where somebody has sorted the rubble into neat heaps by size, with grit still trickling down. Creepy and specific."
+    },
+    {
+      "turn": 94,
+      "kind": "surprise",
+      "note": "A ledge high above a cold river, with no way on without a boat. The world says plainly where it ends."
+    },
+    {
+      "turn": 150,
+      "kind": "frustration",
+      "note": "The maze passages don't lead back the way you came, and the thief keeps taking the items I left as markers. I lost dozens of turns."
+    },
+    {
+      "turn": 152,
+      "kind": "delight",
+      "note": "Hearing the thief somewhere off in the distance admire 'this fine glass bottle' I'd left by the skeleton."
+    },
+    {
+      "turn": 195,
+      "kind": "surprise",
+      "note": "Saying the name of his father's enemy made the cyclops smash out through the east wall and run."
+    },
+    {
+      "turn": 199,
+      "kind": "surprise",
+      "note": "I gave the thief my coins and then attacked him, and he cut my throat. The death message said plain things were scattered outside, valuables had rolled into dark corners, and 'somebody tidy' had put the lamp back."
+    },
+    {
+      "turn": 231,
+      "kind": "frustration",
+      "note": "After respawning I typed a long run of moves without checking the results and wandered the forest. That was my mistake, but nothing told me the way back to the house."
+    },
+    {
+      "turn": 234,
+      "kind": "delight",
+      "note": "The living room now has a cyclops-shaped opening in the old nailed door, a shortcut made by what I did earlier."
+    }
+  ],
+  "wished": [
+    "I wished it understood looser phrasing: 'climb the unclimbable ramp', 'put leaflet back in mailbox', 'swim northwest holding my breath', 'carve my name into the engravings'.",
+    "I wanted to pry the nailed door with the sword, or tie up the knocked-out troll.",
+    "I wanted to bargain with the thief, since he accepted my coins, instead of only fighting him.",
+    "I wanted to wade into the black water northwest of the canyon or climb down to the river.",
+    "I wanted to feed the 'hungry' cyclops, but I had already given my lunch to the troll."
+  ],
+  "lines": [
+    {
+      "turn": 28,
+      "line": "The engravings translate to \"This space intentionally left blank.\"",
+      "why": "A dry joke right where I expected lore."
+    },
+    {
+      "turn": 44,
+      "line": "The troll scratches his head in confusion, then takes the axe.",
+      "why": "The game had an answer for my contrary move."
+    },
+    {
+      "turn": 61,
+      "line": "the floor goes down under black water lying perfectly still, and does not come up again anywhere your light can reach. Whatever is beyond is under it. You step back out of the puddle you were standing in.",
+      "why": "The best prose here. A closed path that still feels like a place."
+    },
+    {
+      "turn": 75,
+      "line": "Somebody has sorted the near end of the rubble into neat heaps by size, smallest nearest.",
+      "why": "Hints at someone living down here, I guess the thief, without spelling it out."
+    },
+    {
+      "turn": 195,
+      "line": "The cyclops, hearing the name of his father's deadly nemesis, flees the room by knocking down the wall on the east of the room.",
+      "why": "The breakthrough of the session."
+    },
+    {
+      "turn": 199,
+      "line": "anything of value has rolled into some dark corner in or under it, and somebody tidy has put the lamp back in the living room.",
+      "why": "A gentle, specific death message that told me where my things went."
+    }
+  ],
+  "ratings": {
+    "fun": {
+      "score": 3,
+      "why": "The troll, the axe joke, the cyclops fleeing and the thief encounters were fun. The maze ate a big part of my session, and so did my blind wandering after dying.",
+      "turns": [
+        44,
+        150,
+        195,
+        199
+      ]
+    },
+    "engagement": {
+      "score": 3,
+      "why": "I wanted to get back to the Treasure Room after dying and was on my way when turns ran out. Interest dipped badly in the maze.",
+      "turns": [
+        150,
+        165,
+        199,
+        245
+      ]
+    },
+    "difficulty": {
+      "score": 4,
+      "felt": "too hard",
+      "why": "The maze doesn't lead back the way you came, and the thief steals markers, so mapping it is miserable. The thief killed me in one exchange. The parser rejects a lot of natural phrasing.",
+      "turns": [
+        36,
+        150,
+        165,
+        199
+      ]
+    },
+    "interestingness": {
+      "score": 4,
+      "why": "The new dead ends have character: the drowned passage, the sorted rubble, the river ledge. Rescue after death and the cyclops-shaped opening carry consequences forward.",
+      "turns": [
+        61,
+        75,
+        94,
+        199,
+        234
+      ]
+    },
+    "prose": {
+      "score": 4,
+      "why": "The new passages are vivid and wry, and the death message is lovely. Elsewhere the text is mostly the classic terse lines plus 'You can't see any such thing.'",
+      "turns": [
+        61,
+        75,
+        94,
+        199
+      ]
+    }
+  }
+}

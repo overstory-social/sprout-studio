@@ -480,12 +480,14 @@ object treasure_room is TreasureRoom in underground_caverns {
   }
   // The thief, dying here: what he hid shows itself (ROBBER-FUNCTION's
   // F-DEAD).
+  // Only what he hid is his treasure: the stiletto he dropped, and anything
+  // the visitor brought in that was not a treasure, lie in plain sight.
   on :unveil (from) {
-    if (self.count(Portable) > self.count(Chalice)) { tell revealed }
+    if (self.count(Treasure) > self.count(Chalice)) { tell revealed }
     tell "The chalice is now safe to take."
   }
   passage revealed {
-    As the thief dies, the power of his magic decreases, and his treasures reappear:{for t: Portable in self}{if !t.is(Chalice)}
+    As the thief dies, the power of his magic decreases, and his treasures reappear:{for t: Treasure in self}{if !t.is(Chalice)}
 
     A {t.short}{/if}{/for}
   }

@@ -1195,3 +1195,53 @@ canary, nobody fed the Cyclops (one player who knew Zork said "odysseus").
   at them (getting past the one-eyed guard without a fight; finding where
   stolen things went; another way out of the maze) is the director's to
   give.
+
+## After round 10
+
+Six runs; the lair worked as round 9 meant it to. Four climbed to it,
+met the thief standing his ground, and one killed him there (the
+goal-seeker, with the nasty knife) and took the hoard; three died, two of
+them on their way back stronger. Nobody typed DIAGNOSE. The new death
+line sent two back for the sword. The Cyclops was fed, lunch then water,
+for the first time in sixty runs.
+
+- **A box holds by weight now, as Zork's V-PUT weighs it** (P1). The sack's
+  capacity of 9 had meant nine things, so the newcomer carried the bar,
+  the painting and the sword up the chimney inside it. Each box keeps
+  `:held`, the sizes of what is directly inside it, and refuses with
+  Zork's "There's no room." The sack is full with the lunch and the
+  garlic; the trophy case's capacity is Zork's 10000; the chimney rule is
+  whole again, the sack being the one honest way to carry small things up
+  it (friction 75 again).
+- **The egg points at the thief** (P2). Nobody has given him the egg in
+  sixty runs, and the goal-seeker killed him without knowing he was the
+  only one who could open it. The egg, examined, now says its clasp
+  "would take a professional's fingers to undo without harm: deft
+  fingers, and not, one suspects, entirely honest ones." Zork's "You have
+  neither the tools nor the expertise." stays as it is, and so does the
+  silence when he dies with the egg safe in the case.
+- **The lair's death lists only his treasures** (P11): the stiletto he
+  drops lies in plain sight, as F-DEAD moves it, and with nothing hidden
+  the line is only "The chalice is now safe to take."
+- **The sword glows once going into the lair** (P10): while its keeper
+  will come, it settles at once on the bright glow, rather than the
+  room's faint one and then his.
+- **FEED alone asks what with; OFFER takes Zork's second order; `go into`
+  is `through`, and the Chasm's crack goes south by it; HOW AM I DOING is
+  SCORE** (P7, P8, P14).
+- **Kept as they are:** the lair's stand-and-fight and Zork's tables (P3);
+  the maze and his robbing in it (P4); the Cyclops Room in BRIEF, as
+  CYCLOPS-ROOM-FCN tells him only in its long description (P9); the edges
+  (P12); "Done." at the case (P13). Engine faults logged, not worked
+  round: 94 (P5), 11 and 59 (P6).
+
+### What round 11 should watch
+
+- **Whether anyone gives the thief the egg,** now that the egg says who
+  could open it, and whether the canary is ever wound.
+- **Whether the sack's weight reads as a puzzle or a wall:** what players
+  carry up the chimney now, and whether anyone takes two trips.
+- **DIAGNOSE,** still never typed.
+- Carried, still unmet: the Grating Room and the key from below; the grue
+  in play; the ghost; the tree's drop; the egg broken. A goal aimed at
+  them is the director's to give.

@@ -9,6 +9,11 @@
 // `:plain` counts what Zork would list plainly ("A leaflet") rather than by
 // a first description: whatever was here from the start without one, and
 // whatever has arrived since.
+//
+// `:held` is what it holds by weight, as Zork's V-PUT weighs it: the sum of
+// the sizes of the things directly inside it, kept as they come and go
+// (what is inside from the start arrives too). A thing put in must fit what is left of `:capacity`,
+// counting what a box it brings holds directly; Zork's own line refuses it.
 import {Thing, Portable} from 'thing'
 import {open, close, look_in, shake, :sealed, :uncork} from 'verbs'
 import {Adventurer} from 'adventurer'
@@ -19,14 +24,20 @@ kind Box is Thing {
   :open false
   :transparent false
   :surface false
-  :capacity 10 min 0 max 100
+  :capacity 10 min 0 max 10000
+  :held 0 min 0 max 10000
   :plain 0 min 0 max 100
 
   pass any (self.get(:open) || self.get(:transparent))
 
   accept (item, from) {
     if (!self.get(:open)) { refuse "The {self.short} isn't open." }
-    else if (self.count >= self.get(:capacity)) { refuse "There's no room." }
+    else if (item.is(Box)) {
+      if (self.get(:held) + item.get(:size) + item.get(:held) > self.get(:capacity)) { refuse "There's no room." }
+    }
+    else if (item.is(Thing)) {
+      if (self.get(:held) + item.get(:size) > self.get(:capacity)) { refuse "There's no room." }
+    }
   }
   release (item, to) {
     if (!self.get(:open)) { refuse "You can't reach something that's inside a closed container." }
@@ -35,6 +46,7 @@ kind Box is Thing {
   // Behind a shut glass lid, what it holds knows it is out of reach.
   on :entered (item, from) {
     self.adjust(:plain, 1)
+    if (item.is(Thing)) { self.adjust(:held, item.get(:size)) }
     if (item.is(Thing)) { send item :sealed with !self.get(:open) && self.get(:transparent) }
   }
   // Opened by somebody else's hands: the Cyclops, checking that the bottle
@@ -46,6 +58,7 @@ kind Box is Thing {
 
   on :left (item, to) {
     if (item.is(Thing)) {
+      self.adjust(:held, 0 - item.get(:size))
       if (item.get(:touched) || !item.get(:has_fdesc)) { self.adjust(:plain, -1) }
     }
   }

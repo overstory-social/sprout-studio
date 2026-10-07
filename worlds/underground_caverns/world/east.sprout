@@ -312,7 +312,7 @@ object chasm_room is DarkRoom, Perilous, ChasmEdge in underground_caverns {
     grammar { nouns "passage", "passageway" }
     passage view { The crack in the south side of the chasm is wide enough for a person, just, and opens into a passage that leads away south. }
     without as target for through from Crack
-    as target for through { do { say "The crack opens into the passage to the south. Go south, and you will be in it." } }
+    as target for through { do { send actor :travel with :ns_passage  say "" } }
   }
   object stairs is Stairs {
     grammar { nouns "stairway" }
@@ -397,7 +397,7 @@ kind Abyss is Box {
   grammar { name "chasm"  nouns "ravine", "gorge", "abyss", "edge", "bottom"  adjectives "bottomless", "deep" }
   :open true
   :ndesc true
-  :capacity 100
+  :capacity 10000
   passage short { chasm }
   passage peer default { You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down. }
   // What goes in is gone for good, when the turn is done (thing.sprout).

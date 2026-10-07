@@ -315,7 +315,7 @@ kind TrophyCase is Box {
   grammar { name "trophy case"  nouns "case"  adjectives "trophy" }
   :transparent true
   :ndesc true
-  :capacity 50
+  :capacity 10000
   passage short { trophy case }
   passage no_take { The trophy case is securely fastened to the wall. }
   passage header { Your collection of treasures consists of: }

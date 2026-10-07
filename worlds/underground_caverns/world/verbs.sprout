@@ -190,8 +190,12 @@ verb give {
   role recipient
   "give [item] to [recipient]"  "give [recipient] [item]"
   "offer [item] to [recipient]"  "hand [item] to [recipient]"  "feed [item] to [recipient]"
-  "feed [recipient] [item]"  "donate [item] to [recipient]"
+  "feed [recipient] [item]"  "donate [item] to [recipient]"  "offer [recipient] [item]"
 }
+// `feed` with only the one fed: Zork's parser asks what with (its orphan
+// question); this one cannot take the answer, so it asks the question and
+// the visitor says the whole sentence again.
+verb feed_bare { role target  "feed [target]" }
 
 // Zork's THROW: the thing leaves the hand for the floor, and whatever it
 // was thrown at answers.
@@ -328,6 +332,7 @@ verb curse { "damn"  "curse"  "shit"  "fuck" }
 // (friction 68).
 intent squeeze_through {
   "squeeze through [x]"  "squeeze in through [x]"  "squeeze into [x]"  "go through [x]"
+  "go into [x]"  "walk into [x]"  "crawl into [x]"
   do through (target: x)
 }
 // Going back the way one came, said as players say it.
@@ -347,6 +352,11 @@ intent what_carried {
   "what am i carrying"  "what do i have"  "what have i got"  "what am i holding"
   do inventory
 }
+// Asked as a person would ask it: Zork's SCORE.
+intent how_doing {
+  "how am i doing"  "what is my score"  "whats my score"  "what's my score"
+  do score
+}
 intent climb_into {
   "climb down into [x]"  "go down into [x]"  "lower yourself into [x]"
   do climb_down (target: x)
@@ -365,7 +375,7 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange }
+enum Dest { ns_passage, forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.

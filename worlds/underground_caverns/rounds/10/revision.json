@@ -1,0 +1,184 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "This is a real departure from Zork. V-PUT weighs what goes into a container and does not count it, so the sack's capacity of 9 let the bar, the painting and the sword up the chimney and broke the chimney rule. Containers now hold by weight and use Zork's own refusal, \"There's no room.\" That is V-PUT's line, so I did not use the \"It won't fit.\" the synthesis suggested. The trophy case and the chasm get Zork's capacity of 10000. The other capacities (coffin 35, nest 20, egg 6, chalice 5, bottle 4, the tables, altar 50, pedestal 30) already match Zork. The thief's bag is not a box and has no limit in Zork."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "The point is that nobody can see the way to the canary, and one dry pointer in the examine layer (the author's own prose) fixes that without touching Zork's mechanics. The egg's clasp now says only a professional's deft and not entirely honest fingers could undo it. \"You have neither the tools nor the expertise.\" stays as it is, and so does the silent death when the egg is already in the case."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "I agree with the recommendation to keep the lair, Zork's fight tables and the warning \"I'd watch out if I were you.\" unchanged. The round shows that the round-9 fix works and that the hoard can be won. DIAGNOSE goes on the watch list for round 11. No change."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The maze and the thief robbing in it stay, as dungeon.zil has them and as the intent decided. The rise in the unread rate comes from players probing maze exits, not from a parser regression. Reaching the Grating Room needs a goal aimed at it, and that is the director's to give. No change."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "This is an engine bug, and the studio does not work around Sprout. I logged it in friction.md as 94 again, with every instance from this round, and asked again for `unknown` or Zork's \"I don't know the word\" in place of `not_here`."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "I accepted this as a friction entry only (11 and 59 again). The world leaves held things out of any list on purpose, so that `take all` does not say \"You already have that!\" for every held thing, and a set role cannot tell `all` from a list of names. I did not add the suggested `take_which.json` step, because it would lock the fault into a test."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "FEED, OFFER and DONATE were already in `give` with two objects. I added `offer [recipient] [item]`, Zork's second order. Bare `feed X` is now its own verb and asks Zork's orphan question, \"What do you want to feed the cyclops?\" The parser cannot take the answer, so I logged that as friction 32 again."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "`go into`, `walk into` and `crawl into` now mean `through`. At the Chasm, `through` the crack now takes the visitor south through the world's gate, using a new destination, `ns_passage`, because an intent cannot name a way out. Logged as friction 82 again."
+    },
+    {
+      "answers": "P9",
+      "decision": "reject",
+      "reason": "Leaving the Cyclops out of the room's BRIEF description is faithful to Zork: CYCLOPS-ROOM-FCN gives his state only in M-LOOK, and the Cyclops has NDESCBIT. Faithfulness is the brief's first rule, and only one run asked for the change. `look` and `examine` both tell his state, and the stairs refuse while he blocks them."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "This is a world bug. Going into the lair, the sword announced the room's faint glow and then the thief's bright glow in the same move. Zork's I-SWORD settles the glow once per turn. While the lair's keeper is coming, the sword now goes straight to the bright glow, so it prints one line or none if it was already bright. The existing test that had locked in the two-line arrival is corrected."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "This is a world bug. F-DEAD moves the stiletto into plain sight and does not list it as a reappeared treasure. The death now lists only treasures other than the chalice; with none, it says only \"The chalice is now safe to take.\""
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "The edges stay as they are: they are the brief's scope, and every run read them as places. The feeling of being herded comes from the slice being smaller than the game, and only the director can widen it. No change."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "\"Done.\" stays: it is Zork's, the intent chose it deliberately, and the case's listing does the celebrating. Only one run asked. No change."
+    },
+    {
+      "answers": "P14",
+      "decision": "accept",
+      "reason": "\"How am I doing\" maps naturally to SCORE, as \"what am I carrying\" became INVENTORY. I added `how am i doing` and `what is my score` (with `whats` and `what's`). The narrator questions stay unread, as Zork's parser leaves them, and there is still no `exits` verb."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Containers hold by weight, as V-PUT weighs them. Each box keeps `:held`, the sum of the sizes of what is directly inside it (updated as things arrive and leave, including what it starts with). `accept` refuses with \"There's no room.\" when `:held` plus the incoming thing's size, plus what an incoming box holds, would pass `:capacity`. The trophy case and the chasm get Zork's capacity of 10000, and the capacity range is widened to fit it.",
+      "files": [
+        "worlds/underground_caverns/world/box.sprout",
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/east.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "New test sack_weight.json: the full sack refuses the leaflet, takes it once the garlic is out, then refuses the garlic; the sword never fits; the case takes the sword and the sack. It also covers the egg's new clasp line, `feed sack`, and `how am i doing`.",
+      "files": [
+        "worlds/underground_caverns/world/tests/sack_weight.json"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P7",
+        "P14"
+      ]
+    },
+    {
+      "what": "The unbroken, unopened egg, examined, now says its clasp would take a professional's deft and not entirely honest fingers to undo.",
+      "files": [
+        "worlds/underground_caverns/world/tree.sprout"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "The thief's death in his lair lists only treasures other than the chalice, so the dropped stiletto is not called a treasure. With nothing hidden, only \"The chalice is now safe to take.\" is said. The three tests that expected the stiletto in the list are corrected.",
+      "files": [
+        "worlds/underground_caverns/world/cyclops.sprout",
+        "worlds/underground_caverns/world/tests/treasure_room.json",
+        "worlds/underground_caverns/world/tests/thief_hoard.json",
+        "worlds/underground_caverns/world/tests/v5_score.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "Going into the Treasure Room while its keeper will come, the sword goes straight to the bright glow instead of the room's faint glow and then the thief's, so it prints one glow line at most. cyclops_sleep.json had locked in the double line and is corrected.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/cyclops_sleep.json"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "Added `offer [recipient] [item]` to give; a new `feed [target]` verb, which the adventurer answers with Zork's orphan question; and an intent mapping `how am i doing`, `what is my score`, `whats my score` and `what's my score` to `score`.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout"
+      ],
+      "for": [
+        "P7",
+        "P14"
+      ]
+    },
+    {
+      "what": "`go into`, `walk into` and `crawl into` now mean `through`. At the Chasm, `through` the crack takes the visitor through the world's gate to the North-South Passage, using a new destination `ns_passage`, with the dark-room warning. barriers.json and chasm_room.json are updated for the new arrival, with a step back north.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/east.sprout",
+        "worlds/underground_caverns/world/tests/barriers.json",
+        "worlds/underground_caverns/world/tests/chasm_room.json"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "friction.md gets a 'Found in round 10' section: 75 again (no sum over contents, so a running :held counter one level deep), 94 again (trailing words answered not_here), 11 and 59 again (a held list item vanishes without a line), 82 again (go into the crack), and 32 again (feed cannot take the orphan answer).",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P1",
+        "P5",
+        "P6",
+        "P8",
+        "P7"
+      ]
+    },
+    {
+      "what": "intent.md gets an 'After round 10' section: what changed and why, what was kept (the lair, the maze, the Cyclops Room in BRIEF, the edges, \"Done.\"), and what round 11 should watch.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P10",
+        "P11",
+        "P12",
+        "P13",
+        "P14"
+      ]
+    }
+  ]
+}

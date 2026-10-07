@@ -20,7 +20,7 @@ import {Thief, Stiletto} from 'thief'
 import {Cyclops, CyclopsRoom, TreasureRoom, Chalice, :flee} from 'cyclops'
 import {treasure_room, cyclops_room, strange_passage} from 'cyclops'
 import {go, look, examine, inventory, wait, help} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall} from 'verbs'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -28,7 +28,7 @@ import {land_of_the_living_dead} from 'nowhere'
 import {east_of_chasm, studio, StudioChimney} from 'gallery'
 import {maze_5, Maze, DeadEnd} from 'maze'
 import {Skeleton, RustyKnife, SkeletonKey} from 'remains'
-import {east_west_passage, chasm_room, loud_room, deep_canyon, Abyss} from 'east'
+import {east_west_passage, north_south_passage, chasm_room, loud_room, deep_canyon, Abyss} from 'east'
 import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, Torch, DomeRoom, AltarRoom, TempleRoom} from 'temple'
 import {Leaves} from 'grating'
 
@@ -249,7 +249,13 @@ kind Adventurer is sprout.Visitor {
     if (to.is(Room)) { self.set(:room_glow, to.get(:glow)) }
     if (to.is(Room) && !self.get(:devoured)) {
       if (!to.is(DarkRoom)) { self.set(:room_dark, false) }
-      send self :settle with to.get(:glow)
+      // Into the lair while its keeper will come to it: the sword knows him
+      // at once, and glows the once, brightly.
+      if (to.is(TreasureRoom)) {
+        if (to.get(:keeper)) { send self :settle with 2 }
+        else { send self :settle with to.get(:glow) }
+      }
+      else { send self :settle with to.get(:glow) }
       if (to.is(Forest) && chance(7)) { tell self "You hear in the distance the chirping of a song bird." }
     }
   }
@@ -509,7 +515,7 @@ kind Adventurer is sprout.Visitor {
       move self to forest_1
     } else if (self.get(:dest) == :temple) {
       move self to temple
-    } else if (self.get(:dest) == :torch_room || self.get(:dest) == :ew_passage || self.get(:dest) == :chasm || self.get(:dest) == :loud_room || self.get(:dest) == :deep_canyon || self.get(:dest) == :egypt || self.get(:dest) == :treasure || self.get(:dest) == :cyclops || self.get(:dest) == :strange) {
+    } else if (self.get(:dest) == :torch_room || self.get(:dest) == :ew_passage || self.get(:dest) == :chasm || self.get(:dest) == :loud_room || self.get(:dest) == :deep_canyon || self.get(:dest) == :egypt || self.get(:dest) == :treasure || self.get(:dest) == :cyclops || self.get(:dest) == :strange || self.get(:dest) == :ns_passage) {
       // Down a rope, or along a staircase by name, into the dark: as `go`
       // goes, the warning first where there is no light to see by.
       self.set(:own_light, self.get(:light) > 0)
@@ -543,6 +549,9 @@ kind Adventurer is sprout.Visitor {
       } else if (self.get(:dest) == :cyclops) {
         if (!self.get(:own_light) && !underground_caverns.cyclops_room.get(:alight)) { tell self "You have moved into a dark place." }
         move self to cyclops_room
+      } else if (self.get(:dest) == :ns_passage) {
+        if (!self.get(:own_light) && !underground_caverns.north_south_passage.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to north_south_passage
       } else if (self.get(:dest) == :strange) {
         if (!self.get(:own_light) && !underground_caverns.strange_passage.get(:alight)) { tell self "You have moved into a dark place." }
         move self to strange_passage
@@ -920,6 +929,12 @@ kind Adventurer is sprout.Visitor {
     }
   }
   as actor for tally      { do { self.adjust(:moves, 1) } }
+  as actor for feed_bare {
+    do {
+      if (target.is(Thing)) { say "What do you want to feed the {target.short}?" }
+      else { say "What do you want to feed?" }
+    }
+  }
   as actor for smell      { do { self.adjust(:moves, 1) } }
   as actor for listen     { do { self.adjust(:moves, 1) } }
   as actor for search     { do { self.adjust(:moves, 1) } }

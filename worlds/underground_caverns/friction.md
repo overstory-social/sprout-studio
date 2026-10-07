@@ -2040,6 +2040,83 @@ me say is below.
   because the visitor's own `:left` subtracts what leaves; weight on the
   standard library's hands would make that bookkeeping go away.
 
+## Found in round 10
+
+### 75, again: a box held what it could count, not what it could weigh
+
+- **Round 10:** the newcomer put the platinum bar (20), the painting (15),
+  the sword (30) and four other things into the brown sack (capacity 9),
+  and went up the chimney with the sack, the lamp and one thing more. Box's
+  `accept` compared `:capacity` with the number of things inside, so 9
+  meant nine things of any size, where Zork's V-PUT weighs them.
+- **Found:** a guard can count a container's contents but not sum their
+  sizes (no sum over contents; a body's own writes hold still, so a loop
+  cannot keep a running total either).
+- **Wrote instead:** each box keeps `:held`, the sum of the sizes of what
+  is directly inside it, on `:entered` and `:left` (initial contents arrive
+  too), and `accept` refuses with Zork's "There's no room." when `:held`
+  and the thing's size, and what a box put in holds directly, would pass
+  `:capacity`. What is lost: a box inside a box does not tell its holder
+  when its own contents change, so Zork's recursive WEIGHT is one level
+  deep; and the visitor's load still counts a carried bag at its own size,
+  not with what is in it, which the sack's capacity of 9 now bounds.
+- **Spec:** Kinds › Containers (`accept`); Events (a body's own state
+  holds still).
+- **Status: open,** as 75; asked of Sprout: a sum over contents
+  (`self.sum(:size)`), or weight on the standard library's hands (#478).
+
+### 94, again: words a noun cannot place, read as a missing thing
+
+- **Round 10:** nine times for the parser-breaker and once for the
+  newcomer, who was looking at the window: `open the window wider`, `kick
+  the boarded door open`, `put leaflet back in mailbox`, `tie the troll up
+  with the leaflet`, `dig through the cave-in with the sword`, `tell the
+  cyclops a joke`, `give the thief my coins as a peace offering`. All
+  answered "You can't see any such thing." with the thing in plain sight.
+- **Wrote instead:** nothing; the world cannot change how a noun phrase
+  that leaves words unmatched is answered. Asked of Sprout, again: answer
+  such a line `unknown`, or as Zork does, "I don't know the word
+  'wider'.", never `not_here`.
+- **Status: open,** an engine bug, with 68.
+
+### 11 and 59, again: a list item, held, vanishes without a line
+
+- **Round 10:** in Maze 5 with the brown sack in hand and the bag of coins
+  on the floor, `take bag and key` answered "Skeleton key: Taken." and
+  nothing for the bag. Alone, `take bag` takes the coins (the permit that
+  refuses a single held reading, 59); inside a list there is no single
+  reading to refuse, the parser settles "bag" on the nearer sack, and the
+  world leaves held things out of any list that holds something fresh, so
+  `take all` does not say "You already have that!" for every held thing.
+- **Wrote instead:** nothing new. A line for the held thing in a list
+  would come back for every held thing in `take all` (11). Not added to
+  `take_which.json`, since the test would pin the fault.
+- **Asked of Sprout, again:** a way for a set role's handler to tell `all`
+  from a list of names, and for a role to prefer what is not carried.
+- **Status: open.**
+
+### 82, again: `go into the crack`
+
+- **Round 10:** at the Chasm, `enter crack` goes south (the library's `go`
+  reads `enter [way]` by the exit's label), and `go into the crack` was
+  not recognised; the newcomer took it to mean the crack was no way at
+  all.
+- **Wrote instead:** `go into`, `walk into` and `crawl into` join the
+  `squeeze_through` intent, which stands for `through`; the Chasm's crack
+  answers `through` by sending the visitor south through the world's gate
+  (a new `Dest`, `ns_passage`), since an intent's slot cannot hold a way
+  out (82). Every other thing gone into answers as `through` does.
+- **Status: open,** as 82.
+
+### 32, again: `feed cyclops`
+
+- **Wanted:** Zork's orphan question, "What do you want to feed the
+  cyclops?", and the next line (`lunch`) taken as its answer.
+- **Wrote instead:** `feed [target]` is its own verb, which asks the
+  question; the visitor must then say the whole sentence, `feed lunch to
+  cyclops`, since the parser cannot take an answer (32).
+- **Status: open,** as 32.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
