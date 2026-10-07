@@ -1464,3 +1464,53 @@ Zork's, on the fourth reach, though the brief does not name them.
 - Carried from round 10, still unmet: the egg given to the thief; the sack's
   weight; DIAGNOSE; the Grating Room and the key from below; the grue in
   play; the ghost; the tree's drop; the egg broken.
+
+## After round 11
+
+Six runs, the first with the dam and the river. Players opened the dam,
+fetched the pump across the lake bed, blew up the boat, rode the river,
+dug the scarab and took the emerald from the buoy; three went over the
+Falls and all three called it fair. Only the goal-seeker found a heavier
+way up than the chimney (praying with the coffin); nobody found the canyon.
+
+- **The canyon is seen from the Falls** (P1). The rainbow at Aragain Falls
+  now comes down "on a little sunlit beach on the far side, where the canyon
+  opens to the sky", and the far side is a thing: a path down the canyon,
+  walls a person might climb "to somewhere with trees on it", and between
+  here and there the rainbow. The weights, the chimney's rule, the sack's
+  weight and the re-barring trap door stay Zork's: the hauling is the
+  puzzle, and the other ways up (the prayer, the canyon, the grating, the
+  Strange Passage) are the answers to it.
+- **A treasure taken from under the visitor's eyes is told** (P2): I-THIEF
+  robs a lit room the visitor is in, and Zork says nothing; here STEAL-JUNK's
+  "You suddenly notice that the painting vanished." says it.
+  `thief_gallery.json`.
+- **WAIT in the boat brings the current** (P3, friction 106): Zork's three
+  moves reach the next reach, so here one wait does.
+- **The river's words** (P4, P5): UP and UPSTREAM are the river's "You
+  cannot go upstream due to strong currents."; DOWN and DOWNSTREAM say the
+  current needs no help; in a beached boat, a way out on foot says to get
+  out first. The label's line is kept for open water. `river_words.json`.
+- **The lunch and garlic are eaten from a held sack** (P8), as V-EAT has it.
+- **The pile's instructions read** (P9): READ, TURN OVER and LOOK BEHIND the
+  pile give the back of the fold, pointing at the valve, a pump and the
+  label inside.
+- **The dam follows the tide from below** (P10): at the Dam Base and on the
+  Dam, the shut gates over a refilling reservoir no longer spill.
+- **DIG THROUGH and DIG INTO** reach the Round Room's rubble (P11); the
+  rubble and heaps were things already, and the Atlantis stair's chalked
+  arrow stays a refusal, since its rubble is in a room not built.
+- **Kept:** the Falls and the river's speeds (P6). Logged, not worked
+  round: 94 and 69 again (P7), 107, the reach report and the boat (P12).
+
+### What round 12 should watch
+
+- **Whether anyone crosses to the canyon,** now that the Falls point at it:
+  whether the sceptre is carried to the rainbow, and the pot of gold and a
+  load carried up the canyon wall to the Clearing.
+- **The river with the new words:** whether WAIT now reads as drifting, and
+  whether anyone still goes over the Falls by a parser turn.
+- **The thief in the Gallery,** and whether the new line reads as his.
+- Carried, still unmet: the egg given to the thief; DIAGNOSE; the Grating
+  Room and the key from below; the grue in play; the ghost; the tree's
+  drop; the egg broken.

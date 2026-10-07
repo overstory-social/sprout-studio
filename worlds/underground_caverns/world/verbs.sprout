@@ -136,6 +136,7 @@ verb dig {
   role target
   role tool carried
   "dig in [target]"  "dig [target]"  "dig in [target] with [tool]"  "dig [target] with [tool]"
+  "dig through [target]"  "dig through [target] with [tool]"  "dig into [target]"  "dig into [target] with [tool]"
 }
 verb dig_here { "dig" }
 // `dig with the axe`, with nothing to dig in: Zork would ask what in, and
@@ -304,7 +305,7 @@ verb leap_at {
   "jump across [target]"  "leap over [target]"  "leap into [target]"  "leap across [target]"
 }
 // Zork's TURN, which pages a book and turns little else.
-verb turn { role target  "turn [target]"  "turn page of [target]"  "turn pages of [target]"  "flip through [target]"  "leaf through [target]" }
+verb turn { role target  "turn [target]"  "turn [target] over"  "turn over [target]"  "flip [target] over"  "turn page of [target]"  "turn pages of [target]"  "flip through [target]"  "leaf through [target]" }
 // Zork's TREASURE and TEMPLE: words the Temple and the Treasure Room know,
 // each the way to the other.
 verb treasure { "treasure"  "temple"  "say treasure"  "say temple" }

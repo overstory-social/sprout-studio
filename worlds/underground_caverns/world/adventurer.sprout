@@ -32,7 +32,7 @@ import {east_west_passage, north_south_passage, chasm_room, loud_room, deep_cany
 import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, Torch, DomeRoom, AltarRoom, TempleRoom} from 'temple'
 import {Leaves} from 'grating'
 import {Sharp, Rejecting} from 'items'
-import {MagicBoat, Vessel, :put_out, :come_ashore} from 'boat'
+import {MagicBoat, Vessel, :put_out, :come_ashore, :hurry} from 'boat'
 import {Pump, reservoir_north, atlantis_room} from 'reservoir'
 import {Matchbook, dam_room, dam_base} from 'dam'
 import {:dig_sand, River, Shovel, Narrows, CliffCave, CanyonRim, SandyCave, Sand, Riverside, OnTheRiver, canyon_view, cliff_middle, canyon_bottom, aragain_falls, end_of_rainbow, on_rainbow} from 'river'
@@ -1052,7 +1052,11 @@ kind Adventurer is sprout.Visitor {
   as actor for look       { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "look look ..." } } } do { self.adjust(:moves, 1) } }
   as actor for examine    { do { self.adjust(:moves, 1) } }
   as actor for inventory  { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "inventory inventory ..." } } } do { self.adjust(:moves, 1) } }
-  as actor for wait       { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "wait wait ..." } } } do { self.adjust(:moves, 1) } }
+  // Zork's V-WAIT passes three moves, stopped by the first clock with
+  // something to say; a turn here is one move, and the host keeps the
+  // clock. In the boat on the river the current is that clock, and comes
+  // now (friction 106).
+  as actor for wait       { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "wait wait ..." } } } do { self.adjust(:moves, 1)  if (here.is(MagicBoat)) { send here :hurry } } }
   as actor for open       { do { self.adjust(:moves, 1) } }
   as actor for close      { do { self.adjust(:moves, 1) } }
   as actor for read       { do { self.adjust(:moves, 1) } }

@@ -59,7 +59,8 @@ object dam_room is Room, Tidal, Riverside in underground_caverns {
   object dam is Scenery {
     grammar { name "dam"  nouns "gate", "gates", "sluice", "sluices", "fcd", "structure"  adjectives "sluice", "flood", "control" }
     passage short { dam }
-    describe { text "Flood Control Dam #3 is a great curved wall of grey concrete, 256 feet tall at the center by the guidebook's count, holding back the reservoir to the west with the air of something that has been asked to do this for a very long time and has not been thanked. {if dam_room.get(:tide) == 1 || dam_room.get(:tide) == 2}Below, the sluice gates stand open, and the river pours through them in a white, roaring rush.{else}The sluice gates at its foot are shut, and water spills in a thin, glassy sheet over the top of it.{/if}" }
+    passage examined { Flood Control Dam #3 is a great curved wall of grey concrete, 256 feet tall at the center by the guidebook's count, holding back the reservoir to the west with the air of something that has been asked to do this for a very long time and has not been thanked. {if dam_room.get(:tide) == 1 || dam_room.get(:tide) == 2}Below, the sluice gates stand open, and the river pours through them in a white, roaring rush.{else if dam_room.get(:tide) == 3}The sluice gates at its foot are shut, and the water behind it is a long way below the top, climbing back up the stained concrete as you watch.{else}The sluice gates at its foot are shut, and water spills in a thin, glassy sheet over the top of it.{/if} }
+    describe { text examined }
     without as target for open from Thing
     without as target for close from Thing
     as target for open  { do { say "Sounds reasonable, but this isn't how." } }
@@ -328,12 +329,12 @@ object dam_base is Room, Riverside in underground_caverns {
   object dam is Scenery {
     grammar { name "dam"  nouns "wall", "gates", "concrete", "structure"  adjectives "flood", "control", "great" }
     passage short { dam }
-    describe { text "The dam looms above you to the north, a great grey wall of concrete streaked dark where the water has run down it for years. {if dam_base.get(:roaring)}Water thunders out of the open sluice gates at its foot and goes off down the river in a hurry.{else}A thin sheet of water spills over the top and patters down the face of it.{/if}" }
+    describe { text "The dam looms above you to the north, a great grey wall of concrete streaked dark where the water has run down it for years. {if dam_base.get(:tide) == 1 || dam_base.get(:tide) == 2}Water thunders out of the open sluice gates at its foot and goes off down the river in a hurry.{else if dam_base.get(:tide) == 3}The sluice gates are shut, and nothing comes over the top: the face of the dam is drying in patches, and only the old dark streaks say where the water used to run.{else}A thin sheet of water spills over the top and patters down the face of it.{/if}" }
     without as target for climb_up from Thing
     as target for climb_up { do { send actor :travel with :dam_room  say "" } }
   }
-  :roaring false
-  on :tide (from, value) { self.set(:roaring, value == 1 || value == 2) }
+  :tide 0 min 0 max 3
+  on :tide (from, value) { self.set(:tide, value) }
   object river is River
   object cliffs is Cliffs
   object water is WaterAbout

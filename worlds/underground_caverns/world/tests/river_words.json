@@ -1,6 +1,6 @@
 {
-  "about": "Flood Control Dam #3 (DAM-ROOM-FCN, BOLT-F, BUTTON-F, I-REMPTY, I-RFILL): the bolt will not turn until the yellow button has freed it, and then only with the wrench; turned, it opens the sluice gates, the green bubble glows, and the reservoir drains over the next eight moves (four minutes), the rooms around it saying so; on its bed, half buried in the mud, is the trunk of jewels, 15 points taken. Turned again, the gates close, the reservoir fills, and the way across the lake is gone.",
   "steps": [
+    { "comment": "The river's own words: the folded boat's instructions read round the back; upstream refused by the current, downstream left to it; a wait in the boat brings the current on, as a three-move wait does; and a beached boat says to get out of it." },
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West of House" },
@@ -122,18 +122,6 @@
       { "reader": "Marta", "kind": "described", "words": "The sluice gates on the dam are closed. Behind the dam, there can be seen a wide reservoir. Water is pouring over the top of the now abandoned dam." },
       { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble." }
     ] },
-    { "as": "Marta", "type": "x bolt", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is a large metal bolt, a good two inches across the head, mounted on the control panel and connected by unseen machinery to the sluice gates below. Its flats are worn bright, the way bolts get when the only way to turn them is with a wrench. The bubble above it is dark." }
-    ] },
-    { "as": "Marta", "type": "turn bolt", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your bare hands don't appear to be enough." }
-    ] },
-    { "as": "Marta", "type": "turn bolt with sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The bolt won't turn using the sword." }
-    ] },
-    { "as": "Marta", "type": "take bolt", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "It is an integral part of the control panel." }
-    ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dam Lobby" },
       { "reader": "Marta", "kind": "described", "words": "This room appears to have been the waiting room for groups touring the dam. There are open doorways here to the north and east marked \"Private\", and there is a path leading south over the top of the dam." },
@@ -148,16 +136,16 @@
       { "reader": "Marta", "kind": "described", "words": "There is an object which looks like a tube of toothpaste here." },
       { "reader": "Marta", "kind": "described", "words": "There is a screwdriver here." }
     ] },
-    { "as": "Marta", "type": "push button", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You'll have to say which: blue, yellow, brown, or red." }
-    ] },
-    { "as": "Marta", "type": "push brown button", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Click." }
-    ] },
     { "as": "Marta", "type": "push yellow button", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Click." }
     ] },
     { "as": "Marta", "type": "take wrench", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "open tube", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the tube reveals a viscous material." }
+    ] },
+    { "as": "Marta", "type": "take putty", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "s", "expect": [
@@ -168,139 +156,129 @@
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dam" }
     ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dam" },
-      { "reader": "Marta", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
-      { "reader": "Marta", "kind": "described", "words": "The sluice gates on the dam are closed. Behind the dam, there can be seen a wide reservoir. Water is pouring over the top of the now abandoned dam." },
-      { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble which is glowing serenely." }
-    ] },
-    { "as": "Marta", "type": "x bubble", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is a small green plastic bubble, about the size of a hen's egg, set into the panel directly above the bolt. It is glowing serenely, the calm, untroubled green of a machine that is ready when you are." }
-    ] },
     { "as": "Marta", "type": "turn bolt with wrench", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The sluice gates open and water pours through the dam." }
     ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dam" },
-      { "reader": "Marta", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
-      { "reader": "Marta", "kind": "described", "words": "The sluice gates are open, and water rushes through the dam. The water level behind the dam is still high." },
-      { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble which is glowing serenely." }
-    ] },
-    { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a long room. To the north is a large lake, too deep to cross. You notice, however, that the water level appears to be dropping at a rapid rate. Before long, it might be possible to cross to the other side from here." },
-      { "reader": "Marta", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." }
-    ] },
-    { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You would drown." }
-    ] },
-    { "advance": "2 minutes", "expect": [
-      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
-      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
-    ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a long room. To the north is a large lake, too deep to cross. You notice, however, that the water level appears to be dropping at a rapid rate. Before long, it might be possible to cross to the other side from here." },
-      { "reader": "Marta", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." }
-    ] },
-    { "advance": "2 minutes", "expect": [
-      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
-      { "level": "info", "text": "dam_room.bolt woke, 240 seconds after it asked" },
-      { "reader": "Marta", "kind": "told", "words": "The water level is now quite low here and you could easily cross over to the other side." },
-      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
-    ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a long room, to the north of which was formerly a lake. However, with the water level lowered, there is merely a wide stream running through the center of the room." },
-      { "reader": "Marta", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." }
-    ] },
-    { "as": "Marta", "type": "drop sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Dropped." }
-    ] },
     { "as": "Marta", "type": "drop wrench", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
-    ] },
-    { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Reservoir" },
-      { "reader": "Marta", "kind": "described", "words": "You are on what used to be a large lake, but which is now a large mud pile. There are \"shores\" to the north and south." },
-      { "reader": "Marta", "kind": "described", "words": "Lying half buried in the mud is an old trunk, bulging with jewels." }
-    ] },
-    { "as": "Marta", "type": "x mud", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The mud of the lake bed is grey and glistening and smells of a very long time under water. It is deep, and would like to keep your boots." }
-    ] },
-    { "as": "Marta", "type": "take trunk", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "x trunk", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is an old sea-trunk, its leather rotted and its brass corners green, and it is bulging with jewels: rubies and sapphires and things you cannot name, glinting through every split in its sides. There are lots of jewels in there." }
-    ] },
-    { "as": "Marta", "type": "open trunk", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The jewels are safely inside; there's no need to do that." }
-    ] },
-    { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 55 (total of 350 points), in 49 moves." },
-      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
-      { "reader": "Marta", "kind": "described", "words": "There is a sword here." },
-      { "reader": "Marta", "kind": "described", "words": "There is a wrench here." }
-    ] },
-    { "as": "Marta", "type": "take wrench", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dam" }
-    ] },
-    { "as": "Marta", "type": "turn bolt with wrench", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The sluice gates close and water starts to collect behind the dam." }
-    ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dam" },
-      { "reader": "Marta", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
-      { "reader": "Marta", "kind": "described", "words": "The sluice gates are closed. The water level in the reservoir is quite low, but the level is rising quickly." },
-      { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble which is glowing serenely." }
-    ] },
-    { "as": "Marta", "type": "x dam", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Flood Control Dam #3 is a great curved wall of grey concrete, 256 feet tall at the center by the guidebook's count, holding back the reservoir to the west with the air of something that has been asked to do this for a very long time and has not been thanked. The sluice gates at its foot are shut, and the water behind it is a long way below the top, climbing back up the stained concrete as you watch." }
-    ] },
-    { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dam Base" },
-      { "reader": "Marta", "kind": "described", "words": "You are at the base of Flood Control Dam #3, which looms above you and to the north. The river Frigid is flowing by here. Along the river are the White Cliffs which seem to form giant walls stretching from north to south along the shores of the river as it winds its way downstream." },
-      { "reader": "Marta", "kind": "described", "words": "There is a folded pile of plastic here which has a small valve attached." }
-    ] },
-    { "as": "Marta", "type": "x dam", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The dam looms above you to the north, a great grey wall of concrete streaked dark where the water has run down it for years. The sluice gates are shut, and nothing comes over the top: the face of the dam is drying in patches, and only the old dark streaks say where the water used to run." }
-    ] },
-    { "as": "Marta", "type": "u", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dam" }
-    ] },
-    { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
-      { "reader": "Marta", "kind": "described", "words": "There is a sword here." }
-    ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a long room, to the north of which is a wide area which was formerly a reservoir, but now is merely a stream. You notice, however, that the level of the stream is rising quickly and that before long it will be impossible to cross here." },
-      { "reader": "Marta", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." },
-      { "reader": "Marta", "kind": "described", "words": "There is a sword here." }
     ] },
     { "advance": "4 minutes", "expect": [
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
       { "level": "info", "text": "dam_room.bolt woke, 240 seconds after it asked" },
-      { "reader": "Marta", "kind": "told", "words": "You notice that the water level has risen to the point that it is impossible to cross." },
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
     ] },
-    { "as": "Marta", "type": "look", "expect": [
+    { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Reservoir South" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a long room on the south shore of a large lake, far too deep and wide for crossing." },
-      { "reader": "Marta", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." },
-      { "reader": "Marta", "kind": "described", "words": "There is a sword here." }
+      { "reader": "Marta", "kind": "described", "words": "You are in a long room, to the north of which was formerly a lake. However, with the water level lowered, there is merely a wide stream running through the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." }
     ] },
     { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You would drown." }
+      { "reader": "Marta", "kind": "described", "words": "Reservoir" },
+      { "reader": "Marta", "kind": "described", "words": "You are on what used to be a large lake, but which is now a large mud pile. There are \"shores\" to the north and south." },
+      { "reader": "Marta", "kind": "described", "words": "Lying half buried in the mud is an old trunk, bulging with jewels." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Reservoir North" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large cavernous room, the south of which was formerly a lake. However, with the water level lowered, there is merely a wide stream running through there." },
+      { "reader": "Marta", "kind": "described", "words": "There is a slimy stairway leaving the room to the north." },
+      { "reader": "Marta", "kind": "described", "words": "There is a hand-held air pump here." }
+    ] },
+    { "as": "Marta", "type": "take pump", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Reservoir" },
+      { "reader": "Marta", "kind": "described", "words": "Lying half buried in the mud is an old trunk, bulging with jewels." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Reservoir South" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dam" },
+      { "reader": "Marta", "kind": "described", "words": "There is a wrench here." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dam Base" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the base of Flood Control Dam #3, which looms above you and to the north. The river Frigid is flowing by here. Along the river are the White Cliffs which seem to form giant walls stretching from north to south along the shores of the river as it winds its way downstream." },
+      { "reader": "Marta", "kind": "described", "words": "There is a folded pile of plastic here which has a small valve attached." }
+    ] },
+    { "as": "Marta", "type": "read instructions", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Round the back, in type that gets smaller as it goes, the instructions go on: \"...INFLATE AT VALVE WITH ANY STANDARD AIR PUMP. DO NOT INFLATE BY MOUTH, BELLOWS OR VOLCANIC VENT. FULL INSTRUCTIONS ON TAN LABEL INSIDE. THE FROBOZZ MAGIC BOAT COMPANY ACCEPTS NO RESPONSIBILITY FOR...\" The rest is folded in too tight to read." }
+    ] },
+    { "as": "Marta", "type": "turn pile over", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You turn the pile over, which takes some doing. Round the back, in type that gets smaller as it goes, the instructions go on: \"...INFLATE AT VALVE WITH ANY STANDARD AIR PUMP. DO NOT INFLATE BY MOUTH, BELLOWS OR VOLCANIC VENT. FULL INSTRUCTIONS ON TAN LABEL INSIDE. THE FROBOZZ MAGIC BOAT COMPANY ACCEPTS NO RESPONSIBILITY FOR...\" The rest is folded in too tight to read." }
+    ] },
+    { "as": "Marta", "type": "drop sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "inflate pile with pump", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The boat inflates and appears seaworthy." },
+      { "reader": "Marta", "kind": "said", "words": "A tan label is lying inside the boat." }
+    ] },
+    { "as": "Marta", "type": "board boat", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are now in the magic boat." },
+      { "reader": "Marta", "kind": "described", "words": "Dam Base, in the magic boat" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the base of Flood Control Dam #3, which looms above you and to the north. The river Frigid is flowing by here. Along the river are the White Cliffs which seem to form giant walls stretching from north to south along the shores of the river as it winds its way downstream." },
+      { "reader": "Marta", "kind": "described", "words": "There is a sword here." },
+      { "reader": "Marta", "kind": "described", "words": "The magic boat contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A tan label" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't go anywhere on foot while you are sitting in a magic boat. Get out of it first." }
+    ] },
+    { "as": "Marta", "type": "out", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The boat is on dry land already. To leave it, get out of it." }
+    ] },
+    { "as": "Marta", "type": "launch", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Frigid River, in the magic boat" },
+      { "reader": "Marta", "kind": "described", "words": "You are on the Frigid River in the vicinity of the Dam. The river flows quietly here. There is a landing on the west shore." },
+      { "reader": "Marta", "kind": "described", "words": "The magic boat contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A tan label" }
+    ] },
+    { "as": "Marta", "type": "up", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You cannot go upstream due to strong currents." }
+    ] },
+    { "as": "Marta", "type": "go upstream", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You cannot go upstream due to strong currents." }
+    ] },
+    { "as": "Marta", "type": "go downstream", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The current needs no help from you. It will carry you downstream in its own good time, and sooner than you might like." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "The flow of the river carries you downstream." },
+      { "reader": "Marta", "kind": "told", "words": "Frigid River, in the magic boat" },
+      { "reader": "Marta", "kind": "told", "words": "The river turns a corner here making it impossible to see the Dam. The White Cliffs loom on the east bank and large rocks prevent landing on the west." },
+      { "reader": "Marta", "kind": "told", "words": "The magic boat contains:" },
+      { "reader": "Marta", "kind": "told", "words": "A tan label" },
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "The flow of the river carries you downstream." },
+      { "reader": "Marta", "kind": "told", "words": "Frigid River, in the magic boat" },
+      { "reader": "Marta", "kind": "told", "words": "The river descends here into a valley. There is a narrow beach on the west shore below the cliffs. In the distance a faint rumbling can be heard." },
+      { "reader": "Marta", "kind": "told", "words": "The magic boat contains:" },
+      { "reader": "Marta", "kind": "told", "words": "A tan label" },
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "west", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The magic boat comes to a rest on the shore." },
+      { "reader": "Marta", "kind": "described", "words": "White Cliffs Beach, in the magic boat" },
+      { "reader": "Marta", "kind": "described", "words": "You are on a narrow strip of beach which runs along the base of the White Cliffs. There is a narrow path heading south along the Cliffs and a tight passage leading west into the cliffs themselves." },
+      { "reader": "Marta", "kind": "described", "words": "The magic boat contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A tan label" }
+    ] },
+    { "as": "Marta", "type": "go south", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't go anywhere on foot while you are sitting in a magic boat. Get out of it first." }
+    ] },
+    { "as": "Marta", "type": "get out", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are on your own feet again." },
+      { "reader": "Marta", "kind": "described", "words": "White Cliffs Beach" },
+      { "reader": "Marta", "kind": "described", "words": "You are on a narrow strip of beach which runs along the base of the White Cliffs. There is a narrow path heading south along the Cliffs and a tight passage leading west into the cliffs themselves." },
+      { "reader": "Marta", "kind": "described", "words": "There is a magic boat here." },
+      { "reader": "Marta", "kind": "described", "words": "The magic boat contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A tan label" }
     ] }
   ]
 }

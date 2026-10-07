@@ -484,10 +484,14 @@ kind Thief is Thing, sprout.Actor {
             each a: Adventurer in from { send a :settle with from.get(:glow) }
           }
           if (from.get(:visited)) {
+            // ROB of the room, as Zork's I-THIEF robs a lit room with the
+            // visitor in it: silently in Zork, but here a treasure gone from
+            // under the visitor's eyes is told with STEAL-JUNK's own line.
             each t: Treasure in from {
               if (t.get(:tvalue) > 0 && !t.get(:sacred) && random(4) < 3) {
                 each b: LargeBag in self { move t to b }
                 self.adjust(:loot, 1)
+                if (self.get(:company)) { tell "You suddenly notice that the {t.short} vanished." }
               }
             }
             self.set(:done, false)

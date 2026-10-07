@@ -244,6 +244,13 @@ object aragain_falls is Room, RainbowFoot, Perilous, Riverside in underground_ca
   object rainbow is Rainbow
   object river is River
   object water is WaterAbout
+  // The far side, where the rainbow comes down: the way up the canyon to
+  // the forest, for anyone who could get there.
+  object far_side is Scenery {
+    grammar { name "far side"  nouns "side", "bank", "beach", "canyon", "sunlight", "sky", "walls", "west"  adjectives "far", "west", "sunlit", "little", "rocky" }
+    passage short { far side }
+    describe { text "Across the falls to the west, where the rainbow comes down, the river canyon opens to the sky, and a little rocky beach lies in real sunlight under the White Cliffs. A path leaves it down the canyon, and the canyon walls beyond it look a good deal less sheer than the ones on this side: the sort of walls a person might climb, to somewhere with trees on it. Between here and there is the rainbow, and four hundred and fifty feet of nothing." }
+  }
   object path is Scenery {
     grammar { name "path"  nouns "trail", "end"  adjectives "north", "only" }
     passage short { path }
@@ -501,7 +508,8 @@ kind Rainbow is Scenery {
   describe {
     if (here.is(RainbowFoot)) {
       if (here.get(:solid)) { text "The rainbow arches over the falls from one bank to the other, and it is solid: you can see steps in it, and a bannister, in seven colors, which is the giveaway." }
-      else { text "A beautiful rainbow hangs in the spray over the falls, every color there is and some that are not, arching away to the west. It is made, as rainbows are, of light and water vapor, and you can see the river through it." }
+      else if (here.is(RainbowEnd)) { text "A beautiful rainbow hangs in the spray over the falls, every color there is and some that are not, arching away to the east. It is made, as rainbows are, of light and water vapor, and you can see the river through it." }
+      else { text "A beautiful rainbow hangs in the spray over the falls, every color there is and some that are not, arching away to the west to come down on a little sunlit beach on the far side, where the canyon opens to the sky. It is made, as rainbows are, of light and water vapor, and you can see the river through it." }
     } else if (here.is(RainbowTop)) { text "Underfoot the rainbow is firm, faintly warm, and colored in broad bands from red at one edge to violet at the other. It does not bear thinking about, so you don't." }
     else { text "Far up the canyon a rainbow hangs over Aragain Falls, small and perfect, like a painting of a rainbow." }
   }

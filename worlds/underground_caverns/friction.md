@@ -2417,6 +2417,64 @@ unseen) are named where they would have helped.
 - **Spec:** Parsing › Intents; Verbs › Set roles; The runtime › Faults.
 - **Status: open.** It looks like a Sprout bug.
 
+## Found in round 11
+
+### 94, again: `kick the mailbox open`
+
+- **Round 11:** three players, four lines, each about a thing in plain
+  sight: `kick the mailbox open`, `land on the west shore`, `turn pile
+  over` (before `turn [target] over` was a phrase), `drop everything except
+  the lantern and the trunk`. All answered "You can't see any such thing.",
+  and each player came away believing the thing was not there.
+- **Wrote instead:** nothing for the engine's line; the world cannot change
+  how leftover words are answered. `turn [target] over`, `turn over
+  [target]` and `flip [target] over` are now phrases of TURN (and `turn` is
+  at the eight phrases a verb may have), and `dig through` and `dig into`
+  of DIG, so the commonest of these now read.
+- **Status: open,** an engine bug, with 68 and 94: answer leftover words
+  `unknown`, never `not_here`.
+
+### 69, again: `except` with a list
+
+- **Round 11:** `drop everything except the lantern and the trunk`, at the
+  chimney again, answered `not_here` (and so also 94).
+- **Status: open,** as 69.
+
+### 106. A wait that passes more than one move
+
+- **Wanted:** Zork's V-WAIT: "Time passes...", and then three moves, cut
+  short by the first clock routine that prints something. On the river,
+  one WAIT after launching reaches I-RIVER and the next reach; in the
+  Reservoir, two or three see it drain.
+- **Found:** a world cannot move the clock. `wait` is the engine's verb and
+  a turn is whatever time the host gives it (half a minute at the studio);
+  no statement asks for time to pass, and a wake cannot be made to fall
+  sooner than it was asked for, only cancelled and asked again. Three
+  players launched, waited, saw nothing, and decided the boat did not move.
+  And the world's `waited` line is said after the turn's work, so a line
+  the wait causes comes before "Time passes...", where Zork's comes after.
+- **Wrote instead:** in the boat, WAIT sends the boat `:hurry`, and the
+  boat, if it is on the river with somebody in it, takes back its wake and
+  does at once what the current would have done: "The flow of the river
+  carries you downstream." and the next reach, or the Falls from the last.
+  Everywhere else WAIT is one move: the reservoir drains in four minutes of
+  whatever the visitor does.
+- **Spec:** Verbs (the engine's six, `wait`); Time › Wakes.
+- **Status: open.** Asked of Sprout: a way for a world's `wait` to stand
+  for more than one turn's time, or for a wake to be brought forward.
+
+### 107. A visitor in a vehicle is not credited with the room it is in
+
+- **Found:** the round's reach report listed the five reaches of the
+  Frigid River as never reached, though five players rode the boat down
+  them and read "Frigid River, in the magic boat" at each. The visitor's
+  place is the boat, and the report counts only the place a visitor
+  stands in, not the place that place lies in.
+- **Wrote instead:** nothing; this is the test reporter's, not the world's.
+  Read `reach.places.never` with the river's reaches taken off.
+- **Spec:** Places (a place inside a place); the host's reach metrics.
+- **Status: open,** to raise with Sprout's reporter.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -2706,3 +2764,21 @@ unseen) are named where they would have helped.
   gone: the Clearing leads east to Canyon View, as in Zork. The Deep
   Canyon's board and its flooded passage, the Chasm's standing water and
   the Damp Cave's ledge over the river went the same way.
+- **Round 11: the river's UP and DOWN.** RBOAT-FUNCTION answers every
+  direction but LAND, EAST and WEST "Read the label for the boat's
+  instructions." before the river's own exits are asked; here, on the
+  river, UP and UPSTREAM are the river's "You cannot go upstream due to
+  strong currents." (RIVER-1 to RIVER-5's own line), and DOWN and DOWNSTREAM
+  say the current needs no help. Players reach for the words, and the
+  label's line told them nothing.
+- **Round 11: a beached boat.** Sitting in the boat on dry land, a way out
+  on foot is answered "You can't go anywhere on foot while you are sitting
+  in a magic boat. Get out of it first." (and OUT, that the boat is on dry
+  land already), where Zork answers the label's line or GOTO's "You can't
+  go there in a magic boat."
+- **Round 11: WAIT in the boat** brings the current on at once (106).
+- **Round 11: the thief in a lit room.** I-THIEF robs a lit room the visitor
+  stands in silently (THIEF-VS-ADVENTURER runs only in the dark); here each
+  treasure he takes from under the visitor's eyes is told with STEAL-JUNK's
+  own line, "You suddenly notice that the painting vanished." The robbery
+  and its odds are Zork's.

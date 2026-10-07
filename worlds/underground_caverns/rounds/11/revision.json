@@ -1,0 +1,187 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "I accepted it the way the synthesis framed it. The weights, the chimney's lamp-and-one-thing rule, the sack's weight and the re-barring trap door are Zork's, and the hauling is the puzzle, so they all stay. The real gap is that the canyon route home can't be seen from the river side. Prose is the author's to extend, so Aragain Falls now points at it: the rainbow comes down on a sunlit beach on the far side, and that far side is now something you can examine, with a path down the canyon and walls a person might climb. Aiming a goal at the other ways up is the director's call, not mine."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "I accepted the symptom but not the claim about Zork. Zork's I-THIEF runs THIEF-VS-ADVENTURER only in dark rooms. In a lit room such as the Gallery it calls ROB on the room silently even with the player standing there, so the robbery itself is faithful and stays, odds included. What was wrong for a player was the silence, which read as a bug. Each treasure he takes from under the player's eyes is now told with Zork's own STEAL-JUNK line, 'You suddenly notice that the painting vanished.' A new test (thief_gallery.json) has the thief arriving unseen while the player stands in the Gallery."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Zork's V-WAIT passes three moves and stops at the first clock event that prints. A Sprout world can't move the clock (friction 106), so a general three-move wait can't be built. The place it cost players was the river. There, WAIT in the boat now brings the current on at once, which matches Zork, where one wait after launching reaches I-RIVER. Elsewhere WAIT is still one move, and that is logged in friction 106."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "UPSTREAM and DOWNSTREAM are what players type on the river, and losing a turn to the parser there is unfair. UP and UPSTREAM now answer with the river's own Zork line, 'You cannot go upstream due to strong currents.' DOWN and DOWNSTREAM say the current needs no help and will carry you soon enough. One correction: in Zork, RBOAT-FUNCTION catches UP before the river's exit and answers with the label line. Sprout runs a direction's exits in order, so UP and UPSTREAM share one answer. This is logged as a chosen difference."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "In a beached boat the label line ('say Land') sends players the wrong way. On dry land, any way out on foot now says to get out of the boat first, and OUT says the boat is already on dry land. On open water the label line stays, as RBOAT-FUNCTION has it, and that includes the fifth reach's 'go south', which is Zork's."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "The Falls and the current's speeds stay Zork's, as recommended. Three players called the death fair. The turns they lost to the parser are dealt with under P3, P4 and P5."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "This is the engine's not_here line answering leftover words, so the world can't fix it. It is logged as friction 94 again and 69 again, to raise with Sprout. Where the world could help, it does: TURN [x] OVER, TURN OVER [x] and FLIP [x] OVER are now TURN phrases, and DIG THROUGH and DIG INTO are DIG phrases."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Zork's V-EAT accepts food that is in your hand or inside something in your hand. The lunch and the garlic can now be eaten from a sack you are holding. Drinking water from a held open bottle already worked."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The pile's own description promised instructions on the back, so READ, READ INSTRUCTIONS, TURN PILE OVER and LOOK BEHIND PILE now give them, in the Frobozz voice. They point at the valve, any standard air pump, and the label inside."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The Dam Base now keeps track of the dam's state, as the other rooms around the reservoir do. With the gates shut and the reservoir refilling, the dam seen from below and from the Dam itself no longer has water spilling over the top."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "I accepted only part of this. The Round Room's cave-ins and heaps were already things that answer dig, clear, move, search and climb in one voice. The evidence of 'examine heaps' failing was typed in the Studio, not the Round Room. The real failure was 'dig through the cave-ins', so DIG THROUGH and DIG INTO are now phrases. The Atlantis stair's chalked arrow stays a refusal, since its rubble lies in a room that isn't built. The trickling grit is kept: it is meant as the mystery that someone has been here."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "This is a fault in the test reporter's metrics, not in the world: a player riding the boat isn't credited with the reach the boat is on. Logged as friction 107, to raise with Sprout. Until then, read reach.places.never with the river reaches taken off."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Aragain Falls points at the canyon. The unsolid rainbow, examined there, comes down on a sunlit beach where the canyon opens to the sky. A new 'far side' scenery thing describes the path down the canyon and walls you could climb. At End of Rainbow the rainbow now arches east, matching that room's description. Tests: rainbow.json updated (End of Rainbow line, plus x rainbow and x far side at the Falls).",
+      "files": [
+        "worlds/underground_caverns/world/river.sprout",
+        "worlds/underground_caverns/world/tests/rainbow.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "When the thief robs a lit room the player is standing in, each treasure he takes is told with STEAL-JUNK's line, 'You suddenly notice that the <treasure> vanished.' New test thief_gallery.json: the player waits in the Gallery and the thief takes the painting.",
+      "files": [
+        "worlds/underground_caverns/world/thief.sprout",
+        "worlds/underground_caverns/world/tests/thief_gallery.json"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "WAIT in the boat sends it a new :hurry message. On the river with someone aboard, the boat cancels its scheduled drift and drifts now, or goes over the Falls from the fifth reach.",
+      "files": [
+        "worlds/underground_caverns/world/boat.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/river_words.json"
+      ],
+      "for": [
+        "P3",
+        "P6"
+      ]
+    },
+    {
+      "what": "The boat's exits. On the river, UP and UPSTREAM give Zork's strong-currents line, and DOWN and DOWNSTREAM say the current needs no help. In a beached boat, every way out on foot says to get out first, and OUT says the boat is on dry land already. The label line stays for open water. Tests: new river_words.json; river.json's beached 'n' updated.",
+      "files": [
+        "worlds/underground_caverns/world/boat.sprout",
+        "worlds/underground_caverns/world/tests/river_words.json",
+        "worlds/underground_caverns/world/tests/river.json"
+      ],
+      "for": [
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "what": "The lunch and garlic can be eaten while inside a sack you are holding, as Zork's V-EAT allows. kitchen.json now eats the lunch straight from the sack.",
+      "files": [
+        "worlds/underground_caverns/world/items.sprout",
+        "worlds/underground_caverns/world/tests/kitchen.json"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "The folded pile answers READ, TURN OVER and LOOK BEHIND with the instructions on the back of the fold, and now answers to the nouns 'instructions', 'words' and 'print'. TURN gains the phrases 'turn [target] over', 'turn over [target]' and 'flip [target] over'; that is eight, the most a verb may have. Covered by river_words.json.",
+      "files": [
+        "worlds/underground_caverns/world/boat.sprout",
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/tests/river_words.json"
+      ],
+      "for": [
+        "P9",
+        "P7"
+      ]
+    },
+    {
+      "what": "The Dam Base keeps the dam's state (:tide) instead of :roaring. The dam, examined from below and from the Dam, describes the refilling state: shut gates and no water over the top. The Dam's description moved into a passage to stay under the 600-character limit. dam_bolt.json now examines both while the reservoir refills.",
+      "files": [
+        "worlds/underground_caverns/world/dam.sprout",
+        "worlds/underground_caverns/world/tests/dam_bolt.json"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "DIG gains the phrases 'dig through [target]', 'dig through [target] with [tool]', 'dig into [target]' and 'dig into [target] with [tool]', so the Round Room's rubble answers them. heaps.json covers it.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/tests/heaps.json"
+      ],
+      "for": [
+        "P11",
+        "P7"
+      ]
+    },
+    {
+      "what": "Friction logged: 94 again and 69 again for round 11; new 106 (a world cannot make WAIT pass more than one move, and the waited line comes after the lines the wait causes); new 107 (the reach report does not credit a player in a vehicle with the room the vehicle is in). Round-11 chosen differences added: the river's UP and DOWN, the beached boat's line, WAIT in the boat, and the thief's line in a lit room.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P3",
+        "P4",
+        "P5",
+        "P2",
+        "P7",
+        "P12"
+      ]
+    },
+    {
+      "what": "intent.md gets an 'After round 11' section: each decision, what is kept and why, and what round 12 should watch.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12"
+      ]
+    }
+  ]
+}

@@ -60,8 +60,12 @@ kind Treasure is Portable {
 kind Food is Portable {
   without as target for eat from Thing
   as target for eat {
+    // V-EAT: in hand, or in something in hand.
     permit {
-      if (!actor.holds(self)) { refuse "You're not holding that." }
+      if (!actor.holds(self)) {
+        each b: Box in actor { if (b.holds(self)) { allow } }
+        refuse "You're not holding that."
+      }
     }
     do {
       say "Thank you very much. It really hit the spot."
@@ -107,7 +111,12 @@ kind Garlic is Food {
   describe { text "It is a single clove of garlic, plump and papery and very much itself. It is the sort of thing that keeps certain company at a distance, and most other company too." }
   without as target for eat from Food
   as target for eat {
-    permit { if (!actor.holds(self)) { refuse "You're not holding that." } }
+    permit {
+      if (!actor.holds(self)) {
+        each b: Box in actor { if (b.holds(self)) { allow } }
+        refuse "You're not holding that."
+      }
+    }
     do {
       say "What the heck! You won't make friends this way, but nobody around here is too friendly anyhow. Gulp!"
       destroy self
