@@ -56,6 +56,16 @@ slice:
   the key unlocks the grating and a second way leads up to the Clearing.
   The thief, his lair and the Cyclops stay out of scope: their exits
   refuse in-world.
+- **v4, from round 7:** v3, plus the land east of the Troll Room as Zork
+  has it: the East-West Passage, the Round Room, the Loud Room (its echo
+  and the platinum bar), the Deep Canyon and Damp Cave, the Chasm's
+  north-south passages, the Dome Room (the rope down), the Torch Room (the
+  ivory torch), the Temple (the brass bell), the Egyptian Room (the gold
+  coffin and the sceptre in it) and the Altar (the black book, the
+  candles, and the prayer that leads up to the Forest). Their treasures
+  score and go in the trophy case. The way past the Round Room to the
+  thief, the Cyclops, the dam, the mirrors and Hades stays out of scope:
+  those exits refuse in-world.
 - Exits into territory not built yet are present, as in Zork, and turn the
   visitor back with an in-world line.
 
@@ -122,7 +132,7 @@ built as Zork has it, that is a finding, not a failure.
 
 ## Budget
 
-- Rounds: 5 (round 3 keeps the round 1–2 slice; round 4 adds a way home; round 5 the maze and the grating)
+- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll), even rounds refine; see status.md
 - Playtests per round: 6 (one per persona)
 - Turn cap per run: 150
 - Spend ceiling: the workflow's default, about 400k tokens a round
