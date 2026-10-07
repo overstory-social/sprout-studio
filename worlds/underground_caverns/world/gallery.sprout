@@ -9,6 +9,7 @@ import {Adventurer} from 'adventurer'
 import {open, close, climb_up, climb_down, look_in, mung, :travel, :scored} from 'verbs'
 import {cellar} from 'cellar'
 import {kitchen, living_room} from 'house'
+import {Abyss} from 'east'
 
 object east_of_chasm is DarkRoom, Perilous in underground_caverns {
   grammar {
@@ -21,14 +22,11 @@ object east_of_chasm is DarkRoom, Perilous in underground_caverns {
     You are on the east edge of a chasm, the bottom of which cannot be seen. A narrow passage goes north, and the path you are on continues to the east.
   }
 
-  object chasm is Scenery {
-    grammar { name "chasm"  nouns "ravine", "gorge", "edge", "bottom"  adjectives "bottomless", "deep" }
-    passage short { chasm }
+  object chasm is Abyss {
     describe { text "The chasm drops away from your feet into a dark that your lamp does not so much light as annoy. A pebble kicked over the edge is never heard from again. Neither, by the look of it, was whoever kicked the last one." }
-    without as target for climb_down from Thing
+    passage peer { You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down. It probably leads straight to the infernal regions. }
+    without as target for climb_down from Abyss
     as target for climb_down { do { say "The chasm probably leads straight to the infernal regions." } }
-    without as target for look_in from Thing
-    as target for look_in { do { say "You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down. It probably leads straight to the infernal regions." } }
   }
   object narrow_passage is Scenery {
     grammar { name "narrow passage"  nouns "crawlway", "passageway", "crawl"  adjectives "narrow", "north" }
@@ -73,6 +71,7 @@ object gallery is Room in underground_caverns {
 // Zork's PAINTING: four points when it is first taken, six in the trophy
 // case, and nothing at all once somebody has put a blade through it.
 kind Painting is Treasure {
+  :burnable true
   grammar { name "painting"  nouns "art", "canvas", "masterpiece", "picture"  adjectives "beautiful" }
   :has_fdesc true
   :size 15

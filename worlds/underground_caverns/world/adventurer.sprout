@@ -9,15 +9,15 @@
 // the Land of the Living Dead. Getting there takes the world's gate, since
 // no room can otherwise reach another.
 import * as sprout from 'sprout'
-import {Thing, Portable} from 'thing'
+import {Thing, Portable, Flame} from 'thing'
 import {Box, Bag} from 'box'
-import {Lamp} from 'lamp'
+import {Lamp, Light} from 'lamp'
 import {Weapon, Sword, Knife, Axe, Treasure, Food, Water} from 'items'
 import {Room, DarkRoom, Forest, Perilous, ChimneyFoot, ChimneyTop} from 'room'
 import {TreeTop, Nest, Egg} from 'tree'
 import {Troll} from 'troll'
-import {go, look, examine, inventory, wait} from 'sprout'
-import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend} from 'verbs'
+import {go, look, examine, inventory, wait, help} from 'sprout'
+import {take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room} from 'house'
@@ -25,6 +25,8 @@ import {land_of_the_living_dead} from 'nowhere'
 import {east_of_chasm, studio, StudioChimney} from 'gallery'
 import {maze_5, Maze, DeadEnd} from 'maze'
 import {Skeleton, RustyKnife, SkeletonKey} from 'remains'
+import {east_west_passage, chasm_room, loud_room, deep_canyon, Abyss} from 'east'
+import {torch_room, temple, egyptian_room, Rope, Railing, Coffin, DomeRoom, AltarRoom, TempleRoom} from 'temple'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -48,6 +50,9 @@ kind Adventurer is sprout.Visitor {
   // How many skeleton keys are in hand: a grating cannot look into the
   // hands of the one unlocking it, so the hands say.
   :keys 0 min 0 max 9
+  // How many gold coffins are in hand, for the hole in the Altar's floor,
+  // which cannot see into the hands of the one going down it (friction 72).
+  :coffins 0 min 0 max 9
   // Zork's MOVES: every command but the ones about the game itself.
   :moves 0 min 0 max 1000000
   // Scratch for taking several things in one command: the load so far, and
@@ -77,7 +82,7 @@ kind Adventurer is sprout.Visitor {
   passage inventory {
     {if self.count(Thing) == 0}You are empty-handed.{else}You are carrying:{for t: Thing in self}
 
-    A {t.short}{if t.is(Lamp)}{if t.get(:lit)} (providing light){/if}{/if}{t.inside_lines}{/for}{/if}
+    A {t.short}{if t.is(Light)}{if t.get(:lit)} (providing light){/if}{/if}{t.inside_lines}{/for}{/if}
   }
 
   passage yuk {
@@ -96,6 +101,7 @@ kind Adventurer is sprout.Visitor {
   on :entered (item, from) {
     if (item.is(Thing)) { self.adjust(:load, item.get(:size)) }
     if (item.is(SkeletonKey)) { self.adjust(:keys, 1) }
+    if (item.is(Coffin)) { self.adjust(:coffins, 1) }
     if (item.is(Treasure)) {
       if (item.get(:value) > 0) {
         self.adjust(:score, item.get(:value))
@@ -106,6 +112,7 @@ kind Adventurer is sprout.Visitor {
   on :left (item, to) {
     if (item.is(Thing)) { self.adjust(:load, 0 - item.get(:size)) }
     if (item.is(SkeletonKey)) { self.adjust(:keys, -1) }
+    if (item.is(Coffin)) { self.adjust(:coffins, -1) }
   }
 
   on :scored (from, value) { self.adjust(:score, value) }
@@ -131,6 +138,21 @@ kind Adventurer is sprout.Visitor {
     broadcast :relight
   }
   on :room_lit (from, value) { self.set(:room_dark, !value) }
+  // The candles, burning down in hand or close by (Zork's I-CANDLES and
+  // LIGHT-INT). A pocket passes nothing (`sprout.Actor`), so these two are
+  // let through it, for the hand that holds them to hear (friction 73).
+  pass :candle_burn (true)
+  pass :snuffed (true)
+  on :candle_burn (from, value) {
+    if (value == 1) { tell self "The candles grow shorter." }
+    else if (value == 2) { tell self "The candles are becoming quite short." }
+    else if (value == 3) { tell self "The candles won't last long now." }
+    else { tell self "You'd better have more light than from the pair of candles." }
+  }
+  // A light in hand gone out of its own accord (the candles, burned down).
+  on :snuffed (from) {
+    if (self.holds(from)) { send self :light with -1 }
+  }
 
   // Going somewhere, as Zork's GOTO does it: into a dark place, the
   // warning; from one dark place into another without a light, four times
@@ -145,7 +167,7 @@ kind Adventurer is sprout.Visitor {
       self.set(:own_light, self.get(:light) > 0)
       each b: Box in self {
         if (b.get(:open)) {
-          each l: Lamp in b { if (l.get(:lit)) { self.set(:own_light, true) } }
+          each l: Light in b { if (l.get(:lit)) { self.set(:own_light, true) } }
         }
       }
       if (here.is(DarkRoom)) {
@@ -309,7 +331,7 @@ kind Adventurer is sprout.Visitor {
       self.set(:own_light, self.get(:light) > 0)
       each b: Box in self {
         if (b.get(:open)) {
-          each l: Lamp in b { if (l.get(:lit)) { self.set(:own_light, true) } }
+          each l: Light in b { if (l.get(:lit)) { self.set(:own_light, true) } }
         }
       }
       if (self.get(:dest) == :attic) {
@@ -320,6 +342,39 @@ kind Adventurer is sprout.Visitor {
         if (!self.get(:own_light) && !underground_caverns.cellar.get(:alight)) { tell self "You have moved into a dark place." }
         if (underground_caverns.cellar.get(:crash)) { tell self "The trap door crashes shut, and you hear someone barring it." }
         move self to cellar
+      }
+    } else if (self.get(:dest) == :prayed) {
+      // Zork's V-PRAY at the Altar: up to the Forest, with everything.
+      move self to forest_1
+    } else if (self.get(:dest) == :temple) {
+      move self to temple
+    } else if (self.get(:dest) == :torch_room || self.get(:dest) == :ew_passage || self.get(:dest) == :chasm || self.get(:dest) == :loud_room || self.get(:dest) == :deep_canyon || self.get(:dest) == :egypt) {
+      // Down a rope, or along a staircase by name, into the dark: as `go`
+      // goes, the warning first where there is no light to see by.
+      self.set(:own_light, self.get(:light) > 0)
+      each b: Box in self {
+        if (b.get(:open)) {
+          each l: Light in b { if (l.get(:lit)) { self.set(:own_light, true) } }
+        }
+      }
+      if (self.get(:dest) == :torch_room) {
+        if (!self.get(:own_light) && !underground_caverns.torch_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to torch_room
+      } else if (self.get(:dest) == :ew_passage) {
+        if (!self.get(:own_light) && !underground_caverns.east_west_passage.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to east_west_passage
+      } else if (self.get(:dest) == :chasm) {
+        if (!self.get(:own_light) && !underground_caverns.chasm_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to chasm_room
+      } else if (self.get(:dest) == :loud_room) {
+        if (!self.get(:own_light) && !underground_caverns.loud_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to loud_room
+      } else if (self.get(:dest) == :deep_canyon) {
+        if (!self.get(:own_light) && !underground_caverns.deep_canyon.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to deep_canyon
+      } else {
+        if (!self.get(:own_light) && !underground_caverns.egyptian_room.get(:alight)) { tell self "You have moved into a dark place." }
+        move self to egyptian_room
       }
     } else if (self.get(:dest) == :living_room) {
       move self to living_room
@@ -407,6 +462,7 @@ kind Adventurer is sprout.Visitor {
           // it out, and taken alone, the move says why.
           else if (several && (t.get(:sealed) || t.is(Axe) && t.get(:wielded))) { }
           else if (self.holds(t)) { say "{if several}{t.short}: {/if}You already have that!" }
+          else if (t.is(Rope) && t.get(:tied)) { say "{if several}{t.short}: {/if}The rope is tied to the railing." }
           else if (t.is(Portable)) {
             if (self.get(:carry) + t.get(:size) > 100) { say "{if several}{t.short}: {/if}Your load is too heavy." }
             else {
@@ -444,6 +500,13 @@ kind Adventurer is sprout.Visitor {
           }
           move t to here
         }
+        // The rope, let go of at the Dome's rail, goes over it (the Dome
+        // sees to that).
+        else if (here.is(DomeRoom) && t.is(Rope)) {
+          send t :let_go
+          move t to here
+          say "{if several}{t.short}: {/if}The rope drops gently to the floor below."
+        }
         else {
           move t to here
           say "{if several}{t.short}: {/if}Dropped."
@@ -458,6 +521,10 @@ kind Adventurer is sprout.Visitor {
       if (item == container) { say "How can you do that?" }
       else if (item.is(Portable)) {
         if (container.holds(item)) { say "The {item.short} is already in the {container.short}." }
+        else if (container.is(Abyss)) {
+          move item to container
+          say "The {item.short} drops out of sight into the chasm."
+        }
         else {
           move item to container
           say "Done."
@@ -520,14 +587,14 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for jump {
+  as actor for jump { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "jump jump ..." } } }
     do {
       self.adjust(:moves, 1)
       if (here.is(TreeTop)) {
         say "In a feat of unaccustomed daring, you manage to land on your feet without killing yourself."
         self.set(:dest, :path)
         send underground_caverns :open_gate
-      } else if (here.is(Perilous)) {
+      } else if (here.is(Perilous) || (here.is(DomeRoom) && !here.get(:roped)) || (here.is(AltarRoom) && self.count(Coffin) > 0)) {
         say "This was not a very safe place to try jumping."
         say "{one of}You should have looked before you leaped.{or}In the movies, your life would be passing before your eyes.{or}Geronimo...{/one of}"
         send self :die
@@ -537,9 +604,9 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for score { do { say score_line } }
+  as actor for score { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "score score ..." } } } do { say score_line } }
 
-  as actor for diagnose {
+  as actor for diagnose { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "diagnose diagnose ..." } } }
     do {
       self.adjust(:moves, 1)
       say "{if self.get(:wounds) == 0}You are in perfect health.{else if self.get(:wounds) == 1}You have a light wound.{else if self.get(:wounds) == 2}You have a serious wound.{else if self.get(:wounds) == 3}You have several wounds.{else}You have serious wounds.{/if}"
@@ -549,24 +616,26 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for xyzzy { do { self.adjust(:moves, 1)  say "A hollow voice says \"Fool.\"" } }
-  as actor for hello {
+  as actor for xyzzy { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "xyzzy xyzzy ..." } } } do { self.adjust(:moves, 1)  say "A hollow voice says \"Fool.\"" } }
+  as actor for hello { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "hello hello ..." } } }
     do {
       self.adjust(:moves, 1)
       say "{one of}Hello.{or}Good day.{or}Nice weather we've been having lately.{or}Goodbye.{/one of}"
     }
   }
-  as actor for yell { do { self.adjust(:moves, 1)  say "Aaaarrrrgggghhhh!" } }
-  as actor for zork { do { self.adjust(:moves, 1)  say "At your service!" } }
-  as actor for curse { do { self.adjust(:moves, 1)  say "Such language in a high-class establishment like this!" } }
+  as actor for yell { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "yell yell ..." } } } do { self.adjust(:moves, 1)  say "Aaaarrrrgggghhhh!" } }
+  as actor for zork { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "zork zork ..." } } } do { self.adjust(:moves, 1)  say "At your service!" } }
+  as actor for curse { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "curse curse ..." } } } do { self.adjust(:moves, 1)  say "Such language in a high-class establishment like this!" } }
 
   // Every other verb counts a move, as Zork's CLOCKER does; `score`,
   // `verbose`, `brief`, `superbrief`, `quit`, `restart`, `save` and
   // `restore`, which are about the game rather than in it, do not.
-  as actor for look       { do { self.adjust(:moves, 1) } }
+  // The Loud Room's echo: no help to be had there either.
+  as actor for help { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "help help ..." } } } }
+  as actor for look       { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "look look ..." } } } do { self.adjust(:moves, 1) } }
   as actor for examine    { do { self.adjust(:moves, 1) } }
-  as actor for inventory  { do { self.adjust(:moves, 1) } }
-  as actor for wait       { do { self.adjust(:moves, 1) } }
+  as actor for inventory  { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "inventory inventory ..." } } } do { self.adjust(:moves, 1) } }
+  as actor for wait       { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "wait wait ..." } } } do { self.adjust(:moves, 1) } }
   as actor for open       { do { self.adjust(:moves, 1) } }
   as actor for close      { do { self.adjust(:moves, 1) } }
   as actor for read       { do { self.adjust(:moves, 1) } }
@@ -586,7 +655,7 @@ kind Adventurer is sprout.Visitor {
   as actor for cross      { do { self.adjust(:moves, 1) } }
   // `listen` with nothing named. In the forest, the songbird the forest
   // keeps mentioning; in the maze, the maze; elsewhere, nothing much.
-  as actor for listen_here {
+  as actor for listen_here { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "listen listen ..." } } }
     do {
       self.adjust(:moves, 1)
       if (here.is(Forest)) { say "You hear in the distance the chirping of a song bird." }
@@ -595,7 +664,7 @@ kind Adventurer is sprout.Visitor {
     }
   }
   // `smell` alone, as `listen` alone: the forest, the maze, or nothing much.
-  as actor for smell_here {
+  as actor for smell_here { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "smell smell ..." } } }
     do {
       self.adjust(:moves, 1)
       if (here.is(Forest)) { say "You smell pine, damp earth and leaf mould, as forests do." }
@@ -625,6 +694,10 @@ kind Adventurer is sprout.Visitor {
       if (bound aim) {
         if (aim.is(Troll)) { move target to aim }
         else if (target.is(Water)) { }
+        else if (aim.is(Abyss)) {
+          move target to aim
+          if (target.is(Thing)) { say "The {target.short} drops out of sight into the chasm." }
+        }
         else if (aim.is(sprout.Actor)) {
           move target to here
           if (target.is(Thing)) { say "{aim} ducks as the {target.short} flies by and crashes to the ground." }
@@ -664,13 +737,59 @@ kind Adventurer is sprout.Visitor {
   as actor for kiss        { do { self.adjust(:moves, 1) } }
   as actor for look_behind { do { self.adjust(:moves, 1) } }
   as actor for fill        { do { self.adjust(:moves, 1) } }
-  as actor for tie         { do { self.adjust(:moves, 1) } }
+  // Tied to the Dome's railing, the rope leaves the hand for the rail.
+  as actor for tie {
+    do {
+      self.adjust(:moves, 1)
+      if (target.is(Rope) && here.is(DomeRoom) && !target.get(:tied)) {
+        if (bound tool) {
+          if (tool.is(Railing) && !here.holds(target)) { move target to here }
+        }
+      }
+    }
+  }
   as actor for alarm       { do { self.adjust(:moves, 1) } }
   as actor for talk        { do { self.adjust(:moves, 1) } }
   as actor for greet       { do { self.adjust(:moves, 1) } }
-  as actor for pray  { do { self.adjust(:moves, 1)  say "If you pray enough, your prayers may be answered." } }
-  as actor for swim  { do { self.adjust(:moves, 1)  say "Go jump in a lake!" } }
-  as actor for walk_about { do { self.adjust(:moves, 1)  say "Use compass directions for movement." } }
+  // Zork's V-PRAY: at the Altar, a prayer is answered, with the Forest.
+  as actor for pray { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "pray pray ..." } } }
+    do {
+      self.adjust(:moves, 1)
+      if (here.is(AltarRoom)) {
+        self.set(:dest, :prayed)
+        send underground_caverns :open_gate
+        say ""
+      } else { say "If you pray enough, your prayers may be answered." }
+    }
+  }
+  // Zork's ECHO: in the Loud Room, while it roars, the word that quiets it.
+  as actor for echo {
+    do {
+      self.adjust(:moves, 1)
+      if (here.is(Room)) {
+        if (here.get(:deafening)) {
+          send here :hush
+          say "The acoustics of the room change subtly."
+        } else { say "echo echo ..." }
+      } else { say "echo echo ..." }
+    }
+  }
+  // Zork's TREASURE and TEMPLE, the Temple's words for the way to the
+  // thief's lair, which is not built.
+  as actor for treasure { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "treasure treasure ..." } } }
+    do {
+      self.adjust(:moves, 1)
+      if (here.is(TempleRoom)) { say "For a moment the air of the temple seems to lean toward somewhere else, somewhere close and crowded and full of other people's things. Then it thinks better of it, and the temple is only a temple." }
+      else { say "Nothing happens." }
+    }
+  }
+  as actor for ring    { do { self.adjust(:moves, 1) } }
+  as actor for untie   { do { self.adjust(:moves, 1) } }
+  as actor for burn    { do { self.adjust(:moves, 1) } }
+  as actor for leap_at { do { self.adjust(:moves, 1) } }
+  as actor for turn    { do { self.adjust(:moves, 1) } }
+  as actor for swim  { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "swim swim ..." } } } do { self.adjust(:moves, 1)  say "Go jump in a lake!" } }
+  as actor for walk_about { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "walk walk ..." } } } do { self.adjust(:moves, 1)  say "Use compass directions for movement." } }
 
   // Zork's DIG: with nothing else to dig with, a pair of hands. Zork asks
   // what to dig in when told only `dig`; the parser here cannot ask, so the
@@ -684,7 +803,7 @@ kind Adventurer is sprout.Visitor {
       } else { say "Digging with a pair of hands is silly." }
     }
   }
-  as actor for dig_here { do { self.adjust(:moves, 1)  say "Digging with a pair of hands is silly." } }
+  as actor for dig_here { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "dig dig ..." } } } do { self.adjust(:moves, 1)  say "Digging with a pair of hands is silly." } }
   as actor for dig_with {
     do {
       self.adjust(:moves, 1)
@@ -707,16 +826,16 @@ kind Adventurer is sprout.Visitor {
     do { self.adjust(:moves, 1) }
   }
   as actor for lock       { do { self.adjust(:moves, 1) } }
-  as actor for verbose    { do { self.set(:mode, :verbose)  say "Maximum verbosity." } }
-  as actor for brief      { do { self.set(:mode, :brief)  say "Brief descriptions." } }
-  as actor for superbrief { do { self.set(:mode, :superbrief)  say "Superbrief descriptions." } }
+  as actor for verbose    { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "verbose verbose ..." } } } do { self.set(:mode, :verbose)  say "Maximum verbosity." } }
+  as actor for brief      { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "brief brief ..." } } } do { self.set(:mode, :brief)  say "Brief descriptions." } }
+  as actor for superbrief { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "superbrief superbrief ..." } } } do { self.set(:mode, :superbrief)  say "Superbrief descriptions." } }
   as actor for quit {
     do {
       say score_line
       say "There is no quitting the Great Underground Empire from inside it. Walk away whenever you like; it will keep your place, and your score, until you come back."
     }
   }
-  as actor for restart {
+  as actor for restart { permit { if (here.is(Room)) { if (here.get(:deafening)) { refuse "restart restart ..." } } }
     do { say "The Great Underground Empire cannot be started over from inside it. What is done here stays done." }
   }
   as actor for save {

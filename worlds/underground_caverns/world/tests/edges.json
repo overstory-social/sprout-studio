@@ -1,5 +1,5 @@
 {
-  "about": "Round 4's loose ends: the Clearing's rope and sign and the Troll Room's note can be named; the trap door's dust remembers being opened; the troll is examined in his own words; the chimney's refusal says its rule; a death says where the belongings went.",
+  "about": "Round 4's loose ends: the Clearing's rope and sign can be named, and the troll fends the visitor off the passage east; the trap door's dust remembers being opened; the troll is examined in his own words; the chimney's refusal says its rule; a death says where the belongings went.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -93,14 +93,8 @@
       { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
       { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
-    { "as": "Marta", "type": "x note", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "A scrap of paper is pinned to the rock at the mouth of the east passage. It reads: \"Back soon. -- The Management.\" It does not say when." }
-    ] },
-    { "as": "Marta", "type": "read note", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The note reads: \"Back soon. -- The Management.\"" }
-    ] },
-    { "as": "Marta", "type": "take note", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The note is pinned to the rock with a spike that was driven in by someone stronger than you." }
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The troll fends you off with a menacing gesture." }
     ] },
     { "seed": 12 },
     { "as": "Marta", "type": "attack troll with sword", "expect": [

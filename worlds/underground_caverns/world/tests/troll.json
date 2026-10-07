@@ -1,5 +1,5 @@
 {
-  "about": "The troll fends the visitor off, fights on Zork's tables with the sword, and is killed; the passage east leads to country not yet built, and the hole west into the Maze.",
+  "about": "The troll fends the visitor off, fights on Zork's tables with the sword, and is killed; the passage east opens on the East-West Passage, and the hole west into the Maze.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -93,7 +93,12 @@
       { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The passage to the east has not been finished. A note is pinned to the rock: \"Back soon. -- The Management.\"" }
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Maze" },

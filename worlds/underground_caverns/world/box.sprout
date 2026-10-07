@@ -12,6 +12,7 @@
 import {Thing, Portable} from 'thing'
 import {open, close, look_in, shake, :sealed} from 'verbs'
 import {Adventurer} from 'adventurer'
+import {Light} from 'lamp'
 
 kind Box is Thing {
   contains
@@ -78,7 +79,7 @@ kind Box is Thing {
   passage look_inside default {
     {if !self.get(:open) && !self.get(:transparent)}The {self.short} is closed.{else if self.count(Thing) == 0}The {self.short} is empty.{else}{self.header}{for u: Thing in self}
 
-    A {u.short}{/for}{/if}
+    A {u.short}{if u.is(Light)}{if u.get(:lit)} (providing light){/if}{/if}{/for}{/if}
   }
   passage inside_lines {
     {if self.get(:open) || self.get(:transparent)}{for u: Thing in self}{if u.get(:has_fdesc) && !u.get(:touched)}
@@ -87,7 +88,7 @@ kind Box is Thing {
 
     {self.header}{for u: Thing in self}{if u.get(:touched) || !u.get(:has_fdesc)}
 
-    A {u.short}{/if}{/for}{/if}{/if}
+    A {u.short}{if u.is(Light)}{if u.get(:lit)} (providing light){/if}{/if}{/if}{/for}{/if}{/if}
   }
 }
 

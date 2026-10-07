@@ -10,9 +10,10 @@
 // and tells each visitor in it whether it would be lit without them.
 import * as sprout from 'sprout'
 import {Thing, Scenery} from 'thing'
-import {Lamp} from 'lamp'
+import {Light} from 'lamp'
+import {Box} from 'box'
 import {Adventurer} from 'adventurer'
-import {:scored, :relight, :room_lit, :wall_look} from 'verbs'
+import {:scored, :relight, :room_lit, :wall_look, :hush, :snuffed} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -28,8 +29,14 @@ kind Room is sprout.Place {
   // holds its own.
   object wall is Wall
   // Which walls these are, for the wall to describe: plain, the Cellar's
-  // damp stone, the Troll Room's scarred rock, or the Studio's paint.
-  :walls 0 min 0 max 3
+  // damp stone, the Troll Room's scarred rock, the Studio's paint, the
+  // Engravings Cave's carved rock, or the Temple's granite.
+  :walls 0 min 0 max 5
+
+  // The Loud Room's noise, until somebody says the word: every thing there
+  // answers whatever is done to it with an echo (thing.sprout).
+  :deafening false
+  on :hush { self.set(:deafening, false) }
 
   // How many times each visitor has come in, up to twice: Zork's TOUCHBIT,
   // kept per visitor.
@@ -102,13 +109,18 @@ kind DarkRoom is Room {
 
   on :entered (item, from) { send self :relight }
   on :left (item, to)      { send self :relight }
+  on :snuffed              { send self :relight }
 
   changed :daylight (was) { send self :relight }
 
   on :relight {
     self.set(:floor_lit, self.get(:daylight))
     self.set(:bearers, 0)
-    each l: Lamp in self { if (l.get(:lit)) { self.set(:floor_lit, true) } }
+    each l: Light in self { if (l.get(:lit)) { self.set(:floor_lit, true) } }
+    // On a table, a pedestal or an altar, or in an open box on the floor.
+    each b: Box in self {
+      if (b.get(:open) || b.get(:transparent)) { each l: Light in b { if (l.get(:lit)) { self.set(:floor_lit, true) } } }
+    }
     each a: Adventurer in self { if (a.get(:light) > 0) { self.adjust(:bearers, 1) } }
     self.set(:alight, self.get(:floor_lit) || self.get(:bearers) > 0)
     // Each visitor is told whether the room would be lit without their own.
@@ -163,16 +175,20 @@ kind ChimneyTop { }
 kind Wall is Scenery {
   grammar { name "surrounding wall"  nouns "wall", "walls"  adjectives "surrounding" }
   passage short { surrounding wall }
-  :look 0 min 0 max 3
+  :look 0 min 0 max 5
   on :wall_look (from, value) { self.set(:look, value) }
   passage plain { The surrounding wall is solid, plain and entirely uninterested in you. }
   passage damp { The cellar walls are damp, rough stone, sweating quietly in the dark. }
   passage scarred { The walls are rough rock, marred by old bloodstains and by deep scratches, perhaps made by an axe. }
   passage painted { The walls are splattered with paint, sixty-nine colors of it by the count of someone who had the time. Some of the splashes look deliberate. None of them looks finished. }
+  passage carved { The walls of the cave are cut all over with old engravings, in a style that took its time and expected to be looked at. }
+  passage granite { The west wall is solid granite, smooth and blank and very sure of itself. The east wall bears an ancient inscription, cut deep. }
   describe {
     if (self.get(:look) == 1) { text damp }
     else if (self.get(:look) == 2) { text scarred }
     else if (self.get(:look) == 3) { text painted }
+    else if (self.get(:look) == 4) { text carved }
+    else if (self.get(:look) == 5) { text granite }
     else { text plain }
   }
 }

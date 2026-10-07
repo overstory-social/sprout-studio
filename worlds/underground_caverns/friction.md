@@ -1399,6 +1399,196 @@ area by area, including what it did not find hard.
 - **Spec:** Parsing › Sequences, again and all.
 - **Status: open.**
 
+## Found before round 7: east of the Troll Room
+
+Building v4 (the East-West Passage to the Altar) against Sprout 6c440f5.
+What the new language did well first: the one-way and refusing exits are
+plain `exit … refuse`, with Zork's own words ("You cannot go down without
+fracturing many bones.", "It is too narrow for most insects.", "Are you out
+of your mind?"); the Loud Room's ways that are not ways out are refusing
+exits under a `when`; `cancel wakes` gives the candles a clock they can put
+off; and the gold coffin is `Box, Treasure` with the diamond on `Portable`
+contributing once, as the spec says. No NPC is new in v4.
+
+### 70. The Loud Room cannot hear what was typed, nor catch every command
+
+- **Wanted:** Zork's LOUD-ROOM-FCN. Until the visitor says "echo", the room
+  takes over the parser: every line but a way out (west, east, up), "echo"
+  and the game's own commands is answered by V-ECHO, which prints the
+  line's last word twice and "...": `take the platinum bar` is "bar bar
+  ...", `look` is "look look ...", `xyzzy` is "xyzzy xyzzy ...", and a line
+  the parser would not even read is echoed too.
+- **Found:** two things. (a) A world cannot read the words a visitor typed:
+  a role binds an object, an option of an enum or an integer, never text
+  (Value roles), and a line no phrase reads never reaches the world at all
+  (`unknown`). (b) There is no "before every reading in this place": a
+  place can refuse only where it is a reading's target, and the wildcards
+  are `as target for any` and `as tool for any`, with no `as actor for any`
+  (Roles compose).
+- **Wrote instead:** the echo is of what the command was about. `Thing`
+  carries `as target for any` and `as tool for any` permits that refuse with
+  `{self.short} {self.short} ...` while the visitor's place is
+  `:deafening` (the bar writes its own, "bar bar ...", Zork's word for it);
+  every verb the visitor plays with no target (look, inventory, wait, help,
+  score, diagnose, jump, pray, xyzzy and fifteen more) carries the same
+  permit with its own word; and the Loud Room writes nine refusing exits,
+  "north north ..." and the rest, under `when (self.get(:deafening))`, for
+  the directions that are not ways out. `echo` (or `say echo`) sends the
+  room `:hush`. What is lost: the echo is of the thing's name, not the
+  word typed ("brass lantern brass lantern ..."); a line the parser cannot
+  read is "That sentence isn't one I recognize."; the echo begins with a
+  capital (17), "Bar bar ...", where Zork's is lower-case; and every new
+  targetless verb must remember to carry the permit. Asked of Sprout: an
+  `as actor for any` permit, or a place's permit over every reading made in
+  it, would be one line where this is twenty-five.
+- **Spec:** Verbs › Value roles; Verbs › Roles compose; Parsing › When
+  nothing matches; Prose › Passages (capitals).
+- **Status: open.**
+
+### 71. A room cannot throw its visitor out after a command
+
+- **Wanted:** Zork's Loud Room with the dam's gates open (M-END): after each
+  command in the room, "It is unbearably loud here, with an ear-splitting
+  roar seeming to come from all around you. ... With a tremendous effort,
+  you scramble out of the room.", and the visitor is put in the Damp Cave,
+  the Round Room or the Deep Canyon, at random.
+- **Found:** the dam is not built (v6), so its gates are shut and Zork's
+  room, in that state, only echoes (70); this is what the throw-out will
+  need. A place has no part that runs after every reading made in it:
+  `:tick` is ambience on the host's clock, not once a command, and a
+  place's `on :entered` runs on arrival, not after what is done there. The
+  move itself is possible, through the world's gate (6), as a death is.
+- **Wrote instead:** nothing yet: the v4 Loud Room is Zork's with the gates
+  shut, and its noise drives the visitor out in the sense that nothing but
+  a way out (or "echo") works in it. When the dam arrives, the throw-out
+  will have to hang off the visitor's own part of every verb they play,
+  as the move count does (23), behind a `:roaring` the dam keeps.
+- **Spec:** Time › Ticks; Verbs › The two passes; Range.
+- **Status: open.**
+
+### 72. The hole in the Altar cannot see the coffin in the hand
+
+- **Wanted:** Zork's SOUTH-TEMPLE-FCN and its `DOWN TO TINY-CAVE IF
+  COFFIN-CURE ELSE "You haven't a prayer of getting the coffin down
+  there."`: the way down refuses whoever carries the coffin.
+- **Found:** an exit's `when` has no actor (42), and in a refusing exit's
+  words, where the manual says `actor` may be used, `actor.count(Coffin)`
+  reads 0 while the visitor holds the coffin: `count` sees only what is in
+  range of the place asking, and `sprout.Actor` passes nothing (33, 67).
+  The compiler accepts it, and it is quietly wrong. A repro of seven lines
+  shows it: a place whose refusing exit says `{actor.count(Coffin)}` says 0
+  with a coffin in hand.
+- **Wrote instead:** the visitor counts the coffins in hand (`:coffins`,
+  kept on `:entered` and `:left`, as `:keys` is for the grating, 58), and
+  the Altar's refusal reads that off the actor, after narrowing it, in a
+  passage that says Zork's line or, without the coffin, the way to Hades's
+  own refusal.
+- **Spec:** Exits (refusal words, `actor`); Range; Properties and values
+  (`count`).
+- **Status: open.**
+
+### 73. A held light cannot tell its holder it is going out
+
+- **Wanted:** Zork's I-CANDLES and LIGHT-INT: the candles in hand burn down
+  and say so, "The candles grow shorter.", "The candles are becoming quite
+  short.", "The candles won't last long now.", and at last "You'd better
+  have more light than from the pair of candles.", and the hand holding
+  them has a light fewer.
+- **Found:** the candles' wake runs while they are in a pocket, and a
+  pocket passes nothing (`sprout.Actor`'s `pass any (false)`), so neither
+  their `tell` nor a `broadcast` reaches anyone, not even the one holding
+  them: a container receives a broadcast from inside only if it passes it
+  (Containers route, rule 2).
+- **Wrote instead:** the adventurer passes `:candle_burn` and `:snuffed`
+  (`pass :candle_burn (true)` beside the library's `pass any (false)`); the
+  candles broadcast their stage, and every adventurer who hears it (the
+  holder, or anyone standing by them on the floor) tells themselves Zork's
+  line; `:snuffed` takes the light out of the holder's count. The burning
+  down is a wake per stage (20, 10 and 5 minutes and 150 seconds, Zork's
+  40, 20, 10 and 5 turns at the studio's 30 seconds a turn), and putting
+  them out is `cancel wakes`. What is lost: turns are time here (24), so a
+  visitor who waits burns them faster than one who acts.
+- **Spec:** Events › Containers route; Other people › Who hears it; Time ›
+  Wakes.
+- **Status: open.**
+
+### 74. The rope: one rope in two rooms, and a climb that is not a walk
+
+- **Wanted:** Zork's ROPE-FUNCTION, DOME-ROOM-FCN and TORCH-ROOM-FCN: `tie
+  rope to railing` in the Dome Room drops the rope over the side and opens
+  the way down; the rope cannot then be taken, can be untied, and if let go
+  of untied it falls to the Torch Room floor; `climb down rope` is the walk
+  down; in the Torch Room the end hangs out of reach, and is in both rooms'
+  descriptions.
+- **Found:** (a) the rope's own part of `tie` cannot take itself out of the
+  visitor's hand (`sprout.Actor` releases only to the actor), so the
+  visitor's part moves it to the floor first, and the Dome's `:entered`,
+  which drops an untied rope over the edge, has to read the rope's own
+  `:tied`, written in its part after the move, to tell a tie from a drop.
+  (b) The tied state is kept in four places (the rope, the Dome, the Torch
+  Room and the Torch Room's dome), in step by a broadcast the world passes,
+  as the grating is (57). (c) The rope's end in the Torch Room is a thing
+  of its own, hidden in the dome by a pass rule that opens while the rope is
+  tied, as the grating under the leaves is. (d) `climb down rope` cannot
+  take the Dome's exit (65), so it goes through the world's gate (6), and
+  says "You have moved into a dark place." itself; the exit is labelled
+  "rope", so `climb rope` and `go rope` take the real exit. (e) An untied
+  rope let go of falls through the gate, as a thing dropped Up a Tree does.
+- **Wrote instead:** all of the above. It works; it is a puzzle written in
+  four files.
+- **Spec:** Movement and consent › The three roles; Exits; Actors and
+  visitors › Acting; Range.
+- **Status: open.**
+
+### 75. Weight is the world's to keep, and a box weighs only itself
+
+- **Wanted:** Zork's load: a visitor carries 100 by weight, the gold coffin
+  weighs 55 and the sceptre inside it 3 more (WEIGHT counts what a
+  container holds), and every way into the hands, `take`, `take all`, and
+  the implicit take of `read`, says "Your load is too heavy." when it is.
+- **Found:** Sprout counts things, not weight: `sprout.Actor`'s
+  `:capacity` is how many. Weight is a property the world declares and
+  keeps (`:size`, and the adventurer's `:load` on `:entered` and `:left`),
+  and each way into the hands checks it for itself. A container's contents
+  move with it without the holder hearing of them, so the load would have
+  to walk every box in hand on every move to count them.
+- **Wrote instead:** the load counts each thing's own size; the coffin
+  weighs 55 with or without the sceptre. `read`'s implicit take now checks
+  the load in its `permit` (the black book in an overloaded hand: "Your
+  load is too heavy."), where until v4 it took whatever it read.
+- **Spec:** Actors and visitors (capacity); Movement and consent › The
+  three roles.
+- **Status: open.**
+
+### 76. A prayer that moves the visitor
+
+- **Wanted:** Zork's V-PRAY: at the Altar, `pray` and the visitor is in the
+  Forest (GOTO FOREST-1), carrying everything, the coffin included.
+- **Found:** the Forest is out of the Altar's range, and no exit joins them;
+  a verb's `do` cannot move its actor across the map (6).
+- **Wrote instead:** the visitor's part of `pray` sends itself through the
+  world's gate with `:prayed`, as a death does, without the scattering. The
+  move says nothing of its own, and the Forest's description follows, as
+  Zork's GOTO prints it.
+- **Spec:** Range; Actors and visitors › Acting.
+- **Status: open,** as 6.
+
+### 77. Burned, vaporized, or dropped into the chasm
+
+- **Wanted:** Zork's REMOVE-CAREFULLY: a thing burned with the torch, the
+  candles vaporized by it, the black book burned (and its burner turned to
+  dust), and anything put or thrown into the chasm, gone for good.
+- **Found:** these are declared things, and `destroy self` on a declared
+  thing is warned (26). A thing moved into a container that passes nothing
+  cannot tell its old holder it has gone (the lamp put into the chasm would
+  leave its bearer's light count at one), so the chasm passes as any open
+  box does, and the thing destroys itself at the end of the turn.
+- **Wrote instead:** `Thing` ends itself with `finally destroy self` on
+  `:consume` and on being moved into an `Abyss`; `sprout check` warns twice
+  more for it. East of Chasm's chasm is the same `Abyss` now.
+- **Spec:** The world model › Destroying; Events › Containers route.
+- **Status: open,** as 26.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -1424,8 +1614,11 @@ area by area, including what it did not find hard.
   Zork's does, but not in hand, where Zork wants it held.
 - **Weight.** Zork's load is weights against 100, as here, but wounds do not
   lower it, and there is no fumbling.
-- **No `burn`.** There is nothing to burn anything with in this slice.
-  THROW, TIE, SWIM, KICK, RUB (and TOUCH), WAVE, SHAKE, SQUEEZE, KISS, LOOK
+- **BURN arrives with v4,** with the torch and the candles to burn things
+  with (PRE-BURN, V-BURN): what burns (the book, the leaflet, the sack, the
+  painting, the leaves, the nest; see below) is consumed, or kills whoever
+  holds it; anything else is "You can't burn a ...". Until v4 there was
+  nothing to burn anything with. THROW, TIE, SWIM, KICK, RUB (and TOUCH), WAVE, SHAKE, SQUEEZE, KISS, LOOK
   BEHIND, FILL, WAKE (Zork's ALARM), TALK TO (Zork's TELL), HELLO to
   someone, and PRAY are built before round 4 with Zork's answers from
   `gverbs.zil` and TROLL-FCN; FILL has no water to fill from, since the
@@ -1478,7 +1671,42 @@ area by area, including what it did not find hard.
 - **The chimney's refusal** keeps Zork's line and adds its rule: the
   chimney has room for a light and one thing more.
 - **Scattered treasures** go, on a death, to the Attic, the Cellar, East of
-  Chasm, the Studio or the Troll Room: the dark places built so far.
+  Chasm, the Studio or the Troll Room, as before v4: Zork's JIGS-UP picks
+  among every dark place, and the v4 rooms east of the troll are left out
+  so that a treasure lost to a death stays findable without the rope.
+
+## Differences chosen in v4
+
+- **The Engravings Cave** is built, though the brief's list leaves it out:
+  it is the only way from the Round Room to the Dome Room in `dungeon.zil`.
+- **The way out of the temple is the prayer,** as in Zork when the hole to
+  Hades is shut: there is no way back up the rope ("You cannot reach the
+  rope."), and the hole in the Altar refuses everyone, in words of its own
+  without the coffin and in Zork's with it. A visitor who goes down the
+  rope and does not pray stays down.
+- **The sceptre is not a weapon.** Zork's has WEAPONBIT, and a visitor
+  could fight the troll with it; the troll is past by the time the sceptre
+  is found, and the melee here knows the sword, the knives and the axe.
+- **The sceptre in the coffin in the trophy case scores nothing** for the
+  sceptre: Zork's OTVAL-FROB recurses into a container in the case without
+  adding what it finds, so only what lies in the case itself counts. The
+  case here pays for what enters it directly, which is the same rule.
+- **The Temple's words TREASURE and TEMPLE** (V-TREASURE) are heard: in the
+  Temple the air leans toward somewhere else and thinks better of it,
+  since the thief's lair is not built; anywhere else, "Nothing happens.".
+- **The candles burn down by time, not turns** (73), and only once
+  disturbed (taken, moved), where Zork starts them on any verb.
+- **Things that burn** are Zork's BURNBIT things in scope: the black book,
+  the leaflet, the brown sack, the painting, the pile of leaves and the
+  nest. Only the book's burning is Zork's own (BLACK-BOOK); the others take
+  V-BURN's default. The leaves burned do not uncover the grating, which
+  Zork's LEAF-PILE does (not built).
+- **The unbuilt ways east of the troll** refuse in the Management's voice,
+  as the old ones do: the Round Room's south passage is choked by a cave-in
+  someone has started sorting; the dam and the reservoir are boarded off
+  by the Flood Control Dam's notices (which can be read, in the Deep
+  Canyon, and on a card at the Chasm); the Damp Cave's east way ends above
+  the river without a boat; the hole in the Altar breathes up from Hades.
 - **The intact canary's aria and the brass bauble** are not built: only the
   thief opens the egg intact, and he is not in this slice. Winding the
   ruined canary gives Zork's "unpleasant grinding noise".

@@ -1,0 +1,198 @@
+{
+  "about": "The Chasm and the passages round it, as dungeon.zil joins them: down the stairway from the East-West Passage, along the North-South Passage to the Deep Canyon and down to the Loud Room; the chasm cannot be crossed or leapt, and what is put or thrown into it is gone for good (CHASM-PSEUDO); the crack is too narrow; the stairs are climbed by name; the ways on to the reservoir, the dam, the river and the mirrors refuse in their own words; jumping beside the chasm is the visitor's end.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "take lamp" },
+    { "as": "Marta", "type": "take sword" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "turn on lamp" },
+    { "as": "Marta", "type": "take rope" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "move rug" },
+    { "as": "Marta", "type": "open trap door" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "n" },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword" },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "as": "Marta", "type": "climb down stairway", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" },
+      { "reader": "Marta", "kind": "described", "words": "A chasm runs southwest to northeast and the path follows it. You are on the south side of the chasm, where a crack opens into a passage." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" },
+      { "reader": "Marta", "kind": "described", "words": "A chasm runs southwest to northeast and the path follows it. You are on the south side of the chasm, where a crack opens into a passage." }
+    ] },
+    { "as": "Marta", "type": "x chasm", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The chasm runs southwest to northeast, a black slot in the floor of the world, too deep for any light to find the bottom. A cold air comes up out of it, smelling of nothing at all." }
+    ] },
+    { "as": "Marta", "type": "x path", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The path follows the chasm from southwest to northeast, keeping a respectful distance from the edge. To the northeast a cord is strung across it between two spikes, with a card hanging from it: \"RESERVOIR SOUTH. CLOSED. -- The Management.\"" }
+    ] },
+    { "as": "Marta", "type": "x crack", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The crack in the south side of the chasm is wide enough for a person, just, and opens into a passage that leads away south." }
+    ] },
+    { "as": "Marta", "type": "x passage", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The crack in the south side of the chasm is wide enough for a person, just, and opens into a passage that leads away south." }
+    ] },
+    { "as": "Marta", "type": "climb through crack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The crack opens into the passage to the south. Go south, and you will be in it." }
+    ] },
+    { "as": "Marta", "type": "cross chasm", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It's too far to jump, and there's no bridge." }
+    ] },
+    { "as": "Marta", "type": "jump over chasm", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You look before leaping, and realize that you would never survive." }
+    ] },
+    { "as": "Marta", "type": "look in chasm", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You peer over the edge. The chasm goes down, and then further down, and then, as far as anyone has come back to say, down." }
+    ] },
+    { "as": "Marta", "type": "put rope in chasm", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The rope drops out of sight into the chasm." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" },
+      { "reader": "Marta", "kind": "described", "words": "A chasm runs southwest to northeast and the path follows it. You are on the south side of the chasm, where a crack opens into a passage." }
+    ] },
+    { "as": "Marta", "type": "throw sword into chasm", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The sword drops out of sight into the chasm." }
+    ] },
+    { "as": "Marta", "type": "inventory", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A brass lantern (providing light)" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Are you out of your mind?" }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The path follows the chasm northeast toward a smell of standing water, and stops at a cord strung across it between two spikes. From the cord hangs a card: \"RESERVOIR SOUTH. CLOSED. -- The Management.\" You go back the way you came." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a high north-south passage, which forks to the northeast." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" }
+    ] },
+    { "as": "Marta", "type": "climb up stairs", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Deep Canyon" },
+      { "reader": "Marta", "kind": "described", "words": "You are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. A stairway leads down. You can hear the sound of flowing water from below." }
+    ] },
+    { "as": "Marta", "type": "x canyon", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The canyon falls away to the north, sheer and black, too deep for your light to find the bottom. From somewhere far below comes the sound of water, going about its business." }
+    ] },
+    { "as": "Marta", "type": "x water", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "You cannot see the water from here. You can only hear it, far below, flowing steadily and with great conviction toward somewhere else." }
+    ] },
+    { "as": "Marta", "type": "listen to water", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can hear the sound of flowing water from below." }
+    ] },
+    { "as": "Marta", "type": "x boards", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The board across the east passage reads: \"FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management.\" The one across the northwest passage reads: \"RESERVOIR CLOSED. -- Flood Control Dam #3, by order of the Management.\"" }
+    ] },
+    { "as": "Marta", "type": "nw", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The passage northwest grows wet underfoot, and then wetter, and then you can hear a great deal of water lying very still somewhere ahead. A board is nailed across the passage at shin height: \"RESERVOIR CLOSED. -- Flood Control Dam #3, by order of the Management.\" You step back over the puddle you were standing in." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The passage east climbs toward a deep, steady hum, the sound of a great deal of water being held back by something that would rather not be disturbed. A board is nailed across it: \"FLOOD CONTROL DAM #3. CLOSED FOR INSPECTION. -- The Management.\" You leave the dam to its inspection." }
+    ] },
+    { "as": "Marta", "type": "climb down stairs", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Loud Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room with a ceiling which cannot be detected from the ground. There is a narrow passage from east to west and a stone stairway leading upward. The room is deafeningly loud with an undetermined rushing sound. The sound seems to reverberate from all of the walls, making it difficult even to think." },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a large platinum bar." }
+    ] },
+    { "as": "Marta", "type": "climb up stairs", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Stairs stairs ..." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Loud Room" },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a large platinum bar." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Damp Cave" },
+      { "reader": "Marta", "kind": "described", "words": "This cave has exits to the west and east, and narrows to a crack toward the south. The earth is particularly damp here." }
+    ] },
+    { "as": "Marta", "type": "x crack", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The crack is a dark slit in the rock a few inches wide, narrowing as it goes. A draught comes out of it, and so, now and then, does an ant." }
+    ] },
+    { "as": "Marta", "type": "climb through crack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't fit through the crack." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "It is too narrow for most insects." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The passage east comes out on a ledge high above a broad, cold river that is going somewhere in a hurry. There is no way down that does not involve the river at the bottom of it, and without a boat that is as far as this way goes." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Loud Room" },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a large platinum bar." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The passage south narrows almost at once and then stops, choked by one of the cave-ins. Somebody has made a start on clearing it: the rubble is sorted into neat heaps by size, smallest nearest. Whoever it was has not finished, and you decide not to be the one who does." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Chasm" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't go that way." }
+    ] },
+    { "as": "Marta", "type": "jump", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "This was not a very safe place to try jumping." },
+      { "reader": "Marta", "kind": "said", "words": "In the movies, your life would be passing before your eyes." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Marta", "kind": "told", "words": "Your belongings, such as they were, have not come with you. They are scattered about the Empire, though somebody tidy has put the lamp back in the living room." },
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] }
+  ]
+}

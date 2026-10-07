@@ -30,6 +30,11 @@ verb put {
   "insert [item] in [container]"  "insert [item] into [container]"
   "stuff [item] in [container]"
 }
+// Zork's DROP into something is its PUT.
+intent drop_in {
+  "drop [x] in [y]"  "drop [x] into [y]"  "drop [x] down [y]"
+  do put (item: x, container: y)
+}
 
 verb open {
   role target
@@ -104,7 +109,7 @@ verb listen { role target  "listen to [target]"  "listen for [target]" }
 verb listen_here { "listen"  "listen carefully" }
 
 verb climb_up { role target  "climb up [target]"  "go up [target]"  "scale [target]" }
-verb climb_down { role target  "climb down [target]"  "go down [target]"  "descend [target]" }
+verb climb_down { role target  "climb down [target]"  "go down [target]"  "descend [target]"  "slide down [target]"  "lower yourself down [target]" }
 
 verb unlock { role target  role tool carried  "unlock [target] with [tool]"  "unlock [target]" }
 
@@ -180,9 +185,10 @@ verb give {
 verb throw {
   role target carried
   role aim
-  "throw [target] at [aim]"  "throw [target] to [aim]"  "toss [target] at [aim]"
-  "hurl [target] at [aim]"  "chuck [target] at [aim]"
-  "throw [target]"  "toss [target]"  "hurl [target]"
+  "throw [target] at [aim]"  "throw [target] to [aim]"  "throw [target] in [aim]"
+  "throw [target] into [aim]"  "throw [target] over [aim]"  "throw [target] down [aim]"
+  "throw [target]"
+  synonyms "toss", "hurl", "chuck"
 }
 
 // Zork's HACK-HACK verbs, and the rest of the small change of the parser:
@@ -216,6 +222,39 @@ verb greet { role target  "hello [target]"  "hi [target]"  "greet [target]"  "sa
 verb cross { role target  "cross [target]"  "ford [target]" }
 verb pray { "pray" }
 verb swim { "swim"  "bathe"  "wade" }
+
+// Zork's ECHO: a word the Loud Room listens for. Anywhere else, the echo
+// is all it gets.
+verb echo { "echo"  "say echo"  "shout echo"  "yell echo" }
+// Zork's RING, for the Temple's bell.
+verb ring { role target  role tool  "ring [target]"  "ring [target] with [tool]" }
+// Zork's UNTIE, for the rope.
+verb untie {
+  role target
+  role tool
+  "untie [target]"  "untie [target] from [tool]"  "unfasten [target]"  "unfasten [target] from [tool]"
+  "detach [target]"  "detach [target] from [tool]"  "unknot [target]"
+}
+// Zork's BURN: with something already burning, the torch or the candles.
+// Zork asks with what when told only `burn`; the parser here cannot ask,
+// so the answer is the one Zork gives when the question goes unanswered.
+verb burn {
+  role target
+  role tool
+  "burn [target] with [tool]"  "burn [target]"  "light [target] with [tool]"
+  "ignite [target] with [tool]"  "set fire to [target] with [tool]"  "set fire to [target]"
+  "incinerate [target] with [tool]"  "incinerate [target]"
+}
+// Zork's LEAP with something to leap at: over it, into it, across it.
+verb leap_at {
+  role target
+  "jump [target]"  "jump over [target]"  "jump into [target]"  "jump in [target]"
+  "jump across [target]"  "leap over [target]"  "leap into [target]"  "leap across [target]"
+}
+// Zork's TURN, which pages a book and turns little else.
+verb turn { role target  "turn [target]"  "turn page of [target]"  "turn pages of [target]"  "flip through [target]"  "leaf through [target]" }
+// Zork's TREASURE and TEMPLE: words the Temple knows.
+verb treasure { "treasure"  "temple" }
 
 verb score { "score" }
 verb diagnose { "diagnose" }
@@ -259,7 +298,7 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish }
+enum Dest { forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.
@@ -310,3 +349,17 @@ message :grate_revealed
 message :banish
 // The rusty knife, once it has done what it does.
 message :spend
+// The Loud Room falls quiet for good once somebody says the word.
+message :hush
+// The rope tied to the Dome's railing, or untied: the Dome keeps the way
+// down, and the Torch Room below sees the rope's end.
+message :dome_rope with boolean
+// Something gone for good: burned, vaporized, or dropped into the chasm.
+message :consume
+// The candles, burning down, or put out: whoever holds them has a light
+// fewer, and the room they light may be dark.
+message :snuffed
+// The candles, a stage further burned down (1 to 3), or out (4).
+message :candle_burn with integer
+// The rope, let go of at the Dome's rail.
+message :let_go

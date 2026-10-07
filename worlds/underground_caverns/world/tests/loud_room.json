@@ -1,0 +1,112 @@
+{
+  "about": "The Loud Room and its echo, as Zork's LOUD-ROOM-FCN has them: east of the Troll Room the passage is open; in the Loud Room every command but a way out comes back as an echo, and the platinum bar cannot be had, until the visitor says \"echo\"; then the room is quiet for good, the bar is taken for ten points, and \"echo\" is only an echo.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "take lamp" },
+    { "as": "Marta", "type": "take sword" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "turn on lamp" },
+    { "as": "Marta", "type": "take rope" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "move rug" },
+    { "as": "Marta", "type": "open trap door" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "n" },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword" },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Loud Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room with a ceiling which cannot be detected from the ground. There is a narrow passage from east to west and a stone stairway leading upward. The room is deafeningly loud with an undetermined rushing sound. The sound seems to reverberate from all of the walls, making it difficult even to think." },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a large platinum bar." }
+    ] },
+    { "as": "Marta", "type": "take bar", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Bar bar ..." }
+    ] },
+    { "as": "Marta", "type": "x bar", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Bar bar ..." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Look look ..." }
+    ] },
+    { "as": "Marta", "type": "inventory", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Inventory inventory ..." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Score score ..." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "North north ..." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Down down ..." }
+    ] },
+    { "as": "Marta", "type": "help", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Help help ..." }
+    ] },
+    { "as": "Marta", "type": "jump", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Jump jump ..." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Loud Room" },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a large platinum bar." }
+    ] },
+    { "as": "Marta", "type": "say echo", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The acoustics of the room change subtly." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Loud Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room with a ceiling which cannot be detected from the ground. There is a narrow passage from east to west and a stone stairway leading upward. The room is eerie in its quietness." },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a large platinum bar." }
+    ] },
+    { "as": "Marta", "type": "take bar", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 50 (total of 350 points), in 27 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "echo", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Echo echo ..." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't go that way." }
+    ] },
+    { "as": "Marta", "type": "listen to sound", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The room is eerie in its quietness. Somewhere far off, the last of an echo is still going round." }
+    ] },
+    { "as": "Marta", "type": "x sound", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "There is no sound at all, now: only the quiet, which has a texture of its own in a room this size, like a held breath." }
+    ] }
+  ]
+}

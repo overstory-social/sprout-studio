@@ -13,6 +13,7 @@ import {SkeletonKey} from 'remains'
 import {Adventurer} from 'adventurer'
 
 kind Leaves is Portable {
+  :burnable true
   grammar { name "pile of leaves"  nouns "leaves", "leaf", "pile" }
   :size 25
   :hiding true

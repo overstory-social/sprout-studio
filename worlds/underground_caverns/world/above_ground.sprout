@@ -38,6 +38,7 @@ object west_of_house is Room in underground_caverns {
     }
 
     object leaflet is Readable {
+      :burnable true
       grammar { nouns "advertisement", "booklet", "mail"  adjectives "small" }
       :size 2
       passage short { leaflet }

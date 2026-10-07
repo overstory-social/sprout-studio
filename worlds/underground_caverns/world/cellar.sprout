@@ -10,6 +10,7 @@ import {open, close, read, climb_up, climb_down, :trap_sync, :troll_flag, :troll
 import {east_of_chasm} from 'gallery'
 import {living_room} from 'house'
 import {maze_1} from 'maze'
+import {east_west_passage} from 'east'
 
 object cellar is DarkRoom in underground_caverns {
   grammar {
@@ -128,14 +129,10 @@ object troll_room is DarkRoom in underground_caverns {
     name "Troll Room"
     article the
     exit south "south" -> cellar
-    exit east  "east"  refuse unbuilt_passage when (self.get(:troll_flag))
+    exit east  "east"  -> east_west_passage when (self.get(:troll_flag))
     exit east  "east"  refuse "The troll fends you off with a menacing gesture."
     exit west  "hole"  -> maze_1 when (self.get(:troll_flag))
     exit west  "hole"  refuse "The troll fends you off with a menacing gesture."
-  }
-  // The edge of what is built so far.
-  passage unbuilt_passage {
-    The passage to the east has not been finished. A note is pinned to the rock: "Back soon. -- The Management."
   }
   :glow 2
   :troll_flag false
@@ -158,16 +155,6 @@ object troll_room is DarkRoom in underground_caverns {
     }
   }
 
-  // What the east passage's refusal names, so it can be named back.
-  object note is Scenery {
-    grammar { name "note"  nouns "notice", "paper"  adjectives "pinned" }
-    passage short { note }
-    passage words { The note reads: "Back soon. -- The Management." }
-    passage no_take { The note is pinned to the rock with a spike that was driven in by someone stronger than you. }
-    describe { text "A scrap of paper is pinned to the rock at the mouth of the east passage. It reads: \"Back soon. -- The Management.\" It does not say when." }
-    without as target for read from Thing
-    as target for read { do { say words } }
-  }
   object passages is Scenery {
     grammar { name "passages"  nouns "passage", "passageway", "passageways"  adjectives "east", "south" }
     passage short { passages }

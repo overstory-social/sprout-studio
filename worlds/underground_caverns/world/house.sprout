@@ -10,6 +10,7 @@ import {Sword, Knife, Treasure, Food, Water, Lunch, Garlic} from 'items'
 import {Room, DarkRoom, Perilous, ChimneyTop} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'scenery'
+import {Rope} from 'temple'
 import {open, close, look_in, read, shift, raise, look_under, smell, eat, through, climb_up, climb_down, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored} from 'verbs'
 import {behind_house} from 'above_ground'
 import {cellar} from 'cellar'
@@ -117,6 +118,7 @@ object kitchen is Room, Perilous, ChimneyTop in underground_caverns {
     }
 
     object sack is Bag {
+      :burnable true
       grammar { name "brown sack"  nouns "bag", "sack"  adjectives "elongated", "smelly" }
       :has_fdesc true
       :size 9
@@ -181,14 +183,7 @@ object attic is DarkRoom in underground_caverns {
   }
   passage body { This is the attic. The only exit is a stairway leading down. }
 
-  object rope is Portable {
-    grammar { nouns "rope", "hemp", "coil"  adjectives "large" }
-    :has_fdesc true
-    :size 10
-    passage short { rope }
-    passage fdesc { A large coil of rope is lying in the corner. }
-    describe { text "It is a good length of stout hemp rope, coiled with more care than anything else in the attic was put away. Someone expected to need it." }
-  }
+  object rope is Rope
 
   object table is Box {
     grammar { name "table" }

@@ -1,0 +1,181 @@
+{
+  "about": "The gold coffin and the sceptre in it: down the rope, past the Temple to the Egyptian Room; the coffin opens on the sceptre, a treasure that shows its colors when waved; the coffin is a treasure too, and weighs 55 of the 100 a visitor can carry, so the sword stays behind; the hole in the Altar's floor refuses the coffin, as Zork's COFFIN-CURE does, and refuses the visitor without it in its own words.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "take lamp" },
+    { "as": "Marta", "type": "take sword" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "turn on lamp" },
+    { "as": "Marta", "type": "take rope" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "move rug" },
+    { "as": "Marta", "type": "open trap door" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "n" },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword" },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Engravings Cave" },
+      { "reader": "Marta", "kind": "described", "words": "You have entered a low cave with passages leading northwest and east." },
+      { "reader": "Marta", "kind": "described", "words": "There are old engravings on the walls here." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dome Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the periphery of a large dome, which forms the ceiling of another room below. Protecting you from a precipitous drop is a wooden railing which circles the dome." }
+    ] },
+    { "as": "Marta", "type": "tie rope to railing", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The rope drops over the side and comes within ten feet of the floor." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Torch Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room with a prominent doorway leading to a down staircase. Above you is a large dome. Up around the edge of the dome (20 feet up) is a wooden railing. In the center of the room sits a white marble pedestal." },
+      { "reader": "Marta", "kind": "described", "words": "A piece of rope descends from the railing above, ending some five feet above your head." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the pedestal is a flaming torch, made of ivory." }
+    ] },
+    { "as": "Marta", "type": "take torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Temple" },
+      { "reader": "Marta", "kind": "described", "words": "This is the north end of a large temple. On the east wall is an ancient inscription, probably a prayer in a long-forgotten language. Below the prayer is a staircase leading down. The west wall is solid granite. The exit to the north end of the room is through huge marble pillars." },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass bell here." }
+    ] },
+    { "as": "Marta", "type": "x bell", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a small brass bell with a wooden handle, of the kind used to call the faithful, or the servants, or the dead; the temple does not say which. It is polished bright where a great many hands have held it." }
+    ] },
+    { "as": "Marta", "type": "ring bell", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Ding, dong." }
+    ] },
+    { "as": "Marta", "type": "x prayer", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The inscription is cut deep into the east wall, in an ancient script, rarely used today. It is probably a prayer. Read, it may say so." }
+    ] },
+    { "as": "Marta", "type": "read prayer", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The prayer is inscribed in an ancient script, rarely used today. It seems to be a philippic against small insects, absent-mindedness, and the picking up and dropping of small objects. The final verse consigns trespassers to the land of the dead. All evidence indicates that the beliefs of the ancient Zorkers were obscure." }
+    ] },
+    { "as": "Marta", "type": "x pillars", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The pillars are huge, white marble, fluted and tall, and stand in a row across the north end of the temple, between which the way out lies. They have the air of holding up a great deal more than a ceiling." }
+    ] },
+    { "as": "Marta", "type": "x temple", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The temple is large and dim and very quiet, the north end of a long hall whose far end, to the south, holds an altar. The air smells of cold stone and old incense. Whatever was worshipped here has not been in for some time." }
+    ] },
+    { "as": "Marta", "type": "treasure", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "For a moment the air of the temple seems to lean toward somewhere else, somewhere close and crowded and full of other people's things. Then it thinks better of it, and the temple is only a temple." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Egyptian Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a room which looks like an Egyptian tomb. There is an ascending staircase to the west." },
+      { "reader": "Marta", "kind": "described", "words": "The solid-gold coffin used for the burial of Ramses II is here." }
+    ] },
+    { "as": "Marta", "type": "x tomb", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The walls are painted from floor to ceiling with figures in profile, walking in solemn single file toward the west, carrying jars, birds, sheaves of wheat and one another. All of them are in a great hurry to get somewhere, and none of them has moved in three thousand years. Somebody important was buried here, and somebody else has been tidying up after him." }
+    ] },
+    { "as": "Marta", "type": "x coffin", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a coffin of solid gold, long and narrow and shaped to a man, with a face on the lid that is calm, handsome and very sure of its place in the world. Ramses II was buried in it, and has evidently been moved elsewhere since, which the face does not seem to know. It is magnificent, and it is enormously heavy." },
+      { "reader": "Marta", "kind": "described", "words": "The gold coffin is closed." }
+    ] },
+    { "as": "Marta", "type": "open coffin", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the gold coffin reveals a sceptre." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Egyptian Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a room which looks like an Egyptian tomb. There is an ascending staircase to the west." },
+      { "reader": "Marta", "kind": "described", "words": "The solid-gold coffin used for the burial of Ramses II is here." },
+      { "reader": "Marta", "kind": "described", "words": "A sceptre, possibly that of ancient Egypt itself, is in the coffin. The sceptre is ornamented with colored enamel, and tapers to a sharp point." }
+    ] },
+    { "as": "Marta", "type": "take sceptre", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "x sceptre", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The sceptre is a rod of gold as long as your forearm, ornamented with bands of colored enamel, blue and red and green, that seem to shift a little as you turn it. It tapers to a sharp point, which suggests that whoever held it was not always asked twice." }
+    ] },
+    { "as": "Marta", "type": "wave sceptre", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A dazzling display of color briefly emanates from the sceptre." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 58 (total of 350 points), in 42 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
+    ] },
+    { "as": "Marta", "type": "take coffin", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your load is too heavy." }
+    ] },
+    { "as": "Marta", "type": "drop sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "take coffin", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "inventory", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A brass lantern (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "A torch (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "A sceptre" },
+      { "reader": "Marta", "kind": "said", "words": "A gold coffin" }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 68 (total of 350 points), in 46 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Temple" },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass bell here." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Altar" },
+      { "reader": "Marta", "kind": "described", "words": "This is the south end of a large temple. In front of you is what appears to be an altar. In one corner is a small hole in the floor which leads into darkness. You probably could not get back up it." },
+      { "reader": "Marta", "kind": "described", "words": "On the altar is a large black book, open to page 569." },
+      { "reader": "Marta", "kind": "described", "words": "On the two ends of the altar are burning candles." }
+    ] },
+    { "as": "Marta", "type": "x hole", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The hole in the corner of the floor is small and round and goes straight down into darkness. A cold draught comes up out of it, and with it a faint sound, like a great many people sighing a very long way off. You probably could not get back up it." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You haven't a prayer of getting the coffin down there." }
+    ] },
+    { "as": "Marta", "type": "drop coffin", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You lower your legs into the hole, and a cold draught comes up it to meet them, smelling of old smoke and carrying a sound like a great many people sighing at once, a very long way down. You decide that whatever is down there has waited this long and can wait a little longer." }
+    ] },
+    { "as": "Marta", "type": "take coffin", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "jump", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "This was not a very safe place to try jumping." },
+      { "reader": "Marta", "kind": "said", "words": "You should have looked before you leaped." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Marta", "kind": "told", "words": "Your belongings, such as they were, have not come with you. They are scattered about the Empire, though somebody tidy has put the lamp back in the living room." },
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] }
+  ]
+}

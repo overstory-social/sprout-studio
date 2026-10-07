@@ -14,7 +14,14 @@ East of Chasm, the Gallery with its painting, and the Studio, whose chimney
 climbs to the Kitchen; and, from round 5, the Maze west of the Troll Room,
 the dead adventurer's remains in it, and the Grating Room under the
 Clearing, whose grating the skeleton key opens from below: a second way
-back to the surface. Every room's name and description
+back to the surface; and, from round 7, the land east of the Troll Room:
+the East-West Passage, the Round Room, the Loud Room with its echo and its
+platinum bar, the Deep Canyon and the Damp Cave, the Chasm and the
+North-South Passage, the Engravings Cave, the Dome Room and its railing,
+the Torch Room with the ivory torch, the Temple with its bell, the Altar
+with the black book and the candles, and the Egyptian Room with the gold
+coffin and the sceptre in it; the way out of the temple is a prayer, up to
+the Forest. Every room's name and description
 is the original's, word for word, from the ZIL source (`dungeon.zil`,
 `actions.zil`, and the shared substrate's `verbs.zil`). The narrator is
 Zork's narrator: "Taken.", "Dropped.", "Opened.", the YUKS, "A hollow voice
@@ -84,12 +91,41 @@ written down. That log is a product of the world as much as the rooms are.
    Up through it is the Clearing, north of the Forest Path: the second way
    home, and the only one that brings a load heavier than the chimney's.
 
-"Done", for this slice, is: the egg, the painting and the bag of coins in
-the trophy case (the egg ruined or not), the visitor having been down,
-past the troll, through the maze to the remains and up through the
-grating, and round by the Gallery and up the chimney. 70 points is the
-ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the egg
-5 and 5, the painting 4 and 6, the coins 10 and 5.
+10. East of the Troll Room, once the troll is down (v4, `east.sprout` and
+   `temple.sprout`, from `1dungeon.zil` and `1actions.zil`): the
+   East-West Passage (5 points the first time, Zork's VALUE), the Round
+   Room, and the Loud Room, deafening until the visitor says "echo": until
+   then every command but a way out comes back as an echo, and the
+   platinum bar (10 taken, 5 in the case) cannot be had. Beyond it the Damp
+   Cave, the Deep Canyon up the stairway, the North-South Passage and the
+   Chasm, which loop back to the East-West Passage. All dark.
+11. Southeast of the Round Room, the Engravings Cave and the Dome Room. The
+   rope from the Attic, tied to the Dome's railing, is the only way down to
+   the Torch Room, and the only way down is the only way: the rope hangs
+   out of reach from below. The ivory torch on the pedestal (14 and 6) is a
+   light that never goes out. South, the Temple (lit) with the brass bell
+   and the prayer inscription; down from it, the Egyptian Room with the
+   gold coffin of Ramses II (10 and 15), which opens on the sceptre (4 and
+   6) and weighs 55 of the 100 a visitor can carry; south of the Temple,
+   the Altar (lit), with the black book open to page 569 and the burning
+   candles.
+12. The way out is to pray at the Altar, which puts the visitor in the
+   Forest with everything they carry, coffin and all. The hole in the
+   Altar's floor leads on toward Hades (not built), and will not take the
+   coffin in any case ("You haven't a prayer of getting the coffin down
+   there.").
+
+"Done", for this slice, is: the egg, the painting, the bag of coins, the
+platinum bar, the torch, the gold coffin and the sceptre in the trophy
+case (the egg ruined or not, the sceptre on its own, not in the coffin),
+the visitor having been past the troll both ways, through the maze to the
+remains and up through the grating, round by the Gallery and up the
+chimney, and down the rope and up by prayer. 145 points is the ceiling
+with every treasure intact: the Kitchen 10, the Cellar 25, the East-West
+Passage 5, the egg 5 and 5, the painting 4 and 6, the coins 10 and 5, the
+bar 10 and 5, the torch 14 and 6, the coffin 10 and 15, the sceptre 4 and
+6. A single visit cannot carry it all: the coffin, the torch and the bar
+together are 95 of the 100, so the lamp and the sword stay below.
 
 ## Secrets and interactions I hope players find
 
@@ -186,10 +222,49 @@ ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the egg
 - **Take means the one lying there.** Where a name fits a thing in hand and
   a thing on the floor (the sack and the bag of coins, the two lanterns),
   `take` takes the one on the floor, as Zork's TAKE does.
+- **The Loud Room listens for one word.** Until "echo" (or `say echo`) the
+  room answers everything with its own echo, "Bar bar ...", "Look look
+  ...", "North north ..."; west, east and up still lead out. Said once, the
+  room is quiet for good, and the bar is free. Zork's own puzzle, and the
+  prayer in the Temple, the engravings and the black book say nothing of
+  it: players find it by trying, or by knowing.
+- **The rope has one use.** Tied to the Dome's railing it is the way down,
+  and it cannot be taken back; untied it can; let go of untied, at the
+  rail, it drops to the Torch Room floor and the way down is gone for
+  good. Jumping at the Dome without it is death.
+- **No way back up.** From the Torch Room the rope is out of reach, so the
+  visitor who goes down is committed, as in Zork: the way out is the
+  prayer at the Altar, which the brass bell, the prayer inscription and
+  the book's "certain noises, lights, and prayers" all lean toward
+  without saying. "If you pray enough, your prayers may be answered."
+  anywhere else.
+- **The torch is a better lamp.** It never goes out ("You nearly burn your
+  hand trying to extinguish the flame."), so with it the brass lantern
+  can be left below to make room for the coffin. It is also the first
+  fire: it burns what Zork lets burn (the book, the leaflet, the sack, the
+  painting, the leaves, the nest), and burning what you hold kills you.
+  Burning the black book is death with Zork's "Wrong, cretin!".
+- **The candles burn down** once disturbed, telling the hand that holds
+  them so, and go out for good; they light a dark room while they last.
+  Put out, nothing down here lights them again but the torch, which
+  vaporizes them.
+- **The coffin is heavy and holy.** It will not go down the hole in the
+  Altar's floor, and jumping at the Altar while holding it is death (the
+  way down is shut to its bearer, and Zork's V-LEAP reads a shut way down
+  as a drop). The sceptre in it shows its colors when waved; in the
+  coffin in the trophy case it scores nothing, as Zork's OTVAL-FROB
+  reckons, and on its own it scores 6.
+- **The chasm takes things.** Put or thrown into the Chasm's chasm (or East
+  of Chasm's), anything is gone for good, treasures included.
+- **The Temple knows a word,** TREASURE (or TEMPLE), for the way to the
+  thief's lair, which is not built: the air leans toward somewhere else
+  and thinks better of it.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
   chimney` and `climb down chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
-  `wind canary`, `dig with axe`, `read manual`, `close door` in the Studio.
+  `wind canary`, `dig with axe`, `read manual`, `close door` in the Studio,
+  `count candles`, `kiss dome`, `turn page`, `close book`, `ring bell`,
+  `wave sceptre`, `pour water on torch`.
 
 ## Things deliberately left out of this slice
 
@@ -201,6 +276,12 @@ ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the egg
   the Grating Room).
 - The thief, who walks the maze in Zork, and the Cyclops beyond it.
 - The map in the trophy case, which only appears at 350 points.
+- East of the troll (v4): the dam and its gates, so the Loud Room's
+  throw-out (friction 71); the reservoir, the river and the White Cliffs;
+  the mirrors south of the Round Room; Hades below the Altar, and the
+  exorcism the bell, the book and the candles are for (v8); the thief's
+  lair the Temple's word would reach; the matchbook, so the candles cannot
+  be lit again once out; the hot bell.
 
 ## Two voices, and the Management
 
@@ -253,6 +334,19 @@ ceiling with every treasure intact: the Kitchen 10, the Cellar 25, the egg
   blow at him, his gifts and his stomach), `person.sprout` (the visitor
   kind). The visitor's side of the troll's blow is `adventurer.sprout`'s
   `as target for attack`.
+- `east.sprout` (v4): the East-West Passage, the Round Room, the Loud Room
+  and its bar, the Deep Canyon, the Damp Cave, the North-South Passage, the
+  Chasm, the Engravings Cave, and the `Crack` and `Abyss` kinds (the
+  chasm here and East of Chasm). `temple.sprout` (v4): the Dome Room, the
+  Torch Room, the Temple, the Altar and the Egyptian Room, and the `Rope`,
+  `Railing`, `Dome`, `Pedestal`, `AltarStone`, `Torch`, `Candles`,
+  `BlackBook`, `Coffin` and `Sceptre` kinds. `lamp.sprout` now holds
+  `Light` (anything lit that lights a dark room, counted for the grue)
+  and `Lamp`, the brass lantern, one of them; `Flame` (`thing.sprout`) is
+  a light that burns things.
+- The Loud Room's echo is `Thing`'s wildcard permits and a permit on each
+  targetless verb of the adventurer's, read off the place's `:deafening`
+  (friction 70).
 - `verbs.sprout`: Zork's verbs, the messages, the enums of gate
   destinations and description modes.
 
@@ -645,3 +739,75 @@ whether the tunnels' warning is noticed.
   pulse, the stairs by name, comma chaining, the tunnels' warning, the
   troll's blows as his, the re-barred trap door.
 
+
+## Before round 7: v4, east of the Troll Room
+
+The director widened the scope to v4. Built from `1dungeon.zil` (EW-PASSAGE
+to EGYPT-ROOM, with ENGRAVINGS-CAVE, which is the only way from the Round
+Room to the Dome; the objects in them) and `1actions.zil` (LOUD-ROOM-FCN,
+DEEP-CANYON-F, DOME-ROOM-FCN, TORCH-ROOM-FCN, ROPE-FUNCTION, TORCH-OBJECT,
+CANDLES-FCN and I-CANDLES, BLACK-BOOK, BELL-F, SCEPTRE-FUNCTION,
+SOUTH-TEMPLE-FCN's COFFIN-CURE, CRACK-FCN, CHASM-PSEUDO, DUMB-CONTAINER),
+and `gverbs.zil` (V-ECHO, V-PRAY, V-TREASURE, V-BURN and PRE-BURN, V-LEAP,
+V-TURN, V-UNTIE, V-RING).
+
+- **Rooms (13):** East-West Passage, Round Room, Loud Room, Deep Canyon,
+  Damp Cave, North-South Passage, Chasm, Engravings Cave, Dome Room, Torch
+  Room (all dark), Temple and Altar (lit), Egyptian Room (dark). The Troll
+  Room's east passage now leads to the East-West Passage once the troll is
+  down; its "Back soon" note is gone with the edge it marked.
+- **Objects:** the platinum bar; the rope's end, the railing and the dome;
+  the pedestal and the ivory torch; the brass bell and the prayer; the
+  altar, the black book and the candles; the gold coffin and the sceptre;
+  and the scenery every room description names, each with a description
+  of its own.
+- **Points:** the East-West Passage 5; the bar 10 and 5; the torch 14 and
+  6; the coffin 10 and 15; the sceptre 4 and 6. The ceiling is 145.
+- **Out of scope, refusing in-world:** south of the Round Room (a cave-in
+  someone has begun to sort), east and northwest of the Deep Canyon (the
+  Flood Control Dam's notices), northeast of the Chasm (a card), east of
+  the Damp Cave (the river, without a boat), down the Altar's hole (Hades
+  sighs up it, and the coffin never fits).
+- **The language as it now stands:** the refusing and one-way exits are
+  plain exits; the candles' clock is wakes put off by `cancel wakes`; the
+  coffin is a `Box, Treasure` diamond. What it made hard is friction 70 to
+  77: the echo (70), the throw-out (71), the coffin in the hand (72), the
+  candles' voice (73), the rope (74), weight (75), the prayer (76), and
+  things gone for good (77).
+- **Tests:** `loud_room.json` (the echo and the bar), `dome.json` (the
+  rope, the railing, the Torch Room and the torch), `rope_fall.json`
+  (untying, the rope dropped over the rail, the leap), `coffin.json` (the
+  coffin, the sceptre, the weight, the Altar's hole), `prayer.json` (the
+  prayer to the Forest, and burning), `altar.json` (the book and the
+  candles put out and vaporized), `candles.json` (burning down, by time),
+  `chasm_room.json` (the Chasm's loop, the chasm taking things, the stairs
+  by name, the unbuilt edges), `treasures.json` (the four new treasures
+  home by prayer, into the case, 110 points).
+
+### What round 7 should test
+
+- **Does anyone go east?** The east passage opens only with the troll down,
+  as the hole west does. Whether players who win the fight now choose east
+  over the maze, and how far 150 turns takes them.
+- **The echo.** Whether the Loud Room's echoes read as a puzzle or as the
+  world breaking; whether anyone says "echo" without knowing Zork, and how
+  long they stay trying other words. Watch for players reading "Bar bar
+  ..." as a fault, and for which commands they try first.
+- **The rope.** Whether anyone carries the Attic's rope this far, ties it
+  to the railing (and with what words: `tie rope to railing`, `tie rope`,
+  `attach`, `fasten`, `put rope over railing`, `throw rope over railing`,
+  which last two are not read as tying), and whether anyone drops it over
+  the rail untied and loses the way down.
+- **The one-way descent.** Whether visitors who climb down notice there is
+  no way back up, and whether they find the prayer: the bell, the
+  inscription and the book are the only hints, as in Zork.
+- **The coffin's weight.** Whether players read "Your load is too heavy."
+  at the coffin as a puzzle (leave the lamp: the torch is light), and
+  whether anyone tries the hole with it.
+- **Fire.** Whether anyone burns things with the torch, burns the black
+  book, vaporizes the candles, or puts a treasure into the chasm.
+- **The score.** Whether anyone carries the new treasures home and casts
+  them, and whether the sceptre left in the coffin in the case reads as a
+  bug (it is Zork's own rule).
+- Carried, still unmet: the Grating Room and the key from below; the grue;
+  the skeleton's ghost; the tree's drop; the egg broken.

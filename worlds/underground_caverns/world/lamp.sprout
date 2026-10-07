@@ -1,14 +1,28 @@
-// The brass lantern: a light source, which lights whatever dark room it is
-// in, lying on the floor or carried. It also tells its bearer when it is
-// lit, put out, picked up or set down, and a lamp on the floor tells the
-// room, for the grue's sake: see the dark room, in room.sprout.
+// Lights. A `Light` lights whatever dark room it is in, lying on the floor
+// or carried, and tells its bearer when it is lit, put out, picked up or set
+// down; a light on the floor tells the room, for the grue's sake: see the
+// dark room, in room.sprout. The brass lantern is a `Lamp`, a light that
+// turns on and off; the ivory torch and the altar's candles are lights of
+// their own kinds (temple.sprout).
 import * as sprout from 'sprout'
 import {Portable, Thing} from 'thing'
 import {Adventurer} from 'adventurer'
 import {DarkRoom, Room} from 'room'
+import {Box} from 'box'
 import {lamp_on, lamp_off, :light, :relight} from 'verbs'
 
-kind Lamp is Portable, sprout.LightSource {
+kind Light is Portable, sprout.LightSource {
+  on :moved (from, to) {
+    if (self.get(:lit)) {
+      if (from.is(Adventurer)) { send from :light with -1 }
+      if (to.is(Adventurer)) { send to :light with 1 }
+    }
+  }
+}
+
+kind Lamp is Light {
+  // Scratch, for putting it out: how many other lights are left.
+  :others 0 min 0 max 50
   without as target for lamp_on from Thing
   without as target for lamp_off from Thing
 
@@ -47,16 +61,23 @@ kind Lamp is Portable, sprout.LightSource {
       self.set(:lit, false)
       say "The {self.short} is now off."
       if (actor.holds(self)) { send actor :light with -1 } else { send here :relight }
+      // Pitch black, unless the day or another light is left: one on the
+      // floor, or in somebody's hands. From a hand, the room's floor is out
+      // of the lamp's sight (friction 33), so it asks what the room last
+      // counted; from the floor, it looks.
       if (here.is(DarkRoom)) {
-        if (!here.get(:daylight)) { say "It is now pitch black." }
+        if (actor.holds(self)) {
+          let mine = actor.is(Adventurer) && actor.get(:light) > 1
+          if (!here.get(:daylight) && !here.get(:floor_lit) && here.get(:bearers) <= 1 && !mine) { say "It is now pitch black." }
+        } else {
+          self.set(:others, 0)
+          each l: Light in here { if (l != self && l.get(:lit)) { self.adjust(:others, 1) } }
+          each b: Box in here {
+            if (b.get(:open)) { each l: Light in b { if (l != self && l.get(:lit)) { self.adjust(:others, 1) } } }
+          }
+          if (!here.get(:daylight) && self.get(:others) == 0 && here.get(:bearers) == 0) { say "It is now pitch black." }
+        }
       }
-    }
-  }
-
-  on :moved (from, to) {
-    if (self.get(:lit)) {
-      if (from.is(Adventurer)) { send from :light with -1 }
-      if (to.is(Adventurer)) { send to :light with 1 }
     }
   }
 }
