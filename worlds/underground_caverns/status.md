@@ -1,7 +1,15 @@
 # Where underground_caverns stands
 
-_Last updated 2026-10-06, when the work paused for a few days. Pick up at
-round 6. Playtesters never see this file._
+_Last updated 2026-10-07: rounds 1-10 done, paused on the usage limit. Pick
+up at round 11 (widen, v6: the dam and river). Playtesters never see this file._
+
+**Since the first pause:** pin bumped to Sprout `6c440f5` and the world
+ported; rounds 6-10 played and committed (v4 east of the troll in round 7,
+v5 the thief and the Cyclops in round 9; ceiling 197). Run settings now:
+`turnCap: 250`, every persona on `opus` except `casual` on `fable`, because
+Fable's safety filter kept cutting off long runs. Next: check Sprout `main`
+for a pin bump, write v6 into brief.md's Scope (the round-11 row below),
+run the `author` pre-round pass, verify, commit, push, play round 11.
 
 ## State
 
