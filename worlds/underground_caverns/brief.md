@@ -107,6 +107,15 @@ slice:
   back down to the Cellar. Where the mine's only way in passes through
   the Mirror Rooms, build the Mirror Rooms too. Hades and the endgame
   stay out of scope.
+- **v8, from round 15: the whole of Zork I.** v7, plus everything left:
+  the Entrance to Hades (the spirits that bar the way), the exorcism as
+  Zork has it (ring the bell, light the candles with a match while the
+  spirits reel, read the black book), the Land of the Living Dead and the
+  crystal skull, the ancient map in the Treasure Room's trophy case
+  once every treasure is home, the path it shows from West of House to
+  the Stone Barrow, and the barrow's door: the end of Zork I, with the
+  score at 350 and Zork's closing lines. Any room or object of Zork I's
+  map still missing is built too. Nothing stays out of scope.
 - Exits into territory not built yet are present, as in Zork, and turn the
   visitor back with an in-world line.
 
@@ -173,7 +182,7 @@ built as Zork has it, that is a finding, not a failure.
 
 ## Budget
 
-- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll, round 9 the thief and the Cyclops, round 11 the dam and the river, round 13 the coal mine), even rounds refine; see status.md
+- Rounds: to the whole of Zork I: odd rounds widen (round 7 east of the troll, round 9 the thief and the Cyclops, round 11 the dam and the river, round 13 the coal mine, round 15 the rest and the end), even rounds refine; see status.md
 - Playtests per round: 6 (one per persona)
 - Turn cap per run: 150
 - Spend ceiling: the workflow's default, about 400k tokens a round
