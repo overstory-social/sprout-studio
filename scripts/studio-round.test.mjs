@@ -132,8 +132,15 @@ function stage(options = {}) {
     calls.push({ type, prompt, label: opts.label, model: opts.model, phase: opts.phase });
     switch (type) {
       case 'clerk': {
-        const command = /^Run: node scripts\/round\.mjs (.*?)(\nFeed|$)/s.exec(prompt)[1];
-        const stdin = /\nFeed it this on stdin, exactly:\n([^]*)$/.exec(prompt);
+        const command = /^Run: node scripts\/round\.mjs (.*?)(\nFeed|\n\nYour last|$)/s.exec(prompt)[1];
+        // A clerk that summarises the command's output instead of handing it back.
+        if (options.paraphrase !== undefined && command.startsWith(options.paraphrase.command)) {
+          if (options.paraphrase.times > 0) {
+            options.paraphrase.times -= 1;
+            return { stdout: 'Round 01 revision plan saved.' };
+          }
+        }
+        const stdin = /\nFeed it this on stdin, exactly:\n(.*?)(\n\nYour last[^]*)?$/s.exec(prompt);
         return { stdout: JSON.stringify(clerk(command, stdin === null ? undefined : JSON.parse(stdin[1]))) };
       }
       case 'playtester': {
@@ -349,6 +356,15 @@ describe('the studio-round workflow', () => {
 
   it('refuses a goal for a persona the round does not play', async () => {
     await assert.rejects(stage().run({ world: 'shed', personas: ['casual'], goals: { explorer: 'Find the key.' } }), /args\.goals names explorer/);
+  });
+
+  it('asks a clerk again where it hands back something other than the command\u2019s output, and fails loudly the second time', async () => {
+    const once = stage({ paraphrase: { command: 'save shed 01 revision-plan', times: 1 } });
+    await once.run({ world: 'shed', personas: ['explorer'] });
+    assert.ok(once.logs.some((line) => line.startsWith("the clerk handed back something that is not the command's output")));
+    assert.equal(once.world.rounds[0].committed, true);
+    const twice = stage({ paraphrase: { command: 'save shed 01 revision-plan', times: 2 } });
+    await assert.rejects(twice.run({ world: 'shed', personas: ['explorer'] }), /the clerk twice handed back something other than the output of: save shed 01 revision-plan/);
   });
 
   it('refuses to start without a world to play, or a brief to play it to', async () => {
