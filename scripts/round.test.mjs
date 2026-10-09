@@ -321,5 +321,8 @@ describe('a round on disk', () => {
       execFileSync('git', ['log', '-1', '--format=%s'], { cwd: root, encoding: 'utf8' }).trim(),
       'shed, round 01: played',
     );
+    // Run again with nothing since, it answers as the commit did and commits nothing more.
+    assert.deepEqual(commit('shed', '01', 'played'), { ok: true, committed });
+    assert.equal(execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(), committed);
   });
 });

@@ -77,17 +77,39 @@ const CASUAL_CAP = Math.min(TURN_CAP, 30)
 /** A clerk's run of one round.mjs command, and its JSON. */
 async function clerk(command, stdin, label) {
   const given = stdin === undefined ? '' : `\nFeed it this on stdin, exactly:\n${JSON.stringify(stdin)}`
-  const out = await agent(`Run: node scripts/round.mjs ${command}${given}`, {
-    agentType: 'clerk',
-    label: label ?? `clerk: ${command.split(' ')[0]}`,
-    schema: {
-      type: 'object',
-      properties: { stdout: { type: 'string', description: 'What the command printed on stdout, exactly.' } },
-      required: ['stdout'],
-    },
-  })
-  if (out === null) throw new Error(`the clerk did not run: ${command}`)
-  return JSON.parse(out.stdout.trim())
+  const ask = (note) =>
+    agent(`Run: node scripts/round.mjs ${command}${given}${note}`, {
+      agentType: 'clerk',
+      label: `${label ?? `clerk: ${command.split(' ')[0]}`}${note === '' ? '' : ', again'}`,
+      schema: {
+        type: 'object',
+        properties: { stdout: { type: 'string', description: 'What the command printed on stdout, exactly.' } },
+        required: ['stdout'],
+      },
+    })
+  // Every round.mjs command prints one JSON object; a clerk that hands back anything else is asked once
+  // more. Asking again runs the command again, which is safe: status, verify and measure only read,
+  // save writes the same file, open mints a spare door, and commit answers as it did for a round already in.
+  const parsed = (out) => {
+    if (out === null) return undefined
+    try {
+      const value = JSON.parse(out.stdout.trim())
+      return value !== null && typeof value === 'object' && !Array.isArray(value) ? value : undefined
+    } catch {
+      return undefined
+    }
+  }
+  const first = await ask('')
+  const value = parsed(first)
+  if (value !== undefined) return value
+  if (first !== null) log(`the clerk handed back something that is not the command's output: ${JSON.stringify(first.stdout.slice(0, 120))}; asked again`)
+  const second = parsed(
+    await ask(
+      `\n\nYour last answer was not what the command printed. Run it again and hand back its stdout exactly, character for character: one JSON object, never a summary of it.`,
+    ),
+  )
+  if (second === undefined) throw new Error(`the clerk twice handed back something other than the output of: ${command}`)
+  return second
 }
 
 /**
