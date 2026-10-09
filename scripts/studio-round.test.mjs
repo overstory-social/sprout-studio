@@ -137,7 +137,8 @@ function stage(options = {}) {
         if (options.paraphrase !== undefined && command.startsWith(options.paraphrase.command)) {
           if (options.paraphrase.times > 0) {
             options.paraphrase.times -= 1;
-            return { stdout: 'Round 01 revision plan saved.' };
+            // A summary, and then valid JSON that is no object: neither is the command's output.
+            return { stdout: options.paraphrase.times % 2 === 1 ? 'Round 01 revision plan saved.' : 'null' };
           }
         }
         const stdin = /\nFeed it this on stdin, exactly:\n(.*?)(\n\nYour last[^]*)?$/s.exec(prompt);

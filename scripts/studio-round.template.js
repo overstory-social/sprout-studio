@@ -87,11 +87,14 @@ async function clerk(command, stdin, label) {
         required: ['stdout'],
       },
     })
-  // Every round.mjs command prints one JSON object; a clerk that hands back anything else is asked once more.
+  // Every round.mjs command prints one JSON object; a clerk that hands back anything else is asked once
+  // more. Asking again runs the command again, which is safe: status, verify and measure only read,
+  // save writes the same file, open mints a spare door, and commit answers as it did for a round already in.
   const parsed = (out) => {
     if (out === null) return undefined
     try {
-      return JSON.parse(out.stdout.trim())
+      const value = JSON.parse(out.stdout.trim())
+      return value !== null && typeof value === 'object' && !Array.isArray(value) ? value : undefined
     } catch {
       return undefined
     }
