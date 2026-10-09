@@ -111,7 +111,7 @@ slice:
   the Entrance to Hades (the spirits that bar the way), the exorcism as
   Zork has it (ring the bell, light the candles with a match while the
   spirits reel, read the black book), the Land of the Living Dead and the
-  crystal skull, the ancient map in the Treasure Room's trophy case
+  crystal skull, the ancient map that appears in the Living Room's trophy case
   once every treasure is home, the path it shows from West of House to
   the Stone Barrow, and the barrow's door: the end of Zork I, with the
   score at 350 and Zork's closing lines. Any room or object of Zork I's
