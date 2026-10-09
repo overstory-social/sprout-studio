@@ -332,6 +332,19 @@ export function verify(world) {
 export function commit(world, round, what) {
   const at = roundDir(world, round);
   const marker = join(ROOT, at, '.committed');
+  const head = () => execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim();
+  // Run again over a round already committed with nothing since, it answers as the commit did,
+  // so a clerk asked to run it twice is told the truth.
+  const tracked = (() => {
+    try {
+      execFileSync('git', ['ls-files', '--error-unmatch', marker], { cwd: ROOT, stdio: 'ignore' });
+      return true;
+    } catch {
+      return false;
+    }
+  })();
+  const pending = execFileSync('git', ['status', '--porcelain', '--', worldDir(world)], { cwd: ROOT, encoding: 'utf8' }).trim();
+  if (tracked && pending === '') return { ok: true, committed: head() };
   // The marker is part of the commit, and is taken back where the commit fails, so a round
   // is marked committed exactly when it is.
   writeFileSync(marker, '');
@@ -344,7 +357,7 @@ export function commit(world, round, what) {
     const said = String(error.stderr ?? error.message).trim();
     return { ok: false, problems: [`git would not commit round ${round}: ${said}`] };
   }
-  return { ok: true, committed: execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim() };
+  return { ok: true, committed: head() };
 }
 
 /** `--name value` flags, and the words before them. */
