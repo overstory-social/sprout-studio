@@ -152,8 +152,8 @@ kind Adventurer is sprout.Visitor {
   // FINISH: the game is over, by the barrow or by a third death.
   passage over { {if self.get(:in_barrow)}The door of the barrow has closed behind you, and the bridge ahead belongs to another adventure. Your adventure in the Great Underground Empire is over.{else}Your remains are installed in the Land of the Living Dead, and nothing further will happen to you in this game.{/if} }
 
-  // Zork's EMPTY-HANDED refusal, going on as the chimney's does (round 13,
-  // P1): which of the things in hand will not go, the lamp among them
+  // Zork's EMPTY-HANDED refusal, going on as the chimney's does: which of
+  // the things in hand will not go, the lamp among them
   // where it is carried, and that the slot takes a body and next to nothing.
   // Only those are named, so the garlic and the matchbook are left out of it.
   // A small container is named for holding anything at all: a passage does
