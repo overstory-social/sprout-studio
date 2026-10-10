@@ -132,6 +132,29 @@
     ] },
     { "as": "Marta", "type": "take sack", "expect": [
       { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "comment": "Up by the prayer, not the chimney: the trap door, opened again from above, stays open behind the next one down (Zork's TOUCHBIT)." },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cellar" }
+    ] },
+    { "as": "Marta", "type": "examine trap door", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "High overhead is the underside of the trap door: rough planks and iron bands, and not a handle or a ring to be had from this side." },
+      { "reader": "Marta", "kind": "described", "words": "The trap door is open, but I can't tell what's beyond it." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cellar" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
     ] }
   ]
 }

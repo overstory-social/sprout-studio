@@ -73,6 +73,17 @@
       { "reader": "Marta", "kind": "said", "words": "Cellar" },
       { "reader": "Marta", "kind": "said", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
     ] },
+    { "as": "Marta", "type": "examine trap door", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "High overhead is the underside of the trap door: rough planks and iron bands, and not a handle or a ring to be had from this side." },
+      { "reader": "Marta", "kind": "described", "words": "Whoever bars it keeps an ear on the house. The door is barred behind anyone new to the place, or new out of its chimney, or newly back from the dead; someone who turns up in the house by any other road and opens it again is, as far as the bar is concerned, already accounted for." },
+      { "reader": "Marta", "kind": "described", "words": "The trap door is closed." }
+    ] },
+    { "as": "Marta", "type": "push open the trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door is locked from above." }
+    ] },
+    { "as": "Marta", "type": "pull the trap door open", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door is locked from above." }
+    ] },
     { "as": "Marta", "type": "l", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cellar" },
       { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
@@ -101,7 +112,7 @@
       { "reader": "Marta", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 21 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 24 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
     ] },
     { "as": "Marta", "type": "x crawlway", "expect": [

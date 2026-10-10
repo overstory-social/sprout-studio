@@ -3114,6 +3114,56 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   The drained Reservoir is still not on it (#481 would let him walk it by
   its exits).
 
+## Found in round 15
+
+### 132. `everything`, `push open`, and a comma that is not a command
+
+- **Round 15:** `drop everything except the lantern and the painting` was
+  "You can't see any such thing." where `drop all except ...` works;
+  `push open the trap door` was not_here; `hello troll, can we talk?`
+  greeted the troll and then answered the second clause "You can't see any
+  such thing.".
+- **Wanted:** `everything` read as `all`, as Zork's parser reads it
+  (gparser's ALL and EVERYTHING are one word), and a clause after a comma
+  that is no command left unanswered, or answered as unknown, not as a
+  thing missing.
+- **Wrote instead:** `push open [x]`, `pull open [x]`, `push [x] open` and
+  `pull [x] open` are now phrases of the world's `open`, so the trap door
+  from below answers "The door is locked from above." `everything` is the
+  engine's word to read, and the comma's second clause is the engine's to
+  answer; the world can do neither.
+- **Spec:** Parsing › Sequences, again and all; The parser › When nothing
+  matches.
+- **Status: open,** with 36 (all) and 94 (the not_here answer).
+
+### 120, again: adverbs and "go back"
+
+- **Round 15:** `knock on the boarded door politely` and `jump into the
+  chasm anyway` were not_here; `go back east` was unknown. A trailing
+  adverb turns a thing present into one not here (94's trailing word).
+- **Wrote instead:** nothing; a phrase per adverb is not a fix.
+- **Status: open,** with 82, 94 and 120.
+
+### 133. `all` in a carried role reaches into the open sack
+
+- **Round 15:** `drop all except lantern and painting` dropped the brown
+  sack, and then each thing that had been in the open sack, one by one.
+- **Wanted:** Zork's DROP is `(HELD MANY HAVE)`: HELD without CARRIED, so
+  DO-SL searches the WINNER at P-SRCTOP, and SEARCH-LIST does not descend
+  into a container at the top level unless it has SEARCHBIT or SURFACEBIT,
+  which the sack does not. DROP ALL in Zork drops the sack with its
+  contents still in it.
+- **Found:** the spec's `carried` role is "in their hands or inside
+  something they carry, at any depth their range reaches", and `all` in a
+  carried role "takes only what the visitor carries", so the sack's
+  contents are in the set.
+- **Wrote instead:** nothing. A `permit` refusing what is not in the hand
+  itself would stop the whole line at the first such thing ("stops at the
+  first refusal"), which is worse.
+- **Spec:** Verbs › Carried roles; Parsing › Sequences, again and all.
+- **Status: open:** a role that takes only what is held at the top level
+  (Zork's HELD), or `all` that leaves out what is inside a held container.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the

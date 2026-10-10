@@ -1,0 +1,220 @@
+{
+  "persona": "parser-breaker",
+  "seed": 1,
+  "turns": 200,
+  "done": {
+    "reason": "bored",
+    "why": "By turn 200 I had four treasures in the case and a score of 85 of 350. Every trip home was the same slog: the trap door slams and gets barred behind me each time, so every treasure has to go up the studio chimney one at a time. The big plastic pile was too heavy to carry, and my sword was lost somewhere after I died. The place is huge, and I'd stopped finding new things faster than I was walking back and forth."
+  },
+  "about": "It's a treasure hunt under a white house. You fill a trophy case that has 'the patient air of something that expects to be filled.' Down there are a troll, a thief with a large bag, a dam you can drain, and a house that keeps shutting its own trap door on you. It's the old Zork bones, but it notices more than I expected: it tells you plainly why the chimney won't take you, and when you die it scatters your things around the house and fields instead of just ending you.",
+  "ending": {
+    "reached": "no",
+    "what": null
+  },
+  "moments": [
+    {
+      "turn": 1,
+      "kind": "frustration",
+      "note": "'knock on the boarded door politely' got 'You can't see any such thing' even though the room describes a boarded front door. 'examine door' worked right after."
+    },
+    {
+      "turn": 4,
+      "kind": "delight",
+      "note": "'take leaflet and eat it': it took the leaflet, then 'I don't think that the leaflet would agree with you.' Both halves of my odd sentence got handled."
+    },
+    {
+      "turn": 21,
+      "kind": "delight",
+      "note": "The gothic lettering translates to 'This space intentionally left blank.'"
+    },
+    {
+      "turn": 26,
+      "kind": "delight",
+      "note": "Trying to sit in the trophy case: 'You have a theory on how to board a trophy case, perhaps?'"
+    },
+    {
+      "turn": 33,
+      "kind": "surprise",
+      "note": "I gave the troll the garlic and he ate it happily, but it didn't calm him down. Hugging him next got my sword knocked out of my hand."
+    },
+    {
+      "turn": 37,
+      "kind": "delight",
+      "note": "Killed the troll in one blow and the black fog took the body."
+    },
+    {
+      "turn": 54,
+      "kind": "delight",
+      "note": "Burning the guidebook with an unlit matchbook: 'With a matchbook??!?'"
+    },
+    {
+      "turn": 56,
+      "kind": "surprise",
+      "note": "Burned the guidebook while I was holding it and died. Coming back was new to me: plain things strewn about the forest and fields, valuables rolled into dark corners, and 'somebody tidy has put the lamp back in the living room.'"
+    },
+    {
+      "turn": 74,
+      "kind": "delight",
+      "note": "Found the bloody axe lying North of House, just where the death message said plain things would be."
+    },
+    {
+      "turn": 102,
+      "kind": "delight",
+      "note": "'count the colors' -> 'You have lost your mind.'"
+    },
+    {
+      "turn": 103,
+      "kind": "delight",
+      "note": "The chimney refusal lists everything I'm carrying and says it has room for 'you, your lamp and one thing more, and not an inch besides.' Clear, and funny."
+    },
+    {
+      "turn": 104,
+      "kind": "confusion",
+      "note": "'drop all except lantern and painting' dropped the lunch as a separate item, as if it had been out of the sack. At turn 176 the manual, tube and matchbook I'd just put in the sack also came out and were dropped one by one."
+    },
+    {
+      "turn": 120,
+      "kind": "delight",
+      "note": "Gave the thief my lunch; he 'places the lunch in his bag and thanks you politely.'"
+    },
+    {
+      "turn": 150,
+      "kind": "frustration",
+      "note": "Couldn't pick up the plastic pile ('Your load is too heavy'), so the boat plan stalled."
+    },
+    {
+      "turn": 172,
+      "kind": "frustration",
+      "note": "'The door is locked from above.' The trap door gets barred every single time, so the only way home is the one-item chimney."
+    },
+    {
+      "turn": 183,
+      "kind": "frustration",
+      "note": "Opened the trap door from above, went down, and it crashed shut and got barred again. No way to stop it."
+    },
+    {
+      "turn": 196,
+      "kind": "surprise",
+      "note": "Threw the 'extremely fragile' egg at the door and it just landed on the floor, unbroken."
+    },
+    {
+      "turn": 200,
+      "kind": "delight",
+      "note": "xyzzy -> 'A hollow voice says \"Fool.\"'"
+    }
+  ],
+  "wished": [
+    "To knock on, shout at, or talk to whoever keeps barring the trap door. 'shout up at whoever is barring the door' wasn't understood.",
+    "To swim, shout, whisper, dive or jump 'anyway'. Lots of natural verbs got 'That sentence isn't one I recognize.'",
+    "To pry the boards or the trap door with a tool (leaflet, platinum bar). The parser doesn't take 'pry X with Y'.",
+    "To find my sword again after dying. The message says valuables rolled 'into some dark corner,' but searching corners isn't understood.",
+    "To keep the trap door open so I could stop climbing the chimney with one treasure at a time.",
+    "To brush my teeth with the toothpaste, pop the green bubble, or push all the buttons at once."
+  ],
+  "lines": [
+    {
+      "turn": 4,
+      "line": "I don't think that the leaflet would agree with you.",
+      "why": "It answered both halves of my contrary sentence, which made me want to keep testing it."
+    },
+    {
+      "turn": 21,
+      "line": "The engravings translate to \"This space intentionally left blank.\"",
+      "why": "A dry joke hidden on a door that won't open."
+    },
+    {
+      "turn": 26,
+      "line": "You have a theory on how to board a trophy case, perhaps?",
+      "why": "It pushed back at my nonsense with some character."
+    },
+    {
+      "turn": 56,
+      "line": "Your belongings, such as they were, have not come with you. The plain things are strewn about the forest and the fields around the house, anything of value has rolled into some dark corner in or under it, and somebody tidy has put the lamp back in the living room.",
+      "why": "This turned dying into a scavenger hunt instead of a dead end, and 'somebody tidy' made me smile."
+    },
+    {
+      "turn": 81,
+      "line": "It has the patient air of something that expects to be filled.",
+      "why": "It gave the trophy case a personality and made filling it feel like the point."
+    },
+    {
+      "turn": 103,
+      "line": "The chimney has room for you, your lamp and one thing more, and not an inch besides.",
+      "why": "A clear rule stated outright, after it listed exactly what I was carrying."
+    },
+    {
+      "turn": 172,
+      "line": "The door is locked from above.",
+      "why": "The moment I realised the house wasn't going to let me back in the easy way."
+    },
+    {
+      "turn": 200,
+      "line": "A hollow voice says \"Fool.\"",
+      "why": "Fair."
+    }
+  ],
+  "ratings": {
+    "fun": {
+      "score": 3,
+      "why": "The jokes and odd answers to my contrary inputs were fun: the leaflet, the trophy case, counting colours, the thief taking my lunch, and the death scatter. But the second half turned into hauling treasures back up the chimney one at a time, and that drained it.",
+      "turns": [
+        4,
+        26,
+        56,
+        102,
+        120,
+        172,
+        183,
+        190
+      ]
+    },
+    "engagement": {
+      "score": 3,
+      "why": "Dying made me want to go find my things. The dam draining and the trunk appearing in the mud were a real payoff. The barred trap door and the weight limits wore me down, though, and by turn 200 I'd had enough.",
+      "turns": [
+        56,
+        74,
+        146,
+        155,
+        150,
+        183,
+        200
+      ]
+    },
+    "difficulty": {
+      "score": 3,
+      "felt": "right",
+      "why": "The puzzles I solved felt fair: troll, rug, dam bolt, chimney. Better parser coverage would have helped. Plenty of natural phrasings were simply rejected, and the trap door that always gets barred plus the one-item chimney make getting back a chore rather than a challenge.",
+      "turns": [
+        37,
+        103,
+        146,
+        150,
+        172,
+        183
+      ]
+    },
+    "interestingness": {
+      "score": 3,
+      "why": "The changes I noticed were thoughtful: the scatter-on-death, a chimney refusal that explains itself, a trophy case with personality, a thief who politely takes lunch. Most of what's underneath is the familiar classic layout, though.",
+      "turns": [
+        56,
+        81,
+        103,
+        120,
+        196
+      ]
+    },
+    "prose": {
+      "score": 4,
+      "why": "Where it's new, the writing is crisp and dry ('somebody tidy', 'not an inch besides', 'patient air'), and the old lines still land. It's let down by bare stock errors like 'That sentence isn't one I recognize' over and over, and by brief room names on return visits.",
+      "turns": [
+        2,
+        56,
+        81,
+        103,
+        100
+      ]
+    }
+  }
+}

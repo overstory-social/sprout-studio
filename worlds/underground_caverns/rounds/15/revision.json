@@ -1,0 +1,117 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "Four runs of six lost their endgame to the trap door barring itself without explanation. TOUCHBIT stays as Zork has it, but the trap door, examined from the Cellar while it is barred, now states the rule in the narrator's voice. It names the rule and not the other roads up, so the grating, the prayer, the canyon and the Strange Passage are still for the player to find. This reverses round 11's choice to leave the rule unsaid."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "I am taking this as test coverage. The endgame at 350 (the map, the secret path, the barrow) is covered by walkthrough.json and map_absent.json, and P1's change should give back the turns that ferrying used up. A mid-game start or a longer turn cap is for the director to decide."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Accepted in part. 'push open', 'pull open', 'push X open' and 'pull X open' are now ways of saying OPEN. 'everything' read as 'all', trailing adverbs, 'go back <dir>' and the second clause after a comma are for the engine to handle, so they are logged as friction 132 and as entry 120 again. 'slide down the slide' was typed in a room with no slide, so not_here was the right answer."
+    },
+    {
+      "answers": "P4",
+      "decision": "reject",
+      "reason": "The world cannot fix this. Zork's DROP takes only what is held at the top level, but the engine's carried 'all' reaches into an open sack. A permit that refused those things would stop the whole command at the first one, which is worse. Logged as friction 133 for Sprout."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "On the Rainbow, over a 450-foot fall, should not answer 'look down' with the stock floor line. On the Rainbow and Aragain Falls now show the drop, in the voice the Dome and the canyon already use."
+    },
+    {
+      "answers": "P6",
+      "decision": "reject",
+      "reason": "No change. The fight uses Zork's own tables and lines, drawn at random, and the brief is the whole of Zork I as it was. One casual player's 30-turn budget does not outrank that."
+    },
+    {
+      "answers": "P7",
+      "decision": "reject",
+      "reason": "Already built in round 14. Examining the cave-ins names the open ways, and the Round Room's text stays word for word Zork's, as the recommendation itself asks."
+    },
+    {
+      "answers": "P8",
+      "decision": "reject",
+      "reason": "No change. The intent makes the rumble the only clue to the mirror swap, and the newcomer worked it out. The synthesis also recommends watching it rather than changing it."
+    },
+    {
+      "answers": "P9",
+      "decision": "reject",
+      "reason": "No change. The coal mine, the bat and the thief are meant to be as punishing as Zork's, and garlic against the bat is Zork's own answer. Softening them would go against the brief."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The mechanics that were reached worked, and the author's lines were the ones players quoted. These are kept as built, and the intent records which ones round 16 should watch."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The trap door, examined from the Cellar while it is barred, now explains the rule (TOUCHBIT itself is unchanged): it is barred behind anyone new to the place, new out of the chimney or newly back from the dead, but someone who reaches the house by any other road and opens it again finds it stays open.",
+      "files": [
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/tests/trap_door.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "prayer.json now comes up by the prayer, opens the trap door from above, goes down, and finds it still open behind them, twice.",
+      "files": [
+        "worlds/underground_caverns/world/tests/prayer.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "'push open X', 'pull open X', 'push X open' and 'pull X open' are now phrases of OPEN. trap_door.json tests them from the Cellar side: 'The door is locked from above.'",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/tests/trap_door.json"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "Logged in friction: 132 ('everything', 'push open', and the comma's second clause) and entry 120 again (trailing adverbs, 'go back <dir>').",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "Updated intent.md: the item 7 note on the barred trap door's line, and a new 'After round 15' section that records each decision and what round 16 should watch (the trap door's line, the endgame, mechanics carried over and not yet seen in play).",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P5",
+        "P10"
+      ]
+    },
+    {
+      "what": "'look down' On the Rainbow and at Aragain Falls now shows the 450-foot drop, tested in rainbow.json.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/rainbow.json"
+      ],
+      "for": [
+        "P5"
+      ]
+    }
+  ]
+}

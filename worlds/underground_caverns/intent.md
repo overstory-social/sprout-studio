@@ -101,7 +101,8 @@ written down. That log is a product of the world as much as the rooms are.
    bars itself once, as Zork's does (TOUCHBIT): after a climb up the
    chimney, or a death (JIGS-UP), whoever opens it from above and goes down
    hears it crash shut and barred behind them again; otherwise, once barred
-   and opened again from above, it stays open.
+   and opened again from above, it stays open. The trap door, examined
+   from below while barred, says so in the narrator's voice (round 15).
 8. The Maze, west through the forbidding hole once the troll is dead or
    out cold: fifteen rooms of twisty little passages, all alike, and four
    dead ends, all dark, joined as `dungeon.zil` joins them, loops and
@@ -2107,3 +2108,58 @@ line.
   DIAGNOSE; the Grating Room and the key from below; the grue in play; the
   ghost; the tree's drop; the egg broken; the canyon; the slide as the way
   home.
+
+## After round 15
+
+Six runs (five opus, one fable); legible, five matching the intent and one
+in part. The v8 mechanics that were reached worked (the exorcism in Zork's
+order and against its clock, the skull, the lamp's dimming, the
+death-scatter line), but nobody came near the end: the best score was 164,
+and the long runs spent their turns ferrying treasure up the chimney one
+thing at a time, never learning that the trap door stays open behind a
+visitor who comes up by some other road.
+
+- **P1, accepted: the rule gets a voice.** TOUCHBIT is unchanged. The
+  trap door, examined from the Cellar while it is barred, now says who
+  is barred in: "Whoever bars it keeps an ear on the house. The door is
+  barred behind anyone new to the place, or new out of its chimney, or
+  newly back from the dead; someone who turns up in the house by any other
+  road and opens it again is, as far as the bar is concerned, already
+  accounted for." This reverses round 11's choice to leave it unsaid:
+  four runs of six lost their endgame to the silence, which is a cost
+  Zork's own players paid over months, not in 400 moves. The line names
+  the rule but not the roads; the grating, the prayer, the canyon and the
+  Strange Passage are still for the player to find. `prayer.json` now
+  comes up by the prayer, opens the trap door from above, goes down, and
+  finds it open behind them, twice.
+- **P2, accepted as test coverage.** The 350 ending (the map, the path,
+  the barrow, the end) is covered by `walkthrough.json` and
+  `map_absent.json`; a run that starts mid-game, or a longer cap, is the
+  director's call.
+- **P3, accepted in part.** `push open`, `pull open`, `push [x] open` and
+  `pull [x] open` are OPEN (tested from the Cellar's side of the trap
+  door). `everything`, adverbs, `go back <dir>` and the comma's second
+  clause are the engine's (friction 132, 120 again). "slide down the
+  slide" was typed in the Twisting Passage, where there is no slide, so
+  not_here was right; `slide down [x]` was already CLIMB DOWN.
+- **P4, rejected for the world, logged** (friction 133): Zork's DROP is
+  HELD at the top level only, and the engine's carried `all` reaches into
+  an open sack; a permit could only stop the whole line.
+- **P5, accepted.** `look down` On the Rainbow and at Aragain Falls shows
+  the 450-foot drop; tested in `rainbow.json`.
+- **P6, checked and kept.** The fight's lines are Zork's own sets (six
+  misses, five staggers, four wounds), drawn at random.
+- **P7, already built** in round 14: the cave-ins, examined, name the open
+  ways; the room text stays Zork's.
+- **P8, P9, P10, kept** as built.
+
+### What round 16 should watch
+
+- **The trap door's line:** whether anyone examines it from below, and
+  whether a player then comes up by another way on purpose and finds the
+  slide and the stairs a short way home.
+- **The endgame:** the map, the path, the barrow, still unmet in play.
+- Carried, still unmet: death as a spirit after the Altar; the bottle
+  refilled; small things through the grating; the lamp burning out; the
+  torch at the shaft and the machine; the egg given to the thief; the
+  Grating Room from below; the grue; the canyon climbed.
