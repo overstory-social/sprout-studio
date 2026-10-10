@@ -1,38 +1,33 @@
 # Where underground_caverns stands
 
-_Last updated 2026-10-07: rounds 1-14 done; paused by Eric after round 14.
-Pick up at round 15 (widen, v8: the last of Zork I). Playtesters never see
-this file._
+_Last updated 2026-10-09: **the project is complete.** All sixteen planned
+rounds are played and committed. Playtesters never see this file._
 
-**Where it stands.** Rounds 1-14 are committed and pushed (the last is
-`ef62c0a`). v7 is built: about 140 rooms, everything in Zork I but Hades,
-the crystal skull and the endgame, with a 330-point ceiling (Zork's is
-350). Round 7 added v4 (east of the troll), round 9 v5 (the thief and the
-Cyclops), round 11 v6 (the dam, reservoir, river, rainbow and canyon),
-round 13 v7 (the Mirror Rooms and the coal mine). The pin is still Sprout
-`6c440f5`; check Sprout `main` before round 15.
+**Where it ended.** Zork I is built whole in Sprout, on the branch
+`world/underground_caverns` (last commit: round 16, `d29773f`, pinned to
+Sprout `c87c30b`):
 
-**Run settings:** `turnCap: 250`, every persona on `opus` except `casual`
-on `fable` (Fable's safety filter kept cutting off long runs), with the
-framing and goals below.
+- all 110 rooms of `1dungeon.zil`, every takeable object, all 19
+  treasures and Zork's 350 points;
+- three NPCs on `sprout.Actor`: the troll, the thief and the Cyclops;
+- the endgame: the map at 350 points, the secret path and the Stone Barrow;
+- `tests/walkthrough.json` plays the whole game to the end (354
+  commands), one of 104 world tests that all pass;
+- about 12,800 lines of Sprout in 32 files; `friction.md` holds 165
+  entries on what the language made hard.
 
-**Round 14 ended by hand.** Its clerk paraphrased the revision plan's save
-output, the workflow crashed on the JSON, and the save had been refused
-(the plan cited rejected points). The plan was re-asked once of the
-author, saved through `round.mjs save`, verified and committed. Filed as
-sprout#487 (studio label): `clerk()` should re-ask on non-JSON stdout.
-Friction 119 (a tied item in a run of things is not read on its own turn)
-is not yet filed in Sprout.
+**What is missing:** the thief never visits the drained Reservoir bed (his
+round is a fixed list), and there is no save, restore or restart, since a
+world cannot start itself over. In play, no playtester reached 350 in 400
+turns, so the map, the path and the barrow are proven by the walkthrough
+test rather than by a playtest.
 
-**Next: round 15.** Write v8 into brief.md's Scope (the round-15 row
-below: the Entrance to Hades and the exorcism with bell, book and candles,
-the Land of the Dead and the crystal skull, the ancient map, and the
-endgame Stone Barrow at 350 points), run the `author` pre-round pass,
-verify, commit, push, play. Round 16 refines the whole game.
+**Sprout issues:** 41 filed with the `from-studio` label over the project
+(23 since closed by fixes, 18 open), plus studio issues fixed by studio
+PRs #2–#5 and #7–#10.
 
-**Sprout issues filed from the port since the first pause:** #475-#486
-(bugs #476, #480, #483, #484, #486; parser #475, #479; features #477,
-#478, #481, #482, #485), #460 reopened, #487 for the studio.
+**To play on:** a further refine round is launched as below with the run
+settings below; a later cycle could mutate the space, as the brief foresees.
 
 ## State
 
