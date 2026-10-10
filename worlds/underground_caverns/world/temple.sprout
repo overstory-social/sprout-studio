@@ -6,8 +6,9 @@
 // tied to the railing, is the only way down (ROPE-FUNCTION, DOME-ROOM-FCN,
 // TORCH-ROOM-FCN), and there is no way back up it; the way out is to pray
 // at the Altar (V-PRAY), which leads up to the Forest. The hole in the
-// Altar's floor leads on toward Hades, which is not built; it refuses the
-// coffin, as Zork's COFFIN-CURE does.
+// Altar's floor leads down to the Cave above Hades (v8), and refuses the
+// coffin, as Zork's COFFIN-CURE does. The bell, the book and the candles
+// are for the exorcism at the gates of Hell (hades.sprout).
 import * as sprout from 'sprout'
 import {Thing, Portable, Scenery, Flame} from 'thing'
 import {Light} from 'lamp'
@@ -18,8 +19,10 @@ import {Matchbook} from 'dam'
 import {Room, DarkRoom} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, read, climb_over, leap_at, through, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, :travel, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go, :rainbow, :light, :blow_out} from 'verbs'
+import {open, close, look_in, read, climb_over, leap_at, through, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, rub, rub_with, :travel, :cool, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go, :rainbow, :light, :blow_out} from 'verbs'
 import {engravings_cave} from 'east'
+import {HadesGate} from 'hades'
+import {BelowAltar, tiny_cave} from 'mirror'
 
 // The rooms the rope and the coffin and the prayer care about.
 kind DomeRoom is DarkRoom { :roped false }
@@ -45,6 +48,13 @@ object dome_room is DomeRoom in underground_caverns {
   // the floor below, through the world's gate (ROPE-FUNCTION's DROP; the
   // visitor's `drop` marks it as going over).
   on :entered (item, from) {
+    // DOME-ROOM-FCN's M-ENTER: the dead are drawn over the railing and down.
+    if (item.is(Adventurer)) {
+      if (item.get(:dead)) {
+        tell item "As you enter the dome you feel a strong pull as if from a wind drawing you over the railing and down."
+        send item :travel with :torch_room
+      }
+    }
     if (item.is(Rope) && from.is(Adventurer)) {
       if (item.get(:over) && !item.get(:tied)) { send underground_caverns :open_gate }
     }
@@ -135,13 +145,7 @@ object temple is TempleRoom in underground_caverns {
     This is the north end of a large temple. On the east wall is an ancient inscription, probably a prayer in a long-forgotten language. Below the prayer is a staircase leading down. The west wall is solid granite. The exit to the north end of the room is through huge marble pillars.
   }
 
-  object bell is Portable {
-    grammar { name "brass bell"  nouns "bell"  adjectives "small", "brass" }
-    passage short { brass bell }
-    describe { text "It is a small brass bell with a wooden handle, of the kind used to call the faithful, or the servants, or the dead; the temple does not say which. It is polished bright where a great many hands have held it." }
-    without as target for ring from Thing
-    as target for ring { do { say "Ding, dong." } }
-  }
+  object bell is Bell
   object prayer is Scenery {
     grammar { name "prayer"  nouns "inscription", "script", "writing", "verse"  adjectives "ancient", "old", "east" }
     passage short { prayer }
@@ -177,18 +181,11 @@ object altar is AltarRoom in underground_caverns {
   grammar {
     name "Altar"
     exit north "north" -> temple
-    exit down  "hole"  refuse hole_way
+    exit down  "hole"  -> tiny_cave
   }
   passage body {
     This is the south end of a large temple. In front of you is what appears to be an altar. In one corner is a small hole in the floor which leads into darkness. You probably could not get back up it.
   }
-  // The way down to Hades, which is not built, and which does not take a
-  // coffin, as Zork's COFFIN-CURE has it.
-  passage hole_way {
-    {if actor.is(Adventurer)}{if actor.get(:coffins) > 0}You haven't a prayer of getting the coffin down there.{else}{self.hole_line}{/if}{else}{self.hole_line}{/if}
-  }
-
-  passage hole_line { You lower your legs into the hole, and a cold draught comes up it to meet them, smelling of old smoke and carrying a sound like a great many people sighing at once, a very long way down. You decide that whatever is down there has waited this long and can wait a little longer. }
 
   object stone is AltarStone {
     object book is BlackBook
@@ -197,17 +194,18 @@ object altar is AltarRoom in underground_caverns {
   object hole is Scenery {
     grammar { name "small hole"  nouns "hole", "corner", "darkness"  adjectives "small", "dark" }
     passage short { small hole }
-    describe { text "The hole in the corner of the floor is small and round and goes straight down into darkness. A cold draught comes up out of it, and with it a faint sound, like a great many people sighing a very long way off. You probably could not get back up it." }
+    describe { text "The hole in the corner of the floor is small and round and goes straight down into darkness. A cold draught comes up out of it, and with it a faint sound, like a great many people sighing a very long way off. It is wide enough for a body, though not for much of a coffin, and you probably could not get back up it." }
+    passage down { {if actor.is(Adventurer)}{if actor.get(:coffins) > 0}You haven't a prayer of getting the coffin down there.{/if}{/if} }
     without as target for look_in from Thing
-    as target for look_in { do { say "It is dark down there, and a long way down, and something down there is sighing." } }
-    // Down the hole by name, or into it, or through it: the way down's own
-    // answer, the coffin's refusal or Hades' sigh.
+    as target for look_in { do { say "It is dark down there, and a long way down, and something further down still is sighing." } }
+    // Down the hole by name, or into it, or through it: the way down, which
+    // will not take the coffin (COFFIN-CURE).
     without as target for climb_down from Thing
-    as target for climb_down { do { say "{altar.hole_way}" } }
+    as target for climb_down { do { if (actor.is(Adventurer)) { if (actor.get(:coffins) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
     without as target for through from Thing
-    as target for through { do { say "{altar.hole_way}" } }
+    as target for through { do { if (actor.is(Adventurer)) { if (actor.get(:coffins) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
     without as target for leap_at from Thing
-    as target for leap_at { do { say "{altar.hole_way}" } }
+    as target for leap_at { do { if (actor.is(Adventurer)) { if (actor.get(:coffins) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
   }
   object hall is TempleHall {
     passage view { This end of the temple is plainer than the other, as though everything worth the effort had been saved for the altar. Your footsteps come back to you from the north end a moment late. }
@@ -467,7 +465,10 @@ kind Candles is Flame {
   without as target for lamp_on from Thing
   as target for lamp_on {
     do {
-      if (self.get(:stage) >= 4) { say "Alas, there's not much left of the candles. Certainly not enough to burn." }
+      // Lit already with the match in hand, by the lighter's own part.
+      if (actor.is(Adventurer) && actor.get(:kindled)) { }
+      else if (self.get(:stage) >= 4) { say "Alas, there's not much left of the candles. Certainly not enough to burn." }
+      else if (self.get(:lit)) { say "The candles are already lit." }
       else { say "You should say what to light them with." }
     }
   }
@@ -565,6 +566,27 @@ kind BlackBook is Readable {
   }
   describe {
     text "It is a large book bound in black leather, heavy as a paving stone, its pages edged in tarnished gold. It lies open to page 569, and does not look as though it has ever been anything else."
+  }
+  // Read at the gates of Hell while the spirits cower before the candles,
+  // it is the end of them (LLD-ROOM's READ): the visitor's own part has
+  // told the room so.
+  passage begone { Each word of the prayer reverberates through the hall in a deafening confusion. As the last word fades, a voice, loud and commanding, speaks: "Begone, fiends!" A heart-stopping scream fills the cavern, and the spirits, sensing a greater power, flee through the walls. }
+  without as target for read from Readable
+  as target for read {
+    permit {
+      if (actor.is(Adventurer)) {
+        if (!actor.holds(self) && actor.get(:load) + self.get(:size) > 100) { refuse "(Taking the {self.short} first) {actor.too_heavy}" }
+      }
+      if (self.get(:sealed)) { refuse "You can't reach something that's inside a closed container." }
+    }
+    do {
+      if (!actor.holds(self)) {
+        move self to actor
+        say "(Taken)"
+      }
+      if (here.is(HadesGate) && here.get(:phase) == 2 && !here.get(:exorcised)) { say begone }
+      else { say words }
+    }
   }
   without as target for open from Thing
   as target for open { do { say "The book is already open to page 569." } }
@@ -667,6 +689,73 @@ kind Sceptre is Treasure, Sharp {
         say collapse
         broadcast :rainbow with false
       } else { say dazzle }
+    }
+  }
+}
+
+// The brass bell from the Temple (BELL, BELL-F). Rung at the gates of Hell
+// before the spirits are gone, it grows red hot and falls (HOT-BELL, which
+// here is the same bell, hot): it cannot be taken or rung, what burns is
+// consumed against it, and it cools in twenty moves (I-XBH), or at once
+// with water poured on it.
+kind Bell is Portable {
+  grammar { name "brass bell"  nouns "bell"  adjectives "small", "brass", "hot", "red" }
+  :hot false
+  passage short { {if self.get(:hot)}red hot brass bell{else}brass bell{/if} }
+  passage ldesc { {if self.get(:hot)}On the ground is a red hot bell.{else}There is a brass bell here.{/if} }
+  passage cooled { The bell appears to have cooled down. }
+  describe {
+    if (self.get(:hot)) { text "The bell glows a dull red from lip to handle, and the air above it shivers. The wooden handle has charred black. It ticks faintly as it cools, very slowly, in no hurry to be picked up." }
+    else { text "It is a small brass bell with a wooden handle, of the kind used to call the faithful, or the servants, or the dead; the temple does not say which. It is polished bright where a great many hands have held it." }
+  }
+  without as target for ring from Thing
+  as target for ring {
+    do {
+      if (self.get(:hot)) {
+        if (bound tool) {
+          if (tool.is(Thing)) {
+            if (tool.get(:burnable)) { say "The {tool.short} burns and is consumed." }
+            else { say "The heat from the bell is too intense." }
+          } else { say "The bell is too hot to touch." }
+        } else { say "The bell is too hot to reach." }
+      } else if (here.is(HadesGate) && !here.get(:exorcised)) {
+        // The visitor's own part has dropped it and said so: it heats.
+        self.set(:hot, true)
+        self.set(:sacred, true)
+        cancel wakes
+        wake in 10 minutes
+      } else { say "Ding, dong." }
+    }
+  }
+  without as target for rub from Thing
+  as target for rub {
+    do {
+      if (self.get(:hot)) { say "The heat from the bell is too intense." }
+      else { say "Fiddling with the {self.short} {self.hacked}" }
+    }
+  }
+  without as target for rub_with from Thing
+  as target for rub_with {
+    do {
+      if (self.get(:hot)) {
+        if (tool.is(Thing)) {
+          if (tool.get(:burnable)) { say "The {tool.short} burns and is consumed." }
+          else { say "The heat from the bell is too intense." }
+        } else { say "The bell is too hot to touch." }
+      } else { say "Fiddling with the {self.short} {self.hacked}" }
+    }
+  }
+  // Cooled by water, or by time.
+  on :cool {
+    self.set(:hot, false)
+    self.set(:sacred, false)
+    cancel wakes
+  }
+  on :woke (elapsed) {
+    if (self.get(:hot)) {
+      self.set(:hot, false)
+      self.set(:sacred, false)
+      tell cooled
     }
   }
 }

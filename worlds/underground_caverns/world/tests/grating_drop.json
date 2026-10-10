@@ -1,0 +1,67 @@
+{
+  "about": "Through the grating (GRATE-FUNCTION's PUT): once the leaves are moved, something small put in the grating from the Clearing goes through the bars, locked or not, into the darkness below, and lies on the floor of the Grating Room when the visitor gets there by the maze; from below, the grating is overhead. Until the grating is uncovered there is nothing to put things in.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "open mailbox" },
+    { "as": "Marta", "type": "take leaflet" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "put leaflet in grating", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "move leaves", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." },
+      { "reader": "Marta", "kind": "said", "words": "In disturbing the pile of leaves, a grating is revealed." }
+    ] },
+    { "as": "Marta", "type": "put leaflet in grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The leaflet goes through the grating into the darkness below." }
+    ] },
+    { "as": "Marta", "type": "x grating", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a heavy iron grating, set securely into the ground and rusted to the colour of the leaves that hid it. Below it is only darkness." },
+      { "reader": "Marta", "kind": "described", "words": "The grating is closed, and fastened from beneath: whatever lock holds it faces down into the dark, well out of reach of anyone up here." }
+    ] },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "take lamp" },
+    { "as": "Marta", "type": "take sword" },
+    { "as": "Marta", "type": "take rope" },
+    { "as": "Marta", "type": "move rug" },
+    { "as": "Marta", "type": "open trap door" },
+    { "as": "Marta", "type": "turn on lamp" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "n" },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll" },
+    { "seed": 0 },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "sw" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Grating Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a small room near the maze. There are twisty passages in the immediate vicinity." },
+      { "reader": "Marta", "kind": "described", "words": "Above you is a grating locked with a skull-and-crossbones lock." },
+      { "reader": "Marta", "kind": "described", "words": "A small leaflet is on the ground." }
+    ] },
+    { "as": "Marta", "type": "take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "put leaflet through grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grating is over your head; anything put through it would come straight back down." }
+    ] }
+  ]
+}

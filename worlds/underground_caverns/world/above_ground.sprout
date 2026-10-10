@@ -12,9 +12,10 @@ import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, T
 import {KitchenWindow, Outdoors} from 'house'
 import {Leaves, Ground, GratingAbove} from 'grating'
 import {grating_room} from 'maze'
-import {take, open, read, cross, climb_over, duck_under, :window_sync, :reveal, :travel, :grate_open, :grate_revealed} from 'verbs'
+import {take, open, read, cross, climb_over, duck_under, :window_sync, :reveal, :travel, :grate_open, :grate_revealed, :won} from 'verbs'
 import {kitchen} from 'house'
 import {canyon_view} from 'river'
+import {stone_barrow} from 'barrow'
 
 object west_of_house is Room in underground_caverns {
   grammar {
@@ -25,8 +26,23 @@ object west_of_house is Room in underground_caverns {
     exit southeast "southeast"  -> south_of_house
     exit west      "west"       -> forest_1
     exit east      "front door" refuse "The door is boarded and you can't remove the boards."
+    exit southwest "secret path" -> stone_barrow when (self.get(:won))
+    exit in        "in"          -> stone_barrow when (self.get(:won))
   }
-  passage body { You are standing in an open field west of a white house, with a boarded front door. }
+  passage body { You are standing in an open field west of a white house, with a boarded front door.{if self.get(:won)} A secret path leads southwest into the forest.{/if} }
+  // At 350 the secret path is there (WON-FLAG), and the room is seen in
+  // full the next time each visitor comes (its TOUCHBIT cleared).
+  :won false
+  on :won { self.set(:won, true) }
+  remembers { :path_seen false }
+  on :entered (item, from) {
+    if (item.is(Adventurer) && self.get(:won)) {
+      if (!item.recall(:path_seen)) {
+        item.remember(:path_seen, true)
+        item.remember(:visits, 1)
+      }
+    }
+  }
 
   object mailbox is Box {
     grammar { name "small mailbox"  nouns "box" }
@@ -59,7 +75,20 @@ object west_of_house is Room in underground_caverns {
   object field is Scenery {
     grammar { name "open field"  nouns "field", "grass", "meadow"  adjectives "open" }
     passage short { open field }
-    describe { text "The field is open, grassy and entirely without incident, which is what fields are for. It runs up to the white house on the east, gives out at the forest on the west, and keeps the mailbox company in between." }
+    describe { text "The field is open, grassy and entirely without incident, which is what fields are for. It runs up to the white house on the east, gives out at the forest on the west, and keeps the mailbox company in between.{if self.get(:won)} At its southwest corner a secret path goes into the trees.{/if}" }
+    // The secret path, there to be seen once the score is 350.
+    contains
+    :won false
+    pass any (self.get(:won))
+    on :won { self.set(:won, true) }
+    object secret_path is Scenery {
+      grammar { name "secret path"  nouns "path", "trail"  adjectives "secret", "southwest" }
+      passage short { secret path }
+      describe { text "A narrow path, mossy and half hidden, leaves the corner of the field and goes southwest into the forest, where no path was before, or where nobody had noticed one. It is the path on the map, marked \"To Stone Barrow\"." }
+    }
+    object forest is Woods {
+      passage view { The forest begins at the edge of the field, west and southwest, old and dim and much like the rest of the forest, except for the path going into it, which is new, or newly noticed. }
+    }
   }
 }
 

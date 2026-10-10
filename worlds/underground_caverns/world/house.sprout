@@ -11,9 +11,12 @@ import {Room, DarkRoom, Perilous, ChimneyTop} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'scenery'
 import {Rope} from 'temple'
-import {open, close, look_in, read, shift, raise, look_under, smell, eat, through, climb_up, climb_down, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored, :magic} from 'verbs'
+import {fill, mung, open, close, look_in, read, shift, raise, look_under, smell, eat, through, climb_up, climb_down, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored, :magic, :won, :consume, :smash} from 'verbs'
 import {strange_passage} from 'cyclops'
+import {AncientMap} from 'barrow'
 import {behind_house} from 'above_ground'
+import {Riverside, OnTheRiver} from 'river'
+import {MagicBoat} from 'boat'
 import {cellar} from 'cellar'
 
 // The room outside the kitchen window.
@@ -140,19 +143,7 @@ object kitchen is Room, Perilous, ChimneyTop in underground_caverns {
       }
     }
 
-    object bottle is Bag {
-      grammar { name "glass bottle"  nouns "bottle", "container"  adjectives "clear", "glass" }
-      :has_fdesc true
-      :transparent true
-      :capacity 4
-      passage short { glass bottle }
-      passage fdesc { A bottle is sitting on the table. }
-      passage examined {
-        It is a clear glass bottle with a stopper, of the kind made to carry water on long walks.
-
-        {self.look_inside}
-      }
-    }
+    object bottle is Bottle
   }
 
   object window is KitchenWindow
@@ -330,6 +321,15 @@ kind TrophyCase is Box {
       each a: Adventurer in underground_caverns.living_room { send a :scored with item.get(:tvalue) }
     }
   }
+  // At 350 the ancient map is among the treasures (Zork's MAP, made
+  // visible by SCORE-UPD).
+  :mapped false
+  on :won {
+    if (!self.get(:mapped)) {
+      self.set(:mapped, true)
+      spawn AncientMap in self
+    }
+  }
   on :left (item, to) {
     if (item.is(Treasure)) {
       each a: Adventurer in underground_caverns.living_room { send a :scored with 0 - item.get(:tvalue) }
@@ -440,5 +440,47 @@ kind TrapDoor is Scenery {
   on :trap_sync (from, value) {
     self.set(:open, value)
     if (value) { self.set(:disturbed, true) }
+  }
+}
+
+// The glass bottle (BOTTLE, BOTTLE-FUNCTION): filled where there is water
+// to fill it from, the reservoir's, the stream's or the river's (V-FILL,
+// WATER-F); thrown, it shatters, and broken, it is gone.
+kind Bottle is Bag {
+  grammar { name "glass bottle"  nouns "bottle", "container"  adjectives "clear", "glass" }
+  :has_fdesc true
+  :transparent true
+  :capacity 4
+  passage short { glass bottle }
+  passage fdesc { A bottle is sitting on the table. }
+  passage examined {
+    It is a clear glass bottle with a stopper, of the kind made to carry water on long walks.
+
+    {self.look_inside}
+  }
+  without as target for fill from Thing
+  as target for fill {
+    do {
+      if (here.is(Riverside) || here.is(OnTheRiver) || here.is(MagicBoat)) {
+        if (!self.get(:open)) { say "The bottle is closed." }
+        else if (self.count(Thing) > 0) { say "The water slips through your fingers." }
+        else {
+          spawn Water in self
+          say "The bottle is now full of water."
+        }
+      } else if (bound tool) { say "You may know how to do that, but I don't." }
+      else { say "There's nothing to fill it with." }
+    }
+  }
+  without as target for mung from Thing
+  as target for mung {
+    do {
+      if (self.count(Water) > 0) { say "A brilliant maneuver destroys the bottle. The water spills to the floor and evaporates." }
+      else { say "A brilliant maneuver destroys the bottle." }
+      send self :consume
+    }
+  }
+  on :smash {
+    finally destroy self
   }
 }

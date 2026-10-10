@@ -38,8 +38,16 @@ the Slide Room and its slide down to the Cellar, the Mine Entrance, the
 Squeaky Room, the Bat Room and its vampire bat, the Shaft Room and the
 basket on its chain, the Smelly Room and the Gas Room, the four rooms of the
 coal mine, the Ladder Top and Bottom, the Dead End and its coal, the Timber
-Room, the Drafty Room and the Machine Room, where coal becomes a diamond.
-Every room's name and description
+Room, the Drafty Room and the Machine Room, where coal becomes a diamond;
+and, from round 15 (v8), the rest of Zork I: the hole in the Altar's floor
+down to the Cave, the Entrance to Hades and its evil spirits, the
+exorcism by bell, book and candles, the Land of the Dead and the crystal
+skull; death as a spirit before the gates of Hell once the Altar has been
+seen, and the prayer that ends it; the brass lantern's battery and its
+smashing, the bottle filled at the water and broken, small things put
+through the grating; and the end: the ancient map in the trophy case at
+350 points, the secret path from West of House, and the Stone Barrow,
+whose door closes on the game. Every room's name and description
 is the original's, word for word, from the ZIL source (`dungeon.zil`,
 `actions.zil`, and the shared substrate's `verbs.zil`). The narrator is
 Zork's narrator: "Taken.", "Dropped.", "Opened.", the YUKS, "A hollow voice
@@ -129,12 +137,12 @@ written down. That log is a product of the world as much as the rooms are.
    candles.
 12. The way out is to pray at the Altar, which puts the visitor in the
    Forest with everything they carry, coffin and all. The hole in the
-   Altar's floor leads on toward Hades (not built), and will not take the
-   coffin in any case ("You haven't a prayer of getting the coffin down
+   Altar's floor drops, one way, into the Cave above Hades (v8), and will
+   not take the coffin ("You haven't a prayer of getting the coffin down
    there.").
 
 13. The thief (v5, `thief.sprout`), from the first descent into the Cellar:
-   unseen, he goes round the 39 rooms underground that Zork does not hold
+   unseen, he goes round the rooms underground (70 since v8) that Zork does not hold
    sacred, one a turn, robbing treasures off the floor of any room a
    visitor has been in, and now and then a lesser thing. In a dark room
    with a visitor in it he sometimes lets himself be seen, leaning on a wall
@@ -207,7 +215,7 @@ written down. That log is a product of the world as much as the rooms are.
 22. The way to the mine (v7, `mirror.sprout`): south of the Round Room the
    Narrow Passage (dark) comes to Mirror Room 2 (lit), which leads only to
    the Winding Passage and the Tiny Cave, whose dark stairs go down to Hades
-   (closed in-world, with a draught that blows candles out). Rubbing the
+   (open since v8, with a draught that blows candles out). Rubbing the
    mirror changes the two Mirror Rooms over: the visitor, and whatever lies
    in either room, are in the other one, which looks exactly the same. From
    Mirror Room 1 (dark), north is the Cold Passage and the mine; east is the
@@ -245,6 +253,52 @@ written down. That log is a product of the world as much as the rooms are.
    Strange Passage, prayer, the canyon); after the chimney, the trap door
    is barred again and the Cellar is a long way round.
 
+27. Hades (v8, `hades.sprout`). Down the Cave's stairs (or down the
+   Altar's hole and then the stairs), the Entrance to Hades (lit): a
+   gateway inscribed "Abandon every hope all ye who enter here!", open on
+   a desolation and a pile of mangled bodies, and barred by evil spirits
+   who jeer. Nothing touches them: spoken to they jeer, attacked they ask
+   how, anything else and "You seem unable to interact with these
+   spirits."; the gate's invisible force turns everyone back ("Some
+   invisible force prevents you from passing through the gate.").
+   EXORCISE says the ceremony is wanted, or that the visitor is not
+   equipped for it.
+28. The exorcism, in Zork's order and to its clock (LLD-ROOM): the bell rung
+   here grows red hot and falls, and the candles in hand fall and go out,
+   and the wraiths reel for six moves (three minutes at the host's half
+   minute a move); the candles taken up and lit with a match in that time
+   make them cower, for three moves more; the black book read then drives
+   them through the walls ("Begone, fiends!"), and the gate is open for
+   good. Too slow at either step and "the tension of this ceremony is
+   broken". The hot bell cannot be taken or rung; it cools in twenty
+   moves, or at once with water poured on it, and can be rung again.
+29. The Land of the Dead, south through the gate (lit): the stacked remains
+   of earlier adventurers, the weeping souls, and the crystal skull (10
+   taken, 10 in the case), the last of Zork's 350. Treasures the skeleton's
+   ghost banishes from the maze arrive here, as in Zork.
+30. Death as a spirit (JIGS-UP, DEAD-FUNCTION): once the Altar has been
+   seen, a death that is not the third wakes the visitor before the gates
+   of Hell, a spirit with nothing in hand. A spirit walks, sees in the dark,
+   is let past by the troll and left alone by the thief, the Cyclops and
+   the bat, and can do almost nothing else ("You can't even do that.");
+   the Dome draws it over the railing to the Torch Room; at the Altar, a
+   prayer is answered with life, in the forest. Before the Altar, deaths
+   go to the forest as before; the third is the end, as before.
+31. The end (v8, `barrow.sprout`). The score at 350, an almost inaudible
+   voice whispers "Look to your treasures for the final secret.", and an
+   ancient map lies in the trophy case: read, it shows a path southwest from
+   the clearing of the house, "To Stone Barrow". West of House now has a
+   secret path southwest, to the Stone Barrow; west (or in) through its open
+   stone door, the barrow closes behind the visitor, Zork's closing lines
+   are read, and the score; after that, nothing further happens but
+   looking, reading and counting.
+32. Smaller things built in v8: the brass lantern's battery (385 moves lit
+   in hand: "The lamp appears a bit dimmer." at 185 left, burned out at
+   none); the lantern thrown is smashed for good; the bottle fills at the
+   reservoir, the stream and the river, and thrown or broken it is gone;
+   small things put in the grating from the Clearing fall into the Grating
+   Room.
+
 "Done", for this slice, is: the egg (whole), the canary, the bauble, the
 painting, the bag of coins, the platinum bar, the torch, the gold coffin,
 the sceptre and the chalice in the trophy case (the sceptre on its own,
@@ -254,15 +308,18 @@ the rope and up by prayer, and past the Cyclops to the lair; and, since
 v6, the trunk, the trident, the emerald, the scarab and the pot of gold in
 the case too, the dam opened and the river run; and, since v7, the jade,
 the bracelet and the diamond in the case, the Drafty Room seen lit and the
-slide gone down. 330 points is the ceiling with every treasure intact,
-which is Zork's 350 less the crystal skull's 20 (v8): the Kitchen 10, the Cellar 25, the East-West
+slide gone down; and, since v8, the skull in the case, Hades exorcised,
+and the game ended in the Stone Barrow at 350, Zork's whole score. 350
+points is the ceiling with every treasure intact (330 until round 15,
+without the crystal skull's 20): the Kitchen 10, the Cellar 25, the East-West
 Passage 5, the Treasure Room 25; the egg 5 and 5, the canary 6 and 4, the
 bauble 1 and 1, the painting 4 and 6, the coins 10 and 5, the bar 10 and
 5, the torch 14 and 6, the coffin 10 and 15, the sceptre 4 and 6, the
 chalice 10 and 5; the trunk 15 and 5, the trident 4 and 11, the pot of
 gold 10 and 10, the scarab 5 and 5, the emerald 5 and 10; the Drafty
-Room 13, the jade 5 and 5, the bracelet 5 and 5, the diamond 10 and 10.
-Until round 13 it was 277; until round 11, 197; until round 9, 145, with the canary unreachable whole. A single visit cannot carry it all: the coffin, the
+Room 13, the jade 5 and 5, the bracelet 5 and 5, the diamond 10 and 10;
+the skull 10 and 10. Every death costs 10, so a visitor who has died
+cannot reach 350, as in Zork. Until round 13 it was 277; until round 11, 197; until round 9, 145, with the canary unreachable whole. A single visit cannot carry it all: the coffin, the
 torch and the bar together are 95 of the 100, so the lamp and the sword
 stay below.
 
@@ -496,6 +553,35 @@ stay below.
   not open it, and the next descent is barred again (Zork's TOUCHBIT), so
   a visitor who only ever uses the chimney finds the slide a long way
   round (round 13, P4).
+- **The ceremony has an order and a clock.** Bell, candles, book, as the
+  book's other page hints ("certain noises, lights, and prayers"): the bell
+  first, because it knocks the candles out of the hand; the candles lit
+  again in hand within six moves, which wants a match, so the matchbook
+  from the Dam Lobby must come this far; the book within three moves
+  after. The candles burning when the visitor arrives are no use; the
+  ones lit while the spirits reel are. Lit where they lie, they do
+  nothing.
+- **The bell grows hot.** Red hot, it cannot be taken or rung, and what
+  burns is burned against it; it cools in twenty moves, or with the
+  bottle's water poured on it, and then the ceremony can begin again.
+- **The bodies are not to be touched.** Taken, a force keeps them;
+  broken or burned, the guardian of the dungeon takes the visitor's head.
+- **Death is not the end, once the Altar has been seen.** The spirit wakes
+  before the gates of Hell and must walk back to the Altar and pray. On the
+  way it sees in the dark, the troll lets it by, and the Dome pulls it down
+  to the Torch Room; nearly everything else it tries, it cannot even do.
+- **The last secret is in the case.** At 350 the voice says to look to the
+  treasures, and the map among them shows the path from the house. West of
+  House says so too, the next time it is seen.
+- **The lamp runs down.** Kept lit in hand it is a bit dimmer after 200
+  moves, and out after 385: the torch, which never goes out, is the light
+  to keep for the long haul. Thrown, the lamp is smashed for good.
+- **The bottle refills.** At the reservoir, the stream or the river, an
+  empty open bottle fills with water: for the Cyclops, the troll, or a hot
+  bell.
+- **The grating takes small things.** Put in it from above, anything no
+  bigger than the painting falls through, locked or not, to the Grating
+  Room floor.
 - Zork's jokes: `xyzzy`, `plugh`, `hello`, `jump`, `count leaves`, `read
   wooden door`, `look under rug`, `raise rug`, `take mailbox`, `climb
   chimney` and `climb down chimney` (in the Kitchen), `eat lunch`, `drink water`, `smell sack`,
@@ -509,18 +595,18 @@ stay below.
 
 ## Things deliberately left out of this slice
 
-- The lamp's battery life (Zork's lamp lasts several hundred turns; a run
-  here is capped well short of it).
-- Putting things through the grating (Zork lets a small one fall into
-  the Grating Room).
-- The map in the trophy case, which only appears at 350 points.
-- Hades below the Altar and below the Tiny Cave, and the exorcism the bell,
-  the book and the candles are for (v8); the hot bell; the crystal skull.
-  Both ways down refuse in-world.
-- Filling the bottle at the river or the reservoir (Zork's FILL with
-  GLOBAL-WATER): the bottle's water is the Kitchen's only.
+Since v8 the scope is the whole of Zork I. What of it is still not here:
+
 - The thief on the drained Reservoir (Zork's I-THIEF goes there once it is
-  land); his round is fixed, and skips it.
+  land); his round is fixed, and skips it. Building it means a room in his
+  round that he passes over while it is water, in the 70-branch move
+  through the world's gate; not done in the v8 pass.
+- Zork's restart, restore and save, and the question FINISH asks: a world
+  here cannot be started over from inside it (friction 25).
+- The battery drains only while the lantern is lit in its bearer's hand;
+  lit on a floor or in a sack it keeps its charge (friction 130).
+- Zork's VERSION, the GWIM fills of its parser and the orphan questions
+  ("What do you want to dig in?"): the parser cannot ask (friction 32).
 
 ## Two voices, and the Management
 
@@ -560,7 +646,24 @@ stay below.
   chimney): the rooms and
   what is in them. A shut way is an exit that refuses in Zork's own words,
   or, for country not yet built, in a passage of its room in Zork's voice.
-- `nowhere.sprout`: the Land of the Living Dead.
+- `nowhere.sprout`: where a third death, or a death while already dead,
+  leaves the visitor's remains (named the Land of the Living Dead, as the
+  death line names it): a place with no way out.
+- `hades.sprout` (v8): the Entrance to Hades (`HadesGate`, keeping the
+  exorcism's `:phase` and `:exorcised`, the clock on its own wakes), the
+  Land of the Dead, the `Ghosts`, the `HellGate`, the `Bodies`, the
+  `Lament` and the `Skull`. The Bell (hot or not) is `temple.sprout`'s; the
+  visitor's own parts of `ring`, `take`, `burn`, `lamp_on`, `read`,
+  `pour_on` and `exorcise` tell the room and the bell what was done, since
+  nothing in a hand reaches the room around it.
+- `barrow.sprout` (v8): the `AncientMap`, the Stone Barrow and its `Barrow`
+  and `BarrowDoor`, and Inside the Barrow, where the game ends. The map is
+  spawned in the trophy case (`house.sprout`) on `:won`, which the visitor
+  broadcasts when its score reaches 350 (`changed :score`); West of House
+  hears it too, and opens its secret path.
+- The dead (v8): the adventurer's `:dead` and `:finished`, a permit on
+  each of its ~100 verbs with DEAD-FUNCTION's answer or the end's, and
+  the rooms' `:haunted`, which lights a dark room for a spirit.
 - `thing.sprout` (Thing, Portable, Scenery: Zork's default answers to every
   verb), `box.sprout` (containers, PRINT-CONT), `room.sprout` (rooms and
   their BRIEF descriptions, dark rooms and what they keep for the grue, the
@@ -594,7 +697,7 @@ stay below.
   destinations and description modes.
 - `thief.sprout` (v5): the `Thief` NPC, his `LargeBag` and `Stiletto`, his
   turns (`:prowl` and `:survey`), his round of the rooms (`:tour`, and the
-  39-branch move through the world's gate), his robbing, his fights on
+  70-branch move since v8 through the world's gate), his robbing, his fights on
   Zork's tables, his gifts, his lair and his death. The thief himself sits
   in the Round Room, where Zork's starts. Each room keeps `:visited` and
   `:tour` (`room.sprout`), and hides his comings and goings.
@@ -1906,3 +2009,101 @@ mine reach it near turn 200 of 250.
 - Carried, still unmet: the egg given to the thief; DIAGNOSE; the Grating
   Room and the key from below; the grue in play; the ghost; the tree's
   drop; the egg broken; the canyon; the slide as the way home.
+
+## Before round 15: v8, the whole of Zork I
+
+The director widened the scope to v8: everything left. Built from
+`1dungeon.zil` (ENTRANCE-TO-HADES, LAND-OF-LIVING-DEAD, STONE-BARROW,
+GHOSTS, SKULL, BODIES, HOT-BELL, BROKEN-LAMP, MAP, BARROW, BARROW-DOOR,
+SOUTH-TEMPLE's way down, WEST-OF-HOUSE's way southwest) and `1actions.zil`
+(LLD-ROOM, BELL-F, HOT-BELL-F, I-XB, I-XC, I-XBH, GHOSTS-F, GATE-PSEUDO,
+BODY-FUNCTION, CANDLES-FCN, BLACK-BOOK, MATCH-FUNCTION, SOUTH-TEMPLE-FCN,
+DEAD-FUNCTION, JIGS-UP, DOME-ROOM-FCN, STONE-BARROW-FCN, BARROW-DOOR-FCN,
+BARROW-FCN, LANTERN, I-LANTERN, BOTTLE-FUNCTION, WATER-F's FILL,
+GRATE-FUNCTION's PUT), `gverbs.zil` (SCORE-UPD and WON-FLAG, FINISH, V-FILL,
+V-EXORCISE) and the winning transcript, whose exorcism this follows line for
+line.
+
+- **The audit.** Every ROOM of `1dungeon.zil` (110) is now a place of the
+  world; the three that were missing were the Entrance to Hades, the Land
+  of the Dead and the Stone Barrow. The world has three places besides:
+  `mirror_limbo` (nobody visits it), the sink a third death leaves the
+  visitor's remains in, and Inside the Barrow, the end (Zork prints its
+  name as a heading and ends). Every object of Zork I with TAKEBIT is here:
+  the ones missing were the crystal skull, the red hot bell (here the brass
+  bell, hot), the broken lantern and the ancient map; the pile of bodies
+  (TRYTAKEBIT) is scenery that refuses. Zork's 19 treasures are all here
+  (its broken egg and broken canary are the egg and the canary, broken), and
+  the ceiling is Zork's 350.
+- **Refusals removed.** The Altar's hole and the Cave's stairs, which
+  refused in-world since v4 and v7, now lead on; the slab and its chalked
+  notice are gone.
+- **The exorcism's clock** is the Entrance to Hades' own, on wakes, at the
+  host's half minute a move: six moves are three minutes, three are ninety
+  seconds, twenty are ten minutes (friction 121).
+- **The visitor tells the room.** A thing in a hand cannot reach the room
+  around it (friction 88), so the visitor's own part of `ring` drops the
+  bell and the candles and starts the clock, its parts of `take`, `burn`
+  and `lamp_on` tell the room the candles are lit in hand, and its part of
+  `read` tells it the book was read; the bell, the candles and the book
+  say their own lines (friction 123).
+- **Spirits.** DEAD-FUNCTION is one routine in Zork; here every verb of
+  the visitor's has a permit for it (friction 125).
+- **The end** is a place: inside the barrow, every verb but those that look,
+  read and count answers that the adventure is over (friction 128). A third
+  death ends the same way now, in the sink.
+- **Also built, from what was left out:** the lamp's battery (counted by
+  its bearer's moves, friction 130) and the lamp smashed by a throw; the
+  bottle filled where there is water to fill it, and shattered or broken;
+  small things put in the grating from above; EXORCISE said bare. Still
+  not built: the thief's round over the drained Reservoir (see Things
+  deliberately left out).
+- **Tests (v8):** `exorcism.json` (done right: the spirits, the gate, the
+  ceremony in order, the gate open), `exorcism_wrong.json` (unequipped; the
+  book too soon; the candles lit where they lie; the six moves and the
+  three moves running out; the hot bell, cooled with water and rung
+  again), `skull.json` (the Land of the Dead, the skull 10 and 10, home by
+  the chimney), `spirit.json` (death at the gates, a spirit's answers, the
+  Dome's pull, the prayer at the Altar), `map_absent.json` (no map, no
+  path, before 350), `bottle_fill.json` (the bottle filled, thrown; the
+  lamp thrown), `grating_drop.json` (through the grating), and
+  `walkthrough.json`: the whole game, West of House to the Stone Barrow at
+  350, the map appearing, the barrow and the end. The walkthrough is 366
+  steps, 354 of them typed commands, and the barrow is entered on Zork's
+  move 335; it takes about two seconds. `altar.json`, `coffin.json` and
+  `rainbow.json` now die into a spirit, `candles_gust.json` and
+  `hole.json` go down to Hades and the Cave, and the thief's round is 70
+  rooms (two more minutes in `thief_gallery.json` and
+  `thief_unseen.json`).
+
+### What round 15 should test
+
+- **Does anyone reach Hades, and read it?** The way down is the Altar's
+  hole or the Cave's stairs. Watch whether players connect the bell, the
+  book and the candles to the spirits (the book's other page, the
+  inscription's "land of the dead", the spirits barring the gate), and
+  whether anyone brings the matchbook.
+- **The order and the clock.** Whether players ring first, notice that the
+  candles fell and went out, take them up and relight them in time; and
+  whether "the tension of this ceremony is broken" reads as a clock to beat
+  rather than a failure. Whether the hot bell's cooling (twenty moves, or
+  water) is found when a first try fails.
+- **Spirits.** Players who die after the Altar wake at the gates of Hell.
+  Watch whether they understand what they are, find the way back to the
+  Altar, and pray; and whether "You can't even do that." reads as Zork's
+  joke or as a broken world. This is the change most likely to strand a
+  run.
+- **The lamp's battery.** "The lamp appears a bit dimmer." comes at 200
+  lit moves: in a 250-turn run, whether players turn it off above ground,
+  or take up the torch.
+- **The end** is out of reach of a 250-turn run (the walkthrough needs 335
+  moves with no mistakes). Whether to test it with a longer cap, or a goal
+  that starts nearer the end, is the director's call.
+- **Faults:** none in the tests; watch the new errands through the gate
+  (the hole, the stairs, the spirit's death and prayer, the barrow), the
+  bell's and the room's wakes, and the map's spawn.
+- Carried from round 14: the torch at the shaft; the Drafty Room lit and the
+  machine; the cave-ins; the new words; the egg given to the thief;
+  DIAGNOSE; the Grating Room and the key from below; the grue in play; the
+  ghost; the tree's drop; the egg broken; the canyon; the slide as the way
+  home.

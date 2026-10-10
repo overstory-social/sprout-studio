@@ -1,5 +1,5 @@
 {
-  "about": "Round 8's corrections at the Altar: the hole answers `go down`, `jump into` and `go through` it as its way down does, refusing the coffin and sighing otherwise; with the torch and the lamp both in hand, a load too heavy names the lamp, the one a visitor can spare; the candles put out say the room is really dark only when no other light is left.",
+  "about": "Round 8's corrections at the Altar: the hole answers `go down`, `jump into` and `go through` it as its way down does, refusing the coffin; with the torch and the lamp both in hand, a load too heavy names the lamp, the one a visitor can spare; the candles put out say the room is really dark only when no other light is left. Since v8 the hole, without the coffin, is the way down to the Cave.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -226,8 +226,7 @@
       { "reader": "Marta", "kind": "said", "words": "You haven't a prayer of getting the coffin down there." }
     ] },
     { "as": "Marta", "type": "go through the hole", "expect": [
-      { "level": "info", "text": "step: underground_caverns.through" },
-      { "reader": "Marta", "kind": "said", "words": "You haven't a prayer of getting the coffin down there." }
+      { "reader": "Marta", "kind": "refused", "words": "You haven't a prayer of getting the coffin down there." }
     ] },
     { "as": "Marta", "type": "drop coffin", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
@@ -253,9 +252,6 @@
     { "as": "Marta", "type": "drop coffin", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
-    { "as": "Marta", "type": "climb down the hole", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You lower your legs into the hole, and a cold draught comes up it to meet them, smelling of old smoke and carrying a sound like a great many people sighing at once, a very long way down. You decide that whatever is down there has waited this long and can wait a little longer." }
-    ] },
     { "as": "Marta", "type": "take lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
@@ -275,6 +271,19 @@
     ] },
     { "as": "Marta", "type": "turn off candles", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The flame is extinguished. It's really dark in here...." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Temple" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Altar" }
+    ] },
+    { "as": "Marta", "type": "climb down the hole", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cave" },
+      { "reader": "Marta", "kind": "described", "words": "This is a tiny cave with entrances west and north, and a dark, forbidding staircase leading down." }
     ] }
   ]
 }

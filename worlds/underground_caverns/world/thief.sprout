@@ -45,6 +45,7 @@ import {dam_room, dam_lobby, maintenance_room} from 'dam'
 import {sandy_cave} from 'river'
 import {narrow_corridor, mirror_room_2, winding_passage, tiny_cave, mirror_room_1, twisting_passage, small_cave, cold_passage} from 'mirror'
 import {slide_room, mine_entrance, squeaky_room, shaft_room, smelly_room, mine_1, mine_2, mine_3, mine_4, ladder_top, ladder_bottom, coal_dead_end, machine_room} from 'mine'
+import {entrance_to_hades, land_of_the_dead} from 'hades'
 
 message :disgorge with integer
 message :unloaded with integer
@@ -562,7 +563,7 @@ kind Thief is Thing, sprout.Actor {
         // On to the next room, unseen, unless something here keeps him.
         if (ph == 1 && !self.get(:shown) && !self.get(:stay)) {
           each s: Stiletto in from { move s to self }
-          if (from.get(:tour) >= 68 || from.get(:tour) == 0) { self.set(:next, 1) }
+          if (from.get(:tour) >= 70 || from.get(:tour) == 0) { self.set(:next, 1) }
           else { self.set(:next, from.get(:tour) + 1) }
           self.set(:phase, 2)
           self.set(:announced, false)
@@ -650,6 +651,8 @@ kind Thief is Thing, sprout.Actor {
       } else if (self.get(:next) == 66) { move self to ladder_bottom
       } else if (self.get(:next) == 67) { move self to coal_dead_end
       } else if (self.get(:next) == 68) { move self to machine_room
+      } else if (self.get(:next) == 69) { move self to entrance_to_hades
+      } else if (self.get(:next) == 70) { move self to land_of_the_dead
       }
     }
     send underground_caverns :close_gate

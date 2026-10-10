@@ -1,5 +1,5 @@
 {
-  "about": "The Tiny Cave (v7; CAVE2-ROOM): east of Mirror Room 2, the dark stairs down to Hades are closed in-world, with the draught and the voices coming up them. With the altar's candles burning in hand, the draught blows them out half the time a visitor comes in (four times in five once the mirror is broken); with no other light, it is now completely dark. The arrival is described as the turn leaves it, so already dark (friction 116). The slab across the stairs and its chalked notice can be looked at and read, and not moved.",
+  "about": "The Tiny Cave (v7; CAVE2-ROOM): east of Mirror Room 2, the dark stairs go down to the Entrance to Hades (v8), with the draught and the voices coming up them, and back up again; the hole from the Altar comes down through its ceiling, out of reach. With the altar's candles burning in hand, the draught blows them out half the time a visitor comes in (four times in five once the mirror is broken); with no other light, it is now completely dark. The arrival is described as the turn leaves it, so already dark (friction 116). The slab that closed the stairs until v8 is gone.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -198,25 +198,26 @@
       { "reader": "Marta", "kind": "said", "words": "Voices, a great many of them, far below, murmuring. You cannot make out the words, which is probably a kindness." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The staircase goes down a long way into a darkness that is darker than the dark, and out of it come a cold draught, a smell of old stone, and voices, a great many of them, all murmuring at once and none of them about anything good. Across the third step somebody has laid a slab of rock, and on it, chalked in a neat hand, CLOSED UNTIL FURTHER NOTICE. Something on the far side of the notice laughs. You decide to take the notice at its word." }
+      { "reader": "Marta", "kind": "described", "words": "Entrance to Hades" },
+      { "reader": "Marta", "kind": "described", "words": "You are outside a large gateway, on which is inscribed" },
+      { "reader": "Marta", "kind": "described", "words": "Abandon every hope all ye who enter here!" },
+      { "reader": "Marta", "kind": "described", "words": "The gate is open; through it you can see a desolation, with a pile of mangled bodies in one corner. Thousands of voices, lamenting some hideous fate, can be heard." },
+      { "reader": "Marta", "kind": "described", "words": "The way through the gate is barred by evil spirits, who jeer at your attempts to pass." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cave" }
     ] },
     { "as": "Marta", "type": "climb down stairs", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The staircase goes down a long way into a darkness that is darker than the dark, and out of it come a cold draught, a smell of old stone, and voices, a great many of them, all murmuring at once and none of them about anything good. Across the third step somebody has laid a slab of rock, and on it, chalked in a neat hand, CLOSED UNTIL FURTHER NOTICE. Something on the far side of the notice laughs. You decide to take the notice at its word." }
+      { "reader": "Marta", "kind": "described", "words": "Entrance to Hades" }
+    ] },
+    { "as": "Marta", "type": "climb up stairs", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cave" }
+    ] },
+    { "as": "Marta", "type": "x hole", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "High in the ceiling is a small round hole, the bottom of the one in the Altar's floor. Whatever comes down it comes down to stay: it is well out of reach, and the walls below it are smooth." }
     ] },
     { "as": "Marta", "type": "x slab", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Three steps down, a slab of grey rock lies across the staircase from wall to wall, as neatly as if it had been measured for it, which it has. On it, chalked in a neat hand, is a notice. The chalk is fresh. Somebody keeps it fresh." }
-    ] },
-    { "as": "Marta", "type": "read notice", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "\"CLOSED UNTIL FURTHER NOTICE.\" Under it, smaller and in the same hand: \"This means you.\"" }
-    ] },
-    { "as": "Marta", "type": "move the slab", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The slab lies across the third step down, and to reach it you would have to go down the stairs, which are closed. It says so on the slab." }
-    ] },
-    { "as": "Marta", "type": "take slab", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The slab lies across the third step down, and to reach it you would have to go down the stairs, which are closed. It says so on the slab." }
-    ] },
-    { "as": "Marta", "type": "look under slab", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Under the slab are the rest of the stairs, and under them the voices, and you are not going to look any closer than that." }
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Winding Passage" },

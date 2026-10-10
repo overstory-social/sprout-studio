@@ -1,0 +1,157 @@
+{
+  "about": "Death as a spirit (JIGS-UP, DEAD-FUNCTION, DOME-ROOM-FCN, V-PRAY): having seen the Altar, a visitor who dies (here by desecrating the bodies at the gates of Hell, BODY-FUNCTION) wakes before the gates of Hell, the spirits jeering, the objects of the dungeon indistinct; a spirit has no possessions, takes nothing, opens nothing, attacks in vain, needs no light, cannot think of its score, may wait an eternity, and cannot pass the gate; it walks, and sees in the dark by no light; the Dome draws it over the railing and down; at the Altar its prayer is answered with life again, deep in the woods, ten points the poorer.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "take lamp" },
+    { "as": "Marta", "type": "take sword" },
+    { "as": "Marta", "type": "turn on lamp" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "take rope" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "move rug" },
+    { "as": "Marta", "type": "open trap door" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "n" },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword" },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll" },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "se" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "tie rope to railing" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "break bodies", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The voice of the guardian of the dungeon booms out from the darkness, \"Your disrespect costs you your life!\" and places your head on a sharp pole." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "As you take your last breath, you feel relieved of your burdens. The feeling passes as you find yourself before the gates of Hell, where the spirits jeer at you and deny you entry. Your senses are disturbed. The objects in the dungeon appear indistinct, bleached of color, even unreal." },
+      { "reader": "Marta", "kind": "told", "words": "Your belongings, such as they were, have not come with you. The plain things are strewn about the forest and the fields around the house, anything of value has rolled into some dark corner in or under it, and somebody tidy has put the lamp back in the living room." },
+      { "reader": "Marta", "kind": "described", "words": "Entrance to Hades" }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The room looks strange and unearthly and objects appear indistinct." },
+      { "reader": "Marta", "kind": "described", "words": "Entrance to Hades" },
+      { "reader": "Marta", "kind": "described", "words": "You are outside a large gateway, on which is inscribed" },
+      { "reader": "Marta", "kind": "described", "words": "Abandon every hope all ye who enter here!" },
+      { "reader": "Marta", "kind": "described", "words": "The gate is open; through it you can see a desolation, with a pile of mangled bodies in one corner. Thousands of voices, lamenting some hideous fate, can be heard." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You have no possessions." }
+    ] },
+    { "as": "Marta", "type": "x gate", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't even do that." }
+    ] },
+    { "as": "Marta", "type": "take bodies", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Your hand passes through its object." }
+    ] },
+    { "as": "Marta", "type": "open gate", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Even such an action is beyond your capabilities." }
+    ] },
+    { "as": "Marta", "type": "attack spirits", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "All such attacks are vain in your condition." }
+    ] },
+    { "as": "Marta", "type": "light lamp", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Might as well. You've got an eternity." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You're dead! How can you think of your score?" }
+    ] },
+    { "as": "Marta", "type": "diagnose", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You are dead." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "Some invisible force prevents you from passing through the gate." }
+    ] },
+    { "as": "Marta", "type": "pray", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your prayers are not heard." }
+    ] },
+    { "as": "Marta", "type": "jump", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't even do that." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cave" },
+      { "reader": "Marta", "kind": "described", "words": "This is a tiny cave with entrances west and north, and a dark, forbidding staircase leading down." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The room looks strange and unearthly and objects appear indistinct." },
+      { "reader": "Marta", "kind": "said", "words": "Although there is no light, the room seems dimly illuminated." },
+      { "reader": "Marta", "kind": "described", "words": "Cave" },
+      { "reader": "Marta", "kind": "described", "words": "This is a tiny cave with entrances west and north, and a dark, forbidding staircase leading down." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Mirror Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large square room with tall ceilings. On the south wall is an enormous mirror which fills the entire wall. There are exits on the other three sides of the room." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Narrow Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a long and narrow corridor where a long north-south passageway briefly narrows even further." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Engravings Cave" },
+      { "reader": "Marta", "kind": "described", "words": "You have entered a low cave with passages leading northwest and east." },
+      { "reader": "Marta", "kind": "described", "words": "There are old engravings on the walls here." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "As you enter the dome you feel a strong pull as if from a wind drawing you over the railing and down." },
+      { "reader": "Marta", "kind": "described", "words": "Torch Room" },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the pedestal is a flaming torch, made of ivory." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The room looks strange and unearthly and objects appear indistinct." },
+      { "reader": "Marta", "kind": "described", "words": "Torch Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room with a prominent doorway leading to a down staircase. Above you is a large dome. Up around the edge of the dome (20 feet up) is a wooden railing. In the center of the room sits a white marble pedestal." },
+      { "reader": "Marta", "kind": "described", "words": "A piece of rope descends from the railing above, ending some five feet above your head." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the pedestal is a flaming torch, made of ivory." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Temple" },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass bell here." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Altar" },
+      { "reader": "Marta", "kind": "described", "words": "On the altar is a large black book, open to page 569." },
+      { "reader": "Marta", "kind": "described", "words": "On the two ends of the altar are burning candles." }
+    ] },
+    { "as": "Marta", "type": "pray", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "From the distance the sound of a lone trumpet is heard. The room becomes very bright and you feel disembodied. In a moment, the brightness fades and you find yourself rising as if from a long sleep, deep in the woods. In the distance you can faintly hear a songbird and the sounds of the forest." },
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 30 (total of 350 points), in 44 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are empty-handed." }
+    ] }
+  ]
+}

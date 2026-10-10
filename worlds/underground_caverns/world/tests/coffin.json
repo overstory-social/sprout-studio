@@ -1,5 +1,5 @@
 {
-  "about": "The gold coffin and the sceptre in it: down the rope, past the Temple to the Egyptian Room; the coffin opens on the sceptre, a treasure that shows its colors when waved; the coffin is a treasure too, and weighs 55 of the 100 a visitor can carry, so the sword stays behind; the hole in the Altar's floor refuses the coffin, as Zork's COFFIN-CURE does, and refuses the visitor without it in its own words.",
+  "about": "The gold coffin and the sceptre in it: down the rope, past the Temple to the Egyptian Room; the coffin opens on the sceptre, a treasure that shows its colors when waved; the coffin is a treasure too, and weighs 55 of the 100 a visitor can carry, so the sword stays behind; the hole in the Altar's floor refuses the coffin, as Zork's COFFIN-CURE does, and jumping there with it is a fall (V-LEAP), after which, the Altar having been seen, the visitor is a spirit before the gates of Hell.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -154,28 +154,18 @@
       { "reader": "Marta", "kind": "described", "words": "On the two ends of the altar are burning candles." }
     ] },
     { "as": "Marta", "type": "x hole", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "The hole in the corner of the floor is small and round and goes straight down into darkness. A cold draught comes up out of it, and with it a faint sound, like a great many people sighing a very long way off. You probably could not get back up it." }
+      { "reader": "Marta", "kind": "described", "words": "The hole in the corner of the floor is small and round and goes straight down into darkness. A cold draught comes up out of it, and with it a faint sound, like a great many people sighing a very long way off. It is wide enough for a body, though not for much of a coffin, and you probably could not get back up it." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "You haven't a prayer of getting the coffin down there." }
-    ] },
-    { "as": "Marta", "type": "drop coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Dropped." }
-    ] },
-    { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "You lower your legs into the hole, and a cold draught comes up it to meet them, smelling of old smoke and carrying a sound like a great many people sighing at once, a very long way down. You decide that whatever is down there has waited this long and can wait a little longer." }
-    ] },
-    { "as": "Marta", "type": "take coffin", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "jump", "expect": [
       { "reader": "Marta", "kind": "said", "words": "This was not a very safe place to try jumping." },
       { "reader": "Marta", "kind": "said", "words": "You should have looked before you leaped." },
       { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
-      { "reader": "Marta", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Marta", "kind": "told", "words": "As you take your last breath, you feel relieved of your burdens. The feeling passes as you find yourself before the gates of Hell, where the spirits jeer at you and deny you entry. Your senses are disturbed. The objects in the dungeon appear indistinct, bleached of color, even unreal." },
       { "reader": "Marta", "kind": "told", "words": "Your belongings, such as they were, have not come with you. The plain things are strewn about the forest and the fields around the house, anything of value has rolled into some dark corner in or under it, and somebody tidy has put the lamp back in the living room." },
-      { "reader": "Marta", "kind": "described", "words": "Forest" },
-      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+      { "reader": "Marta", "kind": "described", "words": "Entrance to Hades" }
     ] }
   ]
 }

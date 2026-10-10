@@ -10,7 +10,7 @@ import {ask} from 'sprout'
 import {Light} from 'lamp'
 import {Weapon} from 'items'
 import {Thief} from 'thief'
-import {lower, rub_with, board, disembark, launch, land, inflate, deflate, plug, turn_with, oil, take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die, :pinch, :far_voice} from 'verbs'
+import {lower, rub_with, board, disembark, launch, land, inflate, deflate, plug, turn_with, oil, take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die, :pinch, :far_voice, :sink} from 'verbs'
 import {Room} from 'room'
 import {Abyss} from 'east'
 import {River} from 'river'
@@ -50,10 +50,15 @@ kind Thing {
     self.set(:touched, true)
     self.set(:falling, false)
     self.set(:sealed, false)
+    self.set(:sinking, false)
     // Into a chasm or the river: gone for good.
     if (to.is(Abyss) || to.is(River)) { finally destroy self }
   }
   on :sealed (from, value) { self.set(:sealed, value) }
+  // Put through the grating, it falls to the Grating Room (the putter's
+  // own errand through the world's gate takes it there).
+  :sinking false
+  on :sink { self.set(:sinking, true) }
   // Burned, vaporized, or dropped into the chasm: gone for good, as Zork's
   // REMOVE-CAREFULLY takes it.
   on :consume { finally destroy self }

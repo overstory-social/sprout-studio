@@ -1,4 +1,4 @@
-// Zork I: The Great Underground Empire, as far as it is built. The world
+// Zork I: The Great Underground Empire, the whole of it. The world
 // keeps Zork's narrator for the lines the engine speaks for itself, and a
 // gate: a room cannot reach another, so where Zork moves a body or a thing
 // across the map at a stroke (dying, falling from the tree), whoever needs
@@ -9,7 +9,7 @@ import * as sprout from 'sprout'
 import {Person} from 'person'
 import {go} from 'sprout'
 import {west_of_house} from 'above_ground'
-import {:shatter, :open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone, :unbar, :grate_unlock, :grate_open, :grate_revealed, :dome_rope, :thief_start, :summon, :far_voice, :magic, :cyclops_gone, :tide, :gate_flag, :rainbow, :flooded} from 'verbs'
+import {:shatter, :open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone, :unbar, :grate_unlock, :grate_open, :grate_revealed, :dome_rope, :thief_start, :summon, :far_voice, :magic, :cyclops_gone, :tide, :gate_flag, :rainbow, :flooded, :won} from 'verbs'
 
 world underground_caverns is sprout.World {
   visitors are Person
@@ -42,6 +42,8 @@ world underground_caverns is sprout.World {
   pass :flooded (true)
   // The mirror broken, heard in both Mirror Rooms (v7).
   pass :shatter (true)
+  // The score at 350: the trophy case and West of House hear it (v8).
+  pass :won (true)
 
   on :open_gate (from) {
     self.set(:gate, true)

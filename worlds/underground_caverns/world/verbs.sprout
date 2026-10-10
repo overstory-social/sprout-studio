@@ -5,6 +5,7 @@ import {Box} from 'box'
 import * as sprout from 'sprout'
 import {inventory} from 'sprout'
 import {Portable} from 'thing'
+import {Grating} from 'grating'
 
 // `take` and `drop` take several things at once, as Zork's do: `take lamp
 // and sword`, `take all`. Each is answered with its name before it, as
@@ -36,6 +37,14 @@ verb put {
   "place [item] in [container]"  "place [item] on [container]"
   "insert [item] in [container]"  "insert [item] into [container]"
   "stuff [item] in [container]"
+}
+// Zork's PUT into the grating (GRATE-FUNCTION): a small thing goes
+// through the bars into the dark below.
+verb put_through {
+  role item carried
+  role target: Grating
+  "put [item] in [target]"  "put [item] into [target]"  "put [item] through [target]"  "drop [item] through [target]"
+  "drop [item] in [target]"  "drop [item] into [target]"  "push [item] through [target]"  "throw [item] through [target]"
 }
 // Zork's DROP into something is its PUT.
 intent drop_in {
@@ -285,6 +294,17 @@ verb swim { "swim"  "bathe"  "wade" }
 verb echo { "echo"  "say echo"  "shout echo"  "yell echo" }
 // Zork's RING, for the Temple's bell.
 verb ring { role target  role tool  "ring [target]"  "ring [target] with [tool]" }
+// Zork's EXORCISE, with its BANISH, CAST, DRIVE and BEGONE: only the
+// ceremony itself has any effect, and at the gates of Hell that is what the
+// visitor is told to perform.
+verb exorcise {
+  role target
+  "exorcise [target]"  "banish [target]"  "cast out [target]"  "drive out [target]"
+  "drive away [target]"  "exorcise out [target]"  "exorcise away [target]"  "begone [target]"
+}
+// EXORCISE with nothing named: Zork would ask what; the parser here cannot
+// ask, so the visitor is answered as if the spirits were named.
+verb exorcise_here { "exorcise"  "perform exorcism"  "perform an exorcism"  "perform the exorcism"  "perform ceremony"  "perform the ceremony"  "perform the rite"  "begone" }
 // Zork's UNTIE, for the rope.
 verb untie {
   role target
@@ -466,7 +486,7 @@ intent open_with {
 }
 
 // Where somebody may be sent by the world's gate: see the world's `:gate`.
-enum Dest { ns_passage, forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange, damp_cave, round_room, canyon_view, ledge, canyon_bottom, falls, rainbow_end, on_rainbow, atlantis, dam_room, dam_base, bat, mirror_1, mirror_2, small_cave, smelly_room, gas_room, ladder_top, ladder_bottom, mine_1, mine_2, mine_3, mine_4, squeaky_room, mine_entrance }
+enum Dest { grate_drop, tiny_cave, hades, lld, spirit, risen, barrow_in, ns_passage, forest_1, path, up_a_tree, kitchen, attic, cellar, living_room, living_dead, west_side, north_side, behind, south_side, banish, prayed, torch_room, ew_passage, chasm, loud_room, deep_canyon, temple, egypt, treasure, cyclops, strange, damp_cave, round_room, canyon_view, ledge, canyon_bottom, falls, rainbow_end, on_rainbow, atlantis, dam_room, dam_base, bat, mirror_1, mirror_2, small_cave, smelly_room, gas_room, ladder_top, ladder_bottom, mine_1, mine_2, mine_3, mine_4, squeaky_room, mine_entrance }
 
 // Where on the water a boat is, or which shore it may put out from (v6):
 // the rooms the Frigid River, the stream and the reservoir touch, and
@@ -613,3 +633,27 @@ message :boom
 // out by it.
 message :gust
 message :blow_out
+// Hades (v8). The bell rung at the gates of Hell (XB), the candles lit in
+// hand while the spirits reel (XC), and the black book read while they
+// cower: the Entrance to Hades keeps the ceremony's clock.
+message :rite
+message :rite_lit
+message :rite_read
+// The Entrance to Hades, counting the dead who stand in it.
+message :reckon
+// The bell, red hot, cooled by water poured on it.
+message :cool
+// The brass lantern's battery, burning down (1 a bit dimmer, 2 definitely
+// dimmer, 3 nearly out, 4 burned out).
+message :lamp_age with integer
+// A move made with the brass lantern lit in hand.
+message :burn_tick
+// The brass lantern thrown and smashed.
+message :shatter_lamp
+// The score at 350 (Zork's WON-FLAG): the map in the trophy case, and the
+// secret path from West of House to the Stone Barrow.
+message :won
+// The barrow entered: the game is over, and the score is read (FINISH).
+message :finish
+// Something put through the grating, on its way down to the Grating Room.
+message :sink

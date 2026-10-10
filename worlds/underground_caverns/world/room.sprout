@@ -147,7 +147,7 @@ kind Room is sprout.Place {
 }
 
 kind DarkRoom is Room {
-  grammar { lit (self.get(:daylight) || self.sees(sprout.LightSource, :lit)) }
+  grammar { lit (self.get(:daylight) || self.get(:haunted) || self.sees(sprout.LightSource, :lit)) }
 
   // Lit by daylight from above (the Grating Room, while the grating is
   // open), by a lamp on its floor, or by one in somebody's hands: `:alight`.
@@ -155,6 +155,8 @@ kind DarkRoom is Room {
   :floor_lit false
   :bearers 0 min 0 max 50
   :alight false
+  // One of the dead is here, who needs no light (Zork's ALWAYS-LIT).
+  :haunted false
 
   on :entered (item, from) { send self :relight }
   on :left (item, to)      { send self :relight }
@@ -171,7 +173,9 @@ kind DarkRoom is Room {
       if (b.get(:open) || b.get(:transparent)) { each l: Light in b { if (l.get(:lit)) { self.set(:floor_lit, true) } } }
     }
     each a: Adventurer in self { if (a.get(:light) > 0) { self.adjust(:bearers, 1) } }
-    self.set(:alight, self.get(:floor_lit) || self.get(:bearers) > 0)
+    self.set(:haunted, false)
+    each a: Adventurer in self { if (a.get(:dead)) { self.set(:haunted, true) } }
+    self.set(:alight, self.get(:floor_lit) || self.get(:bearers) > 0 || self.get(:haunted))
     // Each visitor is told whether the room would be lit without their own.
     each a: Adventurer in self {
       if (a.get(:light) > 0) { send a :room_lit with self.get(:floor_lit) || self.get(:bearers) > 1 }

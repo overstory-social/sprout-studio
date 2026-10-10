@@ -71,7 +71,8 @@ object cyclops_room is CyclopsRoom in underground_caverns {
   // Coming in on a cyclops already roused, his clock starts again
   // (CYCLOPS-ROOM-FCN's M-ENTER).
   on :entered (item, from) {
-    if (item.is(Adventurer)) {
+    // I-CYCLOPS leaves the dead alone.
+    if (item.is(Adventurer) && !item.get(:dead)) {
       if (self.get(:cstate) == 1 || self.get(:cstate) == 2) { each c: Cyclops in self { send c :clock } }
     }
   }
@@ -320,7 +321,7 @@ kind Cyclops is Thing, sprout.Actor {
           if (self.get(:wrath) > 5 || self.get(:wrath) < -5) {
             self.set(:clock, false)
             tell "The cyclops, tired of all of your games and trickery, grabs you firmly. As he licks his chops, he says \"Mmm. Just like Mom used to make 'em.\" It's nice to be appreciated."
-            each a: Adventurer in underground_caverns.cyclops_room { send a :die }
+            each a: Adventurer in underground_caverns.cyclops_room { if (!a.get(:dead)) { send a :die } }
           } else {
             if (self.get(:wrath) < 0) { self.adjust(:wrath, -1) } else { self.adjust(:wrath, 1) }
             tell mad_line

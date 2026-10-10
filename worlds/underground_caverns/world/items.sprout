@@ -7,7 +7,7 @@ import {TrophyCase} from 'house'
 import {Troll} from 'troll'
 import {examine} from 'sprout'
 import {Box} from 'box'
-import {Torch} from 'temple'
+import {Torch, Bell} from 'temple'
 
 // Something sharp, which the magic boat does not agree with: Zork's
 // WEAPONBIT, and the sceptre's point (RBOAT-FUNCTION).
@@ -85,6 +85,8 @@ kind Readable is Portable {
       if (actor.is(Adventurer)) {
         if (!actor.holds(self) && actor.get(:load) + self.get(:size) > 100) { refuse "(Taking the {self.short} first) {actor.too_heavy}" }
       }
+      // Behind a shut glass lid (the map in the trophy case).
+      if (self.get(:sealed)) { refuse "You can't reach something that's inside a closed container." }
     }
     do {
       if (!actor.holds(self)) {
@@ -177,6 +179,13 @@ kind Water is Thing {
     permit { if (self.get(:sealed)) { refuse stoppered } }
     do {
       if (target.is(Torch)) { say "The water evaporates before it gets close." }
+      // HOT-BELL-F's POUR-ON, and I-XBH at once.
+      else if (target.is(Bell)) {
+        if (target.get(:hot)) {
+          say "The water cools the bell and is evaporated."
+          say "The bell appears to have cooled down."
+        } else { say "The water spills over the {target.short}, to the floor, and evaporates." }
+      }
       else if (target.is(Thing)) { say "The water spills over the {target.short}, to the floor, and evaporates." }
       else { say "The water spills to the floor and evaporates." }
       destroy self

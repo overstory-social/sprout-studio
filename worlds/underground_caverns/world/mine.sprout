@@ -35,6 +35,8 @@ message :run
 // narrow for anything heavier than a clove of garlic (Zork's EMPTY-HANDED,
 // which the visitor's own `depart` reads: adventurer.sprout).
 kind Crawlspace { }
+// The Drafty Room, where the dead do not go (DEAD-FUNCTION).
+kind DraftyEnd { }
 // Where a flame in hand is the end of you (BOOM-ROOM).
 kind GasRoom { }
 // The Shaft Room, where lowering the basket can take the light with it.
@@ -633,7 +635,7 @@ kind Draft is Scenery {
   describe { text "A strong, cold draft blows steadily out of the west, as if the rock itself were breathing out." }
 }
 
-object lower_shaft is DarkRoom, Crawlspace in underground_caverns {
+object lower_shaft is DarkRoom, Crawlspace, DraftyEnd in underground_caverns {
   :tour 0
   // LIGHT-SHAFT: thirteen points for seeing this room lit, once.
   :shaft_points 13 min 0 max 13

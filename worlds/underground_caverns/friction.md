@@ -502,7 +502,9 @@ entries' first text is kept as it was written against 61f02bb.
   Empire keeps your place.
 - **Spec:** The host contract › Admission and identity; Actors and
   visitors › Visitors come and go.
-- **Status: open.**
+- **Status: open.** Since v8 the end of the game is a place too, Inside the
+  Barrow, and the end's refusal stands on every verb after it, and after a
+  third death (128).
 
 ### 26. A declared thing cannot be eaten without a warning
 
@@ -2867,6 +2869,251 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
 - **Status: open,** low: an adverb the parser could drop, as it drops
   articles, would carry the first.
 
+## Found before round 15: Hades, the spirits and the end
+
+v8 is the rest of Zork I: the Entrance to Hades, the exorcism, the Land of
+the Dead and the crystal skull, death as a spirit, the ancient map, the
+Stone Barrow and the end, and the small mechanics left over (the lamp's
+battery and its smashing, the bottle filled and broken, things put through
+the grating). What the language let me say plainly: the rooms and their
+gate and spirits, an exit that opens when a room's flag is set (`in` and
+`south` past the gate), the skull and the bodies, the map spawned in the
+case, the secret path as an exit whose `when` reads the room, the
+barrow's door and its last room, the spirit's prayer through the world's
+gate. What it would not, below. The open issues are named where they would
+have helped: sprout#477 (carried things speaking), #478 (weight), #481 (an
+NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
+
+### 121. The exorcism's clock, in moves, kept in minutes
+
+- **Wanted:** LLD-ROOM to the move: the bell rung starts I-XB, six moves;
+  the candles lit in hand within them start I-XC, three moves; the book
+  read within those ends it; I-XBH cools the bell in twenty moves; and
+  M-END checks, after every command in the room, whether the candles are
+  lit in hand while the spirits reel.
+- **Found:** three things. (a) No turns, only time (24): the clocks are
+  wakes on the Entrance to Hades and on the bell, at the host's half
+  minute a move: three minutes, ninety seconds, ten minutes. In `sprout
+  test` time moves only on an `advance`, so a test's moves take no time at
+  all and its clocks must be advanced by hand; under a host whose minute is
+  not thirty seconds a move, the ceremony is easier or harder than Zork's.
+  (b) A wake's delay is a literal (Time › Wakes: "`n` a whole number
+  written out"), so no clock can be set from a computed number: the
+  battery could not have woken at its next threshold (130). (c) There is
+  no M-END: nothing runs after every command in a room. The candles become
+  lit in hand by being lit there (`burn`, `lamp_on` with a burning match)
+  or by being taken up lit (`take`), and the visitor's own part of each of
+  those tells the room; any other way into the hand (the thief handing
+  them back, say) is not noticed.
+- **Wrote instead:** that. The room keeps `:phase` (0 jeering, 1 reeling,
+  2 cowering) and one wake at a time; its wake says "The tension of this
+  ceremony is broken..." to whoever is in it, as I-XB does only where
+  HERE is the Entrance.
+- **Spec:** Time › Wakes; The runtime › Turns.
+- **Status: open,** with 24.
+
+### 122. One bell, two objects
+
+- **Wanted:** Zork's ring at the gate REMOVEs the BELL and MOVEs the
+  HOT-BELL here: a different object, "red hot brass bell", with HOT-BELL-F
+  (not to be taken, too hot to ring, what burns burned against it, water
+  cools it), until I-XBH swaps them back.
+- **Found:** a declared object cannot be hidden and shown again (#482), and
+  names are fixed (15): one object cannot answer to "hot" only while it
+  is.
+- **Wrote instead:** one `Bell` with `:hot`, its short name, room line and
+  description following it; its nouns and adjectives include "hot" and
+  "red" always, so `x red bell` finds the cool bell too.
+- **Spec:** Names › Addressing and display; Destroying; Spawning.
+- **Status: open,** with #482.
+
+### 123. What is in a hand cannot reach the room, again
+
+- **Wanted:** BELL-F and LLD-ROOM: the bell in hand, rung, falls to the
+  floor and starts the clock; the candles in hand fall and go out; the
+  match lights the candles in hand and the room notices; the book read in
+  hand banishes the spirits; the water poured from the bottle in hand
+  cools the bell on the floor.
+- **Found:** each of these is a thing in the visitor's hand acting on the
+  room around it or on something on its floor, and a hand passes nothing
+  (88, #477): `send here` from a held thing does nothing, silently, and
+  `move self to here` is out of its range.
+- **Wrote instead:** the visitor's own part of each verb, which runs first
+  and reaches both its hands and its place, does the moving and the
+  telling (`ring`, `take`, `burn`, `lamp_on`, `read`, `pour_on`,
+  `rub_with`); the thing's own part says its line. Eight verbs' worth of
+  the exorcism live in `adventurer.sprout` rather than with the bell, the
+  candles and the book.
+- **Spec:** Range; Verbs › The two passes.
+- **Status: open,** with 88 and #477.
+
+### 124. Spirits that nothing reaches but a look
+
+- **Wanted:** GHOSTS-F: every verb aimed at the spirits answered "You seem
+  unable to interact with these spirits.", but TELL ("The spirits jeer
+  loudly and ignore you."), EXORCISE and ATTACK; and `examine` with a
+  description of their own, which the brief asks of every named thing.
+- **Found:** a wildcard (`as target for any`) refuses every verb, `examine`
+  among them, and cannot know which verb it is refusing; there is no "every
+  verb but these".
+- **Wrote instead:** the `Ghosts` kind leaves out Thing's part of 56 verbs
+  and writes its own for each (generated, one line apiece), and gives
+  `examine` a description.
+- **Spec:** Verbs › Roles compose (wildcards).
+- **Status: open:** a wildcard that may name the verbs it does not cover,
+  or that may read which verb it is in, would make this one line.
+
+### 125. The dead, a routine run before every verb
+
+- **Wanted:** DEAD-FUNCTION, Zork's WINNER action while the adventurer is
+  a spirit: one routine, asked first about every command, that answers
+  TAKE "Your hand passes through its object.", ATTACK "All such attacks are
+  vain in your condition.", OPEN and a dozen more "Even such an action is
+  beyond your capabilities.", WAIT "Might as well. You've got an eternity.",
+  SCORE, DIAGNOSE, INVENTORY each its own line, PRAY at the Altar the
+  resurrection, WALK and LOOK through (LOOK with a prefix), and everything
+  else "You can't even do that."
+- **Found:** `as actor for any` may only permit, and cannot know which
+  verb it permits, so it cannot give different verbs different answers, and
+  any refusal of its would come before the specific ones.
+- **Wrote instead:** a permit on each of the visitor's ~100 verbs (generated
+  from a table), with DEAD-FUNCTION's line for that verb, and the end's
+  line (128) on the same permits. Darkness: ALWAYS-LIT is the rooms' own
+  `:haunted`, set in their `:relight` when one of the dead stands in them,
+  and read by `lit`; the grue and "You have moved into a dark place." read
+  the visitor's `:dead`. TROLL-FLAG is the Troll Room's flag, set on the
+  way to the gates and cleared on the way back if the troll is on his feet;
+  I-FIGHT, THIEF-VS-ADVENTURER, I-CYCLOPS and the bat's swoop leave the
+  dead alone by the visitor's own guards: its part as the target of
+  `attack` refuses (an NPC's refused act says nothing), and its `:rob`,
+  `:bats` and `:gas` pass over a spirit. A spirit sees no `examine` (Zork's
+  "You can't even do that." to EXAMINE too).
+- **Spec:** Verbs › The actor's own part; Roles compose (wildcards).
+- **Status: open:** a part that ran before every verb and could read
+  the verb's name (or a wildcard that could) would make DEAD-FUNCTION one
+  body again.
+
+### 126. A description that cannot ask who is reading it
+
+- **Wanted:** LLD-ROOM's M-LOOK: the spirits barring the gate are mentioned
+  unless they are gone or the one looking is dead.
+- **Found:** a room's `body` is rendered by `describe`, where `actor` is
+  bound, and also from handlers (`{from.full}` in the bat's and the gas's
+  arrivals, `{to.boat_view}` in the boat's `:moved`), where it is not; the
+  compiler refuses `actor` in the passage for the handler's sake, pointing
+  at the passage and naming `on :moved` without saying whose (here, the
+  boat's, in another file).
+- **Wrote instead:** the Entrance keeps `:shade`, counted on `:entered`
+  and `:left`, and the passage reads that.
+- **Spec:** Prose › Passages; Events › Receiving.
+- **Status: open,** small: the refusal could name the handler and the
+  chain of passages that reaches it.
+
+### 127. The map, made visible
+
+- **Wanted:** the MAP is IN the TROPHY-CASE from the start, INVISIBLE;
+  SCORE-UPD at 350 clears the flag, and it is there.
+- **Found:** a declared thing cannot be present and unseen (#482).
+- **Wrote instead:** the visitor's `changed :score` broadcasts `:won` at
+  350 (the world passes it), and the trophy case spawns the map in itself,
+  once. West of House hears it too, opens its secret path, and clears its
+  TOUCHBIT for each visitor (a per-visitor memory it writes as they next
+  come in).
+- **Spec:** Spawning; The world model › Objects.
+- **Status: open,** with #482.
+
+### 128. The end of the game
+
+- **Wanted:** STONE-BARROW-FCN prints "Inside the Barrow" and Zork's
+  closing lines, then FINISH: the score, and "Would you like to restart the
+  game from the beginning, restore a saved game position, or end this
+  session of the game?" The game is over.
+- **Found:** a game cannot end (25): a visitor cannot be sent away, and the
+  world goes on answering.
+- **Wrote instead:** Inside the Barrow is a place, its description Zork's
+  closing lines; arriving, the visitor reads the score, and from then on
+  every verb but those that look, read and count (`look`, `examine`,
+  `read`, `score`, `inventory`, `diagnose`, `quit` and the like) answers
+  "The door of the barrow has closed behind you, and the bridge ahead
+  belongs to another adventure. Your adventure in the Great Underground
+  Empire is over." The way back and the way over the bridge refuse in the
+  same voice. A third death ends the same way now, in the sink, and so does
+  a death while already dead.
+- **Spec:** Actors and visitors › Visitors come and go; The host contract.
+- **Status: open,** with 25.
+
+### 129. Every wake moves the dice of every later wake in a test
+
+- **Wanted:** I-LANTERN as Zork's clock: the lamp's battery spent a move at
+  a time while it is lit.
+- **Found:** given the lamp a wake a minute, every fight test failed: the
+  troll did not swing where he had swung. A test's dice follow the turn's
+  place in its step, not the turn's seed alone: a step that delivers two
+  wakes rolls differently for the second than for the first, so an object
+  that wakes and draws nothing still changes what every object after it
+  rolls in the same `advance`. Minimal: two objects waking each minute,
+  one drawing `random(1000)`; with the other one wound too, the drawn
+  number changes, though the other draws nothing. Deterministic, and
+  documented as the host's; but it means no world can add a clock without
+  re-seeding every test that advances time past it.
+- **Wrote instead:** the battery is counted by the bearer (130), with no
+  wake at all.
+- **Spec:** Chance › The seed; Time › Wakes.
+- **Status: open,** with 91.
+
+### 130. The lamp's battery
+
+- **Wanted:** I-LANTERN: 385 moves of light, lit or not in anyone's hand,
+  with "The lamp appears a bit dimmer." at 185 left, "definitely dimmer" at
+  85, "nearly out" at 15, and burned out after.
+- **Found:** no turns (24); a wake every move would move the dice (129); a
+  wake for the next threshold needs a computed delay, which a wake cannot
+  have (121); a held lamp cannot tell its holder (73).
+- **Wrote instead:** the visitor's `changed :moves` tells each lit Lamp in
+  its hands to spend a move; the lamp keeps `:life` in moves and, at each
+  threshold, broadcasts `:lamp_age`, which the visitor's pocket passes and
+  its holder tells itself, as the candles' burning is told. A lamp lit on a
+  floor, in a sack or in the thief's bag keeps its charge.
+- **Spec:** Time › Wakes; Range.
+- **Status: open,** with 24 and #477.
+
+### 131. One thing becoming another, again
+
+- **Wanted:** LANTERN's THROW: the lamp REMOVEd and BROKEN-LAMP MOVEd here;
+  BOTTLE-FUNCTION's THROW and MUNG: the bottle removed.
+- **Found:** as 114: a declared thing cannot be replaced by another of a
+  different kind, and destroying it is final and warned about.
+- **Wrote instead:** the thrower spawns a `BrokenLamp` where it lands and
+  the lamp destroys itself (one warning more); the bottle destroys itself,
+  and its water with it.
+- **Spec:** Spawning; Destroying.
+- **Status: open,** with 114 and #482.
+
+### 6, again: every move across the map is an errand
+
+- v8 adds these errands through the world's gate, each the visitor's own:
+  down the Altar's hole, down and up the Cave's stairs by name, through the
+  gate when it is open, the spirit's arrival at the gates of Hell and its
+  rising in the forest, into the barrow by its name, and a thing put
+  through the grating falling to the Grating Room. The Dome's pull on a
+  spirit is the Dome's `:entered` asking the spirit to travel.
+- **Status: open,** with 6.
+
+### 42, again: a way out that cannot ask who is going
+
+- The hole in the Altar's floor takes anyone but the bearer of the gold
+  coffin (COFFIN-CURE), and the Timber Room's passage west takes anyone
+  but a spirit (DEAD-FUNCTION): both are the visitor's own `depart`, since
+  an exit's `when` reads only its room.
+
+### 84, again: the thief's round
+
+- The thief's round is two rooms longer, the Entrance to Hades and the Land
+  of the Dead (Zork does not hold them sacred), so a whole round is 70
+  minutes; each is one more branch in his move through the world's gate.
+  The drained Reservoir is still not on it (#481 would let him walk it by
+  its exits).
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -3240,3 +3487,46 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
   with a look at his axe. Each costs a move where it does anything.
 - **Round 14: an empty TAKE ALL** says "It's not clear what you're
   referring to.", as Zork's parser does (friction 36, again).
+
+## Differences chosen in v8
+
+- **The two dead lands.** Zork's LAND-OF-LIVING-DEAD is the room south of
+  the gate ("Land of the Dead"), and the skeleton's ghost banishes
+  treasures there; that is now so. The third death's remains go, as before,
+  to a sealed place named for the line that sends them ("Your remains will
+  be installed in the Land of the Living Dead"), not to that room, so a
+  dead player is never in a room a living one can walk into.
+- **The exorcism's clock is the host's time:** six moves are three
+  minutes, three are ninety seconds, twenty are ten minutes (121).
+- **The ceremony is begun again** by a bell cooled with water and rung:
+  that restarts the reeling, and the cowering if it had begun; Zork's XC
+  would survive a second ring.
+- **EXORCISE alone,** and PERFORM THE CEREMONY, are answered as EXORCISE
+  SPIRITS is at the gate, and "What a bizarre concept!" elsewhere; Zork
+  asks what to exorcise.
+- **The spirits, examined,** have a description of their own; Zork says
+  "You seem unable to interact with these spirits." The gate, the
+  inscription, the desolation, the voices, the souls and the bodies are
+  described where Zork has only GATE-PSEUDO's line or nothing.
+- **The Cave has a hole in its ceiling,** the bottom of the Altar's, out of
+  reach; Zork's Tiny Cave does not mention it.
+- **A spirit's look** prefixes Zork's line on `look`, not on arriving, as
+  Zork's does; a spirit's `score` and `diagnose` refuse as Zork's do.
+- **The troll is let off guard for a spirit** only while he stands: Zork
+  clears TROLL-FLAG on the way back whenever the troll is in his room, out
+  cold or not.
+- **The end** reads the score and then refuses in its own words (128);
+  `look`, `examine`, `read`, `score`, `inventory`, `diagnose` and `quit` go
+  on answering, so the closing lines and the sign can be read again.
+- **The barrow's last room** has a door behind, a footbridge, a stream, a
+  cavern, a tunnel and a sign to examine; going back or over the bridge
+  refuses in the end's voice.
+- **West of House, after 350,** has a forest and a secret path to examine,
+  and the field mentions the path; Zork's room has only its own line.
+- **The battery** drains only in the bearer's hand (130).
+- **The bottle** fills wherever the river, the stream or the reservoir is
+  (Zork's GLOBAL-WATER: the Riverside and OnTheRiver rooms, and the magic
+  boat), the drained reservoir included, as in Zork.
+- **From below, the grating** answers that anything put through it would
+  come straight back down; Zork moves the thing to the Grating Room, which
+  is where it already is.
