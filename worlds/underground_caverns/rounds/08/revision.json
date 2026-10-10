@@ -1,0 +1,174 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The slice works as built. 145 is reachable in about 170 moves and a careful first-timer reaches about 120 in 250 turns. The recommendation is to keep it, so nothing changes in its shape."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "The added sentence was false. Zork's chimney wants the brass lamp, not just any light. Zork's rule stays. The overload line now names the lamp, and a visitor who has no lamp gets the chimney's own reason (a draught would put out a flame; it is a climb for a lamp)."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Four players asked to look closer and got the same paragraph back. The heaps are now scenery of their own with a closer line in Zork's dry voice. It says only that someone was here, and the thief pays it off in round 9. The cave-ins also answer to 'stones' and 'debris'. 'move the rocks in the south passage' still fails on its trailing words (friction 68, logged again)."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The pull comes from the sorting, which stays because it is the caretaker's thread. Curiosity now ends quickly at an answer. The heaps and the cave-ins share one Rubble kind, so move, push, pull, take, touch, kick, break, clear, dig, look under, climb over and go through all land on the roof still coming down. Search and look behind say what is there."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Zork prints the dark line only when the room is actually dark. The candles now count the other lights the way the lamp does: another lit light in hand, another bearer, or a lit light on the floor or in an open box."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Naming the weight works, but naming the torch, the light that never goes out, pointed the explorer the wrong way. With both the torch and the lamp in hand, the load now names the lamp, which is the one a visitor can spare down here. It hints at the trade without stating it."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The maze stays as dungeon.zil joins it. Giving a run a goal that leads to the grating ('find another way out of the maze') is the director's call, so it is recorded for the director in intent.md. There is no world change: making the grating easier would break Zork's map."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "The edges read as places and as jokes, as the intent wants. They are kept as they are, and Hades waits for v8."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The caretaker thread lands without promising anything. It stays untouched until the thief arrives in round 9; the new heaps line says only that someone was here."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "All three behaviours are kept because they are Zork's: the trap door's silence once TOUCHBIT is cleared, the prayer's move to the Forest with no sentence, and the rope's one-way drop. The optional dust line is not written. From above there is no bar to see, and the line would explain what Zork leaves to be noticed."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Accepted for the hole, the Deep Canyon and the grue. The hole now answers 'go down', 'jump into' and 'go through' as its way down does. 'listen' alone at the Deep Canyon hears the water. Zork's global grue is in every room, as the wall is; it cannot be named in the dark, which is logged as friction 81. The held-book-in-a-list case cannot be fixed in the world, because 'all' and a list of names arrive alike in a set role; it is logged as friction 11 again."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "Accepted where the world can express it. 'enter crack' works because the Chasm's south exit is now labelled 'crack'. 'go/climb/head back up|down X' now climbs. 'look down into X' looks in, and 'look down into the room below' at the Dome looks down. 'what am I carrying' and similar phrasings run inventory. 'go back <direction>' cannot be written (friction 82: an intent's slot cannot hold an exit). The Loud Room cannot echo a line that does not parse (friction 70 again)."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "This is the playtest harness, not the world. It is recorded for the director in intent.md, with the suggestion to rerun the parser-breaker. Nothing in the world changes."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Split the Round Room's sorted heaps into scenery of their own, with a closer description (five graded heaps, a swept cone of dust, the marks of two knees). Added a shared Rubble kind so every verb tried on the heaps or the cave-ins (shift, raise, clear, kick, mung, rub, dig, look under, climb over, through) gets the roof-still-falling reason, and search and look behind get lines of their own. Added 'stones' and 'debris' as names for the cave-ins.",
+      "files": [
+        "worlds/underground_caverns/world/east.sprout",
+        "worlds/underground_caverns/world/tests/heaps.json"
+      ],
+      "for": [
+        "P3",
+        "P4"
+      ]
+    },
+    {
+      "what": "Fixed the chimney refusal so it names the lamp ('you, your lamp and one thing more'), and gave the chimney its own lampless refusal (a flame would go out in the draught; it is a climb for a lamp), at both the 'up' exit and 'climb chimney'.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/edges.json",
+        "worlds/underground_caverns/world/tests/route_home.json"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "A load that is too heavy now names the brass lantern rather than the torch when both are carried.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/hole.json"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "Putting out the candles prints 'It's really dark in here....' only when no other light is left. The other lights are counted the way the lamp counts them, and the candles get an :others scratch property.",
+      "files": [
+        "worlds/underground_caverns/world/temple.sprout",
+        "worlds/underground_caverns/world/tests/hole.json"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "The Altar's hole answers climb down, through and leap at with the way down's own passage: the coffin is refused, or Hades sighs.",
+      "files": [
+        "worlds/underground_caverns/world/temple.sprout",
+        "worlds/underground_caverns/world/tests/hole.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "Zork's global GRUE is now in every Room, as the wall is, with GRUE-FUNCTION's description, its listen line, and the 'There is no grue here...' answer for search and for look in, under and behind. 'listen' alone at the Deep Canyon (CanyonEdge) now hears the flowing water.",
+      "files": [
+        "worlds/underground_caverns/world/room.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/heaps.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "Parser additions. The Chasm's south exit is labelled 'crack', so 'enter crack' and 'go crack' work. New intents: go/climb/head back up|down X (climb), look/peer down into X (look in), and 'what am I carrying' and its variants (inventory). 'look down into the room below' and 'look into the room below' are now phrases of look_down. Two existing test steps that relied on the old crack answer were adjusted.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/east.sprout",
+        "worlds/underground_caverns/world/tests/barriers.json",
+        "worlds/underground_caverns/world/tests/chasm_room.json",
+        "worlds/underground_caverns/world/tests/heaps.json"
+      ],
+      "for": [
+        "P12"
+      ]
+    },
+    {
+      "what": "Logged friction from round 8: 11 again (a list vs 'all'), 68 again (trailing words), 70 again (an unparsed line cannot echo), 81 (the grue cannot be named in the dark) and 82 (an intent's slot cannot hold an exit). Also recorded the differences chosen this round: the chimney's wording, the crack label, the heaps, the global grue, and naming the lamp in the load line.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P2",
+        "P3",
+        "P6",
+        "P11",
+        "P12"
+      ]
+    },
+    {
+      "what": "Added an 'After round 8' section and 'What round 9 should watch' to intent.md: what was kept and why, notes for the director on the unreached Grating Room and the two runs that filed no report, and what was sent to Sprout.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P13"
+      ]
+    }
+  ]
+}

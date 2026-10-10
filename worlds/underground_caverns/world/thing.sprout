@@ -6,7 +6,16 @@
 // has been moved, and by its long one (LDESC) after, or by "There is a ...
 // here." when it has none; `here_line` is that rule. A thing marked `:ndesc`
 // (Zork's NDESCBIT) is never listed.
-import {take, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, :fall, :landed} from 'verbs'
+import {ask} from 'sprout'
+import {Light} from 'lamp'
+import {Weapon} from 'items'
+import {Thief} from 'thief'
+import {lower, rub_with, board, disembark, launch, land, inflate, deflate, plug, turn_with, oil, take, knock, climb_over, duck_under, clear, cut, walk_around, through, give, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, unlock, lock, climb_up, climb_down, pour, pour_in, pour_on, mung, throw, kick, rub, wave, shake, squeeze, kiss, look_behind, fill, tie, alarm, talk, greet, search, cross, ring, untie, burn, leap_at, turn, :fall, :landed, :sealed, :consume, :die, :pinch, :far_voice, :sink} from 'verbs'
+import {Room} from 'room'
+import {Abyss} from 'east'
+import {River} from 'river'
+import {Vessel} from 'boat'
+import {Adventurer} from 'adventurer'
 
 kind Thing {
   grammar { article the }
@@ -16,8 +25,16 @@ kind Thing {
   :ndesc false
   :falling false
   :size 5 min 0 max 100
+  // Zork's DOORBIT, for knocking.
+  :door false
+  // Inside a shut glass container: seen, and out of reach.
+  :sealed false
+  // Zork's BURNBIT: it catches fire.
+  :burnable false
+  // Zork's SACREDBIT: the thief never lays a finger on it.
+  :sacred false
 
-  passage short default {thing}
+  passage short default { thing }
   passage fdesc default { {self.ldesc} }
   passage ldesc default { There is a {self.short} here. }
   passage here_line default {
@@ -27,11 +44,39 @@ kind Thing {
   passage no_take default {
     {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}
   }
-  passage hacked default {{one of} doesn't seem to work.{or} isn't notably helpful.{or} has no effect.{/one of}}
+  passage hacked default {{one of}doesn't seem to work.{or}isn't notably helpful.{or}has no effect.{/one of}}
 
   on :moved (from, to) {
     self.set(:touched, true)
     self.set(:falling, false)
+    self.set(:sealed, false)
+    self.set(:sinking, false)
+    // Into a chasm or the river: gone for good.
+    if (to.is(Abyss) || to.is(River)) { finally destroy self }
+  }
+  on :sealed (from, value) { self.set(:sealed, value) }
+  // Put through the grating, it falls to the Grating Room (the putter's
+  // own errand through the world's gate takes it there).
+  :sinking false
+  on :sink { self.set(:sinking, true) }
+  // Burned, vaporized, or dropped into the chasm: gone for good, as Zork's
+  // REMOVE-CAREFULLY takes it.
+  on :consume { finally destroy self }
+
+  // The Loud Room, until somebody says the word: whatever is said there,
+  // the room says back, and nothing else comes of it (Zork's LOUD-ROOM-FCN
+  // and V-ECHO). The visitor's own words are not to be had (friction 70),
+  // so the echo is of what the command was about.
+  passage echoed default { {self.short} {self.short} ... }
+  as target for any {
+    permit {
+      if (here.is(Room)) { if (here.get(:deafening)) { refuse echoed } }
+    }
+  }
+  as tool for any {
+    permit {
+      if (here.is(Room)) { if (here.get(:deafening)) { refuse echoed } }
+    }
   }
   on :fall   { self.set(:falling, true) }
   on :landed { self.set(:falling, false) }
@@ -41,10 +86,13 @@ kind Thing {
   as target for read       { do { say "How does one read a {self.short}?" } }
   as target for look_in    { do { say "You can't look inside a {self.short}." } }
   as target for look_under { do { say "There is nothing but dust there." } }
+  as target for search     { do { say "You find nothing unusual." } }
+  as target for cross      { do { say "You can't cross that!" } }
   as target for lamp_on    { do { say "You can't turn that on." } }
   as target for lamp_off   { do { say "You can't turn that off." } }
   as target for shift      { do { say "You can't move the {self.short}." } }
-  as target for raise      { do { say "Playing in this way with the {self.short}{self.hacked}" } }
+  as target for raise      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
+  as target for lower      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
   as target for eat        { do { say "I don't think that the {self.short} would agree with you." } }
   as target for drink      { do { say "I don't think that the {self.short} would agree with you." } }
   as target for wind       { do { say "You cannot wind up a {self.short}." } }
@@ -55,15 +103,133 @@ kind Thing {
   as target for lock       { do { say "It doesn't seem to work." } }
   as target for climb_up   { do { say "You can't do that!" } }
   as target for climb_down { do { say "You can't do that!" } }
+  as target for knock {
+    do {
+      if (self.get(:door)) { say "Nobody's home." }
+      else { say "Why knock on a {self.short}?" }
+    }
+  }
+  as target for pour       { do { say "You can't pour that." } }
+  as item for pour_in      { do { say "You can't pour that." } }
+  as item for pour_on      { do { say "You can't pour that." } }
+  as target for mung       { do { say "Nice try." } }
+  as target for walk_around { do { say "Use compass directions for movement." } }
+  // Zork's HACK-HACK, and the rest of its small change.
+  as target for kick    { do { say "Kicking the {self.short} {self.hacked}" } }
+  as target for rub     { do { say "Fiddling with the {self.short} {self.hacked}" } }
+  as target for rub_with { do { say "Fiddling with the {self.short} {self.hacked}" } }
+  as target for wave    { do { say "Waving the {self.short} {self.hacked}" } }
+  as target for shake   { do { say "You can't take it; thus, you can't shake it!" } }
+  as target for squeeze { do { say "How singularly useless." } }
+  as target for kiss    { do { say "I'd sooner kiss a pig." } }
+  as target for look_behind { do { say "There is nothing behind the {self.short}." } }
+  as target for fill {
+    do {
+      if (bound tool) { say "You may know how to do that, but I don't." }
+      else { say "There's nothing to fill it with." }
+    }
+  }
+  as target for tie {
+    do {
+      if (bound tool) {
+        if (tool.is(Thing)) { say "You can't tie the {self.short} to that." }
+        else { say "You can't tie anything to yourself." }
+      } else { say "You'll have to say what to tie the {self.short} to." }
+    }
+  }
+  as target for alarm    { do { say "The {self.short} isn't sleeping." } }
+  as target for ring     { do { say "How, exactly, can you ring that?" } }
+  as target for untie    { do { say "This cannot be tied, so it cannot be untied!" } }
+  as target for turn     { do { say "Your bare hands don't appear to be enough." } }
+  as target for leap_at  { do { say "{one of}Very good. Now you can go to the second grade.{or}Are you enjoying yourself?{or}Wheeeeeeeeee!!!!!{or}Do you expect me to applaud?{/one of}" } }
+  // Zork's PRE-BURN and V-BURN: something burning to do it with, and then a
+  // thing that burns is gone, and the one holding it with it.
+  as target for burn {
+    do {
+      if (bound tool) {
+        if (tool.is(Flame)) {
+          if (!tool.get(:lit)) { say "With a {tool.short}??!?" }
+          else if (!self.get(:burnable)) { say "You can't burn a {self.short}." }
+          else if (actor.holds(self)) {
+            say "The {self.short} catches fire. Unfortunately, you were holding it at the time."
+            send self :consume
+            if (actor.is(Adventurer)) { send actor :die }
+          } else {
+            say "The {self.short} catches fire and is consumed."
+            send self :consume
+          }
+        } else if (tool.is(Thing)) { say "With a {tool.short}??!?" }
+        else { say "With that??!?" }
+      } else { say "You didn't say with what!" }
+    }
+  }
+  // Over it, under it, clearing it away, cutting it: not Zork's words, but
+  // the ones a barrier invites, and answered as Zork answers the rest.
+  as target for climb_over { do { say "You can't do that!" } }
+  as target for duck_under { do { say "There's no getting under the {self.short}." } }
+  as target for clear      { do { say "The {self.short} is as clear as it is going to get." } }
+  // Zork's V-CUT, short of the slicing of what burns.
+  as target for cut {
+    do {
+      if (bound tool) {
+        if (tool.is(Weapon)) { say "Strange concept, cutting the {self.short}...." }
+        else if (tool.is(Thing)) { say "I doubt that the \"cutting edge\" of a {tool.short} is adequate." }
+        else { say "With your bare hands?" }
+      } else { say "You'll have to say what to cut the {self.short} with." }
+    }
+  }
+  // The boat's verbs (v6), as Zork answers them of anything that is not a
+  // boat: PRE-BOARD, V-DISEMBARK, V-LAUNCH, V-INFLATE, V-DEFLATE, V-PLUG,
+  // PRE-TURN and V-OIL.
+  as target for board     { permit { if (!self.is(Vessel)) { refuse "You have a theory on how to board a {self.short}, perhaps?" } } }
+  as target for disembark { permit { if (!self.is(Vessel)) { refuse "You're not in that!" } } }
+  as target for launch    { do { say "That's pretty weird." } }
+  as target for land      { do { say "That's pretty weird." } }
+  as target for inflate   { do { say "How can you inflate that?" } }
+  as target for deflate   { do { say "Come on, now!" } }
+  as target for plug      { do { say "This has no effect." } }
+  as target for turn_with { do { say "You can't turn that!" } }
+  as target for oil       { do { say "You probably put spinach in your gas tank, too." } }
+  as target for talk    { do { say "You can't talk to the {self.short}!" } }
+  as target for ask     { do { say "You can't talk to the {self.short}!" } }
+  as target for greet   { do { say "It's a well known fact that only schizophrenics say \"Hello\" to a {self.short}." } }
+  as target for through { do { say "You hit your head against the {self.short} as you attempt this feat." } }
+  as recipient for give {
+    do {
+      if (item.is(Thing)) { say "You can't give a {item.short} to a {self.short}!" }
+    }
+  }
 }
 
 // A thing that can be carried off. Only these answer `take all`.
 kind Portable is Thing {
   as target for take { permit { if (false) { refuse "" } } }
 
+  // The thief, in the maze, has his eye on it (Zork's ROB-MAZE): it is
+  // talked about, where anyone in the maze can hear, and, if he means to,
+  // it goes into his hands (he is the only one it is ever sent from).
+  on :pinch (from, value) {
+    broadcast :far_voice
+    if (value && from.is(Thief)) { move self to from }
+  }
+
   without as target for shift from Thing
   as target for shift { do { say "Moving the {self.short} reveals nothing." } }
+
+  without as target for shake from Thing
+  as target for shake { do { say "Shaken." } }
+
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (actor.holds(self)) { say "That would involve quite a contortion!" }
+      else { say "{one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}" }
+    }
+  }
 }
+
+// Something burning: the torch, the candles. Only these set things alight.
+kind Flame is Light { }
 
 // A thing Zork describes only in its room's own words.
 kind Scenery is Thing {

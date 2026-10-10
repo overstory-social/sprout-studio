@@ -1,0 +1,108 @@
+{
+  "about": "Zork's small change: throw, kick, rub, wave, shake, squeeze, kiss, look behind, fill, tie, wake, talk, hello, pray and swim, each answered as Zork answers it; shaking a container spills it, or rattles it shut.",
+  "steps": [
+    { "seed": 1 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "shake mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't take it; thus, you can't shake it!" }
+    ] },
+    { "as": "Marta", "type": "kick mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Kicking the small mailbox isn't notably helpful." }
+    ] },
+    { "as": "Marta", "type": "open mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the small mailbox reveals a leaflet." }
+    ] },
+    { "as": "Marta", "type": "take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "throw leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Thrown." }
+    ] },
+    { "as": "Marta", "type": "look behind house", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is nothing behind the white house." }
+    ] },
+    { "as": "Marta", "type": "pray", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "If you pray enough, your prayers may be answered." }
+    ] },
+    { "as": "Marta", "type": "swim", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Go jump in a lake!" }
+    ] },
+    { "as": "Marta", "type": "wave mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Waving the small mailbox isn't notably helpful." }
+    ] },
+    { "as": "Marta", "type": "rub house", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Fiddling with the white house isn't notably helpful." }
+    ] },
+    { "as": "Marta", "type": "kiss mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "I'd sooner kiss a pig." }
+    ] },
+    { "as": "Marta", "type": "wake mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The small mailbox isn't sleeping." }
+    ] },
+    { "as": "Marta", "type": "hello mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It's a well known fact that only schizophrenics say \"Hello\" to a small mailbox." }
+    ] },
+    { "as": "Marta", "type": "talk to mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't talk to the small mailbox!" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "take sack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "shake sack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It sounds like there is something inside the brown sack." }
+    ] },
+    { "as": "Marta", "type": "open sack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the brown sack reveals a lunch, and a clove of garlic." }
+    ] },
+    { "as": "Marta", "type": "shake sack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The contents of the brown sack spill to the ground." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" },
+      { "reader": "Marta", "kind": "described", "words": "A hot pepper sandwich is here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a clove of garlic here." }
+    ] },
+    { "as": "Marta", "type": "squeeze lunch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "How singularly useless." }
+    ] },
+    { "as": "Marta", "type": "tie lunch to table", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't tie the lunch to that." }
+    ] },
+    { "as": "Marta", "type": "tie lunch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You'll have to say what to tie the lunch to." }
+    ] },
+    { "as": "Marta", "type": "fill bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There's nothing to fill it with." }
+    ] },
+    { "as": "Marta", "type": "fill bottle with water", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You may know how to do that, but I don't." }
+    ] }
+  ]
+}

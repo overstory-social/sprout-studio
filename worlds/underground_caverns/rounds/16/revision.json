@@ -1,0 +1,167 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The round-15 rule sat where nobody looked. Moving it to where players actually meet the bar keeps TOUCHBIT and Zork's refusals unchanged and still names none of the other roads home. The brief's hauling puzzle should cost turns, not end the run in silence."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "This is the other half of P1. When the open state goes unsaid, the earned short way home is invisible. It is a one-clause change to fixed Zork room text, made and logged as a chosen difference."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "I agree no world change is needed: the shaft and the torch already point at each other. A run aimed at the mine, or one that starts mid-game, is the director's call. It is noted in intent for round 17."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "I agree to keep the maze and the coal mine as Zork built them. Marking rooms by dropping things is the classic answer. The unread and repetition counts from 'no_way' lines in the maze are mapping, not world failure."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Players read the thief as the intent hopes, an unseen someone. Kept as is."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Accepted, but the cause was not a missing noun: the name already parses. 'climb' is the world's synonym for go, so 'climb mountains' matched the exit label, and the adjective broke that. The fix is a climb synonym for CLIMB UP on the mountains, with Zork's MOUNTAIN-RANGE-F answer, and the same on the Cellar stairs. A global 'climb [x]' was tried and broke 'climb rope' and 'climb chimney', so it is logged as friction 134."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The world already has answers for both phrasings. The trap door now works by name the way the stairs do, and SWIM IN or SWIM ACROSS water gives that water's own refusal (plain SWIM anywhere else), as Zork's LAKE-PSEUDO and RIVER-FUNCTION do."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "There is no world change to make: the parser's fallback answer belongs to the engine. I added this round's evidence to friction (94/120, 'the word nobody knows'; 132, everything except)."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Nothing in the world can echo a line that never parses. I added the evidence to friction 70."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "I replayed it as recommended. The bug was the world's, not the engine's: the adventurer's own take permit refused the whole list when one item was not in the box. It now answers each item in turn, as Zork does. The lost inventory nesting is friction 18 again."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "I agree the room text stays Zork's. The 'changed version' framing is the director's concern, and no world change follows."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "Keep everything that was reached and praised. The list of things still unmet goes into intent's round-17 watch list."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "No change of its own. P1 and P2, both made, are the levers on the goal-seeker's ceiling. The 350 ending still needs a longer cap or a mid-game start, which is the director's call."
+    }
+  ],
+  "changes": [
+    {
+      "what": "While the trap door is shut, the Cellar now gives the bar's rule after Zork's own refusal. It follows 'up', open, push/pull open, push, lift, smash/break (with or without a tool), knock, go through, and climb (up) the stairs or the door. The rule reads: 'Whoever keeps the bar up there drops it behind anyone new to the house. Come home by some other road and open the door yourself, and it will be let alone.' The up exit refuses with a passage that carries the rule.",
+      "files": [
+        "worlds/underground_caverns/world/cellar.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The Cellar says when the trap door above it is open. In BRIEF it adds 'The trap door above you stands open.' through a Cellar-only brief passage; Room's brief is now a default so the Cellar can override it. The full description ends 'Overhead, at the top of the stairs, the trap door stands open.'",
+      "files": [
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/room.sprout"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "The mountains east of the forest now take 'climb' as CLIMB UP, so any phrasing ('climb the impassable mountains', 'climb mountains', 'climb up the mountains') gets MOUNTAIN-RANGE-F's 'Don't you believe me? The mountains are impassable!'. 'mountains', 'grey' and 'gray' were added to their words. The Cellar stairs also take 'climb' as CLIMB UP.",
+      "files": [
+        "worlds/underground_caverns/world/above_ground.sprout",
+        "worlds/underground_caverns/world/cellar.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "When open, the Living Room's trap door can be gone down and through by name ('go down the trap door', 'climb down the trap door', 'go through the trap door'); when shut, it answers 'The trap door is closed.'. A new swim_in intent ('swim in/across/through/into/over/to [x]', 'bathe in', 'wade into') reaches the lake's, river's, stream's or water's own refusal, and plain SWIM for anything that is not water.",
+      "files": [
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/verbs.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Taking several things out of a box now answers each in turn. The take permit refuses only a single item that is not in the box; with several, each stray item is named and refused ('Glass bottle: That isn't in the brown sack.') and the rest are taken.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "Tests: a new trap_door_bar.json tries the barred door every way from the Cellar and swims at the Reservoir. A new mountains.json climbs the mountains. A new take_from_box.json is the P10 replay. prayer.json is extended with the open door in BRIEF and in full and the door gone through by name both ways. The expected lines in climbing, route_home, slide and trap_door are updated to the new refusals. All 104 tests pass and check is clean.",
+      "files": [
+        "worlds/underground_caverns/world/tests/trap_door_bar.json",
+        "worlds/underground_caverns/world/tests/mountains.json",
+        "worlds/underground_caverns/world/tests/take_from_box.json",
+        "worlds/underground_caverns/world/tests/prayer.json",
+        "worlds/underground_caverns/world/tests/climbing.json",
+        "worlds/underground_caverns/world/tests/route_home.json",
+        "worlds/underground_caverns/world/tests/slide.json",
+        "worlds/underground_caverns/world/tests/trap_door.json"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P6",
+        "P7",
+        "P10"
+      ]
+    },
+    {
+      "what": "friction.md has a new 'Found in round 16' section. It adds this round's evidence to the unknown-word entry (94/120: 'politely'), to 132 (everything except), to 70 (the Loud Room's echo exceptions) and to 18 (inventory nesting), and opens a new entry 134 (a climb said of a thing competes with an exit label). The v8 'chosen differences' list gains the Cellar's open-door line, the bar's rule wherever the bar is met, swimming in water, and climbing the mountains.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P6",
+        "P8",
+        "P9",
+        "P10"
+      ]
+    },
+    {
+      "what": "intent.md has a new 'After round 16' section recording each decision, and 'What round 17 should watch': whether the bar's rule, read where the bar is met, sends players looking for another road home; whether the Cellar's open-door line gets them onto the stairs; and the items still unmet, carried over.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P11",
+        "P12",
+        "P13"
+      ]
+    }
+  ]
+}

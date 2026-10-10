@@ -1,0 +1,196 @@
+{
+  "persona": "parser-breaker",
+  "seed": 1,
+  "turns": 250,
+  "done": {
+    "reason": "turn-cap",
+    "why": "The world told me I'd used all 250 turns. I was pretty much finished anyway. I'd handed my only lamp to the thief to see what would happen, walked into the dark, got eaten by a grue, and came back with no light at all. I was standing in the kitchen trying to talk my way down the chimney when the turns ran out."
+  },
+  "about": "It's the old white house over the Great Underground Empire, with some changes. You collect treasures and put them in the trophy case. You drain the dam to get across the lake, rub mirrors to jump between rooms, take the chimney as a shortcut back up, and squeeze through a coal mine where a vampire bat keeps carrying you off. Some of the old doors are shut for good (Hades has a chalked CLOSED sign, the Round Room has cave-ins). Mostly it's about deciding what to carry and making a lot of trips between the dark and the daylight.",
+  "ending": {
+    "reached": "no",
+    "what": "No ending. I had 4 treasures in the case (egg, trunk, painting, platinum bar) and 70 of 350 points. Then I lost my lamp to the thief and couldn't go back underground."
+  },
+  "moments": [
+    {
+      "turn": 1,
+      "kind": "frustration",
+      "note": "\"kick the mailbox gently\" got \"You can't see any such thing\" even though the mailbox was right there. One extra word like an adverb or 'raw' and the parser acts like the object isn't there."
+    },
+    {
+      "turn": 6,
+      "kind": "delight",
+      "note": "\"go around the house\" actually worked and walked me to the north side."
+    },
+    {
+      "turn": 33,
+      "kind": "surprise",
+      "note": "I offered the troll my lunch and he ate it happily. Then he kept swinging his axe at me anyway."
+    },
+    {
+      "turn": 44,
+      "kind": "delight",
+      "note": "I jumped the dome railing on purpose. The death text explained where everything goes: plain things scattered around the forest, valuables rolled into corners, and the lamp put back by 'somebody tidy'. I liked a death that tells you exactly how to recover."
+    },
+    {
+      "turn": 90,
+      "kind": "delight",
+      "note": "\"Your load is too heavy, the sword not least of it.\" It named exactly what to drop."
+    },
+    {
+      "turn": 105,
+      "kind": "delight",
+      "note": "The Hades stairs are blocked by a chalked CLOSED UNTIL FURTHER NOTICE, and something laughs on the other side. A nice, eerie way to say no."
+    },
+    {
+      "turn": 107,
+      "kind": "frustration",
+      "note": "\"move the slab\" said there's no slab, even though the text I'd just read described one. The world won't let you touch things it has just shown you."
+    },
+    {
+      "turn": 113,
+      "kind": "delight",
+      "note": "In the Loud Room, typing \"south\" just echoed back \"South south ...\". Funny."
+    },
+    {
+      "turn": 130,
+      "kind": "delight",
+      "note": "The chimney refusal listed everything I was carrying and told me the rule exactly: you, your lamp and one thing more. Clear and a bit funny."
+    },
+    {
+      "turn": 120,
+      "kind": "confusion",
+      "note": "The crack at the Chasm led to a North-South Passage, and going south from there dropped me in the Round Room. The geography felt rearranged, and I lost my bearings."
+    },
+    {
+      "turn": 170,
+      "kind": "frustration",
+      "note": "The vampire bat grabbed me every time I came into its room. Eating the garlic earlier didn't protect me, so the jade figurine was out of reach."
+    },
+    {
+      "turn": 215,
+      "kind": "frustration",
+      "note": "The coal mine maze is a lot of identical rooms called 'Coal Mine'. I spent around 40 turns trying directions before I dropped the bracelet as a marker and worked out the route."
+    },
+    {
+      "turn": 236,
+      "kind": "frustration",
+      "note": "The thief stole my sapphire bracelet at Ladder Top just as I finally got out of the maze."
+    },
+    {
+      "turn": 240,
+      "kind": "surprise",
+      "note": "I gave the lantern to the thief. He took it, thanked me politely, and left me in pitch darkness. The game let me do it, which I respect."
+    },
+    {
+      "turn": 241,
+      "kind": "frustration",
+      "note": "Grue. Second death. Coming back without the lamp was a dead end for the whole game."
+    },
+    {
+      "turn": 248,
+      "kind": "delight",
+      "note": "\"Only Santa Claus climbs down chimneys.\""
+    }
+  ],
+  "wished": [
+    "Use adverbs and adjectives without the parser deciding the object has vanished, e.g. 'kick the mailbox gently', 'eat the garlic raw'",
+    "Do something with things the text describes, like the slab on the Hades stairs or the mirror ('look at myself in the mirror')",
+    "Have the garlic I ate keep the bat away, since my breath certainly smelled of it",
+    "Talk to the thief and ask for my bracelet back",
+    "Get the lamp back after the thief left, or find any other light source",
+    "Pry the nails out of the gothic door with the sword",
+    "Convince the game I'm Santa Claus and climb down the chimney"
+  ],
+  "lines": [
+    {
+      "turn": 44,
+      "line": "Your belongings, such as they were, have not come with you. The plain things are strewn about the forest and the fields around the house, anything of value has rolled into some dark corner in or under it, and somebody tidy has put the lamp back in the living room.",
+      "why": "This made dying feel like part of the game and not a reset. It told me exactly how to get going again."
+    },
+    {
+      "turn": 90,
+      "line": "Your load is too heavy, the sword not least of it.",
+      "why": "It singled out the item to drop, which made my inventory decisions easy."
+    },
+    {
+      "turn": 105,
+      "line": "Across the third step somebody has laid a slab of rock, and on it, chalked in a neat hand, CLOSED UNTIL FURTHER NOTICE. Something on the far side of the notice laughs. You decide to take the notice at its word.",
+      "why": "The best-written refusal I saw. Creepy and funny together."
+    },
+    {
+      "turn": 130,
+      "line": "The chimney has room for you, your lamp and one thing more, and not an inch besides.",
+      "why": "It stated the rule clearly, which turned the chimney into a puzzle about how many trips to make."
+    },
+    {
+      "turn": 18,
+      "line": "The engravings translate to \"This space intentionally left blank.\"",
+      "why": "A dry joke on a door I couldn't open."
+    },
+    {
+      "turn": 240,
+      "line": "The thief places the brass lantern in his bag and thanks you politely.",
+      "why": "My contrary move went through, and that one line cost me the rest of the game."
+    }
+  ],
+  "ratings": {
+    "fun": {
+      "score": 3,
+      "why": "The first half was a real pleasure: draining the dam, the mirror jump, the chimney trick, a recoverable death. The coal mine maze, the bat and the thief stacked up into a slog. Then losing the lamp ended things with no way back.",
+      "turns": [
+        44,
+        81,
+        102,
+        130,
+        215,
+        240,
+        241
+      ]
+    },
+    "engagement": {
+      "score": 4,
+      "why": "I kept wanting to see what came next until the maze. The trips between the treasure case and the caves had a good rhythm.",
+      "turns": [
+        56,
+        89,
+        134,
+        170,
+        215
+      ]
+    },
+    "difficulty": {
+      "score": 4,
+      "felt": "too hard",
+      "why": "The puzzles themselves were fair and the hints were clear. What made it hard was the identical coal mine rooms, the bat grabbing me every time with no counter that worked, and one careless move (giving away the lamp) ending the game for good. The parser also rejected a lot of ordinary phrasing.",
+      "turns": [
+        1,
+        107,
+        170,
+        215,
+        241
+      ]
+    },
+    "interestingness": {
+      "score": 4,
+      "why": "The changes were noticeable and fit the world: the cave-ins, the Hades notice, the carrying limit on the chimney, the tidy death recovery. It felt like a deliberate remix and not just a copy.",
+      "turns": [
+        38,
+        44,
+        105,
+        130
+      ]
+    },
+    "prose": {
+      "score": 4,
+      "why": "The new lines are sharp and funny (the Hades notice, the chimney rule, 'the sword not least of it'), and they sit well next to the old text. Many replies were one bare room name or 'You can't go that way', but that comes with the format.",
+      "turns": [
+        44,
+        90,
+        105,
+        130,
+        248
+      ]
+    }
+  }
+}

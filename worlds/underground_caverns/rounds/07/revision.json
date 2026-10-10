@@ -1,0 +1,226 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The line promised a passage, which breaks intent's rule that no caretaker line promises more than that someone has been here. It also put the refusal in the player's own voice. The sorted heaps stay, since players enjoyed them. The refusal now ends on the world's reason, a roof that is still coming down. CLEAR, DIG, TAKE (a rock), MOVE/PULL, RAISE, KICK, BREAK, CLIMB OVER and THROUGH on the cave-ins all give that same reason in Zork's voice."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Keep the echo as built. Five of six runs got the bar and four found it by trying. It is Zork's puzzle and it reads as one. Round 8 is listed to watch how long non-Zork players take."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "This is a real gap: a handler cannot read the word that was typed. Added under friction 70 as a round-7 note, with the request for read-only access to the raw last word. No change to the world is possible."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "This was a scoring bug. Zork's PUT and DROP take the item first (HAVE), so a treasure moved straight out of a box in hand has been held and should pay its take value. PUT and DROP now score it, and treasures.json now puts the sceptre into the case straight from the coffin and reaches 110."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Zork reads TAKE ... FROM and TAKE ... OUT OF. I tried an intent first, but the language requires every slot to have a role (friction 79). So `take` now has a `source: Box` role with four phrases and Zork's PRE-TAKE check. The refusal cannot name the thing because of friction 78, a fault in Sprout."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "The engine behaviour is logged as friction 68-again and 69-again for a Sprout issue. Locally, the most common phrasings are now read: move/push/pull X aside, out of the way, pull X off, and go through X. The general case is Sprout's."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "Signs only stay funny if they are rare. The dam's notice is kept. The reservoir, from both the Deep Canyon and the Chasm, is now Zork-voice prose of the place: flooded black water, with a reason in the world and no fence. Each flood can be examined."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Round 4's rule says what a refusal names can be named. With P7 the Chasm's cord and card are gone, along with the notice that named them. The dam's board is now one board that answers examine, read, pull/move, break, cut, climb over, duck under and cross. CLIMB OVER, DUCK UNDER, CLEAR and CUT are new verbs that every thing answers. The Clearing's canyon rope now answers climb over and duck under through the verbs, not object synonyms."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The Dome is all about the drop, so the drop should be lookable. `look down` (and `look over the edge`) now answers at the Dome, both chasm edges, the Deep Canyon and Up a Tree. `look over the railing` shows the drop. `climb over the railing` and `jump over railing` at the Dome are Zork's leap: 'I'm afraid that the leap you attempted has done you in.', then death. In the Loud Room, `look down` echoes like everything else."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The puzzle stays Zork's. The railing's description now leans once toward tying something to it ('the sort of thing a careful person makes something fast to before trusting the drop') without naming the rope. This sits within the brief's allowance for a little spice in the examine layer."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Zork's weights and the limit of 100 are kept. The refusal now names the heaviest of the heavy things carried, in a dry voice ('Your load is too heavy, the sword not least of it.'); the language's limit here is noted as friction 75-again. The axe's description owns its heft. `read` with a refused implicit take now says what it tried: '(Taking the black book first) ...'. The brief's '(Taken)' constraint for the leaflet is untouched."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "The turn cap belongs to the brief's budget, so it is the director's call and not something the author can change. Recorded in intent.md under 'After round 7' as a note for the director, asking for a cap of 250-300. The world itself is not changed."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Local fixes: `crawl <dir>` now works as go (a world synonym), and `go through X` is THROUGH. `go <dir> through/into <thing>` could not be written, because an intent's slot must have a role and the engine's `go` has only the exit role (friction 79). This is logged under friction 68-again."
+    },
+    {
+      "answers": "P14",
+      "decision": "accept",
+      "reason": "Keep the caretaker thread, extend nothing before round 9, and fix the one line that over-promised. The P1 change does that."
+    },
+    {
+      "answers": "P15",
+      "decision": "accept",
+      "reason": "Keep the grating pointer as built. It reads correctly from above, and the Grating Room going unvisited comes from the turn cap (P12), not from the world."
+    },
+    {
+      "answers": "P16",
+      "decision": "accept",
+      "reason": "Keep both as Zork has them: the trophy case's 'Done.', as round 5 decided (its listing does the celebrating), and the four alike Forest rooms, which are Zork's map. No change."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The Round Room's south refusal now ends on the world's reason: the roof has come down all the way and is still coming down, so there is no way through. The sorted heaps stay. The cave-ins description and the passages description no longer promise a passage. The cave-ins answer take (including 'a rock'), shift/move/pull, raise, clear, kick, break, dig, climb over and through with that reason.",
+      "files": [
+        "worlds/underground_caverns/world/east.sprout",
+        "worlds/underground_caverns/world/tests/chasm_room.json",
+        "worlds/underground_caverns/world/tests/barriers.json"
+      ],
+      "for": [
+        "P1",
+        "P14"
+      ]
+    },
+    {
+      "what": "The reservoir edges are no longer Management notices. Deep Canyon northwest is a flooded passage (a new examinable `flood` object), and Chasm northeast is a flooded path (new `standing_water` object); the cord and card are gone. The Deep Canyon's two boards are now the dam's single board, which answers read, pull/move, break, cut, climb over, duck under and cross.",
+      "files": [
+        "worlds/underground_caverns/world/east.sprout",
+        "worlds/underground_caverns/world/tests/chasm_room.json",
+        "worlds/underground_caverns/world/tests/barriers.json"
+      ],
+      "for": [
+        "P7",
+        "P8"
+      ]
+    },
+    {
+      "what": "New verbs: climb_over, duck_under, clear, cut (with a cut_with intent: an attack when turned on an actor, Zork's V-CUT otherwise) and look_down, plus a look_over intent. Thing has Zork-voice defaults for each and the Adventurer counts a move for each. The Clearing's canyon rope answers climb over and duck under through the verbs; the colliding object synonyms were removed.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/above_ground.sprout"
+      ],
+      "for": [
+        "P8",
+        "P9"
+      ]
+    },
+    {
+      "what": "Look down and look over: `look down` answers at the Dome (with or without the rope), at the chasm edges (new ChasmEdge marker kind on the Chasm and East of Chasm), at the Deep Canyon (CanyonEdge) and Up a Tree. The Railing kind answers look over/look in with the drop. Climbing or jumping over the Dome's railing is Zork's leap and death. A new test covers it.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/room.sprout",
+        "worlds/underground_caverns/world/east.sprout",
+        "worlds/underground_caverns/world/gallery.sprout",
+        "worlds/underground_caverns/world/temple.sprout",
+        "worlds/underground_caverns/world/tests/railing.json",
+        "worlds/underground_caverns/world/tests/barriers.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "The Dome railing's description now leans toward tying something to it, without naming the rope.",
+      "files": [
+        "worlds/underground_caverns/world/temple.sprout",
+        "worlds/underground_caverns/world/tests/dome.json"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "A treasure moved by PUT or DROP straight out of a box in hand, or off the floor, scores its take value, as Zork's HAVE does. treasures.json now puts the sceptre in the case straight from the coffin and reaches 110; barriers.json checks the drop path.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/treasures.json",
+        "worlds/underground_caverns/world/tests/barriers.json"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "`take X from/out of Y` and `get X from/out of Y`: `take` gained a `source: Box` role and four phrases (grab, carry, hold and remove moved to synonyms to stay within the cap), with Zork's PRE-TAKE refusal 'That isn't in the <box>.'",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/barriers.json"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "Parser phrasings: a shift_aside intent (aside, out of the way, pull X off); `go through X` added to the squeeze_through intent; `crawl` added as a world synonym of go.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/underground_caverns.sprout",
+        "worlds/underground_caverns/world/tests/barriers.json"
+      ],
+      "for": [
+        "P6",
+        "P13"
+      ]
+    },
+    {
+      "what": "Load: the take refusal names the heaviest heavy thing carried ('Your load is too heavy, the sword not least of it.'). The axe's description gives its heft. Read's refused implicit take says '(Taking the <thing> first) ...'.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/items.sprout",
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/tests/coffin.json",
+        "worlds/underground_caverns/world/tests/knockout.json",
+        "worlds/underground_caverns/world/tests/npc_troll.json",
+        "worlds/underground_caverns/world/tests/barriers.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "Friction logged: 68-again, 69-again and 70-again (round 7's misreadings and the echo of the typed word), 75-again (naming the heaviest), and new entries 78 (a refusal inside `each` faults on the loop variable), 79 (an intent slot must have a role) and 80 (comparing `here` to an out-of-range room faults).",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P3",
+        "P5",
+        "P6",
+        "P11",
+        "P13"
+      ]
+    },
+    {
+      "what": "intent.md: an 'After round 7' section (the decisions, kept-by-choice items, the turn-cap note for the director, issues for Sprout, and what round 8 should watch), a new secret ('What a barrier names answers'), and an amended out-of-scope note.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P7",
+        "P10",
+        "P12",
+        "P14",
+        "P15",
+        "P16"
+      ]
+    }
+  ]
+}

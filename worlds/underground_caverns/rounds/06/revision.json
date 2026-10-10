@@ -1,0 +1,161 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "Option (b). The skeleton key's examine text is already in the author's voice, so it can point to a skull-and-crossbones lock 'somewhere down here' without moving any rooms; they stay joined as dungeon.zil joins them. The locked grating seen from the Clearing now says its lock faces down into the dark. 'unlock grating with key' from above already gave Zork's 'can't reach the lock' answer. The grating stays Zork's secret, just less hidden, and goes on next round's watch list with the suggested goal."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "The caretaker stays, deliberately. It is the faithful explanation of Zork's own barring and foreshadows the thief, who tidies the dungeon into his bag. It is now recorded in intent.md as an addition, with a limit: no line promises more than that someone has been here. Cutting the lines would remove what players valued most to make the world more faithful, and the brief asks for a little spice."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The general case is Sprout's to fix and is logged as friction 68. In the world, Zork-compatible patterns for the phrasings players actually used ('squeeze through', 'climb down into', 'walk around to the back of') now reach the verbs the world already declares."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "'forest' is now an adjective on the forest paths, and a bare 'smell' is answered the way a bare 'listen' is. The field is added despite Zork having no field object, because the brief asks that everything a room's description names answers with a description of its own. This is logged under differences chosen."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "The chimney is kept. I checked: 'drop all except <one thing>' works, but a list after except, and 'but', do not. Logged as friction 69; there is no workaround, since all and except belong to the parser."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "The barring is kept as built (TOUCHBIT) and it reads as Zork's one-way door. Removed from the watch list."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The maze is kept as dungeon.zil joins it, as round 5 decided. intent.md now notes that BRIEF hiding the skeleton is Zork's own behaviour."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Zork's tables are kept, as the director decided. 'Blows read as his' is off the watch list. Throwing at the troll, waking him and his coming round are carried."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "intent.md now says that room text is Zork's word for word and the examine layer is the author's own voice, on purpose. The lunch and the garlic each get a sentence of their own, as the sack has."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The watch list in intent.md is updated. The knife, stairs, commas, tunnel warning, the troll's blows and the re-barring are off it. The grue, the ghost, the tree drop, the broken egg, the troll woken or thrown at, and the Grating Room are carried."
+    },
+    {
+      "answers": "P11",
+      "decision": "reject",
+      "reason": "This is the studio's playtest harness, not Sprout or the world, and the engine logged no faults. There is nothing in the world to change. It is noted in intent.md for the director."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The skeleton key's description now names the skull and crossbones and says the lock it fits is somewhere down here, past where its owner fell. maze.json is updated to match.",
+      "files": [
+        "worlds/underground_caverns/world/remains.sprout",
+        "worlds/underground_caverns/world/tests/maze.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The locked grating seen from above says it is fastened from beneath and its lock is out of reach. Also removed a duplicated set(:open) line in GratingBelow. clearing.json is updated to match.",
+      "files": [
+        "worlds/underground_caverns/world/grating.sprout",
+        "worlds/underground_caverns/world/tests/clearing.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "New intents squeeze_through, climb_into and walk_around_to read the preposition phrasings players used.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/tests/names_and_ways.json"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "A bare 'smell'/'sniff' (smell_here) is answered by the adventurer: the forest, the maze, or nothing out of the ordinary.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/names_and_ways.json"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "An open field object at West of House, and 'forest' as an adjective on the paths north of and behind the house.",
+      "files": [
+        "worlds/underground_caverns/world/above_ground.sprout",
+        "worlds/underground_caverns/world/tests/names_and_ways.json"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "The lunch and the garlic each get an examine sentence of their own. gift.json is updated to match.",
+      "files": [
+        "worlds/underground_caverns/world/items.sprout",
+        "worlds/underground_caverns/world/tests/gift.json",
+        "worlds/underground_caverns/world/tests/names_and_ways.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "Friction 68 (a known verb before a preposition it does not take reads the rest as a name, giving not_here) and friction 69 (except takes one thing; 'but' is not except). Differences chosen are added for the bare smell, the field, and the grating/key pointer.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P3",
+        "P4",
+        "P5",
+        "P1"
+      ]
+    },
+    {
+      "what": "New test names_and_ways.json covers the field, the bare smell, walk around to the back of the house, the forest path, squeeze through the window, the lunch and garlic, and climb down into the chasm.",
+      "files": [
+        "worlds/underground_caverns/world/tests/names_and_ways.json"
+      ],
+      "for": [
+        "P3",
+        "P4",
+        "P9"
+      ]
+    },
+    {
+      "what": "intent.md: the grating's key now lies with the remains. New section 'Two voices, and the Management' (the examine layer is the author's voice; the caretaker is deliberate and bounded). New 'After round 6' section covering the grating pointer, kept choices (barring, BRIEF maze, troll tables) and the round-7 watch list.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10"
+      ]
+    }
+  ]
+}

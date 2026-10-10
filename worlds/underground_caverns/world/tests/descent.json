@@ -58,50 +58,58 @@
     ] },
     { "advance": "30 seconds", "expect": [] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "The trap door crashes shut, and you hear someone barring it." },
-      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." },
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
       { "reader": "Marta", "kind": "described", "words": "Cellar" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "advance": "30 seconds", "expect": [] },
     { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." },
       { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
-      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." }
-    ] },
-    { "advance": "30 seconds", "expect": [] },
-    { "as": "Marta", "type": "attack troll with sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll is momentarily disoriented and can't fight back." },
-      { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
     { "advance": "30 seconds", "expect": [
-      { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" }
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
     ] },
+    { "seed": 2 },
     { "as": "Marta", "type": "attack troll with sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The troll takes a fatal blow and slumps to the floor dead." },
+      { "reader": "Marta", "kind": "said", "words": "The force of your blow knocks the troll back, stunned." },
+      { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
+    ] },
+    { "seed": 1 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "attack troll with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
       { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
       { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
+    { "seed": 1 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "as": "Marta", "type": "attack troll with sword", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
+    ] },
     { "advance": "30 seconds", "expect": [] },
     { "as": "Marta", "type": "attack troll with sword", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
     ] },
     { "advance": "30 seconds", "expect": [
-      { "level": "info", "text": "troll_room.troll woke, 60 seconds after it asked" }
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
     ] },
     { "as": "Marta", "type": "attack troll with sword", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
     ] },
     { "advance": "30 seconds", "expect": [] },
     { "as": "Marta", "type": "attack troll with sword", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+      { "reader": "Marta", "kind": "refused", "words": "You can't see any such thing." }
     ] },
-    { "advance": "30 seconds", "expect": [] },
-    { "as": "Marta", "type": "attack troll with sword", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
     ] },
-    { "advance": "30 seconds", "expect": [] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
@@ -109,10 +117,11 @@
     ] },
     { "advance": "30 seconds", "expect": [] },
     { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Cellar" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
+      { "reader": "Marta", "kind": "described", "words": "Cellar" }
     ] },
-    { "advance": "30 seconds", "expect": [] },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
     { "as": "Marta", "type": "wait", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Time passes..." }
     ] },
@@ -120,7 +129,9 @@
     { "as": "Marta", "type": "wait", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Time passes..." }
     ] },
-    { "advance": "30 seconds", "expect": [] },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
     { "as": "Marta", "type": "i", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
       { "reader": "Marta", "kind": "said", "words": "A brass lantern (providing light)" },
@@ -128,9 +139,11 @@
     ] },
     { "advance": "30 seconds", "expect": [] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 19 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
     ] },
-    { "advance": "30 seconds", "expect": [] }
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] }
   ]
 }

@@ -1,0 +1,509 @@
+{
+  "about": "The Machine Room (v7; MACHINE-ROOM-FCN, MACHINE-F, MSWITCH-FUNCTION, GUNK-FUNCTION): the machine is far too large to carry and cannot be turned on by hand; its switch wants something 1/16 by 1/4 inch, which a torch is not and the screwdriver is, and with the lid open the machine will not run. Run empty, it makes a small piece of vitreous slag, which crumbles at a touch; run with the coal in it and the lid shut (TURN ON ... WITH works as well), the lid opens on a huge diamond, perfectly cut: 10 points taken, the score 87 here (the Kitchen, the Cellar, the passage, the torch, the jade, the bracelet, the Drafty Room's 13 and the diamond).",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "open sack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the brown sack reveals a lunch, and a clove of garlic." }
+    ] },
+    { "as": "Marta", "type": "take garlic", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "The brown sack contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A lunch" },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Attic" },
+      { "reader": "Marta", "kind": "described", "words": "This is the attic. The only exit is a stairway leading down." },
+      { "reader": "Marta", "kind": "described", "words": "A large coil of rope is lying in the corner." },
+      { "reader": "Marta", "kind": "described", "words": "On a table is a nasty-looking knife." }
+    ] },
+    { "as": "Marta", "type": "take rope", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "The brown sack contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A lunch" },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    { "as": "Marta", "type": "move rug", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The force of your blow knocks the troll back, stunned." },
+      { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
+    ] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a high north-south passage, which forks to the northeast." }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Deep Canyon" },
+      { "reader": "Marta", "kind": "described", "words": "You are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. A stairway leads down. You can hear the sound of flowing water from below." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dam" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
+      { "reader": "Marta", "kind": "described", "words": "The sluice gates on the dam are closed. Behind the dam, there can be seen a wide reservoir. Water is pouring over the top of the now abandoned dam." },
+      { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dam Lobby" },
+      { "reader": "Marta", "kind": "described", "words": "This room appears to have been the waiting room for groups touring the dam. There are open doorways here to the north and east marked \"Private\", and there is a path leading south over the top of the dam." },
+      { "reader": "Marta", "kind": "described", "words": "Some guidebooks entitled \"Flood Control Dam #3\" are on the reception desk." },
+      { "reader": "Marta", "kind": "described", "words": "There is a matchbook whose cover says \"Visit Beautiful FCD#3\" here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maintenance Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is what appears to have been the maintenance room for Flood Control Dam #3. Apparently, this room has been ransacked recently, for most of the valuable equipment is gone. On the wall in front of you is a group of buttons colored blue, yellow, brown, and red. There are doorways to the west and south." },
+      { "reader": "Marta", "kind": "described", "words": "There is a group of tool chests here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a wrench here." },
+      { "reader": "Marta", "kind": "described", "words": "There is an object which looks like a tube of toothpaste here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a screwdriver here." }
+    ] },
+    { "as": "Marta", "type": "take screwdriver", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dam Lobby" },
+      { "reader": "Marta", "kind": "described", "words": "Some guidebooks entitled \"Flood Control Dam #3\" are on the reception desk." },
+      { "reader": "Marta", "kind": "described", "words": "There is a matchbook whose cover says \"Visit Beautiful FCD#3\" here." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dam" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Deep Canyon" }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North-South Passage" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Engravings Cave" },
+      { "reader": "Marta", "kind": "described", "words": "You have entered a low cave with passages leading northwest and east." },
+      { "reader": "Marta", "kind": "described", "words": "There are old engravings on the walls here." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dome Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the periphery of a large dome, which forms the ceiling of another room below. Protecting you from a precipitous drop is a wooden railing which circles the dome." }
+    ] },
+    { "as": "Marta", "type": "tie rope to railing", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The rope drops over the side and comes within ten feet of the floor." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Torch Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room with a prominent doorway leading to a down staircase. Above you is a large dome. Up around the edge of the dome (20 feet up) is a wooden railing. In the center of the room sits a white marble pedestal." },
+      { "reader": "Marta", "kind": "described", "words": "A piece of rope descends from the railing above, ending some five feet above your head." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the pedestal is a flaming torch, made of ivory." }
+    ] },
+    { "as": "Marta", "type": "take torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Temple" },
+      { "reader": "Marta", "kind": "described", "words": "This is the north end of a large temple. On the east wall is an ancient inscription, probably a prayer in a long-forgotten language. Below the prayer is a staircase leading down. The west wall is solid granite. The exit to the north end of the room is through huge marble pillars." },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass bell here." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Altar" },
+      { "reader": "Marta", "kind": "described", "words": "This is the south end of a large temple. In front of you is what appears to be an altar. In one corner is a small hole in the floor which leads into darkness. You probably could not get back up it." },
+      { "reader": "Marta", "kind": "described", "words": "On the altar is a large black book, open to page 569." },
+      { "reader": "Marta", "kind": "described", "words": "On the two ends of the altar are burning candles." }
+    ] },
+    { "as": "Marta", "type": "pray", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "The brown sack contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A lunch" },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cellar" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Narrow Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a long and narrow corridor where a long north-south passageway briefly narrows even further." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Mirror Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large square room with tall ceilings. On the south wall is an enormous mirror which fills the entire wall. There are exits on the other three sides of the room." }
+    ] },
+    { "as": "Marta", "type": "rub mirror", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is a rumble from deep within the earth and the room shakes." },
+      { "reader": "Marta", "kind": "described", "words": "Mirror Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large square room with tall ceilings. On the south wall is an enormous mirror which fills the entire wall. There are exits on the other three sides of the room." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cold Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a cold and damp corridor where a long east-west passageway turns into a southward path." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Slide Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small chamber, which appears to have been part of a coal mine. On the south wall of the chamber the letters \"Granite Wall\" are etched in the rock. To the east is a long passage, and there is a steep metal slide twisting downward. To the north is a small opening." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Mine Entrance" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing at the entrance of what might have been a coal mine. The shaft enters the west wall, and there is another exit on the south end of the room." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Squeaky Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a small room. Strange squeaky sounds may be heard coming from the passage at the north end. You may also escape to the east." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Bat Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a small room which has doors only to the east and south." },
+      { "reader": "Marta", "kind": "described", "words": "In the corner of the room on the ceiling is a large vampire bat who is obviously deranged and holding his nose." },
+      { "reader": "Marta", "kind": "described", "words": "There is an exquisite jade figurine here." }
+    ] },
+    { "as": "Marta", "type": "take jade", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Shaft Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room, in the middle of which is a small shaft descending through the floor into darkness below. To the west and the north are exits from this room. Constructed over the top of the shaft is a metal framework to which a heavy iron chain is attached." },
+      { "reader": "Marta", "kind": "described", "words": "At the end of the chain is a basket." }
+    ] },
+    { "as": "Marta", "type": "put torch in basket", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "put screwdriver in basket", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Smelly Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small nondescript room. However, from the direction of a small descending staircase a foul odor can be detected. To the south is a narrow tunnel." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gas Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room which smells strongly of coal gas. There is a short climb up some stairs and a narrow tunnel leading east." },
+      { "reader": "Marta", "kind": "described", "words": "There is a sapphire-encrusted bracelet here." }
+    ] },
+    { "as": "Marta", "type": "take bracelet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" },
+      { "reader": "Marta", "kind": "described", "words": "This is a nondescript part of a coal mine." }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" },
+      { "reader": "Marta", "kind": "described", "words": "This is a nondescript part of a coal mine." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" },
+      { "reader": "Marta", "kind": "described", "words": "This is a nondescript part of a coal mine." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" },
+      { "reader": "Marta", "kind": "described", "words": "This is a nondescript part of a coal mine." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Ladder Top" },
+      { "reader": "Marta", "kind": "described", "words": "This is a very small room. In the corner is a rickety wooden ladder, leading downward. It might be safe to descend. There is also a staircase leading upward." }
+    ] },
+    { "as": "Marta", "type": "climb down ladder", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Ladder Bottom" },
+      { "reader": "Marta", "kind": "described", "words": "This is a rather wide room. On one side is the bottom of a narrow wooden ladder. To the west and the south are passages leaving the room." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dead End" },
+      { "reader": "Marta", "kind": "described", "words": "You have come to a dead end in the mine." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small pile of coal here." }
+    ] },
+    { "as": "Marta", "type": "take coal", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Ladder Bottom" }
+    ] },
+    { "as": "Marta", "type": "climb up ladder", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Ladder Top" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gas Room" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Smelly Room" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Shaft Room" },
+      { "reader": "Marta", "kind": "described", "words": "At the end of the chain is a basket." },
+      { "reader": "Marta", "kind": "described", "words": "The basket contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A torch (providing light)" },
+      { "reader": "Marta", "kind": "described", "words": "A screwdriver" }
+    ] },
+    { "as": "Marta", "type": "put coal in basket", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "lower basket", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The basket is lowered to the bottom of the shaft." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Smelly Room" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gas Room" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Coal Mine" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Ladder Top" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Ladder Bottom" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Timber Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a long and narrow passage, which is cluttered with broken timbers. A wide passage comes from the east and turns at the west end of the room into a very narrow passageway. From the west comes a strong draft." },
+      { "reader": "Marta", "kind": "described", "words": "There is a broken timber here." }
+    ] },
+    { "as": "Marta", "type": "drop all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Clove of garlic: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "Brass lantern: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "Sword: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "Jade figurine: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "Sapphire-encrusted bracelet: Dropped." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Drafty Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small drafty room in which is the bottom of a long shaft. To the south is a passageway and to the east a very narrow passage. In the shaft can be seen a heavy iron chain." },
+      { "reader": "Marta", "kind": "described", "words": "At the end of the chain is a basket." },
+      { "reader": "Marta", "kind": "described", "words": "The basket contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A torch (providing light)" },
+      { "reader": "Marta", "kind": "described", "words": "A screwdriver" },
+      { "reader": "Marta", "kind": "described", "words": "A small pile of coal" }
+    ] },
+    { "as": "Marta", "type": "take coal", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take screwdriver", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Machine Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large, cold room whose sole exit is to the north. In one corner there is a machine which is reminiscent of a clothes dryer. On its face is a switch which is labelled \"START\". The switch does not appear to be manipulable by any human hand (unless the fingers are about 1/16 by 1/4 inch). On the front of the machine is a large lid, which is closed." }
+    ] },
+    { "as": "Marta", "type": "x machine", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a squat white machine of enameled steel, about the size and shape of a clothes dryer, with a large round lid on the front. It hums faintly, or remembers humming. On its face is a switch labelled \"START\"." },
+      { "reader": "Marta", "kind": "described", "words": "The machine is closed." }
+    ] },
+    { "as": "Marta", "type": "x switch", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The switch is set into the face of the machine and labelled \"START\" in letters that have been polished by thumbs. It has no handle at all, only a narrow slot across its face, about 1/16 by 1/4 inch, of a shape that would suit the tip of a small flat tool." }
+    ] },
+    { "as": "Marta", "type": "take machine", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It is far too large to carry." }
+    ] },
+    { "as": "Marta", "type": "turn on machine", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It's not clear how to turn it on with your bare hands." }
+    ] },
+    { "as": "Marta", "type": "turn switch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your bare hands don't appear to be enough." }
+    ] },
+    { "as": "Marta", "type": "turn switch with torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It seems that a torch won't do." }
+    ] },
+    { "as": "Marta", "type": "open lid", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lid opens." }
+    ] },
+    { "as": "Marta", "type": "open lid", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Have your eyes checked." }
+    ] },
+    { "as": "Marta", "type": "turn switch with screwdriver", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The machine doesn't seem to want to do anything." }
+    ] },
+    { "as": "Marta", "type": "close lid", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lid closes." }
+    ] },
+    { "as": "Marta", "type": "turn switch with screwdriver", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The machine comes to life (figuratively) with a dazzling display of colored lights and bizarre noises. After a few moments, the excitement abates." }
+    ] },
+    { "as": "Marta", "type": "open lid", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lid opens, revealing a small piece of vitreous slag." }
+    ] },
+    { "as": "Marta", "type": "take slag", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The slag was rather insubstantial, and crumbles into dust at your touch." }
+    ] },
+    { "as": "Marta", "type": "look in machine", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The machine is empty." }
+    ] },
+    { "as": "Marta", "type": "put coal in machine", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "close lid", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lid closes." }
+    ] },
+    { "as": "Marta", "type": "close lid", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Have your eyes checked." }
+    ] },
+    { "as": "Marta", "type": "turn on machine with screwdriver", "expect": [
+      { "level": "info", "text": "step: underground_caverns.turn_with" },
+      { "reader": "Marta", "kind": "said", "words": "The machine comes to life (figuratively) with a dazzling display of colored lights and bizarre noises. After a few moments, the excitement abates." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Machine Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large, cold room whose sole exit is to the north. In one corner there is a machine which is reminiscent of a clothes dryer. On its face is a switch which is labelled \"START\". The switch does not appear to be manipulable by any human hand (unless the fingers are about 1/16 by 1/4 inch). On the front of the machine is a large lid, which is closed." }
+    ] },
+    { "as": "Marta", "type": "open lid", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lid opens, revealing a huge diamond." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Machine Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large, cold room whose sole exit is to the north. In one corner there is a machine which is reminiscent of a clothes dryer. On its face is a switch which is labelled \"START\". The switch does not appear to be manipulable by any human hand (unless the fingers are about 1/16 by 1/4 inch). On the front of the machine is a large lid, which is open." },
+      { "reader": "Marta", "kind": "described", "words": "The machine contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A huge diamond" }
+    ] },
+    { "as": "Marta", "type": "take diamond", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "x diamond", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is an enormous diamond, perfectly cut, the size of a hen's egg and twice as hard to come by. Light goes into it and comes out again in pieces, all of them brighter. It is still faintly warm, and it smells, very slightly, of coal." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 87 (total of 350 points), in 124 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
+    ] }
+  ]
+}

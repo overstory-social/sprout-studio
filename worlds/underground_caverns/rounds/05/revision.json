@@ -1,0 +1,213 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The maze stays exactly as dungeon.zil joins it. The brief asks for Zork's maze, and rooms that are all alike are the puzzle. The turn cap belongs to the brief's budget, so changing it is the director's call. intent.md now says so for the director, and records that the grating from below, the key, the leaves falling and the second way home are covered only by grating.json and coins.json."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Kept as built. Five players solved the maze Zork's way, by dropping markers. Adding exit lists or making rooms differ would break both the faithfulness and the puzzle."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "A real bug. troll.sprout already left out Thing's talk answer but not its ask answer, so 'ask troll' gave two refusals. It now leaves both out, and take_which.json checks that the troll gives his own single line."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Zork's V-CLIMB-UP and V-CLIMB-DOWN walk the way the stairs lead, so 'You can't do that!' was unfaithful. Each room's stairs now go the right way and use Zork's 'The stairs don't lead upward/downward.' the wrong way. This includes the cellar's stairs, which are Zork's global STAIRS. The Kitchen chimney gives the Santa line for climb down. Sprout cannot make a handler take an exit, so the climb goes through the gate (friction 65)."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Zork would ask 'listen to what?', and this parser cannot ask (friction 32). The closest faithful answer is to say what there is to hear. In the forest that is Zork's own songbird line, and the forest prose keeps pointing at the songbird."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Logged against friction 59. I found a workaround that keeps Zork's nouns, so the sack still answers to 'bag': the adventurer's take refuses a reading of one thing already in hand, and the parser prefers the reading that is allowed. 'take bag' now takes the coins, as Zork's TAKE does, and 'take lamp' in Maze 5 takes the burned-out lantern. The cost is that the refusal no longer counts a move (friction 23)."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "I checked the ZIL source, and Zork's own rule differs from both readings in the point. JIGS-UP clears the trap door's TOUCHBIT, as the chimney does, so after a death the next descent from above bars the door again. The world now does that. intent.md's arc now states the bars-once rule and its two resets. A death also puts out a glowing sword. death_trap.json covers the death-then-descend case."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "The brief asks that every named thing answer with its own description. The front door now names its boards, and Zork's 'The door is closed.' follows as the second paragraph."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The chasm now has a look_in line of its own. For 'search', Zork has its own verb, V-SEARCH, which answers 'You find nothing unusual.'. Search is now that verb rather than a phrase of look_in, so walls and dead ends no longer get a container refusal. This is more faithful than reusing the examine text."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "This is an engine parsing gap the world cannot fix. A world phrase would only move the problem to other verbs. Logged as friction 63, to file with Sprout."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Sprout has no '<actor>, <command>' addressing. Logged as friction 64 alongside 51. No world change, since 'hello troll', 'talk to troll' and 'ask troll' already answer in the troll's words."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "The canyon rope is new prose that invites the attempt. A CROSS verb (Zork's 'You can't cross that!') plus rope-only synonyms (climb, climb over, step over, jump over, duck under, crawl under, go under) now get one line in the Frobozz voice. Inventory synonyms and 'exits' are left out, as in Zork."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Kept as built. The chimney's rule, the barred trap door, the Management's notes and the maze prose all worked as intended."
+    },
+    {
+      "answers": "P14",
+      "decision": "accept",
+      "reason": "Keeping Zork's 'Done.' The collection listing does the celebrating, and two players quoted it as the moment of success. An extra line would add little and depart from Zork."
+    },
+    {
+      "answers": "P15",
+      "decision": "accept",
+      "reason": "Carried into intent.md as round 6's watch list: the grue, the skeleton and ghost, the rusty knife, falls from the tree, throwing at and waking the troll, and the grating loop. Each stays covered by its script test."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "Already followed. Round 4 started only after sprout#450-453 were merged and pinned (Sprout 26e6124), as intent's 'Before round 4' records. Nothing to change this round."
+    },
+    {
+      "answers": "S2",
+      "decision": "accept",
+      "reason": "Already followed in rounds 3 and 4. The knockout holds: the troll never comes round on his first turn after the blow, and is a tenth likelier to on each turn after (friction 38; intent's 'A knockout is a second chance'). Nothing in round 5 touches it, so nothing changes."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Troll leaves out Thing's 'ask' answer, as it already did for 'talk', so asking him prints one line",
+      "files": [
+        "worlds/underground_caverns/world/troll.sprout",
+        "worlds/underground_caverns/world/tests/take_which.json"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "Stairs climbable by name. Kitchen, attic, living room and a new cellar staircase go the way their exit leads (through the gate, with go's dark-place and trap-door-crash lines) and use Zork's 'The stairs don't lead upward/downward.' the wrong way. Kitchen chimney: climb down gives the Santa Claus line, climb up gives 'The chimney doesn't lead upward.'. Dest enum gains attic, cellar and living_room.",
+      "files": [
+        "worlds/underground_caverns/world/scenery.sprout",
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/tests/climbing.json",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "Bare 'listen' / 'listen carefully' verb: songbird in Forest rooms, maze line in Maze and Dead End rooms, 'You hear nothing out of the ordinary.' elsewhere",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/climbing.json"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "Adventurer's take refuses, in its permit, a one-thing reading of something already held, so the parser prefers the thing on the floor (bag of coins over sack, burned-out lantern over brass). Friction 59 updated. trap_door.json now expects the refusal kind and one fewer move.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/take_which.json",
+        "worlds/underground_caverns/world/tests/trap_door.json",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "Death clears the barred trap door as JIGS-UP does. The :unbar message now carries a boolean: the chimney sends false, a death sends true, and the cellar recomputes the crash. A death also resets a carried sword's glow to 0. The intent arc now states the rule.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/cellar.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/death_trap.json",
+        "worlds/underground_caverns/intent.md",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Front door description naming the boards, followed by Zork's 'The door is closed.'",
+      "files": [
+        "worlds/underground_caverns/world/scenery.sprout",
+        "worlds/underground_caverns/world/tests/climbing.json"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "Chasm answers look_in with its own line. SEARCH split out of look_in into its own verb with Zork's 'You find nothing unusual.' default.",
+      "files": [
+        "worlds/underground_caverns/world/gallery.sprout",
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/climbing.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "Friction 63 (trailing 'here' read as a noun, an engine bug for Sprout) and 64 ('troll, hello' addressing)",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P10",
+        "P11"
+      ]
+    },
+    {
+      "what": "CROSS verb with Zork's default 'You can't cross that!'. The canyon rope adds object-scoped synonyms (climb, climb over, step over, jump over, hop over, duck under, crawl under, go under) answered in the Frobozz voice.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/above_ground.sprout",
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/climbing.json",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P12"
+      ]
+    },
+    {
+      "what": "intent.md 'After round 5': the maze kept, with the turn cap flagged for the director; grating loop coverage only in grating.json/coins.json; what was kept by choice; round 6 watch list",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P13",
+        "P14",
+        "P15"
+      ]
+    }
+  ]
+}

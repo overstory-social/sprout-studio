@@ -27,12 +27,10 @@
       { "reader": "Marta", "kind": "said", "words": "You have neither the tools nor the expertise." }
     ] },
     { "as": "Marta", "type": "climb down", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
-      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" }
     ] },
     { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "North of House" },
-      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+      { "reader": "Marta", "kind": "described", "words": "North of House" }
     ] },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Behind House" },
@@ -50,12 +48,8 @@
       { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
     ] },
     { "as": "Marta", "type": "take all", "expect": [
-      { "level": "info", "text": "step: underground_caverns.take" },
-      { "reader": "Marta", "kind": "said", "words": "You already have that!" },
-      { "level": "info", "text": "step: underground_caverns.take" },
-      { "reader": "Marta", "kind": "said", "words": "Taken." },
-      { "level": "info", "text": "step: underground_caverns.take" },
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+      { "reader": "Marta", "kind": "said", "words": "Brown sack: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Glass bottle: Taken." }
     ] },
     { "as": "Marta", "type": "open sack", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Opening the brown sack reveals a lunch, and a clove of garlic." }
@@ -92,21 +86,21 @@
       { "reader": "Marta", "kind": "described", "words": "A jewel-encrusted egg" }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 20 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 20 (total of 350 points), in 17 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." }
     ] },
     { "as": "Marta", "type": "take egg", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 15 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 15 (total of 350 points), in 18 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." }
     ] },
     { "as": "Marta", "type": "put egg in case", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Done." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 20 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 20 (total of 350 points), in 19 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." }
     ] }
   ]

@@ -1,0 +1,96 @@
+{
+  "about": "A comma between commands chains them, as Zork's does, before a verb or a direction; a line said to the troll by name, \"troll, hello\", is not a sentence the world reads, and \"hello troll\" is; \"drop ... here\" drops. \"enter window\" where there is no window is still not understood, and a fix would show here.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "open mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the small mailbox reveals a leaflet." }
+    ] },
+    { "as": "Marta", "type": "take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "drop the leaflet here", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "drop leaflet here", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You don't have the leaflet." }
+    ] },
+    { "as": "Marta", "type": "take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "put leaflet down here", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "n, n, n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." },
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." },
+      { "reader": "Marta", "kind": "described", "words": "Clearing" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a clearing, with a forest surrounding you on all sides. A path leads south." },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a pile of leaves." }
+    ] },
+    { "as": "Marta", "type": "enter window", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "That sentence isn't one I recognize." }
+    ] },
+    { "as": "Marta", "type": "s, s, e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window, enter window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." },
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "take sack, w", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "as": "Marta", "type": "take lamp, take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "move rug", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "as": "Marta", "type": "open trap door, turn on lantern, go down", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." },
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." },
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "as": "Marta", "type": "troll, hello", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "That sentence isn't one I recognize." }
+    ] },
+    { "as": "Marta", "type": "troll, give me the axe", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "That sentence isn't one I recognize." }
+    ] },
+    { "as": "Marta", "type": "hello troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll bows his head to you in greeting." }
+    ] }
+  ]
+}

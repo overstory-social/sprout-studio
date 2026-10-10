@@ -1,0 +1,165 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "Zork's refusal is the same whatever is in hand, so three players read it as a wall to strip down for, down to the lamp alone. It now goes on in the chimney's voice and names only what will not go. The lamp is named, and the garlic and matchbook are left out, which hints at the exception. The rule stays Zork's."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "The grue and the lamp's return stay Zork's. The Shaft Room's shaft now says, when examined, looked into or looked down, that the bottom is dark and that a light sent down stays down. Lowering the only lamp becomes a choice the player makes knowingly, and the need for a second light points at the torch."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Keep the thief's robbing as Zork has it. Following him to the lair goes on round 14's watch list. A goal aimed at the lair is the director's call."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Keep TOUCHBIT, which is Zork's. The intent's claim was wrong: the slide is a short way home only after the player comes up by a non-chimney route and the trap door is open. The intent is corrected in both places that made the claim."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Keep. The identical rooms and one-way exits are Zork's maze, and dropping things to mark rooms worked for the players who tried it."
+    },
+    {
+      "answers": "P6",
+      "decision": "reject",
+      "reason": "This is not something to change in the world. The engine answers an unknown word with not_here, and a phrase for every adverb is not a fix. It is logged in friction.md as friction 94 again, to raise with Sprout, and the world does not work around it."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "This is the 'names given back' problem again, in v7's prose. The slab and its chalked notice are now in the Tiny Cave: they can be examined and read, and they refuse to be moved, taken, kicked or lifted, in the notice's voice. 'look down [x]' and 'peer down [x]' now look into a thing, so 'look down shaft' is answered. Bare LOOK DOWN in the Shaft Room describes the drop and where the basket is. The slab is tested in candles_gust.json, the test that reaches the Tiny Cave, rather than named_back.json, which never goes there."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Keep the mirror, the Cave and the bat as built. They were read as intended."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Fixed through P1 and P2, which make the puzzle readable from the passage and the shaft. A goal aimed at the mine is the director's call. The basket's 'There's no room.' is correct and is unchanged."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "Keep all of it. P1 applies the same named-load pattern to the narrow passage."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Keep Zork's melee table, as the director has ruled."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "This was already built in round 4: the open bottle in hand lets the troll take the water by pass mechanics, and npc_troll.json covers it. Smoke-testing found phrasings that failed: 'hand troll the water', 'let the troll drink the water', 'give troll a drink'. give is at its eight-phrase cap, so the new phrasings went into an intent, plus a 'drink' noun on the water. Nothing was impossible to build, so this is not friction; friction.md records that answer to the steering."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The narrow passage's refusal keeps Zork's sentence and goes on to name only the things in hand too big for the slot, ending 'and anything else bigger than would go in a pocket'. The lamp is named; the garlic and matchbook are not.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The Timber Room's passageway, examined, now says a pocketful goes through, a lamp would stick, and the draught through the slot comes out of the dark.",
+      "files": [
+        "worlds/underground_caverns/world/mine.sprout"
+      ],
+      "for": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "what": "The Shaft Room's shaft (examine and look in) says the bottom is dark and needs its own light, that a light sent down in the basket stays down, and where the basket is.",
+      "files": [
+        "worlds/underground_caverns/world/mine.sprout"
+      ],
+      "for": [
+        "P2",
+        "P7"
+      ]
+    },
+    {
+      "what": "Bare LOOK DOWN in the Shaft Room describes the drop and where the basket is. The 'look down [x]', 'peer down [x]' and 'look down the [x]' phrasings now map to look_in, so 'look down shaft' works.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/verbs.sprout"
+      ],
+      "for": [
+        "P2",
+        "P7"
+      ]
+    },
+    {
+      "what": "Added the slab of rock and its chalked notice to the Tiny Cave: they can be examined and read ('This means you.'). Move, take, raise and kick are refused in the notice's voice, and look under and look behind are answered.",
+      "files": [
+        "worlds/underground_caverns/world/mirror.sprout",
+        "worlds/underground_caverns/world/tests/candles_gust.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Updated basket.json for the new refusal and passageway prose, and added steps for x shaft, look down and look in shaft with the basket at the top, and look down shaft and look down with it lowered. Move counts were adjusted.",
+      "files": [
+        "worlds/underground_caverns/world/tests/basket.json"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P7"
+      ]
+    },
+    {
+      "what": "Added a give_more intent ('hand [y] [x]', 'pass [x] to [y]', 'pass [y] [x]', 'let [y] have [x]', 'let [y] drink [x]', 'let [y] eat [x]', 'give [x] for [y] to drink') and a 'drink' noun on the water. Added a new test, troll_water.json: with the bottle shut the troll is refused, and with it open he drinks.",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/items.sprout",
+        "worlds/underground_caverns/world/tests/troll_water.json"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "Corrected the intent's claim that the slide is a short way home: it needs a return by some way other than the chimney first. Added the passage and shaft legibility to the secrets, and an 'After round 13' section with round 14's watch list.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P7",
+        "P9",
+        "S1"
+      ]
+    },
+    {
+      "what": "friction.md gains a 'Found in round 13' section: 94 again (an unknown word is blamed on the object, to raise with Sprout), 118 (a filtered list can't be written: $first and $last count the whole loop, a passage can't do arithmetic, and a guard can't write), and the steering answer. It also gets v7 'differences chosen' entries for the passage refusal, the shaft line and the slab.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P7",
+        "S1"
+      ]
+    }
+  ]
+}

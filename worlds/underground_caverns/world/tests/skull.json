@@ -1,0 +1,142 @@
+{
+  "about": "The crystal skull (SKULL, LAND-OF-LIVING-DEAD): past the exorcised gate, in the Land of the Dead, among the stacked remains and the weeping souls, lies the crystal skull, ten points taken and ten more in the trophy case, the last twenty of Zork's 350; the bodies are not to be taken. Home again by the Cave, the mirrors' country, the Round Room and the Studio's chimney, with a lamp and the skull and nothing more.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "take lamp" },
+    { "as": "Marta", "type": "take sword" },
+    { "as": "Marta", "type": "turn on lamp" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "take rope" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "move rug" },
+    { "as": "Marta", "type": "open trap door" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "n" },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword" },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll" },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "ne" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "take matchbook" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "sw" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "se" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "tie rope to railing" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "drop sword" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "take bell" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "take book" },
+    { "as": "Marta", "type": "take candles" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "ring bell" },
+    { "as": "Marta", "type": "take candles" },
+    { "as": "Marta", "type": "light match" },
+    { "as": "Marta", "type": "light candles with match" },
+    { "as": "Marta", "type": "read book" },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 40 (total of 350 points), in 47 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of the Dead" },
+      { "reader": "Marta", "kind": "described", "words": "You have entered the Land of the Living Dead. Thousands of lost souls can be heard weeping and moaning. In the corner are stacked the remains of dozens of previous adventurers less fortunate than yourself. A passage exits to the north." },
+      { "reader": "Marta", "kind": "described", "words": "Lying in one corner of the room is a beautifully carved crystal skull. It appears to be grinning at you rather nastily." }
+    ] },
+    { "as": "Marta", "type": "x skull", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a human skull, life-size and perfect to the last tooth, carved out of a single piece of rock crystal so clear that you can see your own fingers through it, and so cold it seems to drink the warmth out of them. Whoever carved it knew exactly what a skull looks like from the inside. It is grinning at you rather nastily, which, being a skull, it cannot help." }
+    ] },
+    { "as": "Marta", "type": "take skull", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 50 (total of 350 points), in 50 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
+    ] },
+    { "as": "Marta", "type": "x bodies", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The remains are stacked in the corner with a dreadful neatness, dozens of them, adventurers all, to judge by what is left of their boots. Each of them came a long way to get here, and every one of them got here first." }
+    ] },
+    { "as": "Marta", "type": "take bodies", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A force keeps you from taking the bodies." }
+    ] },
+    { "as": "Marta", "type": "x souls", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The lost souls are heard and not seen: thousands of them, weeping and moaning on every side, close enough to touch and nowhere at all. They do not seem to have noticed you. They are not, on the whole, the noticing kind." }
+    ] },
+    { "as": "Marta", "type": "listen to souls", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Thousands of voices, lamenting some hideous fate. You listen for a while, and wish you had not; it is the kind of thing that stays with you." }
+    ] },
+    { "as": "Marta", "type": "x passage", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The passage leads north, back through the gate to the stairs and the world above. It is the only way out, which down here counts as generous." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Entrance to Hades" },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a red hot bell." }
+    ] },
+    { "as": "Marta", "type": "extinguish candles" },
+    { "as": "Marta", "type": "drop candles" },
+    { "as": "Marta", "type": "drop book" },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cave" }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "drop matchbook", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    { "as": "Marta", "type": "open case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." }
+    ] },
+    { "as": "Marta", "type": "put skull in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 60 (total of 350 points), in 74 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
+    ] },
+    { "as": "Marta", "type": "x case", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The trophy case is a handsome thing of polished wood and glass, fastened securely to the wall and plainly built to hold treasures. It has the patient air of something that expects to be filled." },
+      { "reader": "Marta", "kind": "described", "words": "Your collection of treasures consists of:" },
+      { "reader": "Marta", "kind": "described", "words": "A crystal skull" }
+    ] }
+  ]
+}

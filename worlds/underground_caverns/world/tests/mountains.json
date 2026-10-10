@@ -1,0 +1,45 @@
+{
+  "about": "After round 16: the mountains east of the forest answer to their own name, and climbing them, by any phrasing, is Zork's MOUNTAIN-RANGE-F.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a dimly lit forest, with large trees all around." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "The forest thins out, revealing impassable mountains." }
+    ] },
+    { "as": "Marta", "type": "climb the impassable mountains", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Don't you believe me? The mountains are impassable!" }
+    ] },
+    { "as": "Marta", "type": "climb mountains", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Don't you believe me? The mountains are impassable!" }
+    ] },
+    { "as": "Marta", "type": "climb up the mountains", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Don't you believe me? The mountains are impassable!" }
+    ] },
+    { "as": "Marta", "type": "up", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The mountains are impassable." }
+    ] },
+    { "as": "Marta", "type": "examine the mountains", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The mountains rise sheer and grey beyond the last of the trees. They are impassable, and they look it." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The mountains are impassable." }
+    ] }
+  ]
+}

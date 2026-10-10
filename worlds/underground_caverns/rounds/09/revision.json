@@ -1,0 +1,196 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "Checked against 1actions.zil: the first clause of THIEF-VS-ADVENTURER does nothing while the visitor is in the Treasure Room. Zork's thief never runs, robs or leaves in his own lair. Ours ran the whole branch there, including the WINNING? flee, so the hoard, the open egg and the canary could not be won. That is a world bug that broke the canary arc. Now he stands and fights in his lair. thief_hoard and treasure_room kill him there; thief_lair shows him staying through a losing exchange and three more of his turns."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Accepted in part. The lair half (he left from his own lair) is the P1 bug and is fixed with it. The staggered half is rejected. Zork's STAGGERED only costs him his next blow in VILLAIN-BLOW. I-THIEF's 30 per cent leave in THIEF-VS-ADVENTURER runs whether he is staggered or not, so a staggered thief leaving 'disgusted' in the same move is faithful."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "V-DIAGNOSE does print 'which will be cured after N moves', and our 'You can...' line also left out the score-based FIGHT-STRENGTH. Fixing it turned up a real bug: a serious wound cost two strength but healed as one. Wounds are now counted in Zork's points."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Accepted in part. The mechanic is rejected: DO-FIGHT really does repeat the villain's blow one to three more times in the same move after an UNCONSCIOUS result, and each repeat that is not a stagger is the sitting-duck death. The brief's faithfulness yardstick keeps it. The prose is accepted: the death line is the author's own, so it now says where things went."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "No change. The thief's voice and the caretaker thread work as intended, and all six players met him."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Friction 92 had kept the description-first order as the spec's. A player read it as a fault, and Zork prints M-ENTER first. The visitor's own `go` (and the TREASURE word) now say the scream and the gesture before the room is described. The gesture is said only when there is a treasure besides the chalice to vanish. That departs from Zork's always-true test, but only in prose."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "This is an engine bug: a noun phrase that leaves words unmatched falls to not_here. The world has no say in it, so it is logged as friction 94 (63 again, for words other than 'here') to file with Sprout, with no world change."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Accepted in part. BLOW OUT is Zork's own syntax (gsyntax.zil: BLOW OUT OBJECT = V-LAMP-OFF), so it is added, and the torch gives Zork's line. EVERYTHING is rejected: it is not in Zork's vocabulary (gparser knows ALL and ONE), so Zork would not know the word either."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "No change. The maze stays as dungeon.zil has it, as decided in round 5. The rise in unread lines is read as maze walls plus the newcomer's natural-language questions, not as a regression."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "There is no world change: the content is built and tested, and a goal aimed at it is the director's to give, not the author's. It is carried into intent.md's 'What round 10 should watch' together with the suggested goals. The P1 fix also reopens the lair route to the canary."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "No change. The echo, the prayer, the lamp named in the load message and the chimney's rule all held. The sack loophole is Zork's own one-thing rule."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "The rule is kept, since it is OTVAL-FROB, the same as the sceptre in the coffin. The optional prose hint is not added: the case lists its contents as Zork's does, and the coffin already teaches the rule in-world."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Noted for the director. The missing reports are a harness problem, not the world's. For the world, the thief was weighed by the opus runs that fought him, which is how P1 and P4 were judged."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "This round-03 comment carries over. The visitor knocking a villain out gives the player a turn to strike again: the thief out cold with company has a growing 25-per-turn chance to come round, starting at zero, so a following attack always lands. P4's knockout of the visitor is the other direction and is Zork's DO-FIGHT, so it is not lengthened."
+    },
+    {
+      "answers": "S2",
+      "decision": "accept",
+      "reason": "The seed tuning is kept. Zork's randomness stays, and the new tests only re-seed fights in the scripts, not in the world."
+    },
+    {
+      "answers": "S3",
+      "decision": "accept",
+      "reason": "This concerns the player agents, not the world, so there is no world change."
+    },
+    {
+      "answers": "S4",
+      "decision": "accept",
+      "reason": "Agreed. No change asked."
+    }
+  ],
+  "changes": [
+    {
+      "what": "In his lair with a visitor present, the thief skips THIEF-VS-ADVENTURER entirely (Zork's first clause): no discretion flee, no robbing, no leaving in disgust. He stands and fights until one of them is dead.",
+      "files": [
+        "worlds/underground_caverns/world/thief.sprout"
+      ],
+      "for": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "what": "The new test thief_lair.json replaces thief_flee.json, which had encoded the flee in the lair. thief_hoard.json, treasure_room.json and v5_score.json were re-seeded so the visitor kills him in his lair and the hoard, open egg and canary reappear.",
+      "files": [
+        "worlds/underground_caverns/world/tests/thief_lair.json",
+        "worlds/underground_caverns/world/tests/thief_flee.json",
+        "worlds/underground_caverns/world/tests/thief_hoard.json",
+        "worlds/underground_caverns/world/tests/treasure_room.json",
+        "worlds/underground_caverns/world/tests/v5_score.json"
+      ],
+      "for": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "what": "The Treasure Room's scream and the thief's gesture are now said by the visitor's own go/TREASURE-word move, before the room is described. The gesture only shows when a treasure besides the chalice is there. The lair keeps :keeper (a new message, set by the thief when knocked out, revived or killed) so the visitor knows whether he will come. The thief's own tells were removed, and cyclops_sleep.json was updated.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/thief.sprout",
+        "worlds/underground_caverns/world/cyclops.sprout",
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/tests/cyclops_sleep.json",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "DIAGNOSE follows V-DIAGNOSE: 'You have <wound>, which will be cured after N moves.' N is 20 moves per further point plus what is left of the current tick, tracked in :cure_at. 'You can...' now counts the score as FIGHT-STRENGTH does. Wounds are counted in Zork's points (a serious wound adds two and heals as two), which fixes a permanent strength loss. cyclops_wake.json was updated, and friction 93 logs the unreadable wake time and the missing * operator.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/cyclops_wake.json",
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "The death line now says where belongings went: plain things about the forest and fields around the house, anything of value into a dark corner in or under it, the lamp to the living room. The mechanic (Zork's same-move sitting-duck blows) is unchanged. Eleven tests got the new line.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/altar.json",
+        "worlds/underground_caverns/world/tests/chasm_room.json",
+        "worlds/underground_caverns/world/tests/coffin.json",
+        "worlds/underground_caverns/world/tests/cyclops_wrath.json",
+        "worlds/underground_caverns/world/tests/death_trap.json",
+        "worlds/underground_caverns/world/tests/diode_dark.json",
+        "worlds/underground_caverns/world/tests/edges.json",
+        "worlds/underground_caverns/world/tests/maze_dark.json",
+        "worlds/underground_caverns/world/tests/railing.json",
+        "worlds/underground_caverns/world/tests/rope_fall.json",
+        "worlds/underground_caverns/world/tests/skeleton.json"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "Added 'blow out [target]' and 'blow [target] out' to the turn-off verb, as Zork's BLOW OUT = V-LAMP-OFF. dome.json now checks the torch's 'You nearly burn your hand trying to extinguish the flame.'",
+      "files": [
+        "worlds/underground_caverns/world/verbs.sprout",
+        "worlds/underground_caverns/world/tests/dome.json"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "Logged friction 94: a trailing unmatched word ('again', 'get on X') falls to not_here instead of unknown. It is an engine bug for Sprout.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "intent.md updated: the lair secret now says he does not run there, the test list names thief_lair.json, and there is a new 'After round 9' section recording each decision. 'What round 10 should watch' carries the unmet content and the director-facing goal suggestions.",
+      "files": [
+        "worlds/underground_caverns/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P3",
+        "P4",
+        "P5",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13"
+      ]
+    }
+  ]
+}

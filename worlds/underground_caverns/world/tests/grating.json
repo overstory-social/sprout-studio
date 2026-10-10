@@ -1,0 +1,223 @@
+{
+  "about": "The skeleton key and the grating, from below: locked with a skull-and-crossbones lock, unlocked with the key and nothing else, opened to the trees with the leaves falling through, the Grating Room lit by the day while it is open and dark when it is shut; and from above, in the Clearing, open and shut but never unlocked or locked, and the way down through it.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "move rug", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike. A skeleton, probably the remains of a luckless adventurer, lies here." },
+      { "reader": "Marta", "kind": "described", "words": "The deceased adventurer's useless lantern is here." },
+      { "reader": "Marta", "kind": "described", "words": "Beside the skeleton is a rusty knife." },
+      { "reader": "Marta", "kind": "described", "words": "There is a skeleton key here." },
+      { "reader": "Marta", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
+    ] },
+    { "as": "Marta", "type": "take key", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Grating Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a small room near the maze. There are twisty passages in the immediate vicinity." },
+      { "reader": "Marta", "kind": "described", "words": "Above you is a grating locked with a skull-and-crossbones lock." }
+    ] },
+    { "as": "Marta", "type": "x grating", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The grating is set into the roof of the room, heavy iron bars rusted the colour of old leaves. It is closed, and fastened with a skull-and-crossbones lock." }
+    ] },
+    { "as": "Marta", "type": "x lock", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The lock on the underside of the grating is a heavy iron thing with a skull and crossbones cast into its face, which seems excessive for a grating. It has a keyhole of generous size, as though whoever made it expected a key of some character." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The grating is closed." }
+    ] },
+    { "as": "Marta", "type": "open grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grating is locked." }
+    ] },
+    { "as": "Marta", "type": "unlock grating with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Can you unlock a grating with a sword?" }
+    ] },
+    { "as": "Marta", "type": "unlock grating with key", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grate is unlocked." }
+    ] },
+    { "as": "Marta", "type": "open grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grating opens to reveal trees above you." },
+      { "reader": "Marta", "kind": "said", "words": "A pile of leaves falls onto your head and to the ground." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Grating Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a small room near the maze. There are twisty passages in the immediate vicinity." },
+      { "reader": "Marta", "kind": "described", "words": "Above you is an open grating with sunlight pouring in." },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a pile of leaves." }
+    ] },
+    { "as": "Marta", "type": "x sunlight", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Sunlight pours down through the open grating, green from the leaves of the trees above. After the maze it is almost indecently cheerful." }
+    ] },
+    { "as": "Marta", "type": "x leaves", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a pile of dead leaves, brown and damp, of the sort a forest produces without being asked. It is rather deeper than leaves usually lie, as though someone had swept them together on purpose." }
+    ] },
+    { "as": "Marta", "type": "turn off lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now off." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Grating Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a small room near the maze. There are twisty passages in the immediate vicinity." },
+      { "reader": "Marta", "kind": "described", "words": "Above you is an open grating with sunlight pouring in." },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a pile of leaves." }
+    ] },
+    { "as": "Marta", "type": "close grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grating is closed." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
+    ] },
+    { "as": "Marta", "type": "open grating", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." },
+      { "reader": "Marta", "kind": "said", "words": "Grating Room" },
+      { "reader": "Marta", "kind": "said", "words": "You are in a small room near the maze. There are twisty passages in the immediate vicinity." },
+      { "reader": "Marta", "kind": "said", "words": "Above you is a grating." },
+      { "reader": "Marta", "kind": "said", "words": "On the ground is a pile of leaves." }
+    ] },
+    { "as": "Marta", "type": "open grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grating opens to reveal trees above you." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Clearing" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a clearing, with a forest surrounding you on all sides. A path leads south." },
+      { "reader": "Marta", "kind": "described", "words": "There is an open grating, descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "x grating", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a heavy iron grating, set securely into the ground and rusted to the colour of the leaves that hid it. Below it is only darkness." },
+      { "reader": "Marta", "kind": "described", "words": "The grating is open." }
+    ] },
+    { "as": "Marta", "type": "close grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grating is closed." }
+    ] },
+    { "as": "Marta", "type": "l", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Clearing" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a clearing, with a forest surrounding you on all sides. A path leads south." },
+      { "reader": "Marta", "kind": "described", "words": "There is a grating securely fastened into the ground." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The grating is closed!" }
+    ] },
+    { "as": "Marta", "type": "unlock grating with key", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't reach the lock from here." }
+    ] },
+    { "as": "Marta", "type": "lock grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't lock it from this side." }
+    ] },
+    { "as": "Marta", "type": "open grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grating opens." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Grating Room" },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a pile of leaves." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Grating Room" },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a pile of leaves." }
+    ] },
+    { "as": "Marta", "type": "lock grating", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The grate is locked." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Clearing" }
+    ] }
+  ]
+}

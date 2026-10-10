@@ -12,15 +12,19 @@
     { "as": "Marta", "type": "plugh", "expect": [
       { "reader": "Marta", "kind": "said", "words": "A hollow voice says \"Fool.\"" }
     ] },
+    { "seed": 4 },
     { "as": "Marta", "type": "hello", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Hello." }
     ] },
+    { "seed": 2 },
     { "as": "Marta", "type": "hello", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Good day." }
     ] },
+    { "seed": 1 },
     { "as": "Marta", "type": "jump", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Do you expect me to applaud?" }
     ] },
+    { "seed": 0 },
     { "as": "Marta", "type": "jump", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Wheeeeeeeeee!!!!!" }
     ] },
@@ -40,7 +44,7 @@
       { "reader": "Marta", "kind": "described", "words": "The small mailbox is closed." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 0 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 0 (total of 350 points), in 11 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." }
     ] },
     { "as": "Marta", "type": "diagnose", "expect": [
@@ -48,7 +52,7 @@
       { "reader": "Marta", "kind": "said", "words": "You can be killed by a serious wound." }
     ] },
     { "as": "Marta", "type": "quit", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 0 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 0 (total of 350 points), in 12 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." },
       { "reader": "Marta", "kind": "said", "words": "There is no quitting the Great Underground Empire from inside it. Walk away whenever you like; it will keep your place, and your score, until you come back." }
     ] },
@@ -59,7 +63,7 @@
       { "reader": "Marta", "kind": "said", "words": "Maximum verbosity." }
     ] },
     { "as": "Marta", "type": "brief", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Brief descriptions are not to be had in this part of the Empire. Every room will tell you everything, every time." }
+      { "reader": "Marta", "kind": "said", "words": "Brief descriptions." }
     ] },
     { "as": "Marta", "type": "foo", "expect": [
       { "reader": "Marta", "kind": "notice", "words": "That sentence isn't one I recognize." }

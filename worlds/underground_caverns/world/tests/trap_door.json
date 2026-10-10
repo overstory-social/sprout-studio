@@ -58,30 +58,41 @@
       { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
     ] },
     { "as": "Marta", "type": "d", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "The trap door crashes shut, and you hear someone barring it." },
-      { "reader": "Marta", "kind": "told", "words": "You have moved into a dark place." },
+      { "reader": "Marta", "kind": "said", "words": "You have moved into a dark place." },
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
       { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
     ] },
     { "as": "Marta", "type": "l", "expect": [
       { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
     ] },
     { "as": "Marta", "type": "take all", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You already have that!" }
+      { "reader": "Marta", "kind": "refused", "words": "You already have that!" }
     ] },
     { "as": "Marta", "type": "turn on lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." },
       { "reader": "Marta", "kind": "said", "words": "Cellar" },
       { "reader": "Marta", "kind": "said", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
     ] },
+    { "as": "Marta", "type": "examine trap door", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "High overhead is the underside of the trap door: rough planks and iron bands, and not a handle or a ring to be had from this side." },
+      { "reader": "Marta", "kind": "described", "words": "Whoever bars it keeps an ear on the house. The door is barred behind anyone new to the place, or new out of its chimney, or newly back from the dead; someone who turns up in the house by any other road and opens it again is, as far as the bar is concerned, already accounted for." },
+      { "reader": "Marta", "kind": "described", "words": "The trap door is closed." }
+    ] },
+    { "as": "Marta", "type": "push open the trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door is locked from above. Whoever keeps the bar up there drops it behind anyone new to the house. Come home by some other road and open the door yourself, and it will be let alone." }
+    ] },
+    { "as": "Marta", "type": "pull the trap door open", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door is locked from above. Whoever keeps the bar up there drops it behind anyone new to the house. Come home by some other road and open the door yourself, and it will be let alone." }
+    ] },
     { "as": "Marta", "type": "l", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cellar" },
       { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." }
     ] },
     { "as": "Marta", "type": "up", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The trap door is closed." }
+      { "reader": "Marta", "kind": "refused", "words": "The trap door is closed. Whoever keeps the bar up there drops it behind anyone new to the house. Come home by some other road and open the door yourself, and it will be let alone." }
     ] },
     { "as": "Marta", "type": "open trap door", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The door is locked from above." }
+      { "reader": "Marta", "kind": "said", "words": "The door is locked from above. Whoever keeps the bar up there drops it behind anyone new to the house. Come home by some other road and open the door yourself, and it will be let alone." }
     ] },
     { "as": "Marta", "type": "turn off lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The brass lantern is now off." },
@@ -101,11 +112,11 @@
       { "reader": "Marta", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points)." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 35 (total of 350 points), in 24 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
     ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The crawlway to the south ends, after a few feet, in raw rock. A small brass plaque reads: \"EXCAVATION SUSPENDED BY ORDER OF THE FROBOZZ MAGIC TUNNELLING COMPANY.\"" }
+    { "as": "Marta", "type": "x crawlway", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The crawlway to the south is low and mean, the kind of tunnel that is wider at the mouth than it ever is again. Someone has cleared it lately: the fallen rock is stacked neatly along one side, and there are fresh pick marks in the roof." }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "You try to ascend the ramp, but it is impossible, and you slide back down." }

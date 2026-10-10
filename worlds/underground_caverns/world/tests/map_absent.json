@@ -1,0 +1,48 @@
+{
+  "about": "Before 350 there is no secret: West of House has no southwest path and no way in, the field is only a field, and the trophy case holds no map; nobody can read or take one (WON-FLAG, MAP's INVISIBLE).",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "x field", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The field is open, grassy and entirely without incident, which is what fields are for. It runs up to the white house on the east, gives out at the forest on the west, and keeps the mailbox company in between." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't go that way." }
+    ] },
+    { "as": "Marta", "type": "in", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't go that way." }
+    ] },
+    { "as": "Marta", "type": "x path", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "read map", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "x case", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The trophy case is a handsome thing of polished wood and glass, fastened securely to the wall and plainly built to hold treasures. It has the patient air of something that expects to be filled." },
+      { "reader": "Marta", "kind": "described", "words": "The trophy case is empty." }
+    ] },
+    { "as": "Marta", "type": "open case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." }
+    ] },
+    { "as": "Marta", "type": "look in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The trophy case is empty." }
+    ] },
+    { "as": "Marta", "type": "take map", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 10 (total of 350 points), in 9 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Beginner." }
+    ] }
+  ]
+}

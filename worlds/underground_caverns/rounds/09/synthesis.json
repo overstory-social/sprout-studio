@@ -1,0 +1,464 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "In his lair the thief runs from a strong visitor after one exchange, every time, so nobody can kill him there. The hoard, the open egg and the canary never come back. The goal-seeker was at about 140 points with the axe. They gave him the egg to get it opened (turn 210), and he 'steps backward into the gloom and disappears' after the first hit (211). The same happened after the chalice parry (168) and again at 223. On every return he 'rushes to its defense' and the treasures vanish. The egg was gone for good and the score fell. In the metrics, Thief on expire and treasure_room on unveil never fired in any run, though LargeBag on disgorge did.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 168,
+          "quote": "Clang! Crash! The thief parries. / Your opponent, determining discretion to be the better part of valor..."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 210,
+          "quote": "The thief is taken aback by your unexpected generosity, but accepts the jewel-encrusted egg"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 211,
+          "quote": "The thief is struck on the arm... he steps backward into the gloom and disappears."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 223,
+          "quote": "he steps backward into the gloom and disappears."
+        }
+      ],
+      "recommendation": "Check the flee test (WINNING? against the visitor's score-based strength) and whether Zork lets the thief flee THIEF-VS-ADVENTURER while he is in the Treasure Room defending it. Then add a test in which a visitor at 120 points or more kills him in his lair (thief_hoard.json at high score). If Zork really does let him flee there, keep it, but the canary arc depends on catching him somewhere else. Say that in intent.md and watch for it next round."
+    },
+    {
+      "id": "P2",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The thief leaves when he should be unable to. The newcomer's knife blow staggered him, and in the same move 'The thief, finding nothing of value, left disgusted.' In the goal-seeker's run he came back into his own lair with the egg in his bag (look at turn 214 lists him), then 'left disgusted' from his lair the next turn instead of emptying his bag.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 192,
+          "quote": "The force of your blow knocks the thief back, stunned. / The thief, finding nothing of value, left disgusted."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 214,
+          "quote": "There is a suspicious-looking individual, holding a large bag, leaning against one wall."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 215,
+          "quote": "The thief, finding nothing of value, left disgusted. ... kill thief with axe: You can't see any such thing."
+        }
+      ],
+      "recommendation": "A staggered thief should lose his next turn, as Zork's STAGGERED does, and not run the leave branch of THIEF-VS-ADVENTURER. In the Treasure Room with the visitor present, 'nothing of value' should not send him out of his own lair. Add both cases to thief_seen.json and treasure_room.json."
+    },
+    {
+      "id": "P3",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "DIAGNOSE leaves out Zork's cure time. Zork's V-DIAGNOSE says the wound 'will be cured after N moves'. Here it says only 'You have a serious wound. You can expect death soon.' The goal-seeker waited about 20 turns, diagnosing three times, with no idea how long healing would take, and ran out of turns still wounded.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 229,
+          "quote": "You have a serious wound. You can expect death soon."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 236,
+          "quote": "You have a serious wound. You can expect death soon."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 243,
+          "quote": "You have a serious wound."
+        }
+      ],
+      "recommendation": "Port the cure line from V-DIAGNOSE (CURE-WAIT times wounds less one, plus the I-CURE tick). Then DIAGNOSE tells the visitor whether waiting is worth it."
+    },
+    {
+      "id": "P4",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The thief kills fresh visitors fast, and the killing blow comes with no turn to react. Both runs that fought him died within two swings, and each time 'knocks you out' and 'cuts your throat' arrived in the same reply. Each death scattered the sword (and the key or the food), and neither player found them again. The newcomer's lost lunch later left the Cyclops unfed at the turn cap.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 32,
+          "quote": "The thief knocks you out. / The thief, forgetting his essentially genteel upbringing, cuts your throat."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 136,
+          "quote": "Shifting in the midst of a thrust, the thief knocks you unconscious... cuts your throat."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 249,
+          "quote": "The cyclops is hungry and my food was lost when I died"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 136,
+          "quote": "'Scattered about the Empire' gave me nothing to search on."
+        }
+      ],
+      "recommendation": "Check against VILLAIN-BLOW whether Zork follows a knockout with the sitting-duck blow in the same move. If it does not, hold the second blow for the thief's next turn, as the troll's is held. Keep the tables. The death line is the author's own prose, so it could say where the scattering went (the lamp home, the rest above ground, as RANDOMIZE-OBJECTS puts it) without changing the mechanic."
+    },
+    {
+      "id": "P5",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "The thief reads as intended. All six players met him: leaning on a wall, wandering through 'lean and hungry', robbing the maze unseen, or taking a lesser thing silently. Every player who filed a report named him as a thief roaming the underground, and the goal-seeker tied the caretaker's sorted heaps to him without being told. The prose-reader's sword disappeared from the Studio while they were away (STEAL-JUNK) and came back as 'You can't see any such thing.'",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 23,
+          "quote": "Then a thief is just leaning on the wall."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 64,
+          "quote": "A \"lean and hungry\" gentleman just wandered through, carrying a large bag."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 168,
+          "quote": "he quietly abstracted some valuables from your possession"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 41,
+          "quote": "made me think somebody lives down here. Probably the thief."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 147,
+          "quote": "take sword: You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 250,
+          "quote": "I'd kept my valuables in the case, so he got nothing off me."
+        }
+      ],
+      "recommendation": "Keep the thief's voice and the caretaker thread as they are. Nobody needed him named."
+    },
+    {
+      "id": "P6",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The Treasure Room's arrival is printed in the wrong order. The room lists 'a suspicious-looking individual... leaning against one wall' before 'he rushes to its defense', and 'the treasures in the room suddenly vanish' is printed while the chalice stays listed. In Zork the room's M-ENTER line comes before the description.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 135,
+          "quote": "There is a silver chalice... here. / There is a suspicious-looking individual... / You hear a scream of anguish... he rushes to its defense. / ...the treasures in the room suddenly vanish."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 209
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 225
+        }
+      ],
+      "recommendation": "Tell the scream and the rush before the room is described, and print the vanishing line only when there is something besides the chalice to vanish."
+    },
+    {
+      "id": "P7",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The parser treats a trailing word as part of the noun, so a thing that is present gets 'You can't see any such thing.' 'attack the troll again' failed with the troll lying there, and 'get on pedestal' failed in the Torch Room, where the pedestal had just been examined.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 20,
+          "quote": "'attack the troll again' got 'You can't see any such thing.'"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 116,
+          "quote": "get on pedestal: You can't see any such thing."
+        }
+      ],
+      "recommendation": "File this with Sprout, alongside friction 63 (a trailing word read as a thing). A noun phrase that leaves words unmatched should fall back to 'unknown', not 'not_here'."
+    },
+    {
+      "id": "P8",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "Zork verbs are missing. 'blow out the torch' is Zork's BLOW OUT (extinguish), which for the torch would give 'You nearly burn your hand trying to extinguish the flame.' Here it gets 'That sentence isn't one I recognize.' 'take everything' got not_here instead of being read as 'all'.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 80,
+          "quote": "blow out the torch: That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 17,
+          "quote": "take everything: You can't see any such thing."
+        }
+      ],
+      "recommendation": "Add BLOW OUT as a synonym for turning off and extinguishing, as Zork's syntax has it. Check whether EVERYTHING is one of Zork's synonyms for ALL before adding it."
+    },
+    {
+      "id": "P9",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The maze took up the budget of the runs that got lost in it, and caused most of this round's rise in unread lines and repetition. The newcomer spent about 60 turns there and never dropped a marker. More than 50 of the round's unread lines are their 'go <direction>' into a maze wall. The parser-breaker spent turns 128 to 198 and 233 to 250 there, and their dropped manual helped only so far.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 221,
+          "quote": "I could never find the coin room again."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 176,
+          "quote": "The maze ate most of my turns."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 216,
+          "quote": "Found the skeleton... Then I walked straight back out of the room by accident."
+        }
+      ],
+      "recommendation": "Keep the maze as dungeon.zil joins it, as decided in round 5. Read the unread-rate rise (0.08 to 0.14) as the maze plus the newcomer's questions, not as a regression."
+    },
+    {
+      "id": "P10",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "Much of v5's content was still never met in play. Nobody fed the Cyclops: on clock, waken and woke never fired, and the only Cyclops solution was 'odysseus' from a player who knew Zork. Nobody killed the thief or saw the hoard reappear, and nobody wound the canary. The Grating Room, the grue, the ghost, the tree's drop and the broken egg are still unreached after 54 runs.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 134,
+          "quote": "Saying 'odysseus' scared the Cyclops off"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 243,
+          "quote": "Stumbled into the Cyclops Room by pure luck."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 13,
+          "quote": "open grating: The grating is locked."
+        }
+      ],
+      "recommendation": "Next round, give a run a goal aimed at the new content (for example 'get past the one-eyed guard without fighting him', or 'find out where your stolen things went'). The round-8 suggestion of a 'find another way out of the maze' goal still stands for the Grating Room."
+    },
+    {
+      "id": "P11",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "The v4 puzzles and the round-8 answers held up. Five of six said 'echo' (casual at turn 29, prose-reader at 55 after 'listen'). Five of six prayed their way out, among them the newcomer, who took the coffin joke as a hint (turn 163): the first player who doesn't know Zork to find the prayer. When the load named the brass lantern beside the torch, the prose-reader dropped the lamp (181 to 186), as round 8 hoped. The chimney's rule was understood straight away in three runs. The parser-breaker found that a full sack counts as the chimney's one thing (113).",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 163,
+          "quote": "'You haven't a prayer of getting the coffin down there.' So I prayed"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 181,
+          "quote": "Your load is too heavy, the brass lantern not least of it."
+        },
+        {
+          "run": "casual-1",
+          "turn": 29,
+          "quote": "Guessed 'echo' and the acoustics changed."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 113,
+          "quote": "I put the painting, bottle and manual inside the sack and that counted as one thing."
+        }
+      ],
+      "recommendation": "Keep these. The sack loophole is Zork's own rule (one thing, whatever is inside it) and needs no change."
+    },
+    {
+      "id": "P12",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "A treasure inside the sack inside the trophy case scores nothing, and the case lists the brown sack among 'Your collection of treasures'. The parser-breaker read this as a bug, but it is Zork's OTVAL-FROB, the same rule as the sceptre in the coffin.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 118,
+          "quote": "The painting inside the sack inside the trophy case didn't score until I took it out... The case also listed the 'brown sack' as a treasure."
+        }
+      ],
+      "recommendation": "Keep, as with the sceptre. Optionally, the sack's description could make clear that the case rewards only what lies in it directly, which is author prose and not mechanics."
+    },
+    {
+      "id": "P13",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "Goals and models. Explorer (fable): the egg was in the case by turn 41, so the goal was reached. They then reached 80 points by turn 130, left the bar unechoed, and stopped at 140 turns with no report. Goal-seeker (opus): peaked at 140 of 197 and ended near 135. What stopped them was a death to the thief that cost the sword and key, the thief's repeated fleeing with the egg (P1), a wound that would not heal (P3), and the turn cap. Newcomer (opus): reported 'no', but had 120 points of treasure in the case by turn 173, and the thief left 'disgruntled' with nothing to take, which meets 'keep it safe' in substance. The opus runs (goal-seeker, newcomer, parser-breaker) all ran to the cap and filed reports. They fought or bargained with the thief and the troll, and the newcomer typed questions in natural language. The fable runs (explorer, casual, prose-reader) examined more and fought the thief not at all. Two fable runs stopped short (140 and 206 turns) with no report, which is the harness and not the world.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 41,
+          "quote": "put egg in trophy case: Done."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 174,
+          "quote": "Watching the score climb (35, 75, 85, 125, 140)"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 173,
+          "quote": "120 points by turn 173"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 206,
+          "quote": "pray: Forest (run ends, no report)"
+        }
+      ],
+      "recommendation": "Tell the director that the explorer and the prose-reader filed no report, a third round in a row for the harness. For the world: when weighing the thief, count the opus runs, since only they fought him."
+    }
+  ],
+  "legibility": {
+    "verdict": "legible",
+    "why": "All four players who filed a report read the world as the intent describes it: Zork, ported faithfully, with its unbuilt country closed off in Zork's voice, a thief roaming and robbing, and the caretaker's tidiness that at least one player connected to him without being told. Nobody read the sealed edges as faults. They quoted the dam, the water and the heaps as places. The explorer and the prose-reader filed no report, so what they understood comes from their transcripts: both played the treasure hunt toward the trophy case, reading and examining as they went.",
+    "runs": [
+      {
+        "run": "casual-1",
+        "understood": "Zork, but not the Zork they half-remembered. The map is changed: passages end in black water and cave-ins, and a thief sizes you up. They took the barred trap door as hostility from someone. They had no goal and ran out at the 30-turn cap having just won the bar.",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A cut-down Zork: loot the underground for the trophy case, with edges sealed off wittily and a thief who guards his lair. They read the sorted heaps as 'probably the thief'. Goal (high score): reached 140 of 197 and ended near 135. A death, the thief fleeing with the egg, and an unhealed wound stood in the way.",
+        "matches": "yes"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "Break into the house, bring treasures up and lock them in the case, while a silent thief with a big bag is the danger to your loot. 'Someone' keeps the place in order. Goal (find treasure, keep it safe): self-reported no, but 120 points were safe in the case and the thief got nothing. The maze and the lost food stopped the Cyclops.",
+        "matches": "yes"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A cut-down Zork treasure hunt: a troll to kill or bribe, treasures to carry home, a light-fingered thief in the maze, deliberate closures, and weight limits to juggle.",
+        "matches": "yes"
+      },
+      {
+        "run": "explorer-1",
+        "understood": "No report filed. The transcript shows a careful tour: the egg into the case at turn 41 (goal reached), the troll killed, the east explored, the torch and sceptre brought home by prayer, 80 points by turn 130.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "No report filed. The transcript shows close reading of scenery, the echo solved by listening, a lost stretch in the maze marked with the leaflet, the chimney rule met, the lamp dropped for the coffin, and the prayer out with the coffin.",
+        "matches": "partly"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.08,
+      "after": 0.14
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.02,
+      "after": 0.02
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 21,
+      "after": 42
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 15,
+      "after": 9
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 170,
+      "after": 244
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 56,
+      "after": 49
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 27,
+      "after": 33
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 661,
+      "after": 830
+    }
+  ]
+}

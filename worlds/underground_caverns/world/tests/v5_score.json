@@ -1,0 +1,340 @@
+{
+  "about": "The points v5 adds, as Zork scores them: the Treasure Room 25; the chalice 10, and 5 in the trophy case; the canary 6, and 4 in the case; the brass bauble 1, and 1 in the case; with the egg and the coins the thief kept for the visitor. The ceiling is now 197 (the Kitchen 10, the Cellar 25, the East-West Passage 5, the Treasure Room 25, and the ten treasures, 132 between them).",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Up a Tree" },
+      { "reader": "Marta", "kind": "described", "words": "You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach." },
+      { "reader": "Marta", "kind": "described", "words": "Beside you on the branch is a small bird's nest." },
+      { "reader": "Marta", "kind": "described", "words": "In the bird's nest is a large egg encrusted with precious jewels, apparently scavenged by a childless songbird. The egg is covered with fine gold inlay, and ornamented in lapis lazuli and mother-of-pearl. Unlike most eggs, this one is hinged and closed with a delicate looking clasp. The egg appears extremely fragile." }
+    ] },
+    { "as": "Marta", "type": "take egg", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "move rug", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The force of your blow knocks the troll back, stunned." },
+      { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
+    ] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins." }
+    ] },
+    { "seed": 4 },
+    { "advance": "1 minutes", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "Someone carrying a large bag is casually leaning against one of the walls here. He does not speak, but it is clear from his aspect that the bag will be taken only over his dead body." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "as": "Marta", "type": "give egg to thief", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The thief is taken aback by your unexpected generosity, but accepts the jewel-encrusted egg and stops to admire its beauty." }
+    ] },
+    { "seed": 4 },
+    { "advance": "1 minutes", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "The thief, finding nothing of value, left disgusted." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "There is a bloody axe here." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike. A skeleton, probably the remains of a luckless adventurer, lies here." },
+      { "reader": "Marta", "kind": "described", "words": "The deceased adventurer's useless lantern is here." },
+      { "reader": "Marta", "kind": "described", "words": "Beside the skeleton is a rusty knife." },
+      { "reader": "Marta", "kind": "described", "words": "There is a skeleton key here." },
+      { "reader": "Marta", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cyclops Room" },
+      { "reader": "Marta", "kind": "described", "words": "This room has an exit on the northwest, and a staircase leading up." },
+      { "reader": "Marta", "kind": "described", "words": "A cyclops, who looks prepared to eat horses (much less mere adventurers), blocks the staircase. From his state of health, and the bloodstains on the walls, you gather that he is not very friendly, though he likes people." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "as": "Marta", "type": "ulysses", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The cyclops, hearing the name of his father's deadly nemesis, flees the room by knocking down the wall on the east of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Strange Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a long passage. To the west is one entrance. On the east there is an old wooden door, with a large opening in it (about cyclops sized)." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    { "advance": "69 minutes" },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Strange Passage" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cyclops Room" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You hear a scream of anguish as you violate the robber's hideaway. Using passages unknown to you, he rushes to its defense." },
+      { "reader": "Marta", "kind": "said", "words": "The thief gestures mysteriously, and the treasures in the room suddenly vanish." },
+      { "reader": "Marta", "kind": "described", "words": "Treasure Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room, whose east wall is solid granite. A number of discarded bags, which crumble at your touch, are scattered about on the floor. There is an exit down a staircase." },
+      { "reader": "Marta", "kind": "described", "words": "There is a silver chalice, intricately engraved, here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a suspicious-looking individual, holding a large bag, leaning against one wall. He is armed with a deadly stiletto." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "attack thief with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The blow lands, making a shallow gash in the thief's arm!" },
+      { "reader": "Marta", "kind": "told", "words": "You dodge as the thief comes in low." }
+    ] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "attack thief with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The blow lands, making a shallow gash in the thief's arm!" },
+      { "reader": "Marta", "kind": "told", "words": "You dodge as the thief comes in low." }
+    ] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "attack thief with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The blow lands, making a shallow gash in the thief's arm!" },
+      { "reader": "Marta", "kind": "told", "words": "You dodge as the thief comes in low." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "attack thief with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The fatal blow strikes the thief square in the heart: He dies." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the thief breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." },
+      { "reader": "Marta", "kind": "told", "words": "As the thief dies, the power of his magic decreases, and his treasures reappear:" },
+      { "reader": "Marta", "kind": "told", "words": "A jewel-encrusted egg" },
+      { "reader": "Marta", "kind": "told", "words": "A leather bag of coins" },
+      { "reader": "Marta", "kind": "told", "words": "The chalice is now safe to take." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Treasure Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room, whose east wall is solid granite. A number of discarded bags, which crumble at your touch, are scattered about on the floor. There is an exit down a staircase." },
+      { "reader": "Marta", "kind": "described", "words": "There is a silver chalice, intricately engraved, here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a stiletto here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a jewel-encrusted egg here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a golden clockwork canary nestled in the egg. It has ruby eyes and a silver beak. Through a crystal window below its left wing you can see intricate machinery inside. It appears to have wound down." },
+      { "reader": "Marta", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
+    ] },
+    { "as": "Marta", "type": "x egg", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The egg is covered with fine gold inlay and ornamented in lapis lazuli and mother-of-pearl. It is hinged, and its delicate clasp has been undone by somebody with the tools and the expertise: it stands open without a scratch on it, as though it had been waiting for him." },
+      { "reader": "Marta", "kind": "described", "words": "The jewel-encrusted egg contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A golden clockwork canary" }
+    ] },
+    { "as": "Marta", "type": "take canary", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take chalice", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 86 (total of 350 points), in 46 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
+    ] },
+    { "as": "Marta", "type": "take egg", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take coins", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A brass lantern (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "A sword" },
+      { "reader": "Marta", "kind": "said", "words": "A golden clockwork canary" },
+      { "reader": "Marta", "kind": "said", "words": "A chalice" },
+      { "reader": "Marta", "kind": "said", "words": "A jewel-encrusted egg" },
+      { "reader": "Marta", "kind": "said", "words": "A leather bag of coins" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cyclops Room" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Strange Passage" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    { "as": "Marta", "type": "open case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." }
+    ] },
+    { "as": "Marta", "type": "put chalice in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "put egg in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "put coins in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 111 (total of 350 points), in 56 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Junior Adventurer." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" }
+    ] },
+    { "as": "Marta", "type": "wind canary", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The canary chirps, slightly off-key, an aria from a forgotten opera. From out of the greenery flies a lovely songbird. It perches on a limb just over your head and opens its beak to sing. As it does so a beautiful brass bauble drops from its mouth, bounces off the top of your head, and lands glimmering in the grass. As the canary winds down, the songbird flies away." }
+    ] },
+    { "as": "Marta", "type": "take bauble", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "Your collection of treasures consists of:" },
+      { "reader": "Marta", "kind": "described", "words": "A chalice" },
+      { "reader": "Marta", "kind": "described", "words": "A jewel-encrusted egg" },
+      { "reader": "Marta", "kind": "described", "words": "A leather bag of coins" }
+    ] },
+    { "as": "Marta", "type": "put canary in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "put bauble in case", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." }
+    ] },
+    { "as": "Marta", "type": "x case", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The trophy case is a handsome thing of polished wood and glass, fastened securely to the wall and plainly built to hold treasures. It has the patient air of something that expects to be filled." },
+      { "reader": "Marta", "kind": "described", "words": "Your collection of treasures consists of:" },
+      { "reader": "Marta", "kind": "described", "words": "A chalice" },
+      { "reader": "Marta", "kind": "described", "words": "A jewel-encrusted egg" },
+      { "reader": "Marta", "kind": "described", "words": "A leather bag of coins" },
+      { "reader": "Marta", "kind": "described", "words": "A golden clockwork canary" },
+      { "reader": "Marta", "kind": "described", "words": "A beautiful brass bauble" }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 117 (total of 350 points), in 69 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Junior Adventurer." }
+    ] }
+  ]
+}

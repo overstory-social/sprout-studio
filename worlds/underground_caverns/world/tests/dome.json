@@ -1,0 +1,161 @@
+{
+  "about": "The rope and the Torch Room, as Zork's ROPE-FUNCTION, DOME-ROOM-FCN and TORCH-ROOM-FCN have them: the Engravings Cave on the way; the Dome's drop refuses until the Attic's rope is tied to the railing; tied, the rope cannot be taken and the visitor climbs down it into the Torch Room, where it hangs out of reach, so there is no way back up; the ivory torch on the pedestal is a treasure and a light that will not go out.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "take lamp" },
+    { "as": "Marta", "type": "take sword" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "u" },
+    { "as": "Marta", "type": "turn on lamp" },
+    { "as": "Marta", "type": "take rope" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "move rug" },
+    { "as": "Marta", "type": "open trap door" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "n" },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword" },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Engravings Cave" },
+      { "reader": "Marta", "kind": "described", "words": "You have entered a low cave with passages leading northwest and east." },
+      { "reader": "Marta", "kind": "described", "words": "There are old engravings on the walls here." }
+    ] },
+    { "as": "Marta", "type": "x engravings", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The engravings were incised in the living rock of the cave wall by an unknown hand. They depict, in symbolic form, the beliefs of the ancient Zorkers. Skillfully interwoven with the bas reliefs are excerpts illustrating the major religious tenets of that time. Unfortunately, a later age seems to have considered them blasphemous and just as skillfully excised them." }
+    ] },
+    { "as": "Marta", "type": "read engravings", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The engravings were incised in the living rock of the cave wall by an unknown hand. They depict, in symbolic form, the beliefs of the ancient Zorkers. Skillfully interwoven with the bas reliefs are excerpts illustrating the major religious tenets of that time. Unfortunately, a later age seems to have considered them blasphemous and just as skillfully excised them." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dome Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the periphery of a large dome, which forms the ceiling of another room below. Protecting you from a precipitous drop is a wooden railing which circles the dome." }
+    ] },
+    { "as": "Marta", "type": "x railing", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The railing is of dark, polished wood, waist-high, running all the way round the edge of the dome. Beyond it is a precipitous drop to the floor of a room below, a good twenty feet down. The railing is very solid, its posts as thick as a wrist and sunk deep in the stone, the sort of thing a careful person makes something fast to before trusting the drop. It is the most reassuring thing you have seen in some time." }
+    ] },
+    { "as": "Marta", "type": "x dome", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The dome curves away beneath you, a great bowl of smooth stone with the railing round its rim. It is the ceiling of a room below, seen, unusually, from above." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You cannot go down without fracturing many bones." }
+    ] },
+    { "as": "Marta", "type": "climb rope", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You cannot go down without fracturing many bones." }
+    ] },
+    { "as": "Marta", "type": "tie rope", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You'll have to say what to tie the rope to." }
+    ] },
+    { "as": "Marta", "type": "tie rope to dome", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't tie the rope to that." }
+    ] },
+    { "as": "Marta", "type": "tie rope to railing", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The rope drops over the side and comes within ten feet of the floor." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dome Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the periphery of a large dome, which forms the ceiling of another room below. Protecting you from a precipitous drop is a wooden railing which circles the dome." },
+      { "reader": "Marta", "kind": "described", "words": "Hanging down from the railing is a rope which ends about ten feet from the floor below." }
+    ] },
+    { "as": "Marta", "type": "take rope", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The rope is tied to the railing." }
+    ] },
+    { "as": "Marta", "type": "take all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Rope: The rope is tied to the railing." }
+    ] },
+    { "as": "Marta", "type": "x rope", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The rope is tied fast to the wooden railing and hangs down over it into the room below, ending about ten feet from the floor. The knot looks good. You tied it, so you would know." }
+    ] },
+    { "as": "Marta", "type": "tie rope to railing", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The rope is already tied to it." }
+    ] },
+    { "as": "Marta", "type": "climb down rope", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Torch Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room with a prominent doorway leading to a down staircase. Above you is a large dome. Up around the edge of the dome (20 feet up) is a wooden railing. In the center of the room sits a white marble pedestal." },
+      { "reader": "Marta", "kind": "described", "words": "A piece of rope descends from the railing above, ending some five feet above your head." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the pedestal is a flaming torch, made of ivory." }
+    ] },
+    { "as": "Marta", "type": "x rope", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The end of the rope hangs from the railing far above, swaying a little, some five feet above your head: just out of reach, the way ropes are when it matters." }
+    ] },
+    { "as": "Marta", "type": "x dome", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The dome is high overhead, a great bowl of stone with a wooden railing round its rim, twenty feet up. A rope hangs from the railing, ending some five feet above your head." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You cannot reach the rope." }
+    ] },
+    { "as": "Marta", "type": "climb rope", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You cannot reach the rope." }
+    ] },
+    { "as": "Marta", "type": "take rope", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You cannot reach the rope." }
+    ] },
+    { "as": "Marta", "type": "x pedestal", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a white marble pedestal, waist-high and carved round its foot with a frieze of figures carrying torches in procession, every one of them facing the middle of the room. It has been made for one thing to stand on it, and to be looked at." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the pedestal is:" },
+      { "reader": "Marta", "kind": "described", "words": "A torch (providing light)" }
+    ] },
+    { "as": "Marta", "type": "look in pedestal", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't do that." }
+    ] },
+    { "as": "Marta", "type": "take torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 54 (total of 350 points), in 42 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Novice Adventurer." }
+    ] },
+    { "as": "Marta", "type": "blow out the torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You nearly burn your hand trying to extinguish the flame." }
+    ] },
+    { "as": "Marta", "type": "x torch", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a torch of old ivory, yellowed and carved along its length with a procession of tiny figures, every one of them carrying a tiny torch. The flame at its head burns steadily, without smoke and without visible fuel, and shows no sign of ever having been lit or of ever going out. Left anywhere, you suspect, it would go on lighting the place whether or not anyone was there to see by it. The torch is burning." }
+    ] },
+    { "as": "Marta", "type": "turn off torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You nearly burn your hand trying to extinguish the flame." }
+    ] },
+    { "as": "Marta", "type": "turn off lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now off." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Torch Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room with a prominent doorway leading to a down staircase. Above you is a large dome. Up around the edge of the dome (20 feet up) is a wooden railing. In the center of the room sits a white marble pedestal." },
+      { "reader": "Marta", "kind": "described", "words": "A piece of rope descends from the railing above, ending some five feet above your head." }
+    ] },
+    { "as": "Marta", "type": "inventory", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A brass lantern" },
+      { "reader": "Marta", "kind": "said", "words": "A sword" },
+      { "reader": "Marta", "kind": "said", "words": "A torch (providing light)" }
+    ] },
+    { "as": "Marta", "type": "kiss dome", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "No." }
+    ] }
+  ]
+}

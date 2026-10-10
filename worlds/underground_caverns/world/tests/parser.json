@@ -1,0 +1,110 @@
+{
+  "about": "Zork's ways of saying things: several things at once with `and` and `all`, knocking, walking around the house, digging, going in through the window, the surrounding wall, and a gift to something that cannot take one.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "knock on door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Nobody's home." }
+    ] },
+    { "as": "Marta", "type": "knock on mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Why knock on a small mailbox?" }
+    ] },
+    { "as": "Marta", "type": "walk around house", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "walk around house", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "walk around house", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "South of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the south side of a white house. There is no door here, and all the windows are boarded." }
+    ] },
+    { "as": "Marta", "type": "walk around house", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "walk", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Use compass directions for movement." }
+    ] },
+    { "as": "Marta", "type": "open mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the small mailbox reveals a leaflet." }
+    ] },
+    { "as": "Marta", "type": "take leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "give leaflet to mailbox", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't give a leaflet to a small mailbox!" }
+    ] },
+    { "as": "Marta", "type": "dig", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Digging with a pair of hands is silly." }
+    ] },
+    { "as": "Marta", "type": "dig in house", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Digging with a pair of hands is silly." }
+    ] },
+    { "as": "Marta", "type": "dig in house with leaflet", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Digging with a leaflet is silly." }
+    ] },
+    { "as": "Marta", "type": "x wall", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The surrounding wall is solid, plain and entirely uninterested in you." }
+    ] },
+    { "as": "Marta", "type": "walk around house", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" }
+    ] },
+    { "as": "Marta", "type": "walk around house", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" }
+    ] },
+    { "as": "Marta", "type": "go in through the window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The kitchen window is closed." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "go in through the window", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "take sack and bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Brown sack: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Glass bottle: Taken." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A leaflet" },
+      { "reader": "Marta", "kind": "said", "words": "A brown sack" },
+      { "reader": "Marta", "kind": "said", "words": "A glass bottle" },
+      { "reader": "Marta", "kind": "said", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "said", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "take all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It's not clear what you're referring to." }
+    ] },
+    { "as": "Marta", "type": "drop all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Leaflet: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "Brown sack: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "Glass bottle: Dropped." }
+    ] },
+    { "as": "Marta", "type": "take all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Leaflet: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Brown sack: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Glass bottle: Taken." }
+    ] },
+    { "as": "Marta", "type": "climb through window", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" }
+    ] },
+    { "as": "Marta", "type": "knock on window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Nobody's home." }
+    ] },
+    { "as": "Marta", "type": "walk around house", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "South of House" }
+    ] }
+  ]
+}

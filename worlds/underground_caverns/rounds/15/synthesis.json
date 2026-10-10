@@ -1,0 +1,405 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "The trap door bars again after every chimney climb (Zork's TOUCHBIT), and the chimney takes only the lamp and one thing. Together they made ferrying treasure one item per round trip the main activity of every long run. Nobody learned that coming up by another way (grating, prayer, canyon, Strange Passage) leaves the trap door open. In four runs the trap door was barred again on every descent from the house. Every one of those descents came after a chimney climb or a death, so the world behaved as intent.md says. The rule that would have helped was never visible to anyone. Prose-reader did come up by prayer (turn ~205) and by Canyon View, but never went down the trap door again, so 'stays open' has still not been exercised in play.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 70,
+          "quote": "The chimney has room for you, your lamp and one thing more, and not an inch besides."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 97,
+          "quote": "Went back down and the trap door got barred again. I had to use the chimney twice."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 111,
+          "quote": "The trap door crashes shut, and you hear someone barring it."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 179,
+          "quote": "Opened the trap door from above, went down, and it crashed shut and got barred again. No way to stop it."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 146
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 155
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 164,
+          "quote": "Every trip down the trap door it crashed shut and was barred again."
+        }
+      ],
+      "recommendation": "Keep TOUCHBIT, but give the rule a voice. For example, an examine line on the trap door or the Cellar's 'locked from above' could hint that whoever bars it does so only behind someone who came in through the house. Or the first non-chimney return could note the trap door left unbarred. Also add a sprout test: come up by prayer or Canyon View, open the trap door, go down, and check it stays open."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "None of v8's new endgame was reached in play: the map at 350, the secret path, the Stone Barrow. Neither were the Maze, the Cyclops, the Treasure Room, the river or the Machine Room. The best score was 164 (prose-reader, who chose to stop) and 154 (goal-seeker, at the 400-turn cap). reach.places.never rose from 27 to 41, and among the new misses are stone_barrow, inside_barrow and every maze room. P1's ferrying used up the turn budget.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 400,
+          "quote": "My last confirmed score was 154 of 350"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 276,
+          "quote": "the rest felt like a long haul of carrying things back and forth"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 200,
+          "quote": "I'd stopped finding new things faster than I was walking back and forth."
+        }
+      ],
+      "recommendation": "Cover the 350 ending (the map, West of House's path, the barrow's closing) with sprout test scripts, because blind play will not get there under these caps. If the director wants the endgame playtested, consider a run that starts mid-game."
+    },
+    {
+      "id": "P3",
+      "category": "engine-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "Several ordinary phrasings fail where a close variant works. 'drop everything except X' is not understood, but 'drop all except X' works. 'push open the trap door' and 'slide down the slide' answer not_here. A trailing adverb ('politely', 'anyway') turns the sentence into not_here. 'go back east' is unknown. 'hello troll, can we talk?' greets, then also answers 'You can't see any such thing.' for the second clause. reading.unreadRate fell from 0.13 to 0.07, so this is better than last round, and what is left is mostly these near-misses.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 87,
+          "quote": "drop everything except the lantern and the painting -> You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 103,
+          "quote": "drop all except lantern and painting (works)"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 72,
+          "quote": "push open the trap door -> You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 66,
+          "quote": "slide down the slide -> You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 20,
+          "quote": "The troll bows his head to you in greeting. / You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 1,
+          "quote": "knock on the boarded door politely -> You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 46,
+          "quote": "jump into the chasm anyway"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 35,
+          "quote": "go back east -> That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "File in Sprout: 'everything' as a synonym of 'all'; leading 'push open'/'pull open' read as open; trailing adverbs dropped; 'go back <dir>' read as the direction; a comma-joined second clause that isn't a command should not be answered with not_here. Where the world can do it itself, give the slide a 'slide down' synonym of its down exit."
+    },
+    {
+      "id": "P4",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "'drop all' also drops what is inside an open sack the player is holding. Each item is dropped on its own after the sack itself. At turn 103 the lunch came out of the sack. At turn 173, the manual, tube and matchbook that had just been put in the sack (turn 155, 'Done.' three times) were dropped one by one after 'Brown sack: Dropped.'",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 103,
+          "quote": "Brown sack: Dropped. ... Lunch: Dropped."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 155,
+          "quote": "put manual, tube, matchbook and screwdriver in the sack -> Done. Done. Done. There's no room."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 173,
+          "quote": "Brown sack: Dropped. ... ZORK owner's manual: Dropped. Tube: Dropped. Matchbook: Dropped."
+        }
+      ],
+      "recommendation": "Check Zork's HELD/ALL search. If DROP ALL there reaches only the top level, this is the engine's 'all' expansion including the contents of held containers, and it is an issue for Sprout. If Zork does the same, reclassify it as faithful."
+    },
+    {
+      "id": "P5",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "'look down' On the Rainbow gives the stock 'You see the floor, where you left it.', on a rainbow over a 450-foot fall. Intent gives look down a real answer at the Dome, the chasm and the canyon, but not here.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 251,
+          "quote": "You see the floor, where you left it."
+        }
+      ],
+      "recommendation": "Give On the Rainbow (and Aragain Falls) a look-down answer showing the drop, in the Dome and canyon's voice."
+    },
+    {
+      "id": "P6",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The troll fight is the round's biggest repetition: the same attack line typed 6 times (casual) and 5 times (explorer). The fight uses Zork's own tables. For the casual player it took a fifth of a 30-turn budget and nearly ended the run.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 15,
+          "quote": "Six turns of 'attack troll with sword' is a lot for an impatient person"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 26
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 36,
+          "quote": "died to the troll"
+        }
+      ],
+      "recommendation": "No retune, since these are Zork's tables. Only check that the miss and stagger lines vary enough that the repeats read as a fight rather than a loop."
+    },
+    {
+      "id": "P7",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The Round Room's original text ('several of them have unfortunately been blocked by cave-ins') does not say which passages are open, so players guessed directions.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 22,
+          "quote": "Round Room 'passages in all directions' but several caved in, and it doesn't say which."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 127,
+          "quote": "I wished the Round Room listed its open exits."
+        }
+      ],
+      "recommendation": "Keep Zork's room text word for word. If the cave-in can be examined, its examine answer could name the open ways in the author's voice."
+    },
+    {
+      "id": "P8",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The mirror swap reads as intended for some players and not others. The newcomer worked out that it moved them but then looped round the Mirror Rooms. The casual player could not tell that anything had happened.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 26,
+          "quote": "Something happened and I don't know what."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 52,
+          "quote": "I was somewhere else, but the room looked exactly the same."
+        }
+      ],
+      "recommendation": "No change. Intent makes the rumble the only clue. Watch whether anyone drops a marker before rubbing."
+    },
+    {
+      "id": "P9",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "The coal mine and the thief are punishing, as in Zork. The goal-seeker spent about 35 turns mapping the mine by dropping items (the round's longest repeated answer: 'You can't go that way.' 7 times running, turns ~284-318). Before that, with the garlic still in the sack, the bat carried them off. Earlier the thief killed them in one exchange (turn 28), and he stripped the prose-reader of everything but the lamp.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 28,
+          "quote": "The thief killed me in one exchange"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 284
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 318
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 184,
+          "quote": "the thief robbed me of everything except the lamp, in one move"
+        }
+      ],
+      "recommendation": "Faithful; leave. The thief's 'clear from his aspect' line is the only warning before a fight, and it is Zork's."
+    },
+    {
+      "id": "P10",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "The v8 mechanics that were reached all worked, and the author's lines were the most quoted. The goal-seeker exorcised Hades in Zork's order and against its clock: bell, candles retaken and lit with a match, book, 'Begone, fiends!'. They took the skull, and it scored in the case. The lamp's 'a bit dimmer' warning fired in two runs. The death-scatter line ('somebody tidy has put the lamp back') was quoted as a favourite by three runs, and two of them went and recovered their things as it described.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 128,
+          "quote": "The bell suddenly becomes red hot and falls to the ground."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 132,
+          "quote": "\"Begone, fiends!\""
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 134
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 248,
+          "quote": "The lamp appears a bit dimmer."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 57
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 66,
+          "quote": "The platinum bar I lost when I died had 'rolled' into the Studio"
+        }
+      ],
+      "recommendation": "Keep. Still to watch: death as a spirit after the Altar (not met), the bottle refilled at the water, small things put through the grating, and the lamp burning out."
+    }
+  ],
+  "legibility": {
+    "verdict": "legible",
+    "why": "All six read the world as the white-house treasure hunt with a trophy case to fill, changed in specific ways, which is what intent.md describes: a faithful port of Zork. Three runs singled out the author's examine layer, as intent expects. Several misread faithful Zork features as changes: the Round Room cave-ins and TOUCHBIT (the trap door barred again) were taken as alterations, not as the original. Nobody saw the endgame. Goals: goal-seeker (score) did not reach it, ending at 154/350 at the 400-turn cap; P1's single-item ferrying, a death to the thief (-10, so 350 was out of reach), the bat and the coal mine stood in the way. Explorer (egg in the case) reached it at turn 17 with the egg whole, then played on to the Dome. Newcomer (find treasure and keep it safe) reached it: the painting and the bar in the case, 65 points, by turn 107. Models: every persona except casual was opus; casual was fable. The difference showed as pace, not reading. The fable casual run typed short, plain commands, examined almost nothing, spent 6 of its 30 turns on the troll, and was cut off holding the trident. The opus runs examined heavily (prose-reader most of all), planned around stated rules (the chimney, the narrow passage), and quoted the author's lines. Within the opus runs, play differed by persona (the parser-breaker's contrary sentences, the goal-seeker's logistics) rather than by model.",
+    "runs": [
+      {
+        "run": "explorer-1",
+        "understood": "A reworked white-house treasure hunt: break into the house, gather treasures above and below ground for a waiting trophy case, with witty descriptions that hint at puzzles.",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A treasure hunt under the white house whose real puzzle is logistics: the barred trap door, the one-item chimney and the death-scatter decide how treasure gets back to the case.",
+        "matches": "yes"
+      },
+      {
+        "run": "casual-1",
+        "understood": "A classic dungeon crawl that someone has 'shaken': a barred trap door, caved-in passages, a rumbling mirror.",
+        "matches": "partly"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "A trophy case on top of a large underground world with strange rooms (echo, mirror, chimney); the challenge is getting finds back to the surface.",
+        "matches": "yes"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "Zork's bones, a treasure hunt with a troll, a thief, a dam, and a house that keeps shutting its trap door, which notices and explains more than expected.",
+        "matches": "yes"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "An emptied underground empire looted for a patient trophy case; much of the writing is about objects that have outlived their people and purposes.",
+        "matches": "yes"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.13,
+      "after": 0.07
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.01,
+      "after": 0.01
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 31,
+      "after": 20
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 27,
+      "after": 41
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 519,
+      "after": 549
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 61,
+      "after": 64
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 50,
+      "after": 82
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 1530,
+      "after": 1692
+    }
+  ]
+}

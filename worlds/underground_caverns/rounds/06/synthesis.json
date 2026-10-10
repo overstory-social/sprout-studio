@@ -1,0 +1,525 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "The second way home has gone unused for a second round. Nobody reached the Grating Room, and nobody used the skeleton key in its lock or saw the leaves fall through, so after 36 runs the Grating Room and the key in the grating are still unmet. The engine counts back this up: maze_6 to maze_15, dead_end_3 and 4 and grating_room were never reached, and the grating_room grate_unlock/grate_open and GratingBelow gate_open handlers never fired. The grating also turns out to be unnecessary. Two runs reached the 70-point ceiling with two chimney trips (explorer at turn 146, newcomer with all three treasures cased by turn 131), so the grating's one advantage, carrying everything at once, never came up. Three of the four players who took the key wanted a lock for it and found none: explorer tried the barred trap door, goal-seeker tried the gothic door, and newcomer planned to unlock the grating from above, which the world refuses by design. Every key-holder but goal-seeker then dropped the key in the Studio to fit up the chimney, and goal-seeker went back down for it.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 118,
+          "quote": "unlock trap door with skeleton key -> It doesn't seem to work."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 127,
+          "quote": "Skeleton key: Dropped. (to fit the chimney)"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 146,
+          "quote": "Your score is 70 (total of 350 points), in 115 moves."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 117,
+          "quote": "unlock gothic door with key -> It doesn't seem to work."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 109,
+          "quote": "drop the skeleton key (in the Studio, before the chimney)"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 142,
+          "quote": "open the grating -> The grating is locked."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 149,
+          "quote": "Forty-odd turns in the maze and nearly every path looped me back to the leaflet at the entrance. I never found the grating or a second way out."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 150,
+          "quote": "The turn cap landed while I was still lost in the maze"
+        }
+      ],
+      "recommendation": "The cap is no longer what stops players: 70 points fits in about 130 turns. What stops them is that nothing points from the key to a lock below. Keeping to Zork, options are: (a) accept that the grating is Zork's secret and leave it covered by grating.json and coins.json, saying so in intent.md; or (b) let the key's authored examine text, which is already the author's voice, hint at a skull-and-crossbones lock 'somewhere below'. Option (b) still leaves the rooms joined as dungeon.zil joins them. Also check that a key used on the grating from the Clearing gives Zork's 'can't reach the lock' answer, since newcomer was walking straight into that. A director-steered run with a goal like 'find another way out of the maze' would test the room directly."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "Players read the world as being about an unseen caretaker ('The Management', 'somebody tidy'), and that idea is not in intent.md. Zork supplies only one of the hints, 'someone barring' the trap door. The author's own non-Zork lines add the rest: the Management's note on the unbuilt passage, the crawlway that 'someone has cleared lately', the trap door's dust 'scuffed by somebody's comings and goings', and the death line's 'somebody tidy has put the lamp back'. Four reports made this caretaker what the world is about, three players wished they could follow it, and nothing in the world ever pays it off.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 52,
+          "quote": "somebody is working down here, and the story is about them."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 94,
+          "quote": "'Somebody tidy' — the first time the unseen caretaker was named, even sideways."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 121,
+          "quote": "I wanted to know who they were more than I wanted any treasure."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 47,
+          "quote": "Made the barring feel like a person, not a mechanism."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 55,
+          "quote": "Barred in again. I'd half hoped it was a one-time thing."
+        },
+        {
+          "run": "casual-1",
+          "turn": 21,
+          "quote": "First sign this isn't plain Zork... made me want to know what else was changed."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 48,
+          "quote": "The world admitting its own edges with a joke rather than a blank wall"
+        }
+      ],
+      "recommendation": "Decide whether the caretaker is wanted. If faithfulness is the yardstick, cut the 'someone/somebody' wording from the crawlway, the trap door's dust and the death line, so that Zork's barring is the only hint left. Keep the Management note: the brief asks edges to refuse in Zork's voice, and players enjoy it. If the caretaker stays, record it in intent.md as a deliberate addition, because players will keep chasing it."
+    },
+    {
+      "id": "P3",
+      "category": "engine-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "When a recognised verb is followed by a preposition it does not take, the parser treats the rest of the sentence as the object's name. It then answers 'You can't see any such thing.' even though the thing is in plain sight. 'squeeze through the window' (with the window just opened), 'climb down into the chasm' (standing at its edge, after examining it), 'walk around to the back of the house' and 'feel around for a grue' all got not_here. 'tie the rope to the chasm' got a proper answer one turn after 'tie the rope to the edge of the chasm' did not. Players read the visibility claim as the world pretending not to understand.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 12,
+          "quote": "squeeze through the window -> You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 16,
+          "quote": "feel around for a grue -> You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 3,
+          "quote": "walk around to the back of the house -> You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 66,
+          "quote": "climb down into the chasm -> You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 65,
+          "quote": "Felt like it was pretending not to understand."
+        }
+      ],
+      "recommendation": "File this with Sprout: when a verb matches but its object phrase begins with a preposition the verb's patterns don't take, the answer should be 'That sentence isn't one I recognize.', not not_here. In the world, consider Zork-compatible patterns for the verbs it already declares: `squeeze through` as THROUGH/enter, `climb down into` the chasm giving the chasm's own refusal, `walk around to` as walk around."
+    },
+    {
+      "id": "P4",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "Some names the room text uses are not things the world will answer to. 'examine the forest path' Behind House gets not_here: behind_house.path is never reached, so it does not answer to 'forest path'. 'examine the field' at West of House gets not_here too. A bare 'smell' is not recognised, although the world declares a smell verb, which was never reached in any run.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 8,
+          "quote": "examine the field -> You can't see any such thing."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 14,
+          "quote": "examine the forest path -> You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 50,
+          "quote": "smell -> That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "Add 'forest' as an adjective on the Behind House path, and on the other rooms' paths where the description calls them a forest path. Give the bare `smell` Zork's 'What do you want to smell?' prompt, or the room's answer, as `listen` now has. Leave the field as Zork leaves it, unless the director wants it."
+    },
+    {
+      "id": "P5",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "The chimney's rule works as a puzzle: every player who reached the Studio read the refusal and went up with the lamp and one thing. That one thing was the painting for explorer, newcomer, prose-reader and parser-breaker, and the painting first, then the coins, for goal-seeker. The cost is a run of one-at-a-time drops: prose-reader dropped seven things singly and newcomer five, which shows up in the repetition count.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 128,
+          "quote": "Fair rule, clearly stated, but it meant a second full trip underground for the painting."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 36,
+          "quote": "A refusal that told me exactly how to fix it."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 68,
+          "quote": "room for you, a light to climb by and one thing more, and not an inch besides."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 97,
+          "quote": "A restriction stated so exactly that I knew what to drop without guessing."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 83,
+          "quote": "drop sword, coins, key, and paper"
+        }
+      ],
+      "recommendation": "Keep it. Check whether Sprout reads `drop all but the painting and the lamp` (or `except`). If it does, nothing changes. If it doesn't, log it in friction.md, since that is the sentence a player wants at the chimney."
+    },
+    {
+      "id": "P6",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "Every player who went down a second time found the trap door barred again: explorer, newcomer, goal-seeker twice, parser-breaker, and prose-reader twice, once after a chimney climb and once after a death. Every return trip was by the chimney or by dying, so the re-barring (TOUCHBIT, as in intent.md) fired every time. Players read the stairs as a one-way door and the chimney as the only way home. That is Zork's design, and it answers the round's watch item on whether a death and a second descent read as Zork's barred trap door.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 136,
+          "quote": "Went down the trap door again and it barred itself again. So the chimney is the only way home every time."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 55,
+          "quote": "Barred in again."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 107,
+          "quote": "The trap door crashes shut, and you hear someone barring it."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 88,
+          "quote": "The trap door crashes shut, and you hear someone barring it."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 114,
+          "quote": "The trap door crashes shut, and you hear someone barring it. (after a death)"
+        }
+      ],
+      "recommendation": "Keep it as built. It reads as intended. Drop it from next round's watch list."
+    },
+    {
+      "id": "P7",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "The maze in BRIEF mode is Zork's, and it tires readers. Re-entering a room prints only 'Maze'. Because the skeleton is part of Maze 5's description, BRIEF hides it on a return visit, and parser-breaker briefly thought it had gone. Dead ends that do not lead back the way you came in (Zork's one-way joins) read as unfair. Players solved the maze Zork's way, with markers: four runs reached the remains, at turns 33 to 88.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 23,
+          "quote": "Maze: 'Maze' and nothing else when I moved."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 135,
+          "quote": "identical rooms, blocked directions, and no prose to reward the lingering."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 116,
+          "quote": "On a brief re-entry the skeleton was not listed and I thought it had gone"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 85,
+          "quote": "Came east into a dead end, can't go west back out."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 84,
+          "quote": "An unlisted 'up' from one maze room opened onto the skeleton"
+        }
+      ],
+      "recommendation": "Keep the maze as dungeon.zil joins it, as round 5 decided. No change is needed for faithfulness. Note the BRIEF-hidden skeleton in intent.md as Zork's own behaviour."
+    },
+    {
+      "id": "P8",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "The troll's blows now come from him, and nobody found them wrong. His swings land on his own turns: 'The troll's swing almost knocks you over' came in the half-minute after an examine or a gift. Knockouts, disarms and recoveries read as Zork's. The fight still plays as dice. Casual needed five swings, and prose-reader lost their head to the troll's first counter-blow and called it 'dice rather than skill'. The other four won in one to three swings. Parser-breaker fed the troll garlic first, and nobody threw anything at him, woke him, or saw him come round (the come_round handler never fired).",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 18,
+          "quote": "Troll fight is dice: miss, knocked to knees, 'still recovering', five swings."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 94,
+          "quote": "The troll neatly removes your head."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 32,
+          "quote": "The troll... gleefully eats it."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 20,
+          "quote": "One swing and the troll's out cold. I felt dangerous."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 43,
+          "quote": "Three thrusts and the troll's head came off"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 17,
+          "quote": "attack troll with sword (one blow, troll dead)"
+        }
+      ],
+      "recommendation": "Keep Zork's tables, as the director decided. The round-6 watch item ('does the fight read as his?') is answered yes. Carry throwing at him, waking him and the come-round to the watch list."
+    },
+    {
+      "id": "P9",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 6
+      },
+      "claim": "The examine texts the author wrote are what players valued most, and gaps in them stand out. The chasm line was quoted by four of six players, the skeleton, the knife, the dead lantern and the trophy case by several. Parser-breaker gave the prose 5 for exactly these lines. Where Zork's default answer shows through, the prose-reader noticed: the lunch and garlic get 'nothing special', inside a sack with its own sentence.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 120,
+          "quote": "The chasm drops away from your feet into a dark that your lamp does not so much light as annoy."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 64,
+          "quote": "best line of the night."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 60,
+          "quote": "The rust has not touched the edge. That is not a thing rust usually overlooks."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 24,
+          "quote": "There's nothing special about the lunch."
+        },
+        {
+          "run": "casual-1",
+          "turn": 29,
+          "quote": "Most of the paintings have been stolen by vandals with exceptional taste."
+        }
+      ],
+      "recommendation": "intent.md promises word-for-word Zork room text. The examine layer is the author's own voice and plainly what players come for. Say so in intent.md. Optionally give the lunch and garlic a sentence each, as the sack has."
+    },
+    {
+      "id": "P10",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 5,
+        "of": 6
+      },
+      "claim": "Status of the watch list. Met this round: the rusty knife turned on something (parser-breaker stabbed the skeleton and the knife slit their throat; the knife's spend handler fired), the knife's pulse on the sword, the one-way tunnels' warning (seen three times; explorer understood it only after taking it), stairs climbed by name, comma chaining, a gift to the troll, and darkness in the attic, twice, both times backed out of harmlessly. Still unmet: the grue (handler never fired), the skeleton's ghost and banishing, anything dropped from the tree (fall/landed never fired), the egg broken, the troll woken or thrown at, and the Grating Room.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 64,
+          "quote": "The knife seems to sing as it savagely slits your throat."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 59,
+          "quote": "your sword gives a single pulse of blinding blue light."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 72,
+          "quote": "A one-way 'down' with a warning I would not be able to get back up; I did not understand the warning until I tried."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 18,
+          "quote": "go down the stairs"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 50,
+          "quote": "go up the stairs"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 83,
+          "quote": "drop sword, coins, key, and paper"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 10,
+          "quote": "You have moved into a dark place. / It is pitch black. You are likely to be eaten by a grue."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 15,
+          "quote": "It is pitch black. You are likely to be eaten by a grue."
+        }
+      ],
+      "recommendation": "Take the knife, stairs, commas and tunnel warning off the watch list; they read as intended. Carry the grue, the ghost, the tree drop, the broken egg, waking or throwing at the troll, and the grating. They are still covered only by sprout test scripts."
+    },
+    {
+      "id": "P11",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The goal-seeker run stopped at 136 typed lines with no leave step and no report. Its last line was 'go down' from Up a Tree, with the egg in hand and 65 of 70 points. This is the studio's playtest harness, not Sprout or the world: the engine logged no faults. The goal-seeker therefore has no report and no ratings, and is judged here only from its transcript and metrics.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 135,
+          "quote": "Your score is 65 (total of 350 points), in 106 moves."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 136,
+          "quote": "go down -> Forest Path (run ends; no leave, no report)"
+        }
+      ],
+      "recommendation": "Check the workflow's playtester step for goal-seeker-1: why it ended before the cap and why no report was written. Re-run the goal-seeker if the director wants its report this round."
+    }
+  ],
+  "legibility": {
+    "verdict": "partly",
+    "why": "Every player understood the arc intent.md describes: a treasure hunt in and under the white house, the trophy case as the goal, the barred trap door, the troll, the maze and the dead adventurer, the Gallery, and the chimney's rule as the way home. None understood that there is a second way home through the grating, and none reached it. Told it was 'a changed version', most players looked for the change and found it in the author's additions rather than in Zork's own lines: the Management's note, 'somebody tidy', the cleared crawlway and the scuffed dust. Four of the six then read the world as being about an unseen caretaker, which intent.md never mentions (P2). Goals: the explorer met theirs ('egg into the trophy case') at turn 36 and went on to 70 points. The newcomer met theirs ('find some treasure and keep it safe') at turn 45, with the painting in the case, and by turn 133 had all three treasures cased (70 points) and the case closed, although their own report says 'not reached'. The goal-seeker ('as high a score as you can') had 65 of 70 at turn 135, with the egg in hand and not yet cased. What stood in the way was the run stopping at 136 without a report (P11), after spending turns on a second chimney trip and on fetching the key. Model differences: the brief says every persona was played by fable this round, so all six runs used the same model and the round offers no contrast between models. The persona differences are what one would expect: the prose-reader examined everything, the parser-breaker probed phrasing and the knife, the casual player stopped at 30 turns.",
+    "runs": [
+      {
+        "run": "explorer-1",
+        "understood": "A trimmed, rewritten slice of the white house and its caverns: bring the egg to a trophy case that 'expects to be filled', go down a self-barring trap door, past a troll and a small maze with a dead adventurer's coins, and find the narrow chimney home; the unfinished passages read as an honest, deliberate cut of a larger place. Goal met at turn 36, then 70 points by turn 146.",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "No report was filed. From the transcript, a straight Zork score run: score checked after each treasure, painting then coins up the chimney, a return for the key, then the egg; 65 points when the run stopped at turn 136.",
+        "matches": "partly"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "A treasure hunt around and under a boarded-up house, half 'under renovation' by a Management that bars the trap door behind you, so the only way home with loot is a chimney that fits you, a lamp and one thing more. Goal met (all three treasures cased and the case closed by turn 133); they had planned to use the key on the grating from above, which the world refuses by design.",
+        "matches": "partly"
+      },
+      {
+        "run": "casual-1",
+        "understood": "The Zork opening with an underground being edited or renovated while you walk through it: treasure-hunting under a house quietly being rebuilt around you, with the Management's notes as the sign of change.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "The old white house rewritten in a dry, careful voice, with a new presence threaded through it: a tidy Management that clears crawlways, bars doors, returns your lamp after death and pins notes on unfinished passages. 'The story is about them.'",
+        "matches": "partly"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "The classic white-house game retold with dry, morbid wit: the familiar errands, and a maze 'openly uninterested in you' whose objects are small essays on adventurers who never came back up; being one more luckless adventurer, told with affection.",
+        "matches": "partly"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.11,
+      "after": 0.12
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.01,
+      "after": 0.01
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 12,
+      "after": 19
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 10,
+      "after": 15
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 121,
+      "after": 118
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 43,
+      "after": 52
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 17,
+      "after": 17
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 392,
+      "after": 424
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "persona": "newcomer",
+  "seed": 1,
+  "turns": 26,
+  "done": {
+    "reason": "exhausted",
+    "why": "The Troll Room's east passage is unfinished and the west hole goes nowhere yet, so I had nowhere further to go."
+  },
+  "about": "A Zork-like adventure. You start outside a white house, get in through a window, collect a lantern and sword, open a trap door to a cellar and kill a troll. Past that the map runs out.",
+  "ending": {
+    "reached": "no",
+    "what": "No ending. The explorable area stopped at the Troll Room."
+  },
+  "moments": [
+    {
+      "turn": 3,
+      "kind": "confusion",
+      "note": "Longer sentences like 'go to the front door and try to open it' got 'That sentence isn't one I recognize', with no hint of what it would accept."
+    },
+    {
+      "turn": 9,
+      "kind": "confusion",
+      "note": "'go in through the window' was rejected. I had to guess that 'west' would take me through."
+    },
+    {
+      "turn": 18,
+      "kind": "surprise",
+      "note": "The trap door crashed shut behind me and I heard it being barred."
+    },
+    {
+      "turn": 21,
+      "kind": "surprise",
+      "note": "I killed the troll with one blow. That felt too easy, but it was satisfying."
+    },
+    {
+      "turn": 24,
+      "kind": "delight",
+      "note": "The note 'Back soon. -- The Management.' left by the unfinished passage was funny."
+    },
+    {
+      "turn": 22,
+      "kind": "confusion",
+      "note": "Attacking again gave 'You can't see any such thing.' This was expected, since the troll was gone, but it was not explained."
+    }
+  ],
+  "wished": [
+    "To say plain sentences, such as 'go in through the window', and have them understood.",
+    "To have more places to explore past the Troll Room.",
+    "Some hint about what to aim for."
+  ],
+  "lines": [
+    {
+      "turn": 17,
+      "line": "Your sword is glowing with a faint blue glow.",
+      "why": "This was a subtle warning that danger was close, and it paid off in the next room."
+    },
+    {
+      "turn": 24,
+      "line": "Someone has left a pick leaning against the rock, and a note: \"Back soon. -- The Management.\"",
+      "why": "A funny way to say an area isn't finished."
+    },
+    {
+      "turn": 15,
+      "line": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door.",
+      "why": "A good discovery moment."
+    }
+  ],
+  "ratings": {
+    "fun": {
+      "score": 3,
+      "why": "Opening up the house and finding the cellar was fun, but the game ended quickly at the unfinished area.",
+      "turns": [
+        15,
+        16,
+        21,
+        24
+      ]
+    },
+    "engagement": {
+      "score": 3,
+      "why": "I was hooked while exploring the house, then hit a dead end.",
+      "turns": [
+        8,
+        12,
+        19,
+        26
+      ]
+    },
+    "difficulty": {
+      "score": 2,
+      "felt": "too easy",
+      "why": "Everything I tried worked, and the troll died in one hit. The only friction was the parser rejecting some phrasings.",
+      "turns": [
+        3,
+        9,
+        21
+      ]
+    },
+    "interestingness": {
+      "score": 3,
+      "why": "The setting is familiar and the details are charming, but the explorable area is small.",
+      "turns": [
+        12,
+        15,
+        24
+      ]
+    },
+    "prose": {
+      "score": 4,
+      "why": "The prose is concise and atmospheric.",
+      "turns": [
+        19,
+        21,
+        24
+      ]
+    }
+  }
+}

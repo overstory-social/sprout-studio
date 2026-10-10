@@ -1,0 +1,160 @@
+{
+  "about": "The Slide Room and its slide (v7; SLIDE-FUNCTION, SLIDER, GRANITE-WALL-F): the wall's letters only SAY \"Granite Wall\"; the slide cannot be climbed or taken; the sword put into it, and the lit lamp thrown down it, fall and are gone, and the Slide Room is dark without the lamp; DOWN is the slide, \"You tumble down the slide....\", into the Cellar, where both lie on the floor and light it. From below the ramp is unclimbable, and the trap door is still barred above.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "as": "Marta", "type": "move rug", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The force of your blow knocks the troll back, stunned." },
+      { "reader": "Marta", "kind": "told", "words": "The troll slowly regains his feet." }
+    ] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Round Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Narrow Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a long and narrow corridor where a long north-south passageway briefly narrows even further." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Mirror Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large square room with tall ceilings. On the south wall is an enormous mirror which fills the entire wall. There are exits on the other three sides of the room." }
+    ] },
+    { "as": "Marta", "type": "rub mirror", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is a rumble from deep within the earth and the room shakes." },
+      { "reader": "Marta", "kind": "described", "words": "Mirror Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large square room with tall ceilings. On the south wall is an enormous mirror which fills the entire wall. There are exits on the other three sides of the room." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cold Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a cold and damp corridor where a long east-west passageway turns into a southward path." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Slide Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small chamber, which appears to have been part of a coal mine. On the south wall of the chamber the letters \"Granite Wall\" are etched in the rock. To the east is a long passage, and there is a steep metal slide twisting downward. To the north is a small opening." }
+    ] },
+    { "as": "Marta", "type": "x slide", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The slide is a steep chute of riveted sheet metal, polished to a shine by everything that has gone down it, and it twists away out of sight into the dark below. It goes down a long way. It does not, by the look of it, come back up." }
+    ] },
+    { "as": "Marta", "type": "read letters", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It only SAYS \"Granite Wall\"." }
+    ] },
+    { "as": "Marta", "type": "read wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "It only SAYS \"Granite Wall\"." }
+    ] },
+    { "as": "Marta", "type": "x wall", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The walls are dark rock, shot through with seams of coal. On the south wall someone has etched, in careful capitals, the words \"Granite Wall\". The wall isn't granite." }
+    ] },
+    { "as": "Marta", "type": "look in slide", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The slide twists away downward, out of sight. Whatever is at the bottom is a long way down." }
+    ] },
+    { "as": "Marta", "type": "climb up slide", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The slide is far too steep and smooth to climb. It is a one-way sort of arrangement." }
+    ] },
+    { "as": "Marta", "type": "take slide", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The slide is riveted to the floor, and to the walls, and very probably to whatever is at the bottom." }
+    ] },
+    { "as": "Marta", "type": "put sword in slide", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The sword falls into the slide and is gone." }
+    ] },
+    { "as": "Marta", "type": "throw lamp down slide", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern falls into the slide and is gone." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You tumble down the slide...." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "There is a sword here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "described", "words": "There is a sword here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern (battery-powered) here." }
+    ] },
+    { "as": "Marta", "type": "take lamp and sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Brass lantern: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "Sword: Taken." }
+    ] },
+    { "as": "Marta", "type": "climb ramp", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You try to ascend the ramp, but it is impossible, and you slide back down." }
+    ] },
+    { "as": "Marta", "type": "x ramp", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The bottom of a steep metal ramp comes down out of the dark on the west side of the cellar. It is polished smooth by everything that has ever slid down it, and it is unclimbable." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The trap door is closed. Whoever keeps the bar up there drops it behind anyone new to the house. Come home by some other road and open the door yourself, and it will be let alone." }
+    ] }
+  ]
+}

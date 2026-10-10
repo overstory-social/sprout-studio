@@ -1,0 +1,96 @@
+{
+  "about": "The glass bottle filled, broken, and the lamp thrown (V-FILL, WATER-F, BOTTLE-FUNCTION, LANTERN): the Kitchen has nothing to fill the bottle from; at the Dam, by the reservoir, it fills where it is open and empty, and not where it is full or stoppered; thrown, it shatters and its water spills; the brass lantern thrown is smashed on the floor, and its light goes out for good: what is left is a broken lantern, which will not light.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
+    ] },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "open window" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "fill bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There's nothing to fill it with." }
+    ] },
+    { "as": "Marta", "type": "take bottle" },
+    { "as": "Marta", "type": "w" },
+    { "as": "Marta", "type": "take lamp" },
+    { "as": "Marta", "type": "take sword" },
+    { "as": "Marta", "type": "move rug" },
+    { "as": "Marta", "type": "open trap door" },
+    { "as": "Marta", "type": "turn on lamp" },
+    { "as": "Marta", "type": "d" },
+    { "as": "Marta", "type": "n" },
+    { "seed": 2 },
+    { "as": "Marta", "type": "attack troll with sword" },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll" },
+    { "seed": 0 },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "n" },
+    { "as": "Marta", "type": "ne" },
+    { "as": "Marta", "type": "e" },
+    { "as": "Marta", "type": "fill bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The bottle is closed." }
+    ] },
+    { "as": "Marta", "type": "open bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opened." }
+    ] },
+    { "as": "Marta", "type": "fill bottle with water", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The water slips through your fingers." }
+    ] },
+    { "as": "Marta", "type": "drink water", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Thank you very much. I was rather thirsty (from all this talking, probably)." }
+    ] },
+    { "as": "Marta", "type": "fill bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The bottle is now full of water." }
+    ] },
+    { "as": "Marta", "type": "x bottle", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a clear glass bottle with a stopper, of the kind made to carry water on long walks." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "close bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Closed." }
+    ] },
+    { "as": "Marta", "type": "fill bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The bottle is closed." }
+    ] },
+    { "as": "Marta", "type": "throw bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The bottle hits the far wall and shatters. The water spills to the floor and evaporates." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dam" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
+      { "reader": "Marta", "kind": "described", "words": "The sluice gates on the dam are closed. Behind the dam, there can be seen a wide reservoir. Water is pouring over the top of the now abandoned dam." },
+      { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble." }
+    ] },
+    { "as": "Marta", "type": "throw lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp has smashed into the floor, and the light has gone out." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dam" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
+      { "reader": "Marta", "kind": "described", "words": "The sluice gates on the dam are closed. Behind the dam, there can be seen a wide reservoir. Water is pouring over the top of the now abandoned dam." },
+      { "reader": "Marta", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble." },
+      { "reader": "Marta", "kind": "described", "words": "There is a broken lantern here." }
+    ] },
+    { "as": "Marta", "type": "x broken lantern", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is what is left of the brass lantern: a dented frame, a twisted handle and a good deal of broken glass, none of it inclined to give light ever again. It was a perfectly good lamp until somebody threw it." }
+    ] },
+    { "as": "Marta", "type": "take lantern", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lantern", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You can't turn that on." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A sword" },
+      { "reader": "Marta", "kind": "said", "words": "A broken lantern" }
+    ] }
+  ]
+}
