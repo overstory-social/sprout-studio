@@ -431,6 +431,22 @@ kind TrapDoor is Scenery {
       send living_room :trap with false
     }
   }
+  // Down the trap door, said of the door: the stairs under it, as Zork's
+  // stairs are climbed; shut, it is shut.
+  without as target for climb_down from Thing
+  without as target for through from Thing
+  as target for climb_down {
+    do {
+      if (self.get(:open)) { send actor :travel with :cellar  say "" }
+      else { say "The trap door is closed." }
+    }
+  }
+  as target for through {
+    do {
+      if (self.get(:open)) { send actor :travel with :cellar  say "" }
+      else { say "The trap door is closed." }
+    }
+  }
   as target for look_under {
     do {
       if (self.get(:open)) { say "You see a rickety staircase descending into darkness." }

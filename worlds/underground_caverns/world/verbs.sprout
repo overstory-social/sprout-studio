@@ -6,6 +6,8 @@ import * as sprout from 'sprout'
 import {inventory} from 'sprout'
 import {Portable} from 'thing'
 import {Grating} from 'grating'
+import {River, WaterAbout} from 'river'
+import {Lake, Stream} from 'reservoir'
 
 // `take` and `drop` take several things at once, as Zork's do: `take lamp
 // and sword`, `take all`. Each is answered with its name before it, as
@@ -289,6 +291,14 @@ intent look_over {
   do look_in (target: x)
 }
 verb swim { "swim"  "bathe"  "wade" }
+// Swimming in something, or across it: the water's own refusal where the
+// thing is water (Zork's LAKE-PSEUDO, RIVER-FUNCTION and GLOBAL-WATER
+// answer SWIM as THROUGH), and plain SWIM anywhere else.
+intent swim_in {
+  "swim in [x]"  "swim across [x]"  "swim through [x]"  "swim into [x]"  "swim over [x]"
+  "swim to [x]"  "bathe in [x]"  "wade into [x]"
+  do through (target: x) when (x.is(Lake) || x.is(River) || x.is(WaterAbout) || x.is(Stream)) then swim when (!(x.is(Lake) || x.is(River) || x.is(WaterAbout) || x.is(Stream)))
+}
 
 // Zork's ECHO: a word the Loud Room listens for. Anywhere else, the echo
 // is all it gets.

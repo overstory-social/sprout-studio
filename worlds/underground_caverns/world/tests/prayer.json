@@ -1,5 +1,5 @@
 {
-  "about": "The prayer at the Altar, as Zork's V-PRAY has it: praying anywhere else is only advice, but at the Altar it is answered, and the visitor stands in the Forest with everything they carried; then the torch, the first fire in the Empire, burns what Zork's BURNBIT says will burn: the brown sack on the kitchen table is consumed, with its lunch, and the bottle will not burn; nothing burns without something burning to burn it with.",
+  "about": "The prayer at the Altar, as Zork's V-PRAY has it: praying anywhere else is only advice, but at the Altar it is answered, and the visitor stands in the Forest with everything they carried; then the torch, the first fire in the Empire, burns what Zork's BURNBIT says will burn: the brown sack on the kitchen table is consumed, with its lunch, and the bottle will not burn; nothing burns without something burning to burn it with. After round 16: the open trap door is named by the Cellar, BRIEF or not, and is gone through by name both ways.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -155,6 +155,32 @@
     ] },
     { "as": "Marta", "type": "u", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    {"comment": "With the trap door open above, the Cellar says so, in BRIEF and in full; the door is gone up and down by its own name, and the stairs from below are climbed."},
+    {"as": "Marta", "type": "d", "expect": [
+      {"reader": "Marta", "kind": "described", "words": "Cellar"},
+      {"reader": "Marta", "kind": "described", "words": "The trap door above you stands open."}
+    ] },
+    {"as": "Marta", "type": "look", "expect": [
+      {"reader": "Marta", "kind": "described", "words": "Cellar"},
+      {"reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable. Overhead, at the top of the stairs, the trap door stands open."}
+    ] },
+    {"as": "Marta", "type": "climb stairs", "expect": [
+      {"reader": "Marta", "kind": "described", "words": "Living Room"}
+    ] },
+    {"as": "Marta", "type": "go down the trap door", "expect": [
+      {"reader": "Marta", "kind": "described", "words": "Cellar"},
+      {"reader": "Marta", "kind": "described", "words": "The trap door above you stands open."}
+    ] },
+    {"as": "Marta", "type": "go up the trap door", "expect": [
+      {"reader": "Marta", "kind": "described", "words": "Living Room"}
+    ] },
+    {"as": "Marta", "type": "climb down the trap door", "expect": [
+      {"reader": "Marta", "kind": "described", "words": "Cellar"},
+      {"reader": "Marta", "kind": "described", "words": "The trap door above you stands open."}
+    ] },
+    {"as": "Marta", "type": "go through the trap door", "expect": [
+      {"reader": "Marta", "kind": "described", "words": "Living Room"}
     ] }
   ]
 }

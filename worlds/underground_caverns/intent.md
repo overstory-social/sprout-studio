@@ -2163,3 +2163,54 @@ visitor who comes up by some other road.
   refilled; small things through the grating; the lamp burning out; the
   torch at the shaft and the machine; the egg given to the thief; the
   Grating Room from below; the grue; the canyon climbed.
+
+## After round 16
+
+Six runs (five opus, one fable); legible, five matching and one in part.
+The best score of any round so far, 225, and the egg and four treasures
+cased in two other runs; the trap door's new line went unread, because
+nobody examined the door from below: they pushed it, opened it, smashed
+it and went up, and got Zork's bare refusals.
+
+- **P1, accepted.** TOUCHBIT is unchanged. The rule now stands where
+  players meet the bar: from the Cellar, while the trap door is shut, `up`,
+  OPEN, PUSH, LIFT, BREAK and SMASH, KNOCK, GO THROUGH, and CLIMB the stairs
+  or the door each follow Zork's refusal with "Whoever keeps the bar up
+  there drops it behind anyone new to the house. Come home by some other
+  road and open the door yourself, and it will be let alone." Still no road
+  is named. The examine line stays. `trap_door_bar.json`.
+- **P2, accepted.** The Cellar says when the trap door above stands open,
+  in BRIEF ("The trap door above you stands open.") and in full; the open
+  state has its voice as the barred one does. `prayer.json`.
+- **P3, P4, P5, P11, P12, P13: kept, no change.** The torch and the shaft
+  already point at each other; the mazes are Zork's and are mapped by
+  dropping things; the thief is read as hoped; the room text stays Zork's.
+  A run aimed at the mine or the endgame, or a longer cap, is the
+  director's call.
+- **P6, accepted, and the cause was not the noun.** `climb` is the world's
+  synonym of `go`, so `climb mountains` was the exit, and an adjective
+  broke it. The mountains now take `climb` as CLIMB UP and answer as
+  MOUNTAIN-RANGE-F ("Don't you believe me? The mountains are
+  impassable!"); so do the Cellar's stairs. A global `climb [x]` was tried
+  and broke the rope and the chimney (friction 134). `mountains.json`.
+- **P7, accepted.** The trap door is gone down, up and through by name, as
+  the stairs are; SWIM IN and SWIM ACROSS reach the lake's, the river's and
+  the stream's own refusals, and plain SWIM elsewhere.
+- **P8, P9: logged** (friction 94/120, 132, 70 again).
+- **P10, accepted: the world's bug, not the engine's.** The adventurer's
+  own permit refused the whole of `take lunch and bottle out of sack`.
+  Several things are now answered each in turn, the stray one named
+  ("Glass bottle: That isn't in the brown sack."). `take_from_box.json`.
+  The inventory's nesting is friction 18 again.
+
+### What round 17 should watch
+
+- **The bar's rule, read where it is met:** whether a player who meets it
+  goes looking for another road home, and finds the slide or the stairs a
+  short way back once the door is open from above.
+- **The Cellar's open-door line** in BRIEF: whether a returning player
+  takes the stairs instead of the chimney.
+- Carried, still unmet: the endgame (map, path, barrow); death as a spirit
+  after the Altar; the bottle refilled; small things through the grating;
+  the torch at the shaft and the machine; the egg given to the thief; the
+  Grating Room from below; the grue; the lamp burning out.

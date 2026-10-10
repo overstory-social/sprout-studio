@@ -12,7 +12,7 @@ import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, T
 import {KitchenWindow, Outdoors} from 'house'
 import {Leaves, Ground, GratingAbove} from 'grating'
 import {grating_room} from 'maze'
-import {take, open, read, cross, climb_over, duck_under, :window_sync, :reveal, :travel, :grate_open, :grate_revealed, :won} from 'verbs'
+import {take, open, read, cross, climb_up, climb_down, climb_over, duck_under, :window_sync, :reveal, :travel, :grate_open, :grate_revealed, :won} from 'verbs'
 import {kitchen} from 'house'
 import {canyon_view} from 'river'
 import {stone_barrow} from 'barrow'
@@ -233,9 +233,15 @@ object mountains is Forest in underground_caverns {
   passage body { The forest thins out, revealing impassable mountains. }
   object house is DistantHouse
   object range is Scenery {
-    grammar { name "mountains"  nouns "mountain", "range", "peaks"  adjectives "impassable" }
+    grammar { name "mountains"  nouns "mountains", "mountain", "range", "peaks"  adjectives "impassable", "grey", "gray" }
     passage short { mountains }
     describe { text "The mountains rise sheer and grey beyond the last of the trees. They are impassable, and they look it." }
+    // MOUNTAIN-RANGE-F: CLIMB, said of the mountains, is CLIMB UP.
+    synonyms climb_up: "climb"
+    without as target for climb_up from Thing
+    without as target for climb_down from Thing
+    as target for climb_up   { do { say "Don't you believe me? The mountains are impassable!" } }
+    as target for climb_down { do { say "Don't you believe me? The mountains are impassable!" } }
   }
   object trees is Trees {
     passage view { The trees thin out here, the last of them small and wind-bent, as though they had come this far only to have a look at the mountains and think better of it. }

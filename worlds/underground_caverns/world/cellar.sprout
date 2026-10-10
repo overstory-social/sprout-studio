@@ -6,7 +6,7 @@ import {DarkRoom} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
 import {Troll} from 'troll'
-import {open, close, read, climb_up, climb_down, :trap_sync, :troll_flag, :troll_gone, :unbar, :travel, :thief_start} from 'verbs'
+import {open, close, read, climb_up, climb_down, shift, raise, mung, knock, through, :trap_sync, :troll_flag, :troll_gone, :unbar, :travel, :thief_start} from 'verbs'
 import {east_of_chasm} from 'gallery'
 import {living_room} from 'house'
 import {maze_1} from 'maze'
@@ -19,7 +19,7 @@ object cellar is DarkRoom in underground_caverns {
     exit north "north"     -> troll_room
     exit south "crawlway"  -> east_of_chasm
     exit up    "trap door" -> living_room when (self.get(:trap_open))
-    exit up    "trap door" refuse "The trap door is closed."
+    exit up    "trap door" refuse shut_up
     exit west  "ramp"      refuse "You try to ascend the ramp, but it is impossible, and you slide back down."
   }
   :value 25
@@ -27,7 +27,22 @@ object cellar is DarkRoom in underground_caverns {
   :trap_open false
   :barred false
   passage body {
-    You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.
+    You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.{if self.get(:trap_open)} Overhead, at the top of the stairs, the trap door stands open.{/if}
+  }
+  // The Cellar named in BRIEF says, as Zork's does not, when the trap door
+  // above stands open: the way home is the short one.
+  passage brief {
+    {self.title}{if self.get(:trap_open)}
+
+    The trap door above you stands open.{/if}
+
+    {self.objects}
+  }
+  // Whoever bars the trap door, said wherever a visitor runs into the bar
+  // from below: the exit, the stairs, and the door itself.
+  passage bar_rule { Whoever keeps the bar up there drops it behind anyone new to the house. Come home by some other road and open the door yourself, and it will be let alone. }
+  passage shut_up {
+    The trap door is closed. {self.bar_rule}
   }
   on :trap_sync (from, value) {
     self.set(:trap_open, value)
@@ -63,11 +78,13 @@ object cellar is DarkRoom in underground_caverns {
   // Zork's STAIRS, which the Cellar keeps among its globals: the rickety
   // staircase from the trap door, seen from the foot of it.
   object stairs is Stairs {
+    // CLIMB, said of the stairs from below, is CLIMB UP.
+    synonyms climb_up: "climb"
     passage view { The rickety staircase climbs from the cellar floor to the underside of the trap door, which is as far as it goes and, from this side, as far as you go. }
     as target for climb_up {
       do {
         if (cellar.get(:trap_open)) { send actor :travel with :living_room  say "" }
-        else { say "The trap door is closed." }
+        else { say "{cellar.shut_up}" }
       }
     }
     as target for climb_down { do { say "The stairs don't lead downward." } }
@@ -96,11 +113,19 @@ object cellar is DarkRoom in underground_caverns {
     }
     on :trap_sync (from, value) { self.set(:open, value) }
 
+    passage locked { The door is locked from above. {cellar.bar_rule} }
+
     without as target for open from Thing
     without as target for close from Thing
+    without as target for shift from Thing
+    without as target for raise from Thing
+    without as target for mung from Thing
+    without as target for knock from Thing
+    without as target for through from Thing
+    without as target for climb_up from Thing
     as target for open {
       do {
-        if (!self.get(:open)) { say "The door is locked from above." }
+        if (!self.get(:open)) { say locked }
         else { say "{one of}Look around.{or}Too late for that.{or}Have your eyes checked.{/one of}" }
       }
     }
@@ -108,6 +133,34 @@ object cellar is DarkRoom in underground_caverns {
       do {
         if (!self.get(:open)) { say "The door closes and locks." }
         else { say "{one of}Look around.{or}Too late for that.{or}Have your eyes checked.{/one of}" }
+      }
+    }
+    // Pushed, lifted, battered, knocked on, gone through: from below, while
+    // it is shut, every one of them runs into the bar and is told why.
+    as target for shift { do { if (self.get(:open)) { say "You can't move the trap door." } else { say locked } } }
+    as target for raise { do { if (self.get(:open)) { say "It is already open." } else { say locked } } }
+    as target for mung {
+      do {
+        if (self.get(:open)) { say "Nice try." }
+        else { say "Nice try. The planks are oak and the bands are iron, and the bar is on the other side. {cellar.bar_rule}" }
+      }
+    }
+    as target for knock {
+      do {
+        if (self.get(:open)) { say "Nobody's home." }
+        else { say "Nobody answers. {cellar.bar_rule}" }
+      }
+    }
+    as target for through {
+      do {
+        if (self.get(:open)) { send actor :travel with :living_room  say "" }
+        else { say "{cellar.shut_up}" }
+      }
+    }
+    as target for climb_up {
+      do {
+        if (self.get(:open)) { send actor :travel with :living_room  say "" }
+        else { say "{cellar.shut_up}" }
       }
     }
   }

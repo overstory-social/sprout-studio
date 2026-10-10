@@ -3164,6 +3164,57 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Status: open:** a role that takes only what is held at the top level
   (Zork's HELD), or `all` that leaves out what is inside a held container.
 
+## Found in round 16
+
+### 94 and 120, again: the word nobody knows
+
+- **Round 16:** `knock on the boarded door politely` was "You can't see any
+  such thing.", and the player took it to mean the boarded door could not
+  be named at all; `open the window wider` and `climb the unclimbable
+  ramp` failed the same way, on a word the world has never heard.
+- **Wanted:** Zork's `I don't know the word "politely".`, which says
+  which word failed and leaves the door nameable.
+- **Wrote instead:** nothing; the parser's answer is the engine's.
+- **Spec:** The parser › When nothing matches.
+- **Status: open,** with 82, 94, 120 and 132.
+
+### 132, again: `everything except`
+
+- **Round 16:** `drop everything except the lantern and the painting` was
+  not_here once more.
+- **Status: open.**
+
+### 70, again: the echo has exceptions
+
+- **Round 16:** in the Loud Room, `score` and `north` echoed, but `take
+  coins`, `examine dam` and `push yellow button`, naming things not there,
+  were "You can't see any such thing.". What does not parse never reaches
+  the room, so it cannot be echoed.
+- **Status: open.**
+
+### 18, again: the inventory's nesting
+
+- **Round 16:** a player read the bottle in hand as inside the sack: "The
+  brown sack contains:", "A lunch", then "A glass bottle" with nothing to
+  show the sack's list had ended. Zork indents PRINT-CONT's contents.
+- **Status: open.**
+
+### 134. A climb, said of a thing, competes with a climb said of a way
+
+- **Round 16:** `climb the impassable mountains` was unknown. `climb` is
+  the world's synonym of `go`, so `climb mountains` was the exit labelled
+  "mountains", and the adjective, which no label carries, broke it.
+- **Wanted:** Zork's CLIMB-FOO: `climb [x]` is CLIMB UP said of a thing,
+  wherever there is a thing, and a way out where there is none.
+- **Tried:** `"climb [target]"` as a phrase of `climb_up`. It wins over the
+  exit wherever both match, so `climb rope` in the Dome Room and `climb
+  chimney` in the Kitchen stopped going where their exits go.
+- **Wrote instead:** `synonyms climb_up: "climb"` on the two objects that
+  want it, the mountains and the Cellar's stairs, where nothing else would
+  take the line.
+- **Spec:** Parsing › Synonyms; The parser › readings (ranking).
+- **Status: open:** a way to say a phrase yields to an exit's label.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
@@ -3580,3 +3631,16 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **From below, the grating** answers that anything put through it would
   come straight back down; Zork moves the thing to the Grating Room, which
   is where it already is.
+- **Round 16: the Cellar names the open trap door.** "The trap door above
+  you stands open." in BRIEF, and the long description ends "Overhead, at
+  the top of the stairs, the trap door stands open."; Zork's Cellar text is
+  fixed.
+- **Round 16: the bar's rule wherever the bar is met.** From below, while
+  the trap door is shut, `up`, OPEN, PUSH, LIFT, BREAK, KNOCK, THROUGH and
+  CLIMB (UP) the stairs or the door follow Zork's refusal with the rule;
+  Zork has only the refusal. The trap door is gone down and up by its own
+  name (`go down the trap door`, `climb down`, `go through`), as the stairs
+  are.
+- **Round 16: SWIM IN, SWIM ACROSS** the lake, the river or the stream is
+  the water's own refusal, and SWIM elsewhere; CLIMB the mountains is
+  MOUNTAIN-RANGE-F's "Don't you believe me?".
