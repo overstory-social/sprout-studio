@@ -11,6 +11,7 @@ import {grating_clearing} from 'above_ground'
 import {grating_room} from 'maze'
 import {SkeletonKey} from 'remains'
 import {Adventurer} from 'adventurer'
+extension media 1
 
 kind Leaves is Portable {
   :burnable true
@@ -116,7 +117,10 @@ kind GratingAbove is Grating {
 
     {if self.get(:open)}The grating is open.{else if self.get(:unlocked)}The grating is closed.{else}The grating is closed, and fastened from beneath: whatever lock holds it faces down into the dark, well out of reach of anyone up here.{/if}
   }
-  describe { text view }
+  describe {
+    text view
+    if (seen == :look) { media.show("pictures/grating.png", "the grating") }
+  }
 
   as target for open {
     do {

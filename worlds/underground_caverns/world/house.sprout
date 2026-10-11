@@ -7,7 +7,7 @@ import {Thing, Portable, Scenery} from 'thing'
 import {Box, Bag} from 'box'
 import {Lamp} from 'lamp'
 import {Sword, Knife, Treasure, Food, Water, Lunch, Garlic} from 'items'
-import {Room, DarkRoom, Perilous, ChimneyTop} from 'room'
+import {Room, DarkRoom, Perilous, ChimneyTop, LivingRoomPicture} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'scenery'
 import {Rope} from 'temple'
@@ -206,7 +206,7 @@ object attic is DarkRoom in underground_caverns {
   }
 }
 
-object living_room is Room in underground_caverns {
+object living_room is Room, LivingRoomPicture in underground_caverns {
   grammar {
     name "Living Room"
     exit east "east"      -> kitchen

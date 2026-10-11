@@ -15,7 +15,7 @@ import * as sprout from 'sprout'
 import {Thing, Portable, Scenery, Flame} from 'thing'
 import {Box, Bag} from 'box'
 import {Readable, Rejecting, Sharp} from 'items'
-import {Room, DarkRoom} from 'room'
+import {Room, DarkRoom, DamPicture} from 'room'
 import {Light} from 'lamp'
 import {Adventurer} from 'adventurer'
 import {Pile} from 'boat'
@@ -36,7 +36,7 @@ kind Tidal {
   on :tide (from, value) { self.set(:tide, value) }
 }
 
-object dam_room is Room, Tidal, Riverside in underground_caverns {
+object dam_room is Room, Tidal, Riverside, DamPicture in underground_caverns {
   :tour 44
   grammar {
     name "Dam"

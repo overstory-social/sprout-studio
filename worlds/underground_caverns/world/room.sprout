@@ -16,6 +16,7 @@ import {Adventurer} from 'adventurer'
 import {Thief} from 'thief'
 import {read, listen, search, look_in, look_under, look_behind, Reach, :scored, :relight, :room_lit, :wall_look, :hush, :snuffed, :prowl, :survey, :where, :berth, :wreck} from 'verbs'
 import {MagicBoat, Wreck} from 'boat'
+extension media 1
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -117,9 +118,26 @@ kind Room is sprout.Place {
   // `look`, in VERBOSE, or the first time in; what is in it unless
   // SUPERBRIEF. Arriving is the only time a visitor's mode is asked.
   describe {
-    if (seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :superbrief) { text title }
-    else if (seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :brief && actor.recall(:visits) > 1) { text brief }
-    else { text full }
+    text described
+    // The room's picture, where it has one: the first time a visitor comes in and whenever
+    // they look, never for a poll, and in a dark room only by the light they see it by. The
+    // file names are written here so that `sprout pack` can send the pictures with the world.
+    if (seen == :look || (seen == :arrival && actor.recall(:visits) < 2)) {
+      if (self.is(WhiteHousePicture)) { media.show("pictures/white-house.png", "the white house") }
+      else if (self.is(ClearingPicture)) { media.show("pictures/grating.png", "the clearing") }
+      else if (self.is(LivingRoomPicture)) { media.show("pictures/trophy-case.png", "the trophy case") }
+      else if (self.is(DamPicture)) { media.show("pictures/dam.png", "Flood Control Dam #3") }
+      else if (self.is(DarkRoom)) {
+        if (self.get(:alight)) {
+          if (self.is(CellarPicture)) { media.show("pictures/cellar.png", "the cellar") }
+          else if (self.is(TrollRoomPicture)) { media.show("pictures/troll.png", "the troll room") }
+        }
+      }
+    }
+  }
+  // The description as a passage.
+  passage described {
+    {if seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :superbrief}{self.title}{else if seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :brief && actor.recall(:visits) > 1}{self.brief}{else}{self.full}{/if}
   }
 
   // A room answers to the words of its name ("Troll Room" to `troll`), but
@@ -288,3 +306,11 @@ kind Grue is Scenery {
   without as target for look_behind from Thing
   as target for look_behind { do { say absent } }
 }
+
+// The rooms with a picture compose one of these, and the room's describe shows it.
+kind WhiteHousePicture { }
+kind ClearingPicture { }
+kind LivingRoomPicture { }
+kind DamPicture { }
+kind CellarPicture { }
+kind TrollRoomPicture { }
