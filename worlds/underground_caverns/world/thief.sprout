@@ -46,6 +46,7 @@ import {sandy_cave} from 'river'
 import {narrow_corridor, mirror_room_2, winding_passage, tiny_cave, mirror_room_1, twisting_passage, small_cave, cold_passage} from 'mirror'
 import {slide_room, mine_entrance, squeaky_room, shaft_room, smelly_room, mine_1, mine_2, mine_3, mine_4, ladder_top, ladder_bottom, coal_dead_end, machine_room} from 'mine'
 import {entrance_to_hades, land_of_the_dead} from 'hades'
+extension media 1
 
 message :disgorge with integer
 message :unloaded with integer
@@ -64,7 +65,10 @@ kind LargeBag is Scenery {
   passage short { large bag }
   passage no_take {{if self.get(:pinned)}Sadly for you, the robber collapsed on top of the bag. Trying to take it would wake him.{else}The bag will be taken over his dead body.{/if}}
   passage examined { The bag is underneath the thief, so one can't say what, if anything, is inside. }
-  describe { text examined }
+  describe {
+    text examined
+    if (seen == :look) { media.show("pictures/thief.png", "the thief") }
+  }
   without as target for open from Thing
   without as target for close from Thing
   without as target for look_in from Thing
