@@ -65,10 +65,7 @@ kind LargeBag is Scenery {
   passage short { large bag }
   passage no_take {{if self.get(:pinned)}Sadly for you, the robber collapsed on top of the bag. Trying to take it would wake him.{else}The bag will be taken over his dead body.{/if}}
   passage examined { The bag is underneath the thief, so one can't say what, if anything, is inside. }
-  describe {
-    text examined
-    if (seen == :look) { media.show("pictures/thief.png", "the thief") }
-  }
+  describe { text examined }
   without as target for open from Thing
   without as target for close from Thing
   without as target for look_in from Thing
@@ -189,6 +186,7 @@ kind Thief is Thing, sprout.Actor {
   describe {
     if (self.get(:strength) < 0) { text "The thief lies where he fell, out cold, with his bag beneath him and an expression of pained surprise, as of a man whose luck has never let him down before. Even unconscious he keeps one hand on the bag." }
     else { text "The thief is a slippery character with beady eyes that flit back and forth. He carries, along with an unmistakable arrogance, a large bag over his shoulder and a vicious stiletto, whose blade is aimed menacingly in your direction. I'd watch out if I were you." }
+    if (seen == :look) { media.show("pictures/thief.png", "the thief") }
   }
 
   without as target for listen from Thing
