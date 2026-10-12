@@ -18,6 +18,10 @@ world underground_caverns is sprout.World {
 
   :gate false
   pass any (self.get(:gate))
+  // A move made through the open gate is told only in the places it joins
+  // (Places): the rest of the Empire hears nothing of it.
+  pass :arrived (false)
+  pass :departed (false)
   pass :trap_sync (true)
   pass :window_sync (true)
   pass :troll_gone (true)

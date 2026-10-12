@@ -3255,6 +3255,30 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Status: open** for the role-less verbs and the Kitchen's poll, which are
   Sprout's (sprout#596, sprout#595).
 
+## Found profiling the Playdate beta
+
+### 136. A move through the gate told the whole Empire
+
+- **Wanted:** a body or a visitor carried across the map (falling from the
+  tree, dying, flung from the Loud Room, the boat) told only where it leaves
+  and where it arrives, as any move is.
+- **Found:** the gate is the world's `pass any`, and it must be open for the
+  move itself, since a person moves only themselves (Movement and consent)
+  and a place across the map is in range only while the world passes.
+  `arrives` and `:arrived`, and `leaves` and `:departed`, walked the place's
+  range under `pass any`, so each such move sent about 720 `:arrived` and
+  720 `:departed` and every visitor anywhere read it: about 7,470 of each
+  across the walkthrough, most of a move's time on the Playdate.
+- **Wrote instead:** nothing could be written: `pass :arrived` was accepted
+  and never asked. Sprout now walks the move's notices under `pass :arrived`
+  and `pass :departed` (sprout#601), and the world writes both `false`.
+  The walkthrough sends about 1,780 of each, the tree's script 62 `:arrived`
+  where it sent 1,483. A world test cannot pin the absence, since a script
+  checks what is said and not what is not; Sprout's
+  `corpus/good/notices-through-gate` transcript does.
+- **Spec:** Places; Events, messages and the bus › Containers route.
+- **Status: resolved** (sprout#601, Sprout 071eed7).
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
