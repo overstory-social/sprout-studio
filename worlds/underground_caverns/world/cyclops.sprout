@@ -25,6 +25,7 @@ import {ask} from 'sprout'
 import {take, put, open, close, look_in, attack, give, throw, listen, talk, greet, alarm, mung, kick, burn, tie, climb_up, climb_down, through, shift, :travel, :clock, :cyc_state, :magic, :cyclops_gone, :uncork, :consume, :summon, :defend, :keeper, :unveil, :wall_look, :die, search} from 'verbs'
 import {maze_15} from 'maze'
 import {living_room} from 'house'
+extension media 1
 
 message :restate
 message :waken
@@ -144,6 +145,7 @@ kind Cyclops is Thing, sprout.Actor {
   describe {
     if (self.get(:asleep)) { text "The cyclops is sleeping like a baby, albeit a very ugly one." }
     else { text "A hungry cyclops is standing at the foot of the stairs." }
+    if (seen == :look) { media.show("pictures/cyclops.png", "the cyclops") }
   }
 
   // The state the room describes him in.
