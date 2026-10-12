@@ -10,7 +10,7 @@
 // coffin, as Zork's COFFIN-CURE does. The bell, the book and the candles
 // are for the exorcism at the gates of Hell (hades.sprout).
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery, Flame} from 'thing'
+import {Thing, Portable, Scenery, Flame, Tieable, Switchable} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
 import {Treasure, Readable, Water, Sharp} from 'items'
@@ -241,7 +241,7 @@ object egyptian_room is DarkRoom in underground_caverns {
 // The rope from the Attic. Tied to the Dome's railing it hangs down into
 // the Torch Room and may be climbed down, and not taken; let go of in the
 // Dome untied, it goes over the edge (ROPE-FUNCTION).
-kind Rope is Portable {
+kind Rope is Portable, Tieable {
   grammar { name "rope"  nouns "hemp", "coil"  adjectives "large" }
   :sacred true
   :has_fdesc true
@@ -257,7 +257,7 @@ kind Rope is Portable {
     if (self.get(:tied)) { text "The rope is tied fast to the wooden railing and hangs down over it into the room below, ending about ten feet from the floor. The knot looks good. You tied it, so you would know." }
     else { text "It is a good length of stout hemp rope, coiled with more care than anything else in the attic was put away. Someone expected to need it." }
   }
-  without as target for tie from Thing
+  without as target for tie from Tieable
   as target for tie {
     do {
       if (bound tool) {
@@ -275,7 +275,6 @@ kind Rope is Portable {
       } else { say "You'll have to say what to tie the rope to." }
     }
   }
-  without as target for untie from Thing
   as target for untie {
     do {
       if (self.get(:tied)) {
@@ -405,9 +404,9 @@ kind Torch is Treasure, Flame {
   describe {
     text "It is a torch of old ivory, yellowed and carved along its length with a procession of tiny figures, every one of them carrying a tiny torch. The flame at its head burns steadily, without smoke and without visible fuel, and shows no sign of ever having been lit or of ever going out. Left anywhere, you suspect, it would go on lighting the place whether or not anyone was there to see by it. The torch is burning."
   }
-  without as target for lamp_on from Thing
+  without as target for lamp_on from Switchable
   as target for lamp_on { do { say "It is already on." } }
-  without as target for lamp_off from Thing
+  without as target for lamp_off from Switchable
   as target for lamp_off { do { say "You nearly burn your hand trying to extinguish the flame." } }
 }
 
@@ -462,7 +461,7 @@ kind Candles is Flame {
     }
   }
 
-  without as target for lamp_on from Thing
+  without as target for lamp_on from Switchable
   as target for lamp_on {
     do {
       // Lit already with the match in hand, by the lighter's own part.
@@ -472,7 +471,7 @@ kind Candles is Flame {
       else { say "You should say what to light them with." }
     }
   }
-  without as target for lamp_off from Thing
+  without as target for lamp_off from Switchable
   as target for lamp_off {
     do {
       if (self.get(:lit)) {
@@ -653,7 +652,6 @@ kind Sceptre is Treasure, Sharp {
   passage solid { Suddenly, the rainbow appears to become solid and, I venture, walkable (I think the giveaway was the stairs and bannister). }
   passage dazzle { A dazzling display of color briefly emanates from the sceptre. }
   passage collapse { The structural integrity of the rainbow is severely compromised, leaving you hanging in midair, supported only by water vapor. Bye. }
-  without as target for wave from Thing
   as target for wave {
     do {
       if (here.is(RainbowFoot)) {
@@ -708,7 +706,6 @@ kind Bell is Portable {
     if (self.get(:hot)) { text "The bell glows a dull red from lip to handle, and the air above it shivers. The wooden handle has charred black. It ticks faintly as it cools, very slowly, in no hurry to be picked up." }
     else { text "It is a small brass bell with a wooden handle, of the kind used to call the faithful, or the servants, or the dead; the temple does not say which. It is polished bright where a great many hands have held it." }
   }
-  without as target for ring from Thing
   as target for ring {
     do {
       if (self.get(:hot)) {

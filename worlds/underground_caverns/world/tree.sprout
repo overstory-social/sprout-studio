@@ -148,7 +148,6 @@ kind Canary is Treasure {
   :sung false
   passage short {{if self.get(:broken)}broken clockwork canary{else}golden clockwork canary{/if}}
 
-  without as target for wind from Thing
   as target for wind {
     do {
       let songful = here.is(Songful)

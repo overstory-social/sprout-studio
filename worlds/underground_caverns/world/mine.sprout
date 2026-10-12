@@ -15,7 +15,7 @@
 // the slide falls to the Cellar; and the machine turns its coal into a
 // diamond, or anything else into slag, by spawning.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Portable, Flame} from 'thing'
+import {Thing, Scenery, Portable, Flame, Lowerable, Mechanism, Switchable} from 'thing'
 import {Box} from 'box'
 import {Room, DarkRoom} from 'room'
 import {Light} from 'lamp'
@@ -282,7 +282,7 @@ kind Cage is Box {
   as target for shift { do { say "The basket swings a little on its chain, and comes back." } }
 }
 
-kind Basket is Cage {
+kind Basket is Cage, Lowerable {
   // Scratch, for lowering: whether the light goes down with it.
   :lamping false
   :others 0 min 0 max 50
@@ -303,7 +303,7 @@ kind Basket is Cage {
       }
     }
   }
-  without as target for lower from Thing
+  without as target for lower from Lowerable
   as target for lower {
     do {
       if (!self.get(:top)) { say dummy }
@@ -328,7 +328,7 @@ kind Basket is Cage {
   }
 }
 
-kind FarBasket is Cage {
+kind FarBasket is Cage, Lowerable {
   :capacity 10000
   passage ldesc { From the chain is suspended a basket. }
   passage away { The basket is at the other end of the chain. }
@@ -348,7 +348,7 @@ kind FarBasket is Cage {
       }
     }
   }
-  without as target for lower from Thing
+  without as target for lower from Lowerable
   as target for lower {
     do {
       if (!self.get(:top)) { say dummy }
@@ -362,7 +362,7 @@ kind FarBasket is Cage {
 }
 
 // Zork's CHAIN-PSEUDO, at both ends of the shaft.
-kind Chain is Scenery {
+kind Chain is Scenery, Lowerable {
   grammar { name "iron chain"  nouns "chain", "chains"  adjectives "heavy", "iron" }
   passage short { iron chain }
   passage no_take { The chain is secure. }
@@ -371,7 +371,7 @@ kind Chain is Scenery {
   as target for shift { do { say "The chain is secure." } }
   without as target for raise from Thing
   as target for raise { do { say "Perhaps you should do that to the basket." } }
-  without as target for lower from Thing
+  without as target for lower from Lowerable
   as target for lower { do { say "Perhaps you should do that to the basket." } }
   without as target for climb_down from Thing
   as target for climb_down { do { say "The chain is greasy, the shaft is narrow, and the bottom is a long way down. You wouldn't fit and would die if you could." } }
@@ -685,11 +685,11 @@ object machine_room is DarkRoom in underground_caverns {
     This is a large, cold room whose sole exit is to the north. In one corner there is a machine which is reminiscent of a clothes dryer. On its face is a switch which is labelled "START". The switch does not appear to be manipulable by any human hand (unless the fingers are about 1/16 by 1/4 inch). On the front of the machine is a large lid, which is {if machine.get(:open)}open{else}closed{/if}.
   }
   object machine is Machine
-  object switch is Scenery {
+  object switch is Scenery, Mechanism {
     grammar { name "switch"  nouns "start"  adjectives "start" }
     passage short { switch }
     describe { text "The switch is set into the face of the machine and labelled \"START\" in letters that have been polished by thumbs. It has no handle at all, only a narrow slot across its face, about 1/16 by 1/4 inch, of a shape that would suit the tip of a small flat tool." }
-    without as target for turn_with from Thing
+    without as target for turn_with from Mechanism
     as target for turn_with {
       do {
         if (tool.is(Screwdriver)) {
@@ -710,7 +710,7 @@ object machine_room is DarkRoom in underground_caverns {
 // The machine (MACHINE-F): a box with a lid, which turns coal into a
 // diamond and anything else into slag when its switch is turned with the
 // screwdriver and the lid is shut (MSWITCH-FUNCTION).
-kind Machine is Box, Scenery {
+kind Machine is Box, Scenery, Mechanism, Switchable {
   grammar { name "machine"  nouns "lid", "dryer", "pdp10", "pdp-10", "drier"  adjectives "large", "clothes" }
   :open false
   :capacity 50
@@ -744,9 +744,9 @@ kind Machine is Box, Scenery {
       } else { say dummy }
     }
   }
-  without as target for lamp_on from Thing
+  without as target for lamp_on from Switchable
   as target for lamp_on { do { say "It's not clear how to turn it on with your bare hands." } }
-  without as target for turn_with from Thing
+  without as target for turn_with from Mechanism
   as target for turn_with {
     do {
       if (tool.is(Screwdriver)) {

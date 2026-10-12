@@ -147,7 +147,6 @@ kind Water is Thing {
 
   // Poured, as Zork's WATER-F takes it: on the floor, into anything but
   // the bottle it is in, or over something, it is gone.
-  without as target for pour from Thing
   as target for pour {
     permit { if (self.get(:sealed)) { refuse stoppered } }
     do {
@@ -155,7 +154,6 @@ kind Water is Thing {
       destroy self
     }
   }
-  without as item for pour_in from Thing
   as item for pour_in {
     permit { if (self.get(:sealed)) { refuse stoppered } }
     do {
@@ -174,7 +172,6 @@ kind Water is Thing {
       }
     }
   }
-  without as item for pour_on from Thing
   as item for pour_on {
     permit { if (self.get(:sealed)) { refuse stoppered } }
     do {

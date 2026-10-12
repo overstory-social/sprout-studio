@@ -5,7 +5,7 @@
 // turns on and off; the ivory torch and the altar's candles are lights of
 // their own kinds (temple.sprout).
 import * as sprout from 'sprout'
-import {Portable, Thing} from 'thing'
+import {Portable, Thing, Switchable} from 'thing'
 import {Adventurer} from 'adventurer'
 import {Thief} from 'thief'
 import {DarkRoom, Room} from 'room'
@@ -13,7 +13,7 @@ import {Box} from 'box'
 import {lamp_on, lamp_off, :light, :relight, :lamp_age, :snuffed, :shatter_lamp, :burn_tick} from 'verbs'
 extension media 1
 
-kind Light is Portable, sprout.LightSource {
+kind Light is Portable, sprout.LightSource, Switchable {
   on :moved (from, to) {
     if (self.get(:lit)) {
       // Into the thief's hands the visitor counts it gone themselves: his
@@ -35,8 +35,8 @@ kind Lamp is Light {
   :life 385 min 0 max 385
   :age 0 min 0 max 4
   :burned_out false
-  without as target for lamp_on from Thing
-  without as target for lamp_off from Thing
+  without as target for lamp_on from Switchable
+  without as target for lamp_off from Switchable
 
   // Examined, the lamp says what it is, then Zork's line for whether it is lit.
   describe {
@@ -142,7 +142,7 @@ kind Lamp is Light {
 }
 
 // What is left of the brass lantern, thrown (BROKEN-LAMP).
-kind BrokenLamp is Portable {
+kind BrokenLamp is Portable, Switchable {
   grammar { name "broken lantern"  nouns "lamp", "lantern"  adjectives "broken", "brass", "smashed" }
   :size 15
   passage short { broken lantern }

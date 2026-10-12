@@ -3215,6 +3215,38 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Spec:** Parsing › Synonyms; The parser › readings (ranking).
 - **Status: open:** a way to say a phrase yields to an exit's label.
 
+## Found typing the verbs for one thing
+
+### 135. A verb for one thing is offered everywhere until its role is typed
+
+- **Wanted:** a verb for one thing (`inflate`, `wind`, `pour`, `unlock`)
+  not offered until that thing is about: the Playdate's sentence builder
+  offered `inflate` in the forest, with no boat for miles.
+- **Found:** a role with no kind is filled by any thing, and `Thing`
+  answered every verb with Zork's default, so every such verb was offered
+  against everything in sight and each reading then refused. Taking the
+  default off `Thing` is not enough: `inflate tree` still reads, as the
+  role takes any thing whatever plays it.
+- **Wrote instead:** the roles of the verbs for one thing are typed, by a
+  kind that exists (`Canary`, `Water`, `Sceptre`, `Bell`, `Rope`, `Vessel`,
+  `Ghosts`, `Pump`, `SkeletonKey`, `sprout.Actor`) or by a kind that names
+  what plays them (`Inflatable`, `Switchable`, `Lockable`, `Tieable`,
+  `Lowerable`, `Pluggable`, `Mechanism`, `Diggable`), which carries Zork's
+  default where there is one. Such a verb said of anything else is answered
+  with the engine's `cannot` ("You can't wave the small mailbox.") instead
+  of Zork's own ("Waving the small mailbox isn't notably helpful."). The
+  general verbs (take, open, break, kick, touch, climb, burn, cut, fill,
+  raise …) keep Zork's default for every thing, and so are still offered
+  against everything. A verb with no role (`launch`, `land`, `dig` and
+  `exorcise` said alone) cannot be typed, and is offered everywhere and
+  refused where it does not apply. With fewer readings to build, the view
+  polls in the forest, West of House and Dam Base; the Kitchen's still
+  exhausts its `pollSteps`.
+- **Spec:** Verbs and the grammar a visitor types › Declaring a verb; The
+  view (a verb is offered when its roles can be filled).
+- **Status: open** for the role-less verbs and the Kitchen's poll, which are
+  Sprout's.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the

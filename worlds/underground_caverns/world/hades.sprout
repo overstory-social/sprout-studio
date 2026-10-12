@@ -14,7 +14,7 @@
 // `read` tell the room what was done here, since a thing in a hand cannot
 // reach the room around it (friction 88).
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery, Flame} from 'thing'
+import {Thing, Portable, Scenery, Flame, Lockable} from 'thing'
 import {Room} from 'room'
 import {Treasure} from 'items'
 import {Stairs} from 'scenery'
@@ -179,40 +179,26 @@ kind Ghosts is Scenery {
   as target for search { do { say unable } }
   without as target for cross from Thing
   as target for cross { do { say unable } }
-  without as target for lamp_on from Thing
-  as target for lamp_on { do { say unable } }
-  without as target for lamp_off from Thing
-  as target for lamp_off { do { say unable } }
   without as target for shift from Thing
   as target for shift { do { say unable } }
   without as target for raise from Thing
   as target for raise { do { say unable } }
-  without as target for lower from Thing
-  as target for lower { do { say unable } }
   without as target for eat from Thing
   as target for eat { do { say unable } }
   without as target for drink from Thing
   as target for drink { do { say unable } }
-  without as target for wind from Thing
-  as target for wind { do { say unable } }
   without as target for tally from Thing
   as target for tally { do { say unable } }
   without as target for smell from Thing
   as target for smell { do { say unable } }
   without as target for listen from Thing
   as target for listen { do { say unable } }
-  without as target for unlock from Thing
-  as target for unlock { do { say unable } }
-  without as target for lock from Thing
-  as target for lock { do { say unable } }
   without as target for climb_up from Thing
   as target for climb_up { do { say unable } }
   without as target for climb_down from Thing
   as target for climb_down { do { say unable } }
   without as target for knock from Thing
   as target for knock { do { say unable } }
-  without as target for pour from Thing
-  as target for pour { do { say unable } }
   without as target for walk_around from Thing
   as target for walk_around { do { say unable } }
   without as target for kick from Thing
@@ -221,8 +207,6 @@ kind Ghosts is Scenery {
   as target for rub { do { say unable } }
   without as target for rub_with from Thing
   as target for rub_with { do { say unable } }
-  without as target for wave from Thing
-  as target for wave { do { say unable } }
   without as target for shake from Thing
   as target for shake { do { say unable } }
   without as target for squeeze from Thing
@@ -233,14 +217,8 @@ kind Ghosts is Scenery {
   as target for look_behind { do { say unable } }
   without as target for fill from Thing
   as target for fill { do { say unable } }
-  without as target for tie from Thing
-  as target for tie { do { say unable } }
   without as target for alarm from Thing
   as target for alarm { do { say unable } }
-  without as target for ring from Thing
-  as target for ring { do { say unable } }
-  without as target for untie from Thing
-  as target for untie { do { say unable } }
   without as target for turn from Thing
   as target for turn { do { say unable } }
   without as target for leap_at from Thing
@@ -255,20 +233,6 @@ kind Ghosts is Scenery {
   as target for clear { do { say unable } }
   without as target for cut from Thing
   as target for cut { do { say unable } }
-  without as target for launch from Thing
-  as target for launch { do { say unable } }
-  without as target for land from Thing
-  as target for land { do { say unable } }
-  without as target for inflate from Thing
-  as target for inflate { do { say unable } }
-  without as target for deflate from Thing
-  as target for deflate { do { say unable } }
-  without as target for plug from Thing
-  as target for plug { do { say unable } }
-  without as target for turn_with from Thing
-  as target for turn_with { do { say unable } }
-  without as target for oil from Thing
-  as target for oil { do { say unable } }
   without as target for through from Thing
   as target for through { do { say unable } }
   without as target for talk from Thing
@@ -282,7 +246,7 @@ kind Ghosts is Scenery {
 
 // The gate of Hell (GATE-PSEUDO): through it is in, if it lets you; touch
 // it any other way and it makes your teeth ache.
-kind HellGate is Scenery {
+kind HellGate is Scenery, Lockable {
   grammar { name "gate"  nouns "gates", "gateway", "portal", "archway"  adjectives "large", "open", "iron" }
   passage short { gate }
   passage ache { The gate is protected by an invisible force. It makes your teeth ache to touch it. }
@@ -313,9 +277,9 @@ kind HellGate is Scenery {
   as target for knock { do { say ache } }
   without as target for climb_over from Thing
   as target for climb_over { do { say ache } }
-  without as target for lock from Thing
+  without as target for lock from Lockable
   as target for lock { do { say ache } }
-  without as target for unlock from Thing
+  without as target for unlock from Lockable
   as target for unlock { do { say ache } }
   without as target for mung from Thing
   as target for mung { do { say ache } }

@@ -8,7 +8,7 @@
 // at its end (FALLS-ROOM, RAINBOW-FCN, SCEPTRE-FUNCTION); and the canyon,
 // Canyon Bottom, Rocky Ledge and Canyon View, up to the forest.
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery} from 'thing'
+import {Thing, Portable, Scenery, Diggable} from 'thing'
 import {Box, Bag} from 'box'
 import {Treasure} from 'items'
 import {Room, DarkRoom, Perilous} from 'room'
@@ -92,7 +92,7 @@ object river_4 is DarkRoom, OnTheRiver in underground_caverns {
   }
   object river is River
   object cliffs is Cliffs
-  object beaches is Scenery {
+  object beaches is Scenery, Diggable {
     grammar { name "beaches"  nouns "beach", "shore", "sand"  adjectives "sandy", "east", "west", "small" }
     passage short { beaches }
     describe { text "On the east shore is a broad sandy beach; on the west, a small patch of beach tucked in below the White Cliffs. Either would take a boat." }
@@ -181,7 +181,7 @@ object sandy_beach is DarkRoom, Riverside in underground_caverns {
   object shovel is Shovel
   object river is River
   object water is WaterAbout
-  object sand is Scenery {
+  object sand is Scenery, Diggable {
     grammar { name "sand"  nouns "beach"  adjectives "sandy", "large" }
     passage short { sand }
     describe { text "The beach is fine pale sand, cool and damp, sloping down to the river. It drifts up against the cliff to the northeast, where it has half buried a passage." }
@@ -613,7 +613,7 @@ kind Shovel is Portable {
 // The sand of the Sandy Cave, with a scarab in it: dug with the shovel,
 // a little deeper each time, until the scarab shows, and then until the
 // hole falls in (SAND-FUNCTION, BDIGS).
-kind Sand is Scenery {
+kind Sand is Scenery, Diggable {
   contains
   pass any (false)
   grammar { name "sand"  nouns "sand", "floor", "hole"  adjectives "fine" }
