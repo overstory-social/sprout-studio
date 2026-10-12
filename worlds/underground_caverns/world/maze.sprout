@@ -12,7 +12,7 @@
 // goes through it; Maze 6's way down into Maze 5 is an ordinary one, and
 // says nothing.
 import {Thing, Scenery} from 'thing'
-import {DarkRoom} from 'room'
+import {DarkRoom, MazePicture} from 'room'
 import {Skeleton, BurnedLantern, RustyKnife, SkeletonKey, CoinBag} from 'remains'
 import {GratingBelow} from 'grating'
 import {read, :grate_open, :grate_unlock, :cyclops_gone} from 'verbs'
@@ -48,7 +48,7 @@ kind MazePassages is Scenery {
   }
 }
 
-object maze_1 is Maze in underground_caverns {
+object maze_1 is Maze, MazePicture in underground_caverns {
   :tour 6
   grammar {
     exit east  "east"  -> troll_room

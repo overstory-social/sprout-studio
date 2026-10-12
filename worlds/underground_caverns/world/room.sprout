@@ -127,10 +127,12 @@ kind Room is sprout.Place {
       else if (self.is(ClearingPicture)) { media.show("pictures/grating.png", "the clearing") }
       else if (self.is(LivingRoomPicture)) { media.show("pictures/trophy-case.png", "the trophy case") }
       else if (self.is(DamPicture)) { media.show("pictures/dam.png", "Flood Control Dam #3") }
+      else if (self.is(KitchenPicture)) { media.show("pictures/kitchen.png", "the kitchen") }
       else if (self.is(DarkRoom)) {
         if (self.get(:alight)) {
           if (self.is(CellarPicture)) { media.show("pictures/cellar.png", "the cellar") }
           else if (self.is(TrollRoomPicture)) { media.show("pictures/troll.png", "the troll room") }
+          else if (self.is(MazePicture)) { media.show("pictures/maze.png", "the maze") }
         }
       }
     }
@@ -314,3 +316,5 @@ kind LivingRoomPicture { }
 kind DamPicture { }
 kind CellarPicture { }
 kind TrollRoomPicture { }
+kind KitchenPicture { }
+kind MazePicture { }
