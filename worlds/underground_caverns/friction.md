@@ -3240,15 +3240,20 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   not `Diggable` ("Digging with a pair of hands is silly."). The
   general verbs (take, open, break, kick, touch, climb, burn, cut, fill,
   raise …) keep Zork's default for every thing, and so are still offered
-  against everything. A verb with no role (`launch`, `land`, `dig` and
-  `exorcise` said alone) cannot be typed, and is offered everywhere and
-  refused where it does not apply. With fewer readings to build, the view
+  against everything. A verb with no role cannot be typed, and is offered
+  everywhere. So bare `launch` and `land` are left to the boat's own ways
+  out, which are offered only where they apply, and are answered
+  `not_here` ashore instead of "You're not in the boat!". Bare `dig` is
+  gone: the visitor digs something (`dig sand`) or with the shovel, and
+  `dig` alone is `unknown`, where Zork said "Digging with a pair of hands
+  is silly."; `dig with` takes only the shovel. Bare `exorcise`, `get out`
+  and `go ashore` are still offered everywhere. With fewer readings to build, the view
   polls in the forest, West of House and Dam Base; the Kitchen's still
   exhausts its `pollSteps`.
 - **Spec:** Verbs and the grammar a visitor types › Declaring a verb; The
   view (a verb is offered when its roles can be filled).
 - **Status: open** for the role-less verbs and the Kitchen's poll, which are
-  Sprout's.
+  Sprout's (sprout#596, sprout#595).
 
 ## Differences chosen, not forced
 

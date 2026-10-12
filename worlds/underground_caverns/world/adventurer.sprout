@@ -20,7 +20,7 @@ import {Thief, Stiletto} from 'thief'
 import {Cyclops, CyclopsRoom, TreasureRoom, Chalice, :flee} from 'cyclops'
 import {treasure_room, cyclops_room, strange_passage} from 'cyclops'
 import {go, look, examine, inventory, wait, help} from 'sprout'
-import {spare, upstairs, downstairs, take, drop, put, give, knock, dig, dig_here, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall, board, disembark, disembark_here, launch, launch_here, land, land_here, inflate, deflate, plug, turn_with, oil, :where, :berth, :wreck, :flung, :match_out, :rainbow, ashore, lower, rub_with, :shatter, :bad_luck, :bats, :gas, :boom, :gust, :blow_out, exorcise, exorcise_here, :rite, :rite_lit, :rite_read, :won, :shatter_lamp, :troll_flag, :cool, :lamp_age, :finish, :burn_tick, :smash, put_through, :sink} from 'verbs'
+import {spare, upstairs, downstairs, take, drop, put, give, knock, dig, dig_with, pour, pour_in, pour_on, mung, walk_around, walk_about, through, attack, open, close, read, look_in, look_under, lamp_on, lamp_off, shift, raise, eat, drink, wind, tally, smell, listen, climb_up, climb_down, unlock, lock, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, echo, ring, untie, burn, leap_at, turn, treasure, odysseus, throw, kick, rub, wave, shake, squeeze, kiss, feed_bare, look_behind, fill, tie, alarm, talk, greet, pray, swim, search, cross, climb_over, duck_under, clear, cut, look_down, listen_here, smell_here, Dest, Mode, :scored, :light, :relight, :room_lit, :grue, :open_gate, :gate_open, :close_gate, :blow, :troll_gone, :glow, :die, :claimed, :settle, :travel, :unbar, :banish, :spend, :hush, :snuffed, :candle_burn, :let_go, :rob, :far_voice, :consume, :thief_gone, :cyclops_gone, :shed, :fall, board, disembark, disembark_here, launch, land, inflate, deflate, plug, turn_with, oil, :where, :berth, :wreck, :flung, :match_out, :rainbow, ashore, lower, rub_with, :shatter, :bad_luck, :bats, :gas, :boom, :gust, :blow_out, exorcise, exorcise_here, :rite, :rite_lit, :rite_read, :won, :shatter_lamp, :troll_flag, :cool, :lamp_age, :finish, :burn_tick, :smash, put_through, :sink} from 'verbs'
 import {behind_house, clearing, forest_1, forest_2, forest_3, forest_path, grating_clearing, north_of_house, south_of_house, west_of_house} from 'above_ground'
 import {cellar, troll_room} from 'cellar'
 import {attic, kitchen, living_room, Bottle} from 'house'
@@ -1869,28 +1869,13 @@ kind Adventurer is sprout.Visitor {
       } else { say "Digging with a pair of hands is silly." }
     }
   }
-  as actor for dig_here { permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_cant }  if (here.is(Room)) { if (here.get(:deafening)) { refuse "dig dig ..." } } }
-    do {
-      self.adjust(:moves, 1)
-      if (self.get(:shovels) > 0) {
-        if (here.is(SandyCave)) {
-          say "(with the shovel)"
-          each d: Sand in here { send d :dig_sand }
-        } else { say "There's no reason to be digging here." }
-      } else { say "Digging with a pair of hands is silly." }
-    }
-  }
   as actor for dig_with { permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_cant } }
     do {
       self.adjust(:moves, 1)
-      if (tool.is(Shovel)) {
-        if (here.is(SandyCave)) {
-          say "(in the sand)"
-          each d: Sand in here { send d :dig_sand }
-        } else { say "There's no reason to be digging here." }
-      }
-      else if (tool.is(Thing)) { say "Digging with a {tool.short} is silly." }
-      else { say "Digging with a pair of hands is silly." }
+      if (here.is(SandyCave)) {
+        say "(in the sand)"
+        each d: Sand in here { send d :dig_sand }
+      } else { say "There's no reason to be digging here." }
     }
   }
   as actor for pour    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_cant } } do { self.adjust(:moves, 1) } }
@@ -1998,8 +1983,7 @@ kind Adventurer is sprout.Visitor {
     }
   }
   // LAUNCH and LAND said with the boat named: the boat's own errand. Said
-  // bare, they are the boat's own ways out, and these answer only where
-  // those do not.
+  // bare, they are the boat's own ways out.
   as actor for launch {
     permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_cant } 
       if (here.is(MagicBoat)) {
@@ -2012,16 +1996,6 @@ kind Adventurer is sprout.Visitor {
       send here :put_out
       say ""
     }
-  }
-  as actor for launch_here {
-    permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_cant } 
-      if (here.is(MagicBoat)) {
-        if (here.get(:afloat)) { refuse "{here.afloat_line}" }
-        else if (here.get(:launch_ok)) { refuse "" }
-        else { refuse "You can't launch it here." }
-      } else { refuse "You're not in the boat!" }
-    }
-    do { say "" }
   }
   as actor for land {
     permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_cant } 
@@ -2043,21 +2017,6 @@ kind Adventurer is sprout.Visitor {
         if (here.get(:at) == :river_2) { refuse "There is no safe landing spot here." }
         else if (here.get(:at) == :river_4) { refuse "You can land either to the east or the west." }
         else if (!(here.get(:at) == :river_1 || here.get(:at) == :river_3 || here.get(:at) == :river_5 || here.get(:at) == :in_stream)) { refuse "You can't go that way." }
-      } else { refuse "You can't go that way." }
-    }
-    do {
-      self.adjust(:moves, 1)
-      send here :come_ashore
-      say ""
-    }
-  }
-  as actor for land_here {
-    permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_cant } 
-      if (here.is(MagicBoat)) {
-        if (here.get(:at) == :river_2) { refuse "There is no safe landing spot here." }
-        else if (here.get(:at) == :river_4) { refuse "You can land either to the east or the west." }
-        else if (here.get(:at) == :river_1 || here.get(:at) == :river_3 || here.get(:at) == :river_5) { refuse "" }
-        else if (here.get(:at) != :in_stream) { refuse "You can't go that way." }
       } else { refuse "You can't go that way." }
     }
     do {
