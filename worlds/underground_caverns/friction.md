@@ -1801,14 +1801,18 @@ me say is below.
   39, in `1dungeon.zil`'s order, leaving out the house, above ground and
   the two temple rooms Zork holds sacred). The thief keeps the index of
   the room he is in (`:at`, read from his survey), and goes to the next by
-  the world's gate (the same gate the deaths and the prayer use) and a
-  39-branch `if` that names every room. Faithful to Zork, which teleports
+  a 39-branch `if` that names every room, moving himself there since his
+  kind `roams` (until Sprout 0414da0, by opening the world's gate, the same
+  gate the deaths and the prayer use). Faithful to Zork, which teleports
   him, but every new room in later versions must be added to the chain.
 - **Spec:** Acting ("It changes place with `move self to <place>`…");
   Moving something; Exits.
-- **Status: open.** A way to move along "this exit" (the exit as a value,
-  as friction 82 also wants for an intent's slot) would let an NPC walk;
-  a place-valued binding for "where I am" (83) would let him choose.
+- **Status: partly answered.** `roams` (sprout#612, Sprout 0414da0) lets
+  him move himself to any room without the world's gate, so none of his
+  turns opens the map to anyone else. Still open: a way to move along
+  "this exit" (the exit as a value, as friction 82 also wants for an
+  intent's slot) would let an NPC walk; a place-valued binding for "where I
+  am" (83) would let him choose, and spare the chain of every room.
 
 ### 85. An unseen actor is announced as he comes and goes
 
@@ -3271,13 +3275,16 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   across the walkthrough, most of a move's time on the Playdate.
 - **Wrote instead:** nothing could be written: `pass :arrived` was accepted
   and never asked. Sprout now walks the move's notices under `pass :arrived`
-  and `pass :departed` (sprout#601), and the world writes both `false`.
+  and `pass :departed` (sprout#601), and the world wrote both `false`. Since
+  Sprout 0414da0 the world's `pass any` never answers for a move's notices
+  (sprout#608), so that is the default and the world's two lines are gone.
   The walkthrough sends about 1,780 of each, the tree's script 62 `:arrived`
   where it sent 1,483. A world test cannot pin the absence, since a script
   checks what is said and not what is not; Sprout's
   `corpus/good/notices-through-gate` transcript does.
 - **Spec:** Places; Events, messages and the bus › Containers route.
-- **Status: resolved** (sprout#601, Sprout 071eed7).
+- **Status: resolved** (sprout#601, Sprout 071eed7; the default since
+  sprout#608, Sprout 0414da0).
 
 ## Differences chosen, not forced
 
