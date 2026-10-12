@@ -9,7 +9,7 @@
 // changes (`changed :tide`); so is the drowning of anyone caught on the
 // lake bed as it refills.
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery} from 'thing'
+import {Thing, Portable, Scenery, Diggable} from 'thing'
 import {Box} from 'box'
 import {Treasure} from 'items'
 import {Room, DarkRoom} from 'room'
@@ -202,7 +202,7 @@ object atlantis_room is DarkRoom in underground_caverns {
     passage short { ancient room }
     describe { text "The room is very old and has been under water for most of that time. Its pillars are crusted with something like barnacles, its floor slopes down to a little shore of silt at the south end, and weed hangs from the carvings in long, dry, disappointed strands." }
   }
-  object silt is Scenery {
+  object silt is Scenery, Diggable {
     grammar { name "shore"  nouns "silt", "sand"  adjectives "little" }
     passage short { shore }
     describe { text "At the south end of the room the floor runs down to a little shore of fine grey silt, rippled where the water last left it." }

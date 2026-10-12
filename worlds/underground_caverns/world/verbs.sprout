@@ -4,10 +4,16 @@
 import {Box} from 'box'
 import * as sprout from 'sprout'
 import {inventory} from 'sprout'
-import {Portable} from 'thing'
+import {Portable, Inflatable, Switchable, Lockable, Tieable, Lowerable, Pluggable, Mechanism, Diggable} from 'thing'
 import {Grating} from 'grating'
 import {River, WaterAbout} from 'river'
-import {Lake, Stream} from 'reservoir'
+import {Lake, Stream, Pump} from 'reservoir'
+import {Water} from 'items'
+import {Canary} from 'tree'
+import {SkeletonKey} from 'remains'
+import {Sceptre, Bell, Rope} from 'temple'
+import {Ghosts} from 'hades'
+import {Vessel} from 'boat'
 
 // `take` and `drop` take several things at once, as Zork's do: `take lamp
 // and sword`, `take all`. Each is answered with its name before it, as
@@ -83,13 +89,13 @@ verb look_under {
 }
 
 verb lamp_on {
-  role target
+  role target: Switchable
   "turn on [target]"  "turn [target] on"  "light [target]"  "switch on [target]"
   "switch [target] on"  "activate [target]"
 }
 
 verb lamp_off {
-  role target
+  role target: Switchable
   "turn off [target]"  "turn [target] off"  "extinguish [target]"
   "switch off [target]"  "switch [target] off"  "douse [target]"
   "blow out [target]"  "blow [target] out"
@@ -116,13 +122,13 @@ intent shift_aside {
 
 verb raise { role target  "raise [target]"  "lift [target]"  "lift up [target]"  "pull up [target]"  "haul up [target]"  "hoist [target]"  "bring up [target]" }
 // Zork's LOWER, for the basket on its chain (v7).
-verb lower { role target  "lower [target]"  "let down [target]"  "send down [target]"  "lower down [target]" }
+verb lower { role target: Lowerable  "lower [target]"  "let down [target]"  "send down [target]"  "lower down [target]" }
 
 verb eat { role target  "eat [target]"  "consume [target]"  "devour [target]"  "taste [target]" }
 
 verb drink { role target  "drink [target]"  "sip [target]"  "swallow [target]" }
 
-verb wind { role target  "wind [target]"  "wind up [target]" }
+verb wind { role target: Canary  "wind [target]"  "wind up [target]" }
 
 verb tally { role target  "count [target]" }
 
@@ -139,15 +145,15 @@ verb listen_here { "listen"  "listen carefully" }
 verb climb_up { role target  "climb up [target]"  "go up [target]"  "scale [target]" }
 verb climb_down { role target  "climb down [target]"  "go down [target]"  "descend [target]"  "slide down [target]"  "lower yourself down [target]" }
 
-verb unlock { role target  role tool carried  "unlock [target] with [tool]"  "unlock [target]" }
+verb unlock { role target: Lockable  role tool: SkeletonKey carried  "unlock [target] with [tool]"  "unlock [target]" }
 
-verb lock { role target  "lock [target]" }
+verb lock { role target: Lockable  "lock [target]" }
 
 verb knock { role target  "knock on [target]"  "knock at [target]"  "rap on [target]"  "rap at [target]" }
 
 // Zork's DIG: with no tool, the visitor's own pair of hands.
 verb dig {
-  role target
+  role target: Diggable
   role tool carried
   "dig in [target]"  "dig [target]"  "dig in [target] with [tool]"  "dig [target] with [tool]"
   "dig through [target]"  "dig through [target] with [tool]"  "dig into [target]"  "dig into [target] with [tool]"
@@ -161,19 +167,19 @@ verb dig_with { role tool carried  "dig with [tool]"  "dig using [tool]" }
 // Zork's POUR: alone it is DROP, into something it is PUT, onto something
 // it is POUR-ON. Only water pours.
 verb pour_in {
-  role item
+  role item: Water
   role container
   "pour [item] in [container]"  "pour [item] into [container]"
   "spill [item] in [container]"  "spill [item] into [container]"
 }
 verb pour_on {
-  role item
+  role item: Water
   role target
   "pour [item] on [target]"  "pour [item] onto [target]"  "pour [item] over [target]"
   "spill [item] on [target]"  "spill [item] over [target]"
 }
 
-verb pour { role target  "pour [target]"  "pour out [target]"  "spill [target]" }
+verb pour { role target: Water  "pour [target]"  "pour out [target]"  "spill [target]" }
 
 // Zork's MUNG: breaking, destroying, damaging. Zork wants something to do
 // it with and asks what; the parser here cannot ask, so a bare `break`
@@ -211,7 +217,7 @@ verb give {
 // `feed` with only the one fed: Zork's parser asks what with (its orphan
 // question); this one cannot take the answer, so it asks the question and
 // the visitor says the whole sentence again.
-verb feed_bare { role target  "feed [target]" }
+verb feed_bare { role target: sprout.Actor  "feed [target]" }
 
 // Zork's THROW: the thing leaves the hand for the floor, and whatever it
 // was thrown at answers.
@@ -226,12 +232,12 @@ verb throw {
 
 // Zork's HACK-HACK verbs, and the rest of the small change of the parser:
 // each answered by every thing with Zork's default, and by a few things
-// better.
+// better. `wave` is the sceptre's alone.
 verb kick { role target  "kick [target]"  "taunt [target]" }
 verb rub { role target  "rub [target]"  "touch [target]"  "feel [target]"  "pat [target]"  "pet [target]"  "caress [target]" }
 // Zork's RUB ... WITH: the mirror, touched with something, only tingles.
 verb rub_with { role target  role tool carried  "rub [target] with [tool]"  "touch [target] with [tool]"  "feel [target] with [tool]"  "pat [target] with [tool]"  "poke [target] with [tool]"  "tap [target] with [tool]" }
-verb wave { role target  "wave [target]"  "brandish [target]"  "flourish [target]" }
+verb wave { role target: Sceptre  "wave [target]"  "brandish [target]"  "flourish [target]" }
 verb shake { role target  "shake [target]" }
 verb squeeze { role target  "squeeze [target]" }
 verb kiss { role target  "kiss [target]"  "hug [target]"  "embrace [target]" }
@@ -242,7 +248,7 @@ verb fill {
   "fill [target] with [tool]"  "fill [target]"  "fill up [target]"
 }
 verb tie {
-  role target
+  role target: Tieable
   role tool
   "tie [target] to [tool]"  "fasten [target] to [tool]"  "attach [target] to [tool]"
   "tie up [target]"  "tie [target]"
@@ -304,12 +310,12 @@ intent swim_in {
 // is all it gets.
 verb echo { "echo"  "say echo"  "shout echo"  "yell echo" }
 // Zork's RING, for the Temple's bell.
-verb ring { role target  role tool  "ring [target]"  "ring [target] with [tool]" }
+verb ring { role target: Bell  role tool  "ring [target]"  "ring [target] with [tool]" }
 // Zork's EXORCISE, with its BANISH, CAST, DRIVE and BEGONE: only the
 // ceremony itself has any effect, and at the gates of Hell that is what the
 // visitor is told to perform.
 verb exorcise {
-  role target
+  role target: Ghosts
   "exorcise [target]"  "banish [target]"  "cast out [target]"  "drive out [target]"
   "drive away [target]"  "exorcise out [target]"  "exorcise away [target]"  "begone [target]"
 }
@@ -318,7 +324,7 @@ verb exorcise {
 verb exorcise_here { "exorcise"  "perform exorcism"  "perform an exorcism"  "perform the exorcism"  "perform ceremony"  "perform the ceremony"  "perform the rite"  "begone" }
 // Zork's UNTIE, for the rope.
 verb untie {
-  role target
+  role target: Rope
   role tool
   "untie [target]"  "untie [target] from [tool]"  "unfasten [target]"  "unfasten [target] from [tool]"
   "detach [target]"  "detach [target] from [tool]"  "unknot [target]"
@@ -352,14 +358,14 @@ verb odysseus { "ulysses"  "odysseus"  "say ulysses"  "say odysseus"  "yell ulys
 // (boat.sprout); these take the words a player says with the boat named,
 // and answer them anywhere else.
 verb board {
-  role target
+  role target: Vessel
   "board [target]"  "get in [target]"  "get into [target]"  "get on [target]"
   "sit in [target]"  "embark on [target]"  "take in [target]"
 }
 // Not ENTER: any verb that reads `enter [target]` answers `enter house`
 // with its own words where the house's way in refuses (friction 101).
 verb disembark {
-  role target
+  role target: Vessel
   "get out of [target]"  "disembark [target]"  "disembark from [target]"  "exit [target]"
   "climb out of [target]"  "step out of [target]"  "get off [target]"  "take out [target]"
   // Zork's LEAVE is DROP, and of the vehicle one is in, DISEMBARK: an
@@ -368,22 +374,22 @@ verb disembark {
   synonyms "leave"
 }
 verb disembark_here { "get out"  "disembark"  "climb out"  "step out"  "alight"  "stand up" }
-verb launch { role target  "launch [target]"  "push off in [target]"  "push [target] off"  "row [target] out" }
+verb launch { role target: Vessel  "launch [target]"  "push off in [target]"  "push [target] off"  "row [target] out" }
 verb launch_here { "launch" }
-verb land { role target  "land [target]"  "beach [target]"  "ground [target]"  "row [target] ashore" }
+verb land { role target: Vessel  "land [target]"  "beach [target]"  "ground [target]"  "row [target] ashore" }
 verb land_here { "land" }
 verb ashore { "go ashore"  "row ashore"  "come ashore"  "head for shore"  "head for the shore"  "push off"  "make for the shore" }
 verb inflate {
-  role target
-  role tool
+  role target: Inflatable
+  role tool: Pump
   "inflate [target] with [tool]"  "inflate [target]"  "blow up [target] with [tool]"
   "blow up [target]"  "blow into [target]"  "pump up [target] with [tool]"  "pump up [target]"
   "pump [target]"
 }
-verb deflate { role target  "deflate [target]"  "let air out of [target]"  "let the air out of [target]" }
+verb deflate { role target: Vessel  "deflate [target]"  "let air out of [target]"  "let the air out of [target]" }
 // Zork's PLUG, and its GLUE, PATCH, REPAIR and FIX.
 verb plug {
-  role target
+  role target: Pluggable
   role tool carried
   "plug [target] with [tool]"  "plug [target]"  "plug up [target] with [tool]"
   "stop [target] with [tool]"  "seal [target] with [tool]"  "stuff [tool] into [target]"
@@ -398,7 +404,7 @@ intent smear {
 }
 // Zork's TURN ... WITH: the bolt, and the wrench to turn it.
 verb turn_with {
-  role target
+  role target: Mechanism
   role tool carried
   "turn [target] with [tool]"  "turn [target] using [tool]"  "rotate [target] with [tool]"
   "twist [target] with [tool]"  "tighten [target] with [tool]"  "loosen [target] with [tool]"
@@ -412,7 +418,7 @@ intent turn_on_with {
   do turn_with (target: x, tool: y)
 }
 // Zork's OIL, LUBRICATE and GREASE.
-verb oil { role target  role tool carried  "oil [target] with [tool]"  "lubricate [target] with [tool]"  "grease [target] with [tool]" }
+verb oil { role target: Mechanism  role tool carried  "oil [target] with [tool]"  "lubricate [target] with [tool]"  "grease [target] with [tool]" }
 
 verb score { "score" }
 verb diagnose { "diagnose" }

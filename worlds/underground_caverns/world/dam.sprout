@@ -12,7 +12,7 @@
 // `:tide` broadcast the world lets through. A room cannot read another's
 // state (friction 89), so each keeps its own copy (`Tidal`).
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery, Flame} from 'thing'
+import {Thing, Portable, Scenery, Flame, Pluggable, Mechanism, Switchable} from 'thing'
 import {Box, Bag} from 'box'
 import {Readable, Rejecting, Sharp} from 'items'
 import {Room, DarkRoom, DamPicture} from 'room'
@@ -57,7 +57,7 @@ object dam_room is Room, Tidal, Riverside, DamPicture in underground_caverns {
     There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble{if self.get(:gate_flag)} which is glowing serenely{/if}.
   }
 
-  object dam is Scenery {
+  object dam is Scenery, Pluggable {
     grammar { name "dam"  nouns "gate", "gates", "sluice", "sluices", "fcd", "structure"  adjectives "sluice", "flood", "control" }
     passage short { dam }
     passage examined { Flood Control Dam #3 is a great curved wall of grey concrete, 256 feet tall at the center by the guidebook's count, holding back the reservoir to the west with the air of something that has been asked to do this for a very long time and has not been thanked. {if dam_room.get(:tide) == 1 || dam_room.get(:tide) == 2}Below, the sluice gates stand open, and the river pours through them in a white, roaring rush.{else if dam_room.get(:tide) == 3}The sluice gates at its foot are shut, and the water behind it is a long way below the top, climbing back up the stained concrete as you watch.{else}The sluice gates at its foot are shut, and water spills in a thin, glassy sheet over the top of it.{/if} }
@@ -66,7 +66,7 @@ object dam_room is Room, Tidal, Riverside, DamPicture in underground_caverns {
     without as target for close from Thing
     as target for open  { do { say "Sounds reasonable, but this isn't how." } }
     as target for close { do { say "Sounds reasonable, but this isn't how." } }
-    without as target for plug from Thing
+    without as target for plug from Pluggable
     as target for plug {
       do {
         if (bound tool) {
@@ -87,7 +87,7 @@ object dam_room is Room, Tidal, Riverside, DamPicture in underground_caverns {
     passage short { control panel }
     describe { text "The control panel is a slab of grey steel set into the top of the dam, its paint long since weathered to the color of the concrete. On it is mounted a large metal bolt, and directly above the bolt a small green plastic bubble{if dam_room.get(:gate_flag)}, which is glowing serenely{/if}. Whatever else it once controlled has been unscrewed and taken away, leaving holes." }
   }
-  object bolt is Scenery {
+  object bolt is Scenery, Mechanism {
     grammar { name "bolt"  nouns "nut"  adjectives "metal", "large" }
     passage short { bolt }
     // The bolt is the dam's clock: it keeps the gates and the water.
@@ -98,7 +98,7 @@ object dam_room is Room, Tidal, Riverside, DamPicture in underground_caverns {
     describe { text "It is a large metal bolt, a good two inches across the head, mounted on the control panel and connected by unseen machinery to the sluice gates below. Its flats are worn bright, the way bolts get when the only way to turn them is with a wrench. {if self.get(:free)}The bubble above it glows a serene green.{else}The bubble above it is dark.{/if}" }
     without as target for shift from Thing
     as target for shift { do { say "Your bare hands don't appear to be enough." } }
-    without as target for turn_with from Thing
+    without as target for turn_with from Mechanism
     as target for turn_with {
       do {
         if (tool.is(Wrench)) {
@@ -135,7 +135,7 @@ object dam_room is Room, Tidal, Riverside, DamPicture in underground_caverns {
         broadcast :tide with 0
       }
     }
-    without as target for oil from Thing
+    without as target for oil from Mechanism
     as target for oil { do { say "Hmm. It appears the tube contained glue, not oil. Turning the bolt won't get any easier...." } }
   }
   object bubble is Scenery {
@@ -428,7 +428,7 @@ kind Button is Scenery {
 // button is pushed: the room fills a level every minute (every other move,
 // at the host's half-minute a turn; Zork's I-MAINT-ROOM rises every move),
 // and drowns whoever is in it when it is full. The gunk stops it.
-kind Leak is Box, Rejecting {
+kind Leak is Box, Rejecting, Pluggable {
   grammar { name "leak"  nouns "drip", "pipe", "spray", "burst"  adjectives "east" }
   :ndesc true
   // Zork's WATER-LEVEL: 1 to 13 rising, -1 stopped.
@@ -458,7 +458,7 @@ kind Leak is Box, Rejecting {
       } else { wake in 1 minutes }
     }
   }
-  without as target for plug from Thing
+  without as target for plug from Pluggable
   as target for plug {
     do {
       if (self.get(:level) <= 0) { say "This has no effect." }
@@ -515,7 +515,7 @@ kind Matchbook is Readable, Flame {
     GUE Tech can't promise these fantastic results to everyone. But when you earn your degree from GUE Tech, your future will be brighter.
   }
   passage tally_line {{if self.get(:count) <= 1}You have no matches.{else if self.get(:count) == 2}You have 1 match.{else if self.get(:count) == 3}You have 2 matches.{else if self.get(:count) == 4}You have 3 matches.{else if self.get(:count) == 5}You have 4 matches.{else}You have 5 matches.{/if}}
-  without as target for lamp_on from Thing
+  without as target for lamp_on from Switchable
   as target for lamp_on {
     permit { if (self.get(:lit)) { refuse "A match is already burning." } }
     do {
@@ -536,7 +536,7 @@ kind Matchbook is Readable, Flame {
       }
     }
   }
-  without as target for lamp_off from Thing
+  without as target for lamp_off from Switchable
   as target for lamp_off {
     do {
       if (self.get(:lit)) {

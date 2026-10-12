@@ -11,7 +11,7 @@
 // and the water (`Tidal`). Since v7 the way south of the Round Room goes on
 // to the Narrow Passage and the mirrors (mirror.sprout); the heaps that
 // once blocked it sit in a passage southwest that Zork never opened.
-import {Thing, Portable, Scenery} from 'thing'
+import {Thing, Portable, Scenery, Diggable} from 'thing'
 import {Box} from 'box'
 import {Treasure} from 'items'
 import {DarkRoom, Perilous, ChasmEdge, CanyonEdge} from 'room'
@@ -351,7 +351,7 @@ object engravings_cave is DarkRoom in underground_caverns {
 // A narrow crack, as Zork's CRACK is: nobody fits through it.
 // The Round Room's cave-in and the heaps sorted from it: whatever is tried
 // on them, the one reason, a roof that is still coming down.
-kind Rubble is Scenery {
+kind Rubble is Scenery, Diggable {
   passage no_take { You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them. }
   without as target for shift from Thing
   as target for shift { do { say no_take } }

@@ -5,7 +5,7 @@
 // holds its own, and the two keep each other in step by messages the world
 // lets pass. It is locked with a skull-and-crossbones lock that only the
 // skeleton key opens, and only from below (GRATE-FUNCTION).
-import {Thing, Portable, Scenery} from 'thing'
+import {Thing, Portable, Scenery, Lockable} from 'thing'
 import {open, close, unlock, lock, look_under, tally, shift, look_in, :reveal, :grate_open, :grate_unlock, :grate_revealed, :open_gate, :gate_open, :close_gate} from 'verbs'
 import {grating_clearing} from 'above_ground'
 import {grating_room} from 'maze'
@@ -72,7 +72,7 @@ kind Ground is Scenery {
 // The grating, from either side. Both sides know whether it is unlocked
 // (Zork's GRUNLOCK) and whether it is open; the side below knows too
 // whether the leaves still lie on it, for they fall when it opens.
-kind Grating is Scenery {
+kind Grating is Scenery, Lockable {
   grammar { name "grating"  nouns "grate", "bars"  adjectives "iron", "heavy" }
   passage short { grating }
   :door true
@@ -88,8 +88,8 @@ kind Grating is Scenery {
 
   without as target for open from Thing
   without as target for close from Thing
-  without as target for unlock from Thing
-  without as target for lock from Thing
+  without as target for unlock from Lockable
+  without as target for lock from Lockable
   without as target for look_in from Thing
   as target for look_in {
     do {
@@ -146,10 +146,8 @@ kind GratingAbove is Grating {
   as target for lock { do { say "You can't lock it from this side." } }
   as target for unlock {
     do {
-      if (bound tool) {
-        if (tool.is(SkeletonKey)) { say "You can't reach the lock from here." }
-        else if (tool.is(Thing)) { say "Can you unlock a grating with a {tool.short}?" }
-      } else {
+      if (bound tool) { say "You can't reach the lock from here." }
+      else {
         say "The lock is on the underside of the grating. You can't reach it from here."
       }
     }
@@ -212,12 +210,9 @@ kind GratingBelow is Grating {
   as target for unlock {
     do {
       if (bound tool) {
-        if (tool.is(SkeletonKey)) {
-          self.set(:unlocked, true)
-          say "The grate is unlocked."
-          broadcast :grate_unlock with true
-        }
-        else if (tool.is(Thing)) { say "Can you unlock a grating with a {tool.short}?" }
+        self.set(:unlocked, true)
+        say "The grate is unlocked."
+        broadcast :grate_unlock with true
       } else if (actor.is(Adventurer) && actor.get(:keys) > 0) {
         self.set(:unlocked, true)
         say "(with the skeleton key)"

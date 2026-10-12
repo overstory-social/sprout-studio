@@ -23,7 +23,7 @@
 // A boat cannot name the room it is in (friction 83), so it keeps its reach,
 // and a visitor who gets out of it asks the room (`:where`, `:berth`).
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery} from 'thing'
+import {Thing, Portable, Scenery, Inflatable, Pluggable} from 'thing'
 import {Box, Bag} from 'box'
 import {Readable, Rejecting, Sharp} from 'items'
 import {Room, DarkRoom} from 'room'
@@ -50,7 +50,7 @@ enum Errand { idle, steer, drift, follow, land, launch }
 
 // The folded boat. It holds the magic boat, out of sight, until it is
 // blown up; the boat folds back into a new one when it is let down.
-kind Pile is Portable {
+kind Pile is Portable, Inflatable {
   contains
   pass any (false)
   // The folded boat still hears the dam, so it knows the lake when it is
@@ -71,20 +71,17 @@ kind Pile is Portable {
   without as target for look_behind from Thing
   as target for look_behind { do { say back_words } }
   passage seaworthy { The boat inflates and appears seaworthy. }
-  without as target for inflate from Thing
+  without as target for inflate from Inflatable
   as target for inflate {
     do {
       if (!here.holds(self)) { say "The boat must be on the ground to be inflated." }
       else if (bound tool) {
-        if (tool.is(Pump)) {
-          say seaworthy
-          each b: MagicBoat in self {
-            each l: BoatLabel in b { if (!l.get(:touched)) { say "A tan label is lying inside the boat." } }
-            move b to here
-          }
-          finally destroy self
-        } else if (tool.is(Thing)) { say "With a {tool.short}? Surely you jest!" }
-        else { say "You don't have enough lung power to inflate it." }
+        say seaworthy
+        each b: MagicBoat in self {
+          each l: BoatLabel in b { if (!l.get(:touched)) { say "A tan label is lying inside the boat." } }
+          move b to here
+        }
+        finally destroy self
       } else if (actor.is(Adventurer)) {
         if (actor.get(:pumps) > 0) {
           say "(with the hand-held air pump)"
@@ -104,7 +101,7 @@ kind Pile is Portable {
 
 // The magic boat: a place to be in, a box to put things in, and a thing to
 // carry, all at once.
-kind MagicBoat is sprout.Place, Bag, Vessel {
+kind MagicBoat is sprout.Place, Bag, Vessel, Inflatable {
   :open true
   :capacity 100
   :size 20
@@ -156,11 +153,10 @@ kind MagicBoat is sprout.Place, Bag, Vessel {
   as target for close { do { say "You must tell me how to do that to a magic boat." } }
   without as target for open from Box
   as target for open { do { say "It is already open, as boats go." } }
-  without as target for inflate from Thing
+  without as target for inflate from Inflatable
   as target for inflate { do { say "Inflating it further would probably burst it." } }
   without as target for fill from Thing
   as target for fill { do { say "Inflating it further would probably burst it." } }
-  without as target for deflate from Thing
   as target for deflate {
     permit {
       if (self.holds(actor)) { refuse "You can't deflate the boat while you're in it." }
@@ -175,9 +171,7 @@ kind MagicBoat is sprout.Place, Bag, Vessel {
   }
   // Getting in and out, launching and landing are the visitor's own parts
   // (adventurer.sprout).
-  without as target for launch from Thing
   as target for launch { do { } }
-  without as target for land from Thing
   as target for land { do { } }
   as target for board { do { } }
   without as target for through from Portable
@@ -331,7 +325,7 @@ kind MagicBoat is sprout.Place, Bag, Vessel {
 
 // The punctured boat. It holds the magic boat, out of sight, until the
 // gunk mends it; it shuts itself over the boat as the boat goes in.
-kind Wreck is Box, Portable, Rejecting {
+kind Wreck is Box, Portable, Rejecting, Inflatable, Pluggable {
   pass :tide (true)
   grammar { name "punctured boat"  nouns "boat", "pile", "plastic", "wreck"  adjectives "plastic", "punctured", "large", "deflated", "ruined" }
   :open true
@@ -348,12 +342,12 @@ kind Wreck is Box, Portable, Rejecting {
   as target for close { do { say "You must tell me how to do that to a punctured boat." } }
   without as target for look_in from Box
   as target for look_in { do { say "There is nothing in it but a little air, and that is on its way out." } }
-  without as target for inflate from Thing
+  without as target for inflate from Inflatable
   as target for inflate { do { say "No chance. Some moron punctured it." } }
   without as target for fill from Thing
   as target for fill { do { say "No chance. Some moron punctured it." } }
   passage mended { Well done. The boat is repaired. }
-  without as target for plug from Thing
+  without as target for plug from Pluggable
   as target for plug {
     do {
       if (bound tool) {
