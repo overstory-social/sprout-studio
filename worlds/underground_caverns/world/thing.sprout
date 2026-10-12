@@ -221,7 +221,9 @@ kind Mechanism is Thing {
   as target for oil       { do { say "You probably put spinach in your gas tank, too." } }
 }
 
-// What a visitor might dig in: the rubble, the sand and the beaches.
+// What a visitor might dig in: the rubble, the sand and the beaches. It has
+// no default of its own, since the digger's part answers `dig`; it is here
+// only to type `dig`'s target.
 kind Diggable is Thing { }
 
 // A thing that can be carried off. Only these answer `take all`.

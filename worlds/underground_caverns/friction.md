@@ -3234,7 +3234,10 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   `Lowerable`, `Pluggable`, `Mechanism`, `Diggable`), which carries Zork's
   default where there is one. Such a verb said of anything else is answered
   with the engine's `cannot` ("You can't wave the small mailbox.") instead
-  of Zork's own ("Waving the small mailbox isn't notably helpful."). The
+  of Zork's own ("Waving the small mailbox isn't notably helpful."), and a
+  wrong tool for `inflate` or `unlock` likewise ("With a sword? Surely you
+  jest!", "Can you unlock a grating with a sword?"), as is `dig` in what is
+  not `Diggable` ("Digging with a pair of hands is silly."). The
   general verbs (take, open, break, kick, touch, climb, burn, cut, fill,
   raise …) keep Zork's default for every thing, and so are still offered
   against everything. A verb with no role (`launch`, `land`, `dig` and
