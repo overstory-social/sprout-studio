@@ -20,8 +20,9 @@
 //
 // A handler has no `here`, so each of his turns starts by asking the room
 // he stands in to show itself (`broadcast :prowl`; the room answers
-// `:survey`), and in that answer `from` is his room. He moves from room to
-// room through the world's gate, by the index the rooms keep (`:tour`).
+// `:survey`), and in that answer `from` is his room. He roams, so he moves
+// himself from room to room by the index the rooms keep (`:tour`), and no
+// turn of his opens the world's gate to anyone else.
 import * as sprout from 'sprout'
 import {Thing, Portable, Scenery} from 'thing'
 import {Weapon, Knife, Treasure} from 'items'
@@ -33,7 +34,7 @@ import {Egg} from 'tree'
 import {Chalice, TreasureRoom} from 'cyclops'
 import {ask} from 'sprout'
 import {examine} from 'sprout'
-import {take, drop, open, close, look_in, search, attack, give, throw, listen, talk, greet, alarm, shift, :blow, :expire, :open_gate, :gate_open, :close_gate, :settle, :thief_start, :prowl, :survey, :rob, :summon, :defend, :pinch, :unveil, :pry, :thief_gone, :keeper} from 'verbs'
+import {take, drop, open, close, look_in, search, attack, give, throw, listen, talk, greet, alarm, shift, :blow, :expire, :settle, :wander, :thief_start, :prowl, :survey, :rob, :summon, :defend, :pinch, :unveil, :pry, :thief_gone, :keeper} from 'verbs'
 import {cellar, troll_room} from 'cellar'
 import {east_of_chasm, gallery, studio} from 'gallery'
 import {maze_1, maze_2, maze_3, maze_4, dead_end_1, maze_5, dead_end_2, maze_6, maze_7, maze_8, dead_end_3, maze_9, maze_10, maze_11, grating_room, maze_12, dead_end_4, maze_13, maze_14, maze_15} from 'maze'
@@ -105,6 +106,7 @@ kind Stiletto is Weapon {
 }
 
 kind Thief is Thing, sprout.Actor {
+  roams
   grammar { name "thief"  nouns "robber", "man", "person", "gentleman", "individual", "crook"  adjectives "shady", "suspicious", "seedy", "suspicious-looking", "seedy-looking" }
   :capacity 60
   // Seen or unseen (Zork's INVISIBLE, cleared): unseen, he is not to be
@@ -336,7 +338,7 @@ kind Thief is Thing, sprout.Actor {
       self.set(:rushing, true)
       self.set(:announced, false)
       self.set(:phase, 3)
-      send underground_caverns :open_gate
+      send self :wander
     }
   }
 
@@ -569,7 +571,7 @@ kind Thief is Thing, sprout.Actor {
           else { self.set(:next, from.get(:tour) + 1) }
           self.set(:phase, 2)
           self.set(:announced, false)
-          send underground_caverns :open_gate
+          send self :wander
         } else if (!from.is(TreasureRoom)) {
           // DROP-JUNK: now and then he lets fall something not worth his bag.
           self.set(:junked, self.get(:company))
@@ -579,8 +581,8 @@ kind Thief is Thing, sprout.Actor {
     }
   }
 
-  // Through the world's gate: to his lair, or on round the Empire.
-  on :gate_open {
+  // To his lair, or on round the Empire.
+  on :wander {
     if (self.get(:rushing)) {
       self.set(:rushing, false)
       move self to treasure_room
@@ -657,7 +659,6 @@ kind Thief is Thing, sprout.Actor {
       } else if (self.get(:next) == 70) { move self to land_of_the_dead
       }
     }
-    send underground_caverns :close_gate
   }
 
   // His blow (Zork's VILLAIN-BLOW, with THIEF-MELEE's words): decided here

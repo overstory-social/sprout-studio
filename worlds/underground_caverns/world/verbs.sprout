@@ -518,6 +518,9 @@ message :relight
 message :room_lit with boolean
 message :open_gate
 message :gate_open
+// The thief, setting off: he roams, so he moves himself to his next room
+// or his lair with no gate opened (thief.sprout).
+message :wander
 message :close_gate
 message :fall
 message :landed

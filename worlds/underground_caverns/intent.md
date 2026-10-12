@@ -600,8 +600,8 @@ Since v8 the scope is the whole of Zork I. What of it is still not here:
 
 - The thief on the drained Reservoir (Zork's I-THIEF goes there once it is
   land); his round is fixed, and skips it. Building it means a room in his
-  round that he passes over while it is water, in the 70-branch move
-  through the world's gate; not done in the v8 pass.
+  round that he passes over while it is water, in the 70-branch move he
+  makes himself; not done in the v8 pass.
 - Zork's restart, restore and save, and the question FINISH asks: a world
   here cannot be started over from inside it (friction 25).
 - The battery drains only while the lantern is lit in its bearer's hand;
@@ -698,7 +698,7 @@ Since v8 the scope is the whole of Zork I. What of it is still not here:
   destinations and description modes.
 - `thief.sprout` (v5): the `Thief` NPC, his `LargeBag` and `Stiletto`, his
   turns (`:prowl` and `:survey`), his round of the rooms (`:tour`, and the
-  70-branch move since v8 through the world's gate), his robbing, his fights on
+  70-branch move since v8, which he makes himself, since he roams), his robbing, his fights on
   Zork's tables, his gifts, his lair and his death. The thief himself sits
   in the Round Room, where Zork's starts. Each room keeps `:visited` and
   `:tour` (`room.sprout`), and hides his comings and goings.
@@ -1382,7 +1382,7 @@ V-TREASURE).
   robs the room unseen (ROB at three in four, then ROB-MAZE in the maze and
   STEAL-JUNK elsewhere); then, seen and with company, he fights (`act
   attack`, on Zork's tables, his lines told to the one hit); then, unseen,
-  he moves on, through the world's gate, to the next room of his round
+  he moves himself on, as one who roams, to the next room of his round
   (`:tour`), whose `:entered` surveys it for him in turn; and he drops a
   worthless thing now and then (DROP-JUNK). He is unseen as Zork's
   INVISIBLE thief is: in the room, unlisted, unnamable, his hands out of
