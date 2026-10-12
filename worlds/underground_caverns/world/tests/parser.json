@@ -43,6 +43,12 @@
     { "as": "Marta", "type": "dig", "expect": [
       { "reader": "Marta", "kind": "notice", "words": "That sentence isn't one I recognize." }
     ] },
+    { "as": "Marta", "type": "launch", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "land", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
     { "as": "Marta", "type": "dig in house", "expect": [
       { "reader": "Marta", "kind": "notice", "words": "You can't dig in West of House." }
     ] },
