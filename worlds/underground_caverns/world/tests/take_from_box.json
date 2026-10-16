@@ -1,5 +1,5 @@
 {
-  "about": "After round 16: several things taken out of the sack are answered each in turn, as Zork's TAKE answers them; one that is not in the sack is named and refused, and the rest are taken.",
+  "about": "The take is the plain one: `take X out of Y` is no longer a sentence, and what is in an open sack in hand is taken by name. Several taken at once are answered each in turn, as Zork's TAKE answers them, and one already held is passed over.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -45,12 +45,13 @@
       { "reader": "Marta", "kind": "said", "words": "The glass bottle contains:" },
       { "reader": "Marta", "kind": "said", "words": "A quantity of water" }
     ] },
-    { "as": "Marta", "type": "take lunch and bottle out of sack", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Lunch: Taken." },
-      { "reader": "Marta", "kind": "said", "words": "Glass bottle: That isn't in the brown sack." }
+    { "as": "Marta", "type": "take lunch out of sack", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "That sentence isn't one I recognize." }
     ] },
-    { "as": "Marta", "type": "take lunch and garlic out of sack", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Lunch: That isn't in the brown sack." },
+    { "as": "Marta", "type": "take lunch and bottle", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Lunch: Taken." }
+    ] },
+    { "as": "Marta", "type": "take lunch and garlic", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Clove of garlic: Taken." }
     ] },
     { "as": "Marta", "type": "inventory", "expect": [
