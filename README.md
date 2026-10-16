@@ -15,7 +15,7 @@ It has no runtime code of its own beyond schemas and small scripts.
 Sprout is unreleased and moving fast, so the studio does not install it
 from npm. [`sprout.pin.json`](sprout.pin.json) names a commit of
 `overstory-social/sprout`; `npm run sprout:install` checks that commit out
-into `.sprout/src`, builds it, packs its seven publishable packages into
+into `.sprout/src`, builds it, packs its publishable packages into
 `.sprout/packs/`, and installs those tarballs — the same tarballs Sprout's
 own `npm run e2e` installs, so the studio still dogfoods an install and
 not a workspace link.
