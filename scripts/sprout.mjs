@@ -26,6 +26,7 @@ const stamp = join(packs, 'COMMIT');
 const PACKAGES = {
   sprout: 'sprout',
   player: 'sprout-player',
+  'engine-wasm': 'sprout-engine-wasm',
   repl: 'sprout-repl',
   mcp: 'sprout-mcp',
   server: 'sprout-server',

@@ -1,5 +1,5 @@
 {
-  "about": "After round 7: the Round Room's cave-in answers every way of shifting it with the roof that is still coming down; the ways on from the Deep Canyon and the Chasm, open since v6 to the reservoir and the dam; `look down` and `look over` at the edges; `crawl` as `go`; moving the rug out of the way; `take X from Y`; the load naming its heaviest part; and a treasure scored the first time it leaves a box in hand.",
+  "about": "After round 7: the Round Room's cave-in answers every way of shifting it with the roof that is still coming down; the ways on from the Deep Canyon and the Chasm, open since v6 to the reservoir and the dam; `look down` and `look over` at the edges; `crawl` as `go`; moving the rug out of the way; a treasure taken out of a box in hand by the plain take; the load naming its heaviest part; and a treasure scored the first time it leaves a box in hand.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -276,10 +276,7 @@
     { "as": "Marta", "type": "put sceptre in coffin", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Done." }
     ] },
-    { "as": "Marta", "type": "take sword from coffin", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "That isn't in the gold coffin." }
-    ] },
-    { "as": "Marta", "type": "take sceptre from coffin", "expect": [
+    { "as": "Marta", "type": "take sceptre", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
@@ -289,7 +286,7 @@
     { "as": "Marta", "type": "put sceptre in coffin", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Done." }
     ] },
-    { "as": "Marta", "type": "take sceptre out of coffin", "expect": [
+    { "as": "Marta", "type": "take sceptre", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "u", "expect": [
@@ -307,9 +304,6 @@
     ] },
     { "as": "Marta", "type": "drop coffin", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
-    ] },
-    { "as": "Marta", "type": "take candles from book", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't take the pair of candles from the black book." }
     ] }
   ]
 }

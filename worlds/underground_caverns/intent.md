@@ -1248,8 +1248,10 @@ V-TURN, V-UNTIE, V-RING).
   dropped straight out of a box in hand (the sceptre from the coffin into
   the case), it pays what taking it pays, as Zork's PUT and DROP take it
   first (`treasures.json`, `barriers.json`).
-- **Parser:** `take X from Y` and `take X out of Y` (with Zork's PRE-TAKE
-  refusal, unnamed, friction 78); `crawl <direction>`; `go through X`;
+- **Parser:** `take` is the plain one, with no `from Y` or `out of Y`: the
+  box only said where to look, and an optional role is a second question
+  on the console's wheel; `crawl <direction>` is the library's `go` now;
+  `go through X`;
   moving a thing aside, out of the way, or off; CUT (Zork's V-CUT, short of
   slicing what burns; turned on the troll it is an attack); CLEAR, CLIMB
   OVER and DUCK UNDER for every thing, in Zork's voice. `go <direction>
