@@ -3251,13 +3251,13 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   gone: the visitor digs something (`dig sand`) or with the shovel, and
   `dig` alone is `unknown`, where Zork said "Digging with a pair of hands
   is silly."; `dig with` takes only the shovel. Bare `exorcise`, `get out`
-  and `go ashore` are still offered everywhere. With fewer readings to build, the view
+  and `go ashore` are placed too (137). With fewer readings to build, the view
   polls in the forest, West of House and Dam Base; the Kitchen's still
   exhausts its `pollSteps`.
 - **Spec:** Verbs and the grammar a visitor types › Declaring a verb; The
   view (a verb is offered when its roles can be filled).
-- **Status: open** for the role-less verbs and the Kitchen's poll, which are
-  Sprout's (sprout#596, sprout#595).
+- **Status: changed**: the role-less verbs are placed (137); the Kitchen's
+  poll is still open, and Sprout's (sprout#595).
 
 ## Found profiling the Playdate beta
 
@@ -3285,6 +3285,44 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Spec:** Places; Events, messages and the bus › Containers route.
 - **Status: resolved** (sprout#601, Sprout 071eed7; the default since
   sprout#608, Sprout 0414da0).
+
+## Found placing the role-less verbs
+
+### 137. A word that belongs to one place cannot be said only there
+
+- **Wanted:** bare EXORCISE answered at the Entrance to Hades and offered
+  nowhere else, and bare GET OUT, DISEMBARK and GO ASHORE answered in the
+  magic boat and offered nowhere else, as Zork's FIND VEHBIT fills the
+  vehicle one is in.
+- **Found:** a verb with no role is offered everywhere, and every phrase of
+  a verb with a role names it, so a bare word cannot be tied to a place or
+  a thing by its verb. Only a way out is offered where it applies, and a
+  way out of the boat cannot name the room the boat lies in. A way that
+  leads back into the boat itself (`launch`, `land`, `east`) cannot be told
+  from another by the boat, since `:entered` is not told which way was
+  taken, so a second way into itself could not mean "land" where the first
+  means "launch". And a link says nothing as it is taken, as an exit's
+  `say` does.
+- **Wrote instead:** `get out`, `disembark` and `ashore` are links of the
+  magic boat, connected again each time it moves (`:moved` binds the room)
+  to the room it lies in, and `ashore` to the boat itself on the reaches
+  where every way back into it lands it, or has no landing (the boat's
+  `accept` refuses there). The boat's `release` refuses a visitor stepping
+  out into the water it floats on, as V-DISEMBARK does. Going says "You are
+  on your own feet again." out of a beached boat, and "The magic boat comes
+  to a rest on the shore." on a landing, for every way, since a link cannot
+  say it; the exits that land say nothing of their own now. `climb out`,
+  `step out`, `alight` and `stand up` are gone, since each would be another
+  way out on the boat's list, and `row ashore`, `come ashore`, `head for
+  shore`, `push off` and `make for the shore` with them. Bare `exorcise`,
+  `begone` and `perform the ceremony` are gone: the visitor exorcises the
+  spirits by name, and `exorcise` alone is `unknown`, where Zork asked
+  "What do you want to exorcise?". Out of the boat, `get out` is
+  `not_here` instead of "You are already on your own two feet."
+- **Spec:** Verbs and the grammar a visitor types › Declaring a verb and
+  › Links, for space that does not exist yet; The view.
+- **Status: open**: a role a phrase may leave to the place or the vehicle
+  the actor is in, as FIND VEHBIT does, would say all of it in the verb.
 
 ## Differences chosen, not forced
 
