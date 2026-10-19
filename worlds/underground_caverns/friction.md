@@ -3324,6 +3324,36 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Status: open**: a role a phrase may leave to the place or the vehicle
   the actor is in, as FIND VEHBIT does, would say all of it in the verb.
 
+## Found landing on the Stream
+
+### 138. A link cannot be connected to a place the source names
+
+- **Wanted:** on the Stream, `go ashore`, `ashore` and `land` landing the
+  magic boat at Stream View with the visitor in it, as `land boat` does and
+  as Zork's IN-STREAM has `(LAND TO STREAM-VIEW)`.
+- **Found:** `east` there already leads back into the boat, to row to the
+  reservoir, and the boat cannot tell one way back into itself from
+  another (137), so neither `ashore` nor `land` can lead into the boat and
+  mean "land". A way that steps out at Stream View would do, but `connect`
+  takes a binding and never an identifier, so the boat's `ashore` link
+  cannot be pointed at `stream_view`, which every exit may name.
+- **Wrote instead:** the boat's `land` exit on the Stream leads to Stream
+  View, and its `ashore` link is connected there as the boat puts out onto
+  the Stream: in its `:gate_open`, while the world passes, it walks the
+  world's rooms to find the one whose reach is Stream View, and connects
+  `ashore` to it. Both step the visitor ashore with the boat following, as
+  `west` does at the fourth reach and `north` and `south` do on the lake,
+  so the visitor ends on the bank beside the boat rather than in it. Going
+  now says "The magic boat comes to a rest on the shore, and you clamber
+  out of it onto dry land." for every way ashore from the water, since a
+  link cannot say it, and the exits that step ashore say nothing of their
+  own. `tests/stream_landing.json` pins it.
+- **Spec:** Verbs and the grammar a visitor types › Links, for space that
+  does not exist yet (its destination is a binding, never an identifier).
+- **Status: open**: a `connect` to a declared place in range, or an exit
+  whose `when` could tell which way was taken, would let the Stream land as
+  Zork's does.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
