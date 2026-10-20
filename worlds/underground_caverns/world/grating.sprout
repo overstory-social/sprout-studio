@@ -5,7 +5,7 @@
 // holds its own, and the two keep each other in step by messages the world
 // lets pass. It is locked with a skull-and-crossbones lock that only the
 // skeleton key opens, and only from below (GRATE-FUNCTION).
-import {Thing, Portable, Scenery, Lockable} from 'thing'
+import {Thing, Portable, Scenery, Lockable, Countable, Door} from 'thing'
 import {open, close, unlock, lock, look_under, tally, shift, look_in, :reveal, :grate_open, :grate_unlock, :grate_revealed, :open_gate, :gate_open, :close_gate} from 'verbs'
 import {grating_clearing} from 'above_ground'
 import {grating_room} from 'maze'
@@ -13,7 +13,7 @@ import {SkeletonKey} from 'remains'
 import {Adventurer} from 'adventurer'
 extension media 1
 
-kind Leaves is Portable {
+kind Leaves is Portable, Countable {
   :burnable true
   grammar { name "pile of leaves"  nouns "leaves", "leaf", "pile" }
   :size 25
@@ -47,7 +47,6 @@ kind Leaves is Portable {
     }
   }
 
-  without as target for tally from Thing
   as target for tally { do { say "There are 69,105 leaves here." } }
 }
 
@@ -67,10 +66,9 @@ kind Ground is Scenery {
 // The grating, from either side. Both sides know whether it is unlocked
 // (Zork's GRUNLOCK) and whether it is open; the side below knows too
 // whether the leaves still lie on it, for they fall when it opens.
-kind Grating is Scenery, Lockable {
+kind Grating is Scenery, Lockable, Door {
   grammar { name "grating"  nouns "grate", "bars"  adjectives "iron", "heavy" }
   passage short { grating }
-  :door true
   :unlocked false
   :open false
   :revealed false

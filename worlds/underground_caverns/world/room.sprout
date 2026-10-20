@@ -294,8 +294,6 @@ kind Grue is Scenery {
   as target for look_in { do { say absent } }
   without as target for look_under from Thing
   as target for look_under { do { say absent } }
-  without as target for look_behind from Thing
-  as target for look_behind { do { say absent } }
 }
 
 // The rooms with a picture compose one of these, and the room's describe shows it.
