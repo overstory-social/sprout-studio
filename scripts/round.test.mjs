@@ -81,6 +81,11 @@ describe('a round on disk', () => {
     const casual = open('shed', '01', 'casual', 7);
     assert.notEqual(seedOf(casual), ticket.seed);
     assert.equal(seedOf(open('shed', '01', 'casual', 7)), seedOf(casual));
+    // Played again by another model, a run is its own, on the same stream of seeds.
+    const replay = open('shed', '01', 'explorer', 7, { by: 'opus' });
+    assert.equal(replay.run, 'explorer-7-opus');
+    assert.equal(seedOf(replay), ticket.seed);
+    assert.throws(() => open('shed', '01', 'explorer', 7, { by: 'gpt' }), /played again by one of/);
     assert.throws(() => open('shed', '1', 'explorer', 7), /a round is two digits/);
     assert.throws(() => open('shed', '01', 'critic', 7), /a persona is one of/);
   });
@@ -305,6 +310,7 @@ describe('a round on disk', () => {
         acceptedDesign: 1,
         runs: ['explorer-7'],
         reports: ['explorer-7'],
+        outcomes: { 'explorer-7': { ending: 'no', reason: 'turn-cap' } },
         metrics: true,
         pairwise: [],
         synthesis: true,
