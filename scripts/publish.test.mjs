@@ -52,11 +52,12 @@ const site = (name) => join(root, 'sites', name);
 const publishTo = (name, more = {}) =>
   publish({ site: site(name), publicKeyFile: join(root, 'publisher.pub'), baseUrl, env, log: quiet, ...more });
 const cartridges = (dir) => readdirSync(join(dir, 'worlds')).filter((f) => f.endsWith('.sproutworld')).sort();
-const setVersion = (version) => {
+const setManifest = (fields) => {
   const file = join(shed, 'sprout.json');
   const manifest = JSON.parse(readFileSync(file, 'utf8'));
-  writeFileSync(file, JSON.stringify({ ...manifest, version }, null, 2));
+  writeFileSync(file, JSON.stringify({ ...manifest, ...fields }, null, 2));
 };
+const setVersion = (version) => setManifest({ version });
 
 /** A live site in `dir` whose index lists `worlds` (with the first site's cartridges beside it), signed by the throwaway publisher key. */
 const liveSite = (dir, worlds) => {
@@ -155,6 +156,20 @@ describe('publish', () => {
     const index = await publishTo('again');
     assert.deepEqual(cartridges(site('again')), cartridges(site('first')));
     assert.equal(index.worlds.length, 1);
+  });
+
+  it('refuses a changed world under a version already published, and says to bump it', async () => {
+    serving = join(site('first'), 'worlds');
+    setManifest({ author: 'someone else' });
+    try {
+      await assert.rejects(publishTo('same-version'), /^Error: World 0\.1\.0 is already published as build [0-9a-f]{8}, and this build [0-9a-f]{8} is another: bump `version` in the world's sprout\.json\.\nNothing is published\.$/);
+      assert.equal(existsSync(join(site('same-version'), 'index.html')), false);
+      setVersion('0.1.1');
+      const index = await publishTo('bumped');
+      assert.deepEqual(index.worlds.map((world) => world.version).sort(), ['0.1.0', '0.1.1']);
+    } finally {
+      setManifest({ author: 'spec', version: '0.1.0' });
+    }
   });
 
   it('refuses rather than drop a build when the live site cannot be read', async () => {

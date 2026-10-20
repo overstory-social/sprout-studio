@@ -174,6 +174,23 @@ export async function carryForward(baseUrl, publicKey, into) {
   return names;
 }
 
+/**
+ * Each new build in `index` (one not among the `carried` cartridge names) whose title and version a
+ * carried build already has, said as what to do: two builds of one world under one version could
+ * not be told apart on the page or the console's list, and a carried build's version never changes.
+ */
+export function reusedVersions(index, carried, baseUrl) {
+  const live = index.worlds.filter((world) => carried.includes(cartridgeName(world.url, baseUrl)));
+  return index.worlds
+    .filter((world) => !carried.includes(cartridgeName(world.url, baseUrl)))
+    .flatMap((world) => {
+      const same = live.find((one) => one.title === world.title && one.version === world.version);
+      return same === undefined
+        ? []
+        : [`${world.title} ${world.version} is already published as build ${same.hash.slice(0, 8)}, and this build ${world.hash.slice(0, 8)} is another: bump \`version\` in the world's sprout.json.`];
+    });
+}
+
 const escape = (text) =>
   String(text).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -268,6 +285,8 @@ export async function publish({ site, publicKeyFile = join(ROOT, 'publisher.pub'
     if (!listed.has(name)) problems.push(`${name} is published and the new index names it otherwise, so its address would stop answering`);
   if (problems.length > 0) throw new Error(`the index the player would read is wrong:\n  ${problems.join('\n  ')}`);
   const index = JSON.parse(readFileSync(join(worldsDir, 'index.json'), 'utf8'));
+  const reused = reusedVersions(index, carried, baseUrl);
+  if (reused.length > 0) throw new Error(`${reused.join('\n')}\nNothing is published.`);
   writeFileSync(join(site, 'index.html'), sitePage(index));
   log(`publish: ${site} holds ${builds(index.worlds.length)}, signed and checked as the player checks them`);
   return index;
