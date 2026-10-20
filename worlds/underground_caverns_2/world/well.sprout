@@ -17,7 +17,7 @@ import {Water, EatMeCake, BlueCake, OrangeCake, RedCake} from 'items'
 import {Adventurer} from 'adventurer'
 import {pearl_room} from 'riddle'
 import {low_room} from 'machine'
-import {read, look_in, look_under, climb_up, climb_down, kick, burn, board, disembark, through, wish, put, throw, look_down, knock, pour_in, Dest, :room_sealed, :open_gate, :gate_open, :close_gate, :die, :consume} from 'verbs'
+import {read, look_in, look_under, climb_up, climb_down, kick, burn, board, disembark, through, wish, put, throw, look_down, knock, pour_in, shift, Dest, :room_sealed, :open_gate, :gate_open, :close_gate, :die, :consume, :hurry} from 'verbs'
 
 enum Errand { idle, rise, descend, dry }
 
@@ -46,7 +46,7 @@ kind Bucket is sprout.Place, Box, Vessel {
   passage short { wooden bucket }
   passage ldesc { There is a wooden bucket here, 3 feet in diameter and 3 feet high. }
   passage inside_view {{if self.get(:at) == :well_top}{if well_top.is(WellTop)}{well_top.bucket_view}{/if}{else}{if well_bottom.is(WellBottom)}{well_bottom.bucket_view}{/if}{/if}}
-  passage examined { It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago, and the rope above it is taut as though it would like to again.
+  passage examined { It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago, and the rope above it is taut as though it would like to again.{if !self.holds(actor)} Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets.{/if}
 
     {self.look_inside} }
   describe {
@@ -114,6 +114,16 @@ kind Bucket is sprout.Place, Box, Vessel {
   // comes down.
   on :woke (elapsed) {
     if (self.get(:at) == :well_top && self.count(Water) > 0) {
+      each w: Water in self { send w :consume }
+      self.set(:errand, :dry)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  // Waited for from the bottom (friction 37): the hundred moves pass at
+  // once, the water with them, unless somebody is riding it.
+  on :hurry {
+    if (self.get(:at) == :well_top && self.get(:riders) == 0 && self.count(Water) > 0) {
+      cancel wakes
       each w: Water in self { send w :consume }
       self.set(:errand, :dry)
       send underground_caverns_2 :open_gate
@@ -202,6 +212,25 @@ kind WellTopMouth is Box, Wishing {
   }
 }
 
+// The bucket's rope, from either end of the well: taut, and not for
+// climbing or pulling, since the bucket goes up and down on its own account.
+kind WellRope is Scenery {
+  grammar { name "rope"  nouns "line", "cable"  adjectives "taut", "long", "wet" }
+  passage short { rope }
+  without as target for shift from Thing
+  as target for shift { do { say "You pull on the rope. It is taut, and stays taut, and whatever holds the other end is not persuaded. The bucket goes up and down on its own account, and not on yours." } }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "The rope is wet, and the well is deep, and you are not a sailor. You get a little way up it, which is to say your feet leave the floor, and then they find it again, rather suddenly. The rope is for the bucket." } }
+  without as target for climb_down from Thing
+  as target for climb_down { do { say "You are at the bottom of it already. The rope goes up." } }
+}
+kind WellRopeAbove is WellRope {
+  without as target for climb_up from WellRope
+  as target for climb_up { do { say "The rope goes up from here to a beam you can just make out, and the beam goes nowhere. Neither, after a short trial, do you." } }
+  without as target for climb_down from WellRope
+  as target for climb_down { do { say "You start down the rope, and get as far as the rim of the well before the rope, the dark and your common sense all have a word with you at once. It's a long way down!" } }
+}
+
 kind TopEtchings is Scenery {
   grammar { name "wall with etchings"  nouns "etchings", "etching", "writing"  adjectives "etched" }
   passage short { wall with etchings }
@@ -230,11 +259,12 @@ object well_bottom is WellBottom in underground_caverns_2 {
   object bucket is Bucket
   object etchings is BottomEtchings
   object well is WellBottomWall
-  object rope is Scenery {
-    grammar { name "rope"  nouns "line", "cable"  adjectives "taut", "long" }
-    passage short { rope }
-    describe { text "{if well_bottom.count(Bucket) > 0}A rope runs from the handle of the bucket up into the dark, where something at the top of the well is presumably holding the other end. It is taut, and not the kind of rope that goes anywhere when pulled.{else}The rope hangs down the well from the dark, and the bucket is at the other end of it, at the top. The rope is taut, and not the kind that goes anywhere when pulled; the bucket came down once, and will presumably come down again when whatever is up there has finished with it.{/if}" }
+  object rope is WellRope {
+    describe { text "{if well_bottom.count(Bucket) > 0}A rope runs from the handle of the bucket up into the dark, where something at the top of the well is presumably holding the other end. It is taut, and not the kind of rope that goes anywhere when pulled.{else}The rope hangs down the well from the dark, and the bucket is at the other end of it, at the top. The rope is taut, and not the kind that goes anywhere when pulled; the bucket came down once, and will presumably come down again when whatever is up there has finished with it, if you wait for it.{/if}" }
   }
+  // Zork's "Time passes...", and, while the bucket is up, what it is
+  // passing against.
+  passage waited { Time passes...{if self.count(Bucket) == 0} The rope stays taut, and the bucket stays up wherever it has gone. It came down once, so it will presumably come down again; you could wait for the bucket, and it would be a long wait.{/if} }
 }
 
 object well_top is WellTop in underground_caverns_2 {
@@ -249,6 +279,9 @@ object well_top is WellTop in underground_caverns_2 {
   passage body { You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily.{if self.count(Bucket) == 0} A rope runs over the rim of the well and down into the dark, and the bucket is at the far end of it.{/if} }
   object etchings is TopEtchings
   object well is WellTopMouth
+  object rope is WellRopeAbove {
+    describe { text "{if well_top.count(Bucket) > 0}The rope runs from the handle of the bucket up to a beam over the well, and over it, and off into the dark; it is taut, and creaks very slightly, and is not the kind of rope that goes anywhere when pulled.{else}The rope runs over a beam above the well and down into the dark, and the bucket is at the far end of it, at the bottom. It is taut, and not the kind of rope that goes anywhere when pulled.{/if}" }
+  }
   object crack is Scenery {
     grammar { name "crack"  nouns "fissure"  adjectives "small" }
     passage short { crack }

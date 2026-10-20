@@ -54,7 +54,19 @@ much the product as the rooms are.
   and west of the Path Near Stream is nothing.
 - **The ways out of the quarter** (south and southwest and northwest of
   the Carousel Room, north of the Deep Ford) are present and turn the
-  visitor back in Zork's voice.
+  visitor back in Zork's voice; after round 2 each rockfall is its own,
+  so that three refusals do not read as one wall.
+- **The bucket can be waited for.** After round 2, when both sonnet runs
+  poured the water in from outside and never saw the bucket again
+  (its hundred moves are a hundred commands here, friction 37), "wait
+  for the bucket" at the bottom of the well passes the hundred at a
+  stroke, counts them on the score line, and brings it down empty. The
+  loss is still Zork's loss; only the waiting is shorter.
+- **The carousel tells, a little.** Its draw is Zork's, but after round
+  2 "examine passages" says the southeast one climbs toward a draught
+  that smells of brick, and after the room has thrown a visitor out
+  three times its description says so too. Nobody in round 2 found the
+  Riddle Room except by luck, and one run in eight spins never did.
 
 ## The arc a visitor walks
 
@@ -151,9 +163,24 @@ the princess, the wand (30) for the Wizard's own rooms.
   held water lately; the rope, taut, going up into the dark, which `look
   up` and the rope's own description point at; and, once the bucket has
   gone up alone, a line in the room that whatever hauled it up will
-  presumably let it down again.
+  presumably let it down again. After round 2, when the tells were read
+  and did not help: the bucket's close-up, seen from outside, says it
+  goes up with what is in it and without what is not; "wait" at the
+  bottom while it is up says the wait is possible and long; "wait for
+  the bucket" does it; and the rope, climbed or pulled at either end,
+  answers in voice.
 - **The topiary animals** move when the visitor has stood too long among
-  them, and close in, and then attack. Leave when they move.
+  them, and close in, and then attack. Leave when they move. Each of
+  them (the dragon, the serpent, the dog, the human figures) has a
+  close-up of its own since round 2, and each carries the tell; the
+  unicorn among them is hedge, and says so.
+- **The Fantasize spell's things** ("There is a basilisk here.") are
+  every room's own, beside the grue: reaching for one is answered in the
+  narrator's voice, differently while the spell is on and after, so a
+  player can tell an illusion from a parser failure (round 2's P5).
+- **Brief mode is Zork's**: a room seen again is named and no more. The
+  first time it happens, one parenthetical line says LOOK, VERBOSE and
+  BRIEF, and is not said again.
 - **The Wizard's spells interact**: Feeble makes the load fifty; Fumble
   drops things from a full hand; Float puts the floor out of reach and,
   at the Top of Well, ends in a long fall; Fear sends the visitor fleeing

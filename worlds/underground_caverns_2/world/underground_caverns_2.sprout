@@ -10,7 +10,7 @@ import {Person} from 'person'
 import {Adventurer} from 'adventurer'
 import {go} from 'sprout'
 import {inside_barrow} from 'way_in'
-import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :room_sealed, :poisoned} from 'verbs'
+import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :room_sealed, :poisoned, :hurry} from 'verbs'
 
 world underground_caverns_2 is sprout.World {
   visitors are Person
@@ -32,6 +32,8 @@ world underground_caverns_2 is sprout.World {
   pass :zoom (true)
   pass :room_sealed (true)
   pass :poisoned (true)
+  // The bucket, waited for from the bottom of the well while it is at the top.
+  pass :hurry (true)
 
   on :open_gate (from) {
     self.set(:gate, true)

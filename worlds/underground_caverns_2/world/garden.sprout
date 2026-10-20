@@ -118,9 +118,35 @@ kind TopiaryHedges is Hedges {
   describe { text "The hedges are shaped like various animals: dogs, serpents, dragons, and the like, and they are vaguely troubling to look at." }
 }
 kind TopiaryAnimals is Scenery {
-  grammar { name "topiary animals"  nouns "animals", "animal", "creatures", "creature", "dragon", "serpent", "dog", "figures"  adjectives "topiary", "misshapen", "huge", "great", "human", "shaped" }
+  grammar { name "topiary animals"  nouns "animals", "animal", "creatures", "creature", "beasts", "shapes"  adjectives "topiary", "misshapen", "huge", "great", "shaped" }
   passage short { topiary animals }
   describe { text "A dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures, all of them clipped out of hedge by somebody with a steady hand and an unsteady mind. They have not been clipped lately, and the dog in particular has grown a little past itself. You have the feeling they were not standing quite like that when you came in." }
+}
+// Each of the animals the room names, with the same tell.
+kind TopiaryDragon is Scenery {
+  grammar { name "topiary dragon"  nouns "dragon"  adjectives "topiary", "hedge", "green" }
+  passage short { topiary dragon }
+  describe { text "The dragon is the largest of them: a long neck of hedge, a head with two holes clipped in it for eyes, and wings that somebody gave up on halfway along. It is looking at the arbor. A moment ago it was looking at you, or you thought so." }
+}
+kind TopiarySerpent is Scenery {
+  grammar { name "topiary serpent"  nouns "serpent", "snake"  adjectives "topiary", "hedge", "great", "green" }
+  passage short { topiary serpent }
+  describe { text "The serpent is a single hedge grown long and coiled twice round itself, with a head at the end that comes up to your knee and is open, as far as hedge can be open, at the mouth. The coils are not quite where they were. Or they are, and you are not." }
+}
+kind TopiaryDog is Scenery {
+  grammar { name "topiary dog"  nouns "dog", "hound"  adjectives "topiary", "hedge", "huge", "misshapen" }
+  passage short { topiary dog }
+  describe { text "The dog is huge and misshapen, as advertised: a hedge the size of a cart on four legs it has grown too many branches to stand on properly, with a head too big for it, hanging low. It has not been clipped in a long time, and it has grown a little past being a dog. It was facing the other way when you came in." }
+}
+kind TopiaryFigures is Scenery {
+  grammar { name "human figures"  nouns "figures", "figure", "people", "humans", "men", "women"  adjectives "human", "several", "topiary", "hedge" }
+  passage short { human figures }
+  describe { text "The human figures are several, and smaller than the beasts, and worse: a person is harder to clip out of hedge than a dog is, and whoever did these got the arms wrong. They stand in a half ring, facing in, as though waiting for something to arrive in the middle. You are nearer the middle than you were." }
+}
+// The unicorn the Topiary names is hedge; the real one is the garden's
+// stand-in's business (GLOBAL-UNICORN).
+kind HedgeUnicorn is DistantUnicorn {
+  passage far_off { The unicorn here is hedge, clipped to the shape of one, and not a good likeness: the horn is a branch somebody tied up. The real one{if self.get(:home)}, way up at the north end of the garden,{else}, wherever it has got to,{/if} would not be flattered. }
 }
 kind RoseBush is Scenery {
   grammar { name "roses"  nouns "bush", "arbor", "rose", "rosebed", "flowers"  adjectives "rose", "red" }
@@ -296,9 +322,13 @@ object topiary is TopiaryRoom in underground_caverns_2 {
   :id topiary
   :walls 4
   passage body { This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel. }
-  object other_unicorn is DistantUnicorn
+  object other_unicorn is HedgeUnicorn
   object hedges is TopiaryHedges
   object animals is TopiaryAnimals
+  object dragon is TopiaryDragon
+  object serpent is TopiarySerpent
+  object dog is TopiaryDog
+  object figures is TopiaryFigures
   object moss is Moss
   object roses is RoseBush
   object path is GardenPath

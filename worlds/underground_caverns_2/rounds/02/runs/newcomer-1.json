@@ -1,0 +1,298 @@
+{
+  "steps": [
+    { "seed": 11 },
+    { "seed": 2197249643 },
+    { "arrive": "Finch", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Finch", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Finch", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Finch", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "seed": 2276102492 },
+    { "as": "Finch", "type": "pick up the lantern and the sword", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Lamp: Taken." },
+      { "reader": "Finch", "kind": "said", "words": "Elvish sword: Taken." }
+    ] },
+    { "seed": 2611849345 },
+    { "tick": true, "expect": [] },
+    { "seed": 2534707746 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3654058086 },
+    { "as": "Finch", "type": "turn on the lantern", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "seed": 2310788172 },
+    { "tick": true, "expect": [] },
+    { "seed": 343709746 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2278503823 },
+    { "as": "Finch", "type": "walk south", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Narrow Tunnel" },
+      { "reader": "Finch", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
+    ] },
+    { "seed": 2610208752 },
+    { "tick": true, "expect": [] },
+    { "seed": 1934130678 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2061766709 },
+    { "as": "Finch", "type": "cross the bridge", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Foot Bridge" },
+      { "reader": "Finch", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
+    ] },
+    { "seed": 3622893700 },
+    { "tick": true, "expect": [] },
+    { "seed": 1803782115 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 2878519677 },
+    { "as": "Finch", "type": "look", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Foot Bridge" },
+      { "reader": "Finch", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
+    ] },
+    { "seed": 2927142993 },
+    { "tick": true, "expect": [] },
+    { "seed": 690691362 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 766714254 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Great Cavern" },
+      { "reader": "Finch", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." }
+    ] },
+    { "seed": 1185867794 },
+    { "tick": true, "expect": [] },
+    { "seed": 1700453084 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1619044949 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "notice", "words": "You can't go that way." }
+    ] },
+    { "seed": 2501857457 },
+    { "tick": true, "expect": [] },
+    { "seed": 547528647 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2564447487 },
+    { "as": "Finch", "type": "go southwest", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Shallow Ford" },
+      { "reader": "Finch", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." }
+    ] },
+    { "seed": 2476215078 },
+    { "tick": true, "expect": [] },
+    { "seed": 1797087874 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" },
+      { "reader": "Finch", "kind": "told", "words": "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." },
+      { "reader": "Finch", "kind": "told", "words": "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow." },
+      { "reader": "Finch", "kind": "told", "words": "The Wizard, in a deep and resonant voice, speaks the word \"Fence!\" He then vanishes, cackling gleefully." },
+      { "reader": "Finch", "kind": "told", "words": "The air round you stiffens, very slightly, as though the room had been shrink-wrapped with you in it." }
+    ] },
+    { "seed": 3626027738 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "An invisible fence of magical force bars your way." }
+    ] },
+    { "seed": 3459101431 },
+    { "tick": true, "expect": [] },
+    { "seed": 3301990234 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1364128264 },
+    { "as": "Finch", "type": "attack the fence with the sword", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "The elvish sword goes through the fence as though it weren't there, which, as far as it is concerned, it isn't. You, on the other hand, can't follow it." }
+    ] },
+    { "seed": 2676226408 },
+    { "tick": true, "expect": [] },
+    { "seed": 1080953885 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 241521202 },
+    { "as": "Finch", "type": "go north", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "An invisible fence of magical force bars your way." }
+    ] },
+    { "seed": 3182186058 },
+    { "tick": true, "expect": [] },
+    { "seed": 4199060035 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1274904538 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 629356129 },
+    { "tick": true, "expect": [] },
+    { "seed": 3193529162 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 1491273201 },
+    { "as": "Finch", "type": "examine fence", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "You can't see it, which is the point of an invisible fence, but you can feel it: a wall of force all round you, humming very faintly, and giving, when you push on it, not at all. It has the Wizard's touch about it, and the Wizard's spells, in your experience, never last; this one feels thinner already than it did." }
+    ] },
+    { "seed": 2377032268 },
+    { "tick": true, "expect": [] },
+    { "seed": 2476786696 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3631417814 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 615118189 },
+    { "tick": true, "expect": [] },
+    { "seed": 3649464262 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3523105993 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 1652310266 },
+    { "tick": true, "expect": [] },
+    { "seed": 109163012 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 329511249 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "An invisible fence of magical force bars your way." }
+    ] },
+    { "seed": 3613403193 },
+    { "tick": true, "expect": [] },
+    { "seed": 2135710826 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 2259626979 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 1161491383 },
+    { "tick": true, "expect": [] },
+    { "seed": 2156110228 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3153455095 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 381824312 },
+    { "tick": true, "expect": [] },
+    { "seed": 2766382278 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 193710876 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "An invisible fence of magical force bars your way." }
+    ] },
+    { "seed": 1909277752 },
+    { "tick": true, "expect": [] },
+    { "seed": 2726413543 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4227850869 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 1839066349 },
+    { "tick": true, "expect": [] },
+    { "seed": 2002199281 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "underground_caverns_2#1 woke, 360 seconds after it asked" },
+      { "reader": "Finch", "kind": "told", "words": "There is a faint pop, as of something invisible giving way, and the fence that was round you is gone." },
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 1515749175 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 207354735 },
+    { "tick": true, "expect": [] },
+    { "seed": 3149954379 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1801440264 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 3261861828 },
+    { "tick": true, "expect": [] },
+    { "seed": 1290132362 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2382831478 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Dark Tunnel" },
+      { "reader": "Finch", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
+    ] },
+    { "seed": 1493895732 },
+    { "tick": true, "expect": [] },
+    { "seed": 3618084676 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 687938869 },
+    { "as": "Finch", "type": "inventory", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Finch", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Finch", "kind": "said", "words": "An elvish sword" }
+    ] },
+    { "seed": 509282110 },
+    { "tick": true, "expect": [] },
+    { "seed": 2706803424 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 2678491850 },
+    { "as": "Finch", "type": "go southeast", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Finch", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Finch", "kind": "said", "words": "The unicorn bounds lightly away." }
+    ] },
+    { "seed": 538929685 },
+    { "tick": true, "expect": [] },
+    { "seed": 1585601068 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1621861323 },
+    { "as": "Finch", "type": "enter the gazebo", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Gazebo" },
+      { "reader": "Finch", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
+      { "reader": "Finch", "kind": "described", "words": "Sitting on the tea table is:" },
+      { "reader": "Finch", "kind": "described", "words": "A newspaper" },
+      { "reader": "Finch", "kind": "described", "words": "A place mat" },
+      { "reader": "Finch", "kind": "described", "words": "A china teapot" }
+    ] },
+    { "seed": 4025690423 },
+    { "tick": true, "expect": [] },
+    { "seed": 3663235710 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2705375891 },
+    { "as": "Finch", "type": "read the newspaper", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "** U.S. News and Dungeon Report **" },
+      { "reader": "Finch", "kind": "said", "words": "FAMED ADVENTURER TO EXPLORE GREAT UNDERGROUND EMPIRE" },
+      { "reader": "Finch", "kind": "said", "words": "Our correspondents report that a world-famous and battle-hardened adventurer has been seen in the vicinity of the Great Underground Empire. Local grues have been reported sharpening their (slavering) fangs...." },
+      { "reader": "Finch", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." },
+      { "reader": "Finch", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
+    ] },
+    { "seed": 1764699966 },
+    { "tick": true, "expect": [] },
+    { "seed": 3946128121 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2521823869 },
+    { "as": "Finch", "type": "open the teapot", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "I think you've already done that." }
+    ] },
+    { "seed": 1867705034 },
+    { "tick": true, "expect": [] },
+    { "seed": 1322236610 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 2209788711 },
+    { "as": "Finch", "type": "look in the teapot", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "The china teapot is empty." },
+      { "reader": "Finch", "kind": "said", "words": "The unicorn bounds lightly away." }
+    ] },
+    { "seed": 36910665 },
+    { "tick": true, "expect": [] },
+    { "seed": 3782617795 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1295344751 },
+    { "as": "Finch", "type": "go out and talk to the unicorn", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Finch", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "seed": 1752954427 },
+    { "tick": true, "expect": [] },
+    { "seed": 530395018 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 342572296 },
+    { "leave": "Finch", "expect": [
+      { "reader": "Finch", "kind": "notice", "words": "You leave, and take what you carry with you." }
+    ] }
+  ]
+}

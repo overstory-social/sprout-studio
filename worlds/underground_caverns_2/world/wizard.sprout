@@ -46,18 +46,8 @@ kind Fence is Scenery {
   as target for look_in { do { say "You are in it. The room is out there, where you left it." } }
 }
 
-// What the Fantasize spell puts in a room that is not there (DESCRIBE-
-// OBJECTS): a basilisk, a pile of jewels, a gold ingot, a bulging chest, a
-// yellow sphere, a convention of wizards, a copy of ZORK I. Zork never
-// declared them, so "take jewels" was no sentence at all; here they are
-// words of the world, kept where nobody can reach them, so that reaching
-// for one is answered as reaching for anything out of sight is.
-kind Illusion is Scenery {
-  grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "convention", "wizards", "copy", "book"  adjectives "bulging", "yellow", "gold", "convention", "pile" }
-  passage short { basilisk }
-  describe { text "It is not there. It never was." }
-}
-object illusions is Illusion in elsewhere { }
+// What the Fantasize spell puts in a room that is not there is every
+// room's own (`Illusion`, room.sprout), beside the grue.
 
 kind Wizard is Creature, sprout.Actor {
   roams

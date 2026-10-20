@@ -33,6 +33,14 @@ intent drop_in {
   "drop [x] in [y]"  "drop [x] into [y]"  "drop [x] down [y]"  "throw [x] in [y]"  "throw [x] into [y]"
   do put (item: x, container: y)
 }
+// Zork's "take all from table": `all` cannot be limited to what a named
+// thing holds (friction 36), so the table is the role and the adventurer
+// takes each thing on it in turn.
+verb take_from {
+  role container: Box
+  "take all from [container]"  "take everything from [container]"  "take all off [container]"  "take everything off [container]"
+  "take all on [container]"  "take everything on [container]"  "get all from [container]"  "get everything from [container]"
+}
 verb open {
   role target
   role tool carried
@@ -181,13 +189,10 @@ verb answer {
   "answer [word]"  "say [word]"  "shout [word]"  "yell [word]"  "answer with [word]"  "say [word] to the door"
   "the answer is [word]"  "answer the riddle with [word]"
 }
-verb say_well { "well"  "a well"  "it is a well"  "its a well"  "it's a well" }
-// The answer given with its article is the answer. (An intent's slot
-// cannot hold a value, so this is a verb of its own: friction 32.)
-verb answer_article {
-  role word: symbol
-  "answer a [word]"  "say a [word]"  "answer with a [word]"  "the answer is a [word]"  "answer the riddle with a [word]"  "shout a [word]"  "its a [word]"  "it's a [word]"
-}
+// The answer given with its article, "a well" or "the well", is the
+// answer: the parser drops an article before the word as it does before a
+// noun, so these are `answer` too (friction 32).
+verb say_well { "well"  "a well"  "the well"  "it is a well"  "its a well"  "it's a well"  "it is the well"  "it's the well" }
 
 // The bucket, a vehicle: in and out of it by name (bucket.sprout).
 verb board {
@@ -244,8 +249,8 @@ verb robot_see {
 }
 verb robot_stuck {
   role target: Orderable
-  "[target], help"  "[target], hello"  "[target], open"  "[target], attack"  "[target], sing"  "[target], dance"
-  "[target], stop"  "[target], come here"
+  "[target], help"  "[target], open"  "[target], attack"  "[target], sing"  "[target], dance"
+  "[target], stop"  "[target], come here"  "[target], go away"
 }
 
 verb score { "score" }
@@ -279,6 +284,15 @@ intent how_doing {
   do score
 }
 verb get_in_bare { "get in"  "climb in"  "board"  "get in the bucket"  "climb into the bucket" }
+// Waiting for the bucket to come down: Zork's player typed WAIT thirty
+// times; here a move is half a minute of the host's clock and nothing in
+// the world can run that clock, so one command waits the whole hundred
+// moves at once (friction 37). No role: the bucket is not here, which is
+// the point.
+verb wait_for_bucket {
+  "wait for bucket"  "wait for the bucket"  "wait for bucket to come down"  "wait for the bucket to come down"
+  "wait for bucket to return"  "wait for the bucket to return"  "wait for bucket to come back"  "wait for the bucket to come back"
+}
 verb get_out_bare { "get out"  "climb out"  "stand up"  "get out of the bucket"  "climb out of the bucket"  "disembark"  "exit"  "leave" }
 intent put_in_well {
   "throw [x] down [y]"  "drop [x] down [y]"  "throw [x] into [y]"  "put [x] down [y]"  "lower [x] into [y]"  "lower [x] down [y]"
@@ -398,3 +412,7 @@ message :spell_ends
 message :riddle_answered
 // Water from the pool: salt.
 message :salt
+// The bucket, asked to come down now: the water in it dries at once.
+message :hurry
+// A room seen again in BRIEF: the one-time word about VERBOSE.
+message :brief_hint

@@ -16,7 +16,7 @@ import {Thing, Scenery} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
-import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, Dest, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed} from 'verbs'
+import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -35,6 +35,7 @@ kind Room is sprout.Place {
   object tunnel is Tunnel
   object floor is Floor
   object ceiling is Ceiling
+  object mirage is Illusion
 
   remembers { :visits 0 min 0 max 2 }
   :visited false
@@ -97,6 +98,9 @@ kind Room is sprout.Place {
       if (!item.get(:spun)) {
         self.set(:visited, true)
         let seen_by = !self.is(DarkRoom) || item.get(:light) > 0
+        // The first room seen again by its name alone: one word, once,
+        // about LOOK and VERBOSE.
+        if (item.recall(:visits) == 1 && seen_by && item.get(:mode) == :brief) { send item :brief_hint }
         if (item.recall(:visits) < 2 && seen_by) { item.adjust(:visits, 1) }
         if (self.is(DarkRoom) && item.recall(:visits) < 2 && !seen_by) {
           if (self.get(:alight)) { item.adjust(:visits, 1) }
@@ -218,6 +222,22 @@ kind Ceiling is Scenery {
   grammar { name "ceiling"  nouns "roof"  adjectives "high", "low", "cavern" }
   passage short { ceiling }
   describe { text "The ceiling is some way above you, where ceilings generally are. It is not the most interesting thing in the room." }
+}
+
+// What the Fantasize spell puts in a room that is not there (DESCRIBE-
+// OBJECTS): a basilisk, a pile of jewels, a gold ingot, a bulging chest, a
+// convention of wizards, a copy of ZORK I. Zork never declared them, so
+// "take jewels" was no sentence at all; here every room keeps one, as it
+// keeps a grue, so that reaching for what the Wizard's word put there is
+// answered in the narrator's voice and not the parser's (friction 35).
+kind Illusion is Scenery {
+  grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "convention", "wizards", "copy", "book"  adjectives "bulging", "yellow", "gold", "convention", "pile" }
+  passage short { basilisk }
+  passage gone {
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now.{else}There is nothing of the kind here. If there was a moment ago, the Wizard had a word in it, and the word has worn off.{/if}
+  }
+  as target for any { permit { refuse gone } }
+  as tool for any { permit { refuse gone } }
 }
 
 // Zork's GRUE: never here, always nearby.

@@ -4,10 +4,11 @@
 import {Portable, Thing, Scenery, Drinkable, Pourable, Fillable, Sprayable, Valuable} from 'thing'
 import {Adventurer} from 'adventurer'
 import {Bag, Box} from 'box'
-import {Room, CakeSafe, Watery, Wonderland, TeaRoomLike, PostsLike} from 'room'
+import {Room, CakeSafe, Watery, Wonderland, TeaRoomLike, PostsLike, ChasmEdge} from 'room'
 import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt} from 'verbs'
 import {Bucket} from 'well'
 import {Pool} from 'posts'
+import {Stream} from 'way_in'
 import {examine} from 'sprout'
 
 // A weapon (Zork's WEAPONBIT).
@@ -180,6 +181,9 @@ kind Teapot is Bag, Fillable {
   describe { text examined }
   without as target for close from Box
   as target for close { do { say "The teapot has no lid." } }
+  without as target for open from Box
+  without as target for open from Thing
+  as target for open { do { say "It has no lid, which saves time." } }
   without as target for fill from Fillable
   as target for fill {
     do {
@@ -192,6 +196,10 @@ kind Teapot is Bag, Fillable {
           say "The teapot is now full of water."
         }
       }
+      // The stream in earshot but not in reach: at the ravine's edge it is
+      // a long way down, and from the Marble Hall it is at the ford.
+      else if (here.is(ChasmEdge)) { say "The stream is at the bottom of the ravine, a long way down, and it is not coming up. The fords are where it comes up to meet you." }
+      else if (here.count(Stream) > 0) { say "The stream is in earshot and not in reach. The ford to the north is where it comes up to meet you." }
       else { say "There's nothing here to fill it with." }
     }
   }
@@ -205,9 +213,10 @@ kind PlaceMat is Bag {
   :capacity 20
   :size 12
   passage short { place mat }
+  // A surface with nothing on it says nothing about its contents.
   passage examined { It is a place mat of woven straw, frayed at one corner, and thin enough to slide under most doors, should you ever need to slide something under a door.
 
-    {self.look_inside} }
+    {if self.count(Thing) > 0}{self.look_inside}{/if} }
   describe { text examined }
 }
 
@@ -231,7 +240,8 @@ kind Newspaper is Readable {
 
 // The green piece of paper by the robot (ROBOT-LABEL).
 kind RobotLabel is Readable {
-  grammar { name "green piece of paper"  nouns "paper", "piece", "instructions", "label"  adjectives "green" }
+  // Not "instructions": in the Machine Room that word is the EBCDIC's.
+  grammar { name "green piece of paper"  nouns "paper", "piece", "label", "sheet"  adjectives "green" }
   :burnable true
   :size 3
   passage short { green piece of paper }

@@ -420,3 +420,66 @@ caverns' numbers are written "caverns N"._
   is a thing of its own, spawned into the room with the spell and
   destroyed with it, that can be examined, pushed and walked into.
 - **Spec:** Parsing › When nothing matches; Range.
+
+## After round 2
+
+### 36. `all` cannot be limited to what a thing holds, or to a plural noun
+
+- **Wanted:** Zork's "take all from table" and "take all cakes", which
+  both opus runs typed at the gazebo's table and the Tea Room's.
+- **Found:** `all` "fills a role with everything it may take, and
+  `except` leaves things out, by kind or by name": there is no form that
+  narrows it to a container's contents, and a plural noun after `all` is
+  no sentence. A relative phrase narrows a *name* by containment ("the key
+  on the shelf"), not `all`.
+- **Wrote instead:** `take_from`, a verb whose one role is the table (typed
+  `Box`), eight phrases of "take all from", "take everything off" and the
+  like; the adventurer's part takes each portable thing on it by `act
+  take`, with `:listing` set so each answers with its name before it, as
+  Zork's does. "take all cakes" stays `unknown`.
+- **Spec:** Parsing › Sequences, again and all; Matching a line.
+
+### 37. A hundred moves is a hundred commands, and nothing in the world can run the clock
+
+- **Wanted:** I-BUCKET: water poured into the bucket from outside sends it
+  up alone, and a hundred moves later it is dry and comes down. Zork's
+  player types WAIT (three moves each) thirty-four times.
+- **Found:** every clock here is the host's, half a minute a command
+  (friction 2, 4): the bucket's `wake in 50 minutes` is a hundred
+  *commands*, and `wait` passes one of them. Both sonnet runs that lost
+  the bucket had fifty-odd turns left and never saw it return. Nothing a
+  world writes can advance the host's clock, and the engine's `wait`
+  has no `do` to pass more than its turn.
+- **Wrote instead:** `wait_for_bucket` ("wait for the bucket to come
+  down"), a verb with no role, since the bucket's absence is the point:
+  at the bottom of the well it says the wait, adds the ninety-nine moves
+  Zork would have counted to the score line, and broadcasts `:hurry`,
+  which the world passes and the bucket at the top answers by drying its
+  water and coming down at once (unless somebody is riding it). The
+  Circular Room's own `waited` line, while the bucket is up, says that
+  the wait is possible and long. Zork's "wait" passing three moves was
+  not copied: a counter that said three moves passed when one did would
+  lie about what ran.
+- **Spec:** Time › Wakes; Verbs › Engine verbs (`wait`); Prose › Engine
+  lines (`waited`).
+
+### 38. The article before a value is dropped after all (amends 32)
+
+- Round 1 gave "answer a well" a verb of its own, `answer_article`
+  (friction 32). Tested this round, "answer a well" and "answer the well"
+  both read as `answer` with `word: :well`, the article dropped before the
+  value as before a noun, so the second verb only tied with the first and
+  drew. Removed; 32 stands as a record of what was not tried. The quoted
+  form, `answer "a well"`, is still friction 33.
+- **Spec:** Parsing › Matching a line (articles); Verbs › Value roles.
+
+### 39. A thing's answer to a verb is not the thing's alone
+
+- Not new, a note: "pour water on roses" printed its line twice, once
+  from the water (`as item for pour_on`) and once from the roses (Thing's
+  `as target for pour_on`), since every participant's `do` speaks. Thing's
+  parts for `pour_in` and `pour_on` are now silent and the water says
+  what came of it. The same as caverns 29 and friction 22, seen from the
+  other side: a verb with two participants that both have something to
+  say says it twice.
+- **Spec:** Verbs › Playing a role; The two passes.
