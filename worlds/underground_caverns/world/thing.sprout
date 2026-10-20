@@ -26,7 +26,6 @@ kind Thing {
   :ndesc false
   :falling false
   :size 5 min 0 max 100
-  // Zork's DOORBIT, for knocking.
   // Inside a shut glass container: seen, and out of reach.
   :sealed false
   // Zork's BURNBIT: it catches fire.
@@ -211,7 +210,7 @@ kind Creature is Thing {
   as target for alarm { do { say "The {self.short} isn't sleeping." } }
 }
 
-// What a visitor might knock on: the doors, the grating, the kitchen window
+// What a visitor might knock on (Zork's DOORBIT): the doors, the grating, the kitchen window
 // and the gates of Hell.
 kind Door is Thing {
   as target for knock { do { say "Nobody's home." } }

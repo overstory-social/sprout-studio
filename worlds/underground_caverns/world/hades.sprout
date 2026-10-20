@@ -152,8 +152,9 @@ object land_of_the_dead is Room in underground_caverns {
 }
 
 // The evil spirits at the gate (GHOSTS, GHOSTS-F): nothing material reaches
-// them. Spoken to, they jeer; attacked, they ask how; anything else, and
-// you cannot interact with them at all. Exorcised, they are gone.
+// them. Spoken to, they jeer; attacked, they ask how; touched, searched,
+// moved or burned, you cannot interact with them at all. Exorcised, they
+// are gone.
 kind Ghosts is Scenery, Creature {
   grammar { name "evil spirits"  nouns "ghosts", "ghost", "spirits", "spirit", "fiends", "force", "wraiths", "wraith"  adjectives "invisible", "evil" }
   passage short { evil spirits }
