@@ -36,6 +36,18 @@ const PUBLISHED_NAME = /^[a-z0-9-]{1,24}-([0-9a-f]{8})\.sproutworld$/;
 const HEX64 = /^[0-9a-f]{64}$/;
 const SPKI_PREFIX = Buffer.from('302a300506032b6570032100', 'hex');
 
+/** The cartridge name an address under `baseUrl` ends in, or null where it is not one. */
+export function cartridgeName(url, baseUrl) {
+  if (typeof url !== 'string' || !url.startsWith(baseUrl)) return null;
+  let name;
+  try {
+    name = decodeURIComponent(url.slice(baseUrl.length));
+  } catch {
+    return null;
+  }
+  return PUBLISHED_NAME.test(name) ? name : null;
+}
+
 const builds = (n) => (n === 1 ? '1 build' : `${n} builds`);
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
@@ -111,9 +123,9 @@ export function indexProblems(worldsDir, publicKey, baseUrl) {
   if (!isSigned(index, publicKey)) problems.push('index.json is not signed by the public key');
   const listed = new Set();
   for (const world of index.worlds ?? []) {
-    const name = decodeURIComponent(String(world.url).slice(baseUrl.length));
-    const match = PUBLISHED_NAME.exec(name);
-    if (!String(world.url).startsWith(baseUrl) || match === null) {
+    const name = cartridgeName(world.url, baseUrl);
+    const match = name === null ? null : PUBLISHED_NAME.exec(name);
+    if (match === null) {
       problems.push(`${world.url} is not a cartridge under ${baseUrl}`);
       continue;
     }
@@ -148,8 +160,8 @@ export async function carryForward(baseUrl, publicKey, into) {
     throw new Error(`${indexUrl} is not signed by publisher.pub, so the builds it lists are not carried and nothing is published. A new publisher key needs a decision about the builds already out (docs/publishing.md).`);
   const names = [];
   for (const world of index.worlds) {
-    const name = decodeURIComponent(String(world.url).slice(baseUrl.length));
-    if (!String(world.url).startsWith(baseUrl) || !PUBLISHED_NAME.test(name))
+    const name = cartridgeName(world.url, baseUrl);
+    if (name === null)
       throw new Error(`${indexUrl} lists ${world.url}, which is not a cartridge under ${baseUrl}.`);
     const got = await fetch(world.url, { cache: 'no-store' });
     if (!got.ok) throw new Error(`${world.url} answered ${got.status}: a published build cannot be carried, so nothing is published.`);
@@ -221,10 +233,11 @@ export async function publish({ site, publicKeyFile = join(ROOT, 'publisher.pub'
   if (existsSync(site) && readdirSync(site).length > 0) throw new Error(`${site} is not empty: name a new folder for the site.`);
   const worldsDir = join(site, 'worlds');
   const work = mkdtempSync(join(tmpdir(), 'studio-publish-'));
+  let carried = [];
   try {
     const cartridges = join(work, 'cartridges');
     mkdirSync(cartridges);
-    const carried = await carryForward(baseUrl, publicKey, cartridges);
+    carried = await carryForward(baseUrl, publicKey, cartridges);
     log(carried.length === 0 ? `publish: no live index at ${baseUrl}, so no earlier builds to carry` : `publish: carried ${builds(carried.length)} already published: ${carried.join(', ')}`);
     for (const { world, dir } of worlds) {
       try {
@@ -249,6 +262,10 @@ export async function publish({ site, publicKeyFile = join(ROOT, 'publisher.pub'
     rmSync(work, { recursive: true, force: true });
   }
   const problems = indexProblems(worldsDir, publicKey, baseUrl);
+  // A published address is permanent: a Sprout whose naming rule changed would move a carried build.
+  const listed = new Set(JSON.parse(readFileSync(join(worldsDir, 'index.json'), 'utf8')).worlds.map((world) => cartridgeName(world.url, baseUrl)));
+  for (const name of carried)
+    if (!listed.has(name)) problems.push(`${name} is published and the new index names it otherwise, so its address would stop answering`);
   if (problems.length > 0) throw new Error(`the index the player would read is wrong:\n  ${problems.join('\n  ')}`);
   const index = JSON.parse(readFileSync(join(worldsDir, 'index.json'), 'utf8'));
   writeFileSync(join(site, 'index.html'), sitePage(index));

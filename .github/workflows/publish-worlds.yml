@@ -94,12 +94,16 @@ jobs:
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
       - name: Pages serves every cartridge byte for byte
+        shell: bash
         env:
           SITE: ${{ steps.deployment.outputs.page_url }}
         run: |
           index="$RUNNER_TEMP/index.json"
           curl -fsS -o "$index" "${SITE%/}/worlds/index.json"
-          jq -r '.worlds[] | [.url, .bytes, .sha256] | @tsv' "$index" | while IFS=$'\t' read -r url bytes sha; do
+          listed=$(jq -er '.worlds | length' "$index")
+          jq -er '.worlds[] | [.url, .bytes, .sha256] | @tsv' "$index" > "$RUNNER_TEMP/worlds.tsv"
+          checked=0
+          while IFS=$'\t' read -r url bytes sha; do
             curl -fsS -o "$RUNNER_TEMP/cartridge" -D "$RUNNER_TEMP/headers" "$url"
             got_bytes=$(stat -c %s "$RUNNER_TEMP/cartridge")
             got_sha=$(sha256sum "$RUNNER_TEMP/cartridge" | cut -d' ' -f1)
@@ -109,4 +113,9 @@ jobs:
               exit 1
             fi
             echo "$url: $bytes bytes as listed ($type)"
-          done
+            checked=$((checked + 1))
+          done < "$RUNNER_TEMP/worlds.tsv"
+          if [ "$checked" -eq 0 ] || [ "$checked" -ne "$listed" ]; then
+            echo "::error::checked $checked cartridges of the $listed the served index lists."
+            exit 1
+          fi

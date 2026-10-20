@@ -55,9 +55,11 @@ The deploy job then fetches every cartridge back from Pages and fails if
 one does not arrive byte for byte as the index lists it.
 
 Every build ever published stays listed, so the player offers each one. A
-build is never replaced: if a new pin packs an unchanged world to other
-bytes under the same bundle hash, `sprout index` refuses and nothing is
-published until that is settled in Sprout.
+build is never replaced and never moves: if a new pin packs an unchanged
+world to other bytes under the same bundle hash, `sprout index` refuses,
+and if a new pin names a carried build otherwise (a change to the rule
+that makes a title into a file name), the run refuses; either way nothing
+is published until that is settled in Sprout.
 
 ## The publisher's key
 

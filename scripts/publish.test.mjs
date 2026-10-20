@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { execFileSync } from 'node:child_process';
-import { generateKeyPairSync, sign } from 'node:crypto';
+import { createPrivateKey, generateKeyPairSync, sign } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
@@ -57,6 +57,15 @@ const setVersion = (version) => {
   const manifest = JSON.parse(readFileSync(file, 'utf8'));
   writeFileSync(file, JSON.stringify({ ...manifest, version }, null, 2));
 };
+
+/** A live site in `dir` whose index lists `worlds` (with the first site's cartridges beside it), signed by the throwaway publisher key. */
+const liveSite = (dir, worlds) => {
+  mkdirSync(dir, { recursive: true });
+  const key = createPrivateKey({ key: Buffer.concat([Buffer.from('302e020100300506032b657004220420', 'hex'), Buffer.from(privateKey, 'hex')]), format: 'der', type: 'pkcs8' });
+  writeFileSync(join(dir, 'index.json'), JSON.stringify({ worlds, signed: sign(null, Buffer.from(canonicalText(worlds)), key).toString('hex') }));
+  return dir;
+};
+const firstIndex = () => JSON.parse(readFileSync(join(site('first'), 'worlds', 'index.json'), 'utf8'));
 
 describe('the signature the player checks', () => {
   it('is over the canonical text: keys in order, no spaces, integers in decimal', () => {
@@ -179,6 +188,30 @@ describe('publish', () => {
     serving = live;
     await assert.rejects(publishTo('foreign'), /not signed by publisher.pub/);
   });
+
+  it('refuses a live build the new index would publish under another name', async () => {
+    const [world] = firstIndex().worlds;
+    const [name] = cartridges(site('first'));
+    const moved = `old-stem-${world.hash.slice(0, 8)}.sproutworld`;
+    serving = liveSite(join(root, 'moved'), [{ ...world, url: `${baseUrl}${moved}` }]);
+    writeFileSync(join(serving, moved), readFileSync(join(site('first'), 'worlds', name)));
+    await assert.rejects(publishTo('moved'), new RegExp(`${moved} is published and the new index names it otherwise`));
+  });
+
+  for (const [what, url] of [
+    ['a name that climbs out of the folder', () => `${baseUrl}..%2F..%2Fescaped-${'ab'.repeat(4)}.sproutworld`],
+    ['an address under another base', () => `http://elsewhere.test/worlds/world-${'ab'.repeat(4)}.sproutworld`],
+    ['an escape that does not decode', () => `${baseUrl}world-%E0%A4%A.sproutworld`],
+  ]) {
+    it(`refuses a signed live index listing ${what}, writing nothing`, async () => {
+      const [world] = firstIndex().worlds;
+      const dir = join(root, 'paths', String(what.length));
+      serving = liveSite(dir, [{ ...world, url: url() }]);
+      await assert.rejects(publishTo(`paths-${what.length}`), /is not a cartridge under/);
+      assert.equal(existsSync(join(root, 'escaped-abababab.sproutworld')), false);
+      assert.equal(existsSync(join(dirname(tmpdir()), 'escaped-abababab.sproutworld')), false);
+    });
+  }
 
   it('refuses a site folder that already holds something', async () => {
     serving = null;
