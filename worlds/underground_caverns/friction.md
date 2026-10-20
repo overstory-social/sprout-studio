@@ -1785,7 +1785,11 @@ me say is below.
 - **Spec:** Prose (`actor` and `here` are bound only where someone is
   acting); Acting; Events › Receiving ("A sender binding is live for the
   length of the handler and cannot be stored").
-- **Status: open.**
+- **Status: resolved** by sprout#774 (Sprout eb7627e): an actor's own
+  handlers bind `here`. His turn is a `:survey` he sends himself, read
+  against `here`, and which part of his turn it is (his clock, a room
+  just reached, his lair) rides in the message. The rooms no longer
+  answer `:prowl`, and the `:phase` and `:at` he kept are gone.
 
 ### 84. An NPC cannot walk the map on its own
 
@@ -1813,6 +1817,11 @@ me say is below.
   "this exit" (the exit as a value, as friction 82 also wants for an
   intent's slot) would let an NPC walk; a place-valued binding for "where I
   am" (83) would let him choose, and spare the chain of every room.
+  **Changed** again by sprout#774 (Sprout eb7627e): he knows his room (83),
+  and `move self <direction>` or `move self along an exit` would let him
+  walk. He does not, because Zork's thief does not walk: I-THIEF takes the
+  next room on its list wherever it lies. So the chain stays, as the
+  faithful round, and is no longer a workaround.
 
 ### 85. An unseen actor is announced as he comes and goes
 
@@ -1830,7 +1839,14 @@ me say is below.
   each of which a later verb or kind could forget.
 - **Spec:** The world model › Places (the arrival and departure notices);
   Range; Roles compose (wildcards).
-- **Status: open.**
+- **Status: resolved** by sprout#775 (Sprout 4aab16e): he holds `:unseen`
+  until he lets himself be seen. The blank notices, `:ndesc`, the wildcard
+  permits and `:shown` are gone. A line naming him while he is unseen is
+  answered with the world's `not_here`, as Zork answers it. His pass rule
+  stays, reading `:unseen`, so that nothing gets into his hands while he
+  is unseen. One thing had to change hands: his lair can no longer count
+  him while he is unseen, so it keeps `:harbors` from its own `:entered`
+  and `:left`, and the scream at the door asks that.
 
 ### 86. Taking from a person's hands, and knowing what is in them
 

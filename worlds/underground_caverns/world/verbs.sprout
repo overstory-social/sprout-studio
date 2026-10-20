@@ -564,20 +564,16 @@ message :candle_burn with integer
 // The rope, let go of at the Dome's rail.
 message :let_go
 // The thief (thief.sprout). His clock starts the first time anyone goes
-// down into the Cellar; each of his turns he asks the room he is in to
-// show itself (`:prowl`, answered `:survey`), since a handler has no
-// `here`; he walks the Empire by the world's gate.
+// down into the Cellar; each of his turns is a `:survey` he sends himself,
+// saying which part of his turn it is.
 message :thief_start
-message :prowl
-message :survey
+message :survey with integer
 // The thief robs a visitor, who hands over what he takes (the hands are
 // the visitor's own): 1 while he passes unseen, 2 as he leaves, seen.
 message :rob with integer
 // The Treasure Room, entered: the thief comes to defend it, from wherever
-// he is (`:summon`, through the world) or from where he stood unseen in it
-// (`:defend`).
+// he is, or from where he stood unseen in it.
 message :summon
-message :defend
 // The thief tells his lair whether he is there to come to its defense:
 // false while he lies out cold and once he is dead.
 message :keeper with boolean

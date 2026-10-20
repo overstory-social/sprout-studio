@@ -457,7 +457,7 @@ kind Adventurer is sprout.Visitor {
       // and his gesture come before the room is described, as in Zork.
       if (here.is(TreasureRoom) && !self.get(:dead)) {
         if (here.get(:keeper)) {
-          if (here.count(Thief) == 0) { say scream }
+          if (!here.get(:harbors)) { say scream }
           if (here.count(Treasure) > here.count(Chalice)) { say vanish }
         }
       }
@@ -798,7 +798,7 @@ kind Adventurer is sprout.Visitor {
       } else if (self.get(:dest) == :treasure) {
         if (!self.get(:own_light) && !underground_caverns.treasure_room.get(:alight)) { tell self "You have moved into a dark place." }
         if (underground_caverns.treasure_room.get(:keeper)) {
-          if (underground_caverns.treasure_room.count(Thief) == 0) { tell self scream }
+          if (!underground_caverns.treasure_room.get(:harbors)) { tell self scream }
           if (underground_caverns.treasure_room.count(Treasure) > underground_caverns.treasure_room.count(Chalice)) { tell self vanish }
         }
         move self to treasure_room
