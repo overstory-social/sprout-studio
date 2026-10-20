@@ -457,6 +457,13 @@ entries' first text is kept as it was written against 61f02bb.
   still not Zork's: a reading refused in its consent pass, an exit's
   refusal and `no_way` run no `do`, so "It is already open." and "You can't
   go that way." are not counted, where Zork counts every command it parses.
+  **Changed** by sprout#772 (Sprout ae97fbb): the count is one `after
+  command` on the adventurer in place of a line in the `do` of every verb,
+  and the game's own commands set `:aside` to go uncounted. A new verb is
+  counted without remembering to be. A refused reading, a refused `go` and
+  a parser's answer still run no `after command`, so what is not Zork's
+  stays as it was. The move is counted after the command, so a clock read
+  inside a command (DIAGNOSE's) sees the moves before it.
 
 ### 24. No turns, only time
 
@@ -1568,7 +1575,15 @@ contributing once, as the spec says. No NPC is new in v4.
   load is too heavy."), where until v4 it took whatever it read.
 - **Spec:** Actors and visitors (capacity); Movement and consent › The
   three roles.
-- **Status: open.**
+- **Status: changed** by sprout#777 (Sprout b52b147): the adventurer holds
+  `capacity 100 by :size`, so the engine refuses any move into the hands
+  past the load, by any way in, with the world's `too_heavy`, which says
+  Zork's line. The engine weighs each thing alone, as the world did, so the
+  coffin still weighs 55 with or without the sceptre. `:load` stays: a line
+  of several things (`take all`) must refuse the one that will not fit and
+  take the rest, and a move refused ends its body, and `read`'s take must
+  refuse in its `permit`, before anything moves. Both need the load as a
+  number, and the language has no sum of a property over what is held.
 
 ### 76. A prayer that moves the visitor
 
@@ -2694,7 +2709,13 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
   difference is a flame in a shut box in hand, which Zork's HELD? finds and
   range does not.
 - **Spec:** Range; Sight; The runtime › Turns (no hook after a command).
-- **Status: open.** #477.
+- **Status: changed** by sprout#772 (Sprout ae97fbb): the Gas Room's own
+  `after command` asks its visitor to look in their hands after every
+  command there, which is Zork's M-END. A flame that comes into the hand
+  there, or a box with one in it opened there, now goes off. The room
+  still asks on the way in, for a visitor brought there by the world's
+  gate, so the visitor keeps `:gassed` to go off once a turn. Still open:
+  a flame in a shut box in hand (#477).
 
 ### 114. One thing becoming another
 
@@ -2930,7 +2951,11 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   ceremony is broken..." to whoever is in it, as I-XB does only where
   HERE is the Entrance.
 - **Spec:** Time › Wakes; The runtime › Turns.
-- **Status: open,** with 24.
+- **Status: changed** by sprout#772 (Sprout ae97fbb): (c) is answered. The
+  candles' own `after command` tells the Entrance to Hades when they burn
+  in hand there, after any command, however they came to be lit or held,
+  through a pass rule on the hands (73). The take's and the burn's own
+  reports are gone. (a) and (b) stand: the ceremony's clocks are wakes.
 
 ### 122. One bell, two objects
 
@@ -3095,7 +3120,12 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   its holder tells itself, as the candles' burning is told. A lamp lit on a
   floor, in a sack or in the thief's bag keeps its charge.
 - **Spec:** Time › Wakes; Range.
-- **Status: open,** with 24 and #477.
+- **Status: changed** by sprout#772 (Sprout ae97fbb): the lamp's own `after
+  command` spends a move of its battery while it is lit and carried, and
+  says its line to its bearer itself. `:lamp_age`, `:burn_tick` and the
+  adventurer's `changed :moves` are gone. `tests/lamp_battery.json` pins it.
+  A command about the game itself spends nothing: the lamp asks its bearer,
+  who counts after the things they carry.
 
 ### 131. One thing becoming another, again
 

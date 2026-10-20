@@ -456,9 +456,13 @@ object gas_room is DarkRoom, GasRoom in underground_caverns {
   passage body {
     This is a small room which smells strongly of coal gas. There is a short climb up some stairs and a narrow tunnel leading east.
   }
-  // BOOM-ROOM: whoever comes in carrying a flame is told the rest.
+  // BOOM-ROOM: whoever comes in carrying a flame, by any way, and whoever
+  // has one in hand after a command here (M-END), is told the rest.
   on :entered (item, from) {
     if (item.is(Adventurer)) { send item :gas }
+  }
+  after command {
+    if (actor.is(Adventurer)) { send actor :gas }
   }
   object bracelet is Bracelet
   object gas is Gas {
