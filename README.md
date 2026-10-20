@@ -81,6 +81,17 @@ arguments, and when it stops, are in [`docs/loop.md`](docs/loop.md#one-round).
 
 `pr-review` (Sonnet 5.5) is not part of the loop: it reviews this repository's own pull requests (CLAUDE.md › Branches, PRs, review, merge).
 
+## Publishing worlds
+
+The studio's GitHub Pages site is where finished worlds are distributed
+from: each one a `.sproutworld`, listed in an index signed with the
+studio's key, which the Playdate player's "more worlds…" screen downloads
+from. [`published.json`](published.json) names the worlds, and
+`.github/workflows/publish-worlds.yml` tests, packs, signs and deploys them
+on a push to `main` that changes one, keeping every earlier build on the
+site. The flow, the key and how to try it locally are in
+[`docs/publishing.md`](docs/publishing.md).
+
 ## Layout
 
 ```
@@ -100,11 +111,16 @@ worlds/<name>/
 templates/brief.md  the brief a new world starts from
 schemas/            what each agent hands back, as zod (index.mjs) and as JSON Schema (json/)
 docs/loop.md        the loop, kept current
+docs/publishing.md  how worlds reach GitHub Pages and the player's downloads
+published.json      the worlds the site publishes
+publisher.pub       the public half of the key the index is signed with, once committed (docs/publishing.md)
 scripts/sprout.mjs  Sprout at the pinned commit: install and bump
+scripts/publish.mjs the published worlds as a site: carry, test, pack, sign, check
 scripts/round.mjs   a round's work on disk: status, open a run, save, measure, verify, commit
 scripts/playtest-mcp.mjs  the playtester's door: a run's world as three tools
 .claude/agents/     the loop's agents
 .claude/workflows/studio-round.js  one round and more, generated from scripts/studio-round.template.js
+.github/workflows/publish-worlds.yml  the publishing run on GitHub Actions
 ```
 
 Git history is the record of how a world grew. A run id carries its
