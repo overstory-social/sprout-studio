@@ -26,7 +26,7 @@
 // wherever it lies, and no turn of his opens the world's gate to anyone
 // else.
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery} from 'thing'
+import {Thing, Portable, Scenery, Creature} from 'thing'
 import {Weapon, Knife, Treasure} from 'items'
 import {Room, DarkRoom} from 'room'
 import {Maze, DeadEnd} from 'maze'
@@ -107,7 +107,7 @@ kind Stiletto is Weapon {
   describe { text "It is a stiletto: a thin, three-sided blade on a plain black hilt, made for going between things, ribs among them. It is spotless. Its owner takes better care of it than of anything else he owns, which is saying something, since everything else he owns used to be somebody else's." }
 }
 
-kind Thief is Thing, sprout.Actor {
+kind Thief is Thing, sprout.Actor, Creature {
   roams
   grammar { name "thief"  nouns "robber", "man", "person", "gentleman", "individual", "crook"  adjectives "shady", "suspicious", "seedy", "suspicious-looking", "seedy-looking" }
   :capacity 60
@@ -187,18 +187,18 @@ kind Thief is Thing, sprout.Actor {
 
   without as target for listen from Thing
   as target for listen { do { say "The thief says nothing, as you have not been formally introduced." } }
-  without as target for talk from Thing
+  without as target for talk from Creature
   as target for talk { do { say "The thief is a strong, silent type." } }
   without as target for ask from Thing
   as target for ask { do { say "The thief is a strong, silent type." } }
-  without as target for greet from Thing
+  without as target for greet from Creature
   as target for greet {
     do {
       if (self.get(:strength) < 0) { say "The thief, being temporarily incapacitated, is unable to acknowledge your greeting with his usual graciousness." }
       else { say "The thief bows his head to you in greeting." }
     }
   }
-  without as target for alarm from Thing
+  without as target for alarm from Creature
   as target for alarm {
     do {
       if (self.get(:strength) < 0) { say "He seems to be deeply unconscious, and in no hurry to stop being so." }

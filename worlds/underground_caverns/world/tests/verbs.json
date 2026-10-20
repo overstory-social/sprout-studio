@@ -1,5 +1,5 @@
 {
-  "about": "Zork's small change: throw, kick, rub, wave, shake, squeeze, kiss, look behind, fill, tie, wake, talk, hello, pray and swim, each answered as Zork answers it; shaking a container spills it, or rattles it shut.",
+  "about": "Zork's small change: throw, kick, rub, wave, shake, squeeze, kiss, look behind, fill, tie, wake, talk, hello, pray and swim, each answered as Zork answers it where something answers it in its own words, and with the world's refusal where nothing does (a verb for a few things is offered only where they are); shaking a container spills it, or rattles it shut.",
   "steps": [
     { "seed": 1 },
     { "arrive": "Marta", "expect": [
@@ -23,7 +23,7 @@
       { "reader": "Marta", "kind": "said", "words": "Thrown." }
     ] },
     { "as": "Marta", "type": "look behind house", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "There is nothing behind the white house." }
+      { "reader": "Marta", "kind": "notice", "words": "You can't look behind the white house." }
     ] },
     { "as": "Marta", "type": "pray", "expect": [
       { "reader": "Marta", "kind": "said", "words": "If you pray enough, your prayers may be answered." }
@@ -38,16 +38,16 @@
       { "reader": "Marta", "kind": "said", "words": "Fiddling with the white house isn't notably helpful." }
     ] },
     { "as": "Marta", "type": "kiss mailbox", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "I'd sooner kiss a pig." }
+      { "reader": "Marta", "kind": "notice", "words": "You can't kiss the small mailbox." }
     ] },
     { "as": "Marta", "type": "wake mailbox", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The small mailbox isn't sleeping." }
+      { "reader": "Marta", "kind": "notice", "words": "You can't wake the small mailbox." }
     ] },
     { "as": "Marta", "type": "hello mailbox", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "It's a well known fact that only schizophrenics say \"Hello\" to a small mailbox." }
+      { "reader": "Marta", "kind": "notice", "words": "You can't hello the small mailbox." }
     ] },
     { "as": "Marta", "type": "talk to mailbox", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You can't talk to the small mailbox!" }
+      { "reader": "Marta", "kind": "notice", "words": "You can't talk to the small mailbox." }
     ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North of House" },
@@ -90,7 +90,7 @@
       { "reader": "Marta", "kind": "described", "words": "There is a clove of garlic here." }
     ] },
     { "as": "Marta", "type": "squeeze lunch", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "How singularly useless." }
+      { "reader": "Marta", "kind": "notice", "words": "You can't squeeze the lunch." }
     ] },
     { "as": "Marta", "type": "tie lunch to table", "expect": [
       { "reader": "Marta", "kind": "notice", "words": "You can't tie the lunch to the kitchen table." }

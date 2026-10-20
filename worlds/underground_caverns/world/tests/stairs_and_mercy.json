@@ -1,5 +1,5 @@
 {
-  "about": "Round 14's words: GO IN the window, UPSTAIRS and DOWNSTAIRS where there are stairs and not where there are none, SPARE said to something in no danger; TAKE ALL with nothing new answered as Zork's parser answers an empty ALL, and a shorter list of held things answered thing by thing.",
+  "about": "Round 14's words: GO IN the window, UPSTAIRS and DOWNSTAIRS where there are stairs and not where there are none, SPARE said to something that is nobody; TAKE ALL with nothing new answered as Zork's parser answers an empty ALL, and a shorter list of held things answered thing by thing.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -8,7 +8,7 @@
       { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." }
     ] },
     { "as": "Marta", "type": "spare the mailbox", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "It is in no danger from you." }
+      { "reader": "Marta", "kind": "notice", "words": "You can't spare the small mailbox." }
     ] },
     { "as": "Marta", "type": "upstairs", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You can't go that way." }

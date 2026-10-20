@@ -3315,7 +3315,26 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Spec:** Verbs and the grammar a visitor types › Declaring a verb; The
   view (a verb is offered when its roles can be filled).
 - **Status: changed**: the role-less verbs are placed (137); the Kitchen's
-  poll is still open, and Sprout's (sprout#595).
+  poll is still open, and Sprout's (sprout#595). **Changed again** for the
+  Playdate's wheel (sprout#788): the general verbs that only a few things
+  answer in their own words are typed too. That is talk to, greet and wake
+  (`Creature`: the troll, the thief, the Cyclops, the bat, the spirits),
+  spare (`sprout.Actor`), cross (`Crossable`), climb over (`Barrier`), jump
+  over or into (`Leapable`, the canyons with Zork's V-SKIP), kiss
+  (`Kissable`), squeeze (`Squeezable`), look behind (`Concealing`), knock
+  (`Door`, in place of a `:door` flag), count (`Countable`), drink
+  (`Drinkable`), eat (`Food`), clear (`Rubble`) and walk around
+  (`WhiteHouse`). `duck under` is gone, since nothing ever answered it but
+  the default. A lit room offers about 58 verbs where it offered 73. The
+  cost is the one above, wider: Zork's jokes for those verbs said of
+  anything else ("I'd sooner kiss a pig.", "Why knock on a small
+  mailbox?", "It's a well known fact that only schizophrenics say
+  \"Hello\" to a small mailbox.") are the engine's `cannot` now, and the
+  spirits' "You seem unable to interact with these spirits." answers fewer
+  verbs. The verbs that stay general (take, open, read, look in, move,
+  kick, rub, smell, listen, climb up and down, burn, cut, turn, fill and
+  the rest) are ones nearly everything answers in its own words, or ones a
+  player tries on anything. The 30 verbs with no roles are 137.
 
 ## Found profiling the Playdate beta
 
@@ -3381,6 +3400,15 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   › Links, for space that does not exist yet; The view.
 - **Status: open**: a role a phrase may leave to the place or the vehicle
   the actor is in, as FIND VEHBIT does, would say all of it in the verb.
+  Asked of Sprout in sprout#787, with the rest of the verbs with no roles:
+  `echo`, `odysseus`, `treasure`, `swim`, `look down`, `upstairs` and
+  `downstairs` belong to a place, and are on the wheel everywhere. A way
+  out cannot carry them: a direction labelled `odysseus` would answer `in`,
+  and a link cannot be set to a place written in source, nor unset. On a
+  host whose only input is the wheel, the puzzle words must be offered
+  somewhere, so they cannot simply go. `xyzzy`, `zork`, `yell`, `curse`,
+  `walk` and the like answer everywhere and belong on no wheel. sprout#787
+  asks for a verb typed but never offered.
 
 ## Found landing on the Stream
 

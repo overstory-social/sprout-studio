@@ -15,7 +15,7 @@
 // the slide falls to the Cellar; and the machine turns its coal into a
 // diamond, or anything else into slag, by spawning.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Portable, Flame, Lowerable, Mechanism, Switchable} from 'thing'
+import {Thing, Scenery, Portable, Flame, Lowerable, Mechanism, Switchable, Creature, Squeezable} from 'thing'
 import {Box} from 'box'
 import {Room, DarkRoom} from 'room'
 import {Light} from 'lamp'
@@ -164,16 +164,16 @@ object squeaky_room is DarkRoom, Squeaky in underground_caverns {
 // The vampire bat (BAT-F, BAT-D): on the ceiling, holding his nose, where
 // there is garlic in hand or on the floor; anywhere else, swooping. Who he
 // carries off, he carries off by their own feet (adventurer.sprout).
-kind Bat is Thing {
+kind Bat is Thing, Creature {
   grammar { name "vampire bat"  nouns "bat", "vampire"  adjectives "vampire", "deranged", "large" }
   passage short { bat }
   passage calm { In the corner of the room on the ceiling is a large vampire bat who is obviously deranged and holding his nose. }
   passage swoop { A large vampire bat, hanging from the ceiling, swoops down at you! }
   passage no_take { You can't reach him; he's on the ceiling. }
   describe { text "He is a large vampire bat, as bats go, and he goes: leathery, beady-eyed and plainly unwell in his mind. He has the look of something that has been underground too long and has come to an understanding with the dark. Just now he is clinging to the ceiling with his feet and holding his nose with both wings." }
-  without as target for talk from Thing
+  without as target for talk from Creature
   as target for talk { do { say "Fweep! Fweep! Fweep! Fweep! Fweep!" } }
-  without as target for greet from Thing
+  without as target for greet from Creature
   as target for greet { do { say "Fweep! Fweep! Fweep! Fweep! Fweep!" } }
   without as target for listen from Thing
   as target for listen { do { say "Fweep!" } }
@@ -792,7 +792,7 @@ kind Diamond is Treasure {
 }
 
 // GUNK-FUNCTION: whatever is done to the slag, it crumbles.
-kind Slag is Thing {
+kind Slag is Thing, Squeezable {
   grammar { name "small piece of vitreous slag"  nouns "slag", "piece", "gunk"  adjectives "small", "vitreous" }
   passage short { small piece of vitreous slag }
   passage crumbles { The slag was rather insubstantial, and crumbles into dust at your touch. }
@@ -808,11 +808,8 @@ kind Slag is Thing {
   as target for raise { do { say crumbles  destroy self } }
   without as target for kick from Thing
   as target for kick { do { say crumbles  destroy self } }
-  without as target for eat from Thing
-  as target for eat { do { say crumbles  destroy self } }
   without as target for mung from Thing
   as target for mung { do { say crumbles  destroy self } }
-  without as target for squeeze from Thing
   as target for squeeze { do { say crumbles  destroy self } }
   without as target for smell from Thing
   as target for smell { do { say crumbles  destroy self } }
