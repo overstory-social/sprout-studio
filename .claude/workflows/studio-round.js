@@ -1662,8 +1662,9 @@ while (played < ROUNDS) {
   let reported = reports.filter(Boolean).length
   log(`${reported} of ${todo.length} runs reported`)
   // Nobody reached an ending: the stuck and the unreported runs, or else the goal-seeker's, are played again by the fallback model.
+  // Only the runs as first played decide it: a replay that reached an ending, resumed from disk, is still a replay.
   let replayed = []
-  if (FALLBACK !== null && !Object.values(outcomes).some((one) => one.ending === 'yes')) {
+  if (FALLBACK !== null && !playing.some((run) => outcomes[run.id]?.ending === 'yes')) {
     const stuck = playing.filter((run) => outcomes[run.id] === undefined || outcomes[run.id].reason === 'stuck')
     const chosen = stuck.length > 0 ? stuck : playing.filter((run) => run.persona === 'goal-seeker')
     replayed = chosen.map((run) => ({ ...run, id: `${run.id}-${FALLBACK}` }))

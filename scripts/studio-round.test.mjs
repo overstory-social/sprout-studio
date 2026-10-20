@@ -389,6 +389,28 @@ describe('the studio-round workflow', () => {
     await assert.rejects(stage().run({ world: 'shed', fallback: 'gpt' }), /args\.fallback is one of/);
   });
 
+  it('resumed with a replay on disk that reached an ending, plays the replays still owed and tells the synthesizer of all', async () => {
+    const s = stage({
+      rounds: [
+        {
+          round: '01',
+          runs: ['explorer-1', 'goal-seeker-1', 'explorer-1-opus'],
+          reports: ['explorer-1', 'goal-seeker-1', 'explorer-1-opus'],
+          outcomes: {
+            'explorer-1': { ending: 'no', reason: 'stuck' },
+            'goal-seeker-1': { ending: 'no', reason: 'stuck' },
+            'explorer-1-opus': { ending: 'yes', reason: 'ending' },
+          },
+          metrics: false, pairwise: [], synthesis: false, steering: false, revision: false, committed: false, figures: null, acceptedDesign: null,
+        },
+      ],
+    });
+    await s.run({ world: 'shed', personas: ['explorer', 'goal-seeker'], fallback: 'opus' });
+    const played = s.calls.filter((one) => one.type === 'playtester').map((one) => [one.label, one.model]);
+    assert.deepEqual(played, [['play goal-seeker-1-opus', 'opus']]);
+    assert.match(s.calls.find((one) => one.type === 'synthesizer').prompt, /explorer-1-opus, goal-seeker-1-opus are runs played again by opus/);
+  });
+
   it('counts a run reported where its replay was, though it was not', async () => {
     const s = stage({ unplayed: ['explorer-1', 'casual-1'] });
     await s.run({ world: 'shed', personas: ['explorer', 'casual', 'goal-seeker'], fallback: 'opus' });
