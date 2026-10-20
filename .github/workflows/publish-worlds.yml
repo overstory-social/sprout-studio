@@ -1,0 +1,112 @@
+# Publishes the worlds published.json lists to GitHub Pages, signed for the
+# Playdate player's downloads (docs/publishing.md). Every build the live
+# site lists is carried into the new one, since a deploy replaces the site.
+name: Publish worlds
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'worlds/*/world/**'
+      - published.json
+      - publisher.pub
+      - sprout.pin.json
+      - scripts/publish.mjs
+      - .github/workflows/publish-worlds.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  # The WebAssembly toolchain Sprout's engine-wasm package builds with.
+  WASI_SDK_URL: https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-25/wasi-sdk-25.0-x86_64-linux.tar.gz
+  WASI_SDK_SHA256: 52640dde13599bf127a95499e61d6d640256119456d1af8897ab6725bcf3d89c
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: The signing key is set
+        env:
+          SPROUT_INDEX_SIGNING_KEY: ${{ secrets.SPROUT_INDEX_SIGNING_KEY }}
+        run: |
+          if [ -z "$SPROUT_INDEX_SIGNING_KEY" ]; then
+            echo "::error title=No signing key::The Actions secret SPROUT_INDEX_SIGNING_KEY is not set, so nothing is published. Add it in Settings › Secrets and variables › Actions: the 64 hexadecimal digits of the .key file \`sprout keygen\` wrote (docs/publishing.md)."
+            exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: The public key is committed
+        run: |
+          if [ ! -f publisher.pub ]; then
+            echo "::error title=No publisher.pub::publisher.pub is not committed, so nothing is published. Commit the .pub file \`sprout keygen\` wrote beside the secret's key, as publisher.pub (docs/publishing.md)."
+            exit 1
+          fi
+
+      - name: Pages is enabled
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install wasi-sdk
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/wasi-sdk.tar.gz" "$WASI_SDK_URL"
+          echo "$WASI_SDK_SHA256  $RUNNER_TEMP/wasi-sdk.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/wasi-sdk.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/wasi-sdk-25.0-x86_64-linux/bin" >> "$GITHUB_PATH"
+
+      - name: Install Sprout from the pin
+        run: npm run sprout:install
+
+      - name: Test, pack and sign the worlds
+        env:
+          SPROUT_INDEX_SIGNING_KEY: ${{ secrets.SPROUT_INDEX_SIGNING_KEY }}
+        run: node scripts/publish.mjs _site
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+      - name: Pages serves every cartridge byte for byte
+        env:
+          SITE: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          index="$RUNNER_TEMP/index.json"
+          curl -fsS -o "$index" "${SITE%/}/worlds/index.json"
+          jq -r '.worlds[] | [.url, .bytes, .sha256] | @tsv' "$index" | while IFS=$'\t' read -r url bytes sha; do
+            curl -fsS -o "$RUNNER_TEMP/cartridge" -D "$RUNNER_TEMP/headers" "$url"
+            got_bytes=$(stat -c %s "$RUNNER_TEMP/cartridge")
+            got_sha=$(sha256sum "$RUNNER_TEMP/cartridge" | cut -d' ' -f1)
+            type=$(grep -i '^content-type:' "$RUNNER_TEMP/headers" | tr -d '\r' | cut -d' ' -f2-)
+            if [ "$got_bytes" != "$bytes" ] || [ "$got_sha" != "$sha" ]; then
+              echo "::error::$url arrived as $got_bytes bytes with SHA-256 $got_sha; the index lists $bytes and $sha."
+              exit 1
+            fi
+            echo "$url: $bytes bytes as listed ($type)"
+          done
