@@ -320,3 +320,103 @@ caverns' numbers are written "caverns N"._
   cage until it falls better than the refusing `as target for any` permit
   this world uses for them. Left as is this round; worth adopting.
   **Spec:** The world model › Unseen.
+
+## After round 1
+
+### 29. The Carousel Room draws among the built passages only
+
+- **Wanted:** CAROUSEL-ROOM-FCN's draw among all seven passages but west,
+  as friction 12 built it.
+- **Found:** three of the seven lead into quarters not yet built, so a
+  draw of them said the rockfall and left the visitor in the Carousel,
+  where Zork would have moved them on; players read the room as a room
+  of rockfalls. A departure from the quarter's boundary, not the
+  language's: logged so that round 3 widens the draw as the passages open.
+- **Wrote instead:** `random(4)` among the Marble Hall, the Path Near
+  Stream, the Topiary and the Riddle Room, until the quarters beyond the
+  south, southwest and northwest passages are built. The three refusing
+  exits still answer a deliberate direction with the rockfall.
+- **Spec:** none; the brief's Scope.
+
+### 30. A `describe` cannot tell `examine` from `look`
+
+- **Wanted:** `examine bucket` from inside the bucket giving the bucket's
+  own description, and `look` from inside it the room seen from the
+  bucket, as Zork's vehicles do.
+- **Found:** `seen` is `:look` for both, "where the reader typed `look` or
+  `examine`, of anything, the place included", and the bucket is both the
+  place and the thing.
+- **Wrote instead:** the adventurer's `as actor for examine` refuses, when
+  the target is the bucket they are in, with a passage that renders the
+  bucket's `examined`; the refusal reads as the description, and counts
+  as one in the host's figures.
+- **Spec:** Prose › Describing (`seen`).
+
+### 31. Declared contents are never `:entered`
+
+- **Wanted:** the tea table's newspaper, place mat and teapot listed with
+  the Gazebo, as DESCRIBE-OBJECTS lists an open surface's contents.
+- **Found:** the box counts what it holds to list plainly (`:plain`, the
+  caverns' PRINT-CONT) in `on :entered`, and "spawning a lantern spawns
+  its wick with it, telling only the lantern `:spawned` and its container
+  `:entered`": what an object's body declares inside it arrives with it,
+  and sends nothing. The count stood at nought until something was put
+  on the table, and the table was listed empty.
+- **Wrote instead:** each declared box writes its own `:plain` by hand:
+  the tea table 3, the oblong table 4, the steel box 1. A passage cannot
+  count what a loop would, so there is no deriving it at render time.
+- **Spec:** Objects (a kind's body may hold objects); Events › Receiving.
+
+### 32. An intent's slot cannot hold a value
+
+- **Wanted:** "answer a well", "say a well", "the answer is a well" as an
+  intent over `answer`: `do answer (word: w)`.
+- **Found:** "`word` of `answer` takes a value, and a slot of an intent
+  holds a thing."
+- **Wrote instead:** a second verb, `answer_article`, with the same value
+  role and its own part on the adventurer, a copy of `answer`'s.
+- **Spec:** Verbs › Intents; Value roles.
+
+### 33. Quotation marks in a line are not stripped
+
+- **Wanted:** `answer "a well"` and `say "well"` heard as the word, as a
+  player who has been asked a riddle types them.
+- **Found:** the parser reads `"well"` as a word that is not `well`: the
+  reading is `answer` with `word` unbound, the stone door laughs. A phrase
+  written with a quotation mark in it (`"answer \"a [word]\""`) compiles
+  and never matches.
+- **Wrote instead:** nothing; the laugh stands for a quoted answer.
+- **Spec:** Parsing › Matching a line; The compiler › Lexical rules.
+
+### 34. "enter gazebo" was the engine's `go`, read in part
+
+- **Wanted:** `enter gazebo` from the north end of the garden, where the
+  gazebo is scenery and the way in is `exit in`.
+- **Found:** the engine's `go` has "enter [way]" with `way: exit`, and read
+  the line in part, the gazebo scenery in the exit's role, which it
+  cannot take: the world's `cannot` line, "You can't enter the gazebo."
+  Nothing warned, since a partial reading is an answer. The world's
+  `board` had "enter [target]" for the bucket only, typed by `Vessel`.
+- **Wrote instead:** "enter [target]" is a phrase of `through`, which
+  every thing plays and the gazebo plays by sending the actor in; a full
+  reading outranks a partial one. The bucket is boarded through `through`
+  too, by the adventurer's own part. "crawl into [target]" came out to
+  stay under eight phrases.
+- **Spec:** Verbs › Engine verbs (`go`); Parsing › When nothing matches
+  (`cannot`).
+
+### 35. A noun nobody declared is `unknown`, however the room describes it
+
+- **Wanted:** "take jewels" under Fantasize, "examine fence" under Fence,
+  answered as Zork answers a thing that is not there: "You can't see any
+  jewels here!"
+- **Found:** "a noun holding a word nothing in the world is named by …
+  is the grammar's failure rather than reach's, and the line is answered
+  with `unknown`", by design; and the illusions and the fence were words
+  of the narrator's, not of any thing. Players read "That sentence isn't
+  one I recognize" as the verb failing.
+- **Wrote instead:** the illusions are one scenery thing in Elsewhere
+  with their words for nouns, so that naming one is `not_here`; the fence
+  is a thing of its own, spawned into the room with the spell and
+  destroyed with it, that can be examined, pushed and walked into.
+- **Spec:** Parsing › When nothing matches; Range.

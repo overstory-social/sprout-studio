@@ -37,7 +37,12 @@ much the product as the rooms are.
   Trophy Room's case in round 7.
 - **The unicorn is in**, since it is the garden's own and the sword glows
   for it; the gold key round its neck stays round its neck until the
-  princess (round 3) can ask for it.
+  princess (round 3) can ask for it. After round 1, when three runs hunted
+  the key as the quarter's goal, the unicorn's and the key's close-ups say
+  the key is being kept for somebody in particular, who is not you.
+- **The Deep Ford's ledge** is the edge of the quarter, and after round 1
+  says so as the rockfalls do ("will have to wait"), not as a puzzle
+  wanting gear.
 - **The Rooms of Mist are not built** (they are the end's, round 7), so a
   death is answered with the demon's own words from the fourth Room of
   Mist, said at once, and the visitor wakes in the barrow as Zork's
@@ -64,11 +69,13 @@ much the product as the rooms are.
    Topiary whose animals move when nobody is looking and, given long
    enough, attack. West of the Topiary, through the rose arbor, the
    Carousel Room.
-3. The Carousel Room spins: every way out of it is a random one of seven
-   (never west) four times in five, with "You're not sure which direction
-   is which." Its eight passages lead to the Marble Hall, the Path Near
-   Stream, the Topiary, the Riddle Room, Room 8 (only once it stops), and
-   three quarters not yet built.
+3. The Carousel Room spins: every way out of it is a random one four
+   times in five, with "You're not sure which direction is which." Its
+   eight passages lead to the Marble Hall, the Path Near Stream, the
+   Topiary, the Riddle Room, Room 8 (only once it stops), and three
+   quarters not yet built; until those are built the draw is among the
+   four that are (Zork draws among seven, never west), so the spin costs
+   turns and not a slog back from a rockfall.
 4. The Riddle Room: "What is tall as a house, round as a cup, and all the
    king's horses can't draw it up?" Say "well" and the stone door opens
    (5 points). The Pearl Room beyond holds the pearl necklace (15).
@@ -104,8 +111,12 @@ much the product as the rooms are.
    Fumble, Fear, Filch, Freeze, Fall, Ferment, Fierce, Float, Fireproof,
    Fence, Fantasize: each changes what the visitor can do for three to
    eighteen minutes (five to thirty-five moves), and ends with its own
-   line. A spell is timed by the clock rather than by moves, so that one
-   which refuses every move still runs out.
+   line: Zork's six for Float, Feeble, Fear, Freeze, Ferment and Fierce,
+   and six written in its voice for the rest, since a visitor fenced in
+   with no word of the fence going had no reason to try the door again.
+   Fence puts a fence in the room that can be examined, pushed and walked
+   into, and says it will not last. A spell is timed by the clock rather
+   than by moves, so that one which refuses every move still runs out.
 
 "Done", for this quarter, is: the riddle answered, the well risen, the
 pearl, the candy, the sphere and the violin taken (85 of Zork II's 400),
@@ -135,7 +146,12 @@ the princess, the wand (30) for the Wizard's own rooms.
   be read in the Pool Room, not in the lamp-light of the Carousel.
 - **The bucket keeps the water**: climb in before pouring, or watch it go
   up without you ("The bucket swiftly rises up, and is gone."), and wait
-  a hundred moves for it to come back.
+  a hundred moves for it to come back. The tells, added after round 1
+  when nobody raised it: a tide-line inside the bucket that says it has
+  held water lately; the rope, taut, going up into the dark, which `look
+  up` and the rope's own description point at; and, once the bucket has
+  gone up alone, a line in the room that whatever hauled it up will
+  presumably let it down again.
 - **The topiary animals** move when the visitor has stood too long among
   them, and close in, and then attack. Leave when they move.
 - **The Wizard's spells interact**: Feeble makes the load fifty; Fumble

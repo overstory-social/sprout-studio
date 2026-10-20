@@ -28,6 +28,8 @@ kind Thing {
   passage short default { thing }
   // With its indefinite article, for a list (PRINT-CONT).
   passage indef default { A {self.short} }
+  // With its indefinite article, in the middle of a line.
+  passage a_short default { a {self.short} }
   passage fdesc default { {self.ldesc} }
   passage ldesc default { There is a {self.short} here. }
   passage here_line default {
@@ -43,14 +45,14 @@ kind Thing {
 
   as target for open       { do { say "You must tell me how to do that to a {self.short}." } }
   as target for close      { do { say "You must tell me how to do that to a {self.short}." } }
-  as target for read       { do { say "How does one read a {self.short}?" } }
+  as target for read       { do { say "How does one read {self.a_short}?" } }
   as target for look_in    { do { say "You can't look inside a {self.short}." } }
   as target for look_under { do { say "There is nothing but dust there." } }
   as target for search     { do { say "You find nothing unusual." } }
   as target for shift      { do { say "You can't move the {self.short}." } }
   as target for raise      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
   as target for lower      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
-  as target for smell      { do { say "It smells like a {self.short}." } }
+  as target for smell      { do { say "It smells like {self.a_short}." } }
   as target for listen     { do { say "The {self.short} makes no sound." } }
   as target for climb_up   { do { say "You can't do that!" } }
   as target for climb_down { do { say "You can't do that!" } }
@@ -60,7 +62,7 @@ kind Thing {
   as target for shake      { do { say "You can't take it; thus, you can't shake it!" } }
   as target for squeeze    { do { say "Squeezing the {self.short} {self.hacked}" } }
   as target for turn       { do { say "You can't turn that!" } }
-  as target for play       { do { say "You can't play a {self.short}." } }
+  as target for play       { do { say "You can't play {self.a_short}." } }
   as target for count_things { do { say "You have lost your mind." } }
   as target for eat        { do { say "I don't think that the {self.short} would agree with you." } }
   as target for tie {
@@ -71,7 +73,7 @@ kind Thing {
   }
   as target for burn {
     do {
-      if (bound tool) { if (tool.is(Thing)) { say "With a {tool.short}??!?" } else { say "With that??!?" } }
+      if (bound tool) { if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" } }
       else { say "You didn't say with what!" }
     }
   }
@@ -83,7 +85,7 @@ kind Thing {
   }
   as target for ask     { do { say "You can't talk to the {self.short}!" } }
   as target for through { do { say "You hit your head against the {self.short} as you attempt this feat." } }
-  as recipient for give { do { if (item.is(Thing)) { say "You can't give a {item.short} to a {self.short}!" } else { say "You can't give that to a {self.short}!" } } }
+  as recipient for give { do { if (item.is(Thing)) { say "You can't give {item.a_short} to {self.a_short}!" } else { say "You can't give that to {self.a_short}!" } } }
   as aim for throw      { do { say "Thrown." } }
   as container for pour_in { do { say "The water leaks out of the {self.short} and evaporates immediately." } }
   as target for pour_on { do { say "The water spills over the {self.short}, to the floor, and evaporates." } }

@@ -1,0 +1,577 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "world-bug",
+      "severity": "high",
+      "consensus": {
+        "n": 5,
+        "of": 8
+      },
+      "claim": "The gazebo cannot be entered with 'enter gazebo' (\"You can't enter the gazebo.\"). Only 'go into the gazebo' works, and the North End of Garden's description gives no direction into it. The gazebo holds the teapot, and without the teapot nobody can raise the bucket, so this one refusal blocks the whole second half of the quarter. Three runs typed 'enter gazebo' and were refused. Two more said they wanted to go inside. Only newcomer-1-opus got in, and it found the teapot.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 26,
+          "quote": "enter gazebo -> You can't enter the gazebo."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 10,
+          "quote": "enter gazebo -> You can't enter the gazebo."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 40,
+          "quote": "enter gazebo -> You can't enter the gazebo."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 88,
+          "quote": "go into the gazebo -> Gazebo / This is a gazebo in the midst of a formal garden."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 17,
+          "quote": "wished: Go inside the gazebo."
+        }
+      ],
+      "recommendation": "Make 'enter gazebo', 'in' and 'go in' from the North End of Garden move the visitor into the Gazebo, the same as 'go into the gazebo'. Name the way in in the room or gazebo description, as Zork's 'in' exit does. Add 'enter gazebo' to the walkthrough so the next round tests it."
+    },
+    {
+      "id": "P2",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 8
+      },
+      "claim": "When the visitor arrives in the Gazebo, the description does not list what is on the tea table. The newspaper, place mat and teapot appear only after examining the table. Zork lists the table's contents with the room, so the teapot is hidden twice over: behind the entry bug in P1 and behind an extra examine.",
+      "evidence": [
+        {
+          "run": "newcomer-1-opus",
+          "turn": 88,
+          "quote": "This is a gazebo ... A tea table adorns the center of the gazebo. (no contents)"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 89,
+          "quote": "look at the tea table -> Sitting on the tea table is: A newspaper / A place mat / A china teapot"
+        }
+      ],
+      "recommendation": "List the contents of a surface in the room description on arrival and on look, as Zork's DESCRIBE-OBJECTS does for an open table."
+    },
+    {
+      "id": "P3",
+      "category": "world-bug",
+      "severity": "high",
+      "consensus": {
+        "n": 3,
+        "of": 8
+      },
+      "claim": "Fence and Fantasize end without telling the visitor, although intent.md says every spell ends with its own line. In all three runs the engine log shows the spell timer waking, and the visitor is told nothing. newcomer-1 was still sure it was fenced in and quit, apparently already free. newcomer-1-opus found out only by trying an exit seven turns later. Fear does announce its end ('You suddenly decide that the Wizard isn't that terrifying...'), so the end-of-spell machinery works and only some spells are missing their lines.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 20,
+          "quote": "underground_caverns_2#1 woke, 360 seconds after it asked (no told line); player quit at turn 23 believing the fence was still up"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 20,
+          "quote": "timer woke with no line; first exit tried at turn 28 succeeds"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 40,
+          "quote": "woke, 900 seconds after it asked; the convention of wizards is gone with no word"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 26,
+          "quote": "You suddenly decide that the Wizard isn't that terrifying..."
+        }
+      ],
+      "recommendation": "Give each of the twelve spells an end line and check that each one fires. Add a walkthrough or test step that casts Fence and waits it out."
+    },
+    {
+      "id": "P4",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 8
+      },
+      "claim": "Fence traps the visitor with nothing to act on. 'examine the fence' and 'attack the fence' are not recognized, nothing says the fence is temporary, and it lasts up to eighteen minutes. Both newcomers spent their turns trying to get out: the sonnet newcomer quit in the Dark Tunnel after 23 turns, and the opus newcomer spent turns 9 to 27 waiting.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 12,
+          "quote": "examine the fence -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 16,
+          "quote": "attack the fence with the sword -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 25,
+          "quote": "examine the fence -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 14,
+          "quote": "hit the fence with the sword -> That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "While Fence is active, add an examinable 'fence' or 'barrier' to the room whose description hints that it is the Wizard's and will not last, for example that it already flickers. The Zork wording can stay as it is."
+    },
+    {
+      "id": "P5",
+      "category": "engine-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 8
+      },
+      "claim": "When a known verb is used with a noun the world never declared, the engine answers \"That sentence isn't one I recognize\" instead of the not-here line. This happens even for things the narrator has just said are present: Fantasize's basilisk and pile of jewels, and the fence. Players took it to mean that examine, x, attack and take themselves do not work. The parser-breaker wrote 'Examine, attack, kill and x were all not recognized'. By contrast, 'examine wizards', a declared word, gets 'You can't see any such thing.'",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 16,
+          "quote": "examine basilisk -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 18,
+          "quote": "x basilisk -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 35,
+          "quote": "take jewels -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 40,
+          "quote": "examine jewels -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 12,
+          "quote": "examine the fence -> That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "Open a Sprout issue: when the verb is recognized but the noun is not in the vocabulary, answer with not_here or a 'no such word' line, not the unknown-sentence line. Until then, the world should declare a noun for every Fantasize illusion and for the fence, and answer them in Zork's way."
+    },
+    {
+      "id": "P6",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 8
+      },
+      "claim": "Fantasize's illusion appears when the visitor arrives but is gone on the next 'look', while the spell still has minutes to run. Later a different illusion (a grue) is in the same room. The parser-breaker found this unexplained.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 11,
+          "quote": "There is a basilisk here."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 17,
+          "quote": "look -> Great Cavern ... (no basilisk)"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 31,
+          "quote": "There is a grue here."
+        }
+      ],
+      "recommendation": "Keep each room's illusion fixed for the length of the spell, and show it on look as well as on arrival."
+    },
+    {
+      "id": "P7",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 3,
+        "of": 8
+      },
+      "claim": "No run reached the Top of Well. Everything after it went unseen: the Tea Room, the cakes, the Posts and Pool Rooms, the robot, the Machine Room, the Dingy Closet, the stopped carousel and Room 8. reach.places.never is 11 of 29, and every robot verb went unused. Three runs reached the bucket. The only clue they got was 'it goes up for water, not for you'. The one run that carried water poured it from outside the bucket. The bucket rose without the visitor and took the pearl necklace, and after five turns of waiting the player gave up, unaware that the bucket returns in a hundred moves.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 18,
+          "quote": "You'd have to get the bucket to go up, and it goes up for water, not for you."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 36,
+          "quote": "look up -> There is a ceiling up there, and it is not doing anything interesting."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 55,
+          "quote": "take the necklace -> You'll need to get in the bucket to reach it."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 112,
+          "quote": "The bucket swiftly rises up, and is gone."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 120,
+          "quote": "call the bucket -> That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "Fix P1 and P2 first, since they hide the only container. Then put a fairer tell into the Circular Room, in Zork's voice: a dry tide-line inside the bucket, or a description that changes when the visitor is in the bucket and holding water. After the bucket leaves, give a line at the well bottom that it may come back down in time. 'look up' should mention the well shaft, not 'a ceiling', because the room says its roof is not visible."
+    },
+    {
+      "id": "P8",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 8
+      },
+      "claim": "The Deep Ford's boundary line ('Whatever is along there will keep until you are better equipped for it') reads as a puzzle the visitor can solve now, not as the quarter's edge. Three runs went looking for gear to climb the ledge or listed it as unfinished business. The rockfall lines ('will have to wait') were read correctly as the edge.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 58,
+          "quote": "go north -> You start up toward the ledge ... until you are better equipped for it."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 18,
+          "quote": "report: 'It hinted that I'd need some piece of gear first, so I went looking for one.'"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 37,
+          "quote": "climb onto the ledge -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 38,
+          "quote": "go north -> ... better equipped for it."
+        }
+      ],
+      "recommendation": "Reword the ledge refusal so it closes the way, as the rockfalls do (for example, the ledge has crumbled away for now), and does not suggest that an item would help."
+    },
+    {
+      "id": "P9",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 5,
+        "of": 8
+      },
+      "claim": "The Carousel Room's scramble often lands on one of the three walled-off passages, so players experienced it as a room of rockfalls and a slog back to the Riddle Room. The refusal leaves the visitor in the Carousel, so the scramble costs turns and gets them nowhere. This is a quarter artifact: in Zork every one of those passages leads somewhere. Most of the round's repetition figure (12) is directions typed over and over in or near the carousel. The casual player quit soon after reaching it.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 69,
+          "quote": "report: 'It took about 20 tries in the random carousel to get back to the Riddle Room.'"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 22,
+          "quote": "The passage northwest is choked with a fall of rock not far in."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 23,
+          "quote": "The passage southwest is choked with a fall of rock not far in."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 47,
+          "quote": "You're not sure which direction is which ... The passage south is choked with a fall of rock"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 38,
+          "quote": "go southeast -> scrambled into the south rockfall"
+        },
+        {
+          "run": "casual-1",
+          "turn": 10,
+          "quote": "report: 'The carousel room scrambled directions, which put me off.'"
+        }
+      ],
+      "recommendation": "While the unbuilt quarters are walled off, draw the random exit only from the passages that are built (still never west), and log the departure in friction.md. Leave the rockfall answer for when the visitor deliberately takes a walled passage after the carousel has stopped."
+    },
+    {
+      "id": "P10",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 8
+      },
+      "claim": "The unicorn's gold key reads as this quarter's goal. Three runs grabbed it, lost the unicorn ('uncouth sort of vagabond') and listed getting the key as unfinished. Per intent.md the key is not obtainable until the princess arrives in round 3, but nothing in play says so.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 16,
+          "quote": "take key -> The unicorn ... melts into the hedges and is gone."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 64,
+          "quote": "report: 'It was funny even though I'd blown it.'"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 132,
+          "quote": "take key -> ... uncouth sort of vagabond ..."
+        }
+      ],
+      "recommendation": "Keep the flight line, but have the unicorn's description or examine text hint that the key is meant for someone other than a passing vagabond. That points forward to the princess without inviting a hunt this quarter."
+    },
+    {
+      "id": "P11",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 3,
+        "of": 8
+      },
+      "claim": "Events in one turn are reported out of order, and some lines repeat. Examining the unicorn prints that it bounds away and that the sword has stopped glowing, and only then the close-up description. 'Your sword is no longer glowing.' is printed twice in a single turn.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 9,
+          "quote": "The unicorn bounds lightly away. / Your sword is no longer glowing. / The unicorn shies away as you approach for a closer look..."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 15,
+          "quote": "report: 'The order of the messages is muddled, and the sword's glow messages are out of step too.'"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 10,
+          "quote": "Your sword is no longer glowing. / Your sword is no longer glowing."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 16,
+          "quote": "Your sword is no longer glowing. (twice)"
+        }
+      ],
+      "recommendation": "Report the result of the command before the unicorn's flight and the sword's change. Send the sword's glow-off line only once per change."
+    },
+    {
+      "id": "P12",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 8
+      },
+      "claim": "From inside the bucket, 'examine bucket' prints the Circular Room description, not the bucket's own description.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 35,
+          "quote": "examine bucket -> Circular Room, in the wooden bucket / This is a damp circular room..."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 49,
+          "quote": "examine the bucket -> Circular Room, in the wooden bucket ..."
+        }
+      ],
+      "recommendation": "When examining the vehicle the visitor is in, give the bucket's description (and whatever water is in it), not the room's."
+    },
+    {
+      "id": "P13",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 8
+      },
+      "claim": "Several responses contradict themselves or are worded wrongly: 'You can't look inside a china teapot. The china teapot is empty.'; 'You can't give a elvish sword to a unicorn!' (wrong article), on a line the engine warned 'read 2 ways that tied, and one was drawn'; 'look up' says there is an unremarkable ceiling in a room whose roof 'is not visible'.",
+      "evidence": [
+        {
+          "run": "newcomer-1-opus",
+          "turn": 94,
+          "quote": "You can't look inside a china teapot. / The china teapot is empty."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 39,
+          "quote": "You can't give a elvish sword to a unicorn! (drawn: the line read 2 ways that tied)"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 48,
+          "quote": "There is a ceiling up there, and it is not doing anything interesting."
+        }
+      ],
+      "recommendation": "Let the teapot accept 'look in'. Use the Thing.indef passage in the give refusal. Resolve the tie between the two 'give' readings. Give the Circular Room its own 'look up' line."
+    },
+    {
+      "id": "P14",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 4,
+        "of": 8
+      },
+      "claim": "Common phrasings are not understood: 'exit' (in the bucket), 'go back', 'go back north', 'take the sword too', 'climb onto the ledge', and a quoted riddle answer ('answer \"a well\"' gets the hollow laugh, while 'a well' and 'answer well' both open the door).",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 19,
+          "quote": "exit -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 21,
+          "quote": "go back -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 28,
+          "quote": "go back -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 28,
+          "quote": "answer \"a well\" -> A hollow laugh seems to come from the stone door."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 42,
+          "quote": "a well -> There is a deafening clap of thunder..."
+        }
+      ],
+      "recommendation": "Add 'exit' and 'leave' as get-out synonyms. Strip quotes and articles from riddle answers. Treat 'climb ledge' as the room's north refusal. 'go back' is Zork's own gap and can be left out."
+    },
+    {
+      "id": "P15",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 8
+      },
+      "claim": "The opening is half a dozen rooms of walking with nothing to act on. The casual player and the prose-reader both stopped, bored, within about 17 turns, before reaching the riddle or the gazebo. This is Zork's own opening, so it is a fidelity cost, not a defect.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 10,
+          "quote": "report: 'After a dozen moves I had found nothing to do except walk through rooms.'"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 17,
+          "quote": "report: 'I had no goal yet, and I stopped without reaching anything.'"
+        }
+      ],
+      "recommendation": "Leave the map alone. Consider letting the Wizard's first visit come earlier, for example a guaranteed early appearance, or let the sword's first glow near the garden act as the hook. Log whatever departs from I-WIZARD."
+    }
+  ],
+  "legibility": {
+    "verdict": "partly",
+    "why": "Every run recognized a wry Zork II sequel in the Wizard of Frobozz's domain: the barrow, the lamp that 'has been through one adventure already', the wandering Wizard, the scrambling carousel, the riddle door, the unicorn with the key. The narrator's voice landed; prose rated 4 in seven of eight runs. But the arc intent.md describes was never reached. No run raised the well, entered the Tea Room, met the robot or stopped the carousel, and only one found the teapot. Players understood the world as a garden-and-carousel slice with walled exits, not as a chain of puzzles running from the well to the robot. The gazebo entry bug (P1) and the hidden water clue (P7) account for most of that gap. Several players also misread two boundaries as puzzles: the Deep Ford ledge and the unicorn's key.",
+    "runs": [
+      {
+        "run": "casual-1",
+        "understood": "A Zork-like walk through a barrow, a cavern, a dark tunnel and a disorienting carousel, with no puzzles or characters met.",
+        "matches": "partly"
+      },
+      {
+        "run": "explorer-1",
+        "understood": "A small Zork II-style slice: barrow, garden with a skittish unicorn, carousel, Marble Hall, a meddling Wizard, many exits blocked for later.",
+        "matches": "partly"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A Zork-tradition cave with a carousel, a riddle door, a well, a garden and a flitting wizard, much of it walled off for later.",
+        "matches": "partly"
+      },
+      {
+        "run": "goal-seeker-1-opus",
+        "understood": "A ruined underground garden with a key-wearing unicorn, moving topiary, a spinning room and a riddle door; a little wizard pops in; the start of something bigger not yet open.",
+        "matches": "partly"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "A Zork-like cave where a wizard appears in a dark tunnel; trapped by his fence before seeing more.",
+        "matches": "partly"
+      },
+      {
+        "run": "newcomer-1-opus",
+        "understood": "An adventure in the Wizard of Frobozz's territory: a spinning room, a riddle, a unicorn, treasures, and small puzzles with ordinary objects like carrying water in a teapot to a bucket, with a cackling wizard casting spells.",
+        "matches": "partly"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A Zork-style cave with a lantern and sword, a garden with a unicorn, a disorienting carousel, and a roaming wizard whose spells change the world.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "A wry, affectionate return to an old cave adventure: barrow, ravine, a cavern garden with a gazebo and a shy unicorn with a gold key, and a sword that glows near danger.",
+        "matches": "partly"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": null,
+      "after": 0.19
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": null,
+      "after": 0.02
+    },
+    {
+      "metric": "faults",
+      "before": null,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": null,
+      "after": 12
+    },
+    {
+      "metric": "reach.places.never",
+      "before": null,
+      "after": 11
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": null,
+      "after": 228
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": null,
+      "after": 66
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": null,
+      "after": 44
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": null,
+      "after": 693
+    }
+  ]
+}

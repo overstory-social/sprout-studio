@@ -46,7 +46,7 @@ kind Bucket is sprout.Place, Box, Vessel {
   passage short { wooden bucket }
   passage ldesc { There is a wooden bucket here, 3 feet in diameter and 3 feet high. }
   passage inside_view {{if self.get(:at) == :well_top}{if well_top.is(WellTop)}{well_top.bucket_view}{/if}{else}{if well_bottom.is(WellBottom)}{well_bottom.bucket_view}{/if}{/if}}
-  passage examined { It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has.
+  passage examined { It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago, and the rope above it is taut as though it would like to again.
 
     {self.look_inside} }
   describe {
@@ -133,10 +133,13 @@ kind Bucket is sprout.Place, Box, Vessel {
       cancel wakes
       wake in 50 minutes
       tell inside "The bucket rises and comes to a stop."
+      tell outside "The wooden bucket comes up the shaft on its rope and stops, level with the rim of the well."
     } else if (e == :descend) {
       tell inside "The bucket descends and comes to a stop."
+      tell outside "The wooden bucket comes down the shaft on its rope and settles on the floor."
     } else if (e == :dry) {
       tell inside "The last of the water evaporates, and the bucket descends."
+      tell outside "The wooden bucket comes down the shaft on its rope and settles on the floor."
     }
     if (e != :idle) {
       self.set(:seeing, false)
@@ -223,14 +226,14 @@ object well_bottom is WellBottom in underground_caverns_2 {
   }
   :id well_bottom
   :walls 6
-  passage body { This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. }
+  passage body { This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west.{if self.count(Bucket) == 0} A rope hangs down the middle of the room from the dark above, taut, with nothing on the end of it; whatever hauled the bucket up will presumably let it down again when it is done with it.{/if} }
   object bucket is Bucket
   object etchings is BottomEtchings
   object well is WellBottomWall
   object rope is Scenery {
-    grammar { name "rope"  nouns "line", "cable"  adjectives "bucket" }
+    grammar { name "rope"  nouns "line", "cable"  adjectives "taut", "long" }
     passage short { rope }
-    describe { text "A rope runs from the handle of the bucket up into the dark, where something at the top of the well is presumably holding the other end. It is taut, and not the kind of rope that goes anywhere when pulled." }
+    describe { text "{if well_bottom.count(Bucket) > 0}A rope runs from the handle of the bucket up into the dark, where something at the top of the well is presumably holding the other end. It is taut, and not the kind of rope that goes anywhere when pulled.{else}The rope hangs down the well from the dark, and the bucket is at the other end of it, at the top. The rope is taut, and not the kind that goes anywhere when pulled; the bucket came down once, and will presumably come down again when whatever is up there has finished with it.{/if}" }
   }
 }
 
@@ -243,7 +246,7 @@ object well_top is WellTop in underground_caverns_2 {
   :id well_top
   :value 10
   :walls 6
-  passage body { You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily. }
+  passage body { You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily.{if self.count(Bucket) == 0} A rope runs over the rim of the well and down into the dark, and the bucket is at the far end of it.{/if} }
   object etchings is TopEtchings
   object well is WellTopMouth
   object crack is Scenery {
@@ -276,6 +279,7 @@ object tea_room is TeaRoom in underground_caverns_2 {
     :surface true
     :capacity 50
     :ndesc true
+    :plain 4
     passage short { large oblong table }
     passage examined { It is a large oblong table, laid for a tea that was a great deal madder than most teas are: the places are set with cakes and nothing else, no cups, no pot, no chairs. {self.look_inside} }
     object eat_me is EatMeCake

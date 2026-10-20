@@ -1,0 +1,202 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "A blocking bug: the engine's go read 'enter gazebo' in part (the scenery in its exit role) and answered with the cannot line. 'enter [target]' is now a phrase of through, whose full reading outranks the partial one; the North End's body names the flagstones leading in; the walkthrough types 'enter gazebo'. Logged as friction 34."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Declared contents are never :entered, so the box's count of what it lists plainly stood at nought and the table read empty. Each declared box now writes its count; the Gazebo and the Tea Room list their tables on arrival and on look, as DESCRIBE-OBJECTS does. Logged as friction 31."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Zork itself says nothing when Fumble, Filch, Fall, Fireproof, Fence or Fantasize end, so my intent over-claimed; but a visitor fenced in with no word of the fence going has no reason to try the door, and the brief allows prose in Zork's voice. All twelve now end with a line; Fence's end was watched in play with @advance."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The Fence spell now spawns an invisible fence into the room, examinable, pushable, walked into, which says it is the Wizard's and already feels thinner; destroyed when the spell ends or the visitor dies. Zork's own step refusal is unchanged."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "The world side: the illusions are one scenery thing in Elsewhere carrying their words, so naming one is 'You can't see any such thing', and the fence is a real thing. The engine side is not a bug: the spec says an undeclared word is the grammar's failure and answered unknown, and the spec wins; logged as friction 35 rather than worked around."
+    },
+    {
+      "answers": "P6",
+      "decision": "reject",
+      "reason": "Fidelity: Zork's DESCRIBE-OBJECTS rolls one time in five on every description and picks afresh, so the illusion is meant to flicker. With P5 done, 'examine basilisk' now answers that nothing of the kind is in sight, which tells the player what it was."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The hidden container was P1/P2; beyond that the brief allows spice in Zork's voice. Added: a tide-line inside the bucket that says it held water lately; 'look up' lines for the Circular Room, the Top of Well and the bucket at either end, all pointing at the taut rope; a line in the room and on the rope once the bucket has gone up alone, that whatever hauled it up will presumably let it down again; and the bucket announcing its arrival at the far end to whoever stands there."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "The ledge is the quarter's edge, and 'better equipped' invited a hunt. The north/up refusal, the ledge's close-up and 'climb ledge' now close the way as the rockfalls do ('will have to wait'). Zork's own west line stays."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "A quarter artifact: three of seven draws landed on a rockfall and left the visitor in the Carousel. The draw is now among the four built passages until round 3 opens the rest; the rockfall still answers a deliberate direction. Logged as friction 29 and in intent."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The flight line is Zork's and stays; the unicorn's and the key's close-ups now say the key is being kept for somebody in particular, who is not you, pointing at the princess without inviting a hunt."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "The doubled glow line was a world bug: two settlings in one turn both found the sword's queued :glow unchanged. The adventurer now keeps its own record and says each change once; verified by waiting in the garden. The ordering (garden clock before the engine verb's answer) is Sprout's after-command placement, already logged as friction 27 and caverns 20, and cannot be moved by the world."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "A describe cannot tell examine from look (seen is :look for both), so the adventurer's examine refuses, when the target is the bucket it sits in, with the bucket's own description. Logged as friction 30."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "The teapot's and the flask's doubled look-in came from Thing's default arriving by a second kind (friction 22); withdrawn. 'a elvish sword' is fixed by an article passage on Thing. The give tie was two things named unicorn in one room: the stand-in is gone from the north end, and the unicorn and the stand-in answer give and throw themselves. 'look up' in the well is part of P7."
+    },
+    {
+      "answers": "P14",
+      "decision": "accept",
+      "reason": "'exit' and 'leave' now get out of the bucket and out of the gazebo; 'climb onto [target]' reaches the ledge's refusal; 'answer a well', 'say a well' and the like are a verb of their own (an intent's slot cannot hold a value, friction 32). Quoted answers cannot be stripped by the world: the parser keeps the marks and a phrase with one never matches, logged as friction 33. 'go back' and 'take the sword too' are left out, as the point itself allows."
+    },
+    {
+      "answers": "P15",
+      "decision": "reject",
+      "reason": "Fidelity: the opening is Zork's own, and the brief keeps the map and mechanics faithful; a guaranteed early Wizard departs from I-WIZARD's roll, and the director has not steered toward pacing. The synthesis itself names it a fidelity cost, not a defect; the sword's glow at the garden already serves as the hook."
+    }
+  ],
+  "changes": [
+    {
+      "what": "'enter [target]' moved from board to through ('crawl into' dropped to stay under eight phrases); 'climb onto [target]' on climb_up; 'exit' and 'leave' on get_out_bare; new verb answer_article for the answer with its article.",
+      "files": [
+        "worlds/underground_caverns_2/world/verbs.sprout"
+      ],
+      "for": [
+        "P1",
+        "P14"
+      ]
+    },
+    {
+      "what": "North End names the flagstones leading in; the unicorn's stand-in removed from the north end and given give/throw refusals elsewhere; the unicorn answers give and throw itself; unicorn and key close-ups say the key is kept for somebody else; the tea table's plain count; the Deep Ford's north/up refusal, ledge close-up and climb close the way.",
+      "files": [
+        "worlds/underground_caverns_2/world/garden.sprout"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P8",
+        "P10",
+        "P13"
+      ]
+    },
+    {
+      "what": "Fence kind (examined, pushed, walked into, climbed, looked into, taken; destroyed on :consume) and the Illusion scenery in Elsewhere carrying the Fantasize words.",
+      "files": [
+        "worlds/underground_caverns_2/world/wizard.sprout"
+      ],
+      "for": [
+        "P4",
+        "P5"
+      ]
+    },
+    {
+      "what": "End lines for all twelve spells and the fence's removal; the fence spawned when Fence is cast and cleared on death; the sword's glow recorded on the adventurer so each change is said once, and a taken sword synced; carousel draw narrowed to the four built passages; examine of the bucket from inside refused with the bucket's own words; look up in the Circular Room, Top of Well and bucket; attack answers for the fence; the article passage in the fighting line; exit/leave from the gazebo via the gate (new :garden_north case); the answer_article part.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P3",
+        "P4",
+        "P7",
+        "P9",
+        "P11",
+        "P12",
+        "P13",
+        "P14"
+      ]
+    },
+    {
+      "what": "Tide-line inside the bucket; the bucket tells the far end of the well of its arrival; the Circular Room and Top of Well bodies and the rope's close-up say where the bucket is when it is away; the oblong table's plain count; the rope no longer answers to 'bucket' alone.",
+      "files": [
+        "worlds/underground_caverns_2/world/well.sprout"
+      ],
+      "for": [
+        "P2",
+        "P7"
+      ]
+    },
+    {
+      "what": "The steel box's plain count.",
+      "files": [
+        "worlds/underground_caverns_2/world/carousel.sprout"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "Thing's a_short article passage used in the give, read, smell, play and burn refusals; the sword's 'an elvish sword'; the teapot's and flask's second-route look_in withdrawn.",
+      "files": [
+        "worlds/underground_caverns_2/world/thing.sprout",
+        "worlds/underground_caverns_2/world/items.sprout"
+      ],
+      "for": [
+        "P13"
+      ]
+    },
+    {
+      "what": "Walkthrough types 'enter gazebo' and expects the tea table's and the oblong table's contents; every test's North End line carries the new sentence.",
+      "files": [
+        "worlds/underground_caverns_2/world/tests/walkthrough.json",
+        "worlds/underground_caverns_2/world/tests/bucket.json",
+        "worlds/underground_caverns_2/world/tests/cakes.json",
+        "worlds/underground_caverns_2/world/tests/gas.json",
+        "worlds/underground_caverns_2/world/tests/riddle.json",
+        "worlds/underground_caverns_2/world/tests/robot.json"
+      ],
+      "for": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "what": "Friction 29–35: the narrowed carousel draw, seen cannot tell examine from look, declared contents never :entered, an intent's slot cannot hold a value, quotation marks are not stripped, go's partial 'enter [way]' reading, and undeclared nouns answered unknown.",
+      "files": [
+        "worlds/underground_caverns_2/friction.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P5",
+        "P9",
+        "P12",
+        "P14"
+      ]
+    },
+    {
+      "what": "Intent kept current: the carousel's draw among the built four, every spell's end line and the fence, the bucket's tells, the unicorn's and ledge's boundary hints.",
+      "files": [
+        "worlds/underground_caverns_2/intent.md"
+      ],
+      "for": [
+        "P3",
+        "P4",
+        "P7",
+        "P8",
+        "P9",
+        "P10"
+      ]
+    }
+  ]
+}

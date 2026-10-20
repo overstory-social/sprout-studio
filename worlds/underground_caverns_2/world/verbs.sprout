@@ -83,7 +83,7 @@ verb smell { role target  "smell [target]"  "sniff [target]" }
 verb smell_here { "smell"  "sniff"  "smell the air"  "sniff the air" }
 verb listen { role target  "listen to [target]"  "listen for [target]" }
 verb listen_here { "listen"  "listen carefully" }
-verb climb_up { role target  "climb up [target]"  "climb [target]"  "go up [target]"  "scale [target]" }
+verb climb_up { role target  "climb up [target]"  "climb [target]"  "go up [target]"  "scale [target]"  "climb onto [target]" }
 verb climb_down { role target  "climb down [target]"  "go down [target]"  "descend [target]"  "climb into [target]"  "lower yourself down [target]" }
 verb knock { role target: Door  "knock on [target]"  "knock at [target]"  "rap on [target]" }
 verb mung {
@@ -95,7 +95,7 @@ verb mung {
 verb through {
   role target
   "go in through [target]"  "climb through [target]"  "crawl through [target]"
-  "walk through [target]"  "go through [target]"  "go into [target]"  "walk into [target]"  "crawl into [target]"
+  "walk through [target]"  "go through [target]"  "go into [target]"  "walk into [target]"  "enter [target]"
 }
 verb give {
   role item carried
@@ -182,11 +182,17 @@ verb answer {
   "the answer is [word]"  "answer the riddle with [word]"
 }
 verb say_well { "well"  "a well"  "it is a well"  "its a well"  "it's a well" }
+// The answer given with its article is the answer. (An intent's slot
+// cannot hold a value, so this is a verb of its own: friction 32.)
+verb answer_article {
+  role word: symbol
+  "answer a [word]"  "say a [word]"  "answer with a [word]"  "the answer is a [word]"  "answer the riddle with a [word]"  "shout a [word]"  "its a [word]"  "it's a [word]"
+}
 
 // The bucket, a vehicle: in and out of it by name (bucket.sprout).
 verb board {
   role target: Vessel
-  "board [target]"  "get in [target]"  "get into [target]"  "get on [target]"  "enter [target]"
+  "board [target]"  "get in [target]"  "get into [target]"  "get on [target]"
   "sit in [target]"  "climb in [target]"  "climb on [target]"
 }
 verb disembark {
@@ -273,7 +279,7 @@ intent how_doing {
   do score
 }
 verb get_in_bare { "get in"  "climb in"  "board"  "get in the bucket"  "climb into the bucket" }
-verb get_out_bare { "get out"  "climb out"  "stand up"  "get out of the bucket"  "climb out of the bucket"  "disembark"  "leave the bucket" }
+verb get_out_bare { "get out"  "climb out"  "stand up"  "get out of the bucket"  "climb out of the bucket"  "disembark"  "exit"  "leave" }
 intent put_in_well {
   "throw [x] down [y]"  "drop [x] down [y]"  "throw [x] into [y]"  "put [x] down [y]"  "lower [x] into [y]"  "lower [x] down [y]"
   do put (item: x, container: y)

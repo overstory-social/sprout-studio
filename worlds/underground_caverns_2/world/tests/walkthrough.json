@@ -39,13 +39,17 @@
     ] },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo." },
+      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
       { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
     ] },
-    { "as": "Marta", "type": "in", "expect": [
+    { "as": "Marta", "type": "enter gazebo", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the tea table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A newspaper" },
+      { "reader": "Marta", "kind": "described", "words": "A place mat" },
+      { "reader": "Marta", "kind": "described", "words": "A china teapot" },
       { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "take teapot", "expect": [
@@ -139,7 +143,9 @@
     ] },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Tea Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small room containing a large oblong table, no doubt set for afternoon tea. It is clear from the objects on the table that the users were indeed mad. In the eastern corner of the room is a small hole (no more than four inches high). There are passageways leading away to the west and the northwest." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small room containing a large oblong table, no doubt set for afternoon tea. It is clear from the objects on the table that the users were indeed mad. In the eastern corner of the room is a small hole (no more than four inches high). There are passageways leading away to the west and the northwest." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the large oblong table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with green letters" }
     ] },
     { "as": "Marta", "type": "take green cake", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }

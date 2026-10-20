@@ -20,9 +20,44 @@ import {well_bottom, well_top, tea_room} from 'well'
 import {posts_room, pool_room} from 'posts'
 import {low_room, machine_room, dingy_closet} from 'machine'
 import {ask} from 'sprout'
-import {attack, mung, greet, talk, give, follow, kick, rub, throw, Spell, Dest, :wizard_start, :where_are_you, :wizard_turn, :vanish, :settle} from 'verbs'
+import {attack, mung, greet, talk, give, follow, kick, rub, throw, through, shift, squeeze, climb_up, look_in, Spell, Dest, :consume, :wizard_start, :where_are_you, :wizard_turn, :vanish, :settle} from 'verbs'
 
 verb enchant { role target: Adventurer }
+
+// The Fence spell's fence: nothing Zork ever let anyone name, but a
+// visitor shut in by it wants to look at it, and it is the Wizard's, so it
+// says so and says that it will not last. Spawned into the room by the
+// spell, and destroyed when the spell ends.
+kind Fence is Scenery {
+  grammar { name "invisible fence"  nouns "fence", "barrier", "field", "force"  adjectives "invisible", "magic", "magical" }
+  passage short { invisible fence }
+  describe { text "You can't see it, which is the point of an invisible fence, but you can feel it: a wall of force all round you, humming very faintly, and giving, when you push on it, not at all. It has the Wizard's touch about it, and the Wizard's spells, in your experience, never last; this one feels thinner already than it did." }
+  passage no_take { There is nothing to take hold of. Your hand stops where the fence is, and that is all. }
+  on :consume { finally destroy self }
+  without as target for through from Thing
+  as target for through { do { say "You walk into the fence, which does not give, and sit down rather suddenly. The fence hums." } }
+  without as target for shift from Thing
+  as target for shift { do { say "The fence hums a little louder, and does not move. It will go when the Wizard's word wears off, and not before." } }
+  without as target for squeeze from Thing
+  as target for squeeze { do { say "There is nothing to get hold of. The fence is where your hands stop." } }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "The fence goes up further than you do." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "You are in it. The room is out there, where you left it." } }
+}
+
+// What the Fantasize spell puts in a room that is not there (DESCRIBE-
+// OBJECTS): a basilisk, a pile of jewels, a gold ingot, a bulging chest, a
+// yellow sphere, a convention of wizards, a copy of ZORK I. Zork never
+// declared them, so "take jewels" was no sentence at all; here they are
+// words of the world, kept where nobody can reach them, so that reaching
+// for one is answered as reaching for anything out of sight is.
+kind Illusion is Scenery {
+  grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "convention", "wizards", "copy", "book"  adjectives "bulging", "yellow", "gold", "convention", "pile" }
+  passage short { basilisk }
+  describe { text "It is not there. It never was." }
+}
+object illusions is Illusion in elsewhere { }
 
 kind Wizard is Creature, sprout.Actor {
   roams

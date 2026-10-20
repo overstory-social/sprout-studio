@@ -51,6 +51,7 @@ object carousel_room is CarouselRoom in underground_caverns_2 {
     as target for listen { do { say "{if carousel_room.is(CarouselRoom)}{if carousel_room.get(:spinning)}A loud whirring, from all around, as of a great deal of machinery going round. It makes it hard to think about directions.{else}Nothing. The whirring has stopped, and the room is still.{/if}{/if}" } }
   }
   object box is IronBox {
+    :plain 1
     object violin is Violin
   }
 }

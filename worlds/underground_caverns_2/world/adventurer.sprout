@@ -17,15 +17,15 @@ import {Weapon, Sword, Treasure, Food, Water, StreamWater, Teapot, Repellent, Sp
 import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike} from 'room'
 import {go, look, examine, inventory, wait, help} from 'sprout'
 import {ask} from 'sprout'
-import {take, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant, sleep, Dest, Spell, Mode, Answer, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten} from 'verbs'
+import {take, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, answer_article, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant, sleep, Dest, Spell, Mode, Answer, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten} from 'verbs'
 import {inside_barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, Bridge, Chasm, Moss} from 'way_in'
-import {garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, elsewhere, Unicorn, DistantUnicorn, GardenNorth, TopiaryRoom, Elsewhere, NearCarousel, GoldKey} from 'garden'
+import {garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, elsewhere, Unicorn, DistantUnicorn, GardenNorth, TopiaryRoom, Elsewhere, NearCarousel, GoldKey, GazeboInside} from 'garden'
 import {carousel_room, room_8, CarouselRoom} from 'carousel'
 import {riddle_room, pearl_room, RiddleRoom, StoneDoor} from 'riddle'
 import {well_bottom, well_top, tea_room, Bucket, WellTopMouth, TeaRoom, WellTop, WellBottom} from 'well'
 import {posts_room, pool_room, Pool, PoolRoom} from 'posts'
 import {low_room, machine_room, dingy_closet, Robot, CagePlace, LowRoom, MachineRoom, Closet} from 'machine'
-import {Wizard, enchant} from 'wizard'
+import {Wizard, Fence, enchant} from 'wizard'
 import {oblivion} from 'oblivion'
 
 kind Adventurer is sprout.Visitor {
@@ -86,6 +86,10 @@ kind Adventurer is sprout.Visitor {
   // Looking, or arriving: when the Fantasize spell shows something that is
   // not there (DESCRIBE-OBJECTS).
   :peeking false
+  // What the sword in hand was last told to glow (I-SWORD), kept here as
+  // well as on the sword: a message to the sword is queued, so two
+  // settlings in one turn would both find it unchanged and say so twice.
+  :glow_now 0 min 0 max 2
 
   passage hands_full { You're holding too many things already! }
   passage over { Everything has gone black, and nothing further will happen to you in this game. }
@@ -214,6 +218,9 @@ kind Adventurer is sprout.Visitor {
   // behind them: I-WIZARD queued for five to thirty-five moves, which at
   // the host's half-minute a move is three to eighteen minutes.
   on :woke (elapsed) { if (self.get(:spell) != :none) { send self :spell_ends } }
+  // Zork says nothing when Fumble, Filch, Fall, Fireproof, Fence or
+  // Fantasize wear off; here each says so, in its voice, since a visitor
+  // fenced in with no word of its ending has no reason to try the door.
   on :spell_ends {
     let s = self.get(:spell)
     self.set(:spell, :none)
@@ -229,6 +236,15 @@ kind Adventurer is sprout.Visitor {
     else if (s == :freeze) { tell self "Your little finger begins to twitch, and then your whole body is free again." }
     else if (s == :ferment) { tell self "Your head is clearer now." }
     else if (s == :fierce) { tell self "You feel cooler and less angry now." }
+    else if (s == :fumble) { tell self "Your fingers feel like your own again." }
+    else if (s == :filch) { tell self "You have the odd feeling that your pockets are your own again." }
+    else if (s == :fall) { tell self "Your feet seem to have remembered what they are for." }
+    else if (s == :fireproof) { tell self "You feel slightly less fireproof, not that it came up." }
+    else if (s == :fence) {
+      each f: Fence in here { send f :consume }
+      tell self "There is a faint pop, as of something invisible giving way, and the fence that was round you is gone."
+    }
+    else if (s == :fantasize) { tell self "The room, which had been looking a little odd round the edges, settles down and is only a room." }
   }
 
   // The Wizard's spell, cast at them by his own act (I-WIZARD): what it
@@ -281,6 +297,11 @@ kind Adventurer is sprout.Visitor {
             tell self "You rise majestically out of the wooden bucket, coming to a stop about five feet above it and to one side."
             move self out
           } else { tell self "Slowly, you and all your belongings rise into the air, stopping after about five feet." }
+        } else if (s == :fence) {
+          // Zork says nothing until the first step; the fence is here to be
+          // felt in the meantime.
+          spawn Fence in here
+          tell self "The air round you stiffens, very slightly, as though the room had been shrink-wrapped with you in it."
         }
       }
     }
@@ -373,15 +394,16 @@ kind Adventurer is sprout.Visitor {
         // and west, or four times in five any other, is a random one of
         // seven.
         say "You're not sure which direction is which. This room is very disorienting."
+        // While the quarters beyond the south, southwest and northwest
+        // passages are not built, the draw is among the four that are
+        // (friction 29); Zork draws among all seven.
         if (here.is(CarouselRoom) || random(5) < 4) {
           self.set(:spun, true)
-          let r = random(7)
+          let r = random(4)
           if (r == 0) { self.set(:dest, :marble_hall) }
           else if (r == 1) { self.set(:dest, :stream_path) }
           else if (r == 2) { self.set(:dest, :topiary) }
-          else if (r == 3) { self.set(:dest, :riddle) }
-          else { self.set(:dest, :carousel) }
-          if (r >= 4) { say "The passage {if r == 4}south{else if r == 5}southwest{else}northwest{/if} is choked with a fall of rock not far in. Whatever lies beyond it will have to wait." }
+          else { self.set(:dest, :riddle) }
           send underground_caverns_2 :open_gate
         }
       }
@@ -468,7 +490,8 @@ kind Adventurer is sprout.Visitor {
   }
   on :settle (from, value) {
     each s: Sword in self {
-      if (s.get(:glow) != value) {
+      if (self.get(:glow_now) != value) {
+        self.set(:glow_now, value)
         if (value == 2) { tell self "Your sword has begun to glow very brightly." }
         else if (value == 1) { tell self "Your sword is glowing with a faint blue glow." }
         else { tell self "Your sword is no longer glowing." }
@@ -490,6 +513,7 @@ kind Adventurer is sprout.Visitor {
       self.set(:load_allowed, 100)
       self.set(:topiary, 0)
       self.set(:in_bucket, false)
+      each f: Fence in here { send f :consume }
       tell self "****  You have died  ****"
       tell self "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything."
       tell self "You follow a corridor of black mist into a black walled spherical room. As you enter, a huge and horrible face materializes out of the mist."
@@ -566,6 +590,8 @@ kind Adventurer is sprout.Visitor {
         move self to dark_tunnel
       } else if (d == :gazebo) {
         move self to gazebo
+      } else if (d == :garden_north) {
+        move self to garden_north
       } else if (d == :formal_garden) {
         move self to formal_garden
       } else if (d == :barrow) {
@@ -668,6 +694,7 @@ kind Adventurer is sprout.Visitor {
             else {
               move t to self
               self.adjust(:carry, t.get(:size))
+              if (t.is(Sword)) { send t :glow with self.get(:glow_now) }
               say "{if several}{t.short}: {/if}Taken."
             }
           }
@@ -804,7 +831,8 @@ kind Adventurer is sprout.Visitor {
     do {
       if (target.is(Unicorn) || target.is(Wizard)) { }
       else if (target.is(Robot)) { say "I've known strange people, but fighting a robot?" }
-      else if (target.is(Thing)) { say "I've known strange people, but fighting a {target.short}?" }
+      else if (target.is(Fence)) { say "The {if bound weapon}{if weapon.is(Thing)}{weapon.short}{else}blow{/if}{else}blow{/if} goes through the fence as though it weren't there, which, as far as it is concerned, it isn't. You, on the other hand, can't follow it." }
+      else if (target.is(Thing)) { say "I've known strange people, but fighting {target.a_short}?" }
       else { say "I've known strange people, but fighting that?" }
     }
   }
@@ -851,7 +879,11 @@ kind Adventurer is sprout.Visitor {
   as actor for incant { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "You don't have a wand, and without one the word comes out as a sort of cough. Nothing happens." } }
   as actor for sleep { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "The Wizard's domain is no place for a nap. Things happen to people who nap here." } }
   as actor for look       { permit { if (self.get(:spell) == :freeze) { refuse frozen } } do { self.set(:peeking, true) } }
-  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
+  // The bucket, examined from inside it: its `describe` cannot tell
+  // `examine` from `look`, so the examining is refused with the bucket's
+  // own words (friction 30).
+  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen }  if (here.is(Bucket) && target == here) { refuse bucket_close_up } } }
+  passage bucket_close_up { {if here.is(Bucket)}{here.examined}{/if} }
   as actor for inventory  { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for wait       { permit { if (self.get(:finished)) { refuse over } } }
   as actor for open       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
@@ -962,6 +994,16 @@ kind Adventurer is sprout.Visitor {
       } else { say "Nothing happens." }
     }
   }
+  as actor for answer_article { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+    word from :answers
+    do {
+      if (here.is(RiddleRoom)) {
+        if (here.get(:open)) { say "The door is already open, and does not need telling twice." }
+        else if (bound word) { say thunder  send self :riddle_answered }
+        else { say "A hollow laugh seems to come from the stone door." }
+      } else { say "Nothing happens." }
+    }
+  }
   as actor for say_well { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (here.is(RiddleRoom)) {
@@ -998,6 +1040,7 @@ kind Adventurer is sprout.Visitor {
   as actor for get_out_bare { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (here.is(Bucket)) { say "You are on your own feet again."  self.set(:in_bucket, false)  move self out }
+      else if (here.count(GazeboInside) > 0) { say ""  send self :travel with :garden_north }
       else { say "You're not in anything, unless you count the Wizard's domain, and there is no getting out of that." }
     }
   }
@@ -1042,7 +1085,9 @@ kind Adventurer is sprout.Visitor {
     do {
       if (here.is(Garden)) { say "If you don't look up, the illusion is of a cloudy day outside. You looked up. It is a cave roof, a long way up, with a great growth of glowing moss on it, and the illusion will take a moment to come back." }
       else if (here.is(CarouselRoom)) { say "The ceiling is lost in gloom, a long way up, and whatever is up there is whirring." }
-      else if (here.is(WellBottom)) { say "The brick goes up in a circle until the dark takes it. The roof of the well, if it has one, is not visible." }
+      else if (here.is(WellBottom)) { say "The brick goes up in a circle until the dark takes it. The roof of the well, if it has one, is not visible. The bucket's rope goes up into it, taut, and whatever holds the other end is up there too." }
+      else if (here.is(WellTop)) { say "Over the well, the dark; over you, more of it, and somewhere in it the beam the bucket's rope runs over, creaking very slightly." }
+      else if (here.is(Bucket)) { if (here.get(:at) == :well_top) { say "The rope goes up from the handle over your head to a beam you can just make out, and the dark goes on past that." } else { say "The rope goes up from the handle over your head into the shaft, and the shaft goes up until the dark takes it. The roof of the well, if it has one, is not visible. Whatever is up there is holding the other end of the rope." } }
       else if (here.is(Wonderland)) { say "The ceiling is very far away, and the leak is in it, and that is all you can make out." }
       else if (here.count(Moss) > 0) { say "The roof of the cavern is high, and the moss on it glows, cold and green and steady." }
       else { say "There is a ceiling up there, and it is not doing anything interesting." }

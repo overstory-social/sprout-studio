@@ -13,7 +13,7 @@ import {carousel_room} from 'carousel'
 import {Adventurer} from 'adventurer'
 import {ask} from 'sprout'
 import {examine} from 'sprout'
-import {take, rub, mung, attack, follow, greet, talk, through, cross, smell, listen, look_in, climb_up, shift, :travel, :bound_away, :come_back, :frighten, :unicorn_at} from 'verbs'
+import {take, rub, mung, attack, follow, greet, talk, through, cross, smell, listen, look_in, climb_up, shift, give, throw, :travel, :bound_away, :come_back, :frighten, :unicorn_at} from 'verbs'
 
 // The unicorn: an NPC that roams between the north end of the garden and
 // Elsewhere, as I-GARDEN moves it, and melts into the hedges when it is
@@ -30,7 +30,11 @@ kind Unicorn is Creature, sprout.Actor {
   passage not_yours { The unicorn shies away as you approach. }
   passage held_fast { {self.melts} }
   passage melts { The unicorn, unsurprised by this evidence that you are indeed the uncouth sort of vagabond it suspected you were, melts into the hedges and is gone. }
-  describe { text "The unicorn shies away as you approach for a closer look, but you do notice a tiny gold key hanging from a red satin ribbon looped around the animal's neck." }
+  describe { text "The unicorn shies away as you approach for a closer look, but you do notice a tiny gold key hanging from a red satin ribbon looped around the animal's neck. The ribbon is tied in the sort of bow that is meant to be untied by somebody in particular, and the unicorn's look makes it plain that you are not the somebody." }
+  without as recipient for give from Thing
+  as recipient for give { do { if (item.is(Thing)) { say "The unicorn regards the {item.short} with polite incomprehension, and goes back to cropping grass." } else { say "The unicorn is not interested." } } }
+  without as aim for throw from Thing
+  as aim for throw { do { } }
   without as target for greet from Creature
   as target for greet { do { say "The unicorn listens distractedly, then goes back to cropping grass." } }
   without as target for talk from Creature
@@ -84,7 +88,7 @@ kind GoldKey is Treasure {
   :value 15
   passage short { delicate gold key }
   passage ldesc { There is a delicate gold key here. }
-  describe { text "The key is tiny and gold and delicate, the kind that opens something small and valuable, and it hangs from a red satin ribbon round the unicorn's neck. The unicorn is watching you look at it." }
+  describe { text "The key is tiny and gold and delicate, the kind that opens something small and valuable, and it hangs from a red satin ribbon round the unicorn's neck. It is being kept for somebody, and the unicorn knows who, and it is watching you look at it." }
 }
 
 // The unicorn as every garden room but the north end knows it (GLOBAL-UNICORN).
@@ -93,12 +97,12 @@ kind DistantUnicorn is Scenery, Creature {
   passage short { unicorn }
   :home false
   on :unicorn_at (from, value) { self.set(:home, value) }
-  as target for any {
-    permit {
-      if (self.get(:home)) { refuse "The unicorn is way up at the north end of the garden." }
-      else { refuse "Unicorn? What unicorn?" }
-    }
-  }
+  passage far_off { {if self.get(:home)}The unicorn is way up at the north end of the garden.{else}Unicorn? What unicorn?{/if} }
+  as target for any { permit { refuse far_off } }
+  without as recipient for give from Thing
+  as recipient for give { permit { refuse far_off } }
+  without as aim for throw from Thing
+  as aim for throw { permit { refuse far_off } }
 }
 
 kind Hedges is Scenery {
@@ -164,9 +168,9 @@ kind Archway is Scenery, Door {
 kind Ledge is Scenery {
   grammar { name "ledge"  nouns "shelf"  adjectives "small", "narrow", "north" }
   passage short { ledge }
-  describe { text "A narrow ledge runs along the north wall of the ravine, above the water, and goes somewhere west that is drier than this. It is reached from the north bank." }
+  describe { text "A narrow ledge runs along the north wall of the ravine, above the water, and goes somewhere west that is drier than this. The bank below it has fallen in, lately, and taken the way up with it. Whatever is along there will have to wait." }
   without as target for climb_up from Thing
-  as target for climb_up { do { say "The ledge is reached from the north bank, by going north, or up, which here are the same thing." } }
+  as target for climb_up { do { say "You start up toward the ledge, and the rock comes away in your hand, and a good deal more of it follows. The way up has gone, for now. Whatever is along there will have to wait." } }
 }
 kind WhirringSound is Scenery {
   grammar { name "whirring sound"  nouns "whirring", "sound", "noise", "whirr"  adjectives "faint", "annoying", "loud" }
@@ -210,9 +214,11 @@ object garden_north is GardenNorth in underground_caverns_2 {
   }
   :id garden_north
   :walls 4
-  passage body { This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo. }
+  passage body { This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses. }
+  // The unicorn's stand-in for the other garden rooms is not here: two
+  // things answering to "unicorn" in one room tie, and the draw is wrong
+  // half the time. While it is away, "unicorn" here is nothing in sight.
   object unicorn is Unicorn
-  object other_unicorn is DistantUnicorn
   object gazebo_outside is Gazebo
   object hedge is Hedges
   object roses is RoseBush
@@ -242,6 +248,9 @@ object gazebo is Room, Garden in underground_caverns_2 {
     :surface true
     :capacity 100
     :ndesc true
+    // Declared contents are never `:entered`, so the count of what is
+    // listed plainly is written by hand (friction 31).
+    :plain 3
     passage short { tea table }
     passage examined { It is a small round table of white-painted iron, laid for a tea that nobody came to, or that somebody left in a hurry. {self.look_inside} }
     object newspaper is Newspaper
@@ -349,8 +358,8 @@ object marble_hall is NearCarousel in underground_caverns_2 {
 object deep_ford is DarkRoom, Watery, ChasmEdge in underground_caverns_2 {
   grammar {
     name "Deep Ford"
-    exit north "north" refuse "You start up toward the ledge, and the rock comes away in your hand. Whatever is along there will keep until you are better equipped for it."
-    exit up "up" refuse "You start up toward the ledge, and the rock comes away in your hand. Whatever is along there will keep until you are better equipped for it."
+    exit north "north" refuse "You start up toward the ledge, and the rock comes away in your hand, and a good deal more of it follows. The way up has gone, for now. Whatever is along there will have to wait."
+    exit up "up" refuse "You start up toward the ledge, and the rock comes away in your hand, and a good deal more of it follows. The way up has gone, for now. Whatever is along there will have to wait."
     exit south "south" -> marble_hall
     exit east "east" refuse "The stream deepens rapidly, and you wisely return before drowning."
     exit west "west" refuse "You notice that the ledge above would be a drier route west."

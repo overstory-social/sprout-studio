@@ -21,6 +21,7 @@ kind Sword is Weapon {
   :glow 0 min 0 max 2
   passage short { elvish sword }
   passage indef { An elvish sword }
+  passage a_short { an elvish sword }
   passage fdesc { A sword of Elvish workmanship is on the ground. }
   passage ldesc { An Elvish sword of great antiquity is here. }
   on :glow (from, value) { self.set(:glow, value) }
@@ -170,6 +171,9 @@ kind Teapot is Bag, Fillable {
   :capacity 4
   :size 5
   passage short { china teapot }
+  // Thing's "You can't look inside" arrives a second time by way of
+  // Fillable (friction 22).
+  without as target for look_in from Thing
   passage examined { It is a china teapot, white with a blue pattern of a bridge and some birds, and chipped at the spout. It has no lid, which is either a loss or a convenience.
 
     {self.look_inside} }
@@ -337,6 +341,7 @@ kind Flask is Bag, Readable {
   describe { text examined }
   passage vapors { As you pass out, you realize that the vapors from the flask's contents are fatal. }
   without as target for look_in from Box
+  without as target for look_in from Thing
   as target for look_in { do { say "You notice that objects behind the flask appear to be magnified. You might try looking at something through the flask." } }
   without as target for read from Thing
   without as target for read from Readable
