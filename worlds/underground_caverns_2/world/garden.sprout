@@ -1,0 +1,377 @@
+// The garden: its north end, the Gazebo, the Formal Garden, the Topiary,
+// the Path Near Stream, the Marble Hall and the Deep Ford; the unicorn
+// that comes and goes, and the Wizard's and the unicorn's Elsewhere.
+// (2dungeon.zil; I-GARDEN, UNICORN-FCN, GLOBAL-UNICORN-FCN, GAZEBO-FCN,
+// HEDGES-F, ROSE-BUSH-FCN, PLACE-MAT-FCN.)
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Crossable, Portable, Door} from 'thing'
+import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Watery} from 'room'
+import {Box} from 'box'
+import {Treasure, Newspaper, PlaceMat, Teapot, StreamWater} from 'items'
+import {Chasm, Stream, Moss, Bridge, dark_tunnel} from 'way_in'
+import {carousel_room} from 'carousel'
+import {Adventurer} from 'adventurer'
+import {ask} from 'sprout'
+import {examine} from 'sprout'
+import {take, rub, mung, attack, follow, greet, talk, through, cross, smell, listen, look_in, climb_up, shift, :travel, :bound_away, :come_back, :frighten, :unicorn_at} from 'verbs'
+
+// The unicorn: an NPC that roams between the north end of the garden and
+// Elsewhere, as I-GARDEN moves it, and melts into the hedges when it is
+// handled. The gold key hangs round its neck until the princess asks.
+kind Unicorn is Creature, sprout.Actor {
+  roams
+  pass any (true)
+  :frightened false
+  grammar { name "unicorn"  nouns "animal", "horse", "beast"  adjectives "beautiful", "white" }
+  passage short { unicorn }
+  passage ldesc { There is a beautiful unicorn here cropping grass. }
+  passage arrives { {if false}.{/if} }
+  passage leaves { {if false}.{/if} }
+  passage not_yours { The unicorn shies away as you approach. }
+  passage held_fast { {self.melts} }
+  passage melts { The unicorn, unsurprised by this evidence that you are indeed the uncouth sort of vagabond it suspected you were, melts into the hedges and is gone. }
+  describe { text "The unicorn shies away as you approach for a closer look, but you do notice a tiny gold key hanging from a red satin ribbon looped around the animal's neck." }
+  without as target for greet from Creature
+  as target for greet { do { say "The unicorn listens distractedly, then goes back to cropping grass." } }
+  without as target for talk from Creature
+  as target for talk { do { say "The unicorn listens distractedly, then goes back to cropping grass." } }
+  without as target for ask from Thing
+  as target for ask { do { say "The unicorn listens distractedly, then goes back to cropping grass." } }
+  without as target for follow from Creature
+  as target for follow { do { say "The unicorn shies away as you approach." } }
+  without as target for listen from Thing
+  as target for listen { do { say "The unicorn crops grass with a small, steady, tearing sound, and now and then snorts at nothing." } }
+  without as target for smell from Thing
+  as target for smell { do { say "It smells of warm horse and crushed roses, which is a better smell than most of this place has." } }
+  without as target for rub from Thing
+  as target for rub { do { say melts  send self :frighten } }
+  without as target for mung from Thing
+  as target for mung { do { say melts  send self :frighten } }
+  as target for attack { do { say melts  send self :frighten } }
+  without as target for shift from Thing
+  as target for shift { do { say melts  send self :frighten } }
+  on :frighten {
+    self.set(:frightened, true)
+    move self to elsewhere
+    broadcast :unicorn_at with false
+  }
+  on :bound_away {
+    if (!here.is(Elsewhere)) {
+      move self to elsewhere
+      broadcast :unicorn_at with false
+    }
+  }
+  on :come_back {
+    if (self.get(:frightened)) { self.set(:frightened, false) }
+    else if (here.is(Elsewhere)) {
+      move self to garden_north
+      broadcast :unicorn_at with true
+    }
+  }
+  object gold_key is GoldKey
+  object ribbon is Scenery {
+    grammar { name "ribbon"  nouns "satin"  adjectives "velvet", "satin", "red" }
+    passage short { ribbon }
+    describe { text "It is a ribbon of red satin, looped round the unicorn's neck and tied in a bow by somebody the unicorn liked better than it likes you. A tiny gold key hangs from it." }
+  }
+}
+
+// The gold key round the unicorn's neck (GOLD-KEY), until the princess.
+kind GoldKey is Treasure {
+  grammar { name "delicate gold key"  nouns "key", "treasure"  adjectives "delicate", "gold", "tiny" }
+  :ndesc true
+  :size 3
+  :value 15
+  passage short { delicate gold key }
+  passage ldesc { There is a delicate gold key here. }
+  describe { text "The key is tiny and gold and delicate, the kind that opens something small and valuable, and it hangs from a red satin ribbon round the unicorn's neck. The unicorn is watching you look at it." }
+}
+
+// The unicorn as every garden room but the north end knows it (GLOBAL-UNICORN).
+kind DistantUnicorn is Scenery, Creature {
+  grammar { name "unicorn"  nouns "animal"  adjectives "beautiful", "white" }
+  passage short { unicorn }
+  :home false
+  on :unicorn_at (from, value) { self.set(:home, value) }
+  as target for any {
+    permit {
+      if (self.get(:home)) { refuse "The unicorn is way up at the north end of the garden." }
+      else { refuse "Unicorn? What unicorn?" }
+    }
+  }
+}
+
+kind Hedges is Scenery {
+  grammar { name "hedge"  nouns "hedges", "bushes", "bush"  adjectives "tall", "green" }
+  passage short { hedge }
+  describe { text "The hedges are tall and dense and very green for things that have never seen the sun, and they hide the cavern walls so well that you can forget, for a moment, that there are walls. They have been clipped by somebody with a steady hand and a long ladder." }
+  passage no_take { The hedge is rooted, and you are not. }
+  without as target for through from Thing
+  as target for through { do { say "The hedge is too dense to push through, and it pushes back." } }
+}
+kind TopiaryHedges is Hedges {
+  grammar { name "hedge"  nouns "hedges", "bushes", "bush"  adjectives "fantastically", "shaped", "topiary", "clipped" }
+  describe { text "The hedges are shaped like various animals: dogs, serpents, dragons, and the like, and they are vaguely troubling to look at." }
+}
+kind TopiaryAnimals is Scenery {
+  grammar { name "topiary animals"  nouns "animals", "animal", "creatures", "creature", "dragon", "serpent", "dog", "figures"  adjectives "topiary", "misshapen", "huge", "great", "human", "shaped" }
+  passage short { topiary animals }
+  describe { text "A dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures, all of them clipped out of hedge by somebody with a steady hand and an unsteady mind. They have not been clipped lately, and the dog in particular has grown a little past itself. You have the feeling they were not standing quite like that when you came in." }
+}
+kind RoseBush is Scenery {
+  grammar { name "roses"  nouns "bush", "arbor", "rose", "rosebed", "flowers"  adjectives "rose", "red" }
+  passage short { roses }
+  describe { text "The roses are red and heavy-headed and very thorny, and they climb everything they are near. They have the look of roses that have been talked to." }
+  passage no_take { You prick your finger trying to take a rose, and jump back annoyed. The rose almost seemed to move its thorns into your path. }
+  without as target for smell from Thing
+  as target for smell { do { say "They smell as roses smell, only more so, as though they were making a point of it." } }
+}
+kind Gazebo is Scenery {
+  grammar { name "gazebo"  nouns "structure", "building"  adjectives "small", "open", "white", "wooden" }
+  passage short { gazebo }
+  describe { text "It is a gazebo: a small open structure of white-painted wood, eight-sided, with a railing round it and a roof like a hat, standing in the middle of a bed of roses. It is the sort of thing one takes tea in." }
+  without as target for through from Thing
+  as target for through { do { send actor :travel with :gazebo  say "" } }
+}
+kind GazeboInside is Gazebo {
+  describe { text "You are in it. It is white-painted wood, eight-sided, with a bench round the inside of the railing and a tea table in the middle, and the roses have come up through the floorboards in one corner." }
+  without as target for through from Gazebo
+  as target for through { do { say "You're already in it." } }
+}
+kind GardenPath is Scenery {
+  grammar { name "path"  nouns "stones", "gravel"  adjectives "manicured", "white", "crushed", "small" }
+  passage short { path }
+  describe { text "The path is of small crushed white stones, raked, and it winds among the beds with no great interest in getting anywhere." }
+}
+kind FlowerBeds is Scenery {
+  grammar { name "flower beds"  nouns "flowers", "beds", "bed", "flower"  adjectives "flower" }
+  passage short { flower beds }
+  describe { text "The beds are full of flowers that have never seen the sun and do not seem to have been told, blooming away in the moss-light in colors that are nearly right." }
+  passage no_take { The flowers are planted, and you would only be stealing from a wizard. }
+}
+kind SmallStructure is Scenery {
+  grammar { name "small structure"  nouns "structure", "gazebo"  adjectives "small", "white" }
+  passage short { small structure }
+  describe { text "To the north, through the hedges, a small white structure stands in the middle of a rosebed. It looks like a gazebo. It is a gazebo." }
+}
+kind Archway is Scenery, Door {
+  grammar { name "ruined archway"  nouns "archway", "arch", "vegetation", "vines"  adjectives "ruined", "choked" }
+  passage short { ruined archway }
+  describe { text "The archway was somebody's idea of a grand entrance, once, and is now mostly vines. The way through it goes east, into the garden." }
+  without as target for through from Thing
+  as target for through { do { send actor :travel with :formal_garden  say "" } }
+}
+kind Ledge is Scenery {
+  grammar { name "ledge"  nouns "shelf"  adjectives "small", "narrow", "north" }
+  passage short { ledge }
+  describe { text "A narrow ledge runs along the north wall of the ravine, above the water, and goes somewhere west that is drier than this. It is reached from the north bank." }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "The ledge is reached from the north bank, by going north, or up, which here are the same thing." } }
+}
+kind WhirringSound is Scenery {
+  grammar { name "whirring sound"  nouns "whirring", "sound", "noise", "whirr"  adjectives "faint", "annoying", "loud" }
+  passage short { whirring sound }
+  describe { text "The whirring comes from the southwest, steady and mechanical and faintly maddening, as of something very large going round and round and not stopping." }
+  without as target for listen from Thing
+  as target for listen { do { say "A whirring, steady and mechanical, as of something very large going round and not stopping. It is coming from the southwest." } }
+}
+kind CrackedMarble is Scenery {
+  grammar { name "marble"  nouns "floor", "cracks"  adjectives "fine", "cracked", "broken" }
+  passage short { marble }
+  describe { text "The marble is fine and veined and polished, and at the north end it is cracked and broken as though the hall had been dropped. A flood, or a collapse of the cave: either is possible, and neither has been tidied up." }
+}
+
+// Where the unicorn, the Wizard and his stash are when they are nowhere
+// a visitor can reach.
+kind Elsewhere is sprout.Place {
+  grammar { name "Elsewhere"  article none }
+  describe { text "Elsewhere. Nobody comes here, and nothing is described." }
+}
+object elsewhere is Elsewhere in underground_caverns_2 {
+  object stash is Box {
+    grammar { name "trophy case"  nouns "case", "stash" }
+    :open true
+    :capacity 10000
+    passage short { trophy case }
+  }
+}
+
+kind GardenNorth is Room, Garden { }
+kind TopiaryRoom is Room, Garden { }
+// The two rooms that hear the carousel whirring.
+kind NearCarousel is DarkRoom { }
+
+object garden_north is GardenNorth in underground_caverns_2 {
+  grammar {
+    name "North End of Garden"
+    exit in "into the gazebo" -> gazebo
+    exit north "north" -> dark_tunnel
+    exit south "south" -> formal_garden
+  }
+  :id garden_north
+  :walls 4
+  passage body { This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo. }
+  object unicorn is Unicorn
+  object other_unicorn is DistantUnicorn
+  object gazebo_outside is Gazebo
+  object hedge is Hedges
+  object roses is RoseBush
+  object moss is Moss
+  object path is GardenPath
+  object break is Scenery {
+    grammar { name "break in the hedge"  nouns "break", "gap", "opening"  adjectives "overgrown" }
+    passage short { break in the hedge }
+    describe { text "The break in the hedge to the north is almost overgrown, and leads back into the dark tunnel, which is not an improvement on the garden." }
+  }
+}
+
+object gazebo is Room, Garden in underground_caverns_2 {
+  grammar {
+    name "Gazebo"
+    exit out "out to the garden" -> garden_north
+    exit north "north" -> garden_north
+  }
+  :id gazebo
+  :walls 4
+  passage body { This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo. }
+  object other_unicorn is DistantUnicorn
+  object gazebo_inside is GazeboInside
+  object table is Box {
+    grammar { name "tea table"  nouns "table"  adjectives "tea", "small", "round" }
+    :open true
+    :surface true
+    :capacity 100
+    :ndesc true
+    passage short { tea table }
+    passage examined { It is a small round table of white-painted iron, laid for a tea that nobody came to, or that somebody left in a hurry. {self.look_inside} }
+    object newspaper is Newspaper
+    object mat is PlaceMat
+    object teapot is Teapot
+  }
+  object bench is Scenery {
+    grammar { name "bench"  nouns "seat"  adjectives "wooden" }
+    passage short { bench }
+    describe { text "A bench runs round the inside of the railing, white-painted and in need of it again. It is cool and restful, and you could sit on it for a long time, which is possibly what happened to the last person who did." }
+  }
+}
+
+object formal_garden is Room, Garden in underground_caverns_2 {
+  grammar {
+    name "Formal Garden"
+    exit west "west" -> stream_path
+    exit north "north" -> garden_north
+    exit south "south" -> topiary
+  }
+  :id formal_garden
+  :walls 4
+  passage body { This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west. }
+  object other_unicorn is DistantUnicorn
+  object hedge is Hedges
+  object moss is Moss
+  object path is GardenPath
+  object beds is FlowerBeds
+  object structure is SmallStructure
+  object gap is Scenery {
+    grammar { name "gap in the hedges"  nouns "gap", "opening"  adjectives "small" }
+    passage short { gap in the hedges }
+    describe { text "A small gap in the hedges to the west, where the garden gives up and the cave begins again. The path through it is not manicured." }
+  }
+}
+
+object topiary is TopiaryRoom in underground_caverns_2 {
+  grammar {
+    name "Topiary"
+    exit west "west" -> carousel_room
+    exit north "north" -> formal_garden
+  }
+  :id topiary
+  :walls 4
+  passage body { This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel. }
+  object other_unicorn is DistantUnicorn
+  object hedges is TopiaryHedges
+  object animals is TopiaryAnimals
+  object moss is Moss
+  object roses is RoseBush
+  object path is GardenPath
+  object arbor is Scenery {
+    grammar { name "rose arbor"  nouns "arbor", "tunnel"  adjectives "rose" }
+    passage short { rose arbor }
+    describe { text "On the west side of the garden the path goes through an arbor of roses, trained over a frame, and the frame over the mouth of a tunnel, so that one goes from flowers into rock without an interval. The roses lean in a little as you look." }
+  }
+}
+
+object stream_path is NearCarousel, Bridged, ChasmEdge in underground_caverns_2 {
+  grammar {
+    name "Path Near Stream"
+    exit east "east" -> formal_garden
+    exit northeast "northeast" -> dark_tunnel
+    exit southwest "southwest" -> carousel_room
+    exit down "down" refuse "The ravine is extremely deep. You would never make it."
+  }
+  :id stream_path
+  :walls 2
+  passage body { The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction. On the east is a ruined archway choked with vegetation. }
+  object bridge is Bridge {
+    describe { text "There is no bridge here; the foot bridge is back the way you came, to the northeast, across the ravine." }
+    without as target for cross from Bridge
+    as target for cross { do { say "There is no bridge here. The foot bridge is to the northeast." } }
+  }
+  object chasm is Chasm
+  object stream is Stream
+  object archway is Archway
+  object whirring is WhirringSound
+}
+
+object marble_hall is NearCarousel in underground_caverns_2 {
+  grammar {
+    name "Marble Hall"
+    exit east "east" refuse "That's a wall there."
+    exit north "north" -> deep_ford
+    exit south "south" -> carousel_room
+  }
+  :id marble_hall
+  :walls 5
+  passage body { This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room. }
+  object stream is Stream
+  object marble is CrackedMarble
+  object ford is Scenery {
+    grammar { name "ford"  nouns "crossing"  adjectives "deep" }
+    passage short { ford }
+    describe { text "The hall stops at the ford to the north, where the stream crosses it; the marble is cracked and broken there, and the water goes over the pieces." }
+  }
+  object whirring is WhirringSound {
+    describe { text "The whirring comes from the large room to the south, steady and mechanical and rather annoying, as of something very large going round and round." }
+    without as target for listen from WhirringSound
+    as target for listen { do { say "A whirring, rather annoying, from the large room to the south." } }
+  }
+}
+
+object deep_ford is DarkRoom, Watery, ChasmEdge in underground_caverns_2 {
+  grammar {
+    name "Deep Ford"
+    exit north "north" refuse "You start up toward the ledge, and the rock comes away in your hand. Whatever is along there will keep until you are better equipped for it."
+    exit up "up" refuse "You start up toward the ledge, and the rock comes away in your hand. Whatever is along there will keep until you are better equipped for it."
+    exit south "south" -> marble_hall
+    exit east "east" refuse "The stream deepens rapidly, and you wisely return before drowning."
+    exit west "west" refuse "You notice that the ledge above would be a drier route west."
+  }
+  :id deep_ford
+  :walls 2
+  passage body { You are fording the stream at a deep but not impossible spot. The water is very cold. The walls of the ravine rise to east and west. There is a small ledge along the north wall of the ravine. To the south is the entrance to a well-constructed but somewhat ruined hall. }
+  object water is StreamWater {
+    describe { text "The water is very cold, and deep here, up to your knees and pulling at them, and clear enough to see the gravel it is trying to take you down to. It would fill a teapot." }
+  }
+  object chasm is Chasm
+  object stream is Stream
+  object ledge is Ledge
+  object hall is Scenery {
+    grammar { name "ruined hall"  nouns "hall", "entrance"  adjectives "ruined", "well-constructed", "marble" }
+    passage short { ruined hall }
+    describe { text "To the south, the stream runs in under an arch of marble: the entrance to a hall that was built well and ruined since, by water or by something that did not care for marble." }
+  }
+  object ravine_walls is Scenery {
+    grammar { name "walls of the ravine"  nouns "ravine"  adjectives "steep" }
+    passage short { walls of the ravine }
+    describe { text "The walls of the ravine rise to the east and the west, steep and wet, and the stream has the whole of the floor between them." }
+  }
+}

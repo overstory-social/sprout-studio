@@ -1,0 +1,74 @@
+// The Carousel Room, which spins the visitor's sense of direction until
+// the robot stops it (CAROUSEL-ROOM-FCN), and Room 8 to its west, with
+// the grue repellent. The room's random turn is the visitor's own doing
+// (adventurer.sprout): every way out of it leads where it says, and the
+// visitor, arriving, turns four times in five to a random one of seven.
+// West, while it spins, leads back into the room, and is always random.
+import * as sprout from 'sprout'
+import {Thing, Scenery} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {IronBox, Violin, Repellent} from 'items'
+import {listen, read, :flip, :zoom} from 'verbs'
+import {marble_hall, stream_path, topiary} from 'garden'
+import {riddle_room} from 'riddle'
+
+kind CarouselRoom is DarkRoom {
+  :spinning true
+  :zooming false
+  on :flip { self.set(:spinning, !self.get(:spinning)) }
+  on :zoom (from, value) { self.set(:zooming, value) }
+}
+
+kind EightPassages is Scenery {
+  grammar { name "passages"  nouns "passage", "exits", "exit", "eight"  adjectives "identical", "eight" }
+  passage short { passages }
+  describe { text "Eight passages, one at each point of the compass, and every one of them exactly like the others: the same height, the same rough arch, the same dark beyond it. Whoever cut them wanted you to have to think." }
+}
+
+object carousel_room is CarouselRoom in underground_caverns_2 {
+  grammar {
+    name "Carousel Room"
+    exit north "north" -> marble_hall
+    exit northeast "northeast" -> stream_path
+    exit east "east" -> topiary
+    exit southeast "southeast" -> riddle_room
+    exit south "south" refuse "The passage south is choked with a fall of rock not far in. Whatever lies beyond it will have to wait."
+    exit southwest "southwest" refuse "The passage southwest is choked with a fall of rock not far in. Whatever lies beyond it will have to wait."
+    exit west "west" -> room_8 when (!self.get(:spinning))
+    exit west "west" -> carousel_room
+    exit northwest "northwest" refuse "The passage northwest is choked with a fall of rock not far in. Whatever lies beyond it will have to wait."
+  }
+  :id carousel
+  passage body { You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room.{if self.get(:spinning)}
+
+    A loud whirring sound comes from all around, and you feel sort of disoriented in here.{/if} }
+  object passages is EightPassages
+  object whirring is Scenery {
+    grammar { name "whirring sound"  nouns "whirring", "sound", "noise", "whirr"  adjectives "loud" }
+    passage short { whirring sound }
+    describe { text "{if carousel_room.is(CarouselRoom)}{if carousel_room.get(:spinning)}The whirring comes from all around you, from under the floor, from the walls, from the dark overhead, steady and mechanical, and your sense of which way you came in has gone with it.{else}The whirring has stopped. The silence is almost worse.{/if}{/if}" }
+    without as target for listen from Thing
+    as target for listen { do { say "{if carousel_room.is(CarouselRoom)}{if carousel_room.get(:spinning)}A loud whirring, from all around, as of a great deal of machinery going round. It makes it hard to think about directions.{else}Nothing. The whirring has stopped, and the room is still.{/if}{/if}" } }
+  }
+  object box is IronBox {
+    object violin is Violin
+  }
+}
+
+object room_8 is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Room 8"
+    exit east "east" -> carousel_room
+  }
+  :id room_8
+  :walls 8
+  passage body { This is a small chamber carved out of the rock at the end of a short crawl. On the wall is crudely chiseled the number "8". }
+  object repellent is Repellent
+  object number is Scenery {
+    grammar { name "number"  nouns "8", "eight", "numeral", "chiseling"  adjectives "chiseled", "crude" }
+    passage short { number }
+    describe { text "The number \"8\" is chiseled into the wall, crudely, by somebody who was either counting rooms or had run out of other ideas. There is no 7 and no 9." }
+    without as target for read from Thing
+    as target for read { do { say "It says \"8\". It is hard to misread." } }
+  }
+}

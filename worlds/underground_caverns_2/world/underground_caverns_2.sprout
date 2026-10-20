@@ -1,0 +1,51 @@
+// Zork II: The Wizard of Frobozz, the first quarter of it: the barrow to
+// the Carousel. The world keeps Zork's narrator for the lines the engine
+// speaks for itself, and a gate: a room cannot reach another, so where
+// Zork moves a body or a thing across the map at a stroke (dying, the
+// carousel's random turn, the bucket rising), whoever needs to asks the
+// world to open the gate, does it, and asks it shut again, in the one
+// turn. While the world passes, every place is in range of every other.
+import * as sprout from 'sprout'
+import {Person} from 'person'
+import {Adventurer} from 'adventurer'
+import {go} from 'sprout'
+import {inside_barrow} from 'way_in'
+import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :room_sealed, :poisoned} from 'verbs'
+
+world underground_caverns_2 is sprout.World {
+  visitors are Person
+  visitors arrive at inside_barrow
+  synonyms go: "climb", "proceed", "head"
+
+  :gate false
+  pass any (self.get(:gate))
+  // The Wizard's clock and the garden's, heard wherever he and the unicorn
+  // are; the carousel's buttons, heard by the Carousel Room, the Low Room
+  // and every visitor; the unicorn's whereabouts, for the sword.
+  pass :wizard_start (true)
+  pass :where_are_you (true)
+  pass :wizard_turn (true)
+  pass :unicorn_at (true)
+  pass :bound_away (true)
+  pass :come_back (true)
+  pass :flip (true)
+  pass :zoom (true)
+  pass :room_sealed (true)
+  pass :poisoned (true)
+
+  on :open_gate (from) {
+    self.set(:gate, true)
+    send from :gate_open
+  }
+  on :close_gate { self.set(:gate, false) }
+
+  passage unknown         { That sentence isn't one I recognize. }
+  passage not_here        { You can't see any such thing. }
+  passage no_way          { You can't go that way. }
+  passage dark            { It is pitch black. You are likely to be eaten by a grue. }
+  passage unremarkable    { There's nothing special about {thing}. }
+  passage nothing_happens { Nothing happens. }
+  passage waited          { Time passes... }
+  passage not_carrying    { You don't have {thing}. }
+  passage too_heavy       { {if to.is(Adventurer)}{to.too_heavy}{else}{to} cannot hold {item}.{/if} }
+}

@@ -1,0 +1,546 @@
+// The kinds of portable thing Zork II treats specially: weapons,
+// treasures, food, things with writing on them, water and what holds it,
+// and the cakes of the Tea Room.
+import {Portable, Thing, Scenery, Drinkable, Pourable, Fillable, Sprayable, Valuable} from 'thing'
+import {Adventurer} from 'adventurer'
+import {Bag, Box} from 'box'
+import {Room, CakeSafe, Watery, Wonderland, TeaRoomLike, PostsLike} from 'room'
+import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt} from 'verbs'
+import {Bucket} from 'well'
+import {Pool} from 'posts'
+import {examine} from 'sprout'
+
+// A weapon (Zork's WEAPONBIT).
+kind Weapon is Portable { }
+
+// The elvish sword, which glows near the Wizard's creatures (I-SWORD).
+kind Sword is Weapon {
+  grammar { name "elvish sword"  nouns "sword", "orcrist", "glamdring", "blade"  adjectives "elvish", "old", "antique" }
+  :size 30
+  :has_fdesc true
+  :glow 0 min 0 max 2
+  passage short { elvish sword }
+  passage indef { An elvish sword }
+  passage fdesc { A sword of Elvish workmanship is on the ground. }
+  passage ldesc { An Elvish sword of great antiquity is here. }
+  on :glow (from, value) { self.set(:glow, value) }
+  describe { text "It is an Elvish sword of great antiquity, long and light, with runes down the blade that you cannot read and a hilt worn to the shape of somebody else's hand. It has the look of a sword that has been places.{if self.get(:glow) == 2} It is glowing very brightly.{else if self.get(:glow) == 1} It is glowing with a faint blue glow.{/if}" }
+}
+
+// A treasure pays `:value` the first time it is taken (Zork II's SCORE-OBJ).
+kind Treasure is Portable, Valuable {
+  :value 0 min 0 max 50
+  // What the Wizard's Filch never takes (RIPOFF): the candy, the spheres.
+  :keep false
+  on :claimed { self.set(:value, 0) }
+}
+
+// Something to eat. Eaten, it is gone for good.
+kind Food is Portable {
+  without as target for eat from Thing
+  as target for eat {
+    permit {
+      if (!actor.holds(self)) {
+        each b: Box in actor { if (b.holds(self)) { allow } }
+        refuse "You're not holding that."
+      }
+    }
+    do {
+      say "Thank you very much. It really hit the spot."
+      destroy self
+    }
+  }
+}
+
+// Something with words on it.
+kind Readable is Portable {
+  without as target for read from Thing
+  passage words default { {if false}.{/if} }
+  as target for read {
+    do {
+      if (bound tool) { say "You can't read it through that." }
+      else { say words }
+    }
+  }
+}
+
+// Water, from the teapot or the stream: it slips through the fingers,
+// spills and evaporates, and is drunk where it stands (WATER-FCN).
+kind Water is Portable, Drinkable, Pourable {
+  grammar { name "quantity of water"  nouns "water", "liquid", "h2o", "quantity" }
+  :size 4
+  :salty false
+  passage short { quantity of water }
+  passage ldesc { There is some water here. }
+  passage no_take { The water slips through your fingers. }
+  describe { text "It is water, clear and cold and wet, as water is.{if self.get(:salty)} It smells of the sea, or of tears.{/if}" }
+  on :salt { self.set(:salty, true) }
+  as target for drink {
+    do {
+      if (self.get(:salty)) { say "The water is extremely salty." }
+      else {
+        say "Thank you very much. I was rather thirsty (from all this talking, probably)."
+        destroy self
+      }
+    }
+  }
+  as target for pour {
+    do {
+      if (here.is(Bucket)) {
+        say "There is now a puddle in the bottom of the wooden bucket."
+      } else {
+        say "The water spills to the floor and evaporates."
+        destroy self
+      }
+    }
+  }
+  as item for pour_in {
+    do {
+      if (container.is(Bucket)) {
+        say "There is now a puddle in the bottom of the wooden bucket."
+      } else if (container.is(Teapot)) {
+        if (container.holds(self)) { say "The water slips through your fingers." }
+        else if (container.count(Water) > 0) { say "The teapot isn't currently empty." }
+        else { say "The teapot is now full of water." }
+      } else if (container.is(Thing)) {
+        say "The water leaks out of the {container.short} and evaporates immediately."
+        destroy self
+      } else {
+        say "The water spills to the floor and evaporates."
+        destroy self
+      }
+    }
+  }
+  as item for pour_on {
+    do {
+      if (target.is(Thing)) { say "The water spills over the {target.short}, to the floor, and evaporates." }
+      else { say "The water spills to the floor and evaporates." }
+      destroy self
+    }
+  }
+  as target for throw {
+    do {
+      say "The water splashes on the walls and evaporates."
+      destroy self
+    }
+  }
+  without as target for smell from Thing
+  as target for smell { do { if (self.get(:salty)) { say "It smells of salt, and faintly of grief." } else { say "It smells of nothing at all, which is how water should smell." } } }
+}
+
+// A stream, a ford, or the pool: water that is there to be taken into
+// the teapot, and never runs out (GLOBAL-WATER).
+kind StreamWater is Scenery, Drinkable, Fillable {
+  grammar { name "water"  nouns "stream", "quantity", "liquid", "ford"  adjectives "cold", "clear", "flowing", "salty" }
+  :salty false
+  passage short { water }
+  describe { text "{if self.get(:salty)}The water is salt, and there is a great deal of it, and it is not going anywhere.{else}The water is cold and clear and in a hurry, as cave streams are. It is shallow enough to see the bottom and deep enough to fill a teapot.{/if}" }
+  passage fingers { The water slips through your fingers. }
+  passage no_take { {self.fingers} }
+  as target for drink {
+    do {
+      if (self.get(:salty)) { say "The water is extremely salty." }
+      else { say "Thank you very much. I was rather thirsty (from all this talking, probably)." }
+    }
+  }
+  without as target for fill from Fillable
+  as target for fill {
+    do {
+      if (bound tool) {
+        if (tool.is(Teapot)) {
+          if (!actor.holds(tool)) { say "You don't have the teapot." }
+          else if (tool.count(Water) > 0) { say "The teapot isn't currently empty." }
+          else {
+            let w = spawn Water in tool
+            if (self.get(:salty)) { send w :salt }
+            say "The teapot is now full of water."
+          }
+        } else { say "You can't fill that with water." }
+      } else { say "You'd need something to fill with it, and something to fill." }
+    }
+  }
+}
+
+// The china teapot from the gazebo: open, lidless, and the only thing
+// that holds water.
+kind Teapot is Bag, Fillable {
+  grammar { name "china teapot"  nouns "teapot", "pot"  adjectives "china", "tea" }
+  :open true
+  :transparent true
+  :capacity 4
+  :size 5
+  passage short { china teapot }
+  passage examined { It is a china teapot, white with a blue pattern of a bridge and some birds, and chipped at the spout. It has no lid, which is either a loss or a convenience.
+
+    {self.look_inside} }
+  describe { text examined }
+  without as target for close from Box
+  as target for close { do { say "The teapot has no lid." } }
+  without as target for fill from Fillable
+  as target for fill {
+    do {
+      if (self.count(Water) > 0) { say "The teapot isn't currently empty." }
+      else if (here.is(Watery)) {
+        if (!actor.holds(self)) { say "You don't have the teapot." }
+        else {
+          let w = spawn Water in self
+          if (here.is(Pool)) { send w :salt }
+          say "The teapot is now full of water."
+        }
+      }
+      else { say "There's nothing here to fill it with." }
+    }
+  }
+}
+
+// The place mat from the gazebo: a surface, carried.
+kind PlaceMat is Bag {
+  grammar { name "place mat"  nouns "mat", "placemat"  adjectives "place", "woven", "straw" }
+  :open true
+  :surface true
+  :capacity 20
+  :size 12
+  passage short { place mat }
+  passage examined { It is a place mat of woven straw, frayed at one corner, and thin enough to slide under most doors, should you ever need to slide something under a door.
+
+    {self.look_inside} }
+  describe { text examined }
+}
+
+// The newspaper from the gazebo (NEWSPAPER).
+kind Newspaper is Readable {
+  grammar { name "newspaper"  nouns "paper", "news"  adjectives "news" }
+  :burnable true
+  :size 2
+  passage short { newspaper }
+  describe { text "It is a newspaper, the U.S. News and Dungeon Report, folded to the front page and gone yellow at the edges. It can be read." }
+  passage words {
+    ** U.S. News and Dungeon Report **
+
+    FAMED ADVENTURER TO EXPLORE GREAT UNDERGROUND EMPIRE
+
+    Our correspondents report that a world-famous and battle-hardened adventurer has been seen in the vicinity of the Great Underground Empire. Local grues have been reported sharpening their (slavering) fangs....
+
+    "Zork II: The Wizard of Frobozz" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc.
+  }
+}
+
+// The green piece of paper by the robot (ROBOT-LABEL).
+kind RobotLabel is Readable {
+  grammar { name "green piece of paper"  nouns "paper", "piece", "instructions", "label"  adjectives "green" }
+  :burnable true
+  :size 3
+  passage short { green piece of paper }
+  passage ldesc { There is a green piece of paper here. }
+  describe { text "It is a piece of green paper, printed, and folded once. It can be read." }
+  passage words {
+    !!  FROBOZZ MAGIC ROBOT COMPANY  !!
+
+    Hello, Master!
+
+    I am a late-model robot, trained at GUE Tech to perform various simple household functions.
+
+    To activate me, say the following:
+
+    >ROBOT, <things to do>
+
+    At your service!
+  }
+}
+
+// The can of Frobozz Magic Grue Repellent (REPELLENT-FCN).
+kind Repellent is Readable, Sprayable {
+  grammar { name "can of Frobozz Magic Grue Repellent"  nouns "can", "repellent", "spray"  adjectives "spray", "grue", "magic", "frobozz" }
+  :size 5
+  :has_fdesc true
+  :used false
+  passage short { can of Frobozz Magic Grue Repellent }
+  passage fdesc { A spray can is in the corner. In large type is the legend "Frobozz Magic Grue Repellent". }
+  passage ldesc { There is a can of Frobozz Magic Grue Repellent here. }
+  describe { text "It is a spray can, dented, with a nozzle on top and a label that takes up most of it, in large type: \"Frobozz Magic Grue Repellent\". The small type can be read.{if self.get(:used)} The can feels empty.{/if}" }
+  passage words {
+    !!! FROBOZZ MAGIC GRUE REPELLENT !!!
+
+    Instructions for use: Apply liberally to creature to be protected. Duration of effect is unpredictable. Use only in place of death!
+
+    (No warranty expressed or implied)
+  }
+  without as target for read from Thing
+  without as target for shake from Thing
+  without as target for shake from Portable
+  as target for shake {
+    do {
+      if (self.get(:used)) { say "The can seems empty." }
+      else { say "There is a sloshing sound from inside." }
+    }
+  }
+  // Sprayed: at nothing, it stinks and drifts away; at the visitor, they
+  // are protected for a while (`:sprayed`, adventurer.sprout); at
+  // anything else, it would keep a grue off that.
+  as target for spray {
+    do {
+      if (self.get(:used)) { say "The repellent is all gone." }
+      else {
+        self.set(:used, true)
+        if (bound aim) { say "The spray smells like a mixture of old socks and burning rubber. If I were a grue I'd sure stay clear!" }
+        else { say "The spray stinks amazingly for a few moments, then drifts away." }
+      }
+    }
+  }
+}
+
+// The pearl necklace (PEARL).
+kind Pearl is Treasure {
+  grammar { name "pearl necklace"  nouns "necklace", "pearls", "pearl", "treasure"  adjectives "pearl" }
+  :size 10
+  :value 15
+  passage short { pearl necklace }
+  passage ldesc { There is a pearl necklace here with hundreds of large pearls. }
+  describe { text "It is a necklace of hundreds of large pearls, each the size of a thumbnail and the color of the inside of a shell, strung on a thread that has lasted better than the broom closet did. Somebody left it here in a hurry, or did not care." }
+}
+
+// The package of candy, under the pool until the red cake finds it (CANDY).
+kind Candy is Treasure, Readable {
+  grammar { name "package of candy"  nouns "package", "candy", "candies", "goodies", "grasshoppers", "treasure"  adjectives "candied", "rare" }
+  :size 8
+  :value 15
+  :keep true
+  passage short { package of candy }
+  passage ldesc { There is a package of candied goodies here. }
+  passage words {
+    Frobozz Magic Candy Company
+    >>Special Assortment<<
+    Candied Grasshoppers
+    Chocolated Ants
+    Worms Glacee
+    (By Appointment to His Majesty, Dimwit I)
+  }
+  describe { text words }
+  without as target for eat from Thing
+  as target for eat { do { say "Such rich food would probably not be good for you." } }
+  without as target for open from Thing
+  as target for open { do { say "Such rich food would probably not be good for you." } }
+  without as target for read from Thing
+}
+
+// The stoppered flask of fatal vapors in the Pool Room (FLASK-FCN).
+kind Flask is Bag, Readable {
+  grammar { name "stoppered glass flask filled with liquid"  nouns "flask", "bottle", "stopper", "glass"  adjectives "stoppered", "glass", "clear" }
+  :open false
+  :transparent true
+  :capacity 5
+  :size 10
+  passage short { stoppered glass flask filled with liquid }
+  passage ldesc { A stoppered glass flask with a skull-and-crossbones marking is here. The flask is filled with some clear liquid. }
+  passage words { There is a skull-and-crossbones engraved on the glass. }
+  passage examined { It is a glass flask, stoppered with a cork sealed in wax, and full of a clear liquid that moves a little more slowly than water would. A skull and crossbones is engraved on the glass, which is the kind of label that means it. Looking through it, things on the far side seem larger. }
+  describe { text examined }
+  passage vapors { As you pass out, you realize that the vapors from the flask's contents are fatal. }
+  without as target for look_in from Box
+  as target for look_in { do { say "You notice that objects behind the flask appear to be magnified. You might try looking at something through the flask." } }
+  without as target for read from Thing
+  without as target for read from Readable
+  as target for read { do { say words } }
+  without as target for open from Box
+  as target for open {
+    do {
+      say vapors
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  without as target for mung from Thing
+  as target for mung {
+    do {
+      say "The flask breaks into pieces."
+      say vapors
+      finally destroy self
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  as target for throw {
+    do {
+      say "The flask breaks into pieces."
+      say vapors
+      finally destroy self
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  object liquid is Scenery {
+    grammar { name "clear liquid"  nouns "liquid", "contents", "poison"  adjectives "clear" }
+    passage short { clear liquid }
+    describe { text "The liquid is clear and a little oily, and fills the flask to the stopper. Whatever it is, the skull on the glass has an opinion about it." }
+  }
+}
+
+// The cakes of the Tea Room (EAT-ME-CAKE, BLUE-ICING, ORANGE-ICING,
+// RED-ICING). Outside the wonderland a cake crumbles the first time it is
+// handled (CAKE-CRUMBLE); here, the first command after it is carried
+// out, which comes to the same thing a move sooner.
+kind Cake is Food, Readable {
+  :size 4
+  passage colour default { frosted }
+  without as target for read from Thing
+  without as target for eat from Thing
+  without as target for read from Readable
+  as target for read {
+    do {
+      if (self.get(:huge)) { say "The cake is much too tall now for you to read the lettering." }
+      else if (bound tool) {
+        if (tool.is(Flask)) { say "The letters, now visible, say \"{self.letters}\"." }
+        else { say "You can't see through that!" }
+      }
+      else { say "{self.plain_words}" }
+    }
+  }
+  passage letters default { Eat Me }
+  passage plain_words default { The first letter is a capital E. The rest is too small to read. }
+  passage boom_line { You have been blasted to smithereens (wherever they are). }
+  passage crushed { The room seems to have become too small to hold you. The walls are not as compressible as your body, which is demolished. }
+  passage hit_spot { Thank you very much. It really hit the spot. }
+  // Eaten (EATME-FCN, CAKE-FCN): in the Tea Room, the Posts Room or the
+  // Pool Room each does what its icing says; anywhere else it is cake.
+  without as target for eat from Food
+  as target for eat {
+    permit {
+      if (!actor.holds(self)) {
+        each b: Box in actor { if (b.holds(self)) { allow } }
+        refuse "You're not holding that."
+      }
+    }
+    do {
+      if (self.is(EatMeCake) && here.is(TeaRoomLike)) {
+        say "Suddenly, the room appears to have become very large (although everything you are carrying seems to be its normal size)."
+        send actor :enlarge
+        finally destroy self
+      } else if (here.is(TeaRoomLike) || here.is(Wonderland)) {
+        if (self.is(OrangeCake)) {
+          say boom_line
+          send here :munge
+          send actor :die
+          finally destroy self
+        } else if (self.is(RedCake)) {
+          say "That was delicious, but your dying memory is of feeling horribly dehydrated and thirsty."
+          send actor :die
+          finally destroy self
+        } else if (self.is(BlueCake)) {
+          if (here.is(PostsLike)) {
+            say "The room around you seems to be getting smaller."
+            send actor :shrink
+          } else {
+            say crushed
+            send actor :die
+          }
+          finally destroy self
+        } else {
+          say hit_spot
+          destroy self
+        }
+      } else {
+        say hit_spot
+        destroy self
+      }
+    }
+  }
+  after command {
+    if (!here.is(CakeSafe)) {
+      say "The {self.short} has crumbled to dust."
+      destroy self
+    }
+  }
+}
+kind EatMeCake is Cake {
+  grammar { name "cake frosted with green letters"  nouns "cake", "icing", "cakes", "letters", "letter"  adjectives "green", "frosted", "eat", "me" }
+  passage short { cake frosted with green letters }
+  passage letters { Eat Me }
+  passage plain_words { The icing spells out "Eat Me." }
+  describe { text "It is a small round cake, iced green, with letters piped on top in a darker green. The letters are large enough to read." }
+}
+kind BlueCake is Cake {
+  grammar { name "cake frosted with blue letters"  nouns "cake", "icing", "cakes", "letters", "letter"  adjectives "blue", "frosted" }
+  passage short { cake frosted with blue letters }
+  passage letters { Enlarge }
+  describe { text "It is a small round cake, iced white, with a word piped on top in blue letters too small to read with the naked eye. It smells faintly of almonds." }
+}
+kind OrangeCake is Cake {
+  grammar { name "cake frosted with orange letters"  nouns "cake", "icing", "cakes", "letters", "letter"  adjectives "orange", "frosted" }
+  passage short { cake frosted with orange letters }
+  passage letters { Explode }
+  describe { text "It is a small round cake, iced white, with a word piped on top in orange letters too small to read with the naked eye. It is slightly warm, which cakes generally are not." }
+}
+kind RedCake is Cake {
+  grammar { name "cake frosted with red letters"  nouns "cake", "icing", "cakes", "letters", "letter"  adjectives "red", "frosted" }
+  passage short { cake frosted with red letters }
+  passage letters { Evaporate }
+  describe { text "It is a small round cake, iced white, with a word piped on top in red letters too small to read with the naked eye. It looks dry." }
+}
+
+// The Stradivarius in the dented steel box (VIOLIN).
+kind Violin is Treasure {
+  grammar { name "fancy violin"  nouns "violin", "stradivarius", "fiddle", "treasure"  adjectives "fancy" }
+  :size 10
+  :value 20
+  passage short { fancy violin }
+  passage ldesc { There is a Stradivarius here. }
+  describe { text "It is a violin of great age and greater value, varnished the color of honey and signed inside, where you can just make it out, by a Mr. Stradivari of Cremona. It has four strings and no bow, which does not stop anybody." }
+  without as target for play from Thing
+  as target for play { do { say "An amazingly offensive noise issues from the violin." } }
+}
+
+// The dented steel box, which the carousel's floor gives up when the
+// carousel stops (IRON-BOX).
+kind IronBox is Bag {
+  grammar { name "steel box"  nouns "box"  adjectives "steel", "dented" }
+  :open false
+  :capacity 20
+  :size 40
+  :hidden true
+  :ndesc true
+  passage short { steel box }
+  passage ldesc { There is a dented steel box here. }
+  passage examined { It is a steel box the size of a small trunk, dented all over as though it had been bounced down a long flight of stairs, which it may have been. {self.look_inside} }
+  describe { text examined }
+  as target for any { permit { if (self.get(:hidden)) { refuse "You can't see any such thing." } } }
+  as tool for any { permit { if (self.get(:hidden)) { refuse "You can't see any such thing." } } }
+  on :flip {
+    self.set(:hidden, !self.get(:hidden))
+    self.set(:ndesc, self.get(:hidden))
+  }
+}
+
+// The red crystal sphere in the Dingy Closet (PALANTIR-1). Reaching for
+// it is the closet's business (machine.sprout).
+kind Sphere is Treasure {
+  grammar { name "red crystal sphere"  nouns "sphere", "ball", "palantir", "crystal", "treasure"  adjectives "red", "crystal", "beautiful" }
+  :size 10
+  :value 20
+  :keep true
+  // Hidden, after the gas has had the closet.
+  :gone false
+  passage short { red crystal sphere }
+  passage ldesc { There is a beautiful red crystal sphere here. }
+  describe { text "There is something misty in the sphere. Perhaps if you were to look into it..." }
+  // Through the bars of the cage it can be seen and not had.
+  depart (to) { if (mover.is(Adventurer)) { if (mover.get(:caged)) { refuse "You can't reach it through the bars of the cage." } } }
+  as target for any { permit { if (self.get(:gone)) { refuse "You can't see any such thing." } } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "You see only darkness." } }
+  on :poisoned { self.set(:gone, true)  self.set(:ndesc, true) }
+}
+
+// What the robot leaves of the cage (MANGLED-CAGE).
+kind MangledCage is Portable {
+  grammar { name "mangled cage"  nouns "cage"  adjectives "mangled", "steel" }
+  :size 60
+  passage short { mangled cage }
+  passage ldesc { There is a mangled steel cage here. }
+  describe { text "It is what is left of the solid steel cage: bars bent every which way, a door that will never shut again, and a dent the shape of a robot's shoulder. It weighs a great deal." }
+}
+
+// The Wizard's wand, in his hand (WAND): a treasure he does not part with.
+kind Wand is Treasure {
+  grammar { name "Wizard's magic wand"  nouns "wand"  adjectives "magic", "wizard's", "wizards" }
+  :ndesc true
+  :value 30
+  passage short { Wizard's magic wand }
+  describe { text "The wand is a foot of some dark wood, worn pale where the Wizard grips it, and glowing, when it glows, a faint blue at the tip. He has not let go of it." }
+}

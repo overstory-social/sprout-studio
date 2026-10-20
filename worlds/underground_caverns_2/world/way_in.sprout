@@ -1,0 +1,218 @@
+// The way in: Inside the Barrow, the Narrow Tunnel, the Foot Bridge, the
+// Great Cavern, the Shallow Ford and the Dark Tunnel, with the moss, the
+// ravine, the stream and the bridge they share (2dungeon.zil, and
+// BRIDGE-FCN, CHASM-FCN, STREAM-FCN, MOSS-FCN, STALA-PSEUDO).
+import * as sprout from 'sprout'
+import {Thing, Scenery, Crossable, Leapable, Door} from 'thing'
+import {Room, DarkRoom, Bridged, ChasmEdge, Watery} from 'room'
+import {Lamp} from 'lamp'
+import {Sword, StreamWater} from 'items'
+import {garden_north, stream_path} from 'garden'
+import {Adventurer} from 'adventurer'
+import {open, knock, cross, leap_at, take, rub, mung, through, look_down, climb_up, climb_down, listen, :travel, :die} from 'verbs'
+
+// The phosphorescent moss on the cavern roofs (MOSS).
+kind Moss is Scenery {
+  grammar { name "mosses"  nouns "moss", "growth"  adjectives "glowing", "phosphorescent", "large" }
+  passage short { mosses }
+  describe { text "The mosses cling to the roof of the cave in long grey-green beards, and glow a cold, steady, underwater sort of light, enough to see by and not enough to be comfortable in. Whatever they live on, it is not sunlight." }
+  passage no_take { Some of the moss rubs off on you, but it stops glowing very quickly once plucked from its environment. }
+  without as target for rub from Thing
+  as target for rub { do { say "Some of the moss rubs off on you, but it stops glowing very quickly once plucked from its environment." } }
+}
+
+// The ravine, in the rooms it winds through (CHASM).
+kind Chasm is Scenery, Leapable, Crossable {
+  grammar { name "chasm"  nouns "ravine", "gorge"  adjectives "deep" }
+  passage short { chasm }
+  describe { text "The ravine winds through the cavern, steep-sided and crumbly, and the stream at the bottom of it is a long way down and sounds further. The walls are not the climbing kind." }
+  as target for leap_at { do { say "For a change, you look before leaping. You realize you would never survive." } }
+  as target for cross { do { say "You'll have to find a bridge." } }
+  without as target for climb_down from Thing
+  as target for climb_down { do { say "The walls of the ravine are steep and crumbly. You would not get far, and you would not get back." } }
+}
+
+// The stream at the bottom of the ravine (STREAM).
+kind Stream is Scenery, Crossable {
+  grammar { name "stream"  nouns "water", "brook"  adjectives "flowing", "small" }
+  passage short { stream }
+  describe { text "The stream runs along the bottom of the ravine, small and quick and silver where the moss-light catches it, going somewhere with the single-mindedness of water." }
+  as target for cross { do { say "You'll have to find a ford or a bridge." } }
+  without as target for through from Thing
+  as target for through { do { say "You can't swim in the stream." } }
+}
+
+// The foot bridge, from the tunnel and from on it (BRIDGE).
+kind Bridge is Scenery, Crossable, Leapable {
+  grammar { name "bridge"  nouns "footbridge", "planks"  adjectives "foot", "wooden", "rickety", "crude", "sturdy" }
+  passage short { bridge }
+  describe { text "The foot bridge is crude but sturdy: a dozen planks lashed across two tree trunks that somebody carried a long way, with a rope on either side for the nervous. It crosses the ravine to the south." }
+  as target for cross { do { send actor :travel with :foot_bridge  say "" } }
+  as target for leap_at {
+    do {
+      say "You execute a perfect swan-dive into the depths below."
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+}
+// The bridge seen from on it: crossing it wants a direction.
+kind BridgeUnder is Bridge {
+  describe { text "You are standing on it. It is crude but sturdy, a dozen planks lashed across two tree trunks, with a rope on either side, and it creaks when you shift your weight, which it has done for a long time without coming to anything." }
+  without as target for cross from Bridge
+  as target for cross { do { say "You'll have to specify a direction." } }
+}
+
+// The stalactites and stalagmites of the Great Cavern (STALA-PSEUDO).
+kind Stalagmites is Scenery {
+  grammar { name "stalagmites"  nouns "stalagmite", "stalactites", "stalactite", "formations"  adjectives "many", "limestone" }
+  passage short { stalagmites }
+  describe { text "Stalactites hang from the roof and stalagmites rise from the floor, of every size from a finger to a pillar, and where they have met they have made columns, wet and fluted and a little translucent in the moss-light. They have been at it for a very long time and are not finished." }
+  passage no_take { The only ones you can reach are too large to successfully break off. }
+  without as target for mung from Thing
+  as target for mung { do { say "The only ones you can reach are too large to successfully break off." } }
+}
+kind Shadows is Scenery {
+  grammar { name "shadows"  nouns "shadow"  adjectives "weird", "moving" }
+  passage short { shadows }
+  describe { text "The shadows move because the moss-light does, a little, as the air stirs it; or that is the explanation you would prefer. They are only shadows. Probably." }
+}
+kind Debris is Scenery {
+  grammar { name "debris"  nouns "twigs", "leaves", "dust", "twig", "leaf"  adjectives "dusty" }
+  passage short { debris }
+  describe { text "Twigs and dead leaves, drifted deep along the tunnel floor, which means that somewhere not far off there is a way for leaves to get in. They crunch underfoot and smell of autumn." }
+  passage no_take { You could carry off a handful of leaves, and a handful of leaves would be no use to you at all. }
+}
+kind BarrowDoor is Scenery, Door {
+  grammar { name "door"  nouns "entrance", "doorway"  adjectives "barrow", "stone", "shut", "closed" }
+  passage short { door }
+  describe { text "The door of the barrow is a single slab of stone, shut, and set so flush with the wall that you could walk past it without knowing it was a door, which, from this side, is rather the point." }
+  without as target for open from Thing
+  as target for open { do { say "The door of the barrow shut behind you when you entered, and it has no handle on this side. There is no way out." } }
+  without as target for knock from Door
+  as target for knock { do { say "You knock. Nobody answers, which, given what is usually inside a barrow, is a relief." } }
+}
+// The cavern around the way in, and the forest the barrow is hidden in.
+kind Cavern is Scenery {
+  grammar { name "cavern"  nouns "cave", "limestone", "gloom"  adjectives "wide", "great", "dim" }
+  passage short { cavern }
+  describe { text "The cavern is wide and high and dim, lit only by the moss on its roof, and it goes on past where the light does. Everything in it drips, slowly, and has been dripping for longer than there have been people to listen." }
+}
+kind Forest is Scenery {
+  grammar { name "dark forest"  nouns "forest", "trees", "woods", "outside"  adjectives "dark" }
+  passage short { dark forest }
+  describe { text "The forest is on the other side of the barrow door, and the barrow door is shut. You remember trees, a great many of them, and dark. You will not be seeing them again from this side." }
+}
+kind Glow is Scenery {
+  grammar { name "faint glow"  nouns "glow", "light"  adjectives "faint" }
+  passage short { faint glow }
+  describe { text "A faint glow, greenish and steady, at the far end of the tunnel to the south. It is not daylight. It is not firelight either." }
+}
+
+object inside_barrow is Room in underground_caverns_2 {
+  grammar {
+    name "Inside the Barrow"
+    exit south "south" -> narrow_tunnel
+    exit out "out" refuse "You may not recall, but when you entered, the door of the barrow shut behind you. There is no way out."
+    exit north "north" refuse "You may not recall, but when you entered, the door of the barrow shut behind you. There is no way out."
+  }
+  :id barrow
+  :walls 1
+  passage body { You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end. }
+  object lamp is Lamp
+  object sword is Sword
+  object door is BarrowDoor
+  object glow is Glow
+  object forest is Forest
+  object barrow is Scenery {
+    grammar { name "barrow"  nouns "tomb", "mound"  adjectives "ancient" }
+    passage short { barrow }
+    describe { text "The barrow is a long low chamber of great flat stones, roofed with more of them, and older than any kingdom you could name. Whoever was buried here is not in evidence, which is for the best." }
+  }
+}
+
+object narrow_tunnel is Room, Bridged, ChasmEdge in underground_caverns_2 {
+  grammar {
+    name "Narrow Tunnel"
+    exit north "north" -> inside_barrow
+    exit south "south" -> foot_bridge
+    exit down "down" refuse "As you start down, you slip on the crumbling rocks and pull back, narrowly averting a fatal fall."
+  }
+  :id narrow_tunnel
+  :walls 2
+  passage body { You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south. }
+  object bridge is Bridge
+  object chasm is Chasm
+  object stream is Stream
+  object moss is Moss
+  object cavern is Cavern
+}
+
+object foot_bridge is Room, Bridged, ChasmEdge in underground_caverns_2 {
+  grammar {
+    name "Foot Bridge"
+    exit north "north" -> narrow_tunnel
+    exit south "south" -> great_cavern
+    exit down "down" refuse "The drop would be fatal."
+  }
+  :id foot_bridge
+  :walls 2
+  passage body { You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here. }
+  object bridge is BridgeUnder
+  object chasm is Chasm
+  object stream is Stream
+}
+
+object great_cavern is Room in underground_caverns_2 {
+  grammar {
+    name "Great Cavern"
+    exit northeast "northeast" -> foot_bridge
+    exit southwest "southwest" -> shallow_ford
+  }
+  :id great_cavern
+  :walls 3
+  passage body { This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast. }
+  object moss is Moss
+  object stalagmites is Stalagmites
+  object shadows is Shadows
+  object cavern is Cavern
+}
+
+object shallow_ford is Room, Watery in underground_caverns_2 {
+  grammar {
+    name "Shallow Ford"
+    exit north "north" -> great_cavern
+    exit south "south" -> dark_tunnel
+  }
+  :id shallow_ford
+  :walls 3
+  passage body { You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern. }
+  object water is StreamWater {
+    grammar { nouns "ford" }
+  }
+  object ford is Scenery, Crossable {
+    grammar { name "ford"  nouns "crossing"  adjectives "shallow" }
+    passage short { ford }
+    describe { text "The ford is where the stream spreads thin over a bed of gravel, ankle-deep and cold, and can be crossed to the dark tunnel on the south side without more than wet boots." }
+    as target for cross { do { send actor :travel with :dark_tunnel  say "" } }
+  }
+  object stalagmites is Stalagmites
+  object moss is Moss
+  object cavern is Cavern
+}
+
+object dark_tunnel is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Dark Tunnel"
+    exit northeast "northeast" -> shallow_ford
+    exit southeast "southeast" -> garden_north
+    exit southwest "southwest" -> stream_path
+  }
+  :id dark_tunnel
+  object dim_light is Scenery {
+    grammar { name "dim light"  nouns "light", "glow"  adjectives "dim" }
+    passage short { dim light }
+    describe { text "A dim light to the northeast, where the tunnel comes out at the ford and the moss takes over again. It is the only light in here that you did not bring." }
+  }
+  passage body { This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast. }
+  object debris is Debris
+}

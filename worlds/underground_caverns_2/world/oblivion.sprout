@@ -1,0 +1,13 @@
+// Where a third death leaves a visitor: the demon's dismissal, and
+// everything goes black (DEAD-PALANTIR's FINISH). A place with no way out.
+import * as sprout from 'sprout'
+
+object oblivion is sprout.Place in underground_caverns_2 {
+  grammar { name "Darkness" article none }
+  describe { text remains }
+  passage remains {
+    Darkness
+
+    Everything has gone black, and stays black. The face has gone, and the mist, and the world of life with them. Nothing further will happen to you in this game.
+  }
+}
