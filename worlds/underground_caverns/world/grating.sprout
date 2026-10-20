@@ -1,5 +1,5 @@
 // The pile of leaves in the Clearing, and the grating it hides. The grating
-// lies in the ground, which shows nothing of it until the leaves are moved.
+// is unseen until the leaves are moved.
 // It is one grating seen from two rooms, the Clearing above and the Grating
 // Room below, as Zork's GRATE is one object in LOCAL-GLOBALS; here each room
 // holds its own, and the two keep each other in step by messages the world
@@ -51,15 +51,10 @@ kind Leaves is Portable {
   as target for tally { do { say "There are 69,105 leaves here." } }
 }
 
-// The ground under the Clearing: nothing in it can be seen or named until
-// it is uncovered. The grating's news passes through it all the same.
+// The ground of the Clearing, bare where the leaves lay once they are
+// moved.
 kind Ground is Scenery {
-  contains
   :revealed false
-  pass any (self.get(:revealed))
-  pass :grate_open (true)
-  pass :grate_unlock (true)
-  pass :grate_revealed (true)
   grammar { name "ground"  nouns "dirt", "earth", "floor" }
   passage short { ground }
   describe {
@@ -110,8 +105,11 @@ kind Grating is Scenery, Lockable {
   }
 }
 
-// The grating from the Clearing: the lock is on the other side.
+// The grating from the Clearing: the lock is on the other side. It cannot
+// be seen or named until the leaves are moved off it.
 kind GratingAbove is Grating {
+  :unseen true
+  on :grate_revealed (from) { self.set(:unseen, false) }
   passage view {
     It is a heavy iron grating, set securely into the ground and rusted to the colour of the leaves that hid it. Below it is only darkness.
 

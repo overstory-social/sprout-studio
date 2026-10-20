@@ -27,6 +27,8 @@ import {deep_canyon} from 'east'
 import {reservoir_south} from 'reservoir'
 
 message :rise
+// The blue button pushed: the leak bursts.
+message :burst
 
 // A room that keeps its own note of the dam: 0 gates shut and the
 // reservoir full, 1 open and still full, 2 open and drained, 3 shut and
@@ -298,7 +300,7 @@ object maintenance_room is DarkRoom in underground_caverns {
         else {
           self.set(:jammed, true)
           say "There is a rumbling sound and a stream of water appears to burst from the east wall of the room (apparently, a leak has occurred in a pipe)."
-          spawn Leak in here
+          send underground_caverns.maintenance_room.leak :burst
         }
       }
     }
@@ -313,6 +315,7 @@ object maintenance_room is DarkRoom in underground_caverns {
     passage short { doorways }
     describe { text "There are doorways to the west and the south, both leading back to the lobby, as though the room could not decide which way it would rather you left." }
   }
+  object leak is Leak { :unseen true }
 }
 
 object dam_base is Room, Riverside in underground_caverns {
@@ -424,8 +427,8 @@ kind Button is Scenery {
   without as target for shift from Thing
 }
 
-// The leak in the Maintenance Room's east wall, from the moment the blue
-// button is pushed: the room fills a level every minute (every other move,
+// The leak in the Maintenance Room's east wall, unseen until the blue
+// button is pushed, and from that moment the room fills a level every minute (every other move,
 // at the host's half-minute a turn; Zork's I-MAINT-ROOM rises every move),
 // and drowns whoever is in it when it is full. The gunk stops it.
 kind Leak is Box, Rejecting, Pluggable {
@@ -437,7 +440,10 @@ kind Leak is Box, Rejecting, Pluggable {
   passage examined {
     {if self.get(:level) < 0}The leak in the pipe in the east wall has been plugged with a fat grey wad of gunk, which is holding, for now, by some miracle of Zorkian technology. The floor is still wet.{else}Water is bursting from a split in a pipe low on the east wall, in a fan of spray that is filling the room a good deal faster than seems fair. It is a small leak, as leaks go: small enough, perhaps, to be stopped with something.{/if}
   }
-  on :spawned (from) { send self :rise }
+  on :burst {
+    self.set(:unseen, false)
+    send self :rise
+  }
   on :woke (elapsed) { send self :rise }
   on :rise {
     if (self.get(:level) > 0) {

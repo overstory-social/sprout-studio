@@ -296,11 +296,7 @@ object end_of_rainbow is Room, RainbowFoot, RainbowEnd, Riverside in underground
   }
   on :rainbow (from, value) {
     self.set(:solid, value)
-    // The pot of gold appears the first time the rainbow is made solid.
-    if (value && !self.get(:pot_shown)) {
-      self.set(:pot_shown, true)
-      spawn PotOfGold in self
-    }
+    if (value) { self.set(:pot_shown, true) }
   }
   passage body {
     You are on a small, rocky beach on the continuation of the Frigid River past the Falls. The beach is narrow due to the presence of the White Cliffs. The river canyon opens here and sunlight shines in from above. A rainbow crosses over the falls to the east and a narrow path continues to the southwest.
@@ -308,6 +304,8 @@ object end_of_rainbow is Room, RainbowFoot, RainbowEnd, Riverside in underground
   object rainbow is Rainbow
   object river is River
   object cliffs is Cliffs
+  // Unseen until the rainbow is first made solid.
+  object pot is PotOfGold { :unseen true }
   object water is WaterAbout
   object beach is Scenery {
     grammar { name "rocky beach"  nouns "beach", "shore", "rocks"  adjectives "small", "rocky", "narrow" }
@@ -681,6 +679,7 @@ kind Scarab is Treasure {
 }
 
 kind PotOfGold is Treasure {
+  on :rainbow (from, value) { if (value) { self.set(:unseen, false) } }
   grammar { name "pot of gold"  nouns "pot", "gold", "treasure", "crock"  adjectives "gold" }
   :size 15
   :value 10

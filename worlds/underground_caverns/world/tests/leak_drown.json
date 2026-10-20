@@ -147,13 +147,13 @@
     ] },
     { "advance": "4 minutes", "expect": [
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
-      { "level": "info", "text": "underground_caverns#33 woke, 60 seconds after it asked" },
+      { "level": "info", "text": "maintenance_room.leak woke, 60 seconds after it asked" },
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
-      { "level": "info", "text": "underground_caverns#33 woke, 60 seconds after it asked" },
+      { "level": "info", "text": "maintenance_room.leak woke, 60 seconds after it asked" },
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
-      { "level": "info", "text": "underground_caverns#33 woke, 60 seconds after it asked" },
+      { "level": "info", "text": "maintenance_room.leak woke, 60 seconds after it asked" },
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
-      { "level": "info", "text": "underground_caverns#33 woke, 60 seconds after it asked" }
+      { "level": "info", "text": "maintenance_room.leak woke, 60 seconds after it asked" }
     ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Maintenance Room" },
@@ -164,12 +164,12 @@
     ] },
     { "advance": "1 minute", "expect": [
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
-      { "level": "info", "text": "underground_caverns#33 woke, 60 seconds after it asked" },
+      { "level": "info", "text": "maintenance_room.leak woke, 60 seconds after it asked" },
       { "reader": "Marta", "kind": "told", "words": "The water level here is now up to your chest." }
     ] },
     { "advance": "1 minute", "expect": [
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
-      { "level": "info", "text": "underground_caverns#33 woke, 60 seconds after it asked" },
+      { "level": "info", "text": "maintenance_room.leak woke, 60 seconds after it asked" },
       { "reader": "Marta", "kind": "told", "words": "The water level here is now up to your neck." },
       { "reader": "Marta", "kind": "told", "words": "I'm afraid you have done drowned yourself." },
       { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
@@ -180,15 +180,14 @@
     ] },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Forest Path" },
-      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." },
-      { "reader": "Marta", "kind": "described", "words": "There is a sword here." }
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
     ] },
     { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "North of House" }
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "There is a sword here." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Behind House" },
-      { "reader": "Marta", "kind": "described", "words": "There is a rope here." }
+      { "reader": "Marta", "kind": "described", "words": "Behind House" }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Kitchen" },

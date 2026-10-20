@@ -1177,7 +1177,11 @@ area by area, including what it did not find hard.
   down.
 - **Spec:** The world model; Range; Events, messages and the bus › Sending;
   Containers route.
-- **Status: open,** as 16.
+- **Status: open,** as 16. The ground's half is **resolved** by sprout#775
+  (Sprout 4aab16e): the Clearing's grating stands in the Clearing holding
+  `:unseen` until the leaves are moved, as the spec's own example has it,
+  and the ground is scenery that holds nothing and needs no pass rules.
+  `tests/grating_hidden.json` pins it.
 
 ### 58. A lock cannot see the key in the hand that turns it
 
@@ -2291,7 +2295,12 @@ unseen) are named where they would have helped.
   nameable things in their own right, which is lucky; a hider with nothing
   in the room to be would need a name nobody types.
 - **Spec:** Range; Spawning; Containment is a declaration.
-- **Status: open,** with sprout#482.
+- **Status: changed** by sprout#775 (Sprout 4aab16e): the pot of gold is
+  declared at the End of Rainbow, unseen until the rainbow is first made
+  solid, and the leak in the Maintenance Room, unseen until the blue
+  button bursts it; each now has a name a path can reach. The trunk and
+  the scarab stay in the mud and the sand, which the water and the shovel
+  move them out of, much as Zork's do.
 
 ### 98. A room that floods, and a river that runs, on a clock coarser than a move
 
@@ -2730,7 +2739,10 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
   itself. Nothing a player sees differs; the diamond has no identifier, so
   nothing in the world can name it by path, which nothing needs to.
 - **Spec:** Spawning; Destroying.
-- **Status: open,** and small: #482 would let the diamond be declared.
+- **Status: changed** by sprout#775 (Sprout 4aab16e): the diamond is
+  declared inside the machine, unseen, and the machine run on coal tells it
+  to show itself, so it has a name a path can reach. The slag is still
+  spawned, one for each run on anything else.
 
 ### 115. A teleport that does not show
 
