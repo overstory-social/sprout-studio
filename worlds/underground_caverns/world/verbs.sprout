@@ -613,8 +613,9 @@ message :flooded
 message :flung with boolean
 // The rainbow over Aragain Falls, solid (true) or only light (false).
 message :rainbow with boolean
-// Somebody in a boat asks the room it lies in for a way out of it (a
-// handler has no `here`): the room answers with itself, `:berth`. A room
+// Somebody in a boat asks the room it lies in for a way out of it (their
+// `here` is the boat, and nothing names the place the boat is in): the room
+// answers with itself, `:berth`. A room
 // told `:wreck` swaps the inflated boat in it for a punctured one.
 message :where
 message :berth
