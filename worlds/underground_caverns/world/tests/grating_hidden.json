@@ -1,0 +1,44 @@
+{
+  "about": "The grating in the Clearing is unseen under the leaves (Zork's GRATE, INVISIBLE until the leaves are moved): before, a line naming it is answered as if nothing were there; moved, the leaves show it, and it can be looked at.",
+  "steps": [
+    { "seed": 0 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." },
+      { "reader": "Marta", "kind": "extension", "words": "the white house" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Clearing" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a clearing, with a forest surrounding you on all sides. A path leads south." },
+      { "reader": "Marta", "kind": "described", "words": "On the ground is a pile of leaves." },
+      { "reader": "Marta", "kind": "extension", "words": "the clearing" }
+    ] },
+    { "as": "Marta", "type": "x grating", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "open grating", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "count leaves", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There are 69,105 leaves here." }
+    ] },
+    { "as": "Marta", "type": "move leaves", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Done." },
+      { "reader": "Marta", "kind": "said", "words": "In disturbing the pile of leaves, a grating is revealed." }
+    ] },
+    { "as": "Marta", "type": "x grating", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a heavy iron grating, set securely into the ground and rusted to the colour of the leaves that hid it. Below it is only darkness." },
+      { "reader": "Marta", "kind": "described", "words": "The grating is closed, and fastened from beneath: whatever lock holds it faces down into the dark, well out of reach of anyone up here." },
+      { "reader": "Marta", "kind": "extension", "words": "the grating" }
+    ] }
+  ]
+}

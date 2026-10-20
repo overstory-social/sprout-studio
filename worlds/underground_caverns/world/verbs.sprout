@@ -564,20 +564,16 @@ message :candle_burn with integer
 // The rope, let go of at the Dome's rail.
 message :let_go
 // The thief (thief.sprout). His clock starts the first time anyone goes
-// down into the Cellar; each of his turns he asks the room he is in to
-// show itself (`:prowl`, answered `:survey`), since a handler has no
-// `here`; he walks the Empire by the world's gate.
+// down into the Cellar; each of his turns is a `:survey` he sends himself,
+// saying which part of his turn it is.
 message :thief_start
-message :prowl
-message :survey
+message :survey with integer
 // The thief robs a visitor, who hands over what he takes (the hands are
 // the visitor's own): 1 while he passes unseen, 2 as he leaves, seen.
 message :rob with integer
 // The Treasure Room, entered: the thief comes to defend it, from wherever
-// he is (`:summon`, through the world) or from where he stood unseen in it
-// (`:defend`).
+// he is, or from where he stood unseen in it.
 message :summon
-message :defend
 // The thief tells his lair whether he is there to come to its defense:
 // false while he lies out cold and once he is dead.
 message :keeper with boolean
@@ -617,8 +613,9 @@ message :flooded
 message :flung with boolean
 // The rainbow over Aragain Falls, solid (true) or only light (false).
 message :rainbow with boolean
-// Somebody in a boat asks the room it lies in for a way out of it (a
-// handler has no `here`): the room answers with itself, `:berth`. A room
+// Somebody in a boat asks the room it lies in for a way out of it (their
+// `here` is the boat, and nothing names the place the boat is in): the room
+// answers with itself, `:berth`. A room
 // told `:wreck` swaps the inflated boat in it for a punctured one.
 message :where
 message :berth
@@ -650,11 +647,6 @@ message :rite_read
 message :reckon
 // The bell, red hot, cooled by water poured on it.
 message :cool
-// The brass lantern's battery, burning down (1 a bit dimmer, 2 definitely
-// dimmer, 3 nearly out, 4 burned out).
-message :lamp_age with integer
-// A move made with the brass lantern lit in hand.
-message :burn_tick
 // The brass lantern thrown and smashed.
 message :shatter_lamp
 // The score at 350 (Zork's WON-FLAG): the map in the trophy case, and the

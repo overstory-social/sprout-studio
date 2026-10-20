@@ -19,7 +19,7 @@ import {Matchbook} from 'dam'
 import {Room, DarkRoom} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
-import {open, close, look_in, read, climb_over, leap_at, through, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, rub, rub_with, :travel, :cool, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go, :rainbow, :light, :blow_out} from 'verbs'
+import {open, close, look_in, read, climb_over, leap_at, through, climb_up, climb_down, tie, untie, ring, burn, turn, tally, lamp_on, lamp_off, wave, raise, take, kiss, listen, smell, rub, rub_with, :travel, :cool, :dome_rope, :consume, :snuffed, :open_gate, :gate_open, :close_gate, :die, :relight, :candle_burn, :let_go, :rainbow, :light, :blow_out, :rite_lit} from 'verbs'
 import {engravings_cave} from 'east'
 import {HadesGate} from 'hades'
 import {BelowAltar, tiny_cave} from 'mirror'
@@ -429,6 +429,12 @@ kind Candles is Flame {
   passage ldesc { There is a pair of candles here{if self.get(:lit)} (providing light){/if}. }
   describe {
     text "They are two tall candles of yellow wax, {if self.get(:stage) == 0}hardly burned at all{else if self.get(:stage) == 1}burned down a fair way{else if self.get(:stage) == 2}burned down to stubs{else}burned down to almost nothing{/if}. {if self.get(:lit)}The candles are burning.{else}The candles are out.{/if}"
+  }
+
+  // Burning in hand at the gates of Hell while the spirits reel from the
+  // bell, after any command there (LLD-ROOM's M-END): the gates are told.
+  after command {
+    if (self.get(:lit) && here.is(HadesGate)) { send here :rite_lit }
   }
 
   // Blown out by the draught in the Tiny Cave (CAVE2-ROOM), in hand.

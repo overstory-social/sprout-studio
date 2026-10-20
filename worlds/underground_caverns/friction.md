@@ -457,6 +457,13 @@ entries' first text is kept as it was written against 61f02bb.
   still not Zork's: a reading refused in its consent pass, an exit's
   refusal and `no_way` run no `do`, so "It is already open." and "You can't
   go that way." are not counted, where Zork counts every command it parses.
+  **Changed** by sprout#772 (Sprout ae97fbb): the count is one `after
+  command` on the adventurer in place of a line in the `do` of every verb,
+  and the game's own commands set `:aside` to go uncounted. A new verb is
+  counted without remembering to be. A refused reading, a refused `go` and
+  a parser's answer still run no `after command`, so what is not Zork's
+  stays as it was. The move is counted after the command, so a clock read
+  inside a command (DIAGNOSE's) sees the moves before it.
 
 ### 24. No turns, only time
 
@@ -1170,7 +1177,11 @@ area by area, including what it did not find hard.
   down.
 - **Spec:** The world model; Range; Events, messages and the bus › Sending;
   Containers route.
-- **Status: open,** as 16.
+- **Status: open,** as 16. The ground's half is **resolved** by sprout#775
+  (Sprout 4aab16e): the Clearing's grating stands in the Clearing holding
+  `:unseen` until the leaves are moved, as the spec's own example has it,
+  and the ground is scenery that holds nothing and needs no pass rules.
+  `tests/grating_hidden.json` pins it.
 
 ### 58. A lock cannot see the key in the hand that turns it
 
@@ -1568,7 +1579,15 @@ contributing once, as the spec says. No NPC is new in v4.
   load is too heavy."), where until v4 it took whatever it read.
 - **Spec:** Actors and visitors (capacity); Movement and consent › The
   three roles.
-- **Status: open.**
+- **Status: changed** by sprout#777 (Sprout b52b147): the adventurer holds
+  `capacity 100 by :size`, so the engine refuses any move into the hands
+  past the load, by any way in, with the world's `too_heavy`, which says
+  Zork's line. The engine weighs each thing alone, as the world did, so the
+  coffin still weighs 55 with or without the sceptre. `:load` stays: a line
+  of several things (`take all`) must refuse the one that will not fit and
+  take the rest, and a move refused ends its body, and `read`'s take must
+  refuse in its `permit`, before anything moves. Both need the load as a
+  number, and the language has no sum of a property over what is held.
 
 ### 76. A prayer that moves the visitor
 
@@ -1785,7 +1804,11 @@ me say is below.
 - **Spec:** Prose (`actor` and `here` are bound only where someone is
   acting); Acting; Events › Receiving ("A sender binding is live for the
   length of the handler and cannot be stored").
-- **Status: open.**
+- **Status: resolved** by sprout#774 (Sprout eb7627e): an actor's own
+  handlers bind `here`. His turn is a `:survey` he sends himself, read
+  against `here`, and which part of his turn it is (his clock, a room
+  just reached, his lair) rides in the message. The rooms no longer
+  answer `:prowl`, and the `:phase` and `:at` he kept are gone.
 
 ### 84. An NPC cannot walk the map on its own
 
@@ -1813,6 +1836,11 @@ me say is below.
   "this exit" (the exit as a value, as friction 82 also wants for an
   intent's slot) would let an NPC walk; a place-valued binding for "where I
   am" (83) would let him choose, and spare the chain of every room.
+  **Changed** again by sprout#774 (Sprout eb7627e): he knows his room (83),
+  and `move self <direction>` or `move self along an exit` would let him
+  walk. He does not, because Zork's thief does not walk: I-THIEF takes the
+  next room on its list wherever it lies. So the chain stays, as the
+  faithful round, and is no longer a workaround.
 
 ### 85. An unseen actor is announced as he comes and goes
 
@@ -1830,7 +1858,14 @@ me say is below.
   each of which a later verb or kind could forget.
 - **Spec:** The world model › Places (the arrival and departure notices);
   Range; Roles compose (wildcards).
-- **Status: open.**
+- **Status: resolved** by sprout#775 (Sprout 4aab16e): he holds `:unseen`
+  until he lets himself be seen. The blank notices, `:ndesc`, the wildcard
+  permits and `:shown` are gone. A line naming him while he is unseen is
+  answered with the world's `not_here`, as Zork answers it. His pass rule
+  stays, reading `:unseen`, so that nothing gets into his hands while he
+  is unseen. One thing had to change hands: his lair can no longer count
+  him while he is unseen, so it keeps `:harbors` from its own `:entered`
+  and `:left`, and the scream at the door asks that.
 
 ### 86. Taking from a person's hands, and knowing what is in them
 
@@ -2260,7 +2295,12 @@ unseen) are named where they would have helped.
   nameable things in their own right, which is lucky; a hider with nothing
   in the room to be would need a name nobody types.
 - **Spec:** Range; Spawning; Containment is a declaration.
-- **Status: open,** with sprout#482.
+- **Status: changed** by sprout#775 (Sprout 4aab16e): the pot of gold is
+  declared at the End of Rainbow, unseen until the rainbow is first made
+  solid, and the leak in the Maintenance Room, unseen until the blue
+  button bursts it; each now has a name a path can reach. The trunk and
+  the scarab stay in the mud and the sand, which the water and the shovel
+  move them out of, much as Zork's do.
 
 ### 98. A room that floods, and a river that runs, on a clock coarser than a move
 
@@ -2678,7 +2718,13 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
   difference is a flame in a shut box in hand, which Zork's HELD? finds and
   range does not.
 - **Spec:** Range; Sight; The runtime › Turns (no hook after a command).
-- **Status: open.** #477.
+- **Status: changed** by sprout#772 (Sprout ae97fbb): the Gas Room's own
+  `after command` asks its visitor to look in their hands after every
+  command there, which is Zork's M-END. A flame that comes into the hand
+  there, or a box with one in it opened there, now goes off. The room
+  still asks on the way in, for a visitor brought there by the world's
+  gate, so the visitor keeps `:gassed` to go off once a turn. Still open:
+  a flame in a shut box in hand (#477).
 
 ### 114. One thing becoming another
 
@@ -2693,7 +2739,10 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
   itself. Nothing a player sees differs; the diamond has no identifier, so
   nothing in the world can name it by path, which nothing needs to.
 - **Spec:** Spawning; Destroying.
-- **Status: open,** and small: #482 would let the diamond be declared.
+- **Status: changed** by sprout#775 (Sprout 4aab16e): the diamond is
+  declared inside the machine, unseen, and the machine run on coal tells it
+  to show itself, so it has a name a path can reach. The slag is still
+  spawned, one for each run on anything else.
 
 ### 115. A teleport that does not show
 
@@ -2914,7 +2963,11 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   ceremony is broken..." to whoever is in it, as I-XB does only where
   HERE is the Entrance.
 - **Spec:** Time › Wakes; The runtime › Turns.
-- **Status: open,** with 24.
+- **Status: changed** by sprout#772 (Sprout ae97fbb): (c) is answered. The
+  candles' own `after command` tells the Entrance to Hades when they burn
+  in hand there, after any command, however they came to be lit or held,
+  through a pass rule on the hands (73). The take's and the burn's own
+  reports are gone. (a) and (b) stand: the ceremony's clocks are wakes.
 
 ### 122. One bell, two objects
 
@@ -3079,7 +3132,12 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   its holder tells itself, as the candles' burning is told. A lamp lit on a
   floor, in a sack or in the thief's bag keeps its charge.
 - **Spec:** Time › Wakes; Range.
-- **Status: open,** with 24 and #477.
+- **Status: changed** by sprout#772 (Sprout ae97fbb): the lamp's own `after
+  command` spends a move of its battery while it is lit and carried, and
+  says its line to its bearer itself. `:lamp_age`, `:burn_tick` and the
+  adventurer's `changed :moves` are gone. `tests/lamp_battery.json` pins it.
+  A command about the game itself spends nothing: the lamp asks its bearer,
+  who counts after the things they carry.
 
 ### 131. One thing becoming another, again
 

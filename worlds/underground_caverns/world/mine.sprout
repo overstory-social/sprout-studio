@@ -30,6 +30,8 @@ import {cellar} from 'cellar'
 
 message :cage with boolean
 message :run
+// The diamond, made from the coal.
+message :made
 
 // The Timber Room and the Drafty Room, between which the passage is too
 // narrow for anything heavier than a clove of garlic (Zork's EMPTY-HANDED,
@@ -456,9 +458,13 @@ object gas_room is DarkRoom, GasRoom in underground_caverns {
   passage body {
     This is a small room which smells strongly of coal gas. There is a short climb up some stairs and a narrow tunnel leading east.
   }
-  // BOOM-ROOM: whoever comes in carrying a flame is told the rest.
+  // BOOM-ROOM: whoever comes in carrying a flame, by any way, and whoever
+  // has one in hand after a command here (M-END), is told the rest.
   on :entered (item, from) {
     if (item.is(Adventurer)) { send item :gas }
+  }
+  after command {
+    if (actor.is(Adventurer)) { send actor :gas }
   }
   object bracelet is Bracelet
   object gas is Gas {
@@ -684,7 +690,11 @@ object machine_room is DarkRoom in underground_caverns {
   passage body {
     This is a large, cold room whose sole exit is to the north. In one corner there is a machine which is reminiscent of a clothes dryer. On its face is a switch which is labelled "START". The switch does not appear to be manipulable by any human hand (unless the fingers are about 1/16 by 1/4 inch). On the front of the machine is a large lid, which is {if machine.get(:open)}open{else}closed{/if}.
   }
-  object machine is Machine
+  object machine is Machine {
+    // Zork's diamond waits outside the world until the machine makes it;
+    // here it waits inside the machine, unseen.
+    object diamond is Diamond { :unseen true }
+  }
   object switch is Scenery, Mechanism {
     grammar { name "switch"  nouns "start"  adjectives "start" }
     passage short { switch }
@@ -709,7 +719,8 @@ object machine_room is DarkRoom in underground_caverns {
 
 // The machine (MACHINE-F): a box with a lid, which turns coal into a
 // diamond and anything else into slag when its switch is turned with the
-// screwdriver and the lid is shut (MSWITCH-FUNCTION).
+// screwdriver and the lid is shut (MSWITCH-FUNCTION). The diamond is in it
+// from the start, unseen, and shows itself when made.
 kind Machine is Box, Scenery, Mechanism, Switchable {
   grammar { name "machine"  nouns "lid", "dryer", "pdp10", "pdp-10", "drier"  adjectives "large", "clothes" }
   :open false
@@ -762,7 +773,7 @@ kind Machine is Box, Scenery, Mechanism, Switchable {
   on :run {
     if (self.count(Coal) > 0) {
       each c: Coal in self { send c :consume }
-      spawn Diamond in self
+      send underground_caverns.machine_room.machine.diamond :made
     } else {
       each t: Thing in self { send t :consume }
       spawn Slag in self
@@ -771,6 +782,7 @@ kind Machine is Box, Scenery, Mechanism, Switchable {
 }
 
 kind Diamond is Treasure {
+  on :made { self.set(:unseen, false) }
   grammar { name "huge diamond"  nouns "diamond", "treasure", "gem", "jewel"  adjectives "huge", "enormous", "perfectly", "cut" }
   :value 10
   :tvalue 10

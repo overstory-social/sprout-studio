@@ -22,7 +22,7 @@ import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
 import {Thief} from 'thief'
 import {ask} from 'sprout'
-import {take, put, open, close, look_in, attack, give, throw, listen, talk, greet, alarm, mung, kick, burn, tie, climb_up, climb_down, through, shift, :travel, :clock, :cyc_state, :magic, :cyclops_gone, :uncork, :consume, :summon, :defend, :keeper, :unveil, :wall_look, :die, search} from 'verbs'
+import {take, put, open, close, look_in, attack, give, throw, listen, talk, greet, alarm, mung, kick, burn, tie, climb_up, climb_down, through, shift, :travel, :clock, :cyc_state, :magic, :cyclops_gone, :uncork, :consume, :summon, :keeper, :unveil, :wall_look, :die, search} from 'verbs'
 import {maze_15} from 'maze'
 import {living_room} from 'house'
 extension media 1
@@ -42,6 +42,11 @@ kind TreasureRoom is DarkRoom {
   // tells it (a room cannot read him out of its range).
   :keeper true
   on :keeper (from, value) { self.set(:keeper, value) }
+  // Whether he is in it: unseen, he is out of its sight, but not out of
+  // the moves it hears of.
+  :harbors false
+  on :entered (item, from) { if (item.is(Thief)) { self.set(:harbors, true) } }
+  on :left (item, to) { if (item.is(Thief)) { self.set(:harbors, false) } }
 }
 
 object cyclops_room is CyclopsRoom in underground_caverns {
@@ -476,10 +481,7 @@ object treasure_room is TreasureRoom in underground_caverns {
   // Somebody is in the lair: its owner comes to defend it
   // (TREASURE-ROOM-FCN), from wherever he is.
   on :entered (item, from) {
-    if (item.is(Adventurer)) {
-      if (self.count(Thief) > 0) { each t: Thief in self { send t :defend } }
-      else { broadcast :summon }
-    }
+    if (item.is(Adventurer)) { broadcast :summon }
   }
   // The thief, dying here: what he hid shows itself (ROBBER-FUNCTION's
   // F-DEAD).
@@ -552,7 +554,7 @@ kind Chalice is Box, Treasure {
   as target for take {
     permit {
       each t: Thief in here {
-        if (t.get(:shown) && t.get(:fighting) && t.get(:strength) > 0) { refuse "You'd be stabbed in the back first." }
+        if (t.get(:fighting) && t.get(:strength) > 0) { refuse "You'd be stabbed in the back first." }
       }
     }
   }
