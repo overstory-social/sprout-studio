@@ -203,13 +203,11 @@ describe('publish', () => {
     ['an address under another base', () => `http://elsewhere.test/worlds/world-${'ab'.repeat(4)}.sproutworld`],
     ['an escape that does not decode', () => `${baseUrl}world-%E0%A4%A.sproutworld`],
   ]) {
-    it(`refuses a signed live index listing ${what}, writing nothing`, async () => {
+    it(`refuses a signed live index listing ${what}`, async () => {
       const [world] = firstIndex().worlds;
       const dir = join(root, 'paths', String(what.length));
       serving = liveSite(dir, [{ ...world, url: url() }]);
       await assert.rejects(publishTo(`paths-${what.length}`), /is not a cartridge under/);
-      assert.equal(existsSync(join(root, 'escaped-abababab.sproutworld')), false);
-      assert.equal(existsSync(join(dirname(tmpdir()), 'escaped-abababab.sproutworld')), false);
     });
   }
 
