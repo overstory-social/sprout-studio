@@ -79,11 +79,13 @@ function stage(options = {}) {
         return world;
       case 'open': {
         const [, , nn, persona, seed] = command.split(' ');
+        const by = / --by (\w+)/.exec(command)?.[1];
+        const id = by === undefined ? `${persona}-${seed}` : `${persona}-${seed}-${by}`;
         if (!world.rounds.some((one) => one.round === nn)) {
           world.rounds.push({ round: nn, runs: [], reports: [], metrics: false, pairwise: [], synthesis: false, steering: false, revision: false, committed: false, figures: null, acceptedDesign: null });
         }
-        current().runs.push(`${persona}-${seed}`);
-        return { run: `${persona}-${seed}`, door: `door${persona.length}${seed}aa` };
+        current().runs.push(id);
+        return { run: id, door: `door${persona.length}${seed}aa` };
       }
       case 'save':
         if (kind === 'synthesis' && refusals > 0) {
@@ -103,7 +105,7 @@ function stage(options = {}) {
           return { ok: false, problems: ['doc: give the url of the doc that was reached'] };
         }
         if (kind === 'steering') current().steering = true;
-        if (kind === 'playtest-report' && `${stdin.persona}-${stdin.seed}` !== name) {
+        if (kind === 'playtest-report' && `${stdin.persona}-${stdin.seed}` !== name.replace(/-(sonnet|opus|fable|haiku)$/, '')) {
           return { ok: false, problems: [`persona and seed: not the run ${name}`] };
         }
         if (kind === 'revision-plan') {
@@ -145,9 +147,12 @@ function stage(options = {}) {
         return { stdout: JSON.stringify(clerk(command, stdin === null ? undefined : JSON.parse(stdin[1]))) };
       }
       case 'playtester': {
-        // What a player hands back, without the persona and seed it is never told.
+        // What a player hands back, without the persona and seed it is never told; `ended` bends how a run ends.
         const { persona: _p, seed: _s, ...theirs } = reportFor('explorer', 0);
-        return theirs;
+        const ended = options.ended?.[opts.label.replace(/^play /, '')];
+        return ended === undefined
+          ? theirs
+          : { ...theirs, done: { reason: ended.reason, why: 'So.' }, ending: { reached: ended.ending, what: ended.ending === 'no' ? null : 'The end.' } };
       }
       case 'brief-checker':
         return options.violated
@@ -353,6 +358,64 @@ describe('the studio-round workflow', () => {
     assert.match(s.calls.find((one) => one.type === 'synthesizer').prompt, /The explorer runs were played by fable/);
     await assert.rejects(stage().run({ world: 'shed', models: { explorer: 'gpt' } }), /args\.models\.explorer is one of/);
     await assert.rejects(stage().run({ world: 'shed', personas: ['casual'], models: { explorer: 'fable' } }), /args\.models names explorer/);
+  });
+
+  it('plays the stuck runs again on the fallback model where nobody reached an ending, and tells the synthesizer', async () => {
+    const s = stage({ ended: { 'explorer-1': { reason: 'stuck', ending: 'no' } } });
+    await s.run({ world: 'shed', personas: ['explorer', 'goal-seeker'], fallback: 'opus' });
+    const played = s.calls.filter((one) => one.type === 'playtester').map((one) => [one.label, one.model]);
+    assert.deepEqual(played, [['play explorer-1', undefined], ['play goal-seeker-1', undefined], ['play explorer-1-opus', 'opus']]);
+    assert.ok(s.logs.includes('no run reached an ending: explorer-1-opus played again by opus'));
+    assert.deepEqual(s.world.rounds[0].reports, ['explorer-1', 'goal-seeker-1', 'explorer-1-opus']);
+    assert.match(s.calls.find((one) => one.type === 'synthesizer').prompt, /explorer-1-opus is a run played again by opus, on the same seeds/);
+    assert.equal(s.world.rounds[0].committed, true);
+  });
+
+  it('plays the goal-seeker again where nobody reached an ending and nobody got stuck', async () => {
+    const s = stage();
+    await s.run({ world: 'shed', personas: ['explorer', 'goal-seeker'], fallback: 'opus' });
+    const again = s.calls.filter((one) => one.type === 'playtester' && one.model === 'opus').map((one) => one.label);
+    assert.deepEqual(again, ['play goal-seeker-1-opus']);
+  });
+
+  it('plays nothing again where a run reached an ending, or where there is no fallback', async () => {
+    const ended = stage({ ended: { 'goal-seeker-1': { reason: 'ending', ending: 'yes' }, 'explorer-1': { reason: 'stuck', ending: 'no' } } });
+    await ended.run({ world: 'shed', personas: ['explorer', 'goal-seeker'], fallback: 'opus' });
+    assert.equal(ended.calls.filter((one) => one.type === 'playtester').length, 2);
+    const none = stage({ ended: { 'explorer-1': { reason: 'stuck', ending: 'no' } } });
+    await none.run({ world: 'shed', personas: ['explorer', 'goal-seeker'] });
+    assert.equal(none.calls.filter((one) => one.type === 'playtester').length, 2);
+    assert.doesNotMatch(none.calls.find((one) => one.type === 'synthesizer').prompt, /played again/);
+    await assert.rejects(stage().run({ world: 'shed', fallback: 'gpt' }), /args\.fallback is one of/);
+  });
+
+  it('resumed with a replay on disk that reached an ending, plays the replays still owed and tells the synthesizer of all', async () => {
+    const s = stage({
+      rounds: [
+        {
+          round: '01',
+          runs: ['explorer-1', 'goal-seeker-1', 'explorer-1-opus'],
+          reports: ['explorer-1', 'goal-seeker-1', 'explorer-1-opus'],
+          outcomes: {
+            'explorer-1': { ending: 'no', reason: 'stuck' },
+            'goal-seeker-1': { ending: 'no', reason: 'stuck' },
+            'explorer-1-opus': { ending: 'yes', reason: 'ending' },
+          },
+          metrics: false, pairwise: [], synthesis: false, steering: false, revision: false, committed: false, figures: null, acceptedDesign: null,
+        },
+      ],
+    });
+    await s.run({ world: 'shed', personas: ['explorer', 'goal-seeker'], fallback: 'opus' });
+    const played = s.calls.filter((one) => one.type === 'playtester').map((one) => [one.label, one.model]);
+    assert.deepEqual(played, [['play goal-seeker-1-opus', 'opus']]);
+    assert.match(s.calls.find((one) => one.type === 'synthesizer').prompt, /explorer-1-opus, goal-seeker-1-opus are runs played again by opus/);
+  });
+
+  it('counts a run reported where its replay was, though it was not', async () => {
+    const s = stage({ unplayed: ['explorer-1', 'casual-1'] });
+    await s.run({ world: 'shed', personas: ['explorer', 'casual', 'goal-seeker'], fallback: 'opus' });
+    assert.deepEqual(s.world.rounds[0].reports, ['goal-seeker-1', 'explorer-1-opus', 'casual-1-opus']);
+    assert.equal(s.world.rounds[0].committed, true);
   });
 
   it('refuses a goal for a persona the round does not play', async () => {

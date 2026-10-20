@@ -1453,6 +1453,10 @@ for (const [persona, model] of Object.entries(MODELS)) {
   if (!PERSONAS.includes(persona)) throw new Error(`args.models names ${persona}, which is not a persona of this round`)
   if (!['sonnet', 'opus', 'fable', 'haiku'].includes(model)) throw new Error(`args.models.${persona} is one of sonnet, opus, fable, haiku`)
 }
+// Where no run of a round reached an ending, the runs that got stuck (or never reported) are
+// played again by this model; where none got stuck, the goal-seeker's are.
+const FALLBACK = A.fallback ?? null
+if (FALLBACK !== null && !['sonnet', 'opus', 'fable', 'haiku'].includes(FALLBACK)) throw new Error('args.fallback is one of sonnet, opus, fable, haiku')
 // A playtester stays blind: nothing it is told names a file, a folder, the round or a calibration world.
 const LEAKS = /worlds\/|rounds\/|\.(md|json|sprout)\b|\bround\s*\d|\bcalibration\b/i
 for (const [what, words] of [['args.framing', FRAMING], ...Object.entries(GOALS).map(([persona, goal]) => [`args.goals.${persona}`, goal])]) {
@@ -1609,48 +1613,79 @@ while (played < ROUNDS) {
   phase('Playtest')
   const runs = PERSONAS.flatMap((persona) => SEEDS.map((seed) => ({ persona, seed, id: `${persona}-${seed}` })))
   if (runs.length > MAX_RUNS) log(`playing ${MAX_RUNS} of ${runs.length} runs: the cap on runs per round`)
-  const todo = runs.slice(0, MAX_RUNS).filter((run) => !at.reports.includes(run.id))
-  const reports = await pipeline(
-    todo,
-    (run) => {
-      const cap = run.persona === 'casual' ? CASUAL_CAP : TURN_CAP
-      return clerk(`open ${WORLD} ${round} ${run.persona} ${run.seed} --turn-cap ${cap} --advance ${ADVANCE}`, undefined, `open ${run.id}`)
-    },
-    (opened, run) =>
-      kept('playtest-report', run.id, round, async (problems, refused) => {
-        // The player never learns its seed: the report is theirs, the run's persona and seed the workflow's.
-        const played =
-          problems === null
-            ? await agent(
-                `Your door: ${opened.door}\nGo by the name ${['Ash', 'Bryn', 'Cato', 'Dell', 'Esme', 'Finch'][PERSONAS.indexOf(run.persona) % 6]}.\n` +
-                  `Who you are as a player: ${PERSONA[run.persona]}\n` +
-                  (FRAMING === null ? '' : `${FRAMING}\n`) +
-                  (GOALS[run.persona] === undefined ? '' : `What you want here: ${GOALS[run.persona].trim()}\n`) +
-                  `You are arriving in a place. Play.`,
-                {
-                  agentType: 'playtester',
-                  ...(MODELS[run.persona] === undefined ? {} : { model: MODELS[run.persona] }),
-                  phase: 'Playtest',
-                  label: `play ${run.id}`,
-                  schema: SCHEMAS['playtest-report-as-played'],
-                },
-              )
-            : await agent(
-                `This is a playtest report a player wrote, and it was refused. You cannot replay what they played.${again(problems)}\n\n` +
-                  `The report:\n${JSON.stringify(refused)}`,
-                { agentType: 'mender', phase: 'Playtest', label: `mend report ${run.id}`, schema: SCHEMAS['playtest-report-as-played'] },
-              )
-        if (played === null) return null
-        const { persona: _p, seed: _s, ...theirs } = played
-        return { persona: run.persona, seed: run.seed, ...theirs }
-      }),
-  )
-  const reported = reports.filter(Boolean).length
+  const playing = runs.slice(0, MAX_RUNS)
+  const todo = playing.filter((run) => !at.reports.includes(run.id))
+  // Each run through its own door, played by `model` where it is given and the playtester's own (or the persona's) where not.
+  const play = (list, model) =>
+    pipeline(
+      list,
+      (run) => {
+        const cap = run.persona === 'casual' ? CASUAL_CAP : TURN_CAP
+        const by = model === undefined ? '' : ` --by ${model}`
+        return clerk(`open ${WORLD} ${round} ${run.persona} ${run.seed} --turn-cap ${cap} --advance ${ADVANCE}${by}`, undefined, `open ${run.id}`)
+      },
+      (opened, run) =>
+        kept('playtest-report', run.id, round, async (problems, refused) => {
+          // The player never learns its seed: the report is theirs, the run's persona and seed the workflow's.
+          const played =
+            problems === null
+              ? await agent(
+                  `Your door: ${opened.door}\nGo by the name ${['Ash', 'Bryn', 'Cato', 'Dell', 'Esme', 'Finch'][PERSONAS.indexOf(run.persona) % 6]}.\n` +
+                    `Who you are as a player: ${PERSONA[run.persona]}\n` +
+                    (FRAMING === null ? '' : `${FRAMING}\n`) +
+                    (GOALS[run.persona] === undefined ? '' : `What you want here: ${GOALS[run.persona].trim()}\n`) +
+                    `You are arriving in a place. Play.`,
+                  {
+                    agentType: 'playtester',
+                    ...(model !== undefined ? { model } : MODELS[run.persona] === undefined ? {} : { model: MODELS[run.persona] }),
+                    phase: 'Playtest',
+                    label: `play ${run.id}`,
+                    schema: SCHEMAS['playtest-report-as-played'],
+                  },
+                )
+              : await agent(
+                  `This is a playtest report a player wrote, and it was refused. You cannot replay what they played.${again(problems)}\n\n` +
+                    `The report:\n${JSON.stringify(refused)}`,
+                  { agentType: 'mender', phase: 'Playtest', label: `mend report ${run.id}`, schema: SCHEMAS['playtest-report-as-played'] },
+                )
+          if (played === null) return null
+          const { persona: _p, seed: _s, ...theirs } = played
+          return { persona: run.persona, seed: run.seed, ...theirs }
+        }),
+    )
+  const reports = await play(todo)
+  // How every run of the round has ended so far, on disk and just now.
+  const outcomes = { ...(at.outcomes ?? {}) }
+  todo.forEach((run, i) => {
+    if (reports[i]) outcomes[run.id] = { ending: reports[i].ending.reached, reason: reports[i].done.reason }
+  })
+  let reported = reports.filter(Boolean).length
   log(`${reported} of ${todo.length} runs reported`)
+  // Nobody reached an ending: the stuck and the unreported runs, or else the goal-seeker's, are played again by the fallback model.
+  // Only the runs as first played decide it: a replay that reached an ending, resumed from disk, is still a replay.
+  let replayed = []
+  if (FALLBACK !== null && !playing.some((run) => outcomes[run.id]?.ending === 'yes')) {
+    const stuck = playing.filter((run) => outcomes[run.id] === undefined || outcomes[run.id].reason === 'stuck')
+    const chosen = stuck.length > 0 ? stuck : playing.filter((run) => run.persona === 'goal-seeker')
+    replayed = chosen.map((run) => ({ ...run, id: `${run.id}-${FALLBACK}` }))
+    const owed = replayed.filter((run) => !at.reports.includes(run.id))
+    if (owed.length > 0) {
+      log(`no run reached an ending: ${owed.map((run) => run.id).join(', ')} played again by ${FALLBACK}`)
+      const more = await play(owed, FALLBACK)
+      reported += more.filter(Boolean).length
+      owed.forEach((run, i) => {
+        if (more[i]) outcomes[run.id] = { ending: more[i].ending.reached, reason: more[i].done.reason }
+      })
+    }
+    replayed = replayed.filter((run) => outcomes[run.id] !== undefined)
+  }
   // A synthesis of a few runs speaks for a round it did not see: the round stops, uncommitted, to be played again.
-  const wanted = Math.min(runs.length, MAX_RUNS)
-  if ((at.reports.length + reported) * 2 < wanted) {
-    log(`stopping: ${at.reports.length + reported} of ${wanted} runs were reported, and a round needs at least half`)
+  // A run counts as reported where it, or its replay, was.
+  const wanted = playing.length
+  const done = new Set([...at.reports, ...Object.keys(outcomes)])
+  const covered = playing.filter((run) => done.has(run.id) || (FALLBACK !== null && done.has(`${run.id}-${FALLBACK}`))).length
+  if (covered * 2 < wanted) {
+    log(`stopping: ${covered} of ${wanted} runs were reported, and a round needs at least half`)
     break
   }
 
@@ -1681,6 +1716,9 @@ while (played < ROUNDS) {
         Object.entries(MODELS)
           .map(([persona, model]) => `\nThe ${persona} runs were played by ${model}, the others by the playtester's own model. Say how they played differently, if they did.`)
           .join('') +
+        (replayed.length === 0
+          ? ''
+          : `\nNo run first reached an ending, so ${replayed.map((run) => run.id).join(', ')} ${replayed.length === 1 ? 'is a run' : 'are runs'} played again by ${FALLBACK}, on the same seeds as the runs they are named after. Say whether ${FALLBACK} got further, and what stood in the way of each.`) +
         again(problems),
       { agentType: 'synthesizer', phase: 'Synthesize', label: 'synthesize', schema: SCHEMAS.synthesis },
     ),

@@ -5,8 +5,9 @@
 // command prints one JSON object on stdout, and exits 1 where it refused.
 //
 //   status  <world>                          where the world's rounds stand
-//   open    <world> <NN> <persona> <seed> [--turn-cap T] [--advance 30]
-//                                            a playtest run: its id and its door
+//   open    <world> <NN> <persona> <seed> [--turn-cap T] [--advance 30] [--by <model>]
+//                                            a playtest run: its id and its door; a run played
+//                                            again by another model is <persona>-<seed>-<model>
 //   save    <world> <NN> <kind> [name]       an agent's output, from stdin, if valid
 //   measure <world> <NN>                     `sprout play --report` on every run, and merged
 //   verify  <world>                          `sprout check` and `sprout test` on the world
@@ -127,6 +128,13 @@ export function status(world) {
             : revision.decisions.filter((one) => one.decision === 'accept' && design.has(one.answers)).length,
         runs: jsonIn(at, 'runs'),
         reports: jsonIn(at, 'reports'),
+        // How each reported run ended: whether the player reached an ending, and why they stopped.
+        outcomes: Object.fromEntries(
+          jsonIn(at, 'reports').map((id) => {
+            const report = read(`reports/${id}.json`);
+            return [id, { ending: report.ending.reached, reason: report.done.reason }];
+          }),
+        ),
         metrics: here('metrics/merged.json'),
         pairwise: jsonIn(at, 'pairwise'),
         synthesis: here('synthesis.json'),
@@ -138,12 +146,19 @@ export function status(world) {
   };
 }
 
-/** Open a playtest run: its ticket under a fresh door, and the run's id, which carries its persona and seed. */
-export function open(world, round, persona, seed, { turnCap, advance } = {}) {
+/** The models a run may be played again by. */
+export const FALLBACK_MODELS = ['sonnet', 'opus', 'fable', 'haiku'];
+
+/**
+ * Open a playtest run: its ticket under a fresh door, and the run's id, which carries its persona
+ * and seed, and the model it is played again by where it is (`by`), on the same stream of seeds.
+ */
+export function open(world, round, persona, seed, { turnCap, advance, by } = {}) {
   if (!PERSONAS.includes(persona)) throw new Error(`${persona}: a persona is one of ${PERSONAS.join(', ')}`);
   if (!/^\d+$/.test(String(seed))) throw new Error(`${seed}: a seed is a whole number`);
+  if (by !== undefined && !FALLBACK_MODELS.includes(by)) throw new Error(`${by}: a run is played again by one of ${FALLBACK_MODELS.join(', ')}`);
   stopStaleServers();
-  const run = `${persona}-${seed}`;
+  const run = by === undefined ? `${persona}-${seed}` : `${persona}-${seed}-${by}`;
   const at = roundDir(world, round);
   mkdirSync(join(ROOT, at, 'runs'), { recursive: true });
   mkdirSync(DOORS, { recursive: true });
@@ -236,7 +251,8 @@ export function save(world, round, kind, name, value) {
   const takesName = kind === 'playtest-report' || kind === 'pairwise-verdict';
   if (takesName && !/^[a-z0-9-]+$/.test(name ?? '')) throw new Error(`a ${kind} is saved under its run's id, as explorer-7`);
   const problems = [...problemsIn(kind, value), ...(kind === 'playtest-report' ? leaksIn(value) : [])];
-  if (kind === 'playtest-report' && problems.length === 0 && `${value.persona}-${value.seed}` !== name) {
+  const runOf = (id) => id.replace(new RegExp(`-(${FALLBACK_MODELS.join('|')})$`), '');
+  if (kind === 'playtest-report' && problems.length === 0 && `${value.persona}-${value.seed}` !== runOf(name)) {
     problems.push(`persona and seed: ${value.persona}-${value.seed} is not the run ${name} it is saved as`);
   }
   if (kind === 'playtest-report' && typedIn(world, round, name) === 0) {
@@ -378,7 +394,7 @@ function main(argv) {
     case 'status':
       return status(world);
     case 'open':
-      return open(world, round, rest[0], rest[1], { turnCap: flags['turn-cap'], advance: flags.advance });
+      return open(world, round, rest[0], rest[1], { turnCap: flags['turn-cap'], advance: flags.advance, by: flags.by });
     case 'save':
       return save(world, round, rest[0], rest[1], JSON.parse(readFileSync(0, 'utf8')));
     case 'measure':
