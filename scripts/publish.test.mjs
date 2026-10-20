@@ -163,6 +163,7 @@ describe('publish', () => {
     setManifest({ author: 'someone else' });
     try {
       await assert.rejects(publishTo('same-version'), /^Error: World 0\.1\.0 is already published as build [0-9a-f]{8}, and this build [0-9a-f]{8} is another: bump `version` in the world's sprout\.json\.\nNothing is published\.$/);
+      assert.equal(existsSync(join(site('same-version'), 'index.html')), false);
       setVersion('0.1.1');
       const index = await publishTo('bumped');
       assert.deepEqual(index.worlds.map((world) => world.version).sort(), ['0.1.0', '0.1.1']);
