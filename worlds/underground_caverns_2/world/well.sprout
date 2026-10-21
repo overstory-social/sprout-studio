@@ -1,0 +1,411 @@
+// The well: the Circular Room at its bottom, the Top of Well, and the
+// wooden bucket between them, which rises when there is fresh water in it
+// and comes down when there is not (BUCKET-FCN, I-BUCKET, PASS-THE-BUCKET,
+// WELL-FCN, WISH-FCN, the etchings); and the Tea Room east of the top,
+// set for the mad (ALICE-TABLE, EATME-FCN, CAKE-FCN, ALICE-HOLE).
+//
+// The bucket is a place (`sprout.Place`) that also stands on the floor:
+// whoever boards it is in it, and goes where it goes. It cannot name the
+// room it stands in, so it keeps which end of the well it is at (`:at`),
+// and its way out leads to whichever end that is.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Portable, Vessel, Wishing, Door, Awaited} from 'thing'
+import {Box} from 'box'
+import {Room, DarkRoom, Airy, CakeSafe, TeaRoomLike} from 'room'
+import {Light} from 'lamp'
+import {Water, EatMeCake, BlueCake, OrangeCake, RedCake} from 'items'
+import {Adventurer} from 'adventurer'
+import {pearl_room} from 'riddle'
+import {low_room, AbsentRobot} from 'machine'
+import {Zorkmid} from 'volcano'
+import {read, look_in, look_under, climb_up, climb_down, kick, burn, board, disembark, through, wish, put, throw, look_down, knock, pour_in, shift, Dest, :room_sealed, :open_gate, :gate_open, :close_gate, :die, :consume, :bucket_lift, :bucket_up, :bucket_down, :bucket_dry} from 'verbs'
+
+// What the bucket is about: nothing; straining at its rope, the move after
+// water was poured into it from outside; rising; coming down because the
+// water was taken out; coming down because the water dried.
+enum Errand { idle, straining, rise, descend, dry }
+
+// A cake keeps in the bucket, as it does at the Top of Well: Zork's
+// vehicle is in the room it stands in (round 3's P11).
+kind Bucket is sprout.Place, Box, Vessel, Awaited, CakeSafe {
+  :open true
+  :capacity 100
+  :size 100
+  :at Dest default well_bottom
+  :riders 0 min 0 max 20
+  :errand Errand default idle
+  :daylight false
+  :seeing false
+  grammar {
+    name "wooden bucket"
+    nouns "bucket", "pail"
+    adjectives "wooden", "large"
+    lit (self.sees(sprout.LightSource, :lit))
+    exit out "out" -> well_top when (self.get(:at) == :well_top)
+    exit out "out" -> well_bottom
+    exit east "east" -> tea_room when (self.get(:at) == :well_top)
+    exit west "west" -> pearl_room when (self.get(:at) == :well_bottom)
+    exit up "up" refuse "You'd have to get the bucket to go up, and it goes up for water, not for you."
+    exit down "down" refuse "It's a long way down!" when (self.get(:at) == :well_top)
+    exit down "down" refuse "You are at the bottom of the well already, in a bucket."
+  }
+  passage short { wooden bucket }
+  passage ldesc { There is a wooden bucket here, 3 feet in diameter and 3 feet high. }
+  passage inside_view {{if self.get(:at) == :well_top}{if well_top.is(WellTop)}{well_top.bucket_view}{/if}{else}{if well_bottom.is(WellBottom)}{well_bottom.bucket_view}{/if}{/if}}
+  passage examined { It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago: fresh water, by the lack of any salt crust, the kind the stream has where it comes up to meet you at a ford, and the kind a teapot would carry; and the rope above it is taut as though it would like to again.{if !self.holds(actor)} Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets.{/if}
+
+    {self.look_inside} }
+  // Examined, from inside it or out, the bucket; looked at from inside,
+  // or arrived in, the well seen from it.
+  passage viewed { {if seen == :examine}{self.examined}{else}{self.inside_view}{/if} }
+  describe { text viewed }
+  passage no_take { The bucket is far too large to carry, and it is tied to the well. }
+
+  // What is in the bucket is reached from in it (BUCKET-CONT).
+  release (item, to) {
+    if (mover.is(Adventurer) && !self.holds(mover) && item.is(Thing)) { refuse "You'll need to get in the bucket to reach it." }
+  }
+
+  without as container for pour_in from Thing
+  as container for pour_in { do { } }
+  // Thing's answer to "look in" arrives by way of Vessel and Awaited
+  // (friction 54; round 7's P9).
+  without as target for look_in from Thing
+  without as target for kick from Thing
+  as target for kick {
+    do {
+      say "If you insist."
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  without as target for burn from Thing
+  as target for burn { do { say "The bucket is fireproof, and won't burn." } }
+  without as target for climb_up from Thing
+  without as target for climb_down from Thing
+  as target for board { do { } }
+  as target for disembark { do { } }
+  without as target for through from Thing
+  as target for through { do { } }
+
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      self.adjust(:riders, 1)
+      self.set(:ndesc, true)
+    } else if (item.is(Water)) {
+      if (!item.get(:salty) && self.get(:at) == :well_bottom) {
+        if (self.get(:riders) == 0) {
+          // Poured into from outside: Zork's bucket is gone at once. This
+          // one strains at its rope for a move first, and says so, so that
+          // whoever poured has one move to get in.
+          self.set(:errand, :straining)
+          tell outside "The rope above the bucket goes taut, and the bucket shifts on the floor and lifts a little at one side, as though it had somewhere to be and meant to go there with or without you. It has not gone yet."
+        } else {
+          self.set(:errand, :rise)
+          send underground_caverns_2 :open_gate
+        }
+      }
+    }
+  }
+  on :left (item, to) {
+    if (item.is(Adventurer) && to != self) {
+      self.adjust(:riders, -1)
+      self.set(:ndesc, self.get(:riders) > 0)
+    } else if (item.is(Water)) {
+      if (self.get(:at) == :well_top && self.count(Water) == 0) {
+        self.set(:errand, :descend)
+        send underground_caverns_2 :open_gate
+      } else if (self.get(:at) == :well_bottom && self.count(Water) == 0 && self.get(:errand) == :straining) {
+        self.set(:errand, :idle)
+        tell inside "The rope slackens, and the bucket settles back on the floor."
+      }
+    }
+  }
+  // Drunk, or spilled, the water is gone without leaving: the bucket
+  // comes down at the end of the move (BUCKET-FCN's M-END).
+  after command {
+    if (self.get(:at) == :well_top && self.count(Water) == 0 && self.get(:errand) == :idle) {
+      self.set(:errand, :descend)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  // The move after it was poured into from outside, the Circular Room
+  // tells it to go: with whoever got in, or without anyone.
+  on :bucket_lift {
+    if (self.get(:errand) == :straining && self.get(:at) == :well_bottom && self.count(Water) > 0) {
+      if (self.get(:riders) == 0) { tell outside "The bucket swiftly rises up, and is gone." }
+      self.set(:errand, :rise)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  // The water's hundred moves are up (I-BUCKET), counted by whoever is
+  // in the domain, or waited through from the bottom: the water dries
+  // and the bucket comes down, with whoever is in it.
+  on :bucket_dry {
+    if (self.get(:at) == :well_top && self.count(Water) > 0) {
+      each w: Water in self { send w :consume }
+      self.set(:errand, :dry)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  on :gate_open {
+    let e = self.get(:errand)
+    if (e == :rise) { move self to well_top }
+    else if (e == :descend || e == :dry) { move self to well_bottom }
+    send underground_caverns_2 :close_gate
+  }
+  on :moved (from, to) {
+    let e = self.get(:errand)
+    self.set(:errand, :idle)
+    if (to.is(Room)) { self.set(:at, to.get(:id)) }
+    if (e == :rise) {
+      broadcast :bucket_up
+      tell inside "The bucket rises and comes to a stop."
+      tell outside "The wooden bucket comes up the shaft on its rope and stops, level with the rim of the well."
+    } else if (e == :descend) {
+      tell inside "The bucket descends and comes to a stop."
+      tell outside "The wooden bucket comes down the shaft on its rope and settles on the floor."
+    } else if (e == :dry) {
+      tell inside "The last of the water evaporates, and the bucket descends."
+      tell outside "The wooden bucket comes down the shaft on its rope and settles on the floor."
+    }
+    if (e == :descend || e == :dry) { broadcast :bucket_down }
+    if (e != :idle) {
+      self.set(:seeing, false)
+      each l: Light in self { if (l.get(:lit)) { self.set(:seeing, true) } }
+      each r: Adventurer in self { if (r.get(:light) > 0) { self.set(:seeing, true) } }
+      if (self.get(:riders) > 0) {
+        if (!self.get(:seeing)) { tell inside "It is pitch black. You are likely to be eaten by a grue." }
+        else { tell inside "{self.inside_view}" }
+      }
+    }
+  }
+}
+
+// The well itself, from the bottom and from the top (WELL, WISH).
+kind WellBottomWall is Scenery, Wishing {
+  grammar { name "well"  nouns "shaft", "brick", "mortar", "bricks"  adjectives "magic", "brick" }
+  passage short { well }
+  describe { text "You are at the bottom of it. The walls are brick and mortar, damp, and go up into the dark in a circle for a long way; the roof of the well is not visible, and may not exist. There are etchings on the walls." }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "You can't climb the well." } }
+  without as target for climb_down from Thing
+  as target for climb_down { do { say "You can't climb the well." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "You are in it. Looking up, the brick goes up until the dark takes it, and then there is only dark." } }
+  as target for wish {
+    do {
+      self.set(:coin_here, false)
+      each z: Zorkmid in here { self.set(:coin_here, true) }
+      if (self.get(:coin_here)) {
+        say "A whispering voice replies: \"Water makes the bucket go.\" Unfortunately, wishing makes the coin go...."
+        each z: Zorkmid in here { send z :consume }
+      }
+      else { say "No one is listening." }
+    }
+  }
+  :coin_here false
+}
+kind WellTopMouth is Box, Wishing {
+  grammar { name "well"  nouns "shaft", "mouth", "hole"  adjectives "magic", "brick" }
+  :ndesc true
+  :open true
+  :capacity 10000
+  passage short { well }
+  describe { text "The mouth of the well is a ring of brick at the top of the shaft, worn smooth at one side where the bucket rope runs over it. Looking down, there is a great deal of dark and, at the bottom of it, nothing you can make out." }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "You can't climb the well." } }
+  without as target for climb_down from Thing
+  as target for climb_down { do { say "You can't climb the well." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "It's a long way down, and dark all the way. If there is anything at the bottom, it is keeping quiet about it." } }
+  as target for wish { do { say "No one is listening." } }
+  // Something thrown or dropped down it lands at the bottom (WELL-FCN).
+  on :entered (item, from) {
+    if (item.is(Thing)) {
+      tell "The {item.short} is now sitting at the bottom of the well."
+      self.set(:sending, true)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  :sending false
+  on :gate_open {
+    if (self.get(:sending)) {
+      self.set(:sending, false)
+      each t: Thing in self { move t to well_bottom }
+    }
+    send underground_caverns_2 :close_gate
+  }
+}
+
+// The bucket's name, at whichever end of the well the bucket has left:
+// spawned by the room as the bucket goes and gone as it comes back, so
+// that "enter bucket", "examine bucket" and "wait for bucket" are
+// answered in voice, and not with the parser's not-here line, while the
+// bucket is at the other end of the rope.
+kind MissingBucket is Scenery, Vessel, Awaited {
+  grammar { name "wooden bucket"  nouns "bucket", "pail"  adjectives "wooden", "large", "missing", "absent" }
+  passage short { wooden bucket }
+  passage away { {if here.is(WellTop)}The bucket is at the bottom of the well, at the far end of the rope, where it goes when there is nothing in it to keep it up. It goes up for water, not for company; there is no water in it down there, and no way to put any in from here.{else}The bucket is not here. It went up the shaft on its rope, and the rope is still here, taut, going up into the dark with nothing on the end of it that you can see. Whatever hauled it up will presumably let it down again when it is done with it, which, buckets being what they are, will be when it is dry. You could wait for it. It would be a long wait. (WAIT FOR THE BUCKET passes the whole of it at once.){/if} }
+  describe { text away }
+  passage no_take { The bucket is not here to take, and it would be far too large to carry if it were. }
+  on :consume { finally destroy self }
+  as target for board { permit { refuse "The bucket is not here to get into. The rope is, and the rope is not the kind of thing one gets into." } }
+  as target for disembark { permit { refuse "You're not in that!" } }
+  without as target for through from Thing
+  as target for through { permit { refuse "The bucket is not here to get into. The rope is, and the rope is not the kind of thing one gets into." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "There is nothing here to look into. The bucket is at the other end of the rope." } }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "The bucket is at the other end of the rope. You could climb the rope, if you were a sailor, which you are not." } }
+  without as target for climb_down from Thing
+  as target for climb_down { do { say "The bucket is at the other end of the rope. You could climb the rope, if you were a sailor, which you are not." } }
+  without as target for kick from Thing
+  as target for kick { do { say "You kick at where the bucket was. The air there is unharmed." } }
+  without as target for shift from Thing
+  as target for shift { do { say "There is no bucket here to move. There is a rope, and the rope is taut, and whatever holds the other end of it is not persuaded." } }
+}
+
+// The bucket's rope, from either end of the well: taut, and not for
+// climbing or pulling, since the bucket goes up and down on its own account.
+kind WellRope is Scenery {
+  grammar { name "rope"  nouns "line", "cable"  adjectives "taut", "long", "wet" }
+  passage short { rope }
+  without as target for shift from Thing
+  as target for shift { do { say "You pull on the rope. It is taut, and stays taut, and whatever holds the other end is not persuaded. The bucket goes up and down on its own account, and not on yours." } }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "The rope is wet, and the well is deep, and you are not a sailor. You get a little way up it, which is to say your feet leave the floor, and then they find it again, rather suddenly. The rope is for the bucket." } }
+  without as target for climb_down from Thing
+  as target for climb_down { do { say "You are at the bottom of it already. The rope goes up." } }
+}
+kind WellRopeAbove is WellRope {
+  without as target for climb_up from WellRope
+  as target for climb_up { do { say "The rope goes up from here to a beam you can just make out, and the beam goes nowhere. Neither, after a short trial, do you." } }
+  without as target for climb_down from WellRope
+  as target for climb_down { do { say "You start down the rope, and get as far as the rim of the well before the rope, the dark and your common sense all have a word with you at once. It's a long way down!" } }
+}
+
+kind TopEtchings is Scenery {
+  grammar { name "wall with etchings"  nouns "etchings", "etching", "writing"  adjectives "etched" }
+  passage short { wall with etchings }
+  passage words {
+    The letters are cut in a ring, and read round from the top: o b o, then r and z, then f M A G I C z, then c W E L L y, then o and n, then m p a. Read across the middle, they say MAGIC WELL; read round the rim they spell frobozz magic well company.
+  }
+  describe { text words }
+  without as target for read from Thing
+  as target for read { do { say words } }
+}
+kind BottomEtchings is TopEtchings {
+  passage words {
+    The letters are cut in a ring, and most of the ring has crumbled with the mortar. What is left reads: o b o at the top, A G I across the middle with E and L beneath, and m p a at the bottom. The rest has gone the way of the brickwork.
+  }
+}
+
+object well_bottom is WellBottom in underground_caverns_2 {
+  grammar {
+    name "Circular Room"
+    exit west "west" -> pearl_room
+    exit up "up" refuse "The walls cannot be climbed."
+  }
+  :id well_bottom
+  :walls 6
+  passage body { This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it.{if self.count(Bucket) == 0} A rope hangs down the middle of the room from the dark above, taut, with nothing on the end of it; whatever hauled the bucket up will presumably let it down again when it is done with it.{/if} }
+  object bucket is Bucket
+  object etchings is BottomEtchings
+  object well is WellBottomWall
+  object rope is WellRope {
+    describe { text "{if well_bottom.count(Bucket) > 0}A rope runs from the handle of the bucket up into the dark, where something at the top of the well is presumably holding the other end. It is taut, and not the kind of rope that goes anywhere when pulled.{else}The rope hangs down the well from the dark, and the bucket is at the other end of it, at the top. The rope is taut, and not the kind that goes anywhere when pulled; the bucket came down once, and will presumably come down again when whatever is up there has finished with it, if you wait for it.{/if}" }
+  }
+  // Zork's "Time passes...", and, while the bucket is up, what it is
+  // passing against.
+  // Zork's player typed WAIT thirty-four times for the hundred moves;
+  // here the whole wait is one command, said in Zork's parenthetical
+  // (round 3's P1: the line that only described the wait was read as
+  // description).
+  passage waited { Time passes...{if self.count(Bucket) == 0} The rope stays taut, and the bucket stays up wherever it has gone. It came down once, so it will presumably come down again, when whatever is in it has dried; it would be a long wait. (WAIT FOR THE BUCKET passes the whole of it at once.){/if} }
+}
+
+object well_top is WellTop in underground_caverns_2 {
+  grammar {
+    name "Top of Well"
+    exit east "east" -> tea_room
+    exit down "down" refuse "It's a long way down!"
+  }
+  :id well_top
+  :value 10
+  :walls 6
+  passage body { You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily.{if self.count(Bucket) == 0} A rope runs over the rim of the well and down into the dark, and the bucket is at the far end of it.{/if} }
+  object etchings is TopEtchings
+  object well is WellTopMouth
+  object rope is WellRopeAbove {
+    describe { text "{if well_top.count(Bucket) > 0}The rope runs from the handle of the bucket up to a beam over the well, and over it, and off into the dark; it is taut, and creaks very slightly, and is not the kind of rope that goes anywhere when pulled.{else}The rope runs over a beam above the well and down into the dark, and the bucket is at the far end of it, at the bottom. It is taut, and not the kind of rope that goes anywhere when pulled.{/if}" }
+  }
+  object crack is Scenery {
+    grammar { name "crack"  nouns "fissure"  adjectives "small" }
+    passage short { crack }
+    describe { text "It is a small crack (as advertised) with no redeeming value." }
+    without as target for look_in from Thing
+    as target for look_in { do { say "You peer into the crack. It is small, and dark, and has nothing in it, which is more than can be said for most cracks in this place." } }
+  }
+}
+
+kind TeaRoom is Room, CakeSafe, TeaRoomLike { }
+// Either end of the well: as the bucket leaves, its name stays behind
+// (MissingBucket), and as it comes back the name goes.
+kind WellEnd is DarkRoom, Airy {
+  on :left (item, to) {
+    if (item.is(Bucket)) { spawn MissingBucket in self }
+  }
+  on :entered (item, from) {
+    if (item.is(Bucket)) { each m: MissingBucket in self { send m :consume } }
+  }
+}
+kind WellTop is WellEnd, CakeSafe {
+  on :left (item, to) {
+    if (item.is(Bucket)) { tell "The rope over the well creaks, and the wooden bucket goes back down the shaft on it, having finished whatever it was doing up here." }
+  }
+}
+kind WellBottom is WellEnd {
+  // The move after the bucket was poured into from outside: it goes.
+  after command {
+    each b: Bucket in self { if (b.get(:errand) == :straining) { send b :bucket_lift } }
+  }
+}
+
+object tea_room is TeaRoom in underground_caverns_2 {
+  grammar {
+    name "Tea Room"
+    exit east "east" refuse "Only a mouse could get in there."
+    exit west "west" -> well_top
+    exit northwest "northwest" -> low_room
+  }
+  :id tea_room
+  :posts_sealed false
+  on :room_sealed (from, value) { if (value == :posts) { self.set(:posts_sealed, true) } }
+  object absent_robot is AbsentRobot { :room tea_room }
+  passage body { This is a small room containing a large oblong table, no doubt set for afternoon tea. It is clear from the objects on the table that the users were indeed mad. In the eastern corner of the room is a small hole (no more than four inches high). There are passageways leading away to the west and the northwest. }
+  object table is Box {
+    grammar { name "large oblong table"  nouns "table"  adjectives "large", "oblong", "tea" }
+    :open true
+    :surface true
+    :capacity 50
+    :ndesc true
+    :plain 4
+    passage short { large oblong table }
+    passage examined { It is a large oblong table, laid for a tea that was a great deal madder than most teas are: the places are set with cakes and nothing else, no cups, no pot, no chairs. A guest who means to leave this table the size they sat down at it would do well to take more than one cake from it. {self.look_inside} }
+    object eat_me is EatMeCake
+    object blue is BlueCake
+    object orange is OrangeCake
+    object red is RedCake
+  }
+  object hole is Scenery, Door {
+    grammar { name "hole"  nouns "mousehole"  adjectives "small", "tiny" }
+    passage short { hole }
+    describe { text "The hole is very small. You could never enter it." }
+    without as target for look_in from Thing
+    as target for look_in { do { say "You can't see what's beyond the hole from here." } }
+    without as target for through from Thing
+    as target for through { do { say "Only a mouse could get in there." } }
+    without as target for knock from Door
+    as target for knock { do { say "You knock beside the hole. Nothing comes out, which is the best you could have hoped for." } }
+  }
+}

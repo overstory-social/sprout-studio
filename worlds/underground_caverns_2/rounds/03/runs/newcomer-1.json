@@ -1,0 +1,148 @@
+{
+  "steps": [
+    { "seed": 11 },
+    { "seed": 2197249643 },
+    { "arrive": "Finch", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Finch", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Finch", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Finch", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "seed": 2276102492 },
+    { "as": "Finch", "type": "pick up the lantern and the sword", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Lamp: Taken." },
+      { "reader": "Finch", "kind": "said", "words": "Elvish sword: Taken." }
+    ] },
+    { "seed": 2611849345 },
+    { "tick": true, "expect": [] },
+    { "seed": 2534707746 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3654058086 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Narrow Tunnel" },
+      { "reader": "Finch", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
+    ] },
+    { "seed": 2310788172 },
+    { "tick": true, "expect": [] },
+    { "seed": 343709746 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2278503823 },
+    { "as": "Finch", "type": "cross the bridge south", "expect": [
+      { "reader": "Finch", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "seed": 2610208752 },
+    { "tick": true, "expect": [] },
+    { "seed": 1934130678 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2061766709 },
+    { "as": "Finch", "type": "look", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Narrow Tunnel" },
+      { "reader": "Finch", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
+    ] },
+    { "seed": 3622893700 },
+    { "tick": true, "expect": [] },
+    { "seed": 1803782115 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" },
+      { "reader": "Finch", "kind": "told", "words": "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." },
+      { "reader": "Finch", "kind": "told", "words": "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." },
+      { "reader": "Finch", "kind": "told", "words": "The Wizard, in a deep and resonant voice, speaks the word \"Fantasize!\" He then vanishes, cackling gleefully." },
+      { "reader": "Finch", "kind": "told", "words": "Your sword has begun to glow very brightly." },
+      { "reader": "Finch", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 2878519677 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Foot Bridge" },
+      { "reader": "Finch", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." },
+      { "reader": "Finch", "kind": "described", "words": "There is a basilisk here." }
+    ] },
+    { "seed": 2927142993 },
+    { "tick": true, "expect": [] },
+    { "seed": 690691362 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 766714254 },
+    { "as": "Finch", "type": "attack the basilisk with the sword", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now." }
+    ] },
+    { "seed": 1185867794 },
+    { "tick": true, "expect": [] },
+    { "seed": 1700453084 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1619044949 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Great Cavern" },
+      { "reader": "Finch", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." }
+    ] },
+    { "seed": 2501857457 },
+    { "tick": true, "expect": [] },
+    { "seed": 547528647 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2564447487 },
+    { "as": "Finch", "type": "go southwest", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Shallow Ford" },
+      { "reader": "Finch", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." },
+      { "reader": "Finch", "kind": "described", "words": "There is a copy of ZORK I here." }
+    ] },
+    { "seed": 2476215078 },
+    { "tick": true, "expect": [] },
+    { "seed": 1797087874 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 3626027738 },
+    { "as": "Finch", "type": "take the copy and read it", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now." }
+    ] },
+    { "seed": 3459101431 },
+    { "tick": true, "expect": [] },
+    { "seed": 3301990234 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1364128264 },
+    { "as": "Finch", "type": "go south", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "You have moved into a dark place." },
+      { "reader": "Finch", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue." }
+    ] },
+    { "seed": 2676226408 },
+    { "tick": true, "expect": [] },
+    { "seed": 1080953885 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "underground_caverns_2#1 woke, 180 seconds after it asked" },
+      { "reader": "Finch", "kind": "told", "words": "The room, which had been looking a little odd round the edges, settles down and is only a room." }
+    ] },
+    { "seed": 241521202 },
+    { "as": "Finch", "type": "turn on the lantern", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "The lamp is now on." },
+      { "reader": "Finch", "kind": "said", "words": "Dark Tunnel" },
+      { "reader": "Finch", "kind": "said", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
+    ] },
+    { "seed": 3182186058 },
+    { "tick": true, "expect": [] },
+    { "seed": 4199060035 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1274904538 },
+    { "as": "Finch", "type": "go southwest", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Path Near Stream" },
+      { "reader": "Finch", "kind": "described", "words": "The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction. On the east is a ruined archway choked with vegetation." }
+    ] },
+    { "seed": 629356129 },
+    { "tick": true, "expect": [] },
+    { "seed": 3193529162 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 1491273201 },
+    { "as": "Finch", "type": "go southwest", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Carousel Room" },
+      { "reader": "Finch", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
+      { "reader": "Finch", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." }
+    ] },
+    { "seed": 2377032268 },
+    { "tick": true, "expect": [] },
+    { "seed": 2476786696 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3631417814 },
+    { "leave": "Finch", "expect": [
+      { "reader": "Finch", "kind": "notice", "words": "You leave, and take what you carry with you." }
+    ] }
+  ]
+}

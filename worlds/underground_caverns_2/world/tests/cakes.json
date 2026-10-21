@@ -1,0 +1,195 @@
+{
+  "about": "The Tea Room: the Eat-Me cake makes the room huge, the red cake dries the pool to show the candy, and the blue cake, eaten in the Posts Room, brings everything back.",
+  "steps": [
+    { "seed": 5 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Marta", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Marta", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Marta", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Narrow Tunnel" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foot Bridge" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Great Cavern" },
+      { "reader": "Marta", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Shallow Ford" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
+      { "reader": "Marta", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." }
+    ] },
+    { "as": "Marta", "type": "in", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gazebo" },
+      { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the tea table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A newspaper" },
+      { "reader": "Marta", "kind": "described", "words": "A place mat" },
+      { "reader": "Marta", "kind": "described", "words": "A china teapot" },
+      { "reader": "Marta", "kind": "described", "words": "A letter opener" },
+      { "reader": "Marta", "kind": "described", "words": "A matchbook" }
+    ] },
+    { "as": "Marta", "type": "take teapot", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "out", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Shallow Ford" }
+    ] },
+    { "as": "Marta", "type": "fill teapot with water", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The teapot is now full of water." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Formal Garden" },
+      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Topiary" },
+      { "reader": "Marta", "kind": "described", "words": "This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
+      { "reader": "Marta", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." },
+      { "reader": "Marta", "kind": "described", "words": "The disorientation is not all in your head. The floor, if you stand still on it a moment, is turning, slowly, and the eight passages go round with it, so that the one you came in by is already somewhere else. They all lead somewhere, every one of them; it is only a question of which, and the only way to settle that is to pick one and walk into it. The one that climbs a little, when it comes round, has a draught down it that smells of old brick and older water, and once, faintly, from up that way, you hear the grinding of a very heavy stone door." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You're not sure which direction is which. This room is very disorienting." },
+      { "reader": "Marta", "kind": "said", "words": "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works; and the works are not in that room so much as under it and off to one side, by the sound, which is loudest low down and toward the passage that climbs, as though the machinery were somewhere past the well at the end of that way." },
+      { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
+      { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
+    ] },
+    { "as": "Marta", "type": "say well", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is a deafening clap of thunder and the stone door quietly swings open to reveal a passageway beyond." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Pearl Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a former broom closet. The exits are to the east and west." },
+      { "reader": "Marta", "kind": "described", "words": "There is a pearl necklace here with hundreds of large pearls." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Circular Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." },
+      { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
+    ] },
+    { "as": "Marta", "type": "get in bucket", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are now in the wooden bucket." },
+      { "reader": "Marta", "kind": "described", "words": "Circular Room, in the wooden bucket" },
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." }
+    ] },
+    { "as": "Marta", "type": "pour water into bucket", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is now a puddle in the bottom of the wooden bucket." },
+      { "reader": "Marta", "kind": "told", "words": "The bucket rises and comes to a stop." },
+      { "reader": "Marta", "kind": "told", "words": "Top of Well, in the wooden bucket" },
+      { "reader": "Marta", "kind": "told", "words": "You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily." },
+      { "reader": "Marta", "kind": "told", "words": "The wooden bucket contains:" },
+      { "reader": "Marta", "kind": "told", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "get out", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are on your own feet again." },
+      { "reader": "Marta", "kind": "described", "words": "Top of Well" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily." },
+      { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." },
+      { "reader": "Marta", "kind": "described", "words": "The wooden bucket contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Tea Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room containing a large oblong table, no doubt set for afternoon tea. It is clear from the objects on the table that the users were indeed mad. In the eastern corner of the room is a small hole (no more than four inches high). There are passageways leading away to the west and the northwest." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the large oblong table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with green letters" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with blue letters" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with orange letters" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with red letters" }
+    ] },
+    { "as": "Marta", "type": "take green cake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take blue cake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take red cake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "read red cake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The first letter is a capital E. The rest is too small to read." }
+    ] },
+    { "as": "Marta", "type": "eat green cake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Suddenly, the room appears to have become very large (although everything you are carrying seems to be its normal size)." },
+      { "reader": "Marta", "kind": "described", "words": "Posts Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is an enormous room, in the center of which are four wooden posts delineating a rectangular area, above which is what appears to be a wooden roof. In fact, all objects in this room appear to be abnormally large. To the east is a passageway. There are large gaping chasms to the west and northwest. Whatever was left on the roof up there is on it still, a long way over your head, and nothing up there is coming down to you." }
+    ] },
+    { "as": "Marta", "type": "take table", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Pool Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room, one half of which is depressed. Salty water flows from a large leak in the ceiling. The only exit is to the west." },
+      { "reader": "Marta", "kind": "described", "words": "A stoppered glass flask with a skull-and-crossbones marking is here. The flask is filled with some clear liquid." },
+      { "reader": "Marta", "kind": "described", "words": "The leak has submerged the depressed area in a pool of tears. There is a hazy something at the deepest part of the pool." }
+    ] },
+    { "as": "Marta", "type": "read red cake through flask", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The letters, now visible, say \"Evaporate\"." }
+    ] },
+    { "as": "Marta", "type": "throw red cake into pool", "expect": [
+      { "level": "info", "text": "step: underground_caverns_2.put" },
+      { "reader": "Marta", "kind": "said", "words": "Most of the pool evaporates, revealing a (slightly damp but still valuable) package of rare candies. The red cake must be pretty strong stuff, since it remains intact!" },
+      { "level": "warning", "text": "drawn: the line read 2 ways that tied, and one was drawn" }
+    ] },
+    { "as": "Marta", "type": "take candy", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Posts Room" }
+    ] },
+    { "as": "Marta", "type": "eat blue cake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The room around you seems to be getting smaller." },
+      { "reader": "Marta", "kind": "described", "words": "Tea Room" },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the large oblong table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with orange letters" }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Tea Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room containing a large oblong table, no doubt set for afternoon tea. It is clear from the objects on the table that the users were indeed mad. In the eastern corner of the room is a small hole (no more than four inches high). There are passageways leading away to the west and the northwest." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the large oblong table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with orange letters" }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your score is 30 (total of 400 points), in 39 moves." },
+      { "reader": "Marta", "kind": "said", "words": "This score gives you the rank of Beginner." }
+    ] }
+  ]
+}

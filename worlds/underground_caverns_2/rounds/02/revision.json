@@ -1,0 +1,255 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The umbrella point: no run reached the end of the quarter, and each stall has a named cause. Answered by what P2 (the lost bucket), P3 (the luck-only Riddle Room and the three rockfalls) and P4 (the paper read as the EBCDIC) change; nothing in the quarter's geography or puzzles moves, since the brief's even round refines and adds no territory."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Accepted in the main, with one piece refused. Zork's hundred-move return is a hundred commands here because every clock is the host's (friction 37), so the bucket was unrecoverable inside a 150-turn run. Kept: the bucket goes up alone when poured into from outside, as Zork has it. Added: the bucket's close-up from outside says it goes up with what is in it and without what is not; the Circular Room's own 'waited' line says the bucket can be waited for and that it is long; 'wait for the bucket' (eight phrasings) passes the hundred moves at a stroke, counts them on the score line, and brings it down dry; the rope at either end answers 'climb', 'climb down' and 'pull' in voice. Refused: 'wait' passing three moves. A move counter that said three passed when one did, with no clock passing with it, would lie about what ran; logged instead."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The draw stays Zork's (random, one in five your own way), but nothing told a visitor the Riddle Room existed. 'examine passages' now says the southeast one climbs toward a draught that smells of old brick; after the room has thrown a visitor out three times its description says so too and names the passage that climbs. The three rockfalls are each their own passage now, with their own lines, so three refusals do not read as one wall. 'A rockfall answering at most once per visit' is refused: a deliberate 'south' deserves its answer every time, and silence is worse than a refusal in voice."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "A world bug of mine: the green paper carried the noun 'instructions', so in the Machine Room the paper in hand outranked the EBCDIC on the wall. The Machine Room already had an 'instructions' object with Zork's joke; the paper loses the noun and gains 'sheet'. 'read instructions' in the Machine Room now reads the EBCDIC, verified by parse and in play."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Three of eight could not tell an illusion from a parser failure, and the brief says everything a description names answers. The illusion is now every room's own object beside the grue (as Zork's GLOBAL-OBJECTS are), named by all the Fantasize words, and every verb on it is refused in the narrator's voice: one line while the spell is on ('Your hand closes on nothing... the room has the grace to look embarrassed'), another after it has worn off. The flicker itself (one time in five on each description) stays, as round 1's P6 decided."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Checked against the spec: 'all' is narrowed only by 'except', by kind or by name, never to a container's contents, and a plural noun after it is no sentence (Parsing, Sequences, again and all). 'take all from table' and its seven siblings are now a verb of the world's, 'take_from', whose part takes each portable thing on the table by name ('Newspaper: Taken.'). 'take all cakes' stays unknown; both are friction 36."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "A typo in Zork's own line. Fixed to 'There is a Wizard of Frobozz in here!'."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Box's open answer ('I think you've already done that') reached the lidless teapot, and Thing's default came back through Fillable (friction 22). The teapot now answers 'It has no lid, which saves time.' and nothing else."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The mat is a surface and reported itself empty like a container. Its close-up now lists what is on it only when something is."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "Two participants spoke: the water's part and the roses' (Thing's target part for pour_on). Thing's parts for pour_on and pour_in are silent now; the water says what came of it. Logged as friction 39, the other face of caverns 29."
+    },
+    {
+      "answers": "P11",
+      "decision": "reject",
+      "reason": "Already friction 30: a describe binds 'seen' as look, arrival or poll only, and 'examine bucket' from inside it is 'look' of the place the visitor is in, so the bucket's own words can only reach them as a refusal. Replacing the engine's examine with a world verb for one object is not worth what it would cost every other thing. 'Unicorn? What unicorn?' is Zork's own refusal and stays one. The spec wins over the metric here."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "The brief's rule, and a fair catch. The dragon, the serpent, the dog and the human figures are each their own object with a close-up in voice and the 'not where they were' tell; the unicorn the Topiary names is hedge, and the garden's stand-in says so there instead of 'Unicorn? What unicorn?'."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Reproduced: 'robot, hello' tied between greet's '[target], hello' and robot_stuck's. The phrase comes out of robot_stuck; greet answers with the robot's 'Hello, Master!'. A world-side tie, not an engine one, so nothing to file with Sprout."
+    },
+    {
+      "answers": "P14",
+      "decision": "reject",
+      "reason": "Fidelity. I-WIZARD runs from the first move in Zork and a spell lasts five to thirty-five moves; the newcomer's twelve fenced turns are Zork's own arithmetic in a thirty-turn persona. Keeping the Wizard out of the first minutes or shortening his spells would be a departure from the mechanics the brief measures against, for one short run. The fence's 'thinner already' line worked, as the point itself says."
+    },
+    {
+      "answers": "P15",
+      "decision": "accept",
+      "reason": "Accepted, and it turned out simpler than asked: tested this round, the parser drops 'a' and 'the' before the answer's word as before a noun, so 'answer a well' and 'answer the well' were already 'answer' and round 1's answer_article only tied with it and drew. The second verb is removed (friction 38 amends 32); 'the well' and 'it's the well' join the bare forms. The quoted 'answer \"a well\"' remains friction 33, a language gap."
+    },
+    {
+      "answers": "P16",
+      "decision": "accept",
+      "reason": "At the Path Near Stream the teapot now says the stream is at the bottom of the ravine and the fords are where it comes up to meet you; at the Marble Hall, that the ford to the north is. The Dark Tunnel's 'You can't see any such thing' stands: no water is named there, and that is the parser's honest answer."
+    },
+    {
+      "answers": "P17",
+      "decision": "accept",
+      "reason": "Brief mode is Zork's and stays the default. The first time a room is seen again by its name alone, one parenthetical line says LOOK, VERBOSE and BRIEF, and is never said again; verified in play that it follows the room's name."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The bucket's close-up from outside says it goes up with what is in it and without what is not; the Circular Room's own 'waited' line while the bucket is up; the bucket answers ':hurry' by drying its water and coming down; a WellRope kind at both ends of the well answering climb up, climb down and pull in voice (the rope's 'bucket' adjective, which captured 'enter bucket', was caught and removed).",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/well.sprout"
+      ],
+      "for": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "what": "'wait_for_bucket', a verb with no role, eight phrasings; the adventurer's part says the wait, adds 99 moves to the counter and broadcasts ':hurry'; the world passes ':hurry'.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/underground_caverns_2.sprout"
+      ],
+      "for": [
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "what": "The Carousel Room counts how often it has thrown a visitor out while spinning and, from three, its description says the passages are not quite identical and the southeast one climbs; 'examine passages' names the climbing passage and its draught of old brick; the three rockfalls each get their own line.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/carousel.sprout"
+      ],
+      "for": [
+        "P1",
+        "P3"
+      ]
+    },
+    {
+      "what": "The green paper loses the noun 'instructions' (gains 'sheet'), so the Machine Room's EBCDIC answers 'read instructions'.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/items.sprout"
+      ],
+      "for": [
+        "P1",
+        "P4"
+      ]
+    },
+    {
+      "what": "The Illusion kind moves from Elsewhere into every Room beside the grue, with a permit that refuses every verb in voice, one line under Fantasize and another after; the Elsewhere object is gone.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/room.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/wizard.sprout"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "'take_from' (take all from / everything off / all on the table, eight phrasings), typed by Box; the adventurer takes each portable thing on it by 'act take' with ':listing' set so each line carries its name.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "The Fear line's typo fixed.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "The teapot's own 'open' answer, with Box's and Thing's left out; the place mat lists its contents only when it has any; the teapot's 'fill' at a ravine's edge or in earshot of the stream explains where the water is.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/items.sprout"
+      ],
+      "for": [
+        "P8",
+        "P9",
+        "P16"
+      ]
+    },
+    {
+      "what": "Thing's container part for pour_in and target part for pour_on are silent; the water alone says what came of it.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/thing.sprout"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "TopiaryDragon, TopiarySerpent, TopiaryDog and TopiaryFigures as objects of the Topiary, each with its own close-up and the tell; the group object keeps 'animals'; HedgeUnicorn, the Topiary's stand-in, says the unicorn there is hedge.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/garden.sprout"
+      ],
+      "for": [
+        "P12"
+      ]
+    },
+    {
+      "what": "'[target], hello' removed from robot_stuck so greet alone reads it; '[target], go away' added in its place.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/verbs.sprout"
+      ],
+      "for": [
+        "P13"
+      ]
+    },
+    {
+      "what": "answer_article removed (the parser drops the article before the word, so it only tied with 'answer'); say_well gains 'the well', 'it is the well', 'it's the well'; the adventurer's duplicate part and import removed.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P15"
+      ]
+    },
+    {
+      "what": "On the first room seen again in BRIEF, the room sends ':brief_hint' and the adventurer tells itself one parenthetical line about LOOK, VERBOSE and BRIEF, once (':brief_told').",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/room.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/verbs.sprout"
+      ],
+      "for": [
+        "P17"
+      ]
+    },
+    {
+      "what": "New test: the bucket poured into from outside goes up alone, 'wait' and 'climb rope' answer in voice, 'wait for bucket' brings it down and the score line counts 132 moves.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/bucket_wait.json"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "Friction 36 ('all' cannot be narrowed to a container or a plural), 37 (a hundred moves is a hundred commands; nothing runs the clock; 'wait' passing three moves refused), 38 (the article before a value is dropped after all, amending 32), 39 (two participants both speaking).",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/friction.md"
+      ],
+      "for": [
+        "P2",
+        "P6",
+        "P10",
+        "P15"
+      ]
+    },
+    {
+      "what": "Intent kept current: the bucket that can be waited for and why, the carousel's tells, the rockfalls, the illusions as every room's own, the topiary close-ups, the one-time brief-mode line.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/intent.md"
+      ],
+      "for": [
+        "P2",
+        "P3",
+        "P5",
+        "P12",
+        "P17"
+      ]
+    }
+  ]
+}

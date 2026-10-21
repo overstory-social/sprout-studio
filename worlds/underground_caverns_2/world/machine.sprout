@@ -1,0 +1,497 @@
+// The robot's rooms: the Low Room, the Machine Room with its three
+// buttons, the Dingy Closet with the sphere and the cage, and the Cage
+// itself (MAGNET-ROOM-FCN, MAGNET-ROOM-EXIT, BUTTONS, SPHERE-FCN,
+// I-SPHERE, IN-CAGE-FCN, ROBOT-FCN). The robot is an NPC: told what to do
+// by the order verbs (verbs.sprout), it walks, pushes, lifts, takes and
+// drops by acting, and says what Zork's robot says.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Orderable, Button, Portable, Door} from 'thing'
+import {Box} from 'box'
+import {Room, DarkRoom, CakeSafe} from 'room'
+import {Sphere, RobotLabel, MangledCage} from 'items'
+import {tea_room} from 'well'
+import {Adventurer} from 'adventurer'
+import {ask} from 'sprout'
+import {take, give, throw, mung, open, close, look_in, shift, read, listen, smell, raise, greet, talk, alarm, follow, robot_go, robot_push, robot_lift, robot_drop, robot_give, robot_inventory, robot_other, robot_stuck, robot_eat, robot_see, Direction, Dest, :flip, :zoom, :cage_fall, :cage_lift, :freed, :poisoned, :robot_out, :robot_at, :die} from 'verbs'
+import {:lost} from 'items'
+message :cage_crush
+import {elsewhere} from 'garden'
+
+kind LowRoom is Room, CakeSafe { }
+kind MachineRoom is Room, CakeSafe { }
+kind Closet is Room, CakeSafe {
+  // The cage lifted: the sphere is free to take (CAGE-SOLVE-FLAG).
+  :solved false
+  on :cage_lift { self.set(:solved, true) }
+  object cage is CagePlace
+}
+
+// The robot (ROBOT): a late-model household robot, trained at GUE Tech.
+kind Robot is Creature, Orderable, sprout.Actor {
+  roams
+  pass any (true)
+  :dirs [Direction] default [north, south, east, west, northeast, northwest, southeast, southwest, up, down, inside, outside]
+  :wrecked false
+  grammar { name "robot"  nouns "r2d2", "c3po", "robby", "machine", "automaton"  adjectives "late-model", "metal" }
+  passage short { robot }
+  // What it holds is said in the room's list as in its close-up (round
+  // 5's P3), since a thing in its hands is out of the room's own list.
+  passage ldesc { There is a robot here.{if self.count(Thing) > 0} It is holding {for t: Thing in self}{if !$first}{if $last} and {else}, {/if}{/if}a {t.short}{/for}.{/if} }
+  passage arrives { {if false}.{/if} }
+  passage leaves { {if false}.{/if} }
+  passage not_yours { The robot holds on to it, politely. "Click. That is mine to carry, Master. Whirr." }
+  passage held_fast { The robot is far too heavy to carry, and has legs of its own. }
+  describe { text "It is a robot, late-model, as it will tell you itself: a tall tin body on two jointed legs, a head-like appendage with two dull lenses in it, and a pair of three-fingered hands held out in front of it as though waiting to be given something. A small plate on its chest says \"FROBOZZ MAGIC ROBOT COMPANY\". It hums.{if self.count(Thing) > 0} It is holding {for t: Thing in self}{if !$first}{if $last} and {else}, {/if}{/if}a {t.short}{/for}.{/if}" }
+  as target for any { permit { if (self.get(:wrecked)) { refuse "You can't see any such thing." } } }
+
+  without as target for open from Thing
+  as target for open { do { say "There's no access panel or door on the robot." } }
+  without as target for close from Thing
+  as target for close { do { say "There's no access panel or door on the robot." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "There's no access panel or door on the robot." } }
+  without as target for listen from Thing
+  as target for listen { do { say "The robot hums, and now and then something inside it clicks over, like a clock thinking." } }
+  without as target for greet from Creature
+  as target for greet { do { say "\"Hello, Master!\" says the robot, and waits to be told what to do." } }
+  without as target for talk from Creature
+  as target for talk { do { say "\"At your service!\" says the robot. It is waiting for an order, which you give by saying \"Robot,\" and then what you want done." } }
+  without as target for ask from Thing
+  as target for ask { do { say "\"My programming is insufficient to allow me to answer that,\" says the robot, apologetically." } }
+  without as target for alarm from Creature
+  as target for alarm { do { say "The robot is quite awake, insofar as a robot is ever anything else." } }
+  without as target for follow from Creature
+  as target for follow { do { say "The robot is right here, and will go where it is told." } }
+  // A gift (ROBOT-FCN's GIVE): the visitor's own part has put it in the
+  // robot's hands.
+  without as recipient for give from Thing
+  as recipient for give { do { if (item.is(Thing)) { say "The robot gladly takes the {item.short} and nods his head-like appendage in thanks." } } }
+  // Thrown at, or broken: it falls to pieces (shoddy construction).
+  without as target for mung from Thing
+  as target for mung {
+    do {
+      say "The robot falls to the ground and (being of shoddy construction) disintegrates before your eyes."
+      self.set(:wrecked, true)
+      self.set(:ndesc, true)
+      each t: Thing in self { move t to here }
+    }
+  }
+  as aim for throw {
+    do {
+      say "The robot falls to the ground and (being of shoddy construction) disintegrates before your eyes."
+      self.set(:wrecked, true)
+      self.set(:ndesc, true)
+      each t: Thing in self { move t to here }
+    }
+  }
+
+  // Orders. Now and then its circuits are rusty (2%); otherwise it
+  // whirrs and does what it was told, where it can.
+  passage whirr {{one of}"Whirr, buzz, click!"{or}"Whirr, buzz, click!"{or}"Whirr, buzz, click!"{or}"Whirr, buzz, click!"{or}"Buzz, click, whirr!"{/one of}}
+  passage rusty { "Buzz! Buzz! Buzz! My circuits are getting rusty. Try again." }
+  as target for robot_go {
+    way from :dirs
+    do {
+      if (random(50) == 0) { say rusty }
+      else if (bound way) {
+        say whirr
+        if (way == :north) { move self north }
+        else if (way == :south) { move self south }
+        else if (way == :east) { move self east }
+        else if (way == :west) { move self west }
+        else if (way == :northeast) { move self northeast }
+        else if (way == :northwest) { move self northwest }
+        else if (way == :southeast) { move self southeast }
+        else if (way == :southwest) { move self southwest }
+        else if (way == :up) { move self up }
+        else if (way == :down) { move self down }
+        else if (way == :inside) { move self in }
+        else { move self out }
+      } else { say "\"My programming is insufficient to allow me to perform that task.\"" }
+    }
+  }
+  as target for robot_push {
+    do {
+      if (random(50) == 0) { say rusty }
+      else {
+        say whirr
+        act shift (target: item)
+      }
+    }
+  }
+  as target for robot_lift {
+    do {
+      if (random(50) == 0) { say rusty }
+      // The sphere, reached for by the robot (SPHERE-FCN's second branch):
+      // the cage falls on him, and that is the end of him, of the sphere,
+      // and, Zork being Zork, of you.
+      else if (item.is(Sphere) && here.is(Closet) && !here.get(:solved)) {
+        say "As the robot reaches for the sphere, a solid steel cage falls from the ceiling, trapping him. You can faintly hear his last words: \"Whirr, buzz, click!\" A cloud of smoke rising from beneath the cage confirms your fears about the fate of your brave mechanical friend."
+        send item :lost
+        send dingy_closet.cage :cage_crush
+        send self :crushed
+        if (actor.is(Adventurer)) { send actor :die }
+      }
+      else if (item.is(CagePlace)) {
+        if (item.holds(self)) {
+          say "The cage shakes and is hurled across the room. It's hard to say, but the robot appears to be smiling."
+          send item :cage_lift
+        } else { say "\"My programming is insufficient to allow me to perform that task.\"" }
+      }
+      else if (item.is(Portable)) {
+        say whirr
+        if (self.holds(item)) { }
+        else { act take (target: item) }
+      }
+      else { say "\"My programming is insufficient to allow me to perform that task.\"" }
+    }
+  }
+  as target for robot_drop {
+    do {
+      if (random(50) == 0) { say rusty }
+      else if (self.holds(item)) {
+        say whirr
+        move item to here
+        if (item.is(Thing)) { say "The robot sets the {item.short} down." }
+      } else { say "\"Click! I don't have that. Buzz! Whirr!\"" }
+    }
+  }
+  // Asked for what it holds, it hands it over (round 5's P3).
+  as target for robot_give {
+    do {
+      if (random(50) == 0) { say rusty }
+      else if (self.holds(item)) {
+        say whirr
+        move item to actor
+        if (item.is(Thing)) { say "The robot hands you the {item.short}." }
+      } else { say "\"Click! I don't have that. Buzz! Whirr!\"" }
+    }
+  }
+  as target for robot_inventory {
+    do {
+      if (random(50) == 0) { say rusty }
+      else if (self.count(Thing) == 0) { say "\"Click. My hands are empty, Master. Whirr.\"" }
+      else { say "\"Click. I am holding {for t: Thing in self}{if !$first}{if $last} and {else}, {/if}{/if}a {t.short}{/for}, Master. Whirr.\"" }
+    }
+  }
+  as target for robot_other {
+    do {
+      if (random(50) == 0) { say rusty }
+      else { say "\"My memory circuits are not that advanced. I can move as directed, though.\"" }
+    }
+  }
+  as target for robot_eat {
+    do {
+      if (random(50) == 0) { say rusty }
+      else { say "\"I am sorry but that is difficult for a being with no mouth.\"" }
+    }
+  }
+  as target for robot_see {
+    do {
+      if (random(50) == 0) { say rusty }
+      else { say "\"My vision is not sufficiently acute to do that.\"" }
+    }
+  }
+  as target for robot_stuck {
+    do {
+      if (random(50) == 0) { say rusty }
+      else { say "\"My programming is insufficient to allow me to perform that task.\"" }
+    }
+  }
+  as actor for take {
+    do { each t of target { move t to self } }
+  }
+  // Wherever it arrives, it tells its stand-ins which room, so that the
+  // one there steps aside and the others answer for it (round 3's P3).
+  on :moved (from, to) {
+    if (to.is(Room)) { broadcast :robot_at with to.get(:id) }
+    else if (to.is(CagePlace)) { broadcast :robot_at with :closet }
+  }
+  // The cage falls while it stands in the closet: it is caught too
+  // (SPHERE-FCN), and is out of sight in there.
+  on :cage_fall {
+    if (here.is(Closet)) {
+      move self to dingy_closet.cage
+      self.set(:ndesc, true)
+    }
+  }
+  on :robot_out {
+    move self out
+    self.set(:ndesc, false)
+  }
+  // Under the cage, for good: out of the closet and out of the game, as
+  // Zork's REMOVE takes him. A roaming move is a handler's to make.
+  on :crushed {
+    self.set(:wrecked, true)
+    self.set(:ndesc, true)
+    self.set(:unseen, true)
+    broadcast :robot_at with :nowhere
+    move self to elsewhere
+  }
+}
+message :crushed
+
+// The robot's name, in the rooms it is ordered about in, while the robot
+// is elsewhere: an order given where it is not is read by the parser as
+// no sentence at all (friction 7), so each of its rooms keeps a stand-in,
+// unseen while the robot is there, that answers every verb in voice and
+// says where the robot has got to.
+kind AbsentRobot is Scenery, Orderable, Creature {
+  grammar { name "robot"  nouns "r2d2", "c3po", "robby", "machine", "automaton"  adjectives "late-model", "metal" }
+  passage short { robot }
+  :room Dest default low_room
+  :robot_room Dest default low_room
+  :dirs [Direction] default [north, south, east, west, northeast, northwest, southeast, southwest, up, down, inside, outside]
+  on :robot_at (from, value) { self.set(:robot_room, value)  self.set(:unseen, value == self.get(:room)) }
+  passage absent { {if self.get(:robot_room) == :nowhere}The robot is under a steel cage in the Dingy Closet, and it has stopped humming. It will not be hearing anything again.{else}The robot is not here, to be looked at or to hear you. It is {if self.get(:robot_room) == :low_room}in the Low Room{else if self.get(:robot_room) == :machine}in the Machine Room{else if self.get(:robot_room) == :closet}in the Dingy Closet{else if self.get(:robot_room) == :tea_room}in the Tea Room{else}wherever you last sent it{/if}, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does.{/if} }
+  as target for any { permit { refuse absent } }
+  // An order to go somewhere names a direction, a value the stand-in must
+  // narrow before the wildcard can answer for it (round 5's P4).
+  as target for robot_go { way from :dirs  permit { refuse absent } }
+  as tool for any { permit { refuse absent } }
+  without as recipient for give from Thing
+  as recipient for give { permit { refuse absent } }
+  without as aim for throw from Thing
+  as aim for throw { permit { refuse absent } }
+}
+
+// The three buttons (ROUND-BUTTON, SQUARE-BUTTON, TRIANGULAR-BUTTON): a
+// person is fried; the robot works them.
+kind RoundButton is Button {
+  grammar { name "round button"  nouns "button"  adjectives "round" }
+  passage short { round button }
+  describe { text "A round button, brass, the size of a coin, set in the wall beside the other two. Above it the instructions are in EBCDIC, which is no help." }
+  without as target for shift from Thing
+  as target for shift {
+    do {
+      if (actor.is(Robot)) {
+        if (self.get(:zooming)) { tell "The whirring decreases in intensity."  self.set(:zooming, false)  broadcast :zoom with false }
+        else { tell "Nothing seems to happen." }
+      } else {
+        say "There is a giant spark and you are fried to a crisp."
+        if (actor.is(Adventurer)) { send actor :die }
+      }
+    }
+  }
+}
+kind SquareButton is Button {
+  grammar { name "square button"  nouns "button"  adjectives "square" }
+  passage short { square button }
+  describe { text "A square button, brass, set in the wall beside the other two. Above it the instructions are in EBCDIC, which is no help." }
+  without as target for shift from Thing
+  as target for shift {
+    do {
+      if (actor.is(Robot)) {
+        if (self.get(:zooming)) { tell "Nothing seems to happen." }
+        else { tell "The whirring increases in intensity."  self.set(:zooming, true)  broadcast :zoom with true }
+      } else {
+        say "There is a giant spark and you are fried to a crisp."
+        if (actor.is(Adventurer)) { send actor :die }
+      }
+    }
+  }
+}
+kind TriangularButton is Button {
+  grammar { name "triangular button"  nouns "button"  adjectives "triangular", "triangle" }
+  passage short { triangular button }
+  describe { text "A triangular button, brass, set in the wall between the other two. Above it the instructions are in EBCDIC, which is no help." }
+  without as target for shift from Thing
+  as target for shift {
+    do {
+      if (actor.is(Robot)) {
+        tell "A dull thump is heard in the distance."
+        broadcast :flip
+      } else {
+        say "There is a giant spark and you are fried to a crisp."
+        if (actor.is(Adventurer)) { send actor :die }
+      }
+    }
+  }
+}
+
+// The cage (CAGE, IN-CAGE): a place inside the closet, out of sight until
+// it falls. It passes, so that whoever is in it can name the robot in it
+// with them (a shut container's other contents are out of reach from
+// inside, the spec's Range); the bars are the sphere's own guard.
+kind CagePlace is sprout.Place, CakeSafe {
+  :fallen false
+  :lifted false
+  :gassed false
+  grammar {
+    name "solid steel cage"
+    nouns "cage", "bars"
+    adjectives "solid", "steel"
+    article the
+    exit out "out" -> dingy_closet when (self.get(:lifted))
+  }
+  passage trapped { Cage
+
+    You are trapped inside a solid steel cage.{if self.count(Robot) > 0} The robot is in here with you, bent nearly double, and humming.{/if} }
+  passage close_up { The bars are steel, as thick as your wrist and set too close to get a shoulder through, and the whole cage is one piece from the ceiling it fell out of to the floor it sits on; there is no door, no lock, and nothing a person could lift. A greenish gas is coming in through the floor, slowly, and finding its way up through the bars, which it has no trouble with.{if self.count(Robot) > 0} The robot is in here with you, bent nearly double, humming, and apparently unbothered by the gas, which is one advantage of having no lungs.{else} The robot is not in here with you; if it were, it would be the kind of thing that could lift a cage.{/if} }
+  describe {
+    if (self.holds(actor) && seen == :examine) { text close_up }
+    else if (self.holds(actor)) { text trapped }
+    else if (self.get(:lifted)) { text "The cage is gone from here, hurled across the room; what is left of it lies mangled on the floor." }
+    else if (self.get(:crushed)) { text "A solid steel cage sits on the floor where it fell, and under it, bent double and no longer humming, is what is left of the robot, with a little smoke still coming out of him; and under the robot, presumably, the sphere, which nobody is going to reach now." }
+    else { text "A solid steel cage, fallen from the ceiling, and whatever is inside it is staying there." }
+  }
+  as target for any { permit { if (!self.get(:fallen)) { refuse "You can't see any such thing." } } }
+  as tool for any { permit { if (!self.get(:fallen)) { refuse "You can't see any such thing." } } }
+  passage crushed_line { A solid steel cage sits on the floor where it fell, with the robot under it. }
+  on :cage_fall {
+    if (!self.get(:fallen)) {
+      self.set(:fallen, true)
+      wake in 3 minutes
+    }
+  }
+  // Fallen on the robot (SPHERE-FCN): down for good, with him under it.
+  :crushed false
+  on :cage_crush { self.set(:fallen, true)  self.set(:crushed, true) }
+  on :cage_lift {
+    if (!self.get(:lifted)) {
+      self.set(:lifted, true)
+      cancel wakes
+      spawn MangledCage in dingy_closet
+      broadcast :cage_lift
+      each r: Robot in self { send r :robot_out }
+      each a: Adventurer in self { send a :freed }
+    }
+  }
+  // Each move in the cage, the gas is a little thicker: a clock a caged
+  // visitor can read (round 3's P2).
+  after command {
+    if (!self.get(:lifted)) { tell actor "The gas is thicker than it was." }
+  }
+  // The gas (I-SPHERE): whoever is still in the cage dies of it, and the
+  // closet is no place to go back to.
+  on :woke (elapsed) {
+    if (!self.get(:lifted)) {
+      self.set(:gassed, true)
+      broadcast :poisoned
+      each a: Adventurer in self {
+        tell a "Time passes...and you die from some obscure poisoning."
+        send a :die
+      }
+    }
+  }
+}
+
+object low_room is LowRoom in underground_caverns_2 {
+  grammar {
+    name "Low Room"
+    exit east "east" -> machine_room
+    exit southeast "southeast" -> tea_room
+    exit out "out" -> tea_room
+  }
+  :id low_room
+  passage body { You are in a circular room with a low ceiling. There are exits to the east and southeast. }
+  object robot is Robot
+  object absent_robot is AbsentRobot { :room low_room  :unseen true }
+  object label is RobotLabel
+  object low_ceiling is Scenery {
+    grammar { name "low ceiling"  nouns "ceiling", "roof"  adjectives "low" }
+    passage short { low ceiling }
+    describe { text "The ceiling is low enough to touch and you keep wanting to duck. It is rock, and under the rock, from the hum of it, there is a great deal of iron." }
+  }
+}
+
+object machine_room is MachineRoom in underground_caverns_2 {
+  grammar {
+    name "Machine Room"
+    exit west "west" -> low_room
+    exit south "south" -> dingy_closet when (!self.get(:closet_sealed))
+    exit south "south" refuse "You are stopped by a cloud of poisonous gas."
+  }
+  :id machine
+  :closet_sealed false
+  on :poisoned { self.set(:closet_sealed, true) }
+  object absent_robot is AbsentRobot { :room machine }
+  passage body {
+    This is a large room full of assorted heavy machinery, whirring noisily. The room smells of burned resistors. Along one wall are three buttons which are, respectively, round, triangular, and square. Naturally, above these buttons are instructions written in EBCDIC. A large sign in English above all the buttons says
+
+    "DANGER -- HIGH VOLTAGE"
+
+    There are exits to the west and the south.
+  }
+  object round_button is RoundButton
+  object triangular_button is TriangularButton
+  object square_button is SquareButton
+  object buttons is Scenery {
+    grammar { name "buttons"  nouns "three", "controls"  adjectives "three" }
+    passage short { buttons }
+    describe { text "Three buttons in a row along the wall: round, triangular and square, in that order, brass, each with a line of EBCDIC above it and the one sign in English above all three. The sign is the only part of it that wants to be understood." }
+  }
+  object sign is Scenery {
+    grammar { name "sign"  nouns "warning", "notice"  adjectives "large", "english" }
+    passage short { sign }
+    describe { text "The sign says \"DANGER -- HIGH VOLTAGE\", in large capitals, in English, which is the only English in the room. It is not a decoration." }
+    without as target for read from Thing
+    as target for read { do { say "\"DANGER -- HIGH VOLTAGE\"" } }
+  }
+  object instructions is Scenery {
+    grammar { name "instructions"  nouns "ebcdic", "writing", "lettering"  adjectives "ebcdic" }
+    passage short { instructions }
+    describe { text "The instructions above the buttons are in EBCDIC, which was a way of writing things down that nobody has used since, and nobody enjoyed then." }
+    without as target for read from Thing
+    as target for read { do { say "They're in EBCDIC. You can make out which lines go with which buttons, and nothing else, and a great deal of nothing else." } }
+  }
+  object machinery is Scenery {
+    grammar { name "machinery"  nouns "machines", "machine", "equipment", "resistors"  adjectives "heavy", "assorted", "whirring" }
+    passage short { machinery }
+    describe { text "Heavy machinery of every sort, whirring: flywheels, belts, a dynamo the size of a cart, and a great deal of cable going into the floor. Somewhere under it all, something very large is being turned round and round, and the room smells of the resistors that have given up trying to stop it." }
+    without as target for listen from Thing
+    as target for listen { do { say "Whirring, from every part of the room at once, and under it a deeper note from under the floor, going round." } }
+    without as target for smell from Thing
+    as target for smell { do { say "Burned resistors. It is not a smell that improves." } }
+  }
+}
+
+object dingy_closet is Closet in underground_caverns_2 {
+  grammar {
+    name "Dingy Closet"
+    exit out "out" -> machine_room
+    exit north "north" -> machine_room
+  }
+  :id closet
+  :walls 9
+  passage body {
+    This is a dingy closet adjacent to a larger room to the north. Chiselled into a wall are these words:
+
+    Protected by
+
+    FROBOZZ
+
+    Magic Alarm Company
+
+    (Hello, footpad!)
+
+    There doesn't seem to be any footpad here, however.{if cage.is(CagePlace)}{if cage.get(:crushed)}
+
+    {cage.crushed_line}{/if}{/if}
+  }
+  on :poisoned { self.set(:munged, true) }
+  passage blocked { You are stopped by a cloud of poisonous gas. }
+  object absent_robot is AbsentRobot { :room closet }
+  object sphere is Sphere
+  object words is Scenery {
+    grammar { name "words"  nouns "notice", "writing", "chiselling", "inscription"  adjectives "chiselled", "chiseled" }
+    passage short { words }
+    passage text_lines {
+      Protected by
+
+      FROBOZZ
+
+      Magic Alarm Company
+
+      (Hello, footpad!)
+    }
+    describe { text text_lines }
+    without as target for read from Thing
+    as target for read { do { say text_lines } }
+  }
+  object footpad is Scenery {
+    grammar { name "footpad"  nouns "thief" }
+    passage short { footpad }
+    describe { text "A footpad is a thief." }
+  }
+}

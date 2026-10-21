@@ -1,0 +1,103 @@
+// The Riddle Room, whose stone door opens to the word "well", and the
+// Pearl Room beyond it (RIDDLE-ROOM-FCN, RIDDLE-DOOR-FCN, RIDDLE-PSEUDO).
+import * as sprout from 'sprout'
+import {Thing, Scenery, Door} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {Pearl} from 'items'
+import {carousel_room} from 'carousel'
+import {well_bottom} from 'well'
+import {open, close, read, knock, through, :riddle_open} from 'verbs'
+
+kind RiddleRoom is DarkRoom {
+  :open false
+  on :riddle_open { self.set(:open, true) }
+}
+
+kind StoneDoor is Scenery, Door {
+  grammar { name "stone door"  nouns "door"  adjectives "great", "stone", "open", "closed" }
+  :open false
+  passage short { stone door }
+  describe { text "It is a great door of a single stone, taller than a man and as thick as you are wide, and it is {if self.get(:open)}open, swung back on hinges that nothing you can see is holding up, with a passage beyond it to the east{else}closed, and fits its frame so well that you could not get a hair into the crack{/if}. Above it, words are written in the rock." }
+  without as target for open from Thing
+  as target for open {
+    do {
+      if (self.get(:open)) { say "It is open!" }
+      else { say "The door can only be opened by answering the riddle." }
+    }
+  }
+  without as target for close from Thing
+  as target for close {
+    do {
+      if (self.get(:open)) { say "Not a chance. The door weighs many tons." }
+      else { say "It is closed!" }
+    }
+  }
+  without as target for knock from Door
+  as target for knock { do { say "You knock on the stone door. A hollow laugh seems to come from it." } }
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (self.get(:open)) { say "The door is open; the way through it is east." }
+      else { say "The door is closed, and it is stone." }
+    }
+  }
+  on :riddle_open { self.set(:open, true) }
+}
+
+kind Riddle is Scenery {
+  grammar { name "riddle"  nouns "words", "writing", "inscription", "question"  adjectives "written" }
+  passage short { riddle }
+  passage words {
+    Above the stone door, the following words are written: "No man shall pass this door without solving this riddle:
+
+    What is tall as a house, round as a cup, and all the king's horses can't draw it up?"
+  }
+  describe { text words }
+  without as target for read from Thing
+  as target for read { do { say words } }
+}
+
+object riddle_room is RiddleRoom in underground_caverns_2 {
+  grammar {
+    name "Riddle Room"
+    exit down "down" -> carousel_room
+    exit northwest "northwest" -> carousel_room
+    exit east "east" -> pearl_room when (self.get(:open))
+    exit east "east" refuse "The stone door is closed."
+  }
+  :id riddle
+  :walls 7
+  passage body {
+    This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great {if self.get(:open)}open{else}closed{/if} door made of stone. Above the stone, the following words are written: "No man shall pass this door without solving this riddle:
+
+    What is tall as a house, round as a cup, and all the king's horses can't draw it up?"
+  }
+  object door is StoneDoor
+  object riddle is Riddle
+  object corner is Scenery {
+    grammar { name "northwest corner"  nouns "corner", "hole"  adjectives "northwest" }
+    passage short { northwest corner }
+    describe { text "In the northwest corner of the room the floor drops away into a passage that goes down, and northwest, into the Carousel Room, where it is hard to say which of those it was." }
+  }
+}
+
+object pearl_room is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Pearl Room"
+    exit east "east" -> well_bottom
+    exit west "west" -> riddle_room
+  }
+  :id pearl
+  passage body { This is a former broom closet. The exits are to the east and west. }
+  object pearl is Pearl
+  object closet is Scenery {
+    grammar { name "broom closet"  nouns "closet", "exits"  adjectives "former", "broom" }
+    passage short { broom closet }
+    describe { text "It is a broom closet, or was: a narrow room with hooks for brooms, and a door at each end, which is one more door than most closets run to." }
+  }
+  object shelves is Scenery {
+    grammar { name "shelves"  nouns "shelf", "brooms", "broom", "hooks", "hook"  adjectives "empty", "old" }
+    passage short { shelves }
+    describe { text "A row of hooks along one wall, for brooms, and a shelf above them, for whatever one keeps above brooms. The brooms are long gone. Somebody has put a pearl necklace where the dustpan should be, which tells you something about the housekeeping." }
+  }
+}

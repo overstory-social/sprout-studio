@@ -1,0 +1,1104 @@
+// The volcano (the third quarter): the Lava Room and the Lava Tube, the
+// Volcano View, the Cobwebby Corridor, the Volcano Bottom with the balloon
+// in it, the volcano's air at four heights, the Narrow Ledge and the
+// Library, the Wide Ledge and the Dusty Room with its safe; the Volcano
+// Gnome, who shows a stranded visitor the way out for a fee; and the
+// brick and the fuse that open the safe (BALLOON-FCN, I-BALLOON,
+// BALLOON-BURN, RISE-AND-SHINE, DECLINE-AND-FALL, BCONTENTS, WIRE-FCN,
+// I-BURNUP, SAFE-ROOM-FCN, SAFE-FCN, SLOT-F, BRICK-FCN, FUSE-FCN, I-FUSE,
+// I-SAFE, I-LEDGE, LEDGE-FCN, I-GNOME, GNOME-FCN, I-NERVOUS,
+// PURPLE-BOOK-FCN, RANDOM-BOOK, LT-CRACK-PSEUDO, CC-CRACK-PSEUDO).
+//
+// The balloon is a place that stands in a room, as the bucket is, and
+// moves itself with whoever rides it. It cannot name the room it is in,
+// so it keeps which (`:at`), and its clock is the visitor's moves, told
+// to it one tick a move (`:balloon_tick`), since nothing counts for a
+// balloon nobody rides. The fuse, the room's collapse and the ledge's are
+// counted by the visitor as the curtain's twelve are (adventurer.sprout).
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Portable, Vessel, Door, Crossable, Switchable, Valuable} from 'thing'
+import {Box, Bag} from 'box'
+import {Room, DarkRoom, Airy, Debris} from 'room'
+import {Treasure, Readable, Matchbook, Weapon} from 'items'
+import {Light} from 'lamp'
+import {Adventurer} from 'adventurer'
+import {ice_room} from 'dragon'
+import {carousel_room} from 'carousel'
+import {guarded_room} from 'workshop'
+import {elsewhere, Elsewhere} from 'garden'
+import {ask} from 'sprout'
+import {take, open, close, look_in, look_under, read, through, tie, untie, burn, lamp_on, inflate, board, disembark, cross, climb_up, climb_down, give, throw, greet, talk, follow, attack, mung, kick, rub, shift, smell, listen, search, raise, Dest, Direction, :balloon_tick, :balloon_land, :fuel_lit, :nestled, :tie_to, :untied, :bag_full, :gnome_due, :gnome_fidget, :vgnome_come, :vgnome_late, :gnome_door, :fuse_lit, :fuse_out, :in_brick, :explosion, :blow, :collapse, :touch, :open_gate, :gate_open, :close_gate, :consume, :die, :travel, :light} from 'verbs'
+
+// A room the balloon can stand or hang in: it has a view from the basket,
+// as the well's rooms have one from the bucket.
+kind VolcanoRoom is DarkRoom {
+  passage balloon_view {
+    {self.title}, in the basket
+
+    {self.body}
+
+    {self.objects}
+  }
+}
+// The volcano's air (VAIR-1 to VAIR-4, NONLANDBIT): no place to stand,
+// and nothing to walk to; the balloon alone comes and goes.
+kind VolcanoAir is VolcanoRoom, Airy { }
+// A ledge the balloon can land on (LEDGE-1, LEDGE-2): it keeps whether the
+// gnome's door has appeared on its west end.
+kind VolcanoLedge is VolcanoRoom {
+  :gnome_door false
+  on :gnome_door { self.set(:gnome_door, true) }
+}
+
+// The balloon's errands, run through the world's gate.
+enum Flight { idle, rise, fall, drift, land, lost, wreck }
+
+// The balloon (BALLOON): a large and extremely heavy wicker basket, with
+// an enormous cloth bag, a metal receptacle in the middle for the fire,
+// and a braided wire to tie it by. Something burnable set burning in the
+// open receptacle fills the bag; the balloon rises every third move while
+// the receptacle is open and the bag full, and sinks while the receptacle
+// is shut or the fire out; above the rim it is gone, and whoever rides it
+// with it. Tied to a ledge's hook it stays put; untied, it floats off the
+// ledge in three moves with or without you.
+kind Balloon is sprout.Place, Box, Vessel {
+  :open true
+  :capacity 100
+  :size 70
+  :at Dest default volcano_bottom
+  :tied Dest default nowhere
+  :inflated false
+  :fuel_left 0 min 0 max 400
+  :tick 0 min 0 max 3
+  :label_dropped false
+  :riders 0 min 0 max 20
+  :flight Flight default idle
+  :land_at Dest default ledge_1
+  :gone false
+  :seeing false
+  :gnome_door false
+  grammar {
+    name "basket"
+    nouns "balloon", "basket"
+    adjectives "wicker", "large", "heavy", "hot", "air"
+    article the
+    lit (self.sees(sprout.LightSource, :lit) || self.get(:inflated))
+    exit out "out" -> volcano_bottom when (self.get(:at) == :volcano_bottom)
+    exit out "out" -> ledge_1 when (self.get(:at) == :ledge_1)
+    exit out "out" -> ledge_2 when (self.get(:at) == :ledge_2)
+    exit out "out" refuse "You realize that getting out here would be fatal."
+    exit west "west" -> ledge_1 when (self.get(:at) == :vair_2)
+    exit west "west" -> ledge_2 when (self.get(:at) == :vair_4)
+    exit west "west" refuse "The gnome's door is for people on foot. You'll have to get out of the basket first." when ((self.get(:at) == :ledge_1 || self.get(:at) == :ledge_2) && self.get(:gnome_door))
+    exit west "west" refuse "You can't control the balloon this way."
+    exit north "north" -> lava_room when (self.get(:at) == :volcano_bottom)
+    exit north "north" refuse "You can't control the balloon this way."
+    exit south "south" -> library when (self.get(:at) == :ledge_1)
+    exit south "south" -> safe_room when (self.get(:at) == :ledge_2)
+    exit south "south" refuse "You can't control the balloon this way."
+    exit east "east" refuse "You can't control the balloon this way."
+    exit northeast "northeast" refuse "You can't control the balloon this way."
+    exit northwest "northwest" refuse "You can't control the balloon this way."
+    exit southeast "southeast" refuse "You can't control the balloon this way."
+    exit southwest "southwest" refuse "You can't control the balloon this way."
+    exit up "up" refuse "You can't control the balloon this way. It goes up when the bag is full and the receptacle is open, and not when it is told."
+    exit down "down" refuse "You can't control the balloon this way. It comes down when the fire is out or the receptacle is shut, and not when it is told."
+  }
+  passage short { basket }
+  passage fuel_name { {for t: Thing in receptacle}{t.short}{/for} }
+  passage ldesc { There is a large and extremely heavy wicker basket here. An enormous cloth bag {if self.get(:inflated)}attached to the basket is inflated. A metal receptacle is fastened to the center of the basket. {if receptacle.get(:open)}In it is a burning {self.fuel_name}{else}Some smoke leaks out around its closed lid{/if}{else}is draped over the side and is firmly attached to the basket. A metal receptacle is fastened to the center of the basket{/if}{if self.get(:tied) != :nowhere}. A piece of wire tied to a hook holds the balloon in place.{else}. Dangling from the basket is a piece of braided wire.{/if} }
+  passage examined { {if self.get(:inflated)}The cloth bag is inflated and {if receptacle.get(:open)}there is a {self.fuel_name} burning in the receptacle.{else}some smoke is leaking out of the closed receptacle.{/if}{else}The cloth bag is draped over the side of the basket. Directly in the middle of the basket is a metal receptacle which is {if receptacle.get(:open)}open{for t: Thing in receptacle}. A {t.short} is nestled inside{/for}{else}closed{/if}.{/if}{if self.get(:tied) != :nowhere} The balloon is tied to a hook by the braided wire.{else} A braided wire is dangling over the side of the basket.{/if} }
+  passage inside_view { {if self.get(:at) == :volcano_bottom}{if volcano_bottom.is(VolcanoRoom)}{volcano_bottom.balloon_view}{/if}{else if self.get(:at) == :vair_1}{if vair_1.is(VolcanoRoom)}{vair_1.balloon_view}{/if}{else if self.get(:at) == :vair_2}{if vair_2.is(VolcanoRoom)}{vair_2.balloon_view}{/if}{else if self.get(:at) == :vair_3}{if vair_3.is(VolcanoRoom)}{vair_3.balloon_view}{/if}{else if self.get(:at) == :vair_4}{if vair_4.is(VolcanoRoom)}{vair_4.balloon_view}{/if}{else if self.get(:at) == :ledge_1}{if ledge_1.is(VolcanoRoom)}{ledge_1.balloon_view}{/if}{else if self.get(:at) == :ledge_2}{if ledge_2.is(VolcanoRoom)}{ledge_2.balloon_view}{/if}{else}Basket{/if}
+
+    {self.examined} }
+  passage viewed { {if seen == :examine}{self.examined}{else}{self.inside_view}{/if} }
+  describe { text viewed }
+  // What lies loose in the basket, from outside; its own parts are not
+  // listed, being part of it.
+  passage inside_lines { {for t: Thing in self}{if !t.get(:ndesc)}
+
+    In the basket there is {t.a_short}.{/if}{/for} }
+  passage look_inside { {if self.count(Thing) <= 3}The basket holds nothing that is not part of it: the receptacle, the bag and the wire.{else}In the basket, besides its own parts:{for t: Thing in self}{if !t.get(:ndesc)}
+
+    {t.indef}{/if}{/for}{/if} }
+  passage no_take { The basket is far too heavy to carry, and the balloon is attached to it. }
+
+  without as target for inflate from Thing
+  as target for inflate { do { say "It takes more than words to inflate a balloon." } }
+  // Thing's answer to "look in" arrives by way of Vessel (friction 54;
+  // round 7's P9).
+  without as target for look_in from Thing
+  without as target for through from Thing
+  as target for through { do { } }
+  as target for board { do { } }
+  as target for disembark { do { } }
+  without as target for climb_up from Thing
+  without as target for climb_down from Thing
+  without as target for kick from Thing
+  as target for kick { do { say "The basket is wicker, and takes it well." } }
+  without as target for burn from Box
+  as target for burn { do { say "The basket is wicker, and would burn very nicely, with you in it. The receptacle is where the fire goes." } }
+  // "tie balloon to hook" is the wire's business, done here as there.
+  without as target for tie from Thing
+  as target for tie {
+    do {
+      if (bound tool) {
+        if (tool.is(Hook)) {
+          if (self.get(:tied) != :nowhere) { say "The balloon is tied to the hook already." }
+          else if (tool.get(:room) != self.get(:at)) { say "The hook is on the ledge, and the balloon is not." }
+          else { say "The balloon is fastened to the hook."  self.set(:tied, tool.get(:room))  self.set(:tick, 0)  send tool :hooked with true  send wire :wire_tied with true }
+        } else { say "You can't tie the balloon to that." }
+      } else { say "You'll have to say what to tie the balloon to." }
+    }
+  }
+  without as target for untie from Thing
+  as target for untie {
+    do {
+      if (self.get(:tied) == :nowhere) { say "The wire is not tied to anything." }
+      else { say "The wire falls off of the hook."  self.set(:tied, :nowhere)  self.set(:tick, 0)  send wire :wire_tied with false  broadcast :untied }
+    }
+  }
+
+  on :entered (item, from) {
+    if (item.is(Adventurer)) { self.adjust(:riders, 1)  self.set(:ndesc, true) }
+  }
+  on :left (item, to) {
+    if (item.is(Adventurer) && to != self) { self.adjust(:riders, -1)  self.set(:ndesc, self.get(:riders) > 0) }
+  }
+  on :gnome_door { self.set(:gnome_door, true) }
+  on :tie_to (from, value) { if (value == self.get(:at)) { self.set(:tied, value)  self.set(:tick, 0)  send wire :wire_tied with true } }
+  on :untied { self.set(:tied, :nowhere)  self.set(:tick, 0)  send wire :wire_tied with false }
+
+  // Something set burning in the receptacle (BALLOON-BURN): the bag fills,
+  // and the first time a label drops out of it.
+  on :fuel_lit (from, value) {
+    self.set(:fuel_left, value)
+    if (!self.get(:inflated)) {
+      self.set(:inflated, true)
+      self.set(:tick, 0)
+      send bag :bag_full with true
+      tell inside "The cloth bag inflates as it fills with hot air."
+      tell outside "The cloth bag inflates as it fills with hot air."
+      if (!self.get(:label_dropped)) {
+        self.set(:label_dropped, true)
+        spawn BalloonLabel in self
+        tell inside "A small label drops from the bag into the basket."
+        tell outside "A small label drops from the bag into the basket."
+      }
+    }
+  }
+
+  // The visitor's move, told to it (I-BALLOON every third, I-BURNUP when
+  // the fire has had its moves).
+  on :balloon_tick {
+    if (!self.get(:gone)) {
+      if (self.get(:inflated)) {
+        self.adjust(:fuel_left, -1)
+        if (self.get(:fuel_left) == 0) {
+          self.set(:inflated, false)
+          send bag :bag_full with false
+          send receptacle :burn_out
+          tell outside "Whatever was burning in the balloon's receptacle has burned out, and the cloth bag starts to deflate."
+        }
+      }
+      if (self.get(:tied) == :nowhere) {
+        self.adjust(:tick, 1)
+        if (self.get(:tick) >= 3) {
+          self.set(:tick, 0)
+          let where = self.get(:at)
+          if ((receptacle.get(:open) && self.get(:inflated)) || where == :ledge_1 || where == :ledge_2) { send self :rise }
+          else { send self :fall }
+        }
+      }
+    }
+  }
+  // Rising (RISE-AND-SHINE): off a ledge, off the ground, up a height, or
+  // out of the volcano for good.
+  on :rise {
+    let where = self.get(:at)
+    if (where == :vair_4) {
+      self.set(:gone, true)
+      each a: Adventurer in self {
+        tell a "The balloon floats majestically out of the volcano, revealing a breathtaking view of a wooded river valley surrounded by impassable mountains. In a clearing stands a white house. You drift into high winds, which carry you towards the snow-capped peaks. Oh, no! You crash into the jagged cliffs of the Flathead Mountains!"
+        send a :die
+      }
+      self.set(:flight, :lost)
+      send underground_caverns_2 :open_gate
+    }
+    else if (where == :ledge_1 || where == :ledge_2) {
+      if (self.get(:riders) > 0) { tell inside "The balloon leaves the ledge." }
+      else {
+        tell outside "You watch as the balloon slowly floats away. It seems to be ascending, due to its light load."
+        broadcast :gnome_due
+        send receptacle :force_open
+      }
+      self.set(:flight, :drift)
+      send underground_caverns_2 :open_gate
+    }
+    else if (where == :volcano_bottom) {
+      tell inside "The balloon rises slowly from the ground."
+      tell outside "You watch as the balloon slowly lifts off."
+      self.set(:flight, :rise)
+      send underground_caverns_2 :open_gate
+    }
+    else {
+      tell inside "The balloon ascends."
+      self.set(:flight, :rise)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  // Sinking (DECLINE-AND-FALL): down a height, or onto the ground, where a
+  // balloon with no fire in it does not survive the landing.
+  on :fall {
+    let where = self.get(:at)
+    if (where == :vair_1) {
+      if (self.get(:riders) > 0) {
+        if (self.get(:inflated)) { tell inside "The balloon has landed."  self.set(:flight, :land)  self.set(:land_at, :volcano_bottom) }
+        else { tell inside "You have landed, but the balloon did not survive."  self.set(:flight, :wreck) }
+      } else { tell outside "You watch as the balloon slowly lands."  self.set(:flight, :land)  self.set(:land_at, :volcano_bottom) }
+      send underground_caverns_2 :open_gate
+    }
+    else if (where == :vair_2 || where == :vair_3 || where == :vair_4) {
+      tell inside "The balloon descends."
+      self.set(:flight, :fall)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  // The ledge it was tied to has gone (I-LEDGE): so has the balloon.
+  on :wreck_now {
+    if (!self.get(:gone)) {
+      self.set(:tied, :nowhere)
+      self.set(:flight, :wreck)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  // Brought down onto a ledge by whoever stepped out of it there.
+  on :balloon_land (from, value) {
+    if ((value == :ledge_1 && self.get(:at) == :vair_2) || (value == :ledge_2 && self.get(:at) == :vair_4)) {
+      self.set(:flight, :land)
+      self.set(:land_at, value)
+      self.set(:tick, 0)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  on :gate_open {
+    let f = self.get(:flight)
+    let where = self.get(:at)
+    if (f == :rise) {
+      if (where == :volcano_bottom) { move self to vair_1 }
+      else if (where == :vair_1) { move self to vair_2 }
+      else if (where == :vair_2) { move self to vair_3 }
+      else if (where == :vair_3) { move self to vair_4 }
+    }
+    else if (f == :fall) {
+      if (where == :vair_4) { move self to vair_3 }
+      else if (where == :vair_3) { move self to vair_2 }
+      else if (where == :vair_2) { move self to vair_1 }
+    }
+    else if (f == :drift) {
+      if (where == :ledge_1) { move self to vair_2 } else { move self to vair_4 }
+    }
+    else if (f == :land) {
+      let d = self.get(:land_at)
+      if (d == :ledge_1) { move self to ledge_1 }
+      else if (d == :ledge_2) { move self to ledge_2 }
+      else { move self to volcano_bottom }
+    }
+    else if (f == :lost) {
+      self.set(:unseen, true)
+      move self to elsewhere
+    }
+    else if (f == :wreck) {
+      move self to volcano_bottom
+      self.set(:at, :volcano_bottom)
+      each a: Adventurer in self { send a :thrown_out }
+      spawn DeadBalloon in volcano_bottom
+      self.set(:unseen, true)
+      self.set(:gone, true)
+      move self to elsewhere
+    }
+    send underground_caverns_2 :close_gate
+  }
+  on :moved (from, to) {
+    let f = self.get(:flight)
+    self.set(:flight, :idle)
+    if (to.is(Room)) { self.set(:at, to.get(:id)) }
+    else if (to.is(Elsewhere)) { self.set(:at, :elsewhere) }
+    if ((f == :rise || f == :fall || f == :drift || f == :land) && self.get(:riders) > 0) {
+      self.set(:seeing, self.get(:inflated))
+      each l: Light in self { if (l.get(:lit)) { self.set(:seeing, true) } }
+      each r: Adventurer in self { if (r.get(:light) > 0) { self.set(:seeing, true) } }
+      if (!self.get(:seeing)) { tell inside "It is pitch black. You are likely to be eaten by a grue." }
+      else { tell inside "{self.inside_view}" }
+    }
+  }
+
+  object receptacle is Receptacle
+  object bag is ClothBag
+  object wire is BraidedWire
+}
+message :rise
+message :fall
+message :burn_out
+message :force_open
+message :hooked with boolean
+message :wire_tied with boolean
+message :thrown_out
+message :wreck_now
+
+// The metal receptacle in the middle of the basket (RECEPTACLE): shut
+// until opened, room for one small thing, and whatever is put in it is
+// what the fire is made of.
+kind Receptacle is Box {
+  grammar { name "receptacle"  nouns "lid", "pan"  adjectives "metal" }
+  :open false
+  :capacity 6
+  :ndesc true
+  :burning false
+  passage short { receptacle }
+  passage no_take { The receptacle is an integral part of the basket and cannot be removed. }
+  passage examined { The receptacle is a metal pan with a lid, fastened to the center of the basket, and it is {if self.get(:open)}open{else}closed{/if}.{if self.get(:open)} {self.look_inside}{/if} }
+  describe { text examined }
+  passage opened_line { {if self.get(:burning)}Opening it reveals a burning {for t: Thing in self}{t.short}{/for}.{else if self.count(Thing) == 0}Opened.{else}Opening the receptacle reveals {self.content_list}.{/if} }
+  accept (item, from) {
+    if (self.count(Thing) > 0) { refuse "The receptacle is already occupied." }
+  }
+  on :entered (item, from) { send item :nestled with true }
+  on :left (item, to) { send item :nestled with false }
+  on :fuel_lit (from, value) { self.set(:burning, true) }
+  on :burn_out { self.set(:burning, false)  each t: Thing in self { tell "The {t.short} has now burned out, and the cloth bag starts to deflate."  send t :consume } }
+  on :force_open { self.set(:open, true) }
+}
+
+// The enormous cloth bag (CLOTH-BAG).
+kind ClothBag is Scenery {
+  grammar { name "cloth bag"  nouns "bag", "envelope"  adjectives "cloth", "enormous" }
+  :ndesc true
+  :full false
+  on :bag_full (from, value) { self.set(:full, value) }
+  passage short { cloth bag }
+  passage no_take { The cloth bag is an integral part of the basket and cannot be removed. }
+  describe { text "{if self.get(:full)}The bag is enormous, and full of hot air, and straining upward at the ropes that hold it to the basket.{else}The bag is enormous, of oiled cloth, and draped empty over the side of the basket, to which it is firmly attached. It wants filling, and the receptacle in the middle of the basket looks like what fills it.{/if}" }
+  without as target for open from Thing
+  as target for open { do { say "The bag is enormous. The concept of opening it here is ludicrous." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "It doesn't appear that there's anything inside." } }
+  without as target for inflate from Thing
+  as target for inflate { do { say "It takes more than words to inflate a balloon." } }
+}
+
+// The braided wire (BRAIDED-WIRE): part of the basket, and the thing that
+// ties it to a ledge's hook.
+kind BraidedWire is Scenery {
+  grammar { name "braided wire"  nouns "wire", "rope", "line"  adjectives "braided", "dangling" }
+  :ndesc true
+  :tied false
+  on :wire_tied (from, value) { self.set(:tied, value) }
+  passage short { braided wire }
+  passage no_take { The braided wire is an integral part of the basket and cannot be removed. The wire might possibly be tied, though. }
+  describe { text "{if self.get(:tied)}The braided wire runs from the basket to a hook in the rock, and is tied to it with a knot you are rather proud of.{else}A length of braided wire, fastened to the basket at one end and dangling over the side at the other, with a loop in the free end that looks as though it was meant to go over something, a hook for instance.{/if}" }
+  without as target for tie from Thing
+  as target for tie {
+    do {
+      if (bound tool) {
+        if (tool.is(Hook)) {
+          if (self.get(:tied)) { say "The balloon is tied to the hook already." }
+          else {
+            say "The balloon is fastened to the hook."
+            send tool :hooked with true
+            broadcast :tie_to with tool.get(:room)
+          }
+        } else { say "You can't tie the wire to that." }
+      } else { say "You'll have to say what to tie the wire to." }
+    }
+  }
+  without as target for untie from Thing
+  as target for untie {
+    do {
+      if (self.get(:tied)) { say "The wire falls off of the hook."  broadcast :untied }
+      else { say "The wire is not tied to anything." }
+    }
+  }
+}
+
+// A small hook in the rock of a ledge (HOOK-1, HOOK-2).
+kind Hook is Scenery {
+  grammar { name "hook"  nouns "ring"  adjectives "small", "iron" }
+  :ndesc false
+  :room Dest default ledge_1
+  passage short { hook }
+  passage ldesc { There is a small hook attached to the rock here. }
+  passage no_take { The hook is attached to the rock, and the rock is attached to the volcano. }
+  describe { text "A small iron hook, driven into the rock of the ledge at about the height of your knee, of the sort one ties a line to. Somebody expected to be landing here." }
+  on :hooked (from, value) { self.set(:ndesc, value) }
+  on :untied { self.set(:ndesc, false) }
+}
+
+// The blue label that drops from the bag (BALLOON-LABEL).
+kind BalloonLabel is Readable {
+  grammar { name "blue label"  nouns "label", "tag"  adjectives "blue", "small" }
+  :size 1
+  :fuel 20
+  :burnable true
+  passage short { blue label }
+  passage ldesc { There is a blue label here. }
+  describe { text "A small blue label, printed, of the kind that comes with a thing and tells you nothing you wanted to know. It can be read." }
+  passage words {
+    !! FROBOZZ MAGIC BALLOON COMPANY !!
+
+    Hello, Aviator!
+
+    To land your balloon, say LAND. Otherwise, you're on your own!
+
+    No warranty expressed or implied.
+  }
+}
+
+// What a balloon is when it lands without a fire in it (DEAD-BALLOON).
+kind DeadBalloon is Scenery {
+  grammar { name "broken balloon"  nouns "balloon", "basket", "pieces", "wreck"  adjectives "broken", "dead" }
+  :ndesc false
+  passage short { broken balloon }
+  passage ldesc { There is a balloon here, broken into pieces. }
+  describe { text "The basket is in pieces, the bag is a great deal of cloth with nobody inside it, and the receptacle lies on its side with its lid off. It will not be going up again." }
+  passage no_take { The pieces are large, and there are a great many of them, and none of them is a balloon. }
+}
+
+// The Volcano Gnome (GNOME, I-GNOME, GNOME-FCN, I-NERVOUS): an NPC who walks
+// out of the wall ten moves after the balloon has left somebody on a
+// ledge, offers the way out for a fee, and leaves when he is talked to
+// for long.
+kind VolcanoGnome is Creature, sprout.Actor {
+  roams
+  pass any (true)
+  grammar { name "Volcano Gnome"  nouns "gnome", "dwarf"  adjectives "volcano", "nervous" }
+  passage short { Volcano Gnome }
+  passage ldesc { There is a nervous Volcano Gnome here. }
+  passage arrives { A volcano gnome seems to walk straight out of the wall and says "I have a busy appointment schedule and little time to waste on trespassers, but for a small fee I'll show you the way out." You notice the gnome nervously glancing at his watch. }
+  passage leaves { {if false}.{/if} }
+  passage not_yours { The gnome keeps what he is given, and says so with his hands, which are rock. }
+  passage held_fast { The gnome is small and the rock is large, and he is more rock than gnome. }
+  :gone false
+  describe { text "He is a gnome, of the volcano: short, wide, the grey of the rock he came out of and about as yielding, with a waistcoat of some darker rock and a watch on a chain which he keeps looking at. He has the air of somebody with somewhere better to be, who will tell you about it for a consideration." }
+  passage nervous { The gnome appears increasingly nervous. }
+  without as target for greet from Creature
+  as target for greet { do { say nervous  broadcast :gnome_fidget } }
+  without as target for talk from Creature
+  as target for talk { do { say nervous  broadcast :gnome_fidget } }
+  without as target for ask from Thing
+  as target for ask { do { say nervous  broadcast :gnome_fidget } }
+  without as target for rub from Thing
+  as target for rub { do { say nervous  broadcast :gnome_fidget } }
+  without as target for follow from Creature
+  as target for follow { do { say "The gnome has not gone anywhere yet, and would like to." } }
+  as target for attack { do { say "The gnome is rock, and your blow is not. He appears increasingly nervous, all the same."  broadcast :gnome_fidget } }
+  without as target for mung from Thing
+  as target for mung { do { say "The gnome is rock, and your blow is not. He appears increasingly nervous, all the same."  broadcast :gnome_fidget } }
+  without as target for kick from Thing
+  as target for kick { do { say "The gnome is rock, and your boot is not. He appears increasingly nervous, all the same."  broadcast :gnome_fidget } }
+  // His fee (GNOME-FCN's GIVE): a treasure buys the way out, the brick
+  // sends him off for good, and anything else is crunched. The hand has
+  // put the gift in his; he says what he makes of it, and goes by a
+  // handler, since a roaming move is a handler's.
+  passage door_line { "Thank you very much for the {item.short}. I don't believe I've ever seen one as beautiful. Follow me," he says, and a door appears on the west end of the ledge. Through the door, you can see a narrow chimney sloping steeply downward. The gnome moves quickly, and disappears from sight. }
+  passage brick_line { "That certainly wasn't what I had in mind," he says, and disappears. }
+  passage crunch_line { "That wasn't quite what I had in mind," he says, crunching the {item.short} in his rock-hard hands. }
+  without as recipient for give from Thing
+  as recipient for give {
+    do {
+      if (item.is(Treasure)) { say door_line  send item :consume  broadcast :gnome_door  send self :gnome_away with false }
+      else if (item.is(Brick)) { say brick_line  move item to here  send self :gnome_away with true }
+      else if (item.is(Thing)) { say crunch_line  send item :consume }
+    }
+  }
+  without as aim for throw from Thing
+  as aim for throw {
+    do {
+      if (target.is(Treasure)) { say "{self.catch_line}\"Thank you very much for the {target.short}. I don't believe I've ever seen one as beautiful. Follow me,\" he says, and a door appears on the west end of the ledge. Through the door, you can see a narrow chimney sloping steeply downward. The gnome moves quickly, and disappears from sight."  send target :consume  broadcast :gnome_door  send self :gnome_away with false }
+      else if (target.is(Brick)) { say "{self.catch_line}\"That certainly wasn't what I had in mind,\" he says, and disappears."  move target to here  send self :gnome_away with true }
+      else if (target.is(Thing)) { say "{self.catch_line}\"That wasn't quite what I had in mind,\" he says, crunching the {target.short} in his rock-hard hands."  send target :consume }
+    }
+  }
+  passage catch_line { The gnome catches it, with a glance at his watch. }
+  on :gnome_away (from, value) {
+    if (value) { self.set(:gone, true) }
+    self.set(:unseen, true)
+    move self to elsewhere
+    self.set(:unseen, false)
+  }
+  on :vgnome_come (from, value) {
+    if (!self.get(:gone) && here.is(Elsewhere)) {
+      if (value == :ledge_1) { move self to ledge_1 }
+      else if (value == :ledge_2) { move self to ledge_2 }
+    }
+  }
+  on :vgnome_late {
+    if (!here.is(Elsewhere)) {
+      tell "The gnome glances at his watch. \"Oops. I'm late for an appointment!\" He disappears, leaving you alone on the ledge."
+      self.set(:unseen, true)
+      move self to elsewhere
+      self.set(:unseen, false)
+    }
+  }
+}
+message :gnome_away with boolean
+
+// The door the gnome opens on the west end of a ledge (GNOME-DOOR-FLAG).
+kind GnomeDoor is Scenery, Door {
+  grammar { name "small door"  nouns "door", "chimney", "doorway"  adjectives "small", "narrow", "west" }
+  :unseen true
+  passage short { small door }
+  on :gnome_door { self.set(:unseen, false) }
+  describe { text "A door in the rock at the west end of the ledge, which was not there before the gnome was, and through it a narrow chimney sloping steeply down toward the bottom of the volcano. It is the gnome's way out, and now yours." }
+  without as target for through from Thing
+  as target for through { do { send actor :travel with :volcano_bottom  say "" } }
+}
+
+// The rusty box imbedded in the Dusty Room's wall (SAFE), the hole chipped
+// out of its front (SLOT), and what is in it.
+kind Safe is Box {
+  grammar { name "rusty box"  nouns "safe", "box", "door"  adjectives "rusty", "steel", "imbedded" }
+  :open false
+  :capacity 15
+  :ndesc true
+  :blown false
+  passage short { rusty box }
+  passage no_take { The box is imbedded in the wall. }
+  passage examined { {if self.get(:blown)}A rusty steel box imbedded in the far wall, its door blown clean off and lying in the corner. {self.look_inside}{else}A rusty steel box imbedded in the far wall, with an oblong hole chipped out of the front of it by somebody who wanted what was inside and did not get it. The door is rusted shut, and the hole is not big enough for a hand.{/if} }
+  describe { text examined }
+  without as target for open from Box
+  as target for open { do { if (self.get(:blown)) { say "The box has no door!" } else { say "The box is rusted and will not open." } } }
+  without as target for close from Box
+  as target for close { do { if (self.get(:blown)) { say "The box has no door!" } else { say "The box isn't open!" } } }
+  on :blow { self.set(:open, true)  self.set(:blown, true) }
+}
+kind Slot is Box {
+  grammar { name "oblong hole"  nouns "hole", "slot", "opening"  adjectives "oblong", "chipped" }
+  :open true
+  :capacity 10
+  :ndesc true
+  passage short { oblong hole }
+  passage no_take { The hole is a hole. There is nothing to take. }
+  describe { text "The oblong hole has been chipped out of the box, probably by someone wanting whatever is inside the box. The attempt was a pathetic failure, however.{if self.count(Thing) > 0} {self.look_inside}{/if}" }
+  without as target for look_in from Box
+  as target for look_in { do { if (self.count(Thing) == 0) { say "There's nothing in the hole." } else { say "{self.look_inside}" } } }
+  // The brick went off in the hole (I-FUSE): the hole is gone with the
+  // door, and the box is open.
+  on :explosion (from) {
+    if (self.holds(from)) {
+      self.set(:unseen, true)
+      broadcast :blow
+    }
+  }
+}
+
+// The square clay brick from the Marble Hall (BRICK): a thing of some
+// weight, with a hole for a string, and other properties.
+kind Brick is Bag {
+  grammar { name "brick"  nouns "clay"  adjectives "square", "clay" }
+  :open true
+  :capacity 2
+  :size 9
+  :burnable true
+  :armed false
+  passage short { brick }
+  passage ldesc { There is a square brick here which feels like clay. }
+  passage examined { It is a brick, square, the size of a brick, and it feels like clay: damp, and heavier than it looks, with a hole in one end just big enough for a finger, or a string.{if self.count(Thing) > 0} {self.look_inside}{/if} }
+  describe { text examined }
+  on :entered (item, from) { send item :in_brick with true }
+  on :left (item, to) { send item :in_brick with false }
+  without as target for burn from Portable
+  as target for burn {
+    do {
+      self.set(:flame, false)
+      if (bound tool) {
+        if (tool.is(Matchbook)) { if (tool.get(:lit)) { self.set(:flame, true) } }
+        if (!self.get(:flame)) { if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" } }
+      } else {
+        if (actor.is(Adventurer)) { if (actor.get(:has_flame)) { self.set(:flame, true) } }
+        if (!self.get(:flame)) { say "You didn't say with what!" }
+      }
+      if (self.get(:flame)) {
+        say "Now you've done it. It seems that the brick has other properties than weight, namely the ability to blow you to smithereens."
+        if (actor.is(Adventurer)) { send actor :die }
+        finally destroy self
+      }
+    }
+  }
+  without as target for smell from Thing
+  as target for smell { do { say "It smells of clay, and faintly of something sharper that is not clay." } }
+  // The fuse in it has burned down (I-FUSE): the explosion is where the
+  // brick is, and the room says the rest.
+  on :fuse_out {
+    self.set(:armed, false)
+    each f: Fuse in self { if (f.get(:lit)) { self.set(:armed, true) } }
+    if (self.get(:armed)) {
+      broadcast :explosion
+      finally destroy self
+    }
+  }
+}
+
+// The coil of black string from the Cobwebby Corridor (FUSE): lit with a
+// match, it burns for two moves.
+kind Fuse is Portable, Switchable {
+  grammar { name "black string"  nouns "fuse", "string", "coil", "wick"  adjectives "black", "thin", "braided" }
+  :size 1
+  :burnable true
+  :lit false
+  :in_brick false
+  passage short { black string }
+  passage ldesc { There is a coil of black, braided string here. }
+  describe { text "It is a coil of thin black string, braided, and stiffer than string usually is, as though something had been worked into it.{if self.get(:lit)} It is burning, with a small bright hiss, and getting shorter.{/if} It would go through a hole the size of a finger." }
+  on :in_brick (from, value) { self.set(:in_brick, value) }
+  without as target for lamp_on from Switchable
+  as target for lamp_on {
+    do {
+      self.set(:flame, false)
+      if (actor.is(Adventurer)) { if (actor.get(:has_flame)) { self.set(:flame, true) } }
+      if (self.get(:lit)) { say "It is burning already." }
+      else if (self.get(:flame)) { self.set(:lit, true)  say "The string starts to burn."  send actor :fuse_lit }
+      else { say "You'd need a flame for that, and your hands are not one. A lit match would do." }
+    }
+  }
+  without as target for burn from Switchable
+  without as target for burn from Portable
+  // Thing's "With a matchbook??!?" arrives by way of Switchable as well
+  // (friction 54; round 6's P9).
+  without as target for burn from Thing
+  as target for burn {
+    do {
+      self.set(:flame, false)
+      if (bound tool) {
+        if (tool.is(Matchbook)) { if (tool.get(:lit)) { self.set(:flame, true) } else { say "The match is not lit." } }
+        else if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" }
+      } else {
+        if (actor.is(Adventurer)) { if (actor.get(:has_flame)) { self.set(:flame, true) } }
+        if (!self.get(:flame)) { say "You'd need a flame for that, and your hands are not one. A lit match would do." }
+      }
+      if (self.get(:flame)) {
+        if (self.get(:lit)) { say "It is burning already." }
+        else { self.set(:lit, true)  say "The string starts to burn."  send actor :fuse_lit }
+      }
+    }
+  }
+  on :fuse_out { if (self.get(:lit) && !self.get(:in_brick)) { finally destroy self } }
+}
+
+// The Library's books (GREEN-BOOK, BLUE-BOOK, WHITE-BOOK, PURPLE-BOOK):
+// handled, they are all handled at once (RANDOM-BOOK), and the purple one
+// has a stamp in it.
+kind Book is Bag, Readable {
+  :open false
+  :capacity 2
+  :size 10
+  :burnable true
+  :fuel 200
+  :has_fdesc true
+  passage words { This book is written in a tongue with which I am unfamiliar. }
+  without as target for read from Thing
+  without as target for read from Readable
+  as target for read { do { if (bound tool) { say "You can't read it through that." } else { say words } } }
+  on :touch { self.set(:touched, true) }
+  // Thing's answers arrive a second time by way of Readable (friction 54;
+  // round 6's P9): left out again here.
+  without as target for look_in from Thing
+  without as target for open from Thing
+  without as target for close from Thing
+}
+kind GreenBook is Book {
+  grammar { name "green book"  nouns "book", "cover", "books"  adjectives "handsome", "green", "leather" }
+  passage short { green book }
+  passage fdesc { A handsome book, bound in green leather, sits in the center of the room. }
+  passage ldesc { There is a green book here. }
+  passage examined { A handsome book, bound in green leather, with nothing on the spine. It can be read, or opened. {self.look_inside} }
+  describe { text examined }
+}
+kind BlueBook is Book {
+  grammar { name "blue book"  nouns "book", "cover", "books"  adjectives "blue", "worn", "battered" }
+  passage short { blue book }
+  passage fdesc { Worn and battered in one corner of the room is a blue book. }
+  passage ldesc { There is a blue book here. }
+  passage examined { A blue book, worn and battered, its corners gone round. It can be read, or opened. {self.look_inside} }
+  describe { text examined }
+}
+kind WhiteBook is Book {
+  grammar { name "white book"  nouns "book", "cover", "books"  adjectives "white", "glossy" }
+  :size 5
+  :fuel 100
+  passage short { white book }
+  passage fdesc { Right beside the purple book sits a white one. }
+  passage ldesc { There is a white book here. }
+  passage examined { A white book, glossy, and thinner than the others. It can be read, or opened. {self.look_inside} }
+  describe { text examined }
+  passage words { It is written in an unfamiliar tongue and details the use of various magical objects, chiefly the so-called "magic wand". Apparently these devices work by pointing them at the object to be ensorcelled, and then chanting the appropriate magic words. (It's truly amazing how credulous these ancients were, isn't it?) }
+}
+kind PurpleBook is Book {
+  grammar { name "purple book"  nouns "book", "books"  adjectives "purple", "moldy", "mouldy" }
+  :has_fdesc false
+  passage short { purple book }
+  passage ldesc { Lying in the dust, and covered with mold, is a purple book. }
+  passage examined { A purple book, lying in the dust and covered with mold, thick, and with something stiff between two of its pages. It can be read, or opened. {self.look_inside} }
+  describe { text examined }
+  passage words { This book is written in a tongue with which I am unfamiliar. Assuming that one can indeed tell a book by its cover, it is likely filled with purple prose, the like of which is rarely seen outside the Great Underground Empire. }
+  // Read with the stamp still in it, it falls open (PURPLE-BOOK-FCN).
+  without as target for read from Book
+  as target for read {
+    do {
+      if (bound tool) { say "You can't read it through that." }
+      else {
+        say words
+        if (!self.get(:open) && self.count(Thing) > 0) { self.set(:open, true)  say opened_line }
+      }
+    }
+  }
+}
+
+// The treasures of the volcano: the Flathead stamp (STAMP), the priceless
+// zorkmid (COIN), the moby ruby (RUBY) and Lord Dimwit's crown (CROWN);
+// and the card in the safe with the crown (CARD).
+kind Stamp is Treasure, Readable {
+  grammar { name "Flathead stamp"  nouns "stamp", "treasure"  adjectives "flathead", "three", "zorkmid" }
+  :size 1
+  :value 10
+  :burnable true
+  :fuel 20
+  passage short { Flathead stamp }
+  passage ldesc { There is a Flathead stamp here. }
+  passage words { This three zorkmid stamp bears a portrait of Lord Dimwit Flathead, "Our Excessive Leader". }
+  describe { text "It is a postage stamp, three zorkmids, in the old Empire's purple, with a portrait of Lord Dimwit Flathead on it looking excessive, which he was, and the legend \"Our Excessive Leader\", which he liked. It has never been licked, which is why it is worth anything." }
+  without as target for read from Thing
+}
+kind Zorkmid is Treasure, Readable {
+  grammar { name "priceless zorkmid"  nouns "zorkmid", "coin", "gold", "treasure"  adjectives "priceless", "gold", "engraved", "octagonal" }
+  :size 10
+  :value 20
+  :has_fdesc true
+  passage short { priceless zorkmid }
+  passage fdesc { On the floor is a priceless gold zorkmid (a valuable collector's item). }
+  passage ldesc { There is an engraved zorkmid here. }
+  passage words { This is a beautiful octagonal coin bearing the legends "Ten Thousand Zorkmids" and "In Frobs We Trust". }
+  describe { text "It is a gold coin, octagonal, heavy, and the size of your palm, with Lord Dimwit Flathead on one face, beloved of Zorkers, and the legends round the rim: \"Ten Thousand Zorkmids\" on the one side and \"In Frobs We Trust\" on the other, with the date, 722 G.U.E. It is a collector's item, and the collector is whoever gets it out of here." }
+  without as target for read from Thing
+}
+kind Ruby is Treasure {
+  grammar { name "moby ruby"  nouns "ruby", "gem", "jewel", "stone", "treasure"  adjectives "moby", "huge", "red" }
+  :size 5
+  :value 15
+  :has_fdesc true
+  passage short { moby ruby }
+  passage fdesc { On the floor lies a moby ruby. }
+  passage ldesc { There is a moby ruby lying here. }
+  describe { text "It is a ruby, and it is moby: the size of a hen's egg, cut, and the red of the lava that must have thrown it up, which is to say the red of a thing that was very hot once and has not forgotten. It has no business lying on a floor." }
+}
+kind Crown is Treasure {
+  grammar { name "gaudy crown"  nouns "crown", "treasure"  adjectives "gaudy", "excessive", "gold", "dimwit's" }
+  :size 10
+  :value 20
+  :has_fdesc true
+  passage short { gaudy crown }
+  passage fdesc { The excessively gaudy crown of Lord Dimwit Flathead sits in the safe. }
+  passage ldesc { Lord Dimwit's crown is here. }
+  describe { text "It is the crown of Lord Dimwit Flathead the Excessive, and it is excessive: gold, and more gold, set with every stone the Empire mined and some it imported, with twelve points to it for the twelve Flatheads and a thirteenth, larger, for himself. It weighs what you would expect, and would give anybody who wore it a headache, which may be what happened to the Empire." }
+}
+kind Card is Readable {
+  grammar { name "card"  nouns "note", "warning"  adjectives "small", "written" }
+  :size 1
+  :burnable true
+  :fuel 20
+  passage short { card }
+  passage ldesc { There is a card with writing on it here. }
+  describe { text "A small card, stiff, with writing on it in a foreman's hand. It can be read." }
+  passage words {
+    Warning:
+
+    This room was constructed over very weak rock strata. Detonation of explosives in this room is strictly prohibited!
+
+    Frobozz Magic Cave Company, per M. Agrippa, foreman
+  }
+}
+
+// The rooms.
+
+object lava_room is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Lava Room"
+    exit south "south" -> volcano_bottom
+    exit east "east" -> ice_room
+  }
+  :id lava_room
+  :walls 13
+  passage body { This is a small room, whose walls are formed by an old lava flow. There are exits here to the east and the south. }
+  object ruby is Ruby
+  object lava is Scenery {
+    grammar { name "lava flow"  nouns "lava", "flow", "rock"  adjectives "old", "black", "glassy" }
+    passage short { lava flow }
+    describe { text "The walls are an old flow of lava, black and glassy where it ran and set, with ropes and folds in it like a thing that was poured. It is cold now. It was not always, and the room remembers." }
+  }
+}
+
+object lava_tube is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Lava Tube"
+    exit down "down" -> ice_room
+    exit up "up" -> volcano_view
+    exit south "south" -> cobwebby_corridor
+  }
+  :id lava_tube
+  :walls 13
+  passage body { You are in a tight chimney of solidified lava. It extends up at least another hundred feet and down to a large room far below. A large crack opens to the south, probably the result of a shift in the rock strata. }
+  object crack is Scenery {
+    grammar { name "large crack"  nouns "crack", "opening", "split"  adjectives "large", "south" }
+    passage short { large crack }
+    describe { text "The crack is fairly wide. You should be able to get into it. It opens to the south, where the rock shifted once and did not shift back." }
+    without as target for through from Thing
+    as target for through { do { send actor :travel with :cobwebby  say "" } }
+  }
+  object chimney is Scenery {
+    grammar { name "chimney"  nouns "tube", "shaft"  adjectives "tight", "lava", "solidified" }
+    passage short { chimney }
+    describe { text "The chimney is lava, solidified, round and smooth and tight enough that you climb it with your back against one side and your boots against the other. It goes up a long way, to a glimmer, and down a long way, to the hall you came up from." }
+    without as target for climb_up from Thing
+    as target for climb_up { do { send actor :travel with :volcano_view  say "" } }
+    without as target for climb_down from Thing
+    as target for climb_down { do { send actor :travel with :ice_room  say "" } }
+  }
+}
+
+object volcano_view is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Volcano View"
+    exit east "east" -> lava_tube
+    exit down "down" refuse "I wouldn't try that."
+    exit west "west" refuse "It is impossible to cross this distance."
+  }
+  :id volcano_view
+  :walls 13
+  passage body { You are on a ledge in the middle of a large volcano. Below you the volcano bottom can be seen and above is the rim of the volcano. A couple of ledges can be seen on the other side of the volcano; it appears that this ledge is intermediate in elevation between those on the other side. The exit from this room is to the east. }
+  object volcano is Scenery, Crossable {
+    grammar { name "volcano"  nouns "gulf", "cone", "distance", "air"  adjectives "large", "dormant", "open" }
+    passage short { volcano }
+    describe { text "The volcano is a great cup of black rock, open at the top to a grey light that is probably sky, and you are on a lip of it halfway up. Across the gulf, two ledges, one a little above you and one a little below; and far down, at the bottom, something large and pale that might be a basket." }
+    as target for cross { do { say "It is impossible to cross this distance." } }
+  }
+  object far_ledges is Scenery {
+    grammar { name "far ledges"  nouns "ledges", "ledge"  adjectives "far", "other", "couple", "two" }
+    passage short { far ledges }
+    describe { text "Two ledges on the far side of the volcano, one narrow and a little below you, one wider and a little above. Each has a dark opening behind it. Neither is any use to you from here; there is a great deal of air in between." }
+  }
+  object rim is Scenery {
+    grammar { name "rim"  nouns "top", "edge"  adjectives "volcano", "high" }
+    passage short { rim }
+    describe { text "The rim of the volcano is a long way above, a ragged circle of rock against a light that is not the moss's and is probably the sky's. Nobody is going to climb to it from here." }
+  }
+  object bottom is Scenery {
+    grammar { name "volcano bottom"  nouns "bottom", "floor"  adjectives "volcano", "far" }
+    passage short { volcano bottom }
+    describe { text "The bottom of the volcano, a long way down, flat and dark, with something large and pale standing on it that might be a basket, and might be a wicker one." }
+  }
+}
+
+object cobwebby_corridor is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Cobwebby Corridor"
+    exit in "in" -> lava_tube
+    exit up "up" -> lava_tube
+    exit north "north" -> lava_tube
+    exit northeast "northeast" -> carousel_room
+    exit southwest "southwest" -> guarded_room
+    exit down "down" -> guarded_room
+  }
+  :id cobwebby
+  passage body { A winding corridor is filled with cobwebs. Some are broken and the dust on the floor is disturbed. The trend of the twists and turns is northeast to southwest. On the north side of one twist, high up, is a narrow crack. }
+  object fuse is Fuse
+  object cobwebs is Scenery {
+    grammar { name "cobwebs"  nouns "cobweb", "webs", "web", "dust"  adjectives "broken", "disturbed" }
+    passage short { cobwebs }
+    describe { text "The cobwebs fill the corridor from floor to roof, grey and thick and older than you are, and somebody has been through them lately: a passage is broken in them, at about the height of a short man, and the dust on the floor under it is scuffed. Whoever it was did not come this way often, and came this way recently." }
+  }
+  object crack is Scenery {
+    grammar { name "narrow crack"  nouns "crack", "opening"  adjectives "narrow", "high" }
+    passage short { narrow crack }
+    describe { text "The crack is fairly wide. You should be able to get into it. It is on the north side, high up, and what is beyond it goes up." }
+    without as target for through from Thing
+    as target for through { do { send actor :travel with :lava_tube  say "" } }
+    without as target for climb_up from Thing
+    as target for climb_up { do { send actor :travel with :lava_tube  say "" } }
+  }
+}
+
+object volcano_bottom is VolcanoRoom in underground_caverns_2 {
+  grammar {
+    name "Volcano Bottom"
+    exit north "north" -> lava_room
+    exit up "up" refuse "The cone of the volcano goes up a very long way, and the walls are not for climbing. The basket here was somebody's answer to that."
+  }
+  :id volcano_bottom
+  :walls 13
+  passage body { You are at the bottom of a large dormant volcano. High above you light enters from the cone of the volcano. The only exit is to the north. }
+  object balloon is Balloon
+  object cone is Scenery {
+    grammar { name "cone"  nouns "light", "sky", "opening", "rim"  adjectives "volcano", "high" }
+    passage short { cone }
+    describe { text "The cone of the volcano goes up and up, narrowing, to a circle of grey light a very long way overhead, which is daylight, or what passes for it on the far side of a mountain. On the walls on the way up there are ledges, three of them, with dark behind them." }
+  }
+}
+
+object vair_1 is VolcanoAir in underground_caverns_2 {
+  grammar { name "Volcano Core" }
+  :id vair_1
+  :walls 13
+  passage body { You are about one hundred feet above the bottom of the volcano. The top of the volcano is clearly visible here. }
+  object top is Scenery {
+    grammar { name "top of the volcano"  nouns "top", "rim", "cone", "sky"  adjectives "volcano" }
+    passage short { top of the volcano }
+    describe { text "The top of the volcano is clearly visible, a ragged ring of rock round a circle of grey, a long way up still, and getting nearer." }
+  }
+}
+
+object vair_2 is VolcanoAir in underground_caverns_2 {
+  grammar { name "Volcano Near Small Ledge" }
+  :id vair_2
+  :walls 13
+  passage body { You are about two hundred feet above the volcano floor. Looming above is the rim of the volcano. There is a small ledge on the west side. }
+  object small_ledge is Scenery {
+    grammar { name "small ledge"  nouns "ledge", "shelf"  adjectives "small", "narrow", "west" }
+    passage short { small ledge }
+    describe { text "A small ledge on the west side, level with you and near enough to see a hook in the rock of it and a dark opening behind. It is the kind of ledge a balloon could be put down on, by somebody who said so." }
+  }
+  object rim is Scenery {
+    grammar { name "rim"  nouns "top", "edge"  adjectives "volcano", "looming" }
+    passage short { rim }
+    describe { text "The rim looms above, nearer than it was, a ragged ring of black against the grey." }
+  }
+}
+
+object vair_3 is VolcanoAir in underground_caverns_2 {
+  grammar { name "Volcano by Viewing Ledge" }
+  :id vair_3
+  :walls 13
+  passage body { You are high above the floor of the volcano. The rim of the volcano looks very narrow and you are very near it. To the east is what appears to be a viewing ledge, too thin to land on. }
+  object viewing_ledge is Scenery {
+    grammar { name "viewing ledge"  nouns "ledge", "shelf"  adjectives "viewing", "thin", "east" }
+    passage short { viewing ledge }
+    describe { text "A ledge to the east, a lip of rock with a passage behind it, and too thin by half to put a basket down on. Somebody standing on it would have a fine view of you." }
+  }
+  object rim is Scenery {
+    grammar { name "rim"  nouns "top", "edge"  adjectives "volcano", "narrow" }
+    passage short { rim }
+    describe { text "The rim is very near now, and looks very narrow: a knife-edge of rock, and beyond it nothing but sky and wind." }
+  }
+}
+
+object vair_4 is VolcanoAir in underground_caverns_2 {
+  grammar { name "Volcano Near Wide Ledge" }
+  :id vair_4
+  :walls 13
+  passage body { You are near the rim of the volcano. Above you it is open to the sky. To the west, there is a place to land on a wide ledge. There is nothing above this but the sky, and a balloon that rises from here rises out of the volcano for good; the wide ledge is the last place to come down. }
+  object wide_ledge is Scenery {
+    grammar { name "wide ledge"  nouns "ledge", "shelf"  adjectives "wide", "west" }
+    passage short { wide ledge }
+    describe { text "A wide ledge to the west, with a hook in the rock of it and a small door at the back, and room on it for a basket and more. It is the place to land, if landing is what you have in mind; above it there is only the rim, and above the rim the wind." }
+  }
+  object sky is Scenery {
+    grammar { name "sky"  nouns "rim", "top", "wind"  adjectives "open", "grey" }
+    passage short { sky }
+    describe { text "Above you the volcano is open to the sky, and the sky is grey, and a wind comes over the rim that would take a balloon a long way, and not anywhere it wanted to go." }
+  }
+}
+
+object ledge_1 is VolcanoLedge in underground_caverns_2 {
+  grammar {
+    name "Narrow Ledge"
+    exit down "down" refuse "I wouldn't jump from here."
+    exit west "west" -> volcano_bottom when (self.get(:gnome_door))
+    exit south "south" -> library
+  }
+  :id ledge_1
+  :walls 13
+  passage body { You are on a narrow ledge within an old dormant volcano. This ledge is about halfway between the floor below and the rim above. There is an exit to the south.{if self.get(:gnome_door)} A small door stands open at the west end of the ledge, and a narrow chimney slopes steeply down behind it.{/if} }
+  object hook is Hook { :room ledge_1 }
+  object coin is Zorkmid
+  object door is GnomeDoor
+  object drop is Scenery {
+    grammar { name "drop"  nouns "floor", "bottom", "edge"  adjectives "long", "precipitous" }
+    passage short { drop }
+    describe { text "The ledge ends, and then there is a great deal of nothing, and then the floor of the volcano, about halfway down from here, which is to say a long way." }
+  }
+}
+
+object library is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Library"
+    exit north "north" -> ledge_1
+    exit out "out" -> ledge_1
+  }
+  :id library
+  :walls 13
+  passage body { This must have been a large library, probably for the royal family. All of the shelves have been gnawed to pieces by unfriendly gnomes. To the north is an exit. }
+  on :left (item, to) { if (item.is(Book)) { each b: Book in self { send b :touch } } }
+  object green_book is GreenBook
+  object blue_book is BlueBook
+  object white_book is WhiteBook
+  object purple_book is PurpleBook {
+    object stamp is Stamp
+  }
+  object shelves is Scenery {
+    grammar { name "shelves"  nouns "shelf", "shelving", "pieces", "splinters"  adjectives "gnawed" }
+    passage short { shelves }
+    describe { text "The shelves ran from floor to roof once, on every wall, and have been gnawed to pieces, from the bottom up, by something with small teeth and a great deal of patience. The pieces are on the floor, and so is most of what was on them, which the gnomes did not care for." }
+  }
+}
+
+object ledge_2 is VolcanoLedge in underground_caverns_2 {
+  grammar {
+    name "Wide Ledge"
+    exit down "down" refuse "It's a long way down."
+    exit west "west" -> volcano_bottom when (self.get(:gnome_door))
+    exit south "south" -> safe_room when (!self.get(:south_blocked))
+    exit south "south" refuse "The way is blocked by debris from an explosion."
+  }
+  :id ledge_2
+  :walls 13
+  :south_blocked false
+  on :collapse (from, value) { if (value == :safe_room) { self.set(:south_blocked, true) } }
+  passage blocked { The ledge has collapsed and cannot be landed on. }
+  passage body { You are on a wide ledge high in the volcano. The rim of the volcano is about 200 feet above and there is a precipitous drop to the bottom.{if self.get(:south_blocked)} The way to the south is blocked by rubble.{else} There is a small door to the south.{/if}{if self.get(:gnome_door)} A small door stands open at the west end of the ledge, and a narrow chimney slopes steeply down behind it.{/if} }
+  object hook is Hook { :room ledge_2 }
+  object door is GnomeDoor
+  object south_door is Scenery, Door {
+    grammar { name "small door"  nouns "door", "doorway", "rubble"  adjectives "small", "south" }
+    passage short { small door }
+    describe { text "{if ledge_2.is(VolcanoLedge)}{if ledge_2.get(:south_blocked)}The doorway to the south is full of rubble, floor to lintel, and the lintel has come down too.{else}A small door in the rock at the back of the ledge, to the south, standing open on a dusty room.{/if}{/if}" }
+  }
+  object drop is Scenery {
+    grammar { name "drop"  nouns "floor", "bottom", "edge"  adjectives "long", "precipitous" }
+    passage short { drop }
+    describe { text "The ledge ends, and then there is a precipitous drop to the bottom of the volcano, which is a very long way down, and not softer for being lava." }
+  }
+}
+
+kind SafeRoom is Room { }
+object safe_room is SafeRoom in underground_caverns_2 {
+  grammar {
+    name "Dusty Room"
+    exit north "north" -> ledge_2
+    exit out "out" -> ledge_2
+  }
+  :id safe_room
+  :walls 13
+  passage body { You are in a dusty old room which is featureless, except for an exit on the north side.{if safe.get(:blown)} On the far wall is a rusty box, whose door has been blown off.{else} Imbedded in the far wall is a rusty box. It appears to be somewhat damaged, since an oblong hole has been chipped out of the front of it.{/if} }
+  object safe is Safe {
+    object crown is Crown
+    object card is Card
+  }
+  object slot is Slot
+  object dust is Scenery {
+    grammar { name "dust"  nouns "floor"  adjectives "thick", "old" }
+    passage short { dust }
+    describe { text "The dust is thick on everything, and undisturbed except where somebody stood at the box for a long time, chipping. The walls have a look of not being quite as solid as walls should be." }
+  }
+}
+
+// The Volcano Gnome, kept Elsewhere until the balloon has left somebody.
+object volcano_gnome is VolcanoGnome in elsewhere { }

@@ -1,0 +1,358 @@
+// The Wizard of Frobozz: an NPC who roams the whole domain, appearing
+// wherever the visitor is, one time in ten on every fourth move
+// (I-WIZARD), to wave his wand and speak a word beginning with "F". What
+// he does to the visitor he does by acting: `enchant`, a verb only he
+// performs, whose target's own part reads the spell from him and applies
+// it (adventurer.sprout). He cannot see where a visitor is, so the
+// visitor's clock tells him (`:wizard_turn`, carrying the room), and he
+// moves himself there, says his piece, and goes back to Elsewhere.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Portable, Valuable} from 'thing'
+import {Room, DarkRoom, Wonderland, Airy} from 'room'
+import {Light} from 'lamp'
+import {Wand} from 'items'
+import {Adventurer} from 'adventurer'
+import {Elsewhere, elsewhere, garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford} from 'garden'
+import {inside_barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel} from 'way_in'
+import {carousel_room, room_8} from 'carousel'
+import {riddle_room, pearl_room} from 'riddle'
+import {well_bottom, well_top, tea_room} from 'well'
+import {posts_room, pool_room} from 'posts'
+import {low_room, machine_room, dingy_closet} from 'machine'
+import {ravine_ledge, ledge_end, tiny_room, dreary_room} from 'ravine'
+import {dragon_room, dragon_lair, fresco_room, stone_bridge, cool_room, ice_room} from 'dragon'
+import {bank_entrance, teller_west, teller_east, viewing_west, viewing_east, small_room, vault, depository, office} from 'bank'
+import {lava_room, lava_tube, volcano_view, cobwebby_corridor, volcano_bottom, vair_1, vair_2, vair_3, vair_4, ledge_1, library, ledge_2, safe_room} from 'volcano'
+import {menhir_room, kennel, stairway, diamond_1, diamond_2, diamond_3, diamond_4, diamond_5, diamond_6, diamond_7, diamond_8, diamond_9} from 'menhir'
+import {guarded_room, workshop, workroom, trophy_room, quarters, pentagram, aquarium_room} from 'workshop'
+import {cerberus_room, crypt_anteroom, crypt} from 'crypt'
+import {ask} from 'sprout'
+import {attack, mung, greet, talk, give, follow, kick, rub, throw, through, shift, squeeze, climb_up, look_in, Spell, Dest, :consume, :wizard_start, :where_are_you, :wizard_turn, :vanish, :wizard_near, :settle, :genie_summoned, :genie_departs, :wizard_dejected, :wizard_gone, :surrender_wand, :freed_wand} from 'verbs'
+
+verb enchant { role target: Adventurer }
+
+// The Fence spell's fence: nothing Zork ever let anyone name, but a
+// visitor shut in by it wants to look at it, and it is the Wizard's, so it
+// says so and says that it will not last. Spawned into the room by the
+// spell, and destroyed when the spell ends.
+kind Fence is Scenery {
+  grammar { name "invisible fence"  nouns "fence", "barrier", "field", "force"  adjectives "invisible", "magic", "magical" }
+  passage short { invisible fence }
+  describe { text "You can't see it, which is the point of an invisible fence, but you can feel it: a wall of force all round you, humming very faintly, and giving, when you push on it, not at all. It has the Wizard's touch about it, and the Wizard's spells, in your experience, never last; this one feels thinner already than it did." }
+  passage no_take { There is nothing to take hold of. Your hand stops where the fence is, and that is all. }
+  on :consume { finally destroy self }
+  without as target for through from Thing
+  as target for through { do { say "You walk into the fence, which does not give, and sit down rather suddenly. The fence hums." } }
+  without as target for shift from Thing
+  as target for shift { do { say "The fence hums a little louder, and does not move. It will go when the Wizard's word wears off, and not before." } }
+  without as target for squeeze from Thing
+  as target for squeeze { do { say "There is nothing to get hold of. The fence is where your hands stop." } }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "The fence goes up further than you do." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "You are in it. The room is out there, where you left it." } }
+}
+
+// What the Fantasize spell puts in a room that is not there is every
+// room's own (`Illusion`, room.sprout), beside the grue.
+
+kind Wizard is Creature, sprout.Actor {
+  roams
+  pass any (true)
+  :spell Spell default none
+  // How many words beginning with F he has spoken, for the record.
+  :cast 0 min 0 max 100000
+  grammar { name "Wizard of Frobozz"  nouns "wizard", "magician", "sorceror", "sorcerer", "man", "frobozz"  adjectives "strange", "little", "old", "frobozz" }
+  passage short { Wizard of Frobozz }
+  passage ldesc { {if self.get(:dejected)}A dejected and fearful Wizard watches from the corner.{else}The Wizard of Frobozz is here, eyeing you warily.{/if} }
+  // Bound (I-WIZARD with the demon in the Pentagram Room): his clock is
+  // stopped, he stands in the room with the demon, and his wand is
+  // powerless; paid off, he is dejected; and once the demon has had the
+  // wand off him, or him, he is gone for good.
+  :bound false
+  :dejected false
+  :dead false
+  on :genie_summoned {
+    if (!self.get(:dead)) {
+      self.set(:bound, true)
+      self.set(:announced, false)
+      self.set(:spell, :none)
+      move self to pentagram
+      if (pentagram.is(Room)) { each a: Adventurer in pentagram {
+        tell a "Suddenly the Wizard materializes in the room. He is astonished by what he sees: his servant in deep conversation with a common adventurer! He draws forth his wand, waves it frantically, and incants \"Frobizz! Frobozzle! Frobnoid!\" The demon laughs heartily. \"You no longer control the Black Crystal, hedge-wizard! Your wand is powerless! Your doom is sealed!\" The demon turns to you, expectantly."
+        send a :wizard_near with true
+      } }
+    }
+  }
+  on :wizard_dejected { self.set(:dejected, true) }
+  // The demon takes the wand from him, and he runs; or takes him, and the
+  // wand is what is left (GENIE-FCN).
+  on :surrender_wand {
+    if (!self.get(:dead)) {
+      each w: Wand in self { move w to here  send w :freed_wand }
+      send self :wizard_gone
+    }
+  }
+  on :wizard_gone {
+    if (!self.get(:dead)) {
+      self.set(:dead, true)
+      self.set(:bound, false)
+      each a: Adventurer in here { send a :wizard_near with false }
+      self.set(:unseen, true)
+      move self to elsewhere
+    }
+  }
+  // The demon gone, his contract fulfilled: the Wizard, if he is still
+  // anybody, slips away and takes up his rounds again.
+  on :genie_departs {
+    if (!self.get(:dead) && self.get(:bound)) {
+      self.set(:bound, false)
+      each a: Adventurer in here { tell a "The Wizard, with a look at where the demon was, edges to the door and is gone."  send a :wizard_near with false }
+      move self to elsewhere
+    }
+  }
+  passage arrives { {if false}.{/if} }
+  passage leaves { {if false}.{/if} }
+  passage not_yours { The Wizard snatches it away. }
+  passage held_fast { The Wizard is not the sort of thing one picks up, and he makes a small gesture with the wand that suggests you not try again. }
+  describe { text "He is a strange little man in a long cloak, with a high pointed hat embroidered with astrological signs and a long, stringy, unkempt beard that he mutters into. He is eyeing you warily, and his wand, which he holds the way other people hold a drink, is pointed more or less in your direction. He does not look like much. That is the mistake most people make." }
+
+  without as target for greet from Creature
+  as target for greet { do { say "The Wizard seems surprised, much as you might be if a dog talked." } }
+  without as target for talk from Creature
+  as target for talk { do { say "The Wizard considers your statement carefully. His expression indicates he regards it as fanciful." } }
+  without as target for ask from Thing
+  as target for ask { do { say "The Wizard considers your statement carefully. His expression indicates he regards it as fanciful." } }
+  without as target for follow from Creature
+  as target for follow { do { say "The Wizard goes where he likes, and arrives without having been anywhere in between. Following him is not a thing that can be done." } }
+  without as target for kick from Thing
+  as target for kick { do { say fear_cast  self.set(:spell, :fear)  if (actor.is(Adventurer)) { act enchant (target: actor) }  send self :vanish } }
+  without as target for rub from Thing
+  as target for rub { do { say "The Wizard twitches away from your hand as though it were wet, and mutters." } }
+  as target for attack { do { say fear_cast  self.set(:spell, :fear)  if (actor.is(Adventurer)) { act enchant (target: actor) }  send self :vanish } }
+  without as target for mung from Thing
+  as target for mung { do { say fear_cast  self.set(:spell, :fear)  if (actor.is(Adventurer)) { act enchant (target: actor) }  send self :vanish } }
+  passage fear_cast { The Wizard retreats, waving his wand and chanting. He says "Fear!"
+
+    You are suddenly terrified. The Wizard seems huge and terrible, looming over you. You flee, terrified. He chuckles, snaps his fingers, and disappears. }
+  as aim for throw {
+    do {
+      if (target.is(Thing)) { say "The Wizard catches the {target.short} without appearing to look at it, and tucks it under his robe. \"Thank you.\"" }
+    }
+  }
+  // A gift (WIZARD-FCN's GIVE): the visitor's own part has put it under
+  // his robe, and told them if the room went dark for it.
+  without as recipient for give from Thing
+  as recipient for give { do { say "\"Thank you.\"" } }
+
+  // Going: the sword in any hand here stops glowing for him first, where
+  // it had begun to. I-SWORD looks for him at the end of a move, so a
+  // call that begins and ends in one move never reaches the sword at all
+  // (round 3's P9): the sword glows only when he lingers.
+  :announced false
+  on :vanish {
+    if (!here.is(Elsewhere)) {
+      if (self.get(:announced)) { each a: Adventurer in here { send a :wizard_near with false } }
+      self.set(:announced, false)
+      move self to elsewhere
+    }
+  }
+
+  // His clock (I-WIZARD, every four moves): started by the first move
+  // anyone makes, and asking after every visitor each time it strikes.
+  :started false
+  on :wizard_start {
+    if (!self.get(:started)) {
+      self.set(:started, true)
+      wake in 2 minutes
+    }
+  }
+  on :woke (elapsed) {
+    wake in 2 minutes
+    broadcast :where_are_you
+  }
+  // Whether he has paid his first call. Zork's Wizard is a one-in-ten
+  // roll from the first move; this one comes for certain the first time
+  // his clock finds a visitor out of the barrow, so that the walk in has
+  // something in it besides walking, and casts something harmless.
+  :debut false
+  // His turn, told by a visitor where they stand. He goes there, says his
+  // piece, and goes. Every line is told to the one who told him where
+  // they are (round 8's P7): a plain tell reaches the room's occupants,
+  // and a visitor in the bucket, the basket or the cage is the occupant
+  // of something in the room, and missed him entirely.
+  on :wizard_turn (from, value) {
+    if (from.is(Adventurer) && !self.get(:bound) && !self.get(:dead) && value != :mist_red && value != :mist_blue && value != :mist_white && value != :mist_black && value != :murky_room && value != :landing) {
+      // His first appearance is his first call wherever it falls (round
+      // 8's P6): certain the first time his clock finds a visitor out of
+      // the barrow, and by the ordinary roll inside it, but the hook and
+      // one of the three harmless words either way.
+      let first = !self.get(:debut)
+      // The spheres in the visitor's hands cool him (I-WIZARD's
+      // CAST-PROB), and the Black Crystal sends him off in a hurry.
+      let pcnt = from.get(:spheres_held)
+      // The visitor's first thirty moves: no Fence and no Freeze, so a
+      // short first visit is not spent shut in or stood still.
+      let early = from.get(:moves) < 30
+      if (!here.is(Elsewhere)) {
+        // Already somewhere, lingering: four times in five he goes.
+        if (random(5) < 4) {
+          if (!from.get(:in_dark)) { tell from "The Wizard vanishes." }
+          send self :vanish
+        }
+      } else if ((first && value != :barrow) || random(10) == 0) {
+        self.set(:debut, true)
+        if (value == :barrow) { move self to inside_barrow }
+        else if (value == :narrow_tunnel) { move self to narrow_tunnel }
+        else if (value == :foot_bridge) { move self to foot_bridge }
+        else if (value == :great_cavern) { move self to great_cavern }
+        else if (value == :shallow_ford) { move self to shallow_ford }
+        else if (value == :dark_tunnel) { move self to dark_tunnel }
+        else if (value == :garden_north) { move self to garden_north }
+        else if (value == :gazebo) { move self to gazebo }
+        else if (value == :formal_garden) { move self to formal_garden }
+        else if (value == :topiary) { move self to topiary }
+        else if (value == :stream_path) { move self to stream_path }
+        else if (value == :marble_hall) { move self to marble_hall }
+        else if (value == :deep_ford) { move self to deep_ford }
+        else if (value == :carousel) { move self to carousel_room }
+        else if (value == :room_8) { move self to room_8 }
+        else if (value == :riddle) { move self to riddle_room }
+        else if (value == :pearl) { move self to pearl_room }
+        else if (value == :well_bottom) { move self to well_bottom }
+        else if (value == :well_top) { move self to well_top }
+        else if (value == :tea_room) { move self to tea_room }
+        else if (value == :posts) { move self to posts_room }
+        else if (value == :pool) { move self to pool_room }
+        else if (value == :low_room) { move self to low_room }
+        else if (value == :machine) { move self to machine_room }
+        else if (value == :closet) { move self to dingy_closet }
+        else if (value == :ravine_ledge) { move self to ravine_ledge }
+        else if (value == :ledge_end) { move self to ledge_end }
+        else if (value == :tiny_room) { move self to tiny_room }
+        else if (value == :dreary_room) { move self to dreary_room }
+        else if (value == :dragon_room) { move self to dragon_room }
+        else if (value == :dragon_lair) { move self to dragon_lair }
+        else if (value == :fresco) { move self to fresco_room }
+        else if (value == :stone_bridge) { move self to stone_bridge }
+        else if (value == :cool_room) { move self to cool_room }
+        else if (value == :ice_room) { move self to ice_room }
+        else if (value == :bank_entrance) { move self to bank_entrance }
+        else if (value == :teller_west) { move self to teller_west }
+        else if (value == :teller_east) { move self to teller_east }
+        else if (value == :viewing_west) { move self to viewing_west }
+        else if (value == :viewing_east) { move self to viewing_east }
+        else if (value == :small_room) { move self to small_room }
+        else if (value == :vault) { move self to vault }
+        else if (value == :depository) { move self to depository }
+        else if (value == :office) { move self to office }
+        else if (value == :lava_room) { move self to lava_room }
+        else if (value == :lava_tube) { move self to lava_tube }
+        else if (value == :volcano_view) { move self to volcano_view }
+        else if (value == :cobwebby) { move self to cobwebby_corridor }
+        else if (value == :volcano_bottom) { move self to volcano_bottom }
+        else if (value == :vair_1) { move self to vair_1 }
+        else if (value == :vair_2) { move self to vair_2 }
+        else if (value == :vair_3) { move self to vair_3 }
+        else if (value == :vair_4) { move self to vair_4 }
+        else if (value == :ledge_1) { move self to ledge_1 }
+        else if (value == :library) { move self to library }
+        else if (value == :ledge_2) { move self to ledge_2 }
+        else if (value == :safe_room) { move self to safe_room }
+        else if (value == :menhir_room) { move self to menhir_room }
+        else if (value == :kennel) { move self to kennel }
+        else if (value == :stairway) { move self to stairway }
+        else if (value == :diamond_1) { move self to diamond_1 }
+        else if (value == :diamond_2) { move self to diamond_2 }
+        else if (value == :diamond_3) { move self to diamond_3 }
+        else if (value == :diamond_4) { move self to diamond_4 }
+        else if (value == :diamond_5) { move self to diamond_5 }
+        else if (value == :diamond_6) { move self to diamond_6 }
+        else if (value == :diamond_7) { move self to diamond_7 }
+        else if (value == :diamond_8) { move self to diamond_8 }
+        else if (value == :diamond_9) { move self to diamond_9 }
+        else if (value == :guarded_room) { move self to guarded_room }
+        else if (value == :workshop) { move self to workshop }
+        else if (value == :workroom) { move self to workroom }
+        else if (value == :trophy_room) { move self to trophy_room }
+        else if (value == :quarters) { move self to quarters }
+        else if (value == :pentagram) { move self to pentagram }
+        else if (value == :aquarium_room) { move self to aquarium_room }
+        else if (value == :cerberus_room) { move self to cerberus_room }
+        else if (value == :crypt_anteroom) { move self to crypt_anteroom }
+        else if (value == :crypt) { move self to crypt }
+        let dark = from.get(:in_dark)
+        if (dark) { tell from "You feel a slight outrush of air as something moves nearby." }
+        else if (here.is(Wonderland)) { tell from "A huge and terrible wizard appears before you, as large as the largest tree! He looks down on you as you would look upon a gnat!" }
+        else if (here.is(Airy)) { tell from "The Wizard appears, floating nonchalantly in the air beside you. He grins sideways at you." }
+        else { tell from "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." }
+        if (from.get(:has_black)) {
+          if (dark) { tell from "You feel a sudden inrush of air as though something disappeared." }
+          else { tell from "The Wizard notices that you carry the Black Crystal, and with an unseemly haste, he disappears." }
+          send self :vanish
+        }
+        else if (first) {
+          // His first call: the wand, a word, and one of the spells that
+          // cost nothing but a little dignity.
+          if (dark) { tell from "Suddenly, illuminated by the faint blue glow of a magic wand pointed in your direction, you see the Wizard!" }
+          else { tell from "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." }
+          // What he is afraid of, read off him (round 4's P8): a short
+          // visit that meets him and nothing else should leave knowing
+          // there is something to want, and where.
+          tell from "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you; the pearls nearest, behind a stone door that asks a question, and the rest further in, past a room that will not keep still, which you will hear before you see it."
+          let r = random(3)
+          if (r == 0) { self.set(:spell, :feeble) }
+          else if (r == 1) { self.set(:spell, :fumble) }
+          else { self.set(:spell, :fantasize) }
+          self.adjust(:cast, 1)
+          tell from "The Wizard, in a deep and resonant voice, speaks the word \"{self.spell_name}!\" He then vanishes, cackling gleefully."
+          act enchant (target: from)
+          send self :vanish
+        }
+        else if (random(5) == 0) {
+          if (dark) { tell from "You hear low, confused muttering." }
+          else { tell from "He mutters something (muffled by his beard) and disappears as suddenly as he came." }
+          send self :vanish
+        } else {
+          if (dark) { tell from "Suddenly, illuminated by the faint blue glow of a magic wand pointed in your direction, you see the Wizard!" }
+          else { tell from "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow." }
+          if (random(5) < 4 - pcnt) {
+            let r = random(12)
+            if (r == 0) { self.set(:spell, :feeble) }
+            else if (r == 1) { self.set(:spell, :fumble) }
+            else if (r == 2) { self.set(:spell, :fear) }
+            else if (r == 3) { self.set(:spell, :filch) }
+            else if (r == 4) { if (early) { self.set(:spell, :fumble) } else { self.set(:spell, :freeze) } }
+            else if (r == 5) { self.set(:spell, :fall) }
+            else if (r == 6) { self.set(:spell, :ferment) }
+            else if (r == 7) { self.set(:spell, :fierce) }
+            else if (r == 8) { self.set(:spell, :float) }
+            else if (r == 9) { self.set(:spell, :fireproof) }
+            else if (r == 10) { if (early) { self.set(:spell, :fantasize) } else { self.set(:spell, :fence) } }
+            else { self.set(:spell, :fantasize) }
+            self.adjust(:cast, 1)
+            if (random(4) < 3) { tell from "The Wizard, in a deep and resonant voice, speaks the word \"{self.spell_name}!\" He then vanishes, cackling gleefully." }
+            else { tell from "The Wizard, almost inaudibly, whispers a word beginning with \"F,\" and then disappears, chuckling nastily." }
+            act enchant (target: from)
+            send self :vanish
+          } else if (random(2) == 0) {
+            tell from "There is a loud crackling noise. Blue smoke rises from out of the Wizard's sleeve. He sighs and disappears."
+            send self :vanish
+          } else if (random(2) == 0) {
+            tell from "The Wizard incants \"{one of}Feeble{or}Fumble{or}Fear{or}Filch{or}Freeze{or}Fall{or}Ferment{or}Fierce{or}Float{or}Fireproof{or}Fence{or}Fantasize{/one of}!\" but nothing happens. He shakes the wand. Nothing happens. With a slightly embarrassed glance in your direction, he vanishes."
+            send self :vanish
+          } else {
+            tell from "The Wizard seems about to say something, but thinks better of it, and peers at you from under his bushy eyebrows."
+            self.set(:announced, true)
+            send from :wizard_near with true
+          }
+        }
+      }
+    }
+  }
+  passage spell_name {{if self.get(:spell) == :feeble}Feeble{else if self.get(:spell) == :fumble}Fumble{else if self.get(:spell) == :fear}Fear{else if self.get(:spell) == :filch}Filch{else if self.get(:spell) == :freeze}Freeze{else if self.get(:spell) == :fall}Fall{else if self.get(:spell) == :ferment}Ferment{else if self.get(:spell) == :fierce}Fierce{else if self.get(:spell) == :float}Float{else if self.get(:spell) == :fireproof}Fireproof{else if self.get(:spell) == :fence}Fence{else}Fantasize{/if}}
+
+  object wand is Wand
+}
+
+object wizard is Wizard in elsewhere { }

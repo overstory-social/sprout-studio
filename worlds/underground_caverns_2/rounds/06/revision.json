@@ -1,0 +1,270 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The framing is right: sonnet runs stop at the first hub and opus runs at the first hard trap. Answered through the hub fixes (P2, P3, P4) and the trap tells (P5, P6, P7); no change of its own."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Three rounds running, short runs quit on the move they enter the Carousel, so the first-throw line comes too late. The reason to keep going moves into the room's own description for the first two visits, with the tell for the stone door's passage, which is the door the hook promises. This is also the steering's 'something to want early'."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "No run in two rounds examined the club, so the burned name goes on the club's room line, first and later descriptions; the stair room keeps its stairway in its BRIEF entry; the window's close-up says it glows by a count being kept, a grade a step. The room lines keep Zork's own words for the grades."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The no-way draw walks the visitor a room along and back, so a heading always follows (friction 65: chance is forbidden in a permit and a move always describes the arrival). The line now says the passage let them out where they started, so the heading reads as the same room, and P3's stairway line names which room that is."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Zork's trap stays, but the tell comes before the cost: the Eat-Me cake's close-up says it is half of the trick and the other half is on the same table, the table says a guest who means to leave at their own size takes more than one cake, and the pool's close-up and look-under say it is deeper than a swimmer and whoever goes in does not come out. The drowning itself is still one command."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "A treasure that vanishes without a word is a lost goal; one that is kept is a goal for round 7's Trophy Room. The demon's return counts what went to the Wizard's keeping and says so; Filch's count says the same."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The window stays Zork's five moves, but it is visible from its start: the blast heard from outside says the rock has not stopped moving, and 'wait' while any volcano countdown runs says it is spending three moves, before they are spent. A wait inside the window still kills, as in Zork."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "The dragon's 'interest runs out' line fired only in dragon country; a visitor who kicked twice and walked straight on is standing in the Ice Room when it gives up, so the line is heard there too. The follow arithmetic itself is Zork's and unchanged."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Three more of friction 54's trap: Thing's stock open, look-in and burn answers arriving a second time by way of Readable, Drinkable and Switchable. Each is suppressed with a `without` naming Thing. The unlit matchbook's refusal now says a struck match would do; the matchbook keeps 'match' as a noun since the instrument clause cannot prefer a lit match over the book it is in."
+    },
+    {
+      "answers": "P10",
+      "decision": "reject",
+      "reason": "An engine matter: `not_here` is said with no binding naming the word that failed, so nothing the world writes can name it. Logged as friction 66 for an issue in Sprout; the studio never patches Sprout."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Every room now holds a Surroundings thing answering to 'room', 'chamber', 'place' and the like, whose close-up is the room's own description; the Pool Room's 'hazy something' is a thing answered with the pool's close-up until the pool is gone."
+    },
+    {
+      "answers": "P12",
+      "decision": "reject",
+      "reason": "The answer is matched as a word from the riddle's list; quotation marks around it are the parser's to strip, not the world's, and both 'a well' bare and 'say well' are accepted. Zork's own parser did not take a quoted answer either. Not worth a world workaround."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "'unlock door' with the rusty key in hand and none named now uses it, '(with the rusty iron key)', as Zork's parser would have implied; the visitor's own part of unlock and lock tells the door whether the key is held (friction 61 again)."
+    },
+    {
+      "answers": "P14",
+      "decision": "accept",
+      "reason": "The stand-in's `any` refusal cannot let a look through (friction 67), so the one line is reworded to be honest for both cases: 'not here, to be looked at or to hear you', then where the robot is."
+    },
+    {
+      "answers": "P15",
+      "decision": "accept",
+      "reason": "Float's refusal now points at 'wait' as Freeze's does, and the two spells that refuse every move draw their length from the short half of Zork's range (three to ten minutes)."
+    },
+    {
+      "answers": "P16",
+      "decision": "accept",
+      "reason": "Read as the synthesis says: the never-reached figures rose because round 5 widened the world, and the third quarter hangs on one run getting past the Carousel and the cakes. P2 and P5 are what move it; no change of its own."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "Round 6 is refine only: no new territory, every change answers a round-6 point, and the early thing to want is the Carousel's first description with the stone door's tell (P2). Round 7 widens to Q4 and the ending; round 8 refines and releases."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Carousel Room's own description, for the first two visits, says the floor turns, every passage leads somewhere, and the climbing one has a draught of old brick and the grinding of a heavy stone door; the first-throw line now says the throw was the floor's doing.",
+      "files": [
+        "worlds/underground_caverns_2/world/carousel.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P2",
+        "S1"
+      ]
+    },
+    {
+      "what": "The club's room lines (first and later) carry 'Babe Flathead' burned into the handle; diamond_5 keeps its stairway in a BRIEF entry; the window's close-up says it glows by a count being kept, a grade a step.",
+      "files": [
+        "worlds/underground_caverns_2/world/menhir.sprout"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "The Oddly-angled no-way draw says the passage lets you out where you started, so the following heading reads as the same room.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "Eat-Me cake close-up says it is half the trick and the other half is on the table; the tea table says a guest who means to leave at their own size takes more than one cake; the pool's close-up and look-under say it is deeper than a swimmer and no one comes up.",
+      "files": [
+        "worlds/underground_caverns_2/world/items.sprout",
+        "worlds/underground_caverns_2/world/well.sprout",
+        "worlds/underground_caverns_2/world/posts.sprout"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "Adventurer counts treasures sent to the stash on death (:lost) and the demon's return says where the lamp, the rest and the treasures went; Filch's count says they went where the Wizard keeps what he takes.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "The blast heard from outside says the rock has not stopped moving; 'wait' while the safe, ledge or fuse countdown runs says it is three moves of waiting, printed before 'Time passes...'.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/volcano.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "The dragon's 'interest runs out' line is heard in the Ice Room as well as in dragon country.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "`without as target for open/close from Thing` on Book, `look_in` on Pool, `burn` on Fuse, so each prints one line; the unlit matchbook's refusal adds that a struck match would do.",
+      "files": [
+        "worlds/underground_caverns_2/world/volcano.sprout",
+        "worlds/underground_caverns_2/world/posts.sprout",
+        "worlds/underground_caverns_2/world/thing.sprout"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "Surroundings kind, one in every Room, answering 'room', 'chamber', 'place', 'surroundings' with the room's description (plus search, smell, listen); the Pool Room's 'hazy something' is a Scenery thing answered with the pool's close-up.",
+      "files": [
+        "worlds/underground_caverns_2/world/room.sprout",
+        "worlds/underground_caverns_2/world/posts.sprout"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "Adventurer's own part of unlock and lock sets :has_rusty; PDoor with no key named uses the rusty key when held, '(with the rusty iron key)', for unlock and lock.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/ravine.sprout"
+      ],
+      "for": [
+        "P13"
+      ]
+    },
+    {
+      "what": "AbsentRobot's refusal reworded to 'not here, to be looked at or to hear you', honest for a look as for an order.",
+      "files": [
+        "worlds/underground_caverns_2/world/machine.sprout"
+      ],
+      "for": [
+        "P14"
+      ]
+    },
+    {
+      "what": "Float's movement refusal points at 'wait'; Freeze and Float draw their duration from the short half of the range (3 + random(8)).",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P15"
+      ]
+    },
+    {
+      "what": "Friction entries 65 (no-way draw cannot refuse in a permit), 67 (`as target for any` refuses examine too), 68 (wait's engine line follows the actor's own) and 54-again (three more Thing double-answers); entry 66 logs the engine note separately.",
+      "files": [
+        "worlds/underground_caverns_2/friction.md"
+      ],
+      "for": [
+        "P4",
+        "P14",
+        "P7",
+        "P9"
+      ]
+    },
+    {
+      "what": "intent.md kept current: Carousel first description, club and stair room, no-way line, cake and pool tells, stash and Filch lines, volcano window, dragon's Ice Room line, Surroundings and hazy something, implied rusty key, stand-in look, Freeze/Float durations.",
+      "files": [
+        "worlds/underground_caverns_2/intent.md"
+      ],
+      "for": [
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P11",
+        "P13",
+        "P14",
+        "P15",
+        "S1"
+      ]
+    },
+    {
+      "what": "Tests: revision6.json (first-quarter answers: Carousel description, room noun, cake and pool tells, stand-in look, look in pool, hazy something, demon's return), revision6_dragon.json (Ice Room turn-back line), revision6_volcano.json (implied key, book and fuse single lines, blast line, wait inside the window); existing scripts updated for the new Carousel, stand-in, club and explosion lines; README lists the revision scripts.",
+      "files": [
+        "worlds/underground_caverns_2/world/tests/revision6.json",
+        "worlds/underground_caverns_2/world/tests/revision6_dragon.json",
+        "worlds/underground_caverns_2/world/tests/revision6_volcano.json",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json",
+        "worlds/underground_caverns_2/world/tests/revision5.json",
+        "worlds/underground_caverns_2/world/tests/bank_walls.json",
+        "worlds/underground_caverns_2/world/tests/bucket_count.json",
+        "worlds/underground_caverns_2/world/tests/cakes.json",
+        "worlds/underground_caverns_2/world/tests/gas.json",
+        "worlds/underground_caverns_2/world/tests/gnome.json",
+        "worlds/underground_caverns_2/world/tests/robot_cage.json",
+        "worlds/underground_caverns_2/world/tests/volcano_gnome.json",
+        "worlds/underground_caverns_2/world/README.md"
+      ],
+      "for": [
+        "P2",
+        "P3",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P11",
+        "P13",
+        "P14"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,414 @@
+// Rooms. A room reads as Zork's do: its name, its description, then what
+// is in it, each in its own paragraph. A room worth points (the Top of
+// Well) pays them to whoever first walks in. Every room keeps which room
+// it is (`:id`), so that what stands in it can say so to something that
+// cannot see it: the Wizard's clock, the bucket.
+//
+// A dark room is lit only while it sees a lit lamp, on its floor or in
+// somebody's hands; until then a visitor in it can name only what they
+// carry, and reads the world's `dark` line, the grue's warning, for its
+// description. What it keeps besides, `:alight`, is for the grue: a
+// handler cannot ask a place whether it is lit, so the room counts its
+// own lamps and tells each visitor in it whether it would be lit without
+// them.
+import * as sprout from 'sprout'
+import {Thing, Scenery} from 'thing'
+import {Light} from 'lamp'
+import {Box} from 'box'
+import {Adventurer} from 'adventurer'
+import {examine} from 'sprout'
+import {read, listen, search, smell, look_in, look_under, shift, climb_up, climb_down, take, through, attack, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize, :conjured, :explosion, :explosion_at, :collapse, :bury, :die} from 'verbs'
+import {Portable} from 'thing'
+
+kind Room is sprout.Place {
+  grammar { article none }
+
+  :value 0 min 0 max 100
+  :glow 0 min 0 max 2
+  :id Dest default nowhere
+  // Which walls these are, for the wall to describe.
+  :walls 0 min 0 max 30
+  // Zork's RMUNGBIT: the room is not to be entered again, and its exits
+  // say why (the closet full of gas, a room blown up by a cake).
+  :munged false
+
+  object wall is Wall
+  object grue is Grue
+  object tunnel is Tunnel
+  object floor is Floor
+  object ceiling is Ceiling
+  object mirage is Illusion
+  object surroundings is Surroundings
+
+  remembers { :visits 0 min 0 max 2 }
+  :visited false
+
+  passage title default { {self} }
+  passage body default { {if false}.{/if} }
+  // Zork's PRINT-CONT: first what has a first description and has not been
+  // moved, then everything else.
+  passage objects {
+    {for t: Thing in self}{if !t.get(:ndesc) && t.get(:has_fdesc) && !t.get(:touched)}
+
+    {t.fdesc}{t.inside_lines}{/if}{/for}{for t: Thing in self}{if t.get(:ndesc) || !t.get(:has_fdesc) || t.get(:touched)}{if !t.get(:ndesc)}
+
+    {t.ldesc}{/if}{t.inside_lines}{/if}{/for}
+  }
+  passage full {
+    {self.title}
+
+    {self.body}
+
+    {self.objects}
+  }
+  passage brief default {
+    {self.title}
+
+    {self.objects}
+  }
+  // The room seen from the bucket, as Zork's DESCRIBE-ROOM shows a room
+  // from a vehicle.
+  passage bucket_view {
+    {self.title}, in the wooden bucket
+
+    {self.body}
+
+    {self.objects}
+  }
+
+  // Zork's DESCRIBE-ROOM: the room's name always; its long description on
+  // `look`, in VERBOSE, or the first time in; what is in it unless
+  // SUPERBRIEF. Arriving is the only time a visitor's mode is asked.
+  describe { text described }
+  passage described {
+    {if seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :superbrief}{self.title}{else if seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :brief && actor.recall(:visits) > 1}{self.brief}{else}{self.full}{/if}
+  }
+
+  // A room answers to the words of its name ("Tea Room" to `tea`), but
+  // only where nothing in it does; then it is as if nothing were there.
+  as target for any { permit { refuse "You can't see any such thing." } }
+  as tool for any { permit { refuse "You can't see any such thing." } }
+
+  // Blown up by a cake (ICEBOOM's MUNG-ROOM): no way back in, and the
+  // rooms whose ways lead here are told.
+  on :munge { self.set(:munged, true)  broadcast :room_sealed with self.get(:id) }
+  // Munged (RMUNGBIT), by whatever means: nobody comes in. The rooms the
+  // cakes and the gas seal say why at their own doors first; this is the
+  // brick's, whose explosion may be anywhere (I-FUSE, I-SAFE, I-LEDGE).
+  passage blocked default { The way is blocked by debris from an explosion. }
+  accept (item, from) { if (self.get(:munged) && item.is(Adventurer)) { refuse blocked } }
+  // The brick went off here (I-FUSE): whoever was in the room with it is
+  // blown to smithereens and the room is sealed; otherwise the blast is
+  // heard from wherever the visitor stands, the room fills with debris, and
+  // what could be carried off is buried, and in five moves the room comes
+  // down (I-SAFE). The Dusty Room's safe answers for itself (volcano.sprout).
+  :exploded false
+  on :explosion {
+    if (!self.get(:exploded)) {
+      self.set(:exploded, true)
+      self.set(:here_now, false)
+      each a: Adventurer in self { self.set(:here_now, true) }
+      if (self.get(:here_now)) {
+        each a: Adventurer in self {
+          tell a "Now you've done it. It seems that the brick has other properties than weight, namely the ability to blow you to smithereens."
+          send a :die
+        }
+        self.set(:munged, true)
+      } else {
+        spawn Debris in self
+        each p: Portable in self { send p :bury }
+        broadcast :explosion_at with self.get(:id)
+      }
+    }
+  }
+  :here_now false
+  on :collapse (from, value) { if (value == self.get(:id)) { self.set(:munged, true) } }
+
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      send wall :wall_look with self.get(:walls)
+      // A room only passed through (the Carousel's random turn, the Low
+      // Room's) is not visited and pays nothing.
+      if (!item.get(:spun)) {
+        self.set(:visited, true)
+        let seen_by = !self.is(DarkRoom) || item.get(:light) > 0
+        // The first room seen again by its name alone: one word, once,
+        // about LOOK and VERBOSE.
+        if (item.recall(:visits) == 1 && seen_by && item.get(:mode) == :brief) { send item :brief_hint }
+        if (item.recall(:visits) < 2 && seen_by) { item.adjust(:visits, 1) }
+        if (self.is(DarkRoom) && item.recall(:visits) < 2 && !seen_by) {
+          if (self.get(:alight)) { item.adjust(:visits, 1) }
+        }
+        if (self.get(:value) > 0) {
+          send item :scored with self.get(:value)
+          self.set(:value, 0)
+        }
+      }
+    }
+  }
+}
+
+kind DarkRoom is Room {
+  grammar { lit (self.get(:daylight) || self.sees(sprout.LightSource, :lit)) }
+
+  :daylight false
+  :floor_lit false
+  :bearers 0 min 0 max 50
+  :alight false
+
+  on :entered (item, from) { send self :relight }
+  on :left (item, to)      { send self :relight }
+  on :snuffed              { send self :relight }
+
+  on :relight {
+    self.set(:floor_lit, self.get(:daylight))
+    self.set(:bearers, 0)
+    each l: Light in self { if (l.get(:lit)) { self.set(:floor_lit, true) } }
+    each b: Box in self {
+      if (b.get(:open) || b.get(:transparent)) { each l: Light in b { if (l.get(:lit)) { self.set(:floor_lit, true) } } }
+    }
+    each a: Adventurer in self { if (a.get(:light) > 0) { self.adjust(:bearers, 1) } }
+    self.set(:alight, self.get(:floor_lit) || self.get(:bearers) > 0)
+    each a: Adventurer in self {
+      if (a.get(:light) > 0) { send a :room_lit with self.get(:floor_lit) || self.get(:bearers) > 1 }
+      else { send a :room_lit with self.get(:alight) }
+    }
+  }
+}
+
+// The garden's rooms, where the unicorn comes and goes and the topiary
+// creeps (I-GARDEN).
+kind Garden { }
+// Where a bridge is (Zork's BRIDGE in LOCAL-GLOBALS): the Fall spell is
+// fatal here.
+kind Bridged { }
+// Where a chasm is: a down that is a long way down.
+kind ChasmEdge { }
+// Where the visitor is small and the furniture is huge (NONLANDBIT): the
+// Posts Room and the Pool Room.
+kind Wonderland { }
+// The Tea Room, and the Posts Room, as the cakes know them.
+kind TeaRoomLike { }
+kind PostsLike { }
+// Where a cake keeps: the Tea Room, the Posts Room, the Pool Room, the
+// Machine Room, the Low Room, the Dingy Closet, the Top of Well and the
+// cage (CAKE-CRUMBLE's list).
+kind CakeSafe { }
+// Rooms that are no place to stand (NONLANDBIT): the Top of Well and the
+// Circular Room, where the Float spell ends badly, and the Wizard floats.
+kind Airy { }
+// Where a fresh-water stream can be reached (GLOBAL-WATER).
+kind Watery { }
+// The dragon's country: where the dragon follows a visitor it is angry
+// with (I-DRAGON's FIND-TARGET walks the exits of its room).
+kind DragonCountry { }
+// The Bank of Zork's rooms behind the curtain of light, where the walls
+// are each their own thing and one of them lets a walker through (SCOL).
+kind CurtainRoom { }
+
+// Zork's EAST-WALL, WEST-WALL and the rest, GLOBAL-OBJECTS: the
+// surrounding wall, in every room. Sprout has no object that is everywhere
+// at once, so every room holds its own, and tells it which walls these
+// are as a visitor comes in.
+kind Wall is Scenery {
+  grammar { name "wall"  nouns "walls"  adjectives "east", "west", "north", "south", "eastern", "western", "cavern", "surrounding" }
+  passage short { wall }
+  :look 0 min 0 max 30
+  // In the Bank's rooms the walls are each their own thing (bank.sprout),
+  // so the one that stands for all four steps aside there.
+  on :wall_look (from, value) { self.set(:look, value)  self.set(:unseen, value == 10) }
+  passage plain { The walls are solid rock, plain and entirely uninterested in you. }
+  passage barrow { The walls of the barrow are great flat stones set on end, older than anything you have ever seen, and fitted without mortar by someone who did not expect to be back. }
+  passage ravine { The walls of the ravine are steep and crumbly, the sort of rock that comes away in the hand and takes the hand with it. }
+  passage limestone { The walls are limestone, wet and fluted, and glow very faintly where the moss has got a grip. }
+  passage hedged { The hedges hide the cavern walls. Where they thin, there is grey rock behind the green, which rather spoils the illusion. }
+  passage marble { The walls are fine marble, veined and polished, cracked here and there by whatever ruined the hall. }
+  passage brick { The walls are brick and mortar, damp and dark, curving away above you into nothing your lamp can reach. }
+  passage riddle_wall { The walls are bare on all sides, which is the point of the room: there is nothing to look at but the riddle. }
+  passage carved { The walls are rough rock. Somebody has gone to the trouble of carving a number into one of them. }
+  passage chiselled { The walls of the closet are rough stone, and somebody with time on their hands has chiselled a notice into one of them. }
+  passage scorched { The walls are scorched black to twice your height, and above that merely smoked, and here and there the rock itself has run like wax and set again. Whatever did it was not a campfire. }
+  passage frescoed { The walls are covered in frescoes, or were: somebody battling dragons and rescuing fair maidens, in the flat bright style of people who had never met either, and the parts that would say who have been blackened and cracked by heat. The dragons came out of it better than the hero did. }
+  passage lava { The walls are old lava, black and glassy, worn smooth to the height of a tall man by something very heavy that went by here a long time ago and was in no hurry. }
+  passage misty { The walls are wet, and the mist beads on them and runs, and where it runs the rock has gone the greenish white of things that are never dry. }
+  passage ledge_wall { The ravine wall goes up beside you, steep and crumbly, and down below you, steeper. It is not a wall one leans on. }
+  passage tiny_wall { The walls are rough, close, and carved rather than grown, and the door takes up most of the one it is in. }
+  passage dreary_wall { The walls are plain rock, and dreary, as advertised; one of them has a crack in it that glows red, which is the only thing in the room with any life in it. }
+  passage bank_wall { The walls are marble, veined grey, and were once panelled; the panelling has gone the way of the furniture, and the scavengers took the brackets too. }
+  passage glassy { The walls are of some glassy substance, dark, and set at angles that do not add up: a corner here is more than a right angle, and the one across from it less, and the passages go off between them in every direction at once. Your reflection in the glass is at a different angle from you. }
+  passage wizardly { The walls are dressed stone, old, and hung here and there with things it is better not to look at closely: charts, a mask, a hand. They have been the Wizard's a long time, and have the look of walls that listen. }
+  passage crypt_wall { The walls are marble, polished, carved with the Flathead crest at intervals and with nothing else, as though whoever built the crypt had been told to make it grand and had run out of ideas after the crest. }
+  passage mist_wall { There are no walls; there is the sphere, crystal, curved, a long way off in every direction and the wrong size, and the mist between you and it. }
+  describe {
+    if (self.get(:look) == 1) { text barrow }
+    else if (self.get(:look) == 2) { text ravine }
+    else if (self.get(:look) == 3) { text limestone }
+    else if (self.get(:look) == 4) { text hedged }
+    else if (self.get(:look) == 5) { text marble }
+    else if (self.get(:look) == 6) { text brick }
+    else if (self.get(:look) == 7) { text riddle_wall }
+    else if (self.get(:look) == 8) { text carved }
+    else if (self.get(:look) == 9) { text chiselled }
+    else if (self.get(:look) == 11) { text scorched }
+    else if (self.get(:look) == 12) { text frescoed }
+    else if (self.get(:look) == 13) { text lava }
+    else if (self.get(:look) == 14) { text misty }
+    else if (self.get(:look) == 15) { text ledge_wall }
+    else if (self.get(:look) == 16) { text tiny_wall }
+    else if (self.get(:look) == 17) { text dreary_wall }
+    else if (self.get(:look) == 18) { text bank_wall }
+    else if (self.get(:look) == 19) { text glassy }
+    else if (self.get(:look) == 20) { text wizardly }
+    else if (self.get(:look) == 21) { text crypt_wall }
+    else if (self.get(:look) == 22) { text mist_wall }
+    else { text plain }
+  }
+}
+
+// Zork's TUNNEL, another GLOBAL-OBJECT: the passage, the tunnel, the
+// crawlway, in every room.
+kind Tunnel is Scenery {
+  grammar { name "passage"  nouns "tunnel", "crawlway", "passageway", "path", "corridor"  adjectives "dark", "smoky", "narrow", "wide" }
+  passage short { passage }
+  describe { text "The passage is cut through the rock, and goes where it goes. The ways out of here are described above, and you may take any of them." }
+  // "take passage" (round 8's P3): a way is taken by walking into it.
+  passage no_take { A passage is not a thing to be picked up; it is a way, and the way to take it is to walk into it. Say which. }
+  without as target for through from Thing
+  as target for through { do { say "Use compass directions for movement, and say which way." } }
+}
+
+kind Floor is Scenery {
+  grammar { name "floor"  nouns "ground"  adjectives "stone", "rock" }
+  passage short { floor }
+  describe { text "The floor is the sort of thing you stand on. You are standing on it." }
+  without as target for search from Thing
+  as target for search { do { say "Everything that is on the floor is listed, in the room's description, and the rest is floor." } }
+  without as target for look_under from Thing
+  as target for look_under { do { say "There is nothing under the floor but more floor, and then, eventually, lava." } }
+}
+kind Ceiling is Scenery {
+  grammar { name "ceiling"  nouns "roof"  adjectives "high", "low", "cavern" }
+  passage short { ceiling }
+  describe { text "The ceiling is some way above you, where ceilings generally are. It is not the most interesting thing in the room." }
+}
+
+// What the Fantasize spell puts in a room that is not there (DESCRIBE-
+// OBJECTS): a basilisk, a pile of jewels, a gold ingot, a bulging chest, a
+// convention of wizards, a copy of ZORK I. Every room keeps one, as it
+// keeps a grue, so that reaching for what the Wizard's word put there is
+// answered in the narrator's voice. Zork rolled afresh on every
+// description; here the illusion is rolled once for each casting of the
+// spell, one room in two, and stays in the room, listed with what is
+// really there, until the spell wears off.
+message :fade
+kind Illusion is Scenery {
+  grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "sphere", "convention", "wizards", "copy", "zork"  adjectives "bulging", "yellow", "gold", "convention", "pile", "zork", "i" }
+  passage short { basilisk }
+  // Which of the eight it is this time, and for which casting it rolled.
+  // While it shows nothing it is unseen, so its words name nothing: the
+  // closet's real sphere is not shadowed by a yellow one that is not
+  // there, and a word for something never shown is the parser's not-here.
+  :which 0 min 0 max 8
+  :cast 0 min 0 max 100000
+  :unseen true
+  // The spell worn off, the illusion is off the room's list at once and
+  // out of reach two commands later (round 8's P10), so a reach for it on
+  // the move after is answered with the word having worn off and not by
+  // the parser.
+  :fading 0 min 0 max 2
+  on :fade {
+    if (self.get(:fading) > 0) {
+      self.adjust(:fading, -1)
+      if (self.get(:fading) == 0) { self.set(:which, 0)  self.set(:unseen, true) }
+    }
+  }
+  passage named {{if self.get(:which) == 1}a pile of jewels{else if self.get(:which) == 2}a gold ingot{else if self.get(:which) == 3}a basilisk{else if self.get(:which) == 4}a bulging chest{else if self.get(:which) == 5}a yellow sphere{else if self.get(:which) == 6}a grue{else if self.get(:which) == 7}a convention of wizards{else}a copy of ZORK I{/if}}
+  passage ldesc { There is {self.named} here. }
+  on :fantasize (from, value) {
+    if (value == 0) {
+      self.set(:ndesc, true)
+      if (self.get(:which) > 0) { self.set(:fading, 2) } else { self.set(:unseen, true) }
+    }
+    else if (self.get(:cast) != value) {
+      self.set(:cast, value)
+      if (random(2) == 0) { self.set(:which, 1 + random(8))  self.set(:ndesc, false)  self.set(:unseen, false) }
+      else { self.set(:which, 0)  self.set(:ndesc, true)  self.set(:unseen, true) }
+    }
+    // The grue it shows is the room's own grue's to answer for, since that
+    // one owns the word (round 4's P12): named as the room beside it
+    // declares it, from where this one sits.
+    send grue :conjured with self.get(:which) == 6
+  }
+  // The refusal's first clause is the verb's: a hand for taking, an eye
+  // for looking, a blow for striking (round 4's P11); the rest is the
+  // same, since it is the part that was quoted. The actor's own part
+  // chooses among them, since this one's wildcard would answer first.
+  passage never_there { It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now. }
+  passage worn_off { There is nothing of the kind here. If there was a moment ago, the Wizard had a word in it, and the word has worn off. }
+  passage gone {
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}Your hand closes on nothing, and your eye on less. {self.never_there}{else}{self.worn_off}{/if}
+  }
+  passage gone_look {
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}You look, and look again, and your eye closes on nothing, and the harder you look the less there is. {self.never_there}{else}{self.worn_off}{/if}
+  }
+  passage gone_strike {
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}Your blow goes through it, and your eye after it, and neither finds anything to stop on. {self.never_there}{else}{self.worn_off}{/if}
+  }
+  passage gone_speak {
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}It does not answer, having no mouth, nor anything else. {self.never_there}{else}{self.worn_off}{/if}
+  }
+  // The wildcard runs before any play for a verb, so the verb's clause is
+  // the actor's to choose (adventurer.sprout), from these.
+  as target for any { permit { refuse gone } }
+  as tool for any { permit { refuse gone } }
+}
+
+// What an explosion leaves in a room (EXPLOSION).
+// The room as a thing to examine (round 6's P11): "examine room" is
+// answered with the room's own description. A room's own name words are
+// refused where anything in it answers better (Room, above), so this is a
+// thing in every room, answering to "room" and the like, and reading the
+// room it is in.
+kind Surroundings is Scenery {
+  grammar { name "room"  nouns "chamber", "place", "surroundings", "area", "everything", "here"  adjectives "this", "whole", "entire" }
+  passage short { room }
+  describe { text "{if here.is(Room)}{here.full}{/if}" }
+  passage no_take { {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of} }
+  without as target for search from Thing
+  as target for search { do { say "{if here.is(Room)}{here.full}{/if}" } }
+  without as target for smell from Thing
+  as target for smell { do { say "It smells like a room." } }
+  without as target for listen from Thing
+  as target for listen { do { say "You hear nothing a room does not usually make." } }
+}
+
+kind Debris is Scenery {
+  grammar { name "debris"  nouns "rubble", "wreckage", "explosion"  adjectives "explosion" }
+  :ndesc false
+  passage short { debris }
+  passage ldesc { The room is cluttered with debris from an explosion. The walls seem ready to collapse. }
+  describe { text "Debris, from an explosion: rock in pieces, dust still coming down, and the walls, where you can see them, with new cracks in them that are getting longer as you watch. This is not a room to stand about in." }
+}
+
+// Zork's GRUE: never here, always nearby.
+kind Grue is Scenery {
+  grammar { name "lurking grue"  nouns "grue", "grues"  adjectives "lurking", "sinister", "hungry", "silent" }
+  passage short { lurking grue }
+  passage absent { There is no grue here, but I'm sure there is at least one lurking in the darkness nearby. I wouldn't let my light go out if I were you! }
+  // Shown by the Wizard's word (round 4's P12): a grue in plain sight is
+  // the one thing no grue has ever been, and it says so.
+  :conjured false
+  on :conjured (from, value) { self.set(:conjured, value) }
+  passage plain_sight { There is a grue here, in the light, in plain sight, which no grue has ever been or ever would be: it has the lamp-lit, slightly transparent look of something the Wizard thought of. A real one would have had you by now. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now. }
+  passage struck_through { Your blow goes through the grue, which is not how grues work; the dark would have had you by now. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now. }
+  describe { if (self.get(:conjured)) { text plain_sight } else { text "The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale." } }
+  as target for any { permit { if (self.get(:conjured)) { refuse plain_sight } } }
+  without as target for listen from Thing
+  as target for listen { do { say "It makes no sound but is always lurking in the darkness nearby." } }
+  without as target for search from Thing
+  as target for search { do { say absent } }
+  without as target for look_in from Thing
+  as target for look_in { do { say absent } }
+  without as target for look_under from Thing
+  as target for look_under { do { say absent } }
+}

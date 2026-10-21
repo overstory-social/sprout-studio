@@ -1,0 +1,376 @@
+// The end (the fourth quarter): down the secret passage from the foot of
+// the stair, the Cerberus Room and the three-headed dog, the Crypt
+// Anteroom, the Crypt of the Flatheads with its secret door that shows in
+// the dark, and the Landing beyond it, where Zork II ends (CERBERUS-FCN,
+// COLLAR-FCN, CRYPT-ANTEROOM-FCN, CRYPT-ROOM-FCN, DIM-DOOR-APPEARS,
+// CRYPT-OBJECT, CRYPT-DOOR-FCN, TOMB-PSEUDO, DIM-DOOR-FCN, HEAD-FCN,
+// ZORK3-FCN).
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Portable, Door} from 'thing'
+import {Box} from 'box'
+import {Room, DarkRoom} from 'room'
+import {Treasure, Readable, Wand, Food, Pearl} from 'items'
+import {Light} from 'lamp'
+import {Adventurer} from 'adventurer'
+import {Collar, diamond_5} from 'menhir'
+import {ask} from 'sprout'
+import {take, open, close, read, knock, through, rub, kick, attack, mung, greet, talk, alarm, follow, give, throw, put, smell, listen, look_in, look_under, climb_up, burn, Dest, Answer, :leashed, :crypt_door, :cast_word, :disenchant, :dim_appear, :relight, :light, :consume, :die, :travel, :scored} from 'verbs'
+
+// The three-headed dog (CERBERUS): the size of an elephant, and in the
+// way, until it is wearing its collar.
+kind Cerberus is Creature, Box {
+  pass any (true)
+  grammar { name "three-headed dog"  nouns "cerberus", "dog", "hound", "monster", "heads"  adjectives "huge", "giant", "three", "headed", "three-headed", "vicious", "vicious-looking" }
+  :open true
+  :capacity 20
+  :ndesc false
+  :leashed false
+  :gone false
+  passage short { three-headed dog }
+  passage ldesc { {if self.get(:leashed)}An insipidly grinning three-headed dog is wagging its tail here. It is wearing a huge dog collar.{else}There is a vicious-looking dog guarding the entrance. It is more or less your usual dog, except that it has three heads and is the size of an elephant.{/if} }
+  passage arrives { {if false}.{/if} }
+  passage leaves { {if false}.{/if} }
+  passage not_yours { The dog growls, and keeps what it has. }
+  passage held_fast { The dog is the size of an elephant, and has three opinions about being picked up. }
+  passage close_up { {if self.get(:leashed)}A dog the size of an elephant, with three heads, all three of them grinning insipidly, and a tail that goes back and forth and knocks small rocks about. Round its neck, or necks, is a huge dog collar, and it is wearing the collar the way a dog wears a thing it has wanted for a long time. It is yours, for as long as the collar is its.{else}A dog, more or less: the size of an elephant, with three heads, six eyes, and more teeth than you have time to count, all of them bared. It stands across the archway to the east and does not look as though it means to lie down. Its necks are bare, and it keeps scratching at them with a hind foot the size of a cart, the way a dog does that has lost something it was used to wearing; and between scratches one head or another lifts and looks up the marble stair, the way a dog looks toward home, which for a dog this size would be a kennel the size of a quarry, and somewhere up there, past the stair and the leaning stone with the F cut in it, there is a quarry.{/if} }
+  describe { text close_up }
+  passage snaps { The three-headed dog snaps at you viciously! }
+  without as target for look_in from Thing
+  without as target for open from Thing
+  without as target for close from Thing
+  as target for look_in { do { if (self.get(:leashed)) { say "Three mouths, all of them open and grinning, and a great many teeth, and no harm in any of them now." } else { say snaps } } }
+  without as target for greet from Creature
+  as target for greet { do { if (self.get(:leashed)) { say "\"Arf! Arf! Arf!\"" } else { say "\"Grrrr!\"" } } }
+  without as target for talk from Creature
+  as target for talk { do { if (self.get(:leashed)) { say "\"Arf! Arf! Arf!\"" } else { say "\"Grrrr!\"" } } }
+  without as target for ask from Thing
+  as target for ask { do { if (self.get(:leashed)) { say "\"Arf! Arf! Arf!\"" } else { say "\"Grrrr!\"" } } }
+  without as target for alarm from Creature
+  as target for alarm { do { if (self.get(:leashed)) { say "The dog is awake, and wagging." } else { say snaps } } }
+  without as target for follow from Creature
+  as target for follow { do { if (self.get(:leashed)) { say "The dog is right here, and would follow you anywhere, if it fitted through the doors." } else { say snaps } } }
+  without as target for rub from Thing
+  as target for rub { do { if (self.get(:leashed)) { say "The dog is now insanely happy, slobbering all over the place and whining with uncontained doggish joy." } else { say snaps } } }
+  without as target for smell from Thing
+  as target for smell { do { say "Dog, three times over, and very large dog at that." } }
+  without as target for listen from Thing
+  as target for listen { do { if (self.get(:leashed)) { say "Panting, from three mouths, and a tail going like a flail." } else { say "Growling, from three throats at once, and not in harmony." } } }
+  // Struck (CERBERUS-FCN's ATTACK): leashed, it dies of disappointment;
+  // otherwise, half the time, so do you.
+  as target for attack {
+    do {
+      if (self.get(:leashed)) {
+        say "With a quiet bark of disappointment, the creature expires. Its six eyes look at you reproachfully. As it dies, it collapses into a small pile of dust which blows away into nothing."
+        send self :expire
+      }
+      else if (chance(2)) {
+        say "The dog-thing snaps at you viciously, and succeeds. Your head, it seems, is only a small mouthful for the poor animal, who is just as hungry afterward."
+        if (actor.is(Adventurer)) { send actor :die }
+      }
+      else { say "The maddened dog-thing snaps viciously at you." }
+    }
+  }
+  without as target for mung from Thing
+  as target for mung {
+    do {
+      if (self.get(:leashed)) {
+        say "With a quiet bark of disappointment, the creature expires. Its six eyes look at you reproachfully. As it dies, it collapses into a small pile of dust which blows away into nothing."
+        send self :expire
+      }
+      else if (chance(2)) {
+        say "The dog-thing snaps at you viciously, and succeeds. Your head, it seems, is only a small mouthful for the poor animal, who is just as hungry afterward."
+        if (actor.is(Adventurer)) { send actor :die }
+      }
+      else { say "The maddened dog-thing snaps viciously at you." }
+    }
+  }
+  without as target for kick from Thing
+  as target for kick { do { if (self.get(:leashed)) { say "The dog takes it for a game, and wags." } else { say snaps } } }
+  on :expire {
+    self.set(:gone, true)
+    self.set(:unseen, true)
+    self.set(:ndesc, true)
+    if (cerberus_room.is(Room)) { each c: Collar in self { move c to cerberus_room } }
+  }
+  // The collar, put on it (CERBERUS-FCN's PUT-ON): the hand has put it
+  // round the dog's neck (adventurer.sprout), and the dog is a dog again.
+  // What is offered it, graded (round 8's P2): food it is not hungry for,
+  // a thing to wear that is the right idea and the wrong size, and a
+  // hand reaching past it with anything else, which gets Zork's snap.
+  accept (item, from) {
+    if (!item.is(Collar)) {
+      if (self.get(:leashed)) { refuse "The dog sniffs at it, and loses interest." }
+      else if (item.is(Food)) { refuse "One head sniffs at {item}, and the other two do not bother; it is not hungry, or not for that. It goes back to scratching at its necks." }
+      else if (item.is(Pearl)) { refuse "The middle head sniffs at the necklace, and a hind foot comes up and scratches at the bare neck under it. It is the right idea and the wrong size: whatever went round those necks was made for three of them, and did not come from a jeweller. The dog snaps at you, less viciously than before, as if you had nearly understood something." }
+      else { refuse "The three-headed dog snaps at you viciously! Whatever it wants, it is not that, and it is not you." }
+    }
+  }
+  on :entered (item, from) {
+    if (item.is(Collar)) {
+      self.set(:leashed, true)
+      broadcast :leashed
+      if (from.is(Adventurer)) { tell from "The creature whines happily, then the center head licks your face (which is roughly like experiencing a sandpaper washcloth). The other two heads look about, as though the monster felt a sudden need to find a pair of slippers somewhere. Its huge tail wags enthusiastically, knocking small rocks around and almost blowing you over from the breeze it creates." }
+    }
+  }
+  without as recipient for give from Thing
+  as recipient for give {
+    do {
+      if (item.is(Collar)) { }
+      else if (self.get(:leashed)) { say "The dog sniffs at {item}, and loses interest; it has what it wanted." }
+      else { say snaps }
+    }
+  }
+  without as aim for throw from Thing
+  as aim for throw { do { if (target.is(Thing)) { if (self.get(:leashed)) { say "The dog fetches the {target.short} and drops it at your feet, wet." } else { say "The dog snaps the {target.short} out of the air, finds it is not you, and drops it." } } } }
+  // The wand's words (CERBERUS-FCN's ENCHANT): Float lifts it an inch,
+  // Fierce is the end of you, Feeble takes the strength of nine elephants.
+  without on :cast_word from Thing
+  on :cast_word (from, value) {
+    if (self.get(:aimed)) {
+      if (value == :float) { tell from "The huge dog rises about an inch off the ground, for a moment." }
+      else if (value == :fierce) { tell from "Cerberus tears you limb from limb! What ferocity!"  if (from.is(Adventurer)) { send from :die } }
+      else if (value == :feeble) { tell from "What an effect! He now has the strength of just one elephant, rather than ten!" }
+      else if (value == :fudge) { tell from "A strong odor of chocolate permeates the room. The dog sneezes, three times." }
+      else { tell from "The wand stops glowing, but there is no other obvious effect. The dog looks puzzled." }
+    }
+  }
+}
+message :expire
+
+// The Flatheads' heads, on poles (HEADS): the dead foresaw you.
+kind Heads is Scenery {
+  grammar { name "set of poled heads"  nouns "heads", "head", "pole", "poles", "flatheads", "remains"  adjectives "flat", "twelve", "poled", "mounted" }
+  passage short { set of poled heads }
+  describe { text "Twelve heads, somewhat flat, mounted securely on poles in a ring round the crypt, each with the look its owner wore in life, which is excessive. They are the Flatheads, all twelve, and they have been here a long time, and they foresaw you." }
+  passage no_take { {self.tamper} }
+  passage tamper { Although the Flatheads are dead, they foresaw that some cretin might tamper with their remains. Therefore, they took steps to punish such actions. }
+  without as target for rub from Thing
+  as target for rub { do { say tamper  if (actor.is(Adventurer)) { send actor :die } } }
+  without as target for kick from Thing
+  as target for kick { do { say tamper  if (actor.is(Adventurer)) { send actor :die } } }
+  as target for attack { do { say tamper  if (actor.is(Adventurer)) { send actor :die } } }
+  without as target for mung from Thing
+  as target for mung { do { say tamper  if (actor.is(Adventurer)) { send actor :die } } }
+  without as target for open from Thing
+  as target for open { do { say tamper  if (actor.is(Adventurer)) { send actor :die } } }
+  without as target for burn from Thing
+  as target for burn { do { say tamper  if (actor.is(Adventurer)) { send actor :die } } }
+  without as target for ask from Thing
+  as target for ask { do { say "The Flatheads are dead; therefore they do not respond." } }
+}
+
+// The crypt door (CRYPT-DOOR), huge and marble, from either side: one door
+// in two rooms (friction 48).
+kind CryptDoor is Scenery, Door {
+  grammar { name "crypt door"  nouns "door"  adjectives "huge", "marble", "crypt", "north", "south" }
+  :open false
+  passage short { crypt door }
+  describe { text "A huge door of marble, taller than two men, carved with the Flathead crest, and {if self.get(:open)}standing open{else}closed{/if}. It squeaks." }
+  on :crypt_door (from, value) { self.set(:open, value) }
+  without as target for open from Thing
+  as target for open {
+    do {
+      if (self.get(:open)) { say "I think you've already done that." }
+      else { self.set(:open, true)  say "The crypt door squeaks open."  broadcast :crypt_door with true }
+    }
+  }
+  without as target for close from Thing
+  as target for close {
+    do {
+      if (!self.get(:open)) { say "I think you've already done that." }
+      else { self.set(:open, false)  say "The crypt door squeaks closed."  broadcast :crypt_door with false }
+    }
+  }
+  without as target for knock from Door
+  as target for knock { do { say "You knock. The marble answers with a sound like a very large, very slow bell." } }
+}
+
+// The secret door in the crypt's south wall (DIM-DOOR): a faint outline
+// with an F in it, seen only when the room is dark.
+kind DimDoor is Scenery, Door {
+  grammar { name "secret door"  nouns "door", "outline", "rectangle", "letter", "f"  adjectives "secret", "dim", "dimly", "south", "glowing", "faint" }
+  :unseen true
+  :open false
+  passage short { secret door }
+  describe { text "{if self.get(:open)}The secret door stands open in the south wall, on a landing beyond, and the F on it glows faintly green.{else}A faint outline of a rectangle on the south wall, as though light were shining round a doorway, and in the center of it a faintly glowing letter. It might be an F. It is a door, and it has no handle, which is the kind of door one opens by asking.{/if}" }
+  on :dim_appear { self.set(:unseen, false) }
+  without as target for open from Thing
+  as target for open {
+    do {
+      if (self.get(:open)) { say "I think you've already done that." }
+      else { self.set(:open, true)  say "The secret door opens noiselessly." }
+    }
+  }
+  without as target for close from Thing
+  as target for close {
+    do {
+      if (!self.get(:open)) { say "I think you've already done that." }
+      else { self.set(:open, false)  say "The secret door closes noiselessly." }
+    }
+  }
+  without as target for knock from Door
+  as target for knock { do { say "A hollow echo responds." } }
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (self.get(:open)) { send actor :travel with :landing  say "" }
+      else { say "The door is shut. It opens noiselessly, if asked, and not to a shoulder." }
+    }
+  }
+}
+
+kind CerberusRoom is DarkRoom {
+  :leashed false
+  on :leashed { self.set(:leashed, true) }
+}
+object cerberus_room is CerberusRoom in underground_caverns_2 {
+  grammar {
+    name "Cerberus Room"
+    exit up "up" -> diamond_5
+    exit east "east" -> crypt_anteroom when (self.get(:leashed))
+    exit east "east" refuse "The huge dog snaps nastily at you."
+    exit in "in" -> crypt_anteroom when (self.get(:leashed))
+    exit in "in" refuse "The huge dog snaps nastily at you."
+  }
+  :id cerberus_room
+  :value 10
+  :walls 21
+  passage body { This is the entrance to a huge crypt or tomb. A marble stairway leads up from a gateway arch. }
+  object cerberus is Cerberus
+  object arch is Scenery, Door {
+    grammar { name "gateway arch"  nouns "arch", "gateway", "archway", "entrance", "tomb", "crypt"  adjectives "gateway", "marble", "huge" }
+    passage short { gateway arch }
+    describe { text "A gateway arch of marble, carved with the Flathead crest, opening east onto the crypt, and the dog across the whole width of it." }
+    without as target for through from Thing
+    as target for through { do { if (cerberus_room.is(CerberusRoom)) { if (cerberus_room.get(:leashed)) { send actor :travel with :crypt_anteroom  say "" } else { say "The huge dog snaps nastily at you." } } } }
+  }
+  object stairs is Scenery {
+    grammar { name "marble stairway"  nouns "stairway", "stairs", "steps", "staircase"  adjectives "marble", "secret" }
+    passage short { marble stairway }
+    describe { text "A marble stairway, narrow and steep, going up to the oddly angled room at the foot of the other stair, through the floor that swung down." }
+    without as target for climb_up from Thing
+    as target for climb_up { do { send actor :travel with :diamond_5  say "" } }
+  }
+}
+
+kind CryptAnteroom is DarkRoom {
+  :door_open false
+  on :crypt_door (from, value) { self.set(:door_open, value) }
+}
+object crypt_anteroom is CryptAnteroom in underground_caverns_2 {
+  grammar {
+    name "Crypt Anteroom"
+    exit west "west" -> cerberus_room
+    exit south "south" -> crypt when (self.get(:door_open))
+    exit south "south" refuse "The crypt door is closed."
+    exit in "in" -> crypt when (self.get(:door_open))
+    exit in "in" refuse "The crypt door is closed."
+  }
+  :id crypt_anteroom
+  :value 3
+  :walls 21
+  passage body { The anteroom is large and empty. Marble bas reliefs depict the stirring times and afterlife of the Flatheads (the latter a bit optimistically). The exit is to the west. A huge marble door stands to the south. The door is {if self.get(:door_open)}open{else}closed{/if}. Above the door is the cryptic inscription: "Feel Free". }
+  object door is CryptDoor
+  object reliefs is Scenery {
+    grammar { name "bas reliefs"  nouns "reliefs", "relief", "carvings", "carving", "flatheads"  adjectives "marble", "bas", "stirring" }
+    passage short { bas reliefs }
+    describe { text "The reliefs run round the room at the height of a man: the twelve Flatheads at their stirring times, which were mostly dinners, and in the afterlife, which the sculptor has shown as more dinners, with wings. It is a bit optimistic." }
+  }
+  object inscription is Scenery {
+    grammar { name "inscription"  nouns "words", "writing", "lettering"  adjectives "cryptic" }
+    passage short { inscription }
+    passage words { "Feel Free" }
+    describe { text "Cut into the marble above the door, in letters a foot high: \"Feel Free\". It is cryptic, as inscriptions on crypts go; whoever cut it had a sense of humor, or none." }
+    without as target for read from Thing
+    as target for read { do { say words } }
+  }
+}
+
+// The Crypt (CRYPT-ROOM): lit by whoever brings a light, and in the dark
+// the outline of a door. A room that is dark only in what it says, so
+// that the door can be named once it is seen (friction 70).
+kind CryptRoom is Room {
+  :door_open false
+  :dim_seen false
+  :lit_now true
+  on :crypt_door (from, value) { self.set(:door_open, value) }
+  on :entered (item, from) { if (item.is(Adventurer)) { send self :relight } }
+  on :relight {
+    self.set(:lit_now, false)
+    each a: Adventurer in self { if (a.get(:light) > 0) { self.set(:lit_now, true) } }
+    each l: Light in self { if (l.get(:lit)) { self.set(:lit_now, true) } }
+    if (!self.get(:lit_now) && !self.get(:dim_seen) && self.count(Adventurer) > 0) {
+      self.set(:dim_seen, true)
+      send dim_door :dim_appear
+      tell dim_line
+    }
+  }
+  passage dim_line { It is dark, but on the south wall is a faint outline of a rectangle, as though light were shining around a doorway. You can also make out a faintly glowing letter in the center of this area. It might be an "F". }
+}
+object crypt is CryptRoom in underground_caverns_2 {
+  grammar {
+    name "Crypt"
+    exit north "north" -> crypt_anteroom when (self.get(:door_open))
+    exit north "north" refuse "The crypt door is closed."
+    exit out "out" -> crypt_anteroom when (self.get(:door_open))
+    exit out "out" refuse "The crypt door is closed."
+    exit south "south" -> landing when (dim_door.get(:open))
+    exit south "south" refuse "The secret door is shut." when (self.get(:dim_seen))
+  }
+  :id crypt
+  :value 2
+  :walls 21
+  passage body { {if !self.get(:lit_now)}{self.dim_line}{else}The room contains the earthly remains of the mighty Flatheads, twelve somewhat flat heads mounted securely on poles. While the room might be expected to contain funerary urns or other evidence of the ritual practices of the ancient Zorkers, it is empty of all such objects. There is writing carved on the crypt. The only apparent exit is to the north through the door to the anteroom. The door is {if self.get(:door_open)}open{else}closed{/if}.{if self.get(:dim_seen)} Looking closely at the south wall, you can see the dim outline of a secret door labelled with the letter "F".{/if}{/if} }
+  object door is CryptDoor
+  object dim_door is DimDoor
+  object heads is Heads
+  object tomb is Scenery {
+    grammar { name "marble crypt"  nouns "crypt", "tomb", "grave", "writing", "carving"  adjectives "marble", "carved" }
+    passage short { marble crypt }
+    passage words { "Here lie the Flatheads, whose heads were placed on poles by the Keeper of the Dungeon for amazing untastefulness." }
+    describe { text "A crypt of marble, sealed, long and low, with the twelve poles round it, and writing carved on the lid. It can be read." }
+    without as target for read from Thing
+    as target for read { do { say words } }
+    without as target for open from Thing
+    as target for open { do { say "The crypt is sealed for all time." } }
+    without as target for rub from Thing
+    as target for rub { do { say "The marble is cool." } }
+  }
+}
+
+// The Landing (ZORK3): the end of Zork II, for whoever stands on it with
+// the wand; and the end of whoever stands on it without.
+kind Landing is Room {
+  :won false
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      if (item.get(:has_wand)) { self.set(:won, true)  send item :won }
+      else {
+        tell item "The green curves begin to vibrate toward you, as if searching for something. One by one your possessions glow bright green. Finally, you are attacked by these magical wardens, and destroyed!"
+        send item :die
+      }
+    }
+  }
+}
+object landing is Landing in underground_caverns_2 {
+  grammar { name "Landing" }
+  :id landing
+  :walls 21
+  passage body { Beyond the door is a roughly hewn staircase leading down into darkness. The landing on which you stand is covered with carefully drawn magical runes like those sketched upon the workbench of the Wizard of Frobozz. These have been overlaid with sweeping green lines of enormous power, which undulate back and forth across the landing. }
+  object runes is Scenery {
+    grammar { name "magical runes"  nouns "runes", "rune", "lines", "curves", "wardens"  adjectives "magical", "green", "sweeping", "drawn" }
+    passage short { magical runes }
+    describe { text "Runes drawn on the landing with great care, like those on the Wizard's bench, and over them lines of green light that sweep back and forth, looking for something. They are not a decoration. They are a lock, and they are looking for the key." }
+  }
+  object door_behind is Scenery, Door {
+    grammar { name "secret door"  nouns "door", "doorway"  adjectives "secret", "open", "north" }
+    passage short { secret door }
+    describe { text "The secret door stands open behind you, on the crypt, and the F on it glows faintly green from this side too. It is the last door of the Wizard's domain, and you are on the far side of it." }
+  }
+  object staircase is Scenery {
+    grammar { name "staircase"  nouns "stairs", "stairway", "steps", "darkness"  adjectives "hewn", "rough", "roughly" }
+    passage short { staircase }
+    describe { text "A staircase roughly hewn out of the rock, going down into darkness, and at the bottom of it, a very long way down, a red light." }
+  }
+}
+message :won

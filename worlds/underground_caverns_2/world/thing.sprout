@@ -1,0 +1,305 @@
+// Everything in the Wizard's domain that a visitor can see and name. A
+// thing answers each of Zork's general verbs with Zork's default refusal;
+// a thing that does something better leaves the default out with
+// `without` and writes its own. A verb for one sort of thing (board,
+// spray, fill, drink …) is typed by a kind below instead, so it is offered
+// only where such a thing is in range.
+//
+// Zork describes a thing in a room by its first description (FDESC) until
+// it has been moved, and by its long one (LDESC) after, or by "There is a
+// ... here." when it has none; `here_line` is that rule. A thing marked
+// `:ndesc` (Zork's NDESCBIT) is never listed.
+import {ask} from 'sprout'
+import {take, open, close, read, lamp_on, lamp_off, talk, greet, alarm, follow, look_in, look_under, search, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, fill, turn, tie, untie, burn, cut, through, give, throw, knock, play, count_things, pour_in, pour_on, spray, inflate, :consume, :filched, :grow, :ungrow, :zoom, :nestled, :fuel_lit, :bury, :die, :wand_aimed, :wand_clear, :cast_word, :wand_fades, :disenchant} from 'verbs'
+import {Matchbook, Teapot, Water} from 'items'
+import {Adventurer} from 'adventurer'
+
+kind Thing {
+  grammar { article the }
+
+  :touched false
+  :has_fdesc false
+  :ndesc false
+  :size 5 min 0 max 100
+  // Zork's BURNBIT.
+  :burnable false
+  // Zork's NONLANDBIT as EATME-FCN sets it: grown huge in the Posts Room,
+  // and out of reach of a hand.
+  :huge false
+
+  passage short default { thing }
+  // With its indefinite article, for a list (PRINT-CONT).
+  passage indef default { A {self.short} }
+  // With its indefinite article, in the middle of a line.
+  passage a_short default { a {self.short} }
+  passage fdesc default { {self.ldesc} }
+  passage ldesc default { There is a {self.short} here. }
+  passage here_line default {
+    {if !self.get(:ndesc)}{if self.get(:has_fdesc) && !self.get(:touched)}{self.fdesc}{else}{self.ldesc}{/if}{/if}
+  }
+  passage inside_lines default { {if false}.{/if} }
+  passage no_take default {
+    {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}
+  }
+  passage hacked default {{one of}doesn't seem to work.{or}isn't notably helpful.{or}has no effect.{/one of}}
+
+  on :moved (from, to) { self.set(:touched, true) }
+
+  as target for open       { do { say "You must tell me how to do that to a {self.short}." } }
+  as target for close      { do { say "You must tell me how to do that to a {self.short}." } }
+  as target for read       { do { say "How does one read {self.a_short}?" } }
+  as target for look_in    { do { say "You can't look inside a {self.short}." } }
+  as target for look_under { do { say "There is nothing but dust there." } }
+  as target for search     { do { say "You find nothing unusual." } }
+  as target for shift      { do { say "You can't move the {self.short}." } }
+  as target for raise      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
+  as target for lower      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
+  as target for smell      { do { say "It smells like {self.a_short}." } }
+  as target for listen     { do { say "The {self.short} makes no sound." } }
+  as target for climb_up   { do { say "You can't do that!" } }
+  as target for climb_down { do { say "You can't do that!" } }
+  as target for mung       { do { say "Nice try." } }
+  as target for kick       { do { say "Kicking the {self.short} {self.hacked}" } }
+  as target for rub        { do { say "Fiddling with the {self.short} {self.hacked}" } }
+  as target for shake      { do { say "You can't take it; thus, you can't shake it!" } }
+  as target for squeeze    { do { say "Squeezing the {self.short} {self.hacked}" } }
+  as target for turn       { do { say "You can't turn that!" } }
+  as target for play       { do { say "You can't play {self.a_short}." } }
+  as target for count_things { do { say "You have lost your mind." } }
+  as target for eat        { do { say "I don't think that the {self.short} would agree with you." } }
+  as target for tie {
+    do {
+      if (bound tool) { say "You can't tie the {self.short} to that." }
+      else { say "You'll have to say what to tie the {self.short} to." }
+    }
+  }
+  as target for untie { do { say "The {self.short} isn't tied to anything." } }
+  as target for burn {
+    do {
+      if (bound tool) { if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" } }
+      else { say "You didn't say with what!" }
+    }
+  }
+  as target for cut {
+    do {
+      if (bound tool) { say "Strange concept, cutting the {self.short}...." }
+      else { say "You'll have to say what to cut the {self.short} with." }
+    }
+  }
+  as target for ask     { do { say "You can't talk to the {self.short}!" } }
+  as target for through { do { say "You hit your head against the {self.short} as you attempt this feat." } }
+  as recipient for give { do { if (item.is(Thing)) { say "You can't give {item.a_short} to {self.a_short}!" } else { say "You can't give that to {self.a_short}!" } } }
+  as aim for throw      { do { say "Thrown." } }
+  // Water poured in or over a thing: the water says what came of it
+  // (items.sprout), and the thing says nothing, or the line came twice.
+  // The teapot poured over a thing (round 7's P5) is the thing's to answer.
+  as container for pour_in { do { } }
+  // The hand that pours has emptied the teapot already, and says whether
+  // there was anything in it (`:teapot_water`), since a thing cannot see
+  // into a teapot in somebody's hands.
+  as target for pour_on {
+    do {
+      if (item.is(Teapot) && actor.is(Adventurer)) {
+        if (actor.get(:teapot_water)) { say "The water from the teapot splashes over the {self.short}, runs off it to the floor, and evaporates." }
+        else { say "The teapot is empty." }
+      }
+    }
+  }
+
+  // The Wizard's wand, pointed at this (WAND-FCN's WAND-ON): the thing
+  // keeps that it is the one, so that a word said over the wand reaches
+  // it by broadcast and it answers as Zork's V-ENCHANT answers for a thing
+  // that is nobody in particular. The kinds the wand does something to
+  // (a portable thing, the menhir, the dog, its collar, the case) leave
+  // this answer out and write their own.
+  :aimed false
+  on :wand_aimed { self.set(:aimed, true) }
+  on :wand_clear { self.set(:aimed, false) }
+  on :wand_fades (from) { if (self.get(:aimed)) { tell from "The {self.short} stops glowing and the power within you weakens."  self.set(:aimed, false) } }
+  on :cast_word (from, value) {
+    if (self.get(:aimed)) {
+      if (value == :fudge) { self.set(:fudged, true)  tell from "A strong odor of chocolate permeates the room." }
+      else if (value == :fluoresce) { tell from "The {self.short} glows for a moment, and then thinks better of it; whatever it is made of does not hold a light." }
+      else if (value == :float || value == :fry || value == :filch) { tell from "The wand stops glowing, but there is no other apparent effect." }
+      else { tell from "That might have done something, but it's hard to tell with {self.a_short}." }
+    }
+  }
+  on :disenchant (from) {
+    if (self.get(:aimed)) {
+      self.set(:aimed, false)
+      if (self.get(:fudged)) { self.set(:fudged, false)  tell from "The sweet smell has dispersed." }
+    }
+  }
+  :fudged false
+  as aim for spray      { do { say "The spray smells like a mixture of old socks and burning rubber. If I were a grue I'd sure stay clear!" } }
+  as target for inflate { do { say "You can't inflate {self.a_short}, and it is not clear what it would be for if you could." } }
+}
+
+// The kinds a verb for one sort of thing is typed by. A role of a kind is
+// filled only by what composes it, so the verb is not offered where
+// nothing of the kind is in range. Each carries Zork's default answer.
+kind Switchable is Thing {
+  as target for lamp_on  { do { say "You can't turn that on." } }
+  as target for lamp_off { do { say "You can't turn that off." } }
+  // "light lamp" is read by `lamp_on` and by `burn` alike; this refusal is
+  // what lets the lamp's own part win the reading (the spec's Choosing a
+  // reading: consent first). With a tool named, `burn` goes ahead.
+  as target for burn { permit { if (!bound tool) { refuse "You can't burn {self.a_short}." } } }
+}
+kind Drinkable is Thing { }
+kind Fillable is Thing {
+  as target for fill {
+    do {
+      if (bound tool) { say "You may know how to do that, but I don't." }
+      else { say "There's nothing to fill it with." }
+    }
+  }
+}
+// A marker and no more: the teapot's stand-in for the water it does not
+// hold is Pourable without being a Thing, so no list counts it.
+kind Pourable { }
+kind Sprayable is Thing { }
+kind Vessel is Thing { }
+// What can be waited for: the bucket, and its stand-in at the end of the
+// well it has left.
+kind Awaited is Thing { }
+kind Orderable is Thing { }
+// Whom "demon, <order>" is given to (GENIE-FCN): the demon.
+kind Demonic is Thing { }
+kind Wishing is Thing { }
+kind Crossable is Thing { }
+kind Leapable is Thing { }
+kind Door is Thing {
+  as target for knock { do { say "Nobody's home." } }
+}
+
+// Whom a visitor might talk to, greet, follow or wake: the Wizard, the
+// robot and the unicorn. Zork's answers for anyone who has none.
+kind Creature is Thing {
+  as target for talk  { do { say "You can't talk to the {self.short}!" } }
+  as target for greet { do { say "It's a well known fact that only schizophrenics say \"Hello\" to a {self.short}." } }
+  as target for alarm { do { say "The {self.short} isn't sleeping." } }
+  as target for follow { do { say "I don't know where it is now." } }
+}
+
+// Something the Wizard's Filch spell takes: whatever has a value (RIPOFF).
+kind Valuable { }
+
+// A thing that can be carried off. Only these answer `take all`.
+kind Portable is Thing {
+  as target for take { permit { if (false) { refuse "" } } }
+  // Burned, exploded, eaten, or spilled: gone for good, as Zork's REMOVE
+  // takes it.
+  on :consume { finally destroy self }
+
+  without as target for shift from Thing
+  as target for shift { do { say "Moving the {self.short} reveals nothing." } }
+
+  without as target for shake from Thing
+  as target for shake { do { say "Shaken." } }
+
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (actor.holds(self)) { say "That would involve quite a contortion!" }
+      else { say "{one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}" }
+    }
+  }
+  // Touched under the Filch spell, it vanishes (ITAKE): marked for the
+  // gate to take.
+  :marked false
+  on :filched { self.set(:touched, true)  self.set(:marked, true) }
+  // Grown huge with the Tea Room, and shrunk again (EATME-FCN, CAKE-FCN).
+  on :grow { self.set(:huge, true) }
+  on :ungrow { self.set(:huge, false) }
+  // Burned (V-BURN): a lit match does it, named as the tool or merely in
+  // hand, as FUSE-FCN allows. In the balloon's receptacle a burnable thing
+  // is fuel (BALLOON-BURN), and burns for `:fuel` moves, Zork's twenty a
+  // unit of size; anywhere else it is consumed, and whoever was holding
+  // it at the time goes with it.
+  :fuel 100 min 0 max 400
+  :in_receptacle false
+  :burning false
+  :flame false
+  on :nestled (from, value) { self.set(:in_receptacle, value) }
+  depart (to) {
+    if (self.get(:burning)) { refuse "You don't really want to hold a burning {self.short}." }
+    else if (self.get(:floating) && to.is(Adventurer)) { refuse "The {self.short} is floating in midair, out of reach." }
+  }
+  without as target for burn from Thing
+  as target for burn {
+    do {
+      self.set(:flame, false)
+      if (bound tool) {
+        if (tool.is(Matchbook)) { if (tool.get(:lit)) { self.set(:flame, true) } }
+        if (!self.get(:flame)) {
+          // An unlit matchbook is Zork's "With a matchbook??!?", with a
+          // word about what would do (round 6's P9).
+          if (tool.is(Matchbook)) { say "With {tool.a_short}??!? A match would do, if one of them were struck first." }
+          else if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" }
+        }
+      } else {
+        if (actor.is(Adventurer)) { if (actor.get(:has_flame)) { self.set(:flame, true) } }
+        if (!self.get(:flame)) { say "You didn't say with what!" }
+      }
+      if (self.get(:flame)) {
+        if (self.get(:burning)) { say "It is burning already." }
+        else if (self.get(:in_receptacle)) {
+          say "The {self.short} burns inside the receptacle."
+          self.set(:burning, true)
+          self.set(:ndesc, true)
+          broadcast :fuel_lit with self.get(:fuel)
+        }
+        else if (self.get(:burnable)) {
+          if (actor.holds(self)) {
+            say "The {self.short} catches fire. Unfortunately, you were holding it at the time."
+            if (actor.is(Adventurer)) { send actor :die }
+          } else { say "The {self.short} catches fire and is consumed." }
+          finally destroy self
+        }
+        else { say "You can't burn {self.a_short}." }
+      }
+    }
+  }
+  // Buried by an explosion (I-FUSE's INVISIBLE): out of sight for good.
+  on :bury { self.set(:unseen, true)  self.set(:ndesc, true) }
+  // The wand's words, said over a thing that can be carried (V-ENCHANT):
+  // Filch brings it to hand, Float lifts it out of reach until the spell
+  // wears off, Fry is the end of it, and Fluoresce lights it, after a
+  // fashion.
+  :floating false
+  :glowing false
+  without on :cast_word from Thing
+  on :cast_word (from, value) {
+    if (self.get(:aimed)) {
+      if (value == :filch) {
+        if (from.is(Adventurer)) { if (from.holds(self)) { tell from "You have it already, and the wand knows it." } else { move self to from  tell from "Filched!" } }
+      }
+      else if (value == :float) { self.set(:floating, true)  tell from "The {self.short} floats serenely in midair." }
+      else if (value == :fry) { tell from "The {self.short} goes up in a puff of smoke."  finally destroy self }
+      else if (value == :fluoresce) { self.set(:glowing, true)  tell from "The {self.short} begins to glow." }
+      else if (value == :fudge) { self.set(:fudged, true)  tell from "A strong odor of chocolate permeates the room." }
+      else { tell from "That might have done something, but it's hard to tell with {self.a_short}." }
+    }
+  }
+  without on :disenchant from Thing
+  on :disenchant (from) {
+    if (self.get(:aimed)) {
+      self.set(:aimed, false)
+      if (self.get(:floating)) { self.set(:floating, false)  tell from "The {self.short} sinks to the ground." }
+      if (self.get(:fudged)) { self.set(:fudged, false)  tell from "The sweet smell has dispersed." }
+    }
+  }
+}
+
+// A thing Zork describes only in its room's own words.
+kind Scenery is Thing {
+  :ndesc true
+}
+// The Machine Room's three buttons: a person is fried by them, and a
+// robot is not. Each keeps whether the carousel is sped up, since the
+// Carousel Room is out of their range (CAROUSEL-ZOOM-FLAG).
+kind Button is Scenery {
+  :zooming false
+  on :zoom (from, value) { self.set(:zooming, value) }
+}

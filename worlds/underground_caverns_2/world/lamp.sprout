@@ -1,0 +1,143 @@
+// Lights. A `Light` lights whatever dark room it is in, lying on the floor
+// or carried, and tells its bearer when it is lit, put out, picked up or
+// set down; a light on the floor tells the room, for the grue's sake: see
+// the dark room, in room.sprout. The strangely familiar brass lantern is a
+// `Lamp`, a light that turns on and off and burns down by the move (Zork
+// II's I-LANTERN and LAMP-TABLE: 200 moves, then "a bit dimmer", 300
+// more, "definitely dimmer", 100, "nearly out", 50, and out).
+import * as sprout from 'sprout'
+import {Portable, Thing, Switchable} from 'thing'
+import {Adventurer} from 'adventurer'
+import {DarkRoom, Room} from 'room'
+import {Box} from 'box'
+import {lamp_on, lamp_off, :light, :relight, :snuffed, :shatter_lamp} from 'verbs'
+
+kind Light is Portable, sprout.LightSource, Switchable {
+  on :moved (from, to) {
+    if (self.get(:lit)) {
+      if (from.is(Adventurer)) { send from :light with -1 }
+      if (to.is(Adventurer)) { send to :light with 1 }
+    }
+  }
+}
+
+kind Lamp is Light {
+  :others 0 min 0 max 50
+  :life 650 min 0 max 650
+  :age 0 min 0 max 4
+  :burned_out false
+  without as target for lamp_on from Switchable
+  without as target for lamp_off from Switchable
+  grammar { name "lamp"  nouns "lantern", "light"  adjectives "brass", "familiar", "strangely" }
+  :size 15
+  :has_fdesc true
+  passage short { lamp }
+  passage fdesc { A strangely familiar brass lantern is lying on the ground. }
+  passage ldesc { There is a brass lantern here{if self.get(:lit)} (providing light){/if}. }
+
+  describe {
+    if (self.get(:burned_out)) { text spent_view }
+    else if (self.get(:lit)) { text lit_view }
+    else { text dark_view }
+  }
+  passage view default { It is a battery-powered brass lantern of a make you could swear you have carried before, dented in the same places, with a stout handle and a glass somebody has kept clean. It has that look of a thing that has been through one adventure already and would rather not discuss it. }
+  passage spent_view {
+    {self.view}
+
+    The lamp has burned out.
+  }
+  passage lit_view {
+    {self.view}
+
+    The lamp is on.
+  }
+  passage dark_view {
+    {self.view}
+
+    The lamp is turned off.
+  }
+
+  // Said rather than refused, so that "light lamp" is never a draw between
+  // this part and `burn`'s (thing.sprout's Switchable).
+  as target for lamp_on {
+    do {
+      if (self.get(:burned_out)) { say "A burned-out lamp won't light." }
+      else if (self.get(:lit)) { say "It is already on." }
+      else {
+        let was_dark = here.is(DarkRoom) && !here.get(:alight)
+        self.set(:lit, true)
+        say "The {self.short} is now on."
+        if (actor.holds(self)) { send actor :light with 1 } else { send here :relight }
+        if (was_dark && here.is(Room)) { say "{here.full}" }
+      }
+    }
+  }
+
+  as target for lamp_off {
+    permit {
+      if (self.get(:burned_out)) { refuse "The lamp has already burned out." }
+      if (!self.get(:lit)) { refuse "It is already off." }
+    }
+    do {
+      self.set(:lit, false)
+      say "The {self.short} is now off."
+      if (actor.holds(self)) { send actor :light with -1 } else { send here :relight }
+      if (here.is(DarkRoom)) {
+        if (actor.holds(self)) {
+          let mine = actor.is(Adventurer) && actor.get(:light) > 1
+          if (!here.get(:daylight) && !here.get(:floor_lit) && here.get(:bearers) <= 1 && !mine) { say "It is now pitch black." }
+        } else {
+          self.set(:others, 0)
+          each l: Light in here { if (l != self && l.get(:lit)) { self.adjust(:others, 1) } }
+          each b: Box in here {
+            if (b.get(:open)) { each l: Light in b { if (l != self && l.get(:lit)) { self.adjust(:others, 1) } } }
+          }
+          if (!here.get(:daylight) && self.get(:others) == 0 && here.get(:bearers) == 0) { say "It is now pitch black." }
+        }
+      }
+    }
+  }
+
+  // The battery, burning down by the move while the lamp is lit and
+  // carried (I-LANTERN, LIGHT-INT). A command about the game itself is no
+  // move.
+  after command {
+    let counted = !(actor.is(Adventurer) && actor.get(:aside))
+    if (counted && self.get(:lit) && !self.get(:burned_out)) {
+      self.adjust(:life, -1)
+      if (self.get(:life) <= 0) {
+        self.set(:burned_out, true)
+        self.set(:lit, false)
+        self.set(:age, 4)
+        say "You'd better have more light than from the lamp."
+        broadcast :snuffed
+      } else {
+        if (self.get(:life) <= 50 && self.get(:age) < 3) {
+          self.set(:age, 3)
+          say "The lamp is nearly out."
+        } else if (self.get(:life) <= 150 && self.get(:age) < 2) {
+          self.set(:age, 2)
+          say "The lamp is definitely dimmer now."
+        } else if (self.get(:life) <= 450 && self.get(:age) < 1) {
+          self.set(:age, 1)
+          say "The lamp appears a bit dimmer."
+        }
+      }
+    }
+  }
+  // LANTERN's THROW: smashed on the floor, and gone; the broken lantern
+  // the thrower has set down is what is left of it.
+  on :shatter_lamp {
+    self.set(:lit, false)
+    broadcast :snuffed
+    finally destroy self
+  }
+}
+
+// What is left of the brass lantern, thrown (BROKEN-LAMP).
+kind BrokenLamp is Portable, Switchable {
+  grammar { name "broken brass lantern"  nouns "lamp", "lantern", "light"  adjectives "broken", "brass", "smashed" }
+  :size 15
+  passage short { broken brass lantern }
+  describe { text "It is what is left of the brass lantern: a dented frame, a twisted handle and a good deal of broken glass, none of it inclined to give light ever again. It was a perfectly good lamp until somebody threw it." }
+}

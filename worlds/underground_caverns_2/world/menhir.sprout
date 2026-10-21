@@ -1,0 +1,447 @@
+// Beyond the Menhir (the third quarter's south): the Menhir Room, the
+// Kennel behind the menhir, the Stairway, and the nine Oddly-angled Rooms
+// with their glowing windows and their baseball bat (MENHIR-ROOM-FCN,
+// DESCRIBE-MENHIR, MENHIR-FCN, DIAMOND-MOTION, DIAMOND-LOSS, DWINDOW-FCN).
+//
+// The menhir is lifted by the wand's Float, which is the Wizard's and
+// waits for his rooms; until then the Kennel is built and shut. The maze
+// is Zork's: from the room at the foot of the stair any way at all is a
+// draw, and from one of the four corner rooms the right way, southeast
+// and then northeast, northwest and southwest, as a runner takes the
+// bases, is the next corner and the wrong way is a draw. The rooms keep
+// the count by broadcast; the draw and the redirection are the visitor's
+// own, as the Carousel's are (adventurer.sprout).
+import * as sprout from 'sprout'
+import {Thing, Scenery, Portable} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {Treasure, Readable, Weapon} from 'items'
+import {Adventurer} from 'adventurer'
+import {carousel_room} from 'carousel'
+import {elsewhere} from 'garden'
+import {read, look_under, shift, take, turn, mung, climb_up, climb_down, raise, look_in, Dest, Answer, :diamond_count, :bat_to, :open_gate, :gate_open, :close_gate, :travel, :menhir_at, :menhir_order, :cast_word, :disenchant} from 'verbs'
+import {cerberus_room, Cerberus} from 'crypt'
+import {pentagram} from 'workshop'
+
+// An Oddly-angled Room: it keeps the count of bases run, so that its exits
+// can lead the right way and loop the wrong one.
+kind DiamondRoom is DarkRoom {
+  :solved false
+  // The walls are the room's own wall's to describe (round 7's P10): a
+  // second thing called "walls" drew against it.
+  :walls 19
+  on :diamond_count (from, value) { if (value >= 5) { self.set(:solved, true) } }
+  passage body { This is a room with oddly angled walls and passages in all directions. The walls are made of some glassy substance. }
+  object glassy_substance is Scenery {
+    grammar { name "glassy substance"  nouns "glass", "substance", "reflection"  adjectives "glassy", "dark" }
+    passage short { glassy substance }
+    describe { text "The walls are of some glassy substance, dark, and set at angles that do not add up: a corner here is more than a right angle, and the one across from it less, and the passages go off between them in every direction at once. Your reflection in the glass is at a different angle from you." }
+  }
+}
+// A corner room, where a base is (DIAMOND-2, -4, -6, -8). The corners are
+// told from the rest by a bag on the floor (round 7's P1), so that a
+// runner knows a base when they stand on one.
+kind DiamondBase is DiamondRoom {
+  passage body { This is a room with oddly angled walls and passages in all directions. The walls are made of some glassy substance. In one corner of the floor a square canvas bag is nailed down, scuffed, the size of a cushion, of the kind a runner touches on the way round. }
+  object bag is Scenery {
+    grammar { name "canvas bag"  nouns "bag", "base", "canvas", "cushion"  adjectives "square", "canvas", "scuffed" }
+    passage short { canvas bag }
+    describe { text "A square bag of canvas, stuffed, nailed to the floor in the corner, and scuffed by feet that came at it in a hurry. It is a base. There are, if this is a diamond, three more like it, and a runner touches them in order, the next one on round from this, and comes home." }
+    passage no_take { The bag is nailed down. Bases generally are. }
+  }
+}
+
+// The diamond shaped window in the floor (DWINDOW): it glows by how far
+// round the bases the runner has got.
+kind DiamondWindow is Scenery {
+  grammar { name "diamond shaped window"  nouns "window", "diamond", "pane"  adjectives "diamond", "shaped", "glowing", "small", "very" }
+  :ndesc false
+  :glow 0 min 0 max 5
+  on :diamond_count (from, value) { self.set(:glow, value) }
+  passage short { diamond shaped window }
+  passage state { {if self.get(:glow) >= 5}glowing serenely{else if self.get(:glow) == 4}glowing brightly{else if self.get(:glow) == 3}glowing{else if self.get(:glow) == 2}dimly glowing{else if self.get(:glow) == 1}flickering dimly{else}dark{/if} }
+  passage ldesc { On the floor is a very small diamond shaped window which is {self.state}. }
+  passage close_up { On the floor is a very small diamond shaped window which is {self.state}. It is set flush with the floor, and whatever is under it is a long way down, or a long way off. It glows, when it glows, by some count that is being kept, the way a scoreboard keeps one: a flicker for first, a dim glow for second, a glow for third, and brightest of all for home, which is where whatever is being counted began; and it goes dark when the count is lost, which it is by any step but the right one. }
+  describe { text close_up }
+  without as target for look_in from Thing
+  as target for look_in { do { say close_up } }
+  passage no_take { The window is an integral part of the floor. }
+  without as target for mung from Thing
+  as target for mung { do { say "The window is diamond-hard and cannot be broken." } }
+}
+
+// The wooden club (BAT): kept Elsewhere until a base is first reached, and
+// put there.
+kind Bat is Weapon, Readable {
+  grammar { name "wooden club"  nouns "club", "bat"  adjectives "wooden", "baseball", "long", "burned" }
+  :size 10
+  :unseen true
+  :has_fdesc true
+  :moving false
+  :to Dest default diamond_2
+  passage short { wooden club }
+  // The name is on the room line as well as under `read` (round 6's P3):
+  // nobody in three rounds examined the club.
+  passage fdesc { A long wooden club lies on the ground near the diamond-shaped window, beside the canvas bag. The club is curiously burned at the thick end, and burned into the handle, in letters large enough to read from where you stand, is the name "Babe Flathead". }
+  passage ldesc { There is a wooden club here, with the name "Babe Flathead" burned into the handle. }
+  passage words { The words "Babe Flathead" are burned into the wood. }
+  describe { text "It is a long wooden club, thicker at one end than the other, and burned at the thick end as though it had been used to stir a fire, or had hit something very hot. There are words burned into it, which can be read. It is, now that you hold it, a bat, and a bat is for hitting a ball with and then running: first base, second, third, and home, round the diamond, the next corner each time." }
+  without as target for read from Thing
+  on :bat_to (from, value) {
+    if (self.get(:unseen)) {
+      self.set(:to, value)
+      self.set(:moving, true)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  on :gate_open {
+    if (self.get(:moving)) {
+      self.set(:moving, false)
+      self.set(:unseen, false)
+      let d = self.get(:to)
+      if (d == :diamond_2) { move self to diamond_2 }
+      else if (d == :diamond_4) { move self to diamond_4 }
+      else if (d == :diamond_6) { move self to diamond_6 }
+      else { move self to diamond_8 }
+    }
+    send underground_caverns_2 :close_gate
+  }
+}
+
+// The enormous menhir (MENHIR): leaning across the way southwest until the
+// Wizard's wand lifts it, which is a later quarter's.
+kind Menhir is Scenery {
+  grammar { name "enormous menhir"  nouns "menhir", "rock", "stone", "f", "letter"  adjectives "enormous", "huge", "heavy", "large", "standing" }
+  // Zork's MENHIR-POSITION: 0 leaning across the opening, 1 lying on the
+  // floor beside it, 2 taken away by the demon, 3 floating on the wand's
+  // Float, 4 dropped at the demon's master's feet in the Pentagram Room.
+  :position 0 min 0 max 4
+  :ndesc true
+  passage short { enormous menhir }
+  passage ldesc { There is a huge menhir here. }
+  passage close_up { It is nicely finished, and the letter \"F\" on it is particularly well carved. It is at least twenty feet tall and eight feet thick{if self.get(:position) == 0}, and leans against the wall across a dark opening to the southwest, with the look of a thing that was put there on purpose and will not be moved by anything you have{else if self.get(:position) == 1}, and lies on the floor beside the opening it used to block, where something very strong put it down{else if self.get(:position) == 3}, and it is floating like a feather in midair, ten feet up, with the opening it was leaning across clear beneath it. It will not float for ever{else}, and it is here, which is not where it was{/if}. }
+  describe { text close_up }
+  passage no_take { The menhir weighs many tons and is eight feet wide. You can't even get a grip on it, much less move it. }
+  on :menhir_order (from, value) {
+    if (value == 1) { self.set(:position, 1)  broadcast :menhir_at with 1 }
+    else if (value == 2) { self.set(:position, 2)  self.set(:unseen, true)  broadcast :menhir_at with 2 }
+    else if (value == 3) { self.set(:position, 4)  self.set(:ndesc, false)  self.set(:moving, true)  broadcast :menhir_at with 4  send underground_caverns_2 :open_gate }
+  }
+  :moving false
+  on :gate_open {
+    if (self.get(:moving)) { self.set(:moving, false)  move self to pentagram }
+    send underground_caverns_2 :close_gate
+  }
+  // The wand's Float (MENHIR-FCN's ENCHANT): it rises, and the passage
+  // beneath it beckons; the word run out, it sinks, wherever you are.
+  without on :cast_word from Thing
+  on :cast_word (from, value) {
+    if (self.get(:aimed)) {
+      if (value == :float && self.get(:position) == 0) {
+        self.set(:position, 3)
+        broadcast :menhir_at with 3
+        tell from "The menhir floats majestically into the air, rising about ten feet. The passage beneath it beckons invitingly."
+      }
+      else if (value == :float) { tell from "The menhir stirs, and settles, and does not float; it is not across anything now, and sees no need." }
+      else if (value == :fudge) { tell from "A strong odor of chocolate permeates the room. The menhir is unmoved." }
+      else { tell from "The wand stops glowing, but there is no other obvious effect. The menhir has heard F-words before." }
+    }
+  }
+  without on :disenchant from Thing
+  on :disenchant (from) {
+    if (self.get(:aimed)) {
+      self.set(:aimed, false)
+      if (self.get(:position) == 3) { self.set(:position, 0)  broadcast :menhir_at with 0  tell "The menhir sinks to the ground." }
+    }
+  }
+  without as target for read from Thing
+  as target for read { do { say "\"F\"" } }
+  without as target for shift from Thing
+  as target for shift { do { say "The menhir weighs many tons and is eight feet wide. You can't even get a grip on it, much less move it." } }
+  without as target for turn from Thing
+  as target for turn { do { say "The menhir weighs many tons and is eight feet wide. You can't even get a grip on it, much less move it." } }
+  without as target for raise from Thing
+  as target for raise { do { say "The menhir weighs many tons and is eight feet wide. You can't even get a grip on it, much less move it. If anything in this domain lifts it, it is not hands." } }
+  without as target for look_under from Thing
+  as target for look_under { do { if (self.get(:position) == 0) { say "The gap between the menhir and the wall is very narrow, but it is clear that there is a sizeable room in there. Your light only reveals a part of the far wall." } else { say "Behind the menhir is some air and then a wall." } } }
+}
+// The rooms either side of the menhir keep its position, told by it.
+kind MenhirSide is DarkRoom {
+  :menhir_pos 0 min 0 max 4
+  on :menhir_at (from, value) { self.set(:menhir_pos, value) }
+  on :disenchant (from) { }
+}
+
+// The gigantic dog collar in the Kennel (COLLAR), behind the menhir.
+kind Collar is Treasure {
+  grammar { name "gigantic dog collar"  nouns "collar", "treasure"  adjectives "gigantic", "huge", "giant", "dog" }
+  :size 10
+  :value 15
+  :has_fdesc true
+  passage short { gigantic dog collar }
+  passage fdesc { A gigantic dog collar, large enough for three rhinoceros-sized dogs, is lying amidst the debris. }
+  passage ldesc { There is a gigantic dog collar here. }
+  describe { text "It is a dog collar, gigantic, of leather an inch thick with a buckle the size of a dinner plate and studs the size of your fist, large enough for three rhinoceros-sized dogs, or one dog with three necks. The name on the plate has worn off. The dog has not been seen for a long time, which is as well." }
+  :worn false
+  on :moved (from, to) { self.set(:worn, to.is(Cerberus)) }
+  without on :cast_word from Portable
+  on :cast_word (from, value) {
+    if (self.get(:aimed)) {
+      if (value == :float && self.get(:worn)) { tell from "The huge dog rises about an inch off the ground, for a moment, collar and all." }
+      else if (value == :float) { self.set(:floating, true)  tell from "The {self.short} floats serenely in midair." }
+      else if (value == :filch) { if (from.is(Adventurer)) { if (from.holds(self)) { tell from "You have it already, and the wand knows it." } else if (self.get(:worn)) { tell from "The collar does not come; the dog has it, and the dog has three opinions." } else { move self to from  tell from "Filched!" } } }
+      else if (value == :fry) { tell from "The {self.short} goes up in a puff of smoke."  finally destroy self }
+      else { tell from "That might have done something, but it's hard to tell with a collar." }
+    }
+  }
+}
+
+object menhir_room is MenhirSide in underground_caverns_2 {
+  grammar {
+    name "Menhir Room"
+    exit north "north" -> carousel_room
+    exit south "south" -> stairway
+    exit southwest "southwest" -> kennel when (self.get(:menhir_pos) != 0)
+    exit southwest "southwest" refuse "You are trying to walk through an enormous rock."
+  }
+  :id menhir_room
+  passage body {
+    This is a large room which was evidently used once as a quarry. Many large limestone chunks lie helter-skelter around the room. Some are rough-hewn and unworked, others smooth and well-finished. One side of the room appears to have been used to quarry building blocks, the other to produce menhirs (standing stones). Obvious passages lead north and south.
+
+    {if self.get(:menhir_pos) == 0}One particularly large menhir, at least twenty feet tall and eight feet thick, is leaning against the wall blocking a dark opening leading southwest. On this side of the menhir is carved an ornate letter "F".{else if self.get(:menhir_pos) == 1}There is a huge menhir lying on the floor near a southwest passage.{else if self.get(:menhir_pos) == 3}There is a huge menhir floating like a feather in midair here. A passage to the southwest opens beneath it.{else}A dark opening leads southwest.{/if}
+  }
+  object menhir is Menhir
+  object chunks is Scenery {
+    grammar { name "limestone chunks"  nouns "chunks", "chunk", "limestone", "blocks", "block", "menhirs", "stones"  adjectives "large", "rough-hewn", "unworked", "smooth", "well-finished", "building", "standing" }
+    passage short { limestone chunks }
+    describe { text "Chunks of limestone of every size, lying where they were dropped: some rough, as the quarry gave them up, and some squared and smoothed into building blocks, and some tall and narrow, menhirs that never stood. Whoever worked here left in the middle of a shift and never came back for their tools either." }
+    passage no_take { The chunks are limestone, and limestone is heavy, and the smallest of them is larger than you. }
+  }
+  object opening is Scenery {
+    grammar { name "dark opening"  nouns "opening", "gap", "doorway"  adjectives "dark", "southwest" }
+    passage short { dark opening }
+    describe { text "{if menhir_room.is(MenhirSide)}{if menhir_room.get(:menhir_pos) == 0}Behind the menhir, to the southwest, there is a dark opening, and most of it is menhir. What you can see of it, past the edge, is dark, and sizeable, and not for you.{else}A dark opening to the southwest, clear now, on a sizeable room with dust in it.{/if}{/if}" }
+  }
+}
+
+object kennel is MenhirSide in underground_caverns_2 {
+  grammar {
+    name "Kennel"
+    exit northeast "northeast" -> menhir_room when (self.get(:menhir_pos) != 0)
+    exit northeast "northeast" refuse "You are trying to walk through an enormous rock."
+    exit out "out" -> menhir_room when (self.get(:menhir_pos) != 0)
+    exit out "out" refuse "You are trying to walk through an enormous rock."
+  }
+  :id kennel
+  passage body { This room looks like it was once a kennel for a very large dog (some of the bones would fit a dinosaur). It apparently hasn't been used for a long time, as the dust is fairly thick all over. The only exit is northeast. }
+  object collar is Collar
+  object bones is Scenery {
+    grammar { name "bones"  nouns "bone", "debris", "dust"  adjectives "large", "thick" }
+    passage short { bones }
+    describe { text "Bones, large ones, gnawed at the ends by something with a very large mouth, and dust on them an inch thick. Some of them would fit a dinosaur. Some of them may have been one." }
+  }
+}
+
+object stairway is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Stairway"
+    exit down "down" -> diamond_5
+    exit north "north" -> menhir_room
+  }
+  :id stairway
+  passage body { A marble stairway leads down into the gloom and a passage leads north. }
+  object stairs is Scenery {
+    grammar { name "stairs"  nouns "stairway", "steps", "staircase", "stair"  adjectives "marble", "stone", "dark", "steep" }
+    passage short { stairs }
+    describe { text "A stairway of marble, broad, going down into the gloom in a long straight flight, and worn in the middle of each step by feet that used it often, a long time ago." }
+    without as target for climb_down from Thing
+    as target for climb_down { do { send actor :travel with :diamond_5  say "" } }
+    without as target for climb_up from Thing
+    as target for climb_up { do { say "You are at the top of it." } }
+  }
+}
+
+// The nine Oddly-angled Rooms. A visitor's own part cannot read which way
+// they walked, and a place may have eight ways out (friction 58), so each
+// room's eight compass ways lead to the eight other rooms in one fixed
+// order, north to northwest round the compass and the rooms in their
+// numbers, and the visitor's part reads the way off where it led and
+// sends them where Zork would (adventurer.sprout): until the bases are
+// run, a draw, or the next corner; after, Zork's own ways, and "You
+// can't go that way." for the rest. The room at the foot of the stair has
+// nine ways in Zork and ten with the secret passage down, so two are left
+// out: its southwest, to a room with nothing in it, and, since round 7,
+// its west, which once the bases are run led to a corner the next corner
+// also leads to (friction 69).
+
+object diamond_5 is DiamondRoom in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit up "up" -> stairway
+    exit down "down" -> cerberus_room when (self.get(:solved))
+    exit north "north" -> diamond_1
+    exit northeast "northeast" -> diamond_2
+    exit east "east" -> diamond_3
+    exit southeast "southeast" -> diamond_4
+    exit south "south" -> diamond_6
+    exit northwest "northwest" -> diamond_9
+  }
+  :id diamond_5
+  passage body { This is a room with oddly angled walls and passages in all directions. The walls are made of some glassy substance. A marble stairway leads upward.{if self.get(:solved)} The floor has swung down at the end of the stairway to reveal a secret passage leading down into unrelieved darkness.{/if} }
+  // Seen again by name alone, the stair is still the one thing that tells
+  // this room from the other eight (round 6's P3).
+  passage brief {
+    {self.title}
+
+    A marble stairway leads upward.{if self.get(:solved)} The floor has swung down at its foot on a secret passage leading down.{/if}
+
+    {self.objects}
+  }
+  object window is DiamondWindow { :ndesc true }
+  object stairs is Scenery {
+    grammar { name "stairs"  nouns "stairway", "steps", "staircase", "stair"  adjectives "marble", "stone", "upward" }
+    passage short { stairs }
+    describe { text "The marble stairway goes up from here, broad and worn, to the passage at the top.{if diamond_5.is(DiamondRoom)}{if diamond_5.get(:solved)} At its foot the floor has swung down on a hinge nobody suspected, and a passage goes down into the dark.{/if}{/if}" }
+    without as target for climb_up from Thing
+    as target for climb_up { do { send actor :travel with :stairway  say "" } }
+  }
+  object secret_passage is Scenery {
+    grammar { name "secret passage"  nouns "passage", "hinge", "darkness"  adjectives "secret", "unrelieved" }
+    :unseen true
+    on :diamond_count (from, value) { if (value >= 5) { self.set(:unseen, false) } }
+    passage short { secret passage }
+    describe { text "Where the floor has swung down at the foot of the stairway, a passage leads down into unrelieved darkness, by a stair of marble narrower and steeper than the one that comes up." }
+    without as target for climb_down from Thing
+    as target for climb_down { do { send actor :travel with :cerberus_room  say "" } }
+  }
+}
+
+object diamond_1 is DiamondRoom in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit north "north" -> diamond_2
+    exit northeast "northeast" -> diamond_3
+    exit east "east" -> diamond_4
+    exit southeast "southeast" -> diamond_5
+    exit south "south" -> diamond_6
+    exit southwest "southwest" -> diamond_7
+    exit west "west" -> diamond_8
+    exit northwest "northwest" -> diamond_9
+  }
+  :id diamond_1
+  object window is DiamondWindow
+}
+
+object diamond_2 is DiamondBase in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit north "north" -> diamond_1
+    exit northeast "northeast" -> diamond_3
+    exit east "east" -> diamond_4
+    exit southeast "southeast" -> diamond_5
+    exit south "south" -> diamond_6
+    exit southwest "southwest" -> diamond_7
+    exit west "west" -> diamond_8
+    exit northwest "northwest" -> diamond_9
+  }
+  :id diamond_2
+  object window is DiamondWindow
+}
+
+object diamond_3 is DiamondRoom in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit north "north" -> diamond_1
+    exit northeast "northeast" -> diamond_2
+    exit east "east" -> diamond_4
+    exit southeast "southeast" -> diamond_5
+    exit south "south" -> diamond_6
+    exit southwest "southwest" -> diamond_7
+    exit west "west" -> diamond_8
+    exit northwest "northwest" -> diamond_9
+  }
+  :id diamond_3
+  object window is DiamondWindow
+}
+
+object diamond_4 is DiamondBase in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit north "north" -> diamond_1
+    exit northeast "northeast" -> diamond_2
+    exit east "east" -> diamond_3
+    exit southeast "southeast" -> diamond_5
+    exit south "south" -> diamond_6
+    exit southwest "southwest" -> diamond_7
+    exit west "west" -> diamond_8
+    exit northwest "northwest" -> diamond_9
+  }
+  :id diamond_4
+  object window is DiamondWindow
+}
+
+object diamond_6 is DiamondBase in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit north "north" -> diamond_1
+    exit northeast "northeast" -> diamond_2
+    exit east "east" -> diamond_3
+    exit southeast "southeast" -> diamond_4
+    exit south "south" -> diamond_5
+    exit southwest "southwest" -> diamond_7
+    exit west "west" -> diamond_8
+    exit northwest "northwest" -> diamond_9
+  }
+  :id diamond_6
+  object window is DiamondWindow
+}
+
+object diamond_7 is DiamondRoom in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit north "north" -> diamond_1
+    exit northeast "northeast" -> diamond_2
+    exit east "east" -> diamond_3
+    exit southeast "southeast" -> diamond_4
+    exit south "south" -> diamond_5
+    exit southwest "southwest" -> diamond_6
+    exit west "west" -> diamond_8
+    exit northwest "northwest" -> diamond_9
+  }
+  :id diamond_7
+  object window is DiamondWindow
+}
+
+object diamond_8 is DiamondBase in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit north "north" -> diamond_1
+    exit northeast "northeast" -> diamond_2
+    exit east "east" -> diamond_3
+    exit southeast "southeast" -> diamond_4
+    exit south "south" -> diamond_5
+    exit southwest "southwest" -> diamond_6
+    exit west "west" -> diamond_7
+    exit northwest "northwest" -> diamond_9
+  }
+  :id diamond_8
+  object window is DiamondWindow
+}
+
+object diamond_9 is DiamondRoom in underground_caverns_2 {
+  grammar {
+    name "Oddly-angled Room"
+    exit north "north" -> diamond_1
+    exit northeast "northeast" -> diamond_2
+    exit east "east" -> diamond_3
+    exit southeast "southeast" -> diamond_4
+    exit south "south" -> diamond_5
+    exit southwest "southwest" -> diamond_6
+    exit west "west" -> diamond_7
+    exit northwest "northwest" -> diamond_8
+  }
+  :id diamond_9
+  object window is DiamondWindow
+}
+
+// The club, kept Elsewhere until the first base is reached.
+object bat is Bat in elsewhere { }

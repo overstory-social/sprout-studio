@@ -1,0 +1,96 @@
+{
+  "about": "Round 3's small points: the bridge crossed with a direction, the gazebo entered on the spot so the unicorn's beat lands in the right room, the key and the unicorn answered in voice from the gazebo and from the north end while the unicorn is away, the gazebo's roses, and the newspaper's second item.",
+  "steps": [
+    { "seed": 5 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Marta", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Marta", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Marta", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Narrow Tunnel" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
+    ] },
+    { "as": "Marta", "type": "cross bridge south", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foot Bridge" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Great Cavern" },
+      { "reader": "Marta", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Shallow Ford" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
+      { "reader": "Marta", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "enter gazebo", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gazebo" },
+      { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the tea table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A newspaper" },
+      { "reader": "Marta", "kind": "described", "words": "A place mat" },
+      { "reader": "Marta", "kind": "described", "words": "A china teapot" },
+      { "reader": "Marta", "kind": "described", "words": "A letter opener" },
+      { "reader": "Marta", "kind": "described", "words": "A matchbook" }
+    ] },
+    { "as": "Marta", "type": "take key", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The unicorn is way up at the north end of the garden, and so is whatever hangs round its neck." }
+    ] },
+    { "as": "Marta", "type": "smell roses", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "They smell as roses smell, only more so, as though they were making a point of it." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "as": "Marta", "type": "take newspaper", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "read newspaper", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "** U.S. News and Dungeon Report **" },
+      { "reader": "Marta", "kind": "said", "words": "FAMED ADVENTURER TO EXPLORE GREAT UNDERGROUND EMPIRE" },
+      { "reader": "Marta", "kind": "said", "words": "Our correspondents report that a world-famous and battle-hardened adventurer has been seen in the vicinity of the Great Underground Empire. Local grues have been reported sharpening their (slavering) fangs...." },
+      { "reader": "Marta", "kind": "said", "words": "WIZARD STILL AT LARGE" },
+      { "reader": "Marta", "kind": "said", "words": "The Wizard of Frobozz, dismissed from the court of Lord Dimwit Flathead for turning the royal mountain into a very large pile of gravel, is believed to have retired to the caverns south of the ravine, taking with him a quantity of the Empire's loose property (a pearl necklace, a Stradivarius and a crystal sphere are mentioned in the inventory, and the Bank of Zork has declined to comment on the rest). Visitors report a loud whirring from somewhere past the garden, as of a room that will not keep still, and nobody who has walked into it has come out the way they expected. He is described as doddering, petulant and armed with a wand, and the public is advised not to let him finish a word." },
+      { "reader": "Marta", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." }
+    ] },
+    { "as": "Marta", "type": "take opener", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
+    ] },
+    { "as": "Marta", "type": "out", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "examine unicorn", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The unicorn shies away as you approach for a closer look, but you do notice a tiny gold key hanging from a red satin ribbon looped around the animal's neck. The ribbon is tied in the sort of bow that is meant to be untied by somebody in particular, a lady by the look of the knot, and the unicorn's look makes it plain that you are not the somebody, and that nobody in this garden is. It will wait for her. You need not." }
+    ] },
+    { "as": "Marta", "type": "take key", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The unicorn, unsurprised by this evidence that you are indeed the uncouth sort of vagabond it suspected you were, melts into the hedges and is gone." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." }
+    ] }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "about": "What a visitor reads on arriving: the barrow, the lantern and the sword in Zork II's own words, and that there is no way out.",
+  "steps": [
+    { "seed": 1 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Marta", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Marta", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Marta", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "as": "Marta", "type": "out", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You may not recall, but when you entered, the door of the barrow shut behind you. There is no way out." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A lamp" },
+      { "reader": "Marta", "kind": "said", "words": "An elvish sword" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You may not recall, but when you entered, the door of the barrow shut behind you. There is no way out." }
+    ] }
+  ]
+}

@@ -1,0 +1,127 @@
+// Zork II: The Wizard of Frobozz, all four quarters of it: the barrow to
+// the Carousel, the dragon and the Bank, the volcano and the Menhir, and
+// the Wizard's rooms and the crypt. The world keeps Zork's narrator for the lines the engine
+// speaks for itself, and a gate: a room cannot reach another, so where
+// Zork moves a body or a thing across the map at a stroke (dying, the
+// carousel's random turn, the bucket rising), whoever needs to asks the
+// world to open the gate, does it, and asks it shut again, in the one
+// turn. While the world passes, every place is in range of every other.
+import * as sprout from 'sprout'
+import {Person} from 'person'
+import {Adventurer} from 'adventurer'
+import {go} from 'sprout'
+import {inside_barrow} from 'way_in'
+import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :unicorn_rides, :unicorn_gone, :princess_step, :princess_gone, :dragon_bored, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :robot_at, :dragon_turn, :dragon_watch, :ice_melted, :princess_turn, :secret_door, :curtain_active, :gnome_come, :gnome_go, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :mat_moved, :key_far, :balloon_tick, :balloon_land, :gnome_due, :gnome_fidget, :vgnome_come, :vgnome_late, :gnome_door, :fuse_out, :explosion_at, :collapse, :diamond_count, :bat_to, :wiz_fed, :wiz_locked, :wiz_open, :genie_summoned, :genie_departs, :case_worth, :case_smashed, :wizard_gone, :wizard_dejected, :surrender_wand, :menhir_at, :menhir_order, :leashed, :crypt_door, :red_at, :blue_at, :clear_at, :serpent_gone} from 'verbs'
+import {:unseal, :seal} from 'workshop'
+import {:princess_walking} from 'dragon'
+
+world underground_caverns_2 is sprout.World {
+  visitors are Person
+  visitors arrive at inside_barrow
+  synonyms go: "climb", "proceed", "head"
+
+  :gate false
+  pass any (self.get(:gate))
+  // The Wizard's clock and the garden's, heard wherever he and the unicorn
+  // are; the carousel's buttons, heard by the Carousel Room, the Low Room
+  // and every visitor; the unicorn's whereabouts, for the sword.
+  pass :wizard_start (true)
+  pass :where_are_you (true)
+  pass :wizard_turn (true)
+  pass :unicorn_at (true)
+  pass :bound_away (true)
+  pass :come_back (true)
+  pass :unicorn_rides (true)
+  pass :unicorn_gone (true)
+  pass :flip (true)
+  pass :zoom (true)
+  pass :room_sealed (true)
+  pass :poisoned (true)
+  // The bucket's comings and goings, counted by every visitor wherever
+  // they are; and the Fantasize spell, heard by every room's illusion.
+  pass :bucket_up (true)
+  pass :bucket_down (true)
+  pass :bucket_dry (true)
+  pass :fantasize (true)
+  // The robot's whereabouts, for its stand-ins; the dragon's and the
+  // princess's clocks, which only a visitor's moves can run; the ice
+  // melting, the secret door opening; the Bank's curtain and its gnome;
+  // and the Tiny Room's door, one door in two rooms.
+  pass :robot_at (true)
+  pass :dragon_turn (true)
+  pass :dragon_watch (true)
+  pass :ice_melted (true)
+  pass :princess_turn (true)
+  pass :princess_walking (true)
+  pass :princess_step (true)
+  pass :princess_gone (true)
+  pass :dragon_bored (true)
+  pass :secret_door (true)
+  pass :curtain_active (true)
+  pass :gnome_come (true)
+  pass :gnome_go (true)
+  pass :pdoor_locked (true)
+  pass :pdoor_open (true)
+  pass :mat_under (true)
+  pass :push_key (true)
+  pass :mat_moved (true)
+  pass :key_far (true)
+  // The volcano's clocks and the maze's count (round 5): the balloon's
+  // tick and its landing, the Volcano Gnome's comings and goings, the
+  // fuse burning down, an explosion heard, a room collapsing, and how far
+  // round the bases the runner has got.
+  pass :balloon_tick (true)
+  pass :balloon_land (true)
+  pass :gnome_due (true)
+  pass :gnome_fidget (true)
+  pass :vgnome_come (true)
+  pass :vgnome_late (true)
+  pass :gnome_door (true)
+  pass :fuse_out (true)
+  pass :explosion_at (true)
+  pass :collapse (true)
+  pass :diamond_count (true)
+  pass :bat_to (true)
+  // The fourth quarter (round 7): the Wizard's door, one door in two
+  // rooms; the demon summoned and gone, and what the trophy case holds,
+  // for his fee; the Wizard bound, dejected, or gone, and his wand given
+  // up; the menhir's position, for the rooms either side of it; the dog
+  // leashed; the crypt door, one door in two rooms; and where each sphere
+  // lies, for the others' visions and the Rooms of Mist.
+  pass :wiz_fed (true)
+  pass :wiz_locked (true)
+  pass :wiz_open (true)
+  pass :genie_summoned (true)
+  pass :genie_departs (true)
+  pass :case_worth (true)
+  pass :case_smashed (true)
+  pass :wizard_gone (true)
+  pass :wizard_dejected (true)
+  pass :surrender_wand (true)
+  pass :menhir_at (true)
+  pass :menhir_order (true)
+  pass :leashed (true)
+  pass :crypt_door (true)
+  pass :red_at (true)
+  pass :blue_at (true)
+  pass :clear_at (true)
+  pass :serpent_gone (true)
+  pass :unseal (true)
+  pass :seal (true)
+
+  on :open_gate (from) {
+    self.set(:gate, true)
+    send from :gate_open
+  }
+  on :close_gate { self.set(:gate, false) }
+
+  passage unknown         { That sentence isn't one I recognize. }
+  passage not_here        { You can't see any such thing. }
+  passage no_way          { You can't go that way. }
+  passage dark            { It is pitch black. You are likely to be eaten by a grue. }
+  passage unremarkable    { There's nothing special about {thing}. }
+  passage nothing_happens { Nothing happens. }
+  passage waited          { Time passes... }
+  passage not_carrying    { You don't have {thing}. }
+  passage too_heavy       { {if to.is(Adventurer)}{to.too_heavy}{else}{to} cannot hold {item}.{/if} }
+}

@@ -1,0 +1,377 @@
+{
+  "steps": [
+    { "seed": 10 },
+    { "seed": 2156039273 },
+    { "arrive": "Esme", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Esme", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Esme", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Esme", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "seed": 3940575822 },
+    { "as": "Esme", "type": "politely ask the lantern to take me", "expect": [
+      { "reader": "Esme", "kind": "notice", "words": "That sentence isn't one I recognize." }
+    ] },
+    { "seed": 2969189523 },
+    { "tick": true, "expect": [] },
+    { "seed": 3445004764 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1964593796 },
+    { "as": "Esme", "type": "put the sword in the lantern", "expect": [
+      { "reader": "Esme", "kind": "notice", "words": "You can't put the elvish sword in the lamp." }
+    ] },
+    { "seed": 1925632242 },
+    { "tick": true, "expect": [] },
+    { "seed": 868815870 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 358892997 },
+    { "as": "Esme", "type": "go south", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Narrow Tunnel" },
+      { "reader": "Esme", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
+    ] },
+    { "seed": 146573627 },
+    { "tick": true, "expect": [] },
+    { "seed": 4280873790 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3960366672 },
+    { "as": "Esme", "type": "north", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Esme", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Esme", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." },
+      { "reader": "Esme", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+    ] },
+    { "seed": 555457178 },
+    { "tick": true, "expect": [] },
+    { "seed": 1686948826 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1666708478 },
+    { "as": "Esme", "type": "take lantern and sword", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "Lamp: Taken." },
+      { "reader": "Esme", "kind": "said", "words": "Elvish sword: Taken." }
+    ] },
+    { "seed": 1908316770 },
+    { "tick": true, "expect": [] },
+    { "seed": 3975727309 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1250424358 },
+    { "as": "Esme", "type": "light the lamp", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "seed": 3471037513 },
+    { "tick": true, "expect": [] },
+    { "seed": 4020267558 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 678130956 },
+    { "as": "Esme", "type": "south", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Narrow Tunnel" }
+    ] },
+    { "seed": 1669470527 },
+    { "tick": true, "expect": [] },
+    { "seed": 2986635648 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2235869037 },
+    { "as": "Esme", "type": "jump into the ravine", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "For a change, you look before leaping. You realize you would never survive." }
+    ] },
+    { "seed": 2069330516 },
+    { "tick": true, "expect": [] },
+    { "seed": 1265228147 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1470303174 },
+    { "as": "Esme", "type": "south", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Foot Bridge" },
+      { "reader": "Esme", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
+    ] },
+    { "seed": 1649225855 },
+    { "tick": true, "expect": [] },
+    { "seed": 2221469044 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 196977486 },
+    { "as": "Esme", "type": "attack the bridge with the sword", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "I've known strange people, but fighting a bridge?" }
+    ] },
+    { "seed": 2202069830 },
+    { "tick": true, "expect": [] },
+    { "seed": 165313381 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" },
+      { "reader": "Esme", "kind": "told", "words": "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." },
+      { "reader": "Esme", "kind": "told", "words": "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." },
+      { "reader": "Esme", "kind": "told", "words": "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you." },
+      { "reader": "Esme", "kind": "told", "words": "The Wizard, in a deep and resonant voice, speaks the word \"Fantasize!\" He then vanishes, cackling gleefully." }
+    ] },
+    { "seed": 319184678 },
+    { "as": "Esme", "type": "south", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Great Cavern" },
+      { "reader": "Esme", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." },
+      { "reader": "Esme", "kind": "described", "words": "There is a pile of jewels here." }
+    ] },
+    { "seed": 876375875 },
+    { "tick": true, "expect": [] },
+    { "seed": 629349823 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 365487937 },
+    { "as": "Esme", "type": "wear the jewels", "expect": [
+      { "reader": "Esme", "kind": "notice", "words": "That sentence isn't one I recognize." }
+    ] },
+    { "seed": 614009337 },
+    { "tick": true, "expect": [] },
+    { "seed": 3296655964 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2077829146 },
+    { "as": "Esme", "type": "take jewels", "expect": [
+      { "reader": "Esme", "kind": "refused", "words": "Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now." }
+    ] },
+    { "seed": 1795132385 },
+    { "tick": true, "expect": [] },
+    { "seed": 2704278435 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3414964298 },
+    { "as": "Esme", "type": "southwest", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Shallow Ford" },
+      { "reader": "Esme", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." },
+      { "reader": "Esme", "kind": "described", "words": "There is a copy of ZORK I here." }
+    ] },
+    { "seed": 677928782 },
+    { "tick": true, "expect": [] },
+    { "seed": 1909779174 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 3942388218 },
+    { "as": "Esme", "type": "take zork", "expect": [
+      { "reader": "Esme", "kind": "refused", "words": "Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now." }
+    ] },
+    { "seed": 1021111710 },
+    { "tick": true, "expect": [] },
+    { "seed": 3391726613 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2938206715 },
+    { "as": "Esme", "type": "read the copy of ZORK I to the sword", "expect": [
+      { "reader": "Esme", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "seed": 577101808 },
+    { "tick": true, "expect": [] },
+    { "seed": 2566376345 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "underground_caverns_2#1 woke, 180 seconds after it asked" },
+      { "reader": "Esme", "kind": "told", "words": "The room, which had been looking a little odd round the edges, settles down and is only a room." }
+    ] },
+    { "seed": 3777650691 },
+    { "as": "Esme", "type": "south", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Dark Tunnel" },
+      { "reader": "Esme", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
+    ] },
+    { "seed": 2560076537 },
+    { "tick": true, "expect": [] },
+    { "seed": 67138906 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3185632324 },
+    { "as": "Esme", "type": "southeast", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Esme", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Esme", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Esme", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "seed": 3089533539 },
+    { "tick": true, "expect": [] },
+    { "seed": 2650271301 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 3437952646 },
+    { "as": "Esme", "type": "look", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Esme", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Esme", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." }
+    ] },
+    { "seed": 2388623598 },
+    { "tick": true, "expect": [] },
+    { "seed": 1670042553 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1355577967 },
+    { "as": "Esme", "type": "offer the lantern to the unicorn", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "The unicorn regards the lamp with polite incomprehension, and goes back to cropping grass." }
+    ] },
+    { "seed": 3231964491 },
+    { "tick": true, "expect": [] },
+    { "seed": 517558139 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1668658317 },
+    { "as": "Esme", "type": "ride the unicorn into the gazebo", "expect": [
+      { "reader": "Esme", "kind": "notice", "words": "That sentence isn't one I recognize." }
+    ] },
+    { "seed": 947661215 },
+    { "tick": true, "expect": [] },
+    { "seed": 249313158 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3767823912 },
+    { "as": "Esme", "type": "enter gazebo", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Gazebo" },
+      { "reader": "Esme", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
+      { "reader": "Esme", "kind": "described", "words": "Sitting on the tea table is:" },
+      { "reader": "Esme", "kind": "described", "words": "A newspaper" },
+      { "reader": "Esme", "kind": "described", "words": "A place mat" },
+      { "reader": "Esme", "kind": "described", "words": "A china teapot" },
+      { "reader": "Esme", "kind": "described", "words": "A letter opener" },
+      { "reader": "Esme", "kind": "described", "words": "A matchbook" }
+    ] },
+    { "seed": 1895225402 },
+    { "tick": true, "expect": [] },
+    { "seed": 1907066057 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 680022238 },
+    { "as": "Esme", "type": "take all", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "Newspaper: Taken." },
+      { "reader": "Esme", "kind": "said", "words": "Place mat: Taken." },
+      { "reader": "Esme", "kind": "said", "words": "China teapot: Taken." },
+      { "reader": "Esme", "kind": "said", "words": "Letter opener: Taken." },
+      { "reader": "Esme", "kind": "said", "words": "Matchbook: Taken." }
+    ] },
+    { "seed": 3777239548 },
+    { "tick": true, "expect": [] },
+    { "seed": 1820279931 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3725431889 },
+    { "as": "Esme", "type": "open the teapot", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "It has no lid, which saves time." },
+      { "reader": "Esme", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 3997142428 },
+    { "tick": true, "expect": [] },
+    { "seed": 292776947 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 701417799 },
+    { "as": "Esme", "type": "look in teapot", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "The china teapot is empty." }
+    ] },
+    { "seed": 1290628933 },
+    { "tick": true, "expect": [] },
+    { "seed": 4228458409 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4098639289 },
+    { "as": "Esme", "type": "read newspaper", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "** U.S. News and Dungeon Report **" },
+      { "reader": "Esme", "kind": "said", "words": "FAMED ADVENTURER TO EXPLORE GREAT UNDERGROUND EMPIRE" },
+      { "reader": "Esme", "kind": "said", "words": "Our correspondents report that a world-famous and battle-hardened adventurer has been seen in the vicinity of the Great Underground Empire. Local grues have been reported sharpening their (slavering) fangs...." },
+      { "reader": "Esme", "kind": "said", "words": "WIZARD STILL AT LARGE" },
+      { "reader": "Esme", "kind": "said", "words": "The Wizard of Frobozz, dismissed from the court of Lord Dimwit Flathead for turning the royal mountain into a very large pile of gravel, is believed to have retired to the caverns south of the ravine, taking with him a quantity of the Empire's loose property (a pearl necklace, a Stradivarius and a crystal sphere are mentioned in the inventory, and the Bank of Zork has declined to comment on the rest). He is described as doddering, petulant and armed with a wand, and the public is advised not to let him finish a word." },
+      { "reader": "Esme", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." }
+    ] },
+    { "seed": 2382856832 },
+    { "tick": true, "expect": [] },
+    { "seed": 3422420 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" },
+      { "reader": "Esme", "kind": "told", "words": "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." },
+      { "reader": "Esme", "kind": "told", "words": "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow." },
+      { "reader": "Esme", "kind": "told", "words": "The Wizard, almost inaudibly, whispers a word beginning with \"F,\" and then disappears, chuckling nastily." },
+      { "reader": "Esme", "kind": "told", "words": "Ooops! You dropped the lamp." }
+    ] },
+    { "seed": 873465903 },
+    { "as": "Esme", "type": "take lamp", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 1390876550 },
+    { "tick": true, "expect": [] },
+    { "seed": 3180271860 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3769269099 },
+    { "as": "Esme", "type": "inventory", "expect": [
+      { "reader": "Esme", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Esme", "kind": "said", "words": "An elvish sword" },
+      { "reader": "Esme", "kind": "said", "words": "A newspaper" },
+      { "reader": "Esme", "kind": "said", "words": "A place mat" },
+      { "reader": "Esme", "kind": "said", "words": "A china teapot" },
+      { "reader": "Esme", "kind": "said", "words": "A letter opener" },
+      { "reader": "Esme", "kind": "said", "words": "A matchbook" },
+      { "reader": "Esme", "kind": "said", "words": "A lamp (providing light)" }
+    ] },
+    { "seed": 3665539892 },
+    { "tick": true, "expect": [] },
+    { "seed": 3629116651 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1401623681 },
+    { "as": "Esme", "type": "out", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Esme", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Esme", "kind": "told", "words": "You catch a glimpse of something white between two hedges." },
+      { "reader": "Esme", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "seed": 876545442 },
+    { "tick": true, "expect": [] },
+    { "seed": 1258038853 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4199144190 },
+    { "as": "Esme", "type": "south", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Formal Garden" },
+      { "reader": "Esme", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." }
+    ] },
+    { "seed": 3876707836 },
+    { "tick": true, "expect": [] },
+    { "seed": 2970226353 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 3324210103 },
+    { "as": "Esme", "type": "pour nothing from the teapot onto the unicorn", "expect": [
+      { "reader": "Esme", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "seed": 2160792184 },
+    { "tick": true, "expect": [] },
+    { "seed": 1760068534 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1002579462 },
+    { "as": "Esme", "type": "west", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Path Near Stream" },
+      { "reader": "Esme", "kind": "described", "words": "The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction. On the east is a ruined archway choked with vegetation." },
+      { "reader": "Esme", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 1112526831 },
+    { "tick": true, "expect": [] },
+    { "seed": 2656638732 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "underground_caverns_2#1 woke, 180 seconds after it asked" },
+      { "reader": "Esme", "kind": "told", "words": "Your fingers feel like your own again." }
+    ] },
+    { "seed": 1512241240 },
+    { "as": "Esme", "type": "look", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Path Near Stream" },
+      { "reader": "Esme", "kind": "described", "words": "The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction. On the east is a ruined archway choked with vegetation." }
+    ] },
+    { "seed": 3332560350 },
+    { "tick": true, "expect": [] },
+    { "seed": 124713010 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2337039239 },
+    { "as": "Esme", "type": "southwest", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Carousel Room" },
+      { "reader": "Esme", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
+      { "reader": "Esme", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." }
+    ] },
+    { "seed": 3773377790 },
+    { "tick": true, "expect": [] },
+    { "seed": 3438681737 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 2165355354 },
+    { "as": "Esme", "type": "look", "expect": [
+      { "reader": "Esme", "kind": "described", "words": "Carousel Room" },
+      { "reader": "Esme", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
+      { "reader": "Esme", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." }
+    ] },
+    { "seed": 1814857838 },
+    { "tick": true, "expect": [] },
+    { "seed": 3476480000 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3847096849 },
+    { "leave": "Esme", "expect": [
+      { "reader": "Esme", "kind": "notice", "words": "You leave, and take what you carry with you." }
+    ] }
+  ]
+}
