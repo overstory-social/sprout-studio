@@ -3869,10 +3869,10 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Round 16: SWIM IN, SWIM ACROSS** the lake, the river or the stream is
   the water's own refusal, and SWIM elsewhere; CLIMB the mountains is
   MOUNTAIN-RANGE-F's "Don't you believe me?".
-- **Pictures (the Playdate's gallery).** A room's picture is shown from
-  `Room`'s one `describe` through marker kinds (`WhiteHousePicture` and the
-  rest, composed by the room), because `media.show` takes only a literal
-  file name, so that `sprout pack` can send the file, and a composed kind
-  cannot leave a `describe` out to write its own. A per-object picture
-  property would say it in one line; that is Sprout's to add.
+- **Pictures (the Playdate's gallery).** A room or a thing with a picture
+  composes one kind, `Illustrated` (picture.sprout), and restates its
+  `:picture media.Image` and `:caption`; `Room`'s one `describe` shows any
+  pictured room's, and a thing's own `describe` shows its on examine. A
+  room with no picture is told apart by not composing `Illustrated`,
+  because `media.Image` has no empty value to say "none" with.
 

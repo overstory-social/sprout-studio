@@ -8,6 +8,8 @@ import {Troll} from 'troll'
 import {examine} from 'sprout'
 import {Box} from 'box'
 import {Torch, Bell} from 'temple'
+import {Illustrated} from 'picture'
+extension media 1
 
 // Something sharp, which the magic boat does not agree with: Zork's
 // WEAPONBIT, and the sceptre's point (RBOAT-FUNCTION).
@@ -105,11 +107,16 @@ kind Lunch is Food {
   describe { text "It is a hot pepper sandwich, wrapped in waxed paper that has long since given up trying to contain it. It smells of hot peppers from across the room, and of more hot peppers from closer to." }
 }
 
-kind Garlic is Food {
+kind Garlic is Food, Illustrated {
+  :picture "pictures/garlic.png"
+  :caption "the clove of garlic"
   grammar { name "clove of garlic"  nouns "garlic", "clove" }
   :size 4
   passage short { clove of garlic }
-  describe { text "It is a single clove of garlic, plump and papery and very much itself. It is the sort of thing that keeps certain company at a distance, and most other company too." }
+  describe {
+    text "It is a single clove of garlic, plump and papery and very much itself. It is the sort of thing that keeps certain company at a distance, and most other company too."
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
+  }
   without as target for eat from Food
   as target for eat {
     permit {

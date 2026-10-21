@@ -1,0 +1,13 @@
+// Pictures. A room or a thing with a plate composes `Illustrated` and
+// restates `:picture` with its own file and `:caption` with the words a
+// client that cannot draw reads instead. A room shows its plate from the
+// room's shared describe (room.sprout); a thing shows its plate on examine,
+// from its own describe, since a thing's describe is its own. The default
+// below is only there because a property must have one: every composer
+// restates it, and `sprout pack` sends every file the world writes here.
+extension media 1
+
+kind Illustrated {
+  :picture media.Image default "pictures/white-house.png"
+  :caption string default "a picture"
+}

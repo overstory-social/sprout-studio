@@ -61,6 +61,12 @@ and if a new pin names a carried build otherwise (a change to the rule
 that makes a title into a file name), the run refuses; either way nothing
 is published until that is settled in Sprout.
 
+Since every build stays, a changed world is a new version. A build whose
+world has the title and the version of one already published, but another
+bundle hash, is refused, and nothing is published until `version` in the
+world's `sprout.json` is bumped. A build already published keeps the
+version it was signed with.
+
 ## The publisher's key
 
 The index is signed with an Ed25519 key, so only the studio can publish to

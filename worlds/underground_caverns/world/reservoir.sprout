@@ -22,6 +22,8 @@ import {cross, through, climb_up, climb_down, dig, look_in, take, swim, leap_at,
 import {deep_canyon, chasm_room} from 'east'
 import {dam_room} from 'dam'
 import {small_cave} from 'mirror'
+import {Illustrated} from 'picture'
+extension media 1
 
 object reservoir_south is DarkRoom, Tidal, Riverside in underground_caverns {
   :tour 40
@@ -263,7 +265,9 @@ kind Mud is Scenery {
 }
 
 // The trunk of jewels on the lake bed (TRUNK-F's STUPID-CONTAINER).
-kind Trunk is Treasure {
+kind Trunk is Treasure, Illustrated {
+  :picture "pictures/trunk.png"
+  :caption "the trunk of jewels"
   grammar { name "trunk of jewels"  nouns "trunk", "chest", "jewels", "treasure"  adjectives "old" }
   :size 35
   :value 15
@@ -274,7 +278,10 @@ kind Trunk is Treasure {
   on :moved (from, to) { if (to.is(Adventurer)) { self.set(:lifted, true) } }
   passage short { trunk of jewels }
   passage ldesc {{if self.get(:lifted)}There is an old trunk here, bulging with assorted jewels.{else}Lying half buried in the mud is an old trunk, bulging with jewels.{/if}}
-  describe { text "It is an old sea-trunk, its leather rotted and its brass corners green, and it is bulging with jewels: rubies and sapphires and things you cannot name, glinting through every split in its sides. There are lots of jewels in there." }
+  describe {
+    text "It is an old sea-trunk, its leather rotted and its brass corners green, and it is bulging with jewels: rubies and sapphires and things you cannot name, glinting through every split in its sides. There are lots of jewels in there."
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
+  }
   without as target for open from Thing
   as target for open { do { say "The jewels are safely inside; there's no need to do that." } }
   without as target for close from Thing

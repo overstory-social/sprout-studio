@@ -15,7 +15,7 @@ import * as sprout from 'sprout'
 import {Thing, Portable, Scenery, Flame, Pluggable, Mechanism, Switchable, Countable, Crossable, Leapable, Squeezable} from 'thing'
 import {Box, Bag} from 'box'
 import {Readable, Rejecting, Sharp} from 'items'
-import {Room, DarkRoom, DamPicture} from 'room'
+import {Room, DarkRoom} from 'room'
 import {Light} from 'lamp'
 import {Adventurer} from 'adventurer'
 import {Pile} from 'boat'
@@ -25,6 +25,8 @@ import {take, open, close, read, look_in, shift, raise, plug, put, turn, turn_wi
 import {GasRoom} from 'mine'
 import {deep_canyon} from 'east'
 import {reservoir_south} from 'reservoir'
+import {Illustrated} from 'picture'
+extension media 1
 
 message :rise
 // The blue button pushed: the leak bursts.
@@ -38,7 +40,9 @@ kind Tidal {
   on :tide (from, value) { self.set(:tide, value) }
 }
 
-object dam_room is Room, Tidal, Riverside, DamPicture in underground_caverns {
+object dam_room is Room, Tidal, Riverside, Illustrated in underground_caverns {
+  :picture "pictures/dam.png"
+  :caption "Flood Control Dam #3"
   :tour 44
   grammar {
     name "Dam"

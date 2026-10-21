@@ -15,6 +15,7 @@ import {Box} from 'box'
 import {Adventurer} from 'adventurer'
 import {read, listen, search, look_in, look_under, look_behind, Reach, :scored, :relight, :room_lit, :wall_look, :hush, :snuffed, :where, :berth, :wreck} from 'verbs'
 import {MagicBoat, Wreck} from 'boat'
+import {Illustrated} from 'picture'
 extension media 1
 
 kind Room is sprout.Place {
@@ -109,22 +110,12 @@ kind Room is sprout.Place {
   // SUPERBRIEF. Arriving is the only time a visitor's mode is asked.
   describe {
     text described
-    // The room's picture, where it has one: the first time a visitor comes in and whenever
-    // they look or examine it, never for a poll, and in a dark room only by the light they see it by. The
-    // file names are written here so that `sprout pack` can send the pictures with the world.
+    // The room's picture, where it has one (picture.sprout): the first time a visitor comes
+    // in and whenever they look or examine it, never for a poll, and in a dark room only by
+    // the light they see it by.
     if (seen == :look || seen == :examine || (seen == :arrival && actor.recall(:visits) < 2)) {
-      if (self.is(WhiteHousePicture)) { media.show("pictures/white-house.png", "the white house") }
-      else if (self.is(ClearingPicture)) { media.show("pictures/grating.png", "the clearing") }
-      else if (self.is(LivingRoomPicture)) { media.show("pictures/trophy-case.png", "the trophy case") }
-      else if (self.is(DamPicture)) { media.show("pictures/dam.png", "Flood Control Dam #3") }
-      else if (self.is(KitchenPicture)) { media.show("pictures/kitchen.png", "the kitchen") }
-      else if (self.is(DarkRoom)) {
-        if (self.get(:alight)) {
-          if (self.is(CellarPicture)) { media.show("pictures/cellar.png", "the cellar") }
-          else if (self.is(TrollRoomPicture)) { media.show("pictures/troll.png", "the troll room") }
-          else if (self.is(MazePicture)) { media.show("pictures/maze.png", "the maze") }
-        }
-      }
+      let unlit = self.is(DarkRoom) && !self.get(:alight)
+      if (self.is(Illustrated) && !unlit) { media.show(self.get(:picture), self.get(:caption)) }
     }
   }
   // The description as a passage.
@@ -295,13 +286,3 @@ kind Grue is Scenery {
   without as target for look_under from Thing
   as target for look_under { do { say absent } }
 }
-
-// The rooms with a picture compose one of these, and the room's describe shows it.
-kind WhiteHousePicture { }
-kind ClearingPicture { }
-kind LivingRoomPicture { }
-kind DamPicture { }
-kind CellarPicture { }
-kind TrollRoomPicture { }
-kind KitchenPicture { }
-kind MazePicture { }

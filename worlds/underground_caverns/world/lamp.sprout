@@ -11,6 +11,7 @@ import {Thief} from 'thief'
 import {DarkRoom, Room} from 'room'
 import {Box} from 'box'
 import {lamp_on, lamp_off, :light, :relight, :snuffed, :shatter_lamp} from 'verbs'
+import {Illustrated} from 'picture'
 extension media 1
 
 kind Light is Portable, sprout.LightSource, Switchable {
@@ -24,7 +25,9 @@ kind Light is Portable, sprout.LightSource, Switchable {
   }
 }
 
-kind Lamp is Light {
+kind Lamp is Light, Illustrated {
+  :picture "pictures/lantern.png"
+  :caption "the brass lantern"
   // Scratch, for putting it out: how many other lights are left.
   :others 0 min 0 max 50
   // Zork's I-LANTERN and LAMP-TABLE: 385 moves of light in the battery,
@@ -42,7 +45,7 @@ kind Lamp is Light {
     if (self.get(:burned_out)) { text spent_view }
     else if (self.get(:lit)) { text lit_view }
     else { text dark_view }
-    if (seen == :examine) { media.show("pictures/lantern.png", "the brass lantern") }
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
   }
   passage spent_view {
     {self.view}

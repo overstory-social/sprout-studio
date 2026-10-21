@@ -25,6 +25,7 @@ import {ask} from 'sprout'
 import {take, put, open, close, look_in, attack, give, throw, listen, talk, greet, alarm, mung, kick, burn, tie, climb_up, climb_down, through, shift, :travel, :clock, :cyc_state, :magic, :cyclops_gone, :uncork, :consume, :summon, :keeper, :unveil, :wall_look, :die, search} from 'verbs'
 import {maze_15} from 'maze'
 import {living_room} from 'house'
+import {Illustrated} from 'picture'
 extension media 1
 
 message :restate
@@ -123,7 +124,9 @@ object cyclops_room is CyclopsRoom in underground_caverns {
 }
 
 // Zork's CYCLOPS. He holds nothing; what he eats goes no further.
-kind Cyclops is Thing, sprout.Actor, Tieable, Creature {
+kind Cyclops is Thing, sprout.Actor, Tieable, Creature, Illustrated {
+  :picture "pictures/cyclops.png"
+  :caption "the cyclops"
   grammar { name "cyclops"  nouns "monster", "eye", "giant", "tongue", "mouth"  adjectives "hungry", "giant", "sleeping", "enflamed", "man-sized" }
   :ndesc true
   // Zork's CYCLOWRATH: 0 calm; more and more, the angrier he grows;
@@ -150,7 +153,7 @@ kind Cyclops is Thing, sprout.Actor, Tieable, Creature {
   describe {
     if (self.get(:asleep)) { text "The cyclops is sleeping like a baby, albeit a very ugly one." }
     else { text "A hungry cyclops is standing at the foot of the stairs." }
-    if (seen == :examine) { media.show("pictures/cyclops.png", "the cyclops") }
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
   }
 
   // The state the room describes him in.
@@ -526,7 +529,9 @@ object treasure_room is TreasureRoom in underground_caverns {
 
 // Zork's CHALICE: a treasure, and a container nobody should use as one.
 // While its owner stands guard over it, fighting, it is not to be had.
-kind Chalice is Box, Treasure {
+kind Chalice is Box, Treasure, Illustrated {
+  :picture "pictures/chalice.png"
+  :caption "the silver chalice"
   grammar { name "chalice"  nouns "cup", "silver", "treasure", "goblet"  adjectives "silver", "engraved", "engravings", "intricately" }
   without as target for close from Thing
   without as target for look_in from Thing
