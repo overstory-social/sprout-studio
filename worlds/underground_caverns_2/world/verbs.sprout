@@ -8,7 +8,7 @@
 import * as sprout from 'sprout'
 import {inventory} from 'sprout'
 import {Box} from 'box'
-import {Portable, Switchable, Creature, Door, Crossable, Leapable, Drinkable, Fillable, Sprayable, Vessel, Orderable, Button, Pourable, Wishing} from 'thing'
+import {Portable, Switchable, Creature, Door, Crossable, Leapable, Drinkable, Fillable, Sprayable, Vessel, Orderable, Button, Pourable, Wishing, Awaited} from 'thing'
 
 verb take {
   role target many
@@ -33,14 +33,9 @@ intent drop_in {
   "drop [x] in [y]"  "drop [x] into [y]"  "drop [x] down [y]"  "throw [x] in [y]"  "throw [x] into [y]"
   do put (item: x, container: y)
 }
-// Zork's "take all from table": `all` cannot be limited to what a named
-// thing holds (friction 36), so the table is the role and the adventurer
-// takes each thing on it in turn.
-verb take_from {
-  role container: Box
-  "take all from [container]"  "take everything from [container]"  "take all off [container]"  "take everything off [container]"
-  "take all on [container]"  "take everything on [container]"  "get all from [container]"  "get everything from [container]"
-}
+// Zork's "take all from table" and "take all cakes" are the language's
+// own narrowing of `all` (the spec's Parsing › Sequences, again and all),
+// read by `take` above with no phrase of this world's.
 verb open {
   role target
   role tool carried
@@ -284,14 +279,16 @@ intent how_doing {
   do score
 }
 verb get_in_bare { "get in"  "climb in"  "board"  "get in the bucket"  "climb into the bucket" }
-// Waiting for the bucket to come down: Zork's player typed WAIT thirty
-// times; here a move is half a minute of the host's clock and nothing in
-// the world can run that clock, so one command waits the whole hundred
-// moves at once (friction 37). No role: the bucket is not here, which is
-// the point.
-verb wait_for_bucket {
-  "wait for bucket"  "wait for the bucket"  "wait for bucket to come down"  "wait for the bucket to come down"
-  "wait for bucket to return"  "wait for the bucket to return"  "wait for bucket to come back"  "wait for the bucket to come back"
+// Waiting for the bucket: Zork's player typed WAIT thirty-four times for
+// the hundred moves the water takes to dry. Here the bucket is waited for
+// by name, and only where it can be: the bucket itself, or the stand-in
+// that holds its name at whichever end of the well it has left. The wait
+// brings the bucket's count of moves to nothing, and the bucket comes
+// down in the same turn (adventurer.sprout).
+verb wait_for {
+  role target: Awaited
+  "wait for [target]"  "wait for [target] to come down"  "wait for [target] to return"  "wait for [target] to come back"
+  "wait on [target]"  "await [target]"  "wait here for [target]"  "wait until [target] comes down"
 }
 verb get_out_bare { "get out"  "climb out"  "stand up"  "get out of the bucket"  "climb out of the bucket"  "disembark"  "exit"  "leave" }
 intent put_in_well {
@@ -362,6 +359,10 @@ message :wizard_turn with Dest
 // The Wizard, cast at by the visitor's own `enchant` part, tells the room
 // he stands in that he has gone (REMOVE WIZARD).
 message :vanish
+// The Wizard, arrived beside a visitor or gone from beside them, for the
+// sword (I-SWORD): a visitor reads an arrival's line and is sent no
+// `:arrived`, so he says so himself.
+message :wizard_near with boolean
 // The garden's clock (I-GARDEN), every move a visitor spends in it, and
 // the unicorn's answers: whether it is home, and that it has been
 // frightened off.
@@ -412,7 +413,17 @@ message :spell_ends
 message :riddle_answered
 // Water from the pool: salt.
 message :salt
-// The bucket, asked to come down now: the water in it dries at once.
-message :hurry
+// The bucket (I-BUCKET): poured into from outside, it strains at its rope
+// for one move before it goes, and the Circular Room tells it to go; at
+// the top with water in it, it tells every visitor, who count its hundred
+// moves; the count run out, or waited through, the water dries and it
+// comes down; and arriving at the bottom, it says so.
+message :bucket_lift
+message :bucket_up
+message :bucket_down
+message :bucket_dry
+// The Fantasize spell, cast or ended: every room's illusion rolls itself
+// once for the spell's number, and clears for nought.
+message :fantasize with integer
 // A room seen again in BRIEF: the one-time word about VERBOSE.
 message :brief_hint

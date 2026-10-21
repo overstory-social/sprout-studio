@@ -9,7 +9,7 @@
 // room it stands in, so it keeps which end of the well it is at (`:at`),
 // and its way out leads to whichever end that is.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Portable, Vessel, Wishing, Door} from 'thing'
+import {Thing, Scenery, Portable, Vessel, Wishing, Door, Awaited} from 'thing'
 import {Box} from 'box'
 import {Room, DarkRoom, Airy, CakeSafe, TeaRoomLike} from 'room'
 import {Light} from 'lamp'
@@ -17,11 +17,14 @@ import {Water, EatMeCake, BlueCake, OrangeCake, RedCake} from 'items'
 import {Adventurer} from 'adventurer'
 import {pearl_room} from 'riddle'
 import {low_room} from 'machine'
-import {read, look_in, look_under, climb_up, climb_down, kick, burn, board, disembark, through, wish, put, throw, look_down, knock, pour_in, shift, Dest, :room_sealed, :open_gate, :gate_open, :close_gate, :die, :consume, :hurry} from 'verbs'
+import {read, look_in, look_under, climb_up, climb_down, kick, burn, board, disembark, through, wish, put, throw, look_down, knock, pour_in, shift, Dest, :room_sealed, :open_gate, :gate_open, :close_gate, :die, :consume, :bucket_lift, :bucket_up, :bucket_down, :bucket_dry} from 'verbs'
 
-enum Errand { idle, rise, descend, dry }
+// What the bucket is about: nothing; straining at its rope, the move after
+// water was poured into it from outside; rising; coming down because the
+// water was taken out; coming down because the water dried.
+enum Errand { idle, straining, rise, descend, dry }
 
-kind Bucket is sprout.Place, Box, Vessel {
+kind Bucket is sprout.Place, Box, Vessel, Awaited {
   :open true
   :capacity 100
   :size 100
@@ -49,9 +52,10 @@ kind Bucket is sprout.Place, Box, Vessel {
   passage examined { It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago, and the rope above it is taut as though it would like to again.{if !self.holds(actor)} Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets.{/if}
 
     {self.look_inside} }
-  describe {
-    if (self.holds(actor)) { text inside_view } else { text examined }
-  }
+  // Examined, from inside it or out, the bucket; looked at from inside,
+  // or arrived in, the well seen from it.
+  passage viewed { {if seen == :examine}{self.examined}{else}{self.inside_view}{/if} }
+  describe { text viewed }
   passage no_take { The bucket is far too large to carry, and it is tied to the well. }
 
   // What is in the bucket is reached from in it (BUCKET-CONT).
@@ -83,9 +87,16 @@ kind Bucket is sprout.Place, Box, Vessel {
       self.set(:ndesc, true)
     } else if (item.is(Water)) {
       if (!item.get(:salty) && self.get(:at) == :well_bottom) {
-        if (self.get(:riders) == 0) { tell outside "The bucket swiftly rises up, and is gone." }
-        self.set(:errand, :rise)
-        send underground_caverns_2 :open_gate
+        if (self.get(:riders) == 0) {
+          // Poured into from outside: Zork's bucket is gone at once. This
+          // one strains at its rope for a move first, and says so, so that
+          // whoever poured has one move to get in.
+          self.set(:errand, :straining)
+          tell outside "The rope above the bucket goes taut, and the bucket shifts on the floor and lifts a little at one side, as though it had somewhere to be and meant to go there with or without you. It has not gone yet."
+        } else {
+          self.set(:errand, :rise)
+          send underground_caverns_2 :open_gate
+        }
       }
     }
   }
@@ -95,9 +106,11 @@ kind Bucket is sprout.Place, Box, Vessel {
       self.set(:ndesc, self.get(:riders) > 0)
     } else if (item.is(Water)) {
       if (self.get(:at) == :well_top && self.count(Water) == 0) {
-        cancel wakes
         self.set(:errand, :descend)
         send underground_caverns_2 :open_gate
+      } else if (self.get(:at) == :well_bottom && self.count(Water) == 0 && self.get(:errand) == :straining) {
+        self.set(:errand, :idle)
+        tell inside "The rope slackens, and the bucket settles back on the floor."
       }
     }
   }
@@ -105,25 +118,24 @@ kind Bucket is sprout.Place, Box, Vessel {
   // comes down at the end of the move (BUCKET-FCN's M-END).
   after command {
     if (self.get(:at) == :well_top && self.count(Water) == 0 && self.get(:errand) == :idle) {
-      cancel wakes
       self.set(:errand, :descend)
       send underground_caverns_2 :open_gate
     }
   }
-  // The water evaporates in a hundred moves (I-BUCKET), and the bucket
-  // comes down.
-  on :woke (elapsed) {
-    if (self.get(:at) == :well_top && self.count(Water) > 0) {
-      each w: Water in self { send w :consume }
-      self.set(:errand, :dry)
+  // The move after it was poured into from outside, the Circular Room
+  // tells it to go: with whoever got in, or without anyone.
+  on :bucket_lift {
+    if (self.get(:errand) == :straining && self.get(:at) == :well_bottom && self.count(Water) > 0) {
+      if (self.get(:riders) == 0) { tell outside "The bucket swiftly rises up, and is gone." }
+      self.set(:errand, :rise)
       send underground_caverns_2 :open_gate
     }
   }
-  // Waited for from the bottom (friction 37): the hundred moves pass at
-  // once, the water with them, unless somebody is riding it.
-  on :hurry {
-    if (self.get(:at) == :well_top && self.get(:riders) == 0 && self.count(Water) > 0) {
-      cancel wakes
+  // The water's hundred moves are up (I-BUCKET), counted by whoever is
+  // in the domain, or waited through from the bottom: the water dries
+  // and the bucket comes down, with whoever is in it.
+  on :bucket_dry {
+    if (self.get(:at) == :well_top && self.count(Water) > 0) {
       each w: Water in self { send w :consume }
       self.set(:errand, :dry)
       send underground_caverns_2 :open_gate
@@ -140,8 +152,7 @@ kind Bucket is sprout.Place, Box, Vessel {
     self.set(:errand, :idle)
     if (to.is(Room)) { self.set(:at, to.get(:id)) }
     if (e == :rise) {
-      cancel wakes
-      wake in 50 minutes
+      broadcast :bucket_up
       tell inside "The bucket rises and comes to a stop."
       tell outside "The wooden bucket comes up the shaft on its rope and stops, level with the rim of the well."
     } else if (e == :descend) {
@@ -151,6 +162,7 @@ kind Bucket is sprout.Place, Box, Vessel {
       tell inside "The last of the water evaporates, and the bucket descends."
       tell outside "The wooden bucket comes down the shaft on its rope and settles on the floor."
     }
+    if (e == :descend || e == :dry) { broadcast :bucket_down }
     if (e != :idle) {
       self.set(:seeing, false)
       each l: Light in self { if (l.get(:lit)) { self.set(:seeing, true) } }
@@ -210,6 +222,34 @@ kind WellTopMouth is Box, Wishing {
     }
     send underground_caverns_2 :close_gate
   }
+}
+
+// The bucket's name, at whichever end of the well the bucket has left:
+// spawned by the room as the bucket goes and gone as it comes back, so
+// that "enter bucket", "examine bucket" and "wait for bucket" are
+// answered in voice, and not with the parser's not-here line, while the
+// bucket is at the other end of the rope.
+kind MissingBucket is Scenery, Vessel, Awaited {
+  grammar { name "wooden bucket"  nouns "bucket", "pail"  adjectives "wooden", "large", "missing", "absent" }
+  passage short { wooden bucket }
+  passage away { {if here.is(WellTop)}The bucket is at the bottom of the well, at the far end of the rope, where it goes when there is nothing in it to keep it up. It goes up for water, not for company; there is no water in it down there, and no way to put any in from here.{else}The bucket is not here. It went up the shaft on its rope, and the rope is still here, taut, going up into the dark with nothing on the end of it that you can see. Whatever hauled it up will presumably let it down again when it is done with it, which, buckets being what they are, will be when it is dry. You could wait for it. It would be a long wait.{/if} }
+  describe { text away }
+  passage no_take { The bucket is not here to take, and it would be far too large to carry if it were. }
+  on :consume { finally destroy self }
+  as target for board { permit { refuse "The bucket is not here to get into. The rope is, and the rope is not the kind of thing one gets into." } }
+  as target for disembark { permit { refuse "You're not in that!" } }
+  without as target for through from Thing
+  as target for through { permit { refuse "The bucket is not here to get into. The rope is, and the rope is not the kind of thing one gets into." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "There is nothing here to look into. The bucket is at the other end of the rope." } }
+  without as target for climb_up from Thing
+  as target for climb_up { do { say "The bucket is at the other end of the rope. You could climb the rope, if you were a sailor, which you are not." } }
+  without as target for climb_down from Thing
+  as target for climb_down { do { say "The bucket is at the other end of the rope. You could climb the rope, if you were a sailor, which you are not." } }
+  without as target for kick from Thing
+  as target for kick { do { say "You kick at where the bucket was. The air there is unharmed." } }
+  without as target for shift from Thing
+  as target for shift { do { say "There is no bucket here to move. There is a rope, and the rope is taut, and whatever holds the other end of it is not persuaded." } }
 }
 
 // The bucket's rope, from either end of the well: taut, and not for
@@ -292,8 +332,27 @@ object well_top is WellTop in underground_caverns_2 {
 }
 
 kind TeaRoom is Room, CakeSafe, TeaRoomLike { }
-kind WellTop is DarkRoom, Airy, CakeSafe { }
-kind WellBottom is DarkRoom, Airy { }
+// Either end of the well: as the bucket leaves, its name stays behind
+// (MissingBucket), and as it comes back the name goes.
+kind WellEnd is DarkRoom, Airy {
+  on :left (item, to) {
+    if (item.is(Bucket)) { spawn MissingBucket in self }
+  }
+  on :entered (item, from) {
+    if (item.is(Bucket)) { each m: MissingBucket in self { send m :consume } }
+  }
+}
+kind WellTop is WellEnd, CakeSafe {
+  on :left (item, to) {
+    if (item.is(Bucket)) { tell "The rope over the well creaks, and the wooden bucket goes back down the shaft on it, having finished whatever it was doing up here." }
+  }
+}
+kind WellBottom is WellEnd {
+  // The move after the bucket was poured into from outside: it goes.
+  after command {
+    each b: Bucket in self { if (b.get(:errand) == :straining) { send b :bucket_lift } }
+  }
+}
 
 object tea_room is TeaRoom in underground_caverns_2 {
   grammar {

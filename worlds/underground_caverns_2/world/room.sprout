@@ -16,7 +16,7 @@ import {Thing, Scenery} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
-import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint} from 'verbs'
+import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -226,13 +226,32 @@ kind Ceiling is Scenery {
 
 // What the Fantasize spell puts in a room that is not there (DESCRIBE-
 // OBJECTS): a basilisk, a pile of jewels, a gold ingot, a bulging chest, a
-// convention of wizards, a copy of ZORK I. Zork never declared them, so
-// "take jewels" was no sentence at all; here every room keeps one, as it
+// convention of wizards, a copy of ZORK I. Every room keeps one, as it
 // keeps a grue, so that reaching for what the Wizard's word put there is
-// answered in the narrator's voice and not the parser's (friction 35).
+// answered in the narrator's voice. Zork rolled afresh on every
+// description; here the illusion is rolled once for each casting of the
+// spell, one room in two, and stays in the room, listed with what is
+// really there, until the spell wears off.
 kind Illusion is Scenery {
-  grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "convention", "wizards", "copy", "book"  adjectives "bulging", "yellow", "gold", "convention", "pile" }
+  grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "sphere", "convention", "wizards", "copy", "book"  adjectives "bulging", "yellow", "gold", "convention", "pile" }
   passage short { basilisk }
+  // Which of the eight it is this time, and for which casting it rolled.
+  // While it shows nothing it is unseen, so its words name nothing: the
+  // closet's real sphere is not shadowed by a yellow one that is not
+  // there, and a word for something never shown is the parser's not-here.
+  :which 0 min 0 max 8
+  :cast 0 min 0 max 100000
+  :unseen true
+  passage named {{if self.get(:which) == 1}a pile of jewels{else if self.get(:which) == 2}a gold ingot{else if self.get(:which) == 3}a basilisk{else if self.get(:which) == 4}a bulging chest{else if self.get(:which) == 5}a yellow sphere{else if self.get(:which) == 6}a grue{else if self.get(:which) == 7}a convention of wizards{else}a copy of ZORK I{/if}}
+  passage ldesc { There is {self.named} here. }
+  on :fantasize (from, value) {
+    if (value == 0) { self.set(:which, 0)  self.set(:ndesc, true)  self.set(:unseen, true) }
+    else if (self.get(:cast) != value) {
+      self.set(:cast, value)
+      if (random(2) == 0) { self.set(:which, 1 + random(8))  self.set(:ndesc, false)  self.set(:unseen, false) }
+      else { self.set(:which, 0)  self.set(:ndesc, true)  self.set(:unseen, true) }
+    }
+  }
   passage gone {
     {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now.{else}There is nothing of the kind here. If there was a moment ago, the Wizard had a word in it, and the word has worn off.{/if}
   }

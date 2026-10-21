@@ -1,155 +1,677 @@
 {
-  "about": "The bucket poured into from outside goes up alone and is waited for: the hundred moves pass at a stroke, counted, and it comes down empty.",
+  "about": "The bucket poured into from outside strains at its rope for one move and then goes up alone; its name stays behind to be examined, entered and waited for; 'wait' passes Zork's three moves; and 'wait for bucket' brings the count of moves to nothing, so the bucket comes down dry in the same turn, the moves counted.",
   "steps": [
-    { "seed": 3 },
-    { "arrive": "Marta", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Inside the Barrow" },
-      { "reader": "Marta", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
-      { "reader": "Marta", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
-      { "reader": "Marta", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
-    ] },
-    { "as": "Marta", "type": "take lamp", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "take sword", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "turn on lamp", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Narrow Tunnel" },
-      { "reader": "Marta", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Foot Bridge" },
-      { "reader": "Marta", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Great Cavern" },
-      { "reader": "Marta", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." }
-    ] },
-    { "as": "Marta", "type": "sw", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Shallow Ford" },
-      { "reader": "Marta", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
-      { "reader": "Marta", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
-    ] },
-    { "as": "Marta", "type": "se", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
-      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
-      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
-    ] },
-    { "as": "Marta", "type": "enter gazebo", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Gazebo" },
-      { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
-      { "reader": "Marta", "kind": "described", "words": "Sitting on the tea table is:" },
-      { "reader": "Marta", "kind": "described", "words": "A newspaper" },
-      { "reader": "Marta", "kind": "described", "words": "A place mat" },
-      { "reader": "Marta", "kind": "described", "words": "A china teapot" },
-      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
-    ] },
-    { "as": "Marta", "type": "take teapot", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "take newspaper", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "read newspaper", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "** U.S. News and Dungeon Report **" },
-      { "reader": "Marta", "kind": "said", "words": "FAMED ADVENTURER TO EXPLORE GREAT UNDERGROUND EMPIRE" },
-      { "reader": "Marta", "kind": "said", "words": "Our correspondents report that a world-famous and battle-hardened adventurer has been seen in the vicinity of the Great Underground Empire. Local grues have been reported sharpening their (slavering) fangs...." },
-      { "reader": "Marta", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." }
-    ] },
-    { "as": "Marta", "type": "out", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
-      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
-      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
-    ] },
-    { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
-      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
-    ] },
-    { "as": "Marta", "type": "ne", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Shallow Ford" }
-    ] },
-    { "as": "Marta", "type": "fill teapot with water", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The teapot is now full of water." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
-    ] },
-    { "as": "Marta", "type": "se", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "North End of Garden" }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Formal Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." }
-    ] },
-    { "as": "Marta", "type": "s", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Topiary" },
-      { "reader": "Marta", "kind": "described", "words": "This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel." }
-    ] },
-    { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
-      { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
-      { "reader": "Marta", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." }
-    ] },
-    { "as": "Marta", "type": "se", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You're not sure which direction is which. This room is very disorienting." },
-      { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
-      { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
-    ] },
-    { "as": "Marta", "type": "say well", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "There is a deafening clap of thunder and the stone door quietly swings open to reveal a passageway beyond." }
-    ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Pearl Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a former broom closet. The exits are to the east and west." },
-      { "reader": "Marta", "kind": "described", "words": "There is a pearl necklace here with hundreds of large pearls." }
-    ] },
-    { "as": "Marta", "type": "take necklace", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
-    ] },
-    { "as": "Marta", "type": "e", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Circular Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." },
-      { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
-    ] },
-    { "as": "Marta", "type": "examine bucket", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago, and the rope above it is taut as though it would like to again. Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets." },
-      { "reader": "Marta", "kind": "described", "words": "The wooden bucket is empty." }
-    ] },
-    { "as": "Marta", "type": "pour water into bucket", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "There is now a puddle in the bottom of the wooden bucket." },
-      { "reader": "Marta", "kind": "told", "words": "The bucket swiftly rises up, and is gone." }
-    ] },
-    { "as": "Marta", "type": "wait", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Time passes... The rope stays taut, and the bucket stays up wherever it has gone. It came down once, so it will presumably come down again; you could wait for the bucket, and it would be a long wait." }
-    ] },
-    { "as": "Marta", "type": "climb rope", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The rope is wet, and the well is deep, and you are not a sailor. You get a little way up it, which is to say your feet leave the floor, and then they find it again, rather suddenly. The rope is for the bucket." }
-    ] },
-    { "as": "Marta", "type": "enter bucket", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
-    ] },
-    { "as": "Marta", "type": "wait for bucket", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You wait. It is a long wait, and the rope stays taut through all of it, and the dark overhead has nothing to say; and then, a good deal later, the rope creaks." },
-      { "reader": "Marta", "kind": "told", "words": "The wooden bucket comes down the shaft on its rope and settles on the floor." }
-    ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Circular Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." },
-      { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
-    ] },
-    { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 20 (total of 400 points), in 132 moves." },
-      { "reader": "Marta", "kind": "said", "words": "This score gives you the rank of Beginner." }
-    ] }
+    {
+      "seed": 3
+    },
+    {
+      "arrive": "Marta",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Inside the Barrow"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "A strangely familiar brass lantern is lying on the ground."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "A sword of Elvish workmanship is on the ground."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take lamp",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take sword",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "turn on lamp",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The lamp is now on."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Narrow Tunnel"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Foot Bridge"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Great Cavern"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "sw",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Shallow Ford"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Dark Tunnel"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "se",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "North End of Garden"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "There is a beautiful unicorn here cropping grass."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "Your sword has begun to glow very brightly."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "enter gazebo",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Gazebo"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Sitting on the tea table is:"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "A newspaper"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "A place mat"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "A china teapot"
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "Your sword is glowing with a faint blue glow."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take teapot",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "out",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "North End of Garden"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "There is a beautiful unicorn here cropping grass."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)"
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "Your sword has begun to glow very brightly."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "n",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Dark Tunnel"
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "Your sword is no longer glowing."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "ne",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Shallow Ford"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "fill teapot with water",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The teapot is now full of water."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Dark Tunnel"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "se",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "North End of Garden"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Formal Garden"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Topiary"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "w",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Carousel Room"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "se",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "You're not sure which direction is which. This room is very disorienting."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Riddle Room"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\""
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "say well",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "There is a deafening clap of thunder and the stone door quietly swings open to reveal a passageway beyond."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "e",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Pearl Room"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is a former broom closet. The exits are to the east and west."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "There is a pearl necklace here with hundreds of large pearls."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take necklace",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "e",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Circular Room"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "examine bucket",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago, and the rope above it is taut as though it would like to again. Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "The wooden bucket is empty."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "pour water into bucket",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "There is now a puddle in the bottom of the wooden bucket."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "The rope above the bucket goes taut, and the bucket shifts on the floor and lifts a little at one side, as though it had somewhere to be and meant to go there with or without you. It has not gone yet."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "score",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Your score is 20 (total of 400 points), in 27 moves."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "This score gives you the rank of Beginner."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "The bucket swiftly rises up, and is gone."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "look",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Circular Room"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. A rope hangs down the middle of the room from the dark above, taut, with nothing on the end of it; whatever hauled the bucket up will presumably let it down again when it is done with it."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "examine bucket",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "The bucket is not here. It went up the shaft on its rope, and the rope is still here, taut, going up into the dark with nothing on the end of it that you can see. Whatever hauled it up will presumably let it down again when it is done with it, which, buckets being what they are, will be when it is dry. You could wait for it. It would be a long wait."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "enter bucket",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "refused",
+          "words": "The bucket is not here to get into. The rope is, and the rope is not the kind of thing one gets into."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "get in",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The bucket is not here to get into. It is at the other end of the rope."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "climb rope",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The rope is wet, and the well is deep, and you are not a sailor. You get a little way up it, which is to say your feet leave the floor, and then they find it again, rather suddenly. The rope is for the bucket."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "score",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Your score is 20 (total of 400 points), in 31 moves."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "This score gives you the rank of Beginner."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "wait",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Time passes... The rope stays taut, and the bucket stays up wherever it has gone. It came down once, so it will presumably come down again; you could wait for the bucket, and it would be a long wait."
+        },
+        {
+          "level": "info",
+          "text": "passes: 90 seconds"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "score",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Your score is 20 (total of 400 points), in 34 moves."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "This score gives you the rank of Beginner."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "wait for bucket",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "You wait. It is a long wait, and the rope stays taut through all of it, and the dark overhead has nothing to say; and then, a good deal later, the rope creaks."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "The wooden bucket comes down the shaft on its rope and settles on the floor."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "look",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Circular Room"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "score",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Your score is 20 (total of 400 points), in 128 moves."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "This score gives you the rank of Beginner."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "wait for bucket",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The bucket is here. It is you that is keeping it waiting."
+        }
+      ]
+    }
   ]
 }

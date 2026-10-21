@@ -10,7 +10,7 @@ import {Person} from 'person'
 import {Adventurer} from 'adventurer'
 import {go} from 'sprout'
 import {inside_barrow} from 'way_in'
-import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :room_sealed, :poisoned, :hurry} from 'verbs'
+import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize} from 'verbs'
 
 world underground_caverns_2 is sprout.World {
   visitors are Person
@@ -32,8 +32,12 @@ world underground_caverns_2 is sprout.World {
   pass :zoom (true)
   pass :room_sealed (true)
   pass :poisoned (true)
-  // The bucket, waited for from the bottom of the well while it is at the top.
-  pass :hurry (true)
+  // The bucket's comings and goings, counted by every visitor wherever
+  // they are; and the Fantasize spell, heard by every room's illusion.
+  pass :bucket_up (true)
+  pass :bucket_down (true)
+  pass :bucket_dry (true)
+  pass :fantasize (true)
 
   on :open_gate (from) {
     self.set(:gate, true)

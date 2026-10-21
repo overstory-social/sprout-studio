@@ -113,6 +113,9 @@ kind Fillable is Thing {
 kind Pourable is Thing { }
 kind Sprayable is Thing { }
 kind Vessel is Thing { }
+// What can be waited for: the bucket, and its stand-in at the end of the
+// well it has left.
+kind Awaited is Thing { }
 kind Orderable is Thing { }
 kind Wishing is Thing { }
 kind Crossable is Thing { }

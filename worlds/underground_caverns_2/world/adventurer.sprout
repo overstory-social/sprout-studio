@@ -17,12 +17,12 @@ import {Weapon, Sword, Treasure, Food, Water, StreamWater, Teapot, Repellent, Sp
 import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike} from 'room'
 import {go, look, examine, inventory, wait, help} from 'sprout'
 import {ask} from 'sprout'
-import {take, take_from, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, wait_for_bucket, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant, sleep, Dest, Spell, Mode, Answer, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten, :hurry, :brief_hint} from 'verbs'
+import {take, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, wait_for, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant, sleep, Dest, Spell, Mode, Answer, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :wizard_near, :brief_hint} from 'verbs'
 import {inside_barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, Bridge, Chasm, Moss} from 'way_in'
 import {garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, elsewhere, Unicorn, DistantUnicorn, GardenNorth, TopiaryRoom, Elsewhere, NearCarousel, GoldKey, GazeboInside} from 'garden'
 import {carousel_room, room_8, CarouselRoom} from 'carousel'
 import {riddle_room, pearl_room, RiddleRoom, StoneDoor} from 'riddle'
-import {well_bottom, well_top, tea_room, Bucket, WellTopMouth, TeaRoom, WellTop, WellBottom} from 'well'
+import {well_bottom, well_top, tea_room, Bucket, MissingBucket, WellTopMouth, TeaRoom, WellTop, WellBottom} from 'well'
 import {posts_room, pool_room, Pool, PoolRoom} from 'posts'
 import {low_room, machine_room, dingy_closet, Robot, CagePlace, LowRoom, MachineRoom, Closet} from 'machine'
 import {Wizard, Fence, enchant} from 'wizard'
@@ -78,19 +78,24 @@ kind Adventurer is sprout.Visitor {
   :topiary 0 min 0 max 2
   :sprayed false
   :spray_left 0 min 0 max 8
-  // Scratch for taking several things in one command; `:listing` while
-  // "take all from the table" takes each thing on it by name.
+  // Scratch for taking several things in one command.
   :carry 0 min 0 max 900
   :fresh 0 min 0 max 50
   :nested false
-  :listing false
   :fumbled false
   :filching false
   // Scratch for the eat-me cake: which way the wonderland goes.
   :growing false
-  // Looking, or arriving: when the Fantasize spell shows something that is
-  // not there (DESCRIBE-OBJECTS).
-  :peeking false
+  // How many times Fantasize has been cast on them: each casting is a
+  // number, and every room's illusion rolls itself once for it.
+  :fantasy 0 min 0 max 100000
+  // The bucket's hundred moves (I-BUCKET), counted here, since the bucket
+  // at the top of the well is out of everyone's reach and nothing but a
+  // visitor's command is a move: while it is up with water in it, every
+  // command counts one off, and at nought the water dries and it comes
+  // down. Waiting for it brings the count to nought at a stroke.
+  :bucket_away false
+  :bucket_wait 0 min 0 max 100
   // What the sword in hand was last told to glow (I-SWORD), kept here as
   // well as on the sword: a message to the sword is queued, so two
   // settlings in one turn would both find it unchanged and say so twice.
@@ -148,11 +153,14 @@ kind Adventurer is sprout.Visitor {
     if (self.get(:aside)) { self.set(:aside, false) }
     else if (!self.get(:finished)) {
       self.adjust(:moves, 1)
-      // Fantasize (DESCRIBE-OBJECTS): one time in five, something that is
-      // not there, wherever the room is described.
-      if (self.get(:peeking)) {
-        self.set(:peeking, false)
-        if (self.get(:spell) == :fantasize && random(5) == 0) { say "There is a {one of}pile of jewels{or}gold ingot{or}basilisk{or}bulging chest{or}yellow sphere{or}grue{or}convention of wizards{or}copy of ZORK I{/one of} here." }
+      // The bucket's count (I-BUCKET): one move off, and at nought the
+      // water dries and the bucket comes down, this turn.
+      if (self.get(:bucket_away)) {
+        if (self.get(:bucket_wait) > 0) { self.adjust(:bucket_wait, -1) }
+        if (self.get(:bucket_wait) == 0) {
+          self.set(:bucket_away, false)
+          broadcast :bucket_dry
+        }
       }
       // The repellent wearing off (I-SPRAY).
       if (self.get(:sprayed)) {
@@ -249,8 +257,14 @@ kind Adventurer is sprout.Visitor {
       each f: Fence in here { send f :consume }
       tell self "There is a faint pop, as of something invisible giving way, and the fence that was round you is gone."
     }
-    else if (s == :fantasize) { tell self "The room, which had been looking a little odd round the edges, settles down and is only a room." }
+    else if (s == :fantasize) {
+      broadcast :fantasize with 0
+      tell self "The room, which had been looking a little odd round the edges, settles down and is only a room."
+    }
   }
+  // The bucket, up with water in it, and down again.
+  on :bucket_up { self.set(:bucket_away, true)  self.set(:bucket_wait, 100) }
+  on :bucket_down { self.set(:bucket_away, false)  self.set(:bucket_wait, 0) }
 
   // The Wizard's spell, cast at them by his own act (I-WIZARD): what it
   // does at once, and the hint of what it will do.
@@ -259,7 +273,11 @@ kind Adventurer is sprout.Visitor {
       if (actor.is(Wizard)) {
         let s = actor.get(:spell)
         self.set(:spell, s)
-        self.set(:spell_left, 3 + random(16))
+        // Five to thirty-five moves (I-WIZARD), three to eighteen minutes
+        // at half a minute a move; in the first thirty moves of play, the
+        // shortest of them, so a short first visit is not all spell.
+        if (self.get(:moves) < 30) { self.set(:spell_left, 3) }
+        else { self.set(:spell_left, 3 + random(16)) }
         cancel wakes
         wake in (self.get(:spell_left)) minutes
         if (s == :feeble) {
@@ -307,6 +325,11 @@ kind Adventurer is sprout.Visitor {
           // felt in the meantime.
           spawn Fence in here
           tell self "The air round you stiffens, very slightly, as though the room had been shrink-wrapped with you in it."
+        } else if (s == :fantasize) {
+          // Every room's illusion rolls itself for this casting, and keeps
+          // what it rolled until the spell ends.
+          self.adjust(:fantasy, 1)
+          broadcast :fantasize with self.get(:fantasy)
         }
       }
     }
@@ -377,7 +400,6 @@ kind Adventurer is sprout.Visitor {
       if (self.get(:spell) == :fence) { refuse fence }
     }
     do {
-      self.set(:peeking, true)
       if (self.get(:in_bucket) && !here.is(Bucket)) {
         self.set(:in_bucket, false)
         say "You are on your own feet again."
@@ -489,16 +511,13 @@ kind Adventurer is sprout.Visitor {
       else { send self :settle with 0 }
     }
   }
-  on :arrived (actor, from) {
-    if (actor.is(Wizard)) { send self :settle with 2 }
-    else if (actor.is(Unicorn)) { send self :settle with 2 }
-  }
-  on :departed (actor, to) {
-    if (actor.is(Wizard) || actor.is(Unicorn)) {
-      if (here.is(GardenNorth) && self.get(:unicorn_home) && here.count(Unicorn) > 0) { send self :settle with 2 }
-      else if (here.is(Garden) && !here.is(TopiaryRoom) && self.get(:unicorn_home)) { send self :settle with 1 }
-      else { send self :settle with 0 }
-    }
+  // The Wizard, appeared beside them or gone (I-SWORD): told by him, since
+  // a visitor reads an arrival's line and is sent no `:arrived`.
+  on :wizard_near (from, value) {
+    if (value) { send self :settle with 2 }
+    else if (here.is(GardenNorth) && self.get(:unicorn_home) && here.count(Unicorn) > 0) { send self :settle with 2 }
+    else if (here.is(Garden) && !here.is(TopiaryRoom) && self.get(:unicorn_home)) { send self :settle with 1 }
+    else { send self :settle with 0 }
   }
   on :settle (from, value) {
     each s: Sword in self {
@@ -519,6 +538,7 @@ kind Adventurer is sprout.Visitor {
     else {
       self.adjust(:score, -10)
       self.adjust(:deaths, 1)
+      if (self.get(:spell) == :fantasize) { broadcast :fantasize with 0 }
       self.set(:spell, :none)
       self.set(:spell_left, 0)
       cancel wakes
@@ -627,7 +647,7 @@ kind Adventurer is sprout.Visitor {
     do {
       self.set(:carry, self.get(:load))
       self.set(:fresh, 0)
-      let several = target.count > 1 || self.get(:listing)
+      let several = target.count > 1
       each t of target {
         if (t.is(Thing)) {
           self.set(:nested, false)
@@ -714,18 +734,6 @@ kind Adventurer is sprout.Visitor {
         }
         else { say yuk }
       } }
-    }
-  }
-
-  // "take all from the table": each thing on it, taken by name (friction 36).
-  as actor for take_from { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
-    do {
-      if (container.count(Portable) == 0) { say "There is nothing on the {container.short} to take." }
-      else {
-        self.set(:listing, true)
-        each p: Portable in container { act take (target: p) }
-        self.set(:listing, false)
-      }
     }
   }
 
@@ -902,14 +910,20 @@ kind Adventurer is sprout.Visitor {
   as actor for curse { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "Such language in a high-class establishment like this!" } }
   as actor for incant { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "You don't have a wand, and without one the word comes out as a sort of cough. Nothing happens." } }
   as actor for sleep { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "The Wizard's domain is no place for a nap. Things happen to people who nap here." } }
-  as actor for look       { permit { if (self.get(:spell) == :freeze) { refuse frozen } } do { self.set(:peeking, true) } }
-  // The bucket, examined from inside it: its `describe` cannot tell
-  // `examine` from `look`, so the examining is refused with the bucket's
-  // own words (friction 30).
-  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen }  if (here.is(Bucket) && target == here) { refuse bucket_close_up } } }
-  passage bucket_close_up { {if here.is(Bucket)}{here.examined}{/if} }
+  as actor for look       { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for inventory  { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for wait       { permit { if (self.get(:finished)) { refuse over } } }
+  // Zork's WAIT is three moves: the clock passes three of them, counted,
+  // and the bucket's count with it.
+  as actor for wait       { permit { if (self.get(:finished)) { refuse over } }
+    do {
+      pass 90 seconds
+      self.adjust(:moves, 2)
+      if (self.get(:bucket_away)) {
+        if (self.get(:bucket_wait) > 2) { self.adjust(:bucket_wait, -2) } else { self.set(:bucket_wait, 0) }
+      }
+    }
+  }
   as actor for open       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for close      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for read       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
@@ -1058,30 +1072,30 @@ kind Adventurer is sprout.Visitor {
       else { say "You're not in anything, unless you count the Wizard's domain, and there is no getting out of that." }
     }
   }
-  // Waiting for the bucket to come down (friction 37): the hundred moves
-  // Zork's player waited through, at a stroke, and counted.
-  as actor for wait_for_bucket { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  // Waiting for the bucket: at the bottom while it is up, the hundred
+  // moves Zork's player waited through, at a stroke and counted; the count
+  // goes to nought, and the bucket comes down in this turn's reckoning.
+  as actor for wait_for { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
-      if (here.is(WellBottom)) {
-        if (here.count(Bucket) > 0) { say "The bucket is here. It is you that is keeping it waiting." }
-        else {
+      if (target.is(MissingBucket)) {
+        if (here.is(WellBottom) && self.get(:bucket_away)) {
           say "You wait. It is a long wait, and the rope stays taut through all of it, and the dark overhead has nothing to say; and then, a good deal later, the rope creaks."
-          self.adjust(:moves, 99)
-          broadcast :hurry
+          self.adjust(:moves, self.get(:bucket_wait) - 1)
+          self.set(:bucket_wait, 0)
         }
-      }
-      else if (here.is(WellTop)) {
-        if (here.count(Bucket) > 0) { say "The bucket is here, and if anything is waiting for you." }
+        else if (here.is(WellBottom)) { say "You wait. The rope stays taut, and the bucket stays where it is, which is not here, and nothing suggests that will change: there is nothing in it to dry." }
         else { say "The bucket goes up for water, not for company, and there is no water in it down there. You could wait a long time." }
       }
       else if (here.is(Bucket)) { say "You are in it. Waiting for it would be a philosophical exercise." }
-      else { say "There is no bucket here to wait for." }
+      else if (here.is(WellTop)) { say "The bucket is here, and if anything is waiting for you." }
+      else { say "The bucket is here. It is you that is keeping it waiting." }
     }
   }
   as actor for get_in_bare { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (here.count(Bucket) > 0) { each b: Bucket in here { act board (target: b) } }
       else if (here.is(Bucket)) { say "You are already in the wooden bucket!" }
+      else if (here.count(MissingBucket) > 0) { say "The bucket is not here to get into. It is at the other end of the rope." }
       else { say "There is nothing here to get into." }
     }
   }

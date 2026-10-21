@@ -34,7 +34,13 @@ much the product as the rooms are.
   rolls; all twelve spells are cast, though some
   (Fireproof, Fierce) have little to bite on until the dragon and the
   fuse arrive. What he steals (Filch) goes to a stash that will become his
-  Trophy Room's case in round 7.
+  Trophy Room's case in round 7. After round 2.5, by the director's
+  steering over my fidelity objections: his first call is certain, the
+  first time his clock finds a visitor out of the barrow (the Narrow
+  Tunnel or the bridge, in play), and he casts one of Feeble, Fumble and
+  Fantasize, so the walk in has something in it besides walking; and in a
+  visitor's first thirty moves he never casts Fence or Freeze, and any
+  spell lasts the shortest three minutes.
 - **The unicorn is in**, since it is the garden's own and the sword glows
   for it; the gold key round its neck stays round its neck until the
   princess (round 3) can ask for it. After round 1, when three runs hunted
@@ -61,7 +67,15 @@ much the product as the rooms are.
   (its hundred moves are a hundred commands here, friction 37), "wait
   for the bucket" at the bottom of the well passes the hundred at a
   stroke, counts them on the score line, and brings it down empty. The
-  loss is still Zork's loss; only the waiting is shorter.
+  loss is still Zork's loss; only the waiting is shorter. After round
+  2.5, with the language's `pass`: plain "wait" is Zork's three moves,
+  ninety seconds of the clock, so the Wizard comes to whoever waits; the
+  bucket's hundred is a count of commands, three to a wait, and thirty-four
+  waits bring it down; and the bucket poured into from outside strains at
+  its rope for one move before it goes, and says so, so that whoever
+  poured has one move to climb in. Its name stays behind at the end of the
+  well it has left, so "enter bucket", "examine bucket" and "wait for
+  bucket" are answered in voice while it is away.
 - **The carousel tells, a little.** Its draw is Zork's, but after round
   2 "examine passages" says the southeast one climbs toward a draught
   that smells of brick, and after the room has thrown a visitor out
@@ -128,7 +142,11 @@ much the product as the rooms are.
    with no word of the fence going had no reason to try the door again.
    Fence puts a fence in the room that can be examined, pushed and walked
    into, and says it will not last. A spell is timed by the clock rather
-   than by moves, so that one which refuses every move still runs out.
+   than by moves, so that one which refuses every move still runs out;
+   "wait" runs the clock ninety seconds. Fantasize, after round 2.5, is
+   not Zork's one-in-five flicker on every description: each room rolls
+   once when the spell is cast, one room in two gets one of the eight,
+   and it stays listed with what is really there until the spell ends.
 
 "Done", for this quarter, is: the riddle answered, the well risen, the
 pearl, the candy, the sphere and the violin taken (85 of Zork II's 400),
@@ -153,7 +171,8 @@ the princess, the wand (30) for the Wizard's own rooms.
   built), and everything else to the gazebo; the third death is the end.
 - **The sword glows** blue near the unicorn and brightly when the Wizard
   stands in the room, as `I-SWORD` has it; it is the only warning of
-  either.
+  either. (It never did glow for the Wizard before round 2.5: a visitor is
+  sent no `:arrived`, friction 40; he tells the sword himself now.)
 - **The cakes crumble** carried out of the wonderland, so the flask must
   be read in the Pool Room, not in the lamp-light of the Carousel.
 - **The bucket keeps the water**: climb in before pouring, or watch it go
@@ -168,7 +187,10 @@ the princess, the wand (30) for the Wizard's own rooms.
   goes up with what is in it and without what is not; "wait" at the
   bottom while it is up says the wait is possible and long; "wait for
   the bucket" does it; and the rope, climbed or pulled at either end,
-  answers in voice.
+  answers in voice. After round 2.5 the pour from outside is warned
+  before it costs: the rope goes taut and the bucket lifts at one side
+  and "has not gone yet", and a visitor who climbs in on that move rises
+  with it.
 - **The topiary animals** move when the visitor has stood too long among
   them, and close in, and then attack. Leave when they move. Each of
   them (the dragon, the serpent, the dog, the human figures) has a
@@ -176,8 +198,12 @@ the princess, the wand (30) for the Wizard's own rooms.
   unicorn among them is hedge, and says so.
 - **The Fantasize spell's things** ("There is a basilisk here.") are
   every room's own, beside the grue: reaching for one is answered in the
-  narrator's voice, differently while the spell is on and after, so a
-  player can tell an illusion from a parser failure (round 2's P5).
+  narrator's voice, so a player can tell an illusion from a parser
+  failure (round 2's P5). Since round 2.5 each stays put for the length
+  of the spell, listed on arrival and on "look", and a room's illusion
+  answers to its words only while it is shown; the yellow sphere beside
+  the closet's real one is a coin-toss on "take sphere", which is the
+  Wizard's joke and not mine.
 - **Brief mode is Zork's**: a room seen again is named and no more. The
   first time it happens, one parenthetical line says LOOK, VERBOSE and
   BRIEF, and is not said again.

@@ -1,0 +1,361 @@
+{
+  "about": "The Wizard's first call comes for certain on his first clock after the visitor leaves the barrow, here on the second 'wait' (three moves and ninety seconds each); he casts Fantasize, and each room's illusion holds for the length of the spell, listed on arrival and on 'look', and is gone when it ends, which in the first thirty moves is three minutes.",
+  "steps": [
+    {
+      "seed": 4
+    },
+    {
+      "arrive": "Marta",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Inside the Barrow"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "A strangely familiar brass lantern is lying on the ground."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "A sword of Elvish workmanship is on the ground."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take lamp",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take sword",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "turn on lamp",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The lamp is now on."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Narrow Tunnel"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "score",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Your score is 0 (total of 400 points), in 4 moves."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "This score gives you the rank of Beginner."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "wait",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Time passes..."
+        },
+        {
+          "level": "info",
+          "text": "passes: 90 seconds"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "score",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Your score is 0 (total of 400 points), in 7 moves."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "This score gives you the rank of Beginner."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "wait",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Time passes..."
+        },
+        {
+          "level": "info",
+          "text": "passes: 90 seconds"
+        },
+        {
+          "level": "info",
+          "text": "elsewhere.wizard woke, 120 seconds after it asked"
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "The Wizard, in a deep and resonant voice, speaks the word \"Fantasize!\" He then vanishes, cackling gleefully."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "Your sword has begun to glow very brightly."
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "Your sword is no longer glowing."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "look",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Narrow Tunnel"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "There is a yellow sphere here."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "examine sphere",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "refused",
+          "words": "Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Foot Bridge"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Great Cavern"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "There is a copy of ZORK I here."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "look",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Great Cavern"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast."
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "There is a copy of ZORK I here."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take book",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "refused",
+          "words": "Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "n",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "notice",
+          "words": "You can't go that way."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "s",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "notice",
+          "words": "You can't go that way."
+        }
+      ]
+    },
+    {
+      "advance": "3 minutes",
+      "expect": [
+        {
+          "level": "info",
+          "text": "elsewhere.wizard woke, 120 seconds after it asked"
+        },
+        {
+          "level": "info",
+          "text": "underground_caverns_2#1 woke, 180 seconds after it asked"
+        },
+        {
+          "reader": "Marta",
+          "kind": "told",
+          "words": "The room, which had been looking a little odd round the edges, settles down and is only a room."
+        },
+        {
+          "level": "info",
+          "text": "elsewhere.wizard woke, 120 seconds after it asked"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "look",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "Great Cavern"
+        },
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "examine book",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "notice",
+          "words": "You can't see any such thing."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "score",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Your score is 0 (total of 400 points), in 15 moves."
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "This score gives you the rank of Beginner."
+        }
+      ]
+    }
+  ]
+}

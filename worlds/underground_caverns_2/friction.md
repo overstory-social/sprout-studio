@@ -38,6 +38,10 @@ caverns' numbers are written "caverns N"._
   play nothing passes the clock but an `advance` step, so a frozen tester
   is frozen until the script advances it.
 - **Spec:** Verbs › After a command; Time › Wakes.
+- **After round 2.5:** `wait` passes ninety seconds (friction 37), so a
+  frozen visitor who waits sees the spell run out in two to twelve waits;
+  and in a visitor's first thirty moves a spell lasts the shortest three
+  minutes and is never Freeze or Fence (round 2's P14).
 
 ### 3. No `as actor for any`
 
@@ -69,6 +73,11 @@ caverns' numbers are written "caverns N"._
   interactive play with no clock he never comes, and a visitor who stands
   still is visited as often as one who walks.
 - **Spec:** Actors and visitors (`roams`); Events › Sending; Time › Wakes.
+- **After round 2.5:** `wait` passes the clock, so in interactive play he
+  comes to whoever waits; and his first call is not a roll: the first time
+  his clock finds a visitor out of the barrow he appears and casts one of
+  Feeble, Fumble and Fantasize (round 1's P15, a departure from I-WIZARD's
+  one in ten, the director's).
 
 ### 5. An NPC's `say` is reported speech
 
@@ -274,6 +283,10 @@ caverns' numbers are written "caverns N"._
 - **Wrote instead:** the adventurer rolls it in `after command` after a
   `look` or a move, and says it after the room.
 - **Spec:** Chance › Where chance is forbidden; Prose › Slots.
+- **After round 2.5:** nothing rolls at render time. Each room's illusion
+  rolls itself once, in its handler for `:fantasize`, when the spell is
+  cast, and is listed by the room's own description until the spell ends
+  (round 1's P6).
 
 ### 22. A Thing's default comes back by a second route
 
@@ -311,7 +324,11 @@ caverns' numbers are written "caverns N"._
 
 - Caverns 20 again: the garden's clock is the adventurer's `after
   command`, so "The unicorn bounds lightly away." reads before the room
-  on `look`. **Spec:** Verbs › After a command.
+  on `look`. **Spec:** Verbs › After a command. The
+  bucket's going is the same: it leaves on the move after it was poured
+  into from outside, from the Circular Room's `after command`, so when
+  that move is `look`, "The bucket swiftly rises up, and is gone." reads
+  before the room.
 
 ### 28. `:unseen` is the library's, and was not used
 
@@ -320,6 +337,9 @@ caverns' numbers are written "caverns N"._
   cage until it falls better than the refusing `as target for any` permit
   this world uses for them. Left as is this round; worth adopting.
   **Spec:** The world model › Unseen.
+- **After round 2.5:** adopted for the illusion: `:unseen` while it shows
+  nothing, so its words name nothing then, and the closet's crystal sphere
+  is never shadowed by a yellow one that is not there.
 
 ## After round 1
 
@@ -351,6 +371,15 @@ caverns' numbers are written "caverns N"._
   bucket's `examined`; the refusal reads as the description, and counts
   as one in the host's figures.
 - **Spec:** Prose › Describing (`seen`).
+- **Answered by the language (Sprout 9bfb5add):** `seen` has a fourth
+  value, `:examine`, given for `examine X` and `look at X` of anything, the
+  reader's own place included. The bucket's `describe` renders `viewed`,
+  which reads `{if seen == :examine}` for the bucket's own words and the
+  well seen from it otherwise; the adventurer's refusal and its
+  `bucket_close_up` passage are gone, and `examine bucket` from inside is
+  a description, not a refusal (round 2's P11). No `seen == :look` was
+  written anywhere in this world meaning "examined"; the rooms read
+  `:arrival` only. Tested in `bucket_strain.json`.
 
 ### 31. Declared contents are never `:entered`
 
@@ -420,6 +449,16 @@ caverns' numbers are written "caverns N"._
   is a thing of its own, spawned into the room with the spell and
   destroyed with it, that can be examined, pushed and walked into.
 - **Spec:** Parsing › When nothing matches; Range.
+- **Answered by the language (Sprout 9bfb5add):** a known verb with a noun
+  that names nothing in reach is `not_here`, whatever the noun's words.
+  The Elsewhere scenery went in round 2, when the illusion became every
+  room's own for its voice (round 2's P5); nothing of this workaround
+  remains. The illusion object stays, but for what the language does not
+  give: it carries the fixed illusion (round 1's P6) and answers a touch of
+  something the room lists in the narrator's voice; it is `:unseen` while
+  it shows nothing, so a word for a thing never shown is the parser's
+  "You can't see any such thing.", which is now also Zork's answer. The
+  fence stays a thing, for the same reason.
 
 ## After round 2
 
@@ -438,6 +477,17 @@ caverns' numbers are written "caverns N"._
   take`, with `:listing` set so each answers with its name before it, as
   Zork's does. "take all cakes" stays `unknown`.
 - **Spec:** Parsing › Sequences, again and all; Matching a line.
+- **Answered by the language (Sprout 9bfb5add):** `all` narrows by a noun
+  and by `from`, `off`, `out of`, `in` or `on` a thing. `take_from` and the
+  adventurer's `:listing` are removed; `take all from the table`, `take
+  everything off the table except the newspaper`, `take all newspapers`
+  and `take all cakes` are read by `take` as written, and the adventurer's
+  own several-things part names each ("Newspaper: Taken."). One difference
+  stays: a narrowed `all` that leaves nothing (the table empty) is the
+  spec's `not_here`, "You can't see any such thing.", where Zork says there
+  is nothing here to take; a line the parser answers reaches no `do`, so
+  the world cannot say its own line there. Tested in `take_all.json` and
+  the walkthrough.
 
 ### 37. A hundred moves is a hundred commands, and nothing in the world can run the clock
 
@@ -462,6 +512,22 @@ caverns' numbers are written "caverns N"._
   lie about what ran.
 - **Spec:** Time › Wakes; Verbs › Engine verbs (`wait`); Prose › Engine
   lines (`waited`).
+- **Answered by the language (Sprout 9bfb5add):** `pass`. Plain `wait` is
+  the adventurer's part of `wait` with `pass 90 seconds`, Zork's three
+  moves at half a minute each, and counts three on the score line; the
+  wakes due in the pass are delivered, so a visitor who waits is visited
+  by the Wizard and sees a spell run out. The bucket's hundred moves are a
+  count now, not a wake: an `after command` of the adventurer's lowers it
+  one a command (three for a `wait`) and at nought broadcasts
+  `:bucket_dry`, which the bucket at the top answers by drying its water
+  and coming down in that turn (`bucket_count.json`: thirty-four waits).
+  "wait for the bucket" is `wait_for`, a verb typed by `Awaited`, which the
+  bucket composes and so does the stand-in that holds its name at the end
+  of the well it has left, so the phrase reads only near the well; it
+  brings the count to nought, adds what remained to the moves, and the
+  bucket's arrival is told in the same turn (`bucket_wait.json`).
+  `wait_for_bucket` and `:hurry` are gone. What the language still does not
+  give is the bucket counting for itself (friction 41).
 
 ### 38. The article before a value is dropped after all (amends 32)
 
@@ -483,3 +549,41 @@ caverns' numbers are written "caverns N"._
   other side: a verb with two participants that both have something to
   say says it twice.
 - **Spec:** Verbs › Playing a role; The two passes.
+
+## After round 2.5
+
+### 40. A visitor is sent no `:arrived`
+
+- **Wanted:** I-SWORD: the sword glows very brightly when the Wizard is in
+  the room. The adventurer's `on :arrived (actor, from)` set the glow when
+  he appeared and `on :departed` cleared it.
+- **Found:** neither ever ran. When an actor enters a place "every visitor
+  in range of the place reads the `arrives` line, every *other* object in
+  range of it is sent `:arrived`": a visitor reads the line and is not sent
+  the message, and the Wizard's `arrives` line is empty by design, since
+  his appearance is told in his own words. Two rounds of play never saw
+  the sword answer him.
+- **Wrote instead:** the Wizard says so himself: `:wizard_near with
+  boolean`, sent to the visitor he has come to once he stands beside them,
+  and to each visitor in the room as he vanishes; the adventurer sets the
+  glow from it, as it did from the dead handlers.
+- **Spec:** Movement and consent › Places (`arrives`, `:arrived`); Prose ›
+  Engine lines.
+
+### 41. The bucket cannot count its own moves
+
+- **Wanted:** I-BUCKET on the bucket: the bucket at the top of the well
+  counts a hundred moves and comes down.
+- **Found:** `after command` runs for "what they carry, …; then the
+  visitor; then each container that holds them, out to the world". The
+  bucket at the top holds nobody standing at the bottom, so its own `after
+  command` runs only while someone rides it; and the Circular Room's
+  cannot reach a sibling room's bucket (friction 13). Nothing but a
+  visitor's command is a move, and only what holds the visitor hears one.
+- **Wrote instead:** the count is the adventurer's: the bucket broadcasts
+  `:bucket_up` as it arrives at the top and `:bucket_down` as it settles at
+  the bottom, each visitor keeps `:bucket_wait` and lowers it, and at
+  nought broadcasts `:bucket_dry` back. With two visitors there would be
+  two counts, and the first to reach nought would bring the bucket down;
+  the brief's world is played alone.
+- **Spec:** Verbs › After a command; Range.
