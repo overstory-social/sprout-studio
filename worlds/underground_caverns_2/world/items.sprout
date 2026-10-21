@@ -516,7 +516,7 @@ kind BlueCake is Cake {
   grammar { name "cake frosted with blue letters"  nouns "cake", "icing", "cakes", "letters", "letter"  adjectives "blue", "frosted" }
   passage short { cake frosted with blue letters }
   passage letters { Enlarge }
-  describe { text "It is a small round cake, iced white, with a word piped on top in blue letters too small to read with the naked eye. It smells faintly of almonds." }
+  describe { text "It is a small round cake, iced white, with a word piped on top in blue letters too small to read with the naked eye. It smells faintly of almonds. It is small enough to pocket, which, for a cake laid beside one marked Eat Me, may be the point of it." }
 }
 kind OrangeCake is Cake {
   grammar { name "cake frosted with orange letters"  nouns "cake", "icing", "cakes", "letters", "letter"  adjectives "orange", "frosted" }
@@ -582,7 +582,9 @@ kind Sphere is Treasure {
   without as target for look_in from Thing
   as target for look_in { do { say "You see only darkness." } }
   on :poisoned { self.set(:gone, true)  self.set(:ndesc, true) }
+  on :lost { self.set(:gone, true)  self.set(:ndesc, true)  self.set(:unseen, true) }
 }
+message :lost
 
 // What the robot leaves of the cage (MANGLED-CAGE).
 kind MangledCage is Portable {
@@ -619,11 +621,11 @@ kind Matchbook is Readable, Light {
   :size 2
   :burnable true
   :matches 6 min 0 max 6
-  :burning 0 min 0 max 2
+  :burning_for 0 min 0 max 2
   without as target for lamp_on from Switchable
   without as target for lamp_off from Switchable
-  without as target for burn from Thing
   without as target for count_things from Thing
+  :fuel 40
   passage short { matchbook }
   passage ldesc { There is a matchbook saying "Visit ZORK I" here. }
   describe { text "It is a paper matchbook, the cover printed \">> Visit Exotic ZORK I <<\", with {if self.get(:matches) == 0}no matches left in it{else if self.get(:matches) == 1}one match left in it{else}{self.get(:matches)} matches in it{/if}.{if self.get(:lit)} A match is burning.{else} No match is burning.{/if}" }
@@ -633,26 +635,13 @@ kind Matchbook is Readable, Light {
     Consult the Frobozz Magic Travel Agency, or visit your local computer store for more details."
   }
   as target for lamp_on {
-    permit { if (self.get(:lit)) { refuse "A match is already burning." } }
-    do {
-      if (self.get(:matches) == 0) { say "I'm afraid you have run out of matches." }
-      else {
-        self.adjust(:matches, -1)
-        self.set(:lit, true)
-        self.set(:burning, 2)
-        say "One of the matches starts to burn."
-        if (actor.holds(self)) { send actor :light with 1 }
-      }
-    }
-  }
-  as target for burn {
     do {
       if (self.get(:lit)) { say "A match is already burning." }
       else if (self.get(:matches) == 0) { say "I'm afraid you have run out of matches." }
       else {
         self.adjust(:matches, -1)
         self.set(:lit, true)
-        self.set(:burning, 2)
+        self.set(:burning_for, 2)
         say "One of the matches starts to burn."
         if (actor.holds(self)) { send actor :light with 1 }
       }
@@ -660,13 +649,13 @@ kind Matchbook is Readable, Light {
   }
   as target for lamp_off {
     permit { if (!self.get(:lit)) { refuse "No match is burning." } }
-    do { self.set(:lit, false)  self.set(:burning, 0)  say "The match is out."  if (actor.holds(self)) { send actor :light with -1 } }
+    do { self.set(:lit, false)  self.set(:burning_for, 0)  say "The match is out."  if (actor.holds(self)) { send actor :light with -1 } }
   }
   as target for count_things { do { say "You have {if self.get(:matches) == 0}no matches{else if self.get(:matches) == 1}one match{else}{self.get(:matches)} matches{/if}." } }
   after command {
     if (self.get(:lit)) {
-      self.adjust(:burning, -1)
-      if (self.get(:burning) == 0) {
+      self.adjust(:burning_for, -1)
+      if (self.get(:burning_for) == 0) {
         self.set(:lit, false)
         say "The match has gone out."
         if (actor.holds(self)) { send actor :light with -1 }
@@ -716,6 +705,7 @@ kind Bills is Treasure, Readable {
   without as target for eat from Thing
   as target for eat { do { say "Talk about eating rich foods!" } }
   without as target for burn from Thing
+  without as target for burn from Portable
   as target for burn { do { say "Nothing like having money to burn!" } }
 }
 

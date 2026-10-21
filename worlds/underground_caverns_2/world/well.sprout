@@ -17,6 +17,7 @@ import {Water, EatMeCake, BlueCake, OrangeCake, RedCake} from 'items'
 import {Adventurer} from 'adventurer'
 import {pearl_room} from 'riddle'
 import {low_room, AbsentRobot} from 'machine'
+import {Zorkmid} from 'volcano'
 import {read, look_in, look_under, climb_up, climb_down, kick, burn, board, disembark, through, wish, put, throw, look_down, knock, pour_in, shift, Dest, :room_sealed, :open_gate, :gate_open, :close_gate, :die, :consume, :bucket_lift, :bucket_up, :bucket_down, :bucket_dry} from 'verbs'
 
 // What the bucket is about: nothing; straining at its rope, the move after
@@ -190,9 +191,16 @@ kind WellBottomWall is Scenery, Wishing {
   as target for look_in { do { say "You are in it. Looking up, the brick goes up until the dark takes it, and then there is only dark." } }
   as target for wish {
     do {
-      say "No one is listening."
+      self.set(:coin_here, false)
+      each z: Zorkmid in here { self.set(:coin_here, true) }
+      if (self.get(:coin_here)) {
+        say "A whispering voice replies: \"Water makes the bucket go.\" Unfortunately, wishing makes the coin go...."
+        each z: Zorkmid in here { send z :consume }
+      }
+      else { say "No one is listening." }
     }
   }
+  :coin_here false
 }
 kind WellTopMouth is Box, Wishing {
   grammar { name "well"  nouns "shaft", "mouth", "hole"  adjectives "magic", "brick" }

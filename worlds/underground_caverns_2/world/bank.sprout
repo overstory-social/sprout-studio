@@ -134,16 +134,18 @@ kind CurtainWall is Box, Scenery {
   as target for shift { do { if (self.get(:passes) && self.get(:active)) { say "As you try, your hand seems to go through it." } else { say "The wall does not move. It is a wall." } } }
   without as target for rub from Thing
   as target for rub { do { if (self.get(:passes) && self.get(:active)) { say "As you try, your hand seems to go through it." } else { say "Cold stone, and solid." } } }
+  // A bare "wall" names all four; the three that are only walls refuse
+  // here, so the reading that consents is the one that leads (round 5's
+  // P2, by the spec's Choosing a reading).
   without as target for through from Thing
   as target for through {
+    permit { if (!(self.get(:passes) && self.get(:active))) { refuse "You hit your head against the {self.get(:side)} wall as you attempt this feat." } }
     do {
-      if (self.get(:passes) && self.get(:active)) {
-        say "You feel somewhat disoriented as you pass through..."
-        send actor :curtain_back
-      }
-      else { say "You hit your head against the {self.get(:side)} wall as you attempt this feat." }
+      say "You feel somewhat disoriented as you pass through..."
+      send actor :curtain_back
     }
   }
+  passage shimmer { {if self.get(:passes) && self.get(:active)}The {self.get(:side)} wall shimmers, very faintly, the way the curtain in the Depository does.{/if} }
   without as target for look_in from Box
   as target for look_in { do { say "It is a wall. There is no inside to it that you can see." } }
   accept (item, from) {
@@ -215,17 +217,32 @@ kind Gnome is Creature, sprout.Actor {
   on :gnome_come { if (!here.is(SmallRoom)) { self.set(:unseen, false)  move self to small_room } }
   on :gnome_go { if (here.is(SmallRoom)) { move self to elsewhere } }
   on :gnome_vanish { if (here.is(SmallRoom)) { self.set(:unseen, true)  move self to elsewhere  self.set(:unseen, false) } }
-  object deposit_box is Box {
-    grammar { name "safety deposit box"  nouns "box"  adjectives "safety", "deposit" }
-    :open true
-    :ndesc true
-    :capacity 1000
-    passage short { safety deposit box }
-    passage examined { A safety deposit box, steel, with the Bank's crest on the lid and the gnome's hand on the box. }
-    describe { text examined }
-  }
+  object deposit_box is DepositBox
 }
 message :gnome_vanish
+
+// The gnome's safety deposit box (DEPOSIT-BOX): a treasure put in it is
+// the payment, as one handed to him is (round 5's P1: both sonnet runs
+// typed "put portrait in box", read "Done.", and were left shut in).
+kind DepositBox is Box {
+  grammar { name "safety deposit box"  nouns "box"  adjectives "safety", "deposit" }
+  :open true
+  :ndesc true
+  :capacity 1000
+  passage short { safety deposit box }
+  passage examined { A safety deposit box, steel, with the Bank's crest on the lid and the gnome's hand on the box. It is open, and it is empty, and the gnome is looking from it to you. }
+  describe { text examined }
+  accept (item, from) {
+    if (from.is(Adventurer) && !item.is(Treasure)) { refuse "\"I wouldn't put THAT in a safety deposit box,\" remarks the gnome with disdain, and holds the lid shut over it." }
+  }
+  on :entered (item, from) {
+    if (from.is(Adventurer) && item.is(Treasure)) {
+      tell from "The gnome carefully places the {item.short} in the deposit box. \"Let me show you the way out,\" he says, making it clear he will be pleased to see the last of you. Then, you are momentarily disoriented, and when you recover you are back at the Bank Entrance."
+      send from :travel with :bank_entrance
+      broadcast :gnome_vanish
+    }
+  }
+}
 
 kind BankSign is Scenery {
   grammar { name "sign"  nouns "signs", "notice", "lettering"  adjectives "two", "bank" }
@@ -357,6 +374,8 @@ object viewing_west is ViewingWest in underground_caverns_2 {
     "Remain here while the teller retrieves your safety deposit box. When you are finished, leave the box, and exit to the south. Safety deposit boxes cannot be removed from this room!
 
     Thank You for Banking at the Zork!"
+
+    {east_wall.shimmer}
   }
   object sign is ViewingSign
   object east_wall is EastWall { :room viewing_west  :passes true }
@@ -378,6 +397,8 @@ object viewing_east is ViewingEast in underground_caverns_2 {
     "Remain here while the teller retrieves your safety deposit box. When you are finished, leave the box, and exit to the south. Safety deposit boxes cannot be removed from this room!
 
     Thank You for Banking at the Zork!"
+
+    {west_wall.shimmer}
   }
   object sign is ViewingSign
   object east_wall is EastWall { :room viewing_east }
@@ -390,7 +411,7 @@ object small_room is SmallRoom in underground_caverns_2 {
   grammar { name "Small Room" }
   :id small_room
   :walls 10
-  passage body { This is a small, bare room with no distinguishing features. There are no exits from this room. }
+  passage body { This is a small, bare room with no distinguishing features. There are no exits from this room. {south_wall.shimmer} }
   object east_wall is EastWall { :room small_room }
   object west_wall is WestWall { :room small_room }
   object north_wall is NorthWall { :room small_room }
@@ -401,7 +422,7 @@ object vault is Vault in underground_caverns_2 {
   grammar { name "Vault" }
   :id vault
   :walls 10
-  passage body { This is the Vault of the Bank of Zork, in which there are no doors. }
+  passage body { This is the Vault of the Bank of Zork, in which there are no doors. {north_wall.shimmer} }
   object bills is Bills
   object east_wall is EastWall { :room vault }
   object west_wall is WestWall { :room vault }

@@ -1,0 +1,225 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "A world bug against Zork's GNOME-FCN: a treasure put in the box or given to the gnome is his fee, and he shows the visitor out to the Bank Entrance. Both longest sonnet runs ended on it."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "The Bank's own manner already names the curtain; naming the wall that still leads back, taking it for a bare \"walk through wall\", and reading \"Curtain Door Closed\" as the way back going dark are all in voice and in the brief's faithful-port spirit."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Taken the way the point's last sentence offers: Zork's SPHERE-FCN drops the cage on a robot that reaches for the sphere, so that is ported and the closet says so. With the cage lifted, the robot now lists what it holds, answers for it, and hands it over on request."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The stand-in catches a go order from the next room in voice, and the robot answers an inventory order with what it holds. Where the language would not reach, it is in friction."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Three runs quit at the Carousel for want of a thing to do. The hook now names the pearls behind a door that asks a question, and the room that will not keep still; the Carousel's first throw says once, in the narrator's voice, that the floor has been turning and that what turns can be stopped. Zork's text is untouched."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Zork's mechanics kept, with a tell in its voice: the Posts Room says the roof is out of reach, the blue cake's close-up says it is small enough to pocket, and the refusal says it is the hands that are full."
+    },
+    {
+      "answers": "P7",
+      "decision": "reject",
+      "reason": "A leading article is already dropped before the word (friction 38, verb say_well); \"a well\" and \"the well\" open the door. What both opus runs typed was a quoted answer, say \"a well\", and `sprout parse` reads any quoted word as unbound, so no world text can match it. That is a language gap, logged as friction 57, not a world change."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "A clock bug: the garden's clock now holds the unicorn for the move a visitor arrives at the north end, so a unicorn the room lists is not announced arriving in the same breath."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Filch counts what it takes and says \"Several things\" when more than one goes; the first vanish-on-touch names the Wizard's word as the cause, so the spell is told from the Bank."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The brief's scope and the steering both name round 5 for the third quarter. The volcano and the Menhir are built, the Cobwebby Corridor with them (it is between two third-quarter places and holds the fuse), and intent.md says so."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "The director's steering. Every round 4 point was re-checked in play and in the tests, the partial ones finished where round 5's runs found them again (P1, P2, P3, P4, P8), and the world widened to Q3."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The Gnome of Zurich takes a treasure handed to him or put in his box, deposits it, and shows the visitor out to the Bank Entrance; junk is tossed over his shoulder with a pop. Both commands are played in gnome.json and walkthrough.json.",
+      "files": [
+        "worlds/underground_caverns_2/world/bank.sprout",
+        "worlds/underground_caverns_2/world/box.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/tests/gnome.json",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P1",
+        "S1"
+      ]
+    },
+    {
+      "what": "While a pass is open the room beyond the curtain says which wall shimmers, in the Depository's manner; a bare \"walk through wall\" takes that wall rather than drawing among four; \"Curtain Door Closed\" now says the way back has gone dark. New test bank_walls.json.",
+      "files": [
+        "worlds/underground_caverns_2/world/bank.sprout",
+        "worlds/underground_caverns_2/world/room.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/bank_walls.json",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P2",
+        "S1"
+      ]
+    },
+    {
+      "what": "SPHERE-FCN ported: a robot sent for the sphere before the cage is lifted is caged, the sphere is under it for good, and the visitor's first life ends as Zork ends it. With the cage lifted, the robot's room line and close-up list what it holds, \"robot, inventory\" answers with it, and \"robot, give X to me\" / \"robot, give me X\" hand it over. New tests robot_cage.json and revision5.json.",
+      "files": [
+        "worlds/underground_caverns_2/world/machine.sprout",
+        "worlds/underground_caverns_2/world/thing.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/robot_cage.json",
+        "worlds/underground_caverns_2/world/tests/revision5.json"
+      ],
+      "for": [
+        "P3",
+        "S1"
+      ]
+    },
+    {
+      "what": "The robot's stand-in catches \"robot, go <way>\" from another room and answers in voice with where the robot is; \"robot, inventory\" is a recognised order. Played in revision5.json.",
+      "files": [
+        "worlds/underground_caverns_2/world/machine.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/revision5.json"
+      ],
+      "for": [
+        "P4",
+        "S1"
+      ]
+    },
+    {
+      "what": "The Wizard's hook names the pearls, nearest, behind a stone door that asks a question, and the room that will not keep still between them and the rest; the Carousel's first throw is followed once by a narrator's line that the floor has been turning and that a thing that is turned can be stopped by whoever finds the works.",
+      "files": [
+        "worlds/underground_caverns_2/world/wizard.sprout",
+        "worlds/underground_caverns_2/world/carousel.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/wizard_debut.json"
+      ],
+      "for": [
+        "P5",
+        "S1"
+      ]
+    },
+    {
+      "what": "The Posts Room says whatever was left on the roof up there is out of reach; the blue cake's close-up says it is small enough to pocket; the carry refusal says it is the hands that are full, not the item.",
+      "files": [
+        "worlds/underground_caverns_2/world/posts.sprout",
+        "worlds/underground_caverns_2/world/items.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/cakes.json"
+      ],
+      "for": [
+        "P6",
+        "S1"
+      ]
+    },
+    {
+      "what": "The garden's clock holds the unicorn for the move a visitor arrives at the north end, so it is never listed as present and announced arriving in one move.",
+      "files": [
+        "worlds/underground_caverns_2/world/garden.sprout",
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/underground_caverns_2.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P8",
+        "S1"
+      ]
+    },
+    {
+      "what": "Filch counts what it takes and says \"Several things you are carrying have disappeared!\" when more than one goes; the first thing that vanishes at a touch names the Wizard's word as the cause, once.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/thing.sprout"
+      ],
+      "for": [
+        "P9",
+        "S1"
+      ]
+    },
+    {
+      "what": "The third quarter built: Lava Room (ruby), Lava Tube, Volcano View, Cobwebby Corridor (fuse), Volcano Bottom and the balloon with its receptacle, fire and wire, the volcano's air at four heights, Narrow Ledge (zorkmid, hook), Library (stamp in the purple book), Wide Ledge, Dusty Room with the safe, brick and blast, the Volcano Gnome; the Menhir Room, the shut Kennel, the Stairway and the eight Oddly-angled Rooms with the bases, the club and the floor that swings down. Rockfalls moved to the new frontier; Carousel draw now Zork's seven; wish at the well bottom with the zorkmid; score ceiling 260. New test volcano_gnome.json; walkthrough.json extended to the end of the third quarter.",
+      "files": [
+        "worlds/underground_caverns_2/world/volcano.sprout",
+        "worlds/underground_caverns_2/world/menhir.sprout",
+        "worlds/underground_caverns_2/world/sprout.json",
+        "worlds/underground_caverns_2/world/carousel.sprout",
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/garden.sprout",
+        "worlds/underground_caverns_2/world/well.sprout",
+        "worlds/underground_caverns_2/world/items.sprout",
+        "worlds/underground_caverns_2/world/lamp.sprout",
+        "worlds/underground_caverns_2/world/room.sprout",
+        "worlds/underground_caverns_2/world/thing.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/wizard.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/underground_caverns_2.sprout",
+        "worlds/underground_caverns_2/world/README.md",
+        "worlds/underground_caverns_2/world/tests/volcano_gnome.json",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json",
+        "worlds/underground_caverns_2/world/tests/bucket_count.json"
+      ],
+      "for": [
+        "P10",
+        "S1"
+      ]
+    },
+    {
+      "what": "intent.md kept current: three quarters, the third's arc (sections 12 and 13), the Cobwebby Corridor and Kennel boundary notes, the eight-way Oddly-angled Room, the robot's cage, the Bank's shimmer and gnome payment, Filch's count, the new \"done\" at 260, and each round-5 point where it changed the design.",
+      "files": [
+        "worlds/underground_caverns_2/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P8",
+        "P9",
+        "P10",
+        "S1"
+      ]
+    },
+    {
+      "what": "friction.md, \"After round 5\": entries 58 to 64 from the widening (a place's eight-exit cap against DIAMOND-5's ten ways and a part unable to read which way was walked; every turn of a script drawing from one seed; an NPC that never roamed and Elsewhere; the fuse's match out of a target's sight; `at` as a word of the language; a handler's line after \"Nothing happens.\"; a vehicle's way out on foot), plus the note that the robot's out-of-room go order is caught by the stand-in rather than by addressee scope.",
+      "files": [
+        "worlds/underground_caverns_2/friction.md"
+      ],
+      "for": [
+        "P4",
+        "P10",
+        "S1"
+      ]
+    }
+  ]
+}

@@ -5,16 +5,20 @@ _The author's. Sealed from playtesters; never quoted in the world._
 ## What this is
 
 Zork II: The Wizard of Frobozz, ported as faithfully as Sprout allows,
-a quarter at a time. After round 3 two quarters stand: the first the brief
-names (the way in from the barrow to the garden, the Carousel Room and
-Room 8, the Riddle Room and the Pearl Room, the well and the Tea Room, the
-Posts Room and the Pool Room, and the robot's rooms) and the second (the
-ravine's ledge and the Tiny and Dreary Rooms, the dragon's country from
-the Dragon Room to the Ice Room, and the Bank of Zork). Every room's name
-and description is the original's from `2dungeon.zil` and `2actions.zil`,
-with a little more said where the brief asks for it, in the same voice.
-The narrator is Zork's: "Taken.", "Dropped.", the YUKS, the hollow laugh
-from the stone door.
+a quarter at a time. After round 5 three quarters stand: the first the
+brief names (the way in from the barrow to the garden, the Carousel Room
+and Room 8, the Riddle Room and the Pearl Room, the well and the Tea
+Room, the Posts Room and the Pool Room, and the robot's rooms), the
+second (the ravine's ledge and the Tiny and Dreary Rooms, the dragon's
+country from the Dragon Room to the Ice Room, and the Bank of Zork), and
+the third (the Lava Room and the Lava Tube, the Volcano View, the
+Cobwebby Corridor, the Volcano Bottom and the volcano's air at four
+heights, the Narrow Ledge and the Library, the Wide Ledge and the Dusty
+Room, the Menhir Room and the Kennel, the Stairway and the nine
+Oddly-angled Rooms). Every room's name and description is the original's
+from `2dungeon.zil` and `2actions.zil`, with a little more said where the
+brief asks for it, in the same voice. The narrator is Zork's: "Taken.",
+"Dropped.", the YUKS, the hollow laugh from the stone door.
 
 Nothing carries over from Zork I. The lamp is "strangely familiar" and
 that is all. The machinery (the adventurer, the verbs, darkness and the
@@ -49,7 +53,11 @@ much the product as the rooms are.
   round 4 his first call carries the hook (P8): a line in the narrator's
   voice, not his, that reads off him what he is afraid of, that the
   treasures are south of the ravine and not yet found; and the first spell
-  is drawn evenly among Feeble, Fumble and Fantasize.
+  is drawn evenly among Feeble, Fumble and Fantasize. After round 5 (P5)
+  the hook names the pearls, nearest, behind a stone door that asks a
+  question, and "a room that will not keep still" between them and the
+  rest, since three short runs quit at the Carousel having seen where but
+  not what.
 - **The unicorn is in**, since it is the garden's own and the sword glows
   for it; the gold key round its neck stays round its neck until the
   princess asks, which since round 3 she can. After round 1, when three
@@ -67,7 +75,9 @@ much the product as the rooms are.
   say so, and say whether the key went with her. The garden's clock holds
   the unicorn put for two moves after it comes or goes, since the roll
   alternated every other move (friction 43), and says "bounds lightly
-  away" only where it can be seen to (P3).
+  away" only where it can be seen to (P3). After round 5 (P8) the clock
+  also holds it for the move a visitor arrives at the north end, so a
+  unicorn the room lists is not announced arriving in the same breath.
 - **The Deep Ford's ledge** was the edge of the first quarter; it leads up
   now, to the Ledge in Ravine.
 - **The Rooms of Mist are not built** (they are the end's, round 7), so a
@@ -84,15 +94,36 @@ much the product as the rooms are.
 - **The Marble Hall's secret door** opens when the princess presses the
   loose marble on her way home, and stays open: east of the Marble Hall
   and west of the Path Near Stream lead through it from then on.
-- **The ways out of the built quarters** (south and southwest of the
-  Carousel Room; west and up from the Ice Room, where the Lava Room and
-  the Lava Tube are the volcano's) are present and turn the visitor back
-  in Zork's voice, each rockfall its own. The Carousel's northwest passage
-  leads to the Cool Room now, and the spinning room's draw is among five.
+- **The Cobwebby Corridor is the third quarter's, not the fourth's.** The
+  brief lists it among the Wizard's rooms; it is a corridor between two
+  third-quarter places, the Carousel's southwest passage and the Lava
+  Tube's crack, and it holds the fuse, without which the safe chain (the
+  brick from the Marble Hall, the hole chipped in the safe, a match from
+  the gazebo) would be split across the boundary. So it is built, with
+  its southwest and down turning the visitor back at a fall of rock in
+  Zork's voice; the Guarded Room beyond it is round 7's. With it and the
+  Menhir Room built, every one of the Carousel's eight passages leads
+  somewhere, and the spinning room's draw is Zork's seven.
+- **The Kennel is built and shut.** The menhir across its door is lifted
+  by the wand's Float, and the wand is the Wizard's, in his Workroom in
+  round 7; until then "southwest" from the Menhir Room is "You are
+  trying to walk through an enormous rock.", as Zork's is, and the
+  collar's fifteen points wait with it. The ceiling the score line
+  announces is 260, not 275, for that reason.
+- **The Oddly-angled Room at the foot of the stair has nine ways in
+  Zork and eight here** (friction 58): a place may have eight ways out,
+  and its up to the Stairway must be one, so its southwest, which when
+  the bases are run leads to a room with nothing in it but a window, is
+  left out. Up and down typed in the other eight rooms are "You can't go
+  that way." rather than Zork's draw.
+- **The ways out of the built quarters** are present and turn the visitor
+  back in Zork's voice, each rockfall its own: the Cobwebby Corridor's
+  southwest and down (the Guarded Room), and the secret passage down from
+  the foot of the stair once the bases are run (the Cerberus Room).
 - **The gazebo's table carries what Zork's does**: the matchbook and the
   letter opener came in with round 3, since the opener is the Tiny Room's
   key to the key, and the matchbook is a light of six matches, two moves
-  each, that round 5's fuse will want.
+  each, that the fuse and the balloon's fire want now.
 - **The bucket can be waited for.** After round 2, when both sonnet runs
   poured the water in from outside and never saw the bucket again
   (its hundred moves are a hundred commands here, friction 37), "wait
@@ -116,10 +147,26 @@ much the product as the rooms are.
   2 "examine passages" says the southeast one climbs toward a draught
   that smells of brick, and after the room has thrown a visitor out
   twice (three times before round 3, P13) its description says so too,
-  and names the northwest passage's mist as well.
+  and names the northwest passage's mist and the southwest one's cobwebs
+  as well. After round 5 (P5) the first throw is followed, once, by a
+  line in the narrator's voice that the floor has been turning under you
+  and that a thing that is turned can be stopped by whoever finds the
+  works. West while it spins is always a throw, as Zork's is; the two
+  west exits are one now (friction 58), and a visitor who lands in Room 8
+  with the room still spinning is thrown from there.
 - **The cakes keep in the bucket** as they do at the Top of Well, since
   Zork's vehicle is in the room it stands in (round 3's P11), and the
-  crumble line says why a cake crumbled.
+  crumble line says why a cake crumbled. After round 5 (P6) the Posts
+  Room says that whatever was left on the roof up there is out of reach,
+  and the blue cake's close-up says it is small enough to pocket, which,
+  for a cake laid beside one marked Eat Me, may be the point.
+- **The robot reaching for the sphere is Zork's** (round 5's P3): both
+  opus runs sent the robot for the sphere to spare themselves the cage,
+  and SPHERE-FCN has an answer for that, which is that the cage falls on
+  the robot, the sphere is under it for good, and the visitor dies of
+  grief or, Zork being Zork, of JIGS-UP. Ported as written: the closet
+  says what lies under the cage, the robot's stand-ins say he has
+  stopped humming, and the first quarter is then short a sphere.
 
 ## The arc a visitor walks
 
@@ -139,9 +186,8 @@ much the product as the rooms are.
 3. The Carousel Room spins: every way out of it is a random one four
    times in five, with "You're not sure which direction is which." Its
    eight passages lead to the Marble Hall, the Path Near Stream, the
-   Topiary, the Riddle Room, the Cool Room, Room 8 (only once it stops),
-   and two quarters not yet built; until those are built the draw is among
-   the five that are (Zork draws among seven, never west).
+   Topiary, the Riddle Room, the Menhir Room, the Cobwebby Corridor, Room
+   8 (only once it stops) and the Cool Room; the draw is Zork's seven.
 4. The Riddle Room: "What is tall as a house, round as a cup, and all the
    king's horses can't draw it up?" Say "well" and the stone door opens
    (5 points). The Pearl Room beyond holds the pearl necklace (15).
@@ -150,7 +196,9 @@ much the product as the rooms are.
    it rise; in it, the visitor rises to the Top of Well (10 points).
    Salt water from the Pool Room does nothing. The water evaporates in a
    hundred moves and the bucket goes down again; taking the water out
-   sends it down at once.
+   sends it down at once. Make a wish at the bottom with the priceless
+   zorkmid on the floor and a whispering voice says what makes the bucket
+   go, and the coin is gone.
 6. The Tea Room: the oblong table with four cakes. The "Eat Me" cake
    makes the room huge (the visitor small): the Posts Room, where the
    table is four wooden posts and a roof and everything on it is too big
@@ -166,12 +214,14 @@ much the product as the rooms are.
    person is fried by and a robot is not; the Dingy Closet south, with
    the red crystal sphere (20). Reach for the sphere and a steel cage
    falls and gas comes in; the robot, if it is there, lifts the cage when
-   told. The triangular button stops the carousel (and brings the dented
-   steel box with the Stradivarius (20) up through its floor); the square
-   button speeds it, which makes the Low Room electric; the round button
-   slows it again. With the carousel stopped, the Low Room is where a
-   visitor cannot get their bearings, and Room 8 is where the grue
-   repellent is.
+   told. Send the robot for the sphere instead and the cage has him. The
+   triangular button stops the carousel (and brings the dented steel box
+   with the Stradivarius (20) up through its floor); the square button
+   speeds it, which makes the Low Room electric; the round button slows
+   it again. With the carousel stopped, the Low Room is where a visitor
+   cannot get their bearings, and Room 8 is where the grue repellent is.
+   The robot says what it holds, in the room's list and when asked, and
+   hands it over when asked for it (round 5's P3, P4).
 8. The ravine (round 3): up from the Deep Ford, the Ledge in Ravine and
    the End of Ledge, where the air is warm and smells of smoke; up a
    precarious climb from the ledge, the Tiny Room, with the oak door, its
@@ -189,13 +239,13 @@ much the product as the rooms are.
    whoever provoked it. Since round 4 (P6) a blow's reply is graded rather
    than drawn (a shrug, a stare, and "You had better be very careful now"
    for the blow before the last), and when its interest runs out behind a
-   visitor who has walked on, they hear it turn back. Led west into the Ice Room, it meets its own
-   reflection in the glacier, breathes fire, and drowns in the melt (5
-   points); the dead dragon lies at the Deep Ford, the Ice Room's west
-   passage opens on steam and a rockfall, heard coming down in the same
-   breath as the reveal (round 4's P14), and the lair is open: the rotten
-   chest with the golden statuette (20), whose hinges give on the second
-   try as the first try's line promises (P2), and the princess in a trance.
+   visitor who has walked on, they hear it turn back. Led west into the
+   Ice Room, it meets its own reflection in the glacier, breathes fire,
+   and drowns in the melt (5 points); the dead dragon lies at the Deep
+   Ford, the Ice Room's west passage opens on the Lava Room, and the lair
+   is open: the rotten chest with the golden statuette (20), whose hinges
+   give on the second try as the first try's line promises (P2), and the
+   princess in a trance.
 10. The princess: woken (examined, spoken to, or startled by the chest's
    hinges), she walks home a step a move, glancing back: the Dragon Room,
    the ledge, down to the Deep Ford, the Marble Hall, where she presses a
@@ -214,15 +264,64 @@ much the product as the rooms are.
    the Small Room, which has no exits; and from the Small Room's south
    wall back into the Depository and through the curtain again, the
    Vault, with the bills (25). For twelve moves after a pass one wall of
-   the room beyond leads back; then "Curtain Door Closed," and in the
+   the room beyond leads back, and since round 5 (P2) the room says which
+   wall shimmers while it does, a bare "walk through wall" takes it, and
+   "Curtain Door Closed" says the way back has gone dark; then in the
    Small Room the Gnome of Zurich comes three moves later with a deposit
-   box, takes a treasure for the way out, and goes after twelve. The
-   Depository's doors sound an alarm against the bills and the portrait;
-   the curtain does not: carry them through it into a viewing room and
-   walk out south. Since round 4 the alarm's line says it is the doorway
-   that knows the Bank's property, and that the curtain was not built by
-   the same people (P7).
-12. The Wizard, every two minutes, one time in ten: he appears, waves his
+   box, takes a treasure for the way out, handed to him or put in his box
+   (P1), and goes after twelve. The Depository's doors sound an alarm
+   against the bills and the portrait; the curtain does not: carry them
+   through it into a viewing room and walk out south. Since round 4 the
+   alarm's line says it is the doorway that knows the Bank's property, and
+   that the curtain was not built by the same people (P7).
+12. The volcano (round 5): up the lava tube from the Ice Room to the
+   Lava Tube, the Volcano View above it with the whole volcano in sight,
+   and through its crack south the Cobwebby Corridor with the coil of
+   black string, which also leads northeast to the Carousel. West from the
+   Ice Room, once the glacier has gone, the Lava Room with the moby ruby
+   (15) and south of it the Volcano Bottom, where the balloon stands: a
+   wicker basket, a cloth bag, a metal receptacle shut in the middle, and
+   a braided wire. Open the receptacle, put something burnable in it (the
+   newspaper burns a hundred moves, the blue label that drops from the
+   bag twenty, a book two hundred), burn it with a match, and the bag
+   fills; every third move the balloon rises while the receptacle is open
+   and the fire burning, and sinks while it is shut or the fire out.
+   Beside the Narrow Ledge, "west" or "land" brings it down: the ledge
+   has a hook to tie the wire to (three moves, or the balloon goes on
+   without you), the priceless zorkmid (20) on its floor, and the Library
+   south of it, where the purple book has a Flathead stamp (10) in it.
+   Beside the Wide Ledge, the same: the hook, and south the Dusty Room
+   with the rusty safe, an oblong hole chipped in its front, and inside
+   it Lord Dimwit's crown (20) and a foreman's card. The brick from the
+   Marble Hall goes in the hole, the string in the brick, a match to the
+   string, and the blast is at the end of the next move: it opens the
+   safe, and five moves later brings the room down, and eight after that
+   the ledge, so the crown is taken quickly and the balloon untied and
+   away before the ledge goes. Above the Wide Ledge the balloon floats out
+   of the volcano for good, and whoever rides it dies in the Flathead
+   Mountains; shut the receptacle to come down, and keep the fire lit
+   until the bottom, since a balloon that lands without one is pieces.
+   Left on a ledge by a balloon that floated off, the visitor is found
+   ten moves later by the Volcano Gnome, who opens a door on the west end
+   of the ledge for a treasure, crunches anything else, and leaves for
+   good if given the brick.
+13. The Menhir (round 5): south of the Carousel, the Menhir Room, a
+   quarry with one great menhir carved with an F leaning across the way
+   southwest to the Kennel and the collar (15, round 7's). South again
+   the Stairway, and down it the Oddly-angled Rooms, nine of them, with a
+   diamond-shaped window in each floor that glows by how far the runner
+   has got. From the room at the foot of the stair any way is a draw: a
+   third of the time no way, a sixth a throw into one of the rooms that
+   are not corners, and half a throw into a corner, where the wooden club
+   burned "Babe Flathead" lies the first time. From a corner, the bases
+   are run as a runner runs them, southeast to first, northeast to
+   second, northwest to third, southwest home, each the next corner round
+   the diamond; a wrong way is a throw, and twenty wrong ways earn the
+   Wizard's taunt. Home, a rusty squeal echoes (5 points), the floor at
+   the foot of the stair swings down on a passage into unrelieved
+   darkness, which ends in a fall of rock for now, and the rooms join as
+   Zork joins them.
+14. The Wizard, every two minutes, one time in ten: he appears, waves his
    wand, speaks a word beginning with "F", and vanishes cackling. Feeble,
    Fumble, Fear, Filch, Freeze, Fall, Ferment, Fierce, Float, Fireproof,
    Fence, Fantasize: each changes what the visitor can do for three to
@@ -233,17 +332,20 @@ much the product as the rooms are.
    clock ninety seconds. Fantasize, after round 2.5, is not Zork's
    one-in-five flicker on every description: each room rolls once when
    the spell is cast, one room in two gets one of the eight, and it stays
-   listed with what is really there until the spell ends.
+   listed with what is really there until the spell ends. Filch, since
+   round 5 (P9), says how many things went, and the first thing that
+   vanishes at a touch names the Wizard's word as the cause.
 
-"Done", for the two quarters, is: the riddle answered, the well risen,
+"Done", for the three quarters, is: the riddle answered, the well risen,
 the pearl, the candy, the sphere and the violin taken, the robot told
 what to do and doing it, the carousel stopped, the dragon drowned, the
 statuette, the gold key, the portrait, the bills and the blue sphere
-taken (190 of Zork II's 400), and the Wizard met and survived. 190 is the
-ceiling, and the world says so once it is reached: a line in the
+taken, the ruby, the zorkmid, the stamp and the crown taken, and the
+bases run (260 of Zork II's 400), and the Wizard met and survived. 260 is
+the ceiling, and the world says so once it is reached: a line in the
 narrator's voice when the last point lands, and a parenthesis on the
-score line after (round 3's P7). The wand (30) waits for the Wizard's own
-rooms.
+score line after (round 3's P7). The wand (30) and the collar (15) wait
+for the Wizard's own rooms.
 
 ## Secrets and interactions I hope players find
 
@@ -260,7 +362,9 @@ rooms.
   has a close-up of its own (the bars nobody could lift, the gas coming
   in, the robot's absence remarked on), the gas thickens a line a move,
   and an order to the robot while it stands in another room is answered
-  in voice by its stand-in, which says where it is (P2, P3).
+  in voice by its stand-in, which says where it is (P2, P3). Since round
+  5 the stand-in answers an order to go as well (P4), and the robot sent
+  for the sphere instead of you is the robot's last errand.
 - **Dying costs more than ten points**: the lamp goes back to the barrow,
   treasures to the Wizard's stash (out of reach until his rooms are
   built), and everything else to the gazebo; the third death is the end.
@@ -317,17 +421,18 @@ rooms.
   wash over harmlessly, once, and the doubling-back dragon crushes a
   fireproof visitor in its jaws instead; Filch makes anything of value
   vanish as it is touched; Fantasize puts things in rooms that are not
-  there.
+  there, the volcano's air included.
 - **"Robot, go east"** works, comma and all, and so does "tell the robot
   to push the triangular button"; the robot answers "Whirr, buzz, click!"
   and does it, or, now and then, "Buzz! Buzz! Buzz! My circuits are
   getting rusty. Try again."
 - **Taking the sphere is a trap** only if the robot is not there to lift
   the cage; a player who sends the robot south first is safe, and one who
-  does not has six moves of poison gas to think it over.
-- **Make a wish at the bottom of the well** and no one is listening, yet:
-  the voice that tells you what makes the bucket go wants the priceless
-  zorkmid, which lies on a ledge in the volcano (round 5).
+  does not has six moves of poison gas to think it over. A player who
+  sends the robot for the sphere has read the wrong page of the manual.
+- **Make a wish at the bottom of the well** with the priceless zorkmid
+  lying there and a whispering voice tells you what makes the bucket go;
+  unfortunately, wishing makes the coin go.
 - **The dragon's anger is arithmetic**: examine it for one, greet it for
   two, strike or kick it or throw at it for four, give to it for one; it
   cools by two a move; past six it kills. So two blows and a walk lose it
@@ -351,10 +456,10 @@ rooms.
   the loot picked up again.
 - **The Small Room is a trap with a price**: the way in is the Office,
   and the way out, once the curtain has closed, is the south wall while it
-  still shimmers, or the gnome, who takes a treasure for it. Throw the
-  loot through a wall of light and it lands in the Depository; through the
-  curtain, and it lands in the room the curtain opens on, and the curtain
-  closes behind it.
+  still shimmers, or the gnome, who takes a treasure for it, by hand or
+  into his box. Throw the loot through a wall of light and it lands in the
+  Depository; through the curtain, and it lands in the room the curtain
+  opens on, and the curtain closes behind it.
 - **The key without the mat is lost**: the push sends it somewhere that
   is not a room, and the game says nothing, as Zork says nothing. The mat
   pulled from under the door, rather than taken, is drawn out and the key
@@ -362,6 +467,36 @@ rooms.
 - **The bucket's tide-line says what water it wants**: fresh, the kind the
   stream has at a ford and a teapot carries (round 4's P4).
 - **The matchbook is a light**: six matches, two moves each, for a visitor
-  who has lost the lamp to the Wizard.
+  who has lost the lamp to the Wizard; and the only flame in the domain,
+  for the fuse and the balloon's fire. A match struck is good for the
+  next command and no more.
 - **Two keys answer to "key"**: with both in hand the parser draws, and
   tells you which it drew; say "iron key" or "gold key".
+- **The receptacle is the balloon's whole control**: open, with a fire in
+  it, the balloon rises; shut, it sinks, smoke leaking round the lid;
+  the fire out, it sinks and does not survive the ground. Everything else
+  typed in the basket is "You can't control the balloon this way." The
+  blue label that drops from the bag says LAND, and LAND beside a ledge
+  is the only landing there is; the viewing ledge is too thin.
+- **The books are fuel**: the white one, which is the only one small
+  enough for the receptacle, burns a hundred moves, and the Library is on
+  the first ledge, so a visitor whose newspaper is nearly out can refuel
+  there; the purple one, read, falls open on the stamp.
+- **The brick has other properties than weight**: burn it in your hand
+  and it says so, once. Light the fuse in it anywhere and the room it is
+  in is wrecked in one move and comes down in five; whoever is in the
+  room with it goes with it. In the hole in the safe it opens the safe,
+  and the Dusty Room's card, read too late, says the room was built on
+  weak rock.
+- **The Wide Ledge collapses** thirteen moves after the blast, and a
+  balloon tied to it goes down with it, rider and all; untied, it is left
+  "with no place to land", and floats off.
+- **The Volcano Gnome is an alarm clock**: he comes ten moves after the
+  balloon leaves you on a ledge, grows nervous when talked to, and is
+  late for his appointment five moves after that. His fee is any
+  treasure; his door leads down a chimney to the Volcano Bottom. Give
+  him the brick and he is never seen again.
+- **The bat says who to be**: "Babe Flathead", burned into a club lying
+  by the first base, is the hint that the Oddly-angled Rooms are a
+  diamond to be run, southeast and round. The windows glow brighter base
+  by base, and go dark when the count is lost.

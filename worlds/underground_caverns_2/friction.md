@@ -811,3 +811,105 @@ caverns' numbers are written "caverns N"._
   chest is a counter now (the second try opens it, as its line promised),
   and the first call draws evenly among three; the observation stands.
 - **Spec:** Chance › The seed; Time › Determinism.
+
+## After round 5
+
+### 57. A quoted answer is still unbound (reaffirms 33)
+
+- Round 5's P7: both opus runs answered the riddle as `say "a well"` and
+  read the hollow laugh, and solved it next line with the bare word. The
+  article is dropped already (38); the quotation marks are not: `sprout
+  parse` reads `say "well"` and `answer "a well"` alike as `answer` with
+  `word` unbound. Nothing a world writes matches a quoted word (33), so
+  the laugh stands for a quoted answer.
+- **Spec:** Parsing › Matching a line; The compiler › Lexical rules.
+
+### 58. A place may have eight ways out, and a part cannot read which way was walked
+
+- **Wanted:** DIAMOND-5's ten ways (eight compass, up and down) and
+  DIAMOND-MOTION, which answers every direction typed in any of the nine
+  Oddly-angled Rooms before the exits are looked at; and the Carousel's
+  west, which led to Room 8 stopped and back into the room spinning.
+- **Found:** "`diamond_5` writes more than 8 exits and links, and 8 is as
+  many as a place may have"; guarded exits in one direction each count,
+  and only refusing exits do not, so `exit north -> a when (x)` and `exit
+  north -> b` are two. And `way` is not bound in `as actor for go`
+  ("Nothing here is called `way`"), so a part cannot learn the direction
+  after the move either, as friction 12 found it cannot before.
+- **Wrote instead:** each Oddly-angled Room's eight compass ways lead to
+  the eight other rooms in one fixed order (north to northwest, the rooms
+  in their numbers), so the way walked is read off the pair of rooms in
+  the visitor's own `go` part, which then sends them where Zork would
+  through the world's gate: a draw, the next corner, or back where they
+  stood with "There is no way to go in that direction."; after the bases
+  are run, Zork's own ways by the same reading, and `no_way`'s words for
+  the rest. DIAMOND-5's up to the Stairway makes nine, so its southwest,
+  to a room with nothing in it, is the way left out, and up and down in
+  the other eight rooms are `no_way`. The Carousel's two west exits are
+  one: west leads to Room 8 spinning or not, and a visitor arriving there
+  while the room spins is always thrown, which is Zork's west (Room 8 is
+  a kind of its own so the part can tell).
+- **Spec:** Limits › Static caps; Verbs › Exits; The actor's own part.
+
+### 59. Every turn of a script draws from the same seed (explains 43 and 56)
+
+- **Found:** a probe world printing `random(12)` from an `after command`
+  printed the same value on every turn of a script whose first step was
+  `{ "seed": 5 }`, and a `{ "seed": n }` step changes it for the turns
+  after. So in `sprout play` and `sprout test` a draw at the same point of
+  successive turns is the same draw, which is what 43 and 56 saw in the
+  princess's roll, the chest's one in four and the Wizard's first-call
+  draw: the harness, not the generator. In live play every turn has a
+  seed of its own. Under seed 5 the maze's first draw is always 0, "no
+  way", so the walkthrough sets `{ "seed": 1 }` before the Stairway and
+  5 again after. A recorded test is a fair coin only where it changes the
+  seed; a test that reads a roll should say which seed it rolled under.
+- **Spec:** Chance › The seed; the command line (`play`'s script steps).
+
+### 60. An NPC that never roamed cannot be moved to Elsewhere (a note)
+
+- The robot, which only ever walked its own three rooms by `move self
+  north`, had no `roams`; its `move self to elsewhere` from under the cage
+  faulted in a part and in a handler alike, `NameOutOfRange: elsewhere is
+  out of range of low_room.robot`, which names the range and not the
+  missing word. Added `roams`. The fault could say so.
+- **Spec:** Actors and visitors (`roams`); The compiler › Diagnostics.
+
+### 61. A target's part cannot see into the hands that hold the match
+
+- **Wanted:** FUSE-FCN: "light fuse" with a lit match in hand, and
+  Zork's V-BURN wanting a flame for the tool. The fuse's part walked `each
+  m: Matchbook in actor` and found nothing: `sprout.Actor` passes nothing,
+  and only a refusal's words see into a person's hands.
+- **Wrote instead:** the visitor's own part for `burn` and `lamp_on` sets
+  `:has_flame` on the visitor from its own hands before the target's part
+  runs, and the fuse, the brick and anything burnable read
+  `actor.get(:has_flame)`, since a property of the actor is readable where
+  what the actor carries is not.
+- **Spec:** Range (a refusal's words); Verbs › The two passes.
+
+### 62. `at` is a word of the language (a note)
+
+- `let at = self.get(:at)` is refused: "`at` is a word of the language, so
+  it cannot name a value". A property may be `:at`; a binding may not.
+  **Spec:** Reserved names.
+
+### 63. A handler's line comes after "Nothing happens." (caverns 21, friction 10 again)
+
+- The Volcano Gnome's fee and the Gnome of Zurich's box: a part whose
+  only work is a `send` is answered with `nothing_happens` before the
+  handler's line. The Volcano Gnome's parts say their own lines and leave
+  only the roaming move to a handler; the deposit box's handler tells the
+  rest after the hand's own "The gnome holds the box out for it."
+- **Spec:** Verbs › The two passes.
+
+### 64. A vehicle's way out is taken on foot (a note)
+
+- The balloon's `exit west -> ledge_1 when (self.get(:at) == :vair_2)`
+  moves the rider out of the basket onto the ledge, as the bucket's east
+  leads out of it to the Tea Room; Zork's LAND moves the vehicle with the
+  rider in it. Here the rider steps out and the balloon, told by the
+  rider's `on :moved`, comes down beside them through the gate
+  (`:balloon_land`), which is the same puzzle one command shorter: the
+  wire must still be tied in three moves or the balloon goes without you.
+- **Spec:** Verbs › Exits; Places inside places.

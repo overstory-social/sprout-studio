@@ -172,8 +172,15 @@ verb untie { role target  "untie [target]"  "unfasten [target]"  "undo [target]"
 verb burn {
   role target
   role tool
-  "burn [target] with [tool]"  "burn [target]"  "light [target] with [tool]"  "ignite [target]"  "set fire to [target]"
+  "burn [target] with [tool]"  "burn [target]"  "light [target] with [tool]"  "light [target]"  "ignite [target]"
+  "ignite [target] with [tool]"  "set fire to [target]"  "set fire to [target] with [tool]"
 }
+// The balloon (BALLOON-FCN's INFLATE), and anything else somebody tries
+// to blow up with their lungs.
+verb inflate { role target  "inflate [target]"  "blow up [target]"  "deflate [target]"  "blow into [target]" }
+// The balloon, landed: Zork's LAND is a direction of the volcano's air;
+// here it is a word, answered by whoever is in the basket.
+verb land { "land"  "land the balloon"  "land balloon"  "land the basket"  "land here"  "land on the ledge"  "land on ledge"  "set down" }
 verb cut { role target  role tool carried  "cut [target]"  "cut [target] with [tool]"  "slice [target]"  "chop [target]"  "slice [target] with [tool]" }
 verb play { role target  "play [target]"  "play on [target]"  "strum [target]"  "fiddle with [target]"  "bow [target]" }
 verb spray {
@@ -234,8 +241,23 @@ verb robot_lift {
 verb robot_drop {
   role target: Orderable
   role item
-  "[target], drop [item]"  "[target], put down [item]"  "tell [target] to drop [item]"  "[target], give me [item]"
-  "tell [target] to give me [item]"  "ask [target] for [item]"  "[target], give [item] to me"  "[target], hand me [item]"
+  "[target], drop [item]"  "[target], put down [item]"  "[target], put [item] down"  "tell [target] to drop [item]"
+  "[target] drop [item]"  "order [target] to drop [item]"  "ask [target] to drop [item]"  "[target], set down [item]"
+}
+// Asked for what it holds, the robot hands it over (round 5's P3): its own
+// verb, since "give me" and "drop" went the same way before and the sphere
+// landed on the floor without a word.
+verb robot_give {
+  role target: Orderable
+  role item
+  "[target], give me [item]"  "[target], give [item] to me"  "[target], hand me [item]"  "[target], hand [item] to me"
+  "tell [target] to give me [item]"  "ask [target] for [item]"  "[target] give me [item]"  "tell [target] to hand me [item]"
+}
+// What the robot is holding, asked (round 5's P4).
+verb robot_inventory {
+  role target: Orderable
+  "[target], inventory"  "[target], i"  "[target], what are you holding"  "[target], what do you have"
+  "[target], what are you carrying"  "ask [target] what it is holding"  "[target], show me what you have"  "[target], list your inventory"
 }
 verb robot_other {
   role target: Orderable
@@ -347,7 +369,7 @@ intent hand_over {
 // Where somebody or something may be sent by the world's gate, and which
 // room a room is: every place keeps its own, so that what stands in it
 // (the visitor, the Wizard's clock, the bucket) can name it to another.
-enum Dest { nowhere, barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, carousel, room_8, riddle, pearl, well_bottom, well_top, tea_room, posts, pool, low_room, machine, closet, cage, elsewhere, oblivion, filch, scatter, in_bucket, out_of_bucket, cage_out, ravine_ledge, ledge_end, tiny_room, dreary_room, dragon_room, dragon_lair, fresco, stone_bridge, cool_room, ice_room, bank_entrance, teller_west, teller_east, viewing_west, viewing_east, small_room, vault, depository, office, key_scene, dragon_dead }
+enum Dest { nowhere, barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, carousel, room_8, riddle, pearl, well_bottom, well_top, tea_room, posts, pool, low_room, machine, closet, cage, elsewhere, oblivion, filch, scatter, in_bucket, out_of_bucket, cage_out, ravine_ledge, ledge_end, tiny_room, dreary_room, dragon_room, dragon_lair, fresco, stone_bridge, cool_room, ice_room, bank_entrance, teller_west, teller_east, viewing_west, viewing_east, small_room, vault, depository, office, key_scene, dragon_dead, lava_room, lava_tube, volcano_view, cobwebby, volcano_bottom, vair_1, vair_2, vair_3, vair_4, ledge_1, library, ledge_2, safe_room, menhir_room, kennel, stairway, diamond_1, diamond_2, diamond_3, diamond_4, diamond_5, diamond_6, diamond_7, diamond_8, diamond_9 }
 
 // The Wizard's spells (SPELL?), and none.
 enum Spell { none, feeble, fumble, fear, filch, freeze, fall, ferment, fierce, float, fireproof, fence, fantasize }
@@ -506,3 +528,40 @@ message :key_far with boolean
 message :tally
 // The curtain of light's twelve moves run out.
 message :curtain_closes
+// The volcano (round 5): the balloon's clock, one tick a move, since the
+// balloon counts for nobody when nobody rides it; its landing, told by the
+// rider who stepped onto a ledge; a thing set burning in its receptacle,
+// with how long it burns; and whether a thing is in the receptacle at all.
+message :balloon_tick
+message :balloon_land with Dest
+message :fuel_lit with integer
+message :nestled with boolean
+message :tie_to with Dest
+message :untied
+message :bag_full with boolean
+// The Volcano Gnome (I-GNOME, I-NERVOUS): due, come, and late; and the door
+// he opens on the west end of either ledge.
+message :gnome_due
+message :gnome_fidget
+message :vgnome_come with Dest
+message :vgnome_late
+message :gnome_door
+// The brick and the fuse (I-FUSE, I-SAFE, I-LEDGE): the fuse lit and burnt
+// out; whether the fuse is in the brick; the explosion, where the brick
+// was; what the explosion was heard from; a room collapsing after it; the
+// safe blown open; and a thing buried by the blast.
+message :fuse_lit
+message :fuse_out
+message :in_brick with boolean
+message :explosion
+message :explosion_at with Dest
+message :collapse with Dest
+message :blow
+message :bury
+// The Oddly-angled Rooms (DIAMOND-MOTION): how far round the bases the
+// visitor has got, five for solved; and the club, put where the first base
+// is reached.
+message :diamond_count with integer
+message :bat_to with Dest
+// The Library's books, touched all at once (RANDOM-BOOK).
+message :touch

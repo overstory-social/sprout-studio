@@ -57,17 +57,19 @@ kind Lamp is Light {
     The lamp is turned off.
   }
 
+  // Said rather than refused, so that "light lamp" is never a draw between
+  // this part and `burn`'s (thing.sprout's Switchable).
   as target for lamp_on {
-    permit {
-      if (self.get(:burned_out)) { refuse "A burned-out lamp won't light." }
-      if (self.get(:lit)) { refuse "It is already on." }
-    }
     do {
-      let was_dark = here.is(DarkRoom) && !here.get(:alight)
-      self.set(:lit, true)
-      say "The {self.short} is now on."
-      if (actor.holds(self)) { send actor :light with 1 } else { send here :relight }
-      if (was_dark && here.is(Room)) { say "{here.full}" }
+      if (self.get(:burned_out)) { say "A burned-out lamp won't light." }
+      else if (self.get(:lit)) { say "It is already on." }
+      else {
+        let was_dark = here.is(DarkRoom) && !here.get(:alight)
+        self.set(:lit, true)
+        say "The {self.short} is now on."
+        if (actor.holds(self)) { send actor :light with 1 } else { send here :relight }
+        if (was_dark && here.is(Room)) { say "{here.full}" }
+      }
     }
   }
 

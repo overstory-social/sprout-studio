@@ -17,7 +17,8 @@ import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
 import {examine} from 'sprout'
-import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, attack, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize, :conjured} from 'verbs'
+import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, attack, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize, :conjured, :explosion, :explosion_at, :collapse, :bury, :die} from 'verbs'
+import {Portable} from 'thing'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -90,6 +91,37 @@ kind Room is sprout.Place {
   // Blown up by a cake (ICEBOOM's MUNG-ROOM): no way back in, and the
   // rooms whose ways lead here are told.
   on :munge { self.set(:munged, true)  broadcast :room_sealed with self.get(:id) }
+  // Munged (RMUNGBIT), by whatever means: nobody comes in. The rooms the
+  // cakes and the gas seal say why at their own doors first; this is the
+  // brick's, whose explosion may be anywhere (I-FUSE, I-SAFE, I-LEDGE).
+  passage blocked default { The way is blocked by debris from an explosion. }
+  accept (item, from) { if (self.get(:munged) && item.is(Adventurer)) { refuse blocked } }
+  // The brick went off here (I-FUSE): whoever was in the room with it is
+  // blown to smithereens and the room is sealed; otherwise the blast is
+  // heard from wherever the visitor stands, the room fills with debris, and
+  // what could be carried off is buried, and in five moves the room comes
+  // down (I-SAFE). The Dusty Room's safe answers for itself (volcano.sprout).
+  :exploded false
+  on :explosion {
+    if (!self.get(:exploded)) {
+      self.set(:exploded, true)
+      self.set(:here_now, false)
+      each a: Adventurer in self { self.set(:here_now, true) }
+      if (self.get(:here_now)) {
+        each a: Adventurer in self {
+          tell a "Now you've done it. It seems that the brick has other properties than weight, namely the ability to blow you to smithereens."
+          send a :die
+        }
+        self.set(:munged, true)
+      } else {
+        spawn Debris in self
+        each p: Portable in self { send p :bury }
+        broadcast :explosion_at with self.get(:id)
+      }
+    }
+  }
+  :here_now false
+  on :collapse (from, value) { if (value == self.get(:id)) { self.set(:munged, true) } }
 
   on :entered (item, from) {
     if (item.is(Adventurer)) {
@@ -303,6 +335,15 @@ kind Illusion is Scenery {
   // the actor's to choose (adventurer.sprout), from these.
   as target for any { permit { refuse gone } }
   as tool for any { permit { refuse gone } }
+}
+
+// What an explosion leaves in a room (EXPLOSION).
+kind Debris is Scenery {
+  grammar { name "debris"  nouns "rubble", "wreckage", "explosion"  adjectives "explosion" }
+  :ndesc false
+  passage short { debris }
+  passage ldesc { The room is cluttered with debris from an explosion. The walls seem ready to collapse. }
+  describe { text "Debris, from an explosion: rock in pieces, dust still coming down, and the walls, where you can see them, with new cracks in them that are getting longer as you watch. This is not a room to stand about in." }
 }
 
 // Zork's GRUE: never here, always nearby.

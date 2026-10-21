@@ -82,7 +82,7 @@ object posts_room is Room, Wonderland, CakeSafe, ChasmEdge, PostsLike in undergr
   :id posts
   :pool_sealed false
   on :room_sealed (from, value) { if (value == :pool) { self.set(:pool_sealed, true) } }
-  passage body { This is an enormous room, in the center of which are four wooden posts delineating a rectangular area, above which is what appears to be a wooden roof. In fact, all objects in this room appear to be abnormally large. To the east is a passageway. There are large gaping chasms to the west and northwest. }
+  passage body { This is an enormous room, in the center of which are four wooden posts delineating a rectangular area, above which is what appears to be a wooden roof. In fact, all objects in this room appear to be abnormally large. To the east is a passageway. There are large gaping chasms to the west and northwest. Whatever was left on the roof up there is on it still, a long way over your head, and nothing up there is coming down to you. }
   object posts is Posts
   object roof is Roof
   object chasm is Chasm {

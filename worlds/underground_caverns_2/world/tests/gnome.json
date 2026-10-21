@@ -1,5 +1,5 @@
 {
-  "about": "The Gnome of Zurich: shut in the Small Room when the curtain of light closes twelve moves after a pass, a customer is visited three moves later by a gnome with a safety deposit box, who, given a treasure, deposits it and shows the way out to the Bank Entrance.",
+  "about": "The Gnome of Zurich: shut in the Small Room when the curtain of light closes twelve moves after a pass, a customer is visited three moves later by a gnome with a safety deposit box, who scorns anything but a treasure, and, given one, by hand or into his box, deposits it and shows the way out to the Bank Entrance.",
   "steps": [
     { "seed": 5 },
     { "arrive": "Marta", "expect": [
@@ -105,6 +105,7 @@
     ] },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You're not sure which direction is which. This room is very disorienting." },
+      { "reader": "Marta", "kind": "said", "words": "The floor, you realize a moment too late, has been turning under you the whole time, slowly, with you on it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works." },
       { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
       { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
@@ -164,7 +165,7 @@
     { "as": "Marta", "type": "eat green cake", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Suddenly, the room appears to have become very large (although everything you are carrying seems to be its normal size)." },
       { "reader": "Marta", "kind": "described", "words": "Posts Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is an enormous room, in the center of which are four wooden posts delineating a rectangular area, above which is what appears to be a wooden roof. In fact, all objects in this room appear to be abnormally large. To the east is a passageway. There are large gaping chasms to the west and northwest." }
+      { "reader": "Marta", "kind": "described", "words": "This is an enormous room, in the center of which are four wooden posts delineating a rectangular area, above which is what appears to be a wooden roof. In fact, all objects in this room appear to be abnormally large. To the east is a passageway. There are large gaping chasms to the west and northwest. Whatever was left on the roof up there is on it still, a long way over your head, and nothing up there is coming down to you." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Pool Room" },
@@ -352,7 +353,8 @@
     ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room." }
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Deep Ford" },
@@ -398,9 +400,9 @@
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Ice Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a large hall of ancient lava, since worn smooth by the movement of a glacier. A large passage exits to the east and an upward lava tube is at the top of a jumble of fallen rocks." },
-      { "reader": "Marta", "kind": "described", "words": "A damp and scorched passage leads west. It is still partly full of steam, and a little way along it, where the glacier was holding the roof up, the roof has come down." },
+      { "reader": "Marta", "kind": "described", "words": "A damp and scorched passage leads west, where the glacier was." },
       { "reader": "Marta", "kind": "told", "words": "As the dragon enters, he sees his reflection on the icy surface of the glacier at its western end. He becomes enraged: There is another dragon here, behind that glass, he thinks! Dragons are smart, but sometimes naive, and this one has never seen ice before. He rears up to his full height to challenge this intruder into his territory. He roars a challenge! The intruder responds! The dragon takes a deep breath, and out of his mouth pours a massive gout of flame. It washes over the ice, which melts rapidly, sending out torrents of water and a huge cloud of steam! You manage to clamber up to a small shelf, but the dragon is terrified! A huge splash goes down his throat! There is a muffled explosion and the dragon, a puzzled expression on his face, dies. He is carried away by the water." },
-      { "reader": "Marta", "kind": "told", "words": "When the flood recedes you climb gingerly down. While no trace of the dragon can be found, the melting of the ice has revealed a passage leading west; and as the steam thins you hear, a little way along it, a fall of rock come down where the glacier was holding it up, and go on coming down for some time. Whatever lies beyond it will have to wait." }
+      { "reader": "Marta", "kind": "told", "words": "When the flood recedes you climb gingerly down. While no trace of the dragon can be found, the melting of the ice has revealed a passage leading west." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cool Room" },
@@ -485,35 +487,42 @@
     ] },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room." }
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room." }
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "told", "words": "The princess enters from the north. She seems surprised to see you." },
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
       { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." },
       { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
       { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." },
       { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "told", "words": "The princess presses a loose piece of marble in the wall and a large section of the wall slides away, revealing a passage to the east. She enters it." },
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room. A large section of the east wall has slid away, revealing a passage to the east." }
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room. A large section of the east wall has slid away, revealing a passage to the east." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room. A large section of the east wall has slid away, revealing a passage to the east." }
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room. A large section of the east wall has slid away, revealing a passage to the east." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room. A large section of the east wall has slid away, revealing a passage to the east." }
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room. A large section of the east wall has slid away, revealing a passage to the east." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Path Near Stream" },
@@ -708,54 +717,54 @@
     { "as": "Marta", "type": "walk through curtain", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You feel somewhat disoriented as you pass through..." },
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
+      { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "You hear a faint voice say \"Curtain Door Closed.\"" },
+      { "reader": "Marta", "kind": "told", "words": "You hear a faint voice say \"Curtain Door Closed.\" The faint shimmer that was in one wall of this room is gone: it is only a wall now, like the other three, and the way back through it has gone dark." },
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room." }
     ] },
@@ -779,8 +788,12 @@
     { "as": "Marta", "type": "examine gnome", "expect": [
       { "reader": "Marta", "kind": "described", "words": "He is a gnome, small and neat and of no particular sex, in a three-piece suit of banker's grey with a watch-chain across the waistcoat, and wire-rimmed bifocals he looks over rather than through. He carries a safety deposit box under one arm and taps its lid. He has the air of a man whose time is money, and whose money is somebody else's." }
     ] },
-    { "as": "Marta", "type": "give statuette to gnome", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The gnome carefully places the golden dragon statuette in the deposit box. \"Let me show you the way out,\" he says, making it clear he will be pleased to see the last of you. Then, you are momentarily disoriented, and when you recover you are back at the Bank Entrance." },
+    { "as": "Marta", "type": "give opener to gnome", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"I wouldn't put THAT in a safety deposit box,\" remarks the gnome with disdain, tossing it over his shoulder, where it disappears with an understated \"pop\"." }
+    ] },
+    { "as": "Marta", "type": "put statuette in box", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The gnome holds the box out for it." },
+      { "reader": "Marta", "kind": "told", "words": "The gnome carefully places the golden dragon statuette in the deposit box. \"Let me show you the way out,\" he says, making it clear he will be pleased to see the last of you. Then, you are momentarily disoriented, and when you recover you are back at the Bank Entrance." },
       { "reader": "Marta", "kind": "described", "words": "Bank Entrance" },
       { "reader": "Marta", "kind": "described", "words": "This is the entrance hall of the Bank of Zork, the largest banking institution of the Great Underground Empire. A partial account of its history is in \"The Lives of the Twelve Flatheads,\" in the chapter on J. Pierpont Flathead. A more detailed history (albeit less objective) may be found in Flathead's outrageous autobiography \"I'm Rich and You Aren't - So There!\". Most of the furniture has been ravaged by passing scavengers. All that remains are two signs at the northwest and northeast corners of the room, which say:" },
       { "reader": "Marta", "kind": "described", "words": "<-- VIEWING ROOMS -->" },
@@ -793,7 +806,7 @@
       { "reader": "Marta", "kind": "described", "words": "The way out (ornate but tasteful) is to the east." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 145 (total of 400 points), in 155 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 145 (total of 400 points), in 156 moves." },
       { "reader": "Marta", "kind": "said", "words": "This score gives you the rank of Novice Adventurer." }
     ] }
   ]

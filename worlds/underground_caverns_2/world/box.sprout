@@ -9,7 +9,7 @@
 // directly inside it, kept as they come and go; `:plain` counts what Zork
 // would list plainly rather than by a first description.
 import {Thing, Portable} from 'thing'
-import {open, close, look_in, shake} from 'verbs'
+import {open, close, look_in, shake, burn} from 'verbs'
 import {Light} from 'lamp'
 
 kind Box is Thing {
@@ -50,6 +50,15 @@ kind Box is Thing {
   without as target for open from Thing
   without as target for close from Thing
   without as target for look_in from Thing
+  // Thing's answer to `burn`, written here so that a carried box (a Bag)
+  // can leave it out once and take Portable's (friction 54).
+  without as target for burn from Thing
+  as target for burn {
+    do {
+      if (bound tool) { if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" } }
+      else { say "You didn't say with what!" }
+    }
+  }
 
   as target for open {
     permit { if (self.get(:open)) { refuse "I think you've already done that." } }
@@ -99,6 +108,7 @@ kind Bag is Box, Portable {
   without as target for look_in from Thing
   without as target for shake from Thing
   without as target for shake from Portable
+  without as target for burn from Box
   as target for shake {
     do {
       if (!self.get(:open)) {

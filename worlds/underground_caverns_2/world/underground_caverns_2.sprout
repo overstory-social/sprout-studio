@@ -1,5 +1,6 @@
-// Zork II: The Wizard of Frobozz, the first two quarters of it: the
-// barrow to the Carousel, and the dragon and the Bank. The world keeps Zork's narrator for the lines the engine
+// Zork II: The Wizard of Frobozz, the first three quarters of it: the
+// barrow to the Carousel, the dragon and the Bank, and the volcano and
+// the Menhir. The world keeps Zork's narrator for the lines the engine
 // speaks for itself, and a gate: a room cannot reach another, so where
 // Zork moves a body or a thing across the map at a stroke (dying, the
 // carousel's random turn, the bucket rising), whoever needs to asks the
@@ -10,7 +11,7 @@ import {Person} from 'person'
 import {Adventurer} from 'adventurer'
 import {go} from 'sprout'
 import {inside_barrow} from 'way_in'
-import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :unicorn_rides, :unicorn_gone, :princess_step, :princess_gone, :dragon_bored, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :robot_at, :dragon_turn, :dragon_watch, :ice_melted, :princess_turn, :secret_door, :curtain_active, :gnome_come, :gnome_go, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :mat_moved, :key_far} from 'verbs'
+import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :unicorn_rides, :unicorn_gone, :princess_step, :princess_gone, :dragon_bored, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :robot_at, :dragon_turn, :dragon_watch, :ice_melted, :princess_turn, :secret_door, :curtain_active, :gnome_come, :gnome_go, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :mat_moved, :key_far, :balloon_tick, :balloon_land, :gnome_due, :gnome_fidget, :vgnome_come, :vgnome_late, :gnome_door, :fuse_out, :explosion_at, :collapse, :diamond_count, :bat_to} from 'verbs'
 import {:princess_walking} from 'dragon'
 
 world underground_caverns_2 is sprout.World {
@@ -64,6 +65,22 @@ world underground_caverns_2 is sprout.World {
   pass :push_key (true)
   pass :mat_moved (true)
   pass :key_far (true)
+  // The volcano's clocks and the maze's count (round 5): the balloon's
+  // tick and its landing, the Volcano Gnome's comings and goings, the
+  // fuse burning down, an explosion heard, a room collapsing, and how far
+  // round the bases the runner has got.
+  pass :balloon_tick (true)
+  pass :balloon_land (true)
+  pass :gnome_due (true)
+  pass :gnome_fidget (true)
+  pass :vgnome_come (true)
+  pass :vgnome_late (true)
+  pass :gnome_door (true)
+  pass :fuse_out (true)
+  pass :explosion_at (true)
+  pass :collapse (true)
+  pass :diamond_count (true)
+  pass :bat_to (true)
 
   on :open_gate (from) {
     self.set(:gate, true)

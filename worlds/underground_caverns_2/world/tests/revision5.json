@@ -1,0 +1,241 @@
+{
+  "about": "Round 5's robot points: with the cage lifted, the robot told to take the sphere holds it, and the room and its close-up say so; asked what it holds it answers; asked to give it, it hands it over (P3); an order to go, given from the next room, is answered by its stand-in in voice (P4).",
+  "steps": [
+    { "seed": 5 },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Marta", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Marta", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Marta", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Narrow Tunnel" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foot Bridge" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Great Cavern" },
+      { "reader": "Marta", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Shallow Ford" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
+      { "reader": "Marta", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Marta", "kind": "said", "words": "The unicorn bounds lightly away." }
+    ] },
+    { "as": "Marta", "type": "in", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gazebo" },
+      { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the tea table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A newspaper" },
+      { "reader": "Marta", "kind": "described", "words": "A place mat" },
+      { "reader": "Marta", "kind": "described", "words": "A china teapot" },
+      { "reader": "Marta", "kind": "described", "words": "A letter opener" },
+      { "reader": "Marta", "kind": "described", "words": "A matchbook" }
+    ] },
+    { "as": "Marta", "type": "take teapot", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "out", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
+      { "reader": "Marta", "kind": "told", "words": "There is a beautiful unicorn eating roses here. Around his neck is a red satin ribbon on which is strung a tiny key." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Shallow Ford" }
+    ] },
+    { "as": "Marta", "type": "fill teapot with water", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The teapot is now full of water." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Formal Garden" },
+      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Topiary" },
+      { "reader": "Marta", "kind": "described", "words": "This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
+      { "reader": "Marta", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You're not sure which direction is which. This room is very disorienting." },
+      { "reader": "Marta", "kind": "said", "words": "The floor, you realize a moment too late, has been turning under you the whole time, slowly, with you on it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works." },
+      { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
+      { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
+    ] },
+    { "as": "Marta", "type": "say well", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is a deafening clap of thunder and the stone door quietly swings open to reveal a passageway beyond." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Pearl Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a former broom closet. The exits are to the east and west." },
+      { "reader": "Marta", "kind": "described", "words": "There is a pearl necklace here with hundreds of large pearls." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Circular Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." },
+      { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
+    ] },
+    { "as": "Marta", "type": "get in bucket", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are now in the wooden bucket." },
+      { "reader": "Marta", "kind": "described", "words": "Circular Room, in the wooden bucket" },
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." }
+    ] },
+    { "as": "Marta", "type": "pour water into bucket", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There is now a puddle in the bottom of the wooden bucket." },
+      { "reader": "Marta", "kind": "told", "words": "The bucket rises and comes to a stop." },
+      { "reader": "Marta", "kind": "told", "words": "Top of Well, in the wooden bucket" },
+      { "reader": "Marta", "kind": "told", "words": "You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily." },
+      { "reader": "Marta", "kind": "told", "words": "The wooden bucket contains:" },
+      { "reader": "Marta", "kind": "told", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "get out", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are on your own feet again." },
+      { "reader": "Marta", "kind": "described", "words": "Top of Well" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily." },
+      { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." },
+      { "reader": "Marta", "kind": "described", "words": "The wooden bucket contains:" },
+      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Tea Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room containing a large oblong table, no doubt set for afternoon tea. It is clear from the objects on the table that the users were indeed mad. In the eastern corner of the room is a small hole (no more than four inches high). There are passageways leading away to the west and the northwest." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the large oblong table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with green letters" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with blue letters" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with orange letters" },
+      { "reader": "Marta", "kind": "described", "words": "A cake frosted with red letters" }
+    ] },
+    { "as": "Marta", "type": "nw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Low Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a circular room with a low ceiling. There are exits to the east and southeast." },
+      { "reader": "Marta", "kind": "described", "words": "There is a robot here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a green piece of paper here." }
+    ] },
+    { "as": "Marta", "type": "robot, go east", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"Whirr, buzz, click!\"" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Machine Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room full of assorted heavy machinery, whirring noisily. The room smells of burned resistors. Along one wall are three buttons which are, respectively, round, triangular, and square. Naturally, above these buttons are instructions written in EBCDIC. A large sign in English above all the buttons says" },
+      { "reader": "Marta", "kind": "described", "words": "\"DANGER -- HIGH VOLTAGE\"" },
+      { "reader": "Marta", "kind": "described", "words": "There are exits to the west and the south." },
+      { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
+    ] },
+    { "as": "Marta", "type": "robot, push triangular button", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"Whirr, buzz, click!\"" },
+      { "reader": "Marta", "kind": "told", "words": "A dull thump is heard in the distance." }
+    ] },
+    { "as": "Marta", "type": "robot, go south", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"Whirr, buzz, click!\"" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
+      { "reader": "Marta", "kind": "described", "words": "This is a dingy closet adjacent to a larger room to the north. Chiselled into a wall are these words:" },
+      { "reader": "Marta", "kind": "described", "words": "Protected by" },
+      { "reader": "Marta", "kind": "described", "words": "FROBOZZ" },
+      { "reader": "Marta", "kind": "described", "words": "Magic Alarm Company" },
+      { "reader": "Marta", "kind": "described", "words": "(Hello, footpad!)" },
+      { "reader": "Marta", "kind": "described", "words": "There doesn't seem to be any footpad here, however." },
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
+    ] },
+    { "as": "Marta", "type": "take sphere", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "As you reach for the sphere, a solid steel cage falls from the ceiling to entrap you. To make matters worse, poisonous gas starts coming into the room." },
+      { "reader": "Marta", "kind": "described", "words": "Cage" },
+      { "reader": "Marta", "kind": "described", "words": "You are trapped inside a solid steel cage. The robot is in here with you, bent nearly double, and humming." }
+    ] },
+    { "as": "Marta", "type": "examine robot", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "The gas is thicker than it was." },
+      { "reader": "Marta", "kind": "described", "words": "It is a robot, late-model, as it will tell you itself: a tall tin body on two jointed legs, a head-like appendage with two dull lenses in it, and a pair of three-fingered hands held out in front of it as though waiting to be given something. A small plate on its chest says \"FROBOZZ MAGIC ROBOT COMPANY\". It hums." }
+    ] },
+    { "as": "Marta", "type": "robot, lift cage", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The cage shakes and is hurled across the room. It's hard to say, but the robot appears to be smiling." },
+      { "reader": "Marta", "kind": "told", "words": "The gas is thicker than it was." },
+      { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a mangled steel cage here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
+    ] },
+    { "as": "Marta", "type": "take sphere", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "drop sphere", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "robot, take sphere", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"Whirr, buzz, click!\"" }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
+      { "reader": "Marta", "kind": "described", "words": "This is a dingy closet adjacent to a larger room to the north. Chiselled into a wall are these words:" },
+      { "reader": "Marta", "kind": "described", "words": "Protected by" },
+      { "reader": "Marta", "kind": "described", "words": "FROBOZZ" },
+      { "reader": "Marta", "kind": "described", "words": "Magic Alarm Company" },
+      { "reader": "Marta", "kind": "described", "words": "(Hello, footpad!)" },
+      { "reader": "Marta", "kind": "described", "words": "There doesn't seem to be any footpad here, however." },
+      { "reader": "Marta", "kind": "described", "words": "There is a mangled steel cage here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a robot here. It is holding a red crystal sphere." }
+    ] },
+    { "as": "Marta", "type": "examine robot", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is a robot, late-model, as it will tell you itself: a tall tin body on two jointed legs, a head-like appendage with two dull lenses in it, and a pair of three-fingered hands held out in front of it as though waiting to be given something. A small plate on its chest says \"FROBOZZ MAGIC ROBOT COMPANY\". It hums. It is holding a red crystal sphere." }
+    ] },
+    { "as": "Marta", "type": "robot, inventory", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"Click. I am holding a red crystal sphere, Master. Whirr.\"" }
+    ] },
+    { "as": "Marta", "type": "robot, give me the sphere", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"Whirr, buzz, click!\"" },
+      { "reader": "Marta", "kind": "said", "words": "The robot hands you the red crystal sphere." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "A china teapot" },
+      { "reader": "Marta", "kind": "said", "words": "A red crystal sphere" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Machine Room" }
+    ] },
+    { "as": "Marta", "type": "robot, go south", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The robot is not here to hear you. It is in the Dingy Closet, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does." }
+    ] },
+    { "as": "Marta", "type": "robot, go north", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The robot is not here to hear you. It is in the Dingy Closet, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
+      { "reader": "Marta", "kind": "described", "words": "There is a mangled steel cage here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
+    ] }
+  ]
+}

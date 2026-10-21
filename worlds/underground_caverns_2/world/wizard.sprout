@@ -22,6 +22,8 @@ import {low_room, machine_room, dingy_closet} from 'machine'
 import {ravine_ledge, ledge_end, tiny_room, dreary_room} from 'ravine'
 import {dragon_room, dragon_lair, fresco_room, stone_bridge, cool_room, ice_room} from 'dragon'
 import {bank_entrance, teller_west, teller_east, viewing_west, viewing_east, small_room, vault, depository, office} from 'bank'
+import {lava_room, lava_tube, volcano_view, cobwebby_corridor, volcano_bottom, vair_1, vair_2, vair_3, vair_4, ledge_1, library, ledge_2, safe_room} from 'volcano'
+import {menhir_room, kennel, stairway, diamond_1, diamond_2, diamond_3, diamond_4, diamond_5, diamond_6, diamond_7, diamond_8, diamond_9} from 'menhir'
 import {ask} from 'sprout'
 import {attack, mung, greet, talk, give, follow, kick, rub, throw, through, shift, squeeze, climb_up, look_in, Spell, Dest, :consume, :wizard_start, :where_are_you, :wizard_turn, :vanish, :wizard_near, :settle} from 'verbs'
 
@@ -186,6 +188,31 @@ kind Wizard is Creature, sprout.Actor {
         else if (value == :vault) { move self to vault }
         else if (value == :depository) { move self to depository }
         else if (value == :office) { move self to office }
+        else if (value == :lava_room) { move self to lava_room }
+        else if (value == :lava_tube) { move self to lava_tube }
+        else if (value == :volcano_view) { move self to volcano_view }
+        else if (value == :cobwebby) { move self to cobwebby_corridor }
+        else if (value == :volcano_bottom) { move self to volcano_bottom }
+        else if (value == :vair_1) { move self to vair_1 }
+        else if (value == :vair_2) { move self to vair_2 }
+        else if (value == :vair_3) { move self to vair_3 }
+        else if (value == :vair_4) { move self to vair_4 }
+        else if (value == :ledge_1) { move self to ledge_1 }
+        else if (value == :library) { move self to library }
+        else if (value == :ledge_2) { move self to ledge_2 }
+        else if (value == :safe_room) { move self to safe_room }
+        else if (value == :menhir_room) { move self to menhir_room }
+        else if (value == :kennel) { move self to kennel }
+        else if (value == :stairway) { move self to stairway }
+        else if (value == :diamond_1) { move self to diamond_1 }
+        else if (value == :diamond_2) { move self to diamond_2 }
+        else if (value == :diamond_3) { move self to diamond_3 }
+        else if (value == :diamond_4) { move self to diamond_4 }
+        else if (value == :diamond_5) { move self to diamond_5 }
+        else if (value == :diamond_6) { move self to diamond_6 }
+        else if (value == :diamond_7) { move self to diamond_7 }
+        else if (value == :diamond_8) { move self to diamond_8 }
+        else if (value == :diamond_9) { move self to diamond_9 }
         let dark = from.get(:in_dark)
         if (dark) { tell "You feel a slight outrush of air as something moves nearby." }
         else if (here.is(Wonderland)) { tell "A huge and terrible wizard appears before you, as large as the largest tree! He looks down on you as you would look upon a gnat!" }
@@ -199,7 +226,7 @@ kind Wizard is Creature, sprout.Actor {
           // What he is afraid of, read off him (round 4's P8): a short
           // visit that meets him and nothing else should leave knowing
           // there is something to want, and where.
-          tell "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you."
+          tell "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you; the pearls nearest, behind a stone door that asks a question, and the rest further in, past a room that will not keep still."
           let r = random(3)
           if (r == 0) { self.set(:spell, :feeble) }
           else if (r == 1) { self.set(:spell, :fumble) }

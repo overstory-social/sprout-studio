@@ -16,6 +16,7 @@ import {examine} from 'sprout'
 import {take, rub, mung, attack, follow, greet, talk, through, cross, smell, listen, look_in, climb_up, shift, give, throw, cut, untie, tie, :travel, :bound_away, :come_back, :frighten, :unicorn_at, :secret_door, :unicorn_scene, :unicorn_rides, :unicorn_gone, :consume} from 'verbs'
 import {ravine_ledge} from 'ravine'
 import {AbsentPrincess} from 'dragon'
+import {Brick} from 'volcano'
 
 // The unicorn: an NPC that roams between the north end of the garden and
 // Elsewhere, as I-GARDEN moves it, and melts into the hedges when it is
@@ -452,6 +453,7 @@ object marble_hall is NearCarousel in underground_caverns_2 {
   on :secret_door { self.set(:secret, true) }
   passage body { This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room.{if self.get(:secret)} A large section of the east wall has slid away, revealing a passage to the east.{/if} }
   object other_princess is AbsentPrincess { :order 5  :way east }
+  object brick is Brick
   object loose_marble is Scenery {
     grammar { name "loose piece of marble"  nouns "piece", "panel", "section"  adjectives "loose" }
     passage short { loose piece of marble }

@@ -23,7 +23,8 @@ import {bank_entrance} from 'bank'
 import {carousel_room} from 'carousel'
 import {elsewhere, deep_ford, stream_path, Elsewhere} from 'garden'
 import {ask} from 'sprout'
-import {attack, mung, kick, greet, talk, give, throw, rub, alarm, follow, open, close, melt, cross, listen, smell, through, Spell, Dest, Direction, :provoke, :dragon_turn, :dragon_watch, :dragon_bored, :ice_melted, :princess_awake, :princess_turn, :princess_step, :princess_gone, :secret_door, :unicorn_scene, :unicorn_rides, :scored, :die, :open_gate, :gate_open, :close_gate, :consume, :travel} from 'verbs'
+import {lava_room, lava_tube} from 'volcano'
+import {attack, mung, kick, greet, talk, give, throw, rub, alarm, follow, open, close, melt, cross, listen, smell, through, climb_up, Spell, Dest, Direction, :provoke, :dragon_turn, :dragon_watch, :dragon_bored, :ice_melted, :princess_awake, :princess_turn, :princess_step, :princess_gone, :secret_door, :unicorn_scene, :unicorn_rides, :scored, :die, :open_gate, :gate_open, :close_gate, :consume, :travel} from 'verbs'
 
 // The huge red dragon (DRAGON): an NPC that lies in the Dragon Room,
 // watching, and follows whoever has made it angry, out of mingled
@@ -46,7 +47,7 @@ kind Dragon is Creature, sprout.Actor {
   passage glacier_scene {
     As the dragon enters, he sees his reflection on the icy surface of the glacier at its western end. He becomes enraged: There is another dragon here, behind that glass, he thinks! Dragons are smart, but sometimes naive, and this one has never seen ice before. He rears up to his full height to challenge this intruder into his territory. He roars a challenge! The intruder responds! The dragon takes a deep breath, and out of his mouth pours a massive gout of flame. It washes over the ice, which melts rapidly, sending out torrents of water and a huge cloud of steam! You manage to clamber up to a small shelf, but the dragon is terrified! A huge splash goes down his throat! There is a muffled explosion and the dragon, a puzzled expression on his face, dies. He is carried away by the water.
 
-    When the flood recedes you climb gingerly down. While no trace of the dragon can be found, the melting of the ice has revealed a passage leading west; and as the steam thins you hear, a little way along it, a fall of rock come down where the glacier was holding it up, and go on coming down for some time. Whatever lies beyond it will have to wait.
+    When the flood recedes you climb gingerly down. While no trace of the dragon can be found, the melting of the ice has revealed a passage leading west.
   }
   passage amused { The dragon looks amused. He speaks in a voice so deep you feel it rather than hear it, but the tongue is unknown to you. You find yourself almost hypnotized. }
   // What a blow gets, by how angry he already is (DRAGON-FCN's lines,
@@ -651,27 +652,29 @@ object ice_room is IceRoom in underground_caverns_2 {
   grammar {
     name "Ice Room"
     exit east "east" -> cool_room
-    exit west "west" refuse "The passage west is damp and scorched and still partly full of steam, and a little way along it a fall of rock has come down behind the glacier, where the glacier was holding it up. Whatever lies beyond it will have to wait." when (self.get(:melted))
+    exit west "west" -> lava_room when (self.get(:melted))
     exit west "west" refuse "You don't even have an ice-pick."
-    exit up "up" refuse "The lava tube goes up from the top of the fallen rocks, and so do you, for a little way, until a slab that was wedged across it lets go and comes down past you with a great deal of company. The way up has gone, for now. Whatever lies beyond it will have to wait."
+    exit up "up" -> lava_tube
   }
   :id ice_room
   :walls 13
   passage body { This is a large hall of ancient lava, since worn smooth by the movement of a glacier. A large passage exits to the east and an upward lava tube is at the top of a jumble of fallen rocks.{if self.get(:melted)}
 
-    A damp and scorched passage leads west. It is still partly full of steam, and a little way along it, where the glacier was holding the roof up, the roof has come down.{/if} }
+    A damp and scorched passage leads west, where the glacier was.{/if} }
   object glacier is Glacier
-  object lava_tube is Scenery {
+  object tube_mouth is Scenery {
     grammar { name "lava tube"  nouns "tube", "chimney", "rocks", "jumble"  adjectives "upward", "lava", "fallen" }
     passage short { lava tube }
-    describe { text "At the top of a jumble of fallen rocks a tube of lava goes up into the dark, round and smooth as a drainpipe, and nearly as wide. It would be a tight climb." }
+    describe { text "At the top of a jumble of fallen rocks a tube of lava goes up into the dark, round and smooth as a drainpipe, and nearly as wide. It would be a tight climb, and it can be climbed." }
+    without as target for climb_up from Thing
+    as target for climb_up { do { send actor :travel with :lava_tube  say "" } }
   }
   object steam is Scenery {
     grammar { name "steam"  nouns "passage", "vapor"  adjectives "damp", "scorched", "west" }
     passage short { steam }
     :unseen true
     on :ice_melted { self.set(:unseen, false) }
-    describe { text "The passage to the west, where the glacier was, is damp and scorched both, which takes some doing, and still partly full of steam that smells very faintly of dragon." }
+    describe { text "The passage to the west, where the glacier was, is damp and scorched both, which takes some doing, and still a little full of steam that smells very faintly of dragon. It leads on, into a room walled with old lava." }
   }
 }
 
