@@ -992,3 +992,163 @@ caverns' numbers are written "caverns N"._
   each naming Thing. The rule in 54 holds; the trap is that a `without`
   reads as if it settled the member, and settles only one path.
 - **Spec:** Kinds › Suppressing a contribution.
+
+## After round 7
+
+### 69. The foot of the stair: ten ways, eight allowed (amends 58)
+
+- **Wanted:** Zork's DIAMOND-5 has nine compass ways and one down, the
+  secret passage to the Cerberus Room, which round 7 builds.
+- **Wrote instead:** `exitsPerPlace` is eight, and up and down must be
+  two of them, so the room's west goes the way its southwest went in 58:
+  "west" at the foot of the stair is "You can't go that way.", which is
+  what a third of any direction there says anyway, and the corner that
+  west led to once the bases are run is reached from the next corner.
+- **Spec:** Limits › Static caps; Exits.
+
+### 70. A room that is dark but whose things can be named
+
+- **Wanted:** Zork's CRYPT-ROOM is a lit room until the visitor's lamp
+  goes out in it; then it is dark, the outline of the secret door shows,
+  and OPEN DOOR still works, because the door is a local-global the parser
+  finds in the dark.
+- **Wrote instead:** a dark place's things cannot be named ("a visitor in
+  it can name only what they carry"), so the crypt is a lit `Room` that
+  says it is dark: it counts the lights of whoever is in it on every
+  `:relight`, and its body reads its own count rather than the visitor's.
+  The grue never comes to the crypt, which is Zork's own arrangement too.
+- **Spec:** Range › Sight; Places.
+
+### 71. A room's words may not read the one looking, anywhere
+
+- **Wanted:** the Guarded Room's "The lizard is sniffing at you" where the
+  visitor carries the candy, and the crypt's dark text where they carry no
+  light: `{if actor.get(:has_candy)}` in the room's body.
+- **Wrote instead:** the bucket's view renders a room's `body`, from a
+  handler where nobody acts, and the compiler takes every `body` as one
+  member: a `body` that reads `actor` in the Guarded Room refuses the
+  bucket's `inside_view` in the well. So the Guarded Room keeps
+  `:candy_near`, read off whoever comes in and after every command, and
+  the crypt keeps `:lit_now`, and both bodies read their own property.
+- **Spec:** Prose › Passages ("it may then only be invoked from a body
+  where those bindings exist"); How members combine.
+
+### 72. A thing marked unseen is out of reach of a message
+
+- **Wanted:** the clear sphere in the sand, unseen until the glass breaks,
+  and then told `:reveal_sphere` by the aquarium; the obsidian stand and
+  the black sphere likewise, told `:reveal` by the bench.
+- **Wrote instead:** `each c: ClearSphere in self` walks past an unseen
+  thing, as a hand does, so the message never arrived and the sphere
+  stayed hidden for good. Each hides by a flag of its own (`:hidden`, with
+  `as target for any` and `as tool for any` refusing while it is set, and
+  `:ndesc` keeping it off the room's list), which a message can clear.
+- **Spec:** The world model › Unseen; Range.
+
+### 73. `take all` from a hand too full never reaches the floor (an engine note)
+
+- Round 7's P11, reproduced from the seeded run: with nine things in hand
+  and the club on the floor, `take all` bound eight things, the carried
+  ones first by nearness, and the club never made the set; the world's
+  own line for "every one of these is already held" was the wrong answer.
+  The world says so now ("Your hands are too full for 'all' to see past
+  them; say which thing you want."), but what `all` should do is leave out
+  what the actor holds before it counts to eight, as it does for a role
+  that takes one thing. For Sprout: an issue.
+- **Spec:** Parsing › Sequences, again and all; Limits › Runtime budgets
+  (`setRoleObjects`).
+
+### 74. `after command` runs before the gate's move, and `here` is the room before the throw
+
+- Round 7's P6: a visitor thrown by the Carousel is moved by the exit to
+  the room the exit names, then, by the gate, in a handler further down
+  the queue, to the room the throw chose; `after command` runs between
+  the two, so `here` in it is the exit's room, and the princess walking
+  out of that room told the visitor she walked east, from a room they
+  never saw. The dragon's and the princess's turns are sent two sends
+  deep now (`:clocks_later`, `:clocks_now`), which is enough for the
+  gate's handler to have run, and `here` in the second handler is where
+  the visitor stands. A visitor's `:last_room`, set in `on :moved`, is no
+  help: that message is queued too.
+- **Spec:** Verbs › After a command ("before what an engine verb answers,
+  which follows the queue"); Events, messages and the bus.
+
+### 75. A handler's plain `tell` leaves out the one acting
+
+- The wand's words reach the thing they are said over by broadcast, and
+  the thing answers from a handler; a plain `tell` there "reaches every
+  actor in the telling object's place except the actor and except any
+  participant in the current reading", and the caster is the actor. Every
+  such answer is `tell from`, the broadcast's sender, and the demon's fee
+  lines, first written in his `on :paid`, are said in his `do` for `give`.
+- **Spec:** Other people › Who hears it.
+
+### 76. A word said over the wand is the reading's own answer (63 again)
+
+- "float" with the wand pointed must glow the wand, set the spell running
+  and broadcast the word, and `random` for its length; a `do` that only
+  sends is answered "Nothing happens." before the handler's lines. So the
+  verb's `do` sends `:cast_now` and says `cast_line`, a passage that reads
+  what the handler decided (`:cast_result`), which works because a turn's
+  lines are rendered once its work is done.
+- **Spec:** Verbs › The two passes; Properties › Reading ("a line reads a
+  property as the turn left it").
+
+### 77. A guard cannot tell a hand from a spell
+
+- **Wanted:** the Wizard's trophy cabinet takes what Filch and the dead
+  give up and refuses what a visitor puts in it.
+- **Wrote instead:** both moves are the visitor's own body's: `accept`'s
+  `from` is the hand the treasure comes from and `mover` is the body that
+  ran the move, and in the death's scatter and in Filch's gate both are
+  the visitor. So the cabinet is unsealed by a message the visitor sends
+  ahead of the gate (`:unseal`, which the world passes) and sealed again
+  after. Until it was, the refusal ended the gate's handler silently,
+  before the move to the Rooms of Mist, and the gate stayed open.
+- **Spec:** Movement and consent › The three roles.
+
+### 78. I-WAND's two moves and the queue
+
+- The wand's glow lasts two of Zork's clock ticks, and the word is read
+  before the tick of the move it is said in. Here the word's handler runs
+  after `after command`, where the countdown lives, so the second move's
+  tick put the glow out under the word. The countdown skips the move a
+  word is pending in (`:cast_pending`).
+- **Spec:** Verbs › After a command.
+
+### 79. Fluoresce lights nothing
+
+- **Wanted:** V-ENCHANT's FLUORESCE sets LIGHTBIT and ONBIT on the thing,
+  so a fluoresced sword is a lamp.
+- **Wrote instead:** a thing gives light only as a `sprout.LightSource`,
+  which is what it is made of, not a property a word sets; the visitor's
+  own count of lights, and the dark rooms', know only the world's `Light`.
+  The thing "begins to glow", and the glow holds no light. Making every
+  portable thing a light source from birth would do it, and is more than
+  this round changes.
+- **Spec:** The standard library › `sprout.LightSource`; Range › Sight.
+
+### 80. The demon fetches only what is in range
+
+- Zork's "demon, give me X" moves any takeable thing in the game to the
+  Pentagram Room. A line names only what is in reach, so the demon can be
+  asked for what is in the room (the wand in the Wizard's hand, since the
+  Wizard passes), and for the menhir, the dog and the cabinet by stand-ins
+  the Pentagram Room keeps, as Zork's GLOBAL-MENHIR, GLOBAL-CERBERUS and
+  GLOBAL-WIZARD-CASE are.
+- **Spec:** Range; Parsing › When nothing matches.
+
+### 81. The spheres' visions are written by hand (47 again)
+
+- A sphere shows the room the next one lies in, GO&LOOK describing that
+  room from here. A room is out of range of a sphere, so each sphere
+  tells the others, and the Rooms of Mist, where it has got to on every
+  move, and the vision is a line for each of the rooms a sphere comes to
+  rest in and a word for the rest.
+- **Spec:** Range.
+
+### 82. One door in two rooms, twice more (48 again)
+
+- The Wizard's door and the crypt door are each two doors keeping each
+  other told, as the Tiny Room's is; the lizard is on one side only.
+- **Spec:** Objects.

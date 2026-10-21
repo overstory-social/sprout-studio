@@ -15,7 +15,7 @@ import * as sprout from 'sprout'
 import {Thing, Scenery, Creature, Portable, Valuable, Door} from 'thing'
 import {Box, Bag} from 'box'
 import {Room, DarkRoom, Bridged, ChasmEdge, DragonCountry} from 'room'
-import {Treasure, Statuette, Rose} from 'items'
+import {Treasure, Statuette, Rose, Teapot, Water} from 'items'
 import {Chasm, Stream, Bridge, BridgeUnder} from 'way_in'
 import {Adventurer} from 'adventurer'
 import {ledge_end} from 'ravine'
@@ -24,7 +24,7 @@ import {carousel_room} from 'carousel'
 import {elsewhere, deep_ford, stream_path, Elsewhere} from 'garden'
 import {ask} from 'sprout'
 import {lava_room, lava_tube} from 'volcano'
-import {attack, mung, kick, greet, talk, give, throw, rub, alarm, follow, open, close, melt, cross, listen, smell, through, climb_up, Spell, Dest, Direction, :provoke, :dragon_turn, :dragon_watch, :dragon_bored, :ice_melted, :princess_awake, :princess_turn, :princess_step, :princess_gone, :secret_door, :unicorn_scene, :unicorn_rides, :scored, :die, :open_gate, :gate_open, :close_gate, :consume, :travel} from 'verbs'
+import {attack, mung, kick, greet, talk, give, throw, rub, alarm, follow, open, close, melt, cross, listen, smell, through, climb_up, burn, pour_on, Spell, Dest, Direction, :provoke, :dragon_turn, :dragon_watch, :dragon_bored, :ice_melted, :princess_awake, :princess_turn, :princess_step, :princess_gone, :secret_door, :unicorn_scene, :unicorn_rides, :scored, :die, :open_gate, :gate_open, :close_gate, :consume, :travel} from 'verbs'
 
 // The huge red dragon (DRAGON): an NPC that lies in the Dragon Room,
 // watching, and follows whoever has made it angry, out of mingled
@@ -43,7 +43,7 @@ kind Dragon is Creature, sprout.Actor {
   passage leaves { {if false}.{/if} }
   passage not_yours { The dragon does not give things back. }
   passage held_fast { The dragon weighs rather more than you do, and is awake. }
-  describe { text "He turns and looks back at you, his cat's eyes yellow in the gloom. You start to feel weak, and quickly turn away." }
+  describe { text "He turns and looks back at you, his cat's eyes yellow in the gloom. You start to feel weak, and quickly turn away. Before you do, you notice that he has caught sight of himself in the polished brass of your lamp, and that he does not care for the look of the other dragon in it at all." }
   passage glacier_scene {
     As the dragon enters, he sees his reflection on the icy surface of the glacier at its western end. He becomes enraged: There is another dragon here, behind that glass, he thinks! Dragons are smart, but sometimes naive, and this one has never seen ice before. He rears up to his full height to challenge this intruder into his territory. He roars a challenge! The intruder responds! The dragon takes a deep breath, and out of his mouth pours a massive gout of flame. It washes over the ice, which melts rapidly, sending out torrents of water and a huge cloud of steam! You manage to clamber up to a small shelf, but the dragon is terrified! A huge splash goes down his throat! There is a muffled explosion and the dragon, a puzzled expression on his face, dies. He is carried away by the water.
 
@@ -278,7 +278,7 @@ kind Princess is Creature, sprout.Actor {
   // to, kept apart from `:step`, since a passage is rendered after the
   // move's clocks have walked her on (round 4's P10).
   :seen_step 0 min 0 max 15
-  passage ignores { The princess ignores you. She looks about the room, but her eyes fix on the {if self.get(:seen_step) == 0}way out{else if self.get(:seen_step) == 1}small crack to the east{else if self.get(:seen_step) == 2}ledge to the east{else if self.get(:seen_step) == 3}rock face{else if self.get(:seen_step) == 4}hall to the south{else if self.get(:seen_step) == 5}east wall{else if self.get(:seen_step) == 6}archway{else if self.get(:seen_step) == 7}path north{else if self.get(:seen_step) == 8}gazebo{else}garden outside, with no great interest{/if}. }
+  passage ignores { The princess ignores you. She looks about the room, but her eyes fix on the {if self.get(:seen_step) == 0}blackened doorway to the south{else if self.get(:seen_step) == 1}small crack to the east{else if self.get(:seen_step) == 2}ledge to the east{else if self.get(:seen_step) == 3}rock face{else if self.get(:seen_step) == 4}hall to the south{else if self.get(:seen_step) == 5}east wall{else if self.get(:seen_step) == 6}archway{else if self.get(:seen_step) == 7}path north{else if self.get(:seen_step) == 8}gazebo{else}garden outside, with no great interest{/if}. }
   passage trance { She's in a trance! }
   // How she went, for her stand-ins: ridden off with the key given, ridden
   // off with the key, or whisked away by the Wizard.
@@ -477,7 +477,18 @@ kind Glacier is Scenery {
   passage ldesc { A mass of ice fills the western half of the room. }
   describe { text "A mass of ice, blue-white and faintly translucent, fills the western half of the room from floor to roof, and goes back into the dark further than you can see. The face of it is smooth as glass, and in it, if you stand close, there is a dim adventurer looking back at you with a lamp. It gives off cold the way a fire gives off heat." }
   passage no_take { The glacier is rather larger than you are, and colder, and attached. }
-  as target for melt { do { say "This is a big glacier; you'll need a lot of heat." } }
+  as target for melt { do { say "This is a big glacier; you'll need a lot of heat, a great deal more than anything you can carry: the kind that comes out of something's mouth." } }
+  // Burned, with a match or the idea of one (round 7's P5): the answer is
+  // Zork's, and says what would do.
+  without as target for burn from Thing
+  as target for burn {
+    do {
+      if (bound tool) { if (tool.is(Thing)) { say "With {tool.a_short}??!? This is a big glacier; you'll need a lot of heat, a great deal more than that: the kind that comes out of something's mouth." } else { say "With that??!?" } }
+      else { say "This is a big glacier; you'll need a lot of heat, a great deal more than you have: the kind that comes out of something's mouth." }
+    }
+  }
+  without as target for pour_on from Thing
+  as target for pour_on { do { if (item.is(Teapot) && actor.is(Adventurer)) { if (actor.get(:teapot_water)) { say "The water from the teapot runs down the face of the ice and freezes there, and the glacier is a teapot's worth bigger. Water is not what it wants; heat is." } else { say "The teapot is empty." } } } }
   without as target for through from Thing
   as target for through { do { say "You walk into the glacier. The glacier does not notice, and you are colder for it." } }
   on :ice_melted { self.set(:ndesc, true)  self.set(:unseen, true) }

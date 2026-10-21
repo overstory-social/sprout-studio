@@ -68,6 +68,9 @@ kind Bucket is sprout.Place, Box, Vessel, Awaited, CakeSafe {
 
   without as container for pour_in from Thing
   as container for pour_in { do { } }
+  // Thing's answer to "look in" arrives by way of Vessel and Awaited
+  // (friction 54; round 7's P9).
+  without as target for look_in from Thing
   without as target for kick from Thing
   as target for kick {
     do {

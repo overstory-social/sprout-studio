@@ -24,6 +24,7 @@ import {Light} from 'lamp'
 import {Adventurer} from 'adventurer'
 import {ice_room} from 'dragon'
 import {carousel_room} from 'carousel'
+import {guarded_room} from 'workshop'
 import {elsewhere, Elsewhere} from 'garden'
 import {ask} from 'sprout'
 import {take, open, close, look_in, look_under, read, through, tie, untie, burn, lamp_on, inflate, board, disembark, cross, climb_up, climb_down, give, throw, greet, talk, follow, attack, mung, kick, rub, shift, smell, listen, search, raise, Dest, Direction, :balloon_tick, :balloon_land, :fuel_lit, :nestled, :tie_to, :untied, :bag_full, :gnome_due, :gnome_fidget, :vgnome_come, :vgnome_late, :gnome_door, :fuse_lit, :fuse_out, :in_brick, :explosion, :blow, :collapse, :touch, :open_gate, :gate_open, :close_gate, :consume, :die, :travel, :light} from 'verbs'
@@ -124,6 +125,9 @@ kind Balloon is sprout.Place, Box, Vessel {
 
   without as target for inflate from Thing
   as target for inflate { do { say "It takes more than words to inflate a balloon." } }
+  // Thing's answer to "look in" arrives by way of Vessel (friction 54;
+  // round 7's P9).
+  without as target for look_in from Thing
   without as target for through from Thing
   as target for through { do { } }
   as target for board { do { } }
@@ -901,8 +905,8 @@ object cobwebby_corridor is DarkRoom in underground_caverns_2 {
     exit up "up" -> lava_tube
     exit north "north" -> lava_tube
     exit northeast "northeast" -> carousel_room
-    exit southwest "southwest" refuse "The corridor twists southwest a little way and ends in a fall of rock, floor to roof, with cobwebs over the rock, which means nobody has been through it for a long while. Whatever lies beyond it will have to wait."
-    exit down "down" refuse "The corridor twists southwest and down a little way and ends in a fall of rock, floor to roof, with cobwebs over the rock. Whatever lies beyond it will have to wait."
+    exit southwest "southwest" -> guarded_room
+    exit down "down" -> guarded_room
   }
   :id cobwebby
   passage body { A winding corridor is filled with cobwebs. Some are broken and the dust on the floor is disturbed. The trend of the twists and turns is northeast to southwest. On the north side of one twist, high up, is a narrow crack. }
@@ -990,7 +994,7 @@ object vair_4 is VolcanoAir in underground_caverns_2 {
   grammar { name "Volcano Near Wide Ledge" }
   :id vair_4
   :walls 13
-  passage body { You are near the rim of the volcano. Above you it is open to the sky. To the west, there is a place to land on a wide ledge. }
+  passage body { You are near the rim of the volcano. Above you it is open to the sky. To the west, there is a place to land on a wide ledge. There is nothing above this but the sky, and a balloon that rises from here rises out of the volcano for good; the wide ledge is the last place to come down. }
   object wide_ledge is Scenery {
     grammar { name "wide ledge"  nouns "ledge", "shelf"  adjectives "wide", "west" }
     passage short { wide ledge }

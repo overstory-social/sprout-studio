@@ -276,16 +276,15 @@ kind Elsewhere is sprout.Place {
   grammar { name "Elsewhere"  article none }
   describe { text "Elsewhere. Nobody comes here, and nothing is described." }
 }
-object elsewhere is Elsewhere in underground_caverns_2 {
-  object stash is Box {
-    grammar { name "trophy case"  nouns "case", "stash" }
-    :open true
-    :capacity 10000
-    passage short { trophy case }
-  }
-}
+object elsewhere is Elsewhere in underground_caverns_2 { }
 
-kind GardenNorth is Room, Garden { }
+// The north end and the gazebo say, once the princess has ridden off
+// with the key, that the unicorn went and did not wait (round 7's P6).
+kind GardenNorth is Room, Garden {
+  :rode_off false
+  :given false
+  on :unicorn_gone (from, value) { self.set(:rode_off, true)  self.set(:given, value) }
+}
 kind TopiaryRoom is Room, Garden { }
 // The two rooms that hear the carousel whirring.
 kind NearCarousel is DarkRoom { }
@@ -299,7 +298,7 @@ object garden_north is GardenNorth in underground_caverns_2 {
   }
   :id garden_north
   :walls 4
-  passage body { This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses. }
+  passage body { This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses.{if self.get(:rode_off) && !self.get(:given)} The hedge on the east side has been pushed through by something that left in a hurry, and there is a hoofprint in the rosebed. The unicorn has not been seen since, nor what hung round its neck.{/if} }
   object unicorn is Unicorn
   // The unicorn's stand-in, unseen while the unicorn is home, so the two
   // never tie for the word; while it is away, "unicorn" and "key" are
@@ -326,7 +325,10 @@ object gazebo is Room, Garden in underground_caverns_2 {
   }
   :id gazebo
   :walls 4
-  passage body { This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo. }
+  :rode_off false
+  :given false
+  on :unicorn_gone (from, value) { self.set(:rode_off, true)  self.set(:given, value) }
+  passage body { This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo.{if self.get(:rode_off) && !self.get(:given)} Somebody has been here and gone, not long ago: the rose on the floor says who, and the hoofprint in the rosebed outside says how, and nothing says that she waited.{/if} }
   object other_unicorn is DistantUnicorn
   object other_princess is AbsentPrincess { :order 9  :last true }
   object gazebo_inside is GazeboInside
@@ -421,7 +423,7 @@ object stream_path is NearCarousel, Bridged, ChasmEdge in underground_caverns_2 
   // The secret door the princess opens on her way home (SECRET-DOOR).
   :secret false
   on :secret_door { self.set(:secret, true) }
-  passage body { The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction. On the east is a ruined archway choked with vegetation.{if self.get(:secret)} Behind some rocks to the west, a section of wall stands slid aside, and a passage leads through it into a marble hall.{/if} }
+  passage body { The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction, as of something very large going round that will not keep still. On the east is a ruined archway choked with vegetation.{if self.get(:secret)} Behind some rocks to the west, a section of wall stands slid aside, and a passage leads through it into a marble hall.{/if} }
   object other_princess is AbsentPrincess { :order 6  :way east }
   object rocks is Scenery {
     grammar { name "rocks"  nouns "rock", "boulders", "section"  adjectives "some", "loose" }
@@ -451,7 +453,7 @@ object marble_hall is NearCarousel in underground_caverns_2 {
   :walls 5
   :secret false
   on :secret_door { self.set(:secret, true) }
-  passage body { This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room.{if self.get(:secret)} A large section of the east wall has slid away, revealing a passage to the east.{/if} }
+  passage body { This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still.{if self.get(:secret)} A large section of the east wall has slid away, revealing a passage to the east.{/if} }
   object other_princess is AbsentPrincess { :order 5  :way east }
   object brick is Brick
   object loose_marble is Scenery {

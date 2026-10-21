@@ -27,7 +27,7 @@ kind Room is sprout.Place {
   :glow 0 min 0 max 2
   :id Dest default nowhere
   // Which walls these are, for the wall to describe.
-  :walls 0 min 0 max 20
+  :walls 0 min 0 max 30
   // Zork's RMUNGBIT: the room is not to be entered again, and its exits
   // say why (the closet full of gas, a room blown up by a cake).
   :munged false
@@ -213,7 +213,7 @@ kind CurtainRoom { }
 kind Wall is Scenery {
   grammar { name "wall"  nouns "walls"  adjectives "east", "west", "north", "south", "eastern", "western", "cavern", "surrounding" }
   passage short { wall }
-  :look 0 min 0 max 20
+  :look 0 min 0 max 30
   // In the Bank's rooms the walls are each their own thing (bank.sprout),
   // so the one that stands for all four steps aside there.
   on :wall_look (from, value) { self.set(:look, value)  self.set(:unseen, value == 10) }
@@ -235,6 +235,10 @@ kind Wall is Scenery {
   passage tiny_wall { The walls are rough, close, and carved rather than grown, and the door takes up most of the one it is in. }
   passage dreary_wall { The walls are plain rock, and dreary, as advertised; one of them has a crack in it that glows red, which is the only thing in the room with any life in it. }
   passage bank_wall { The walls are marble, veined grey, and were once panelled; the panelling has gone the way of the furniture, and the scavengers took the brackets too. }
+  passage glassy { The walls are of some glassy substance, dark, and set at angles that do not add up: a corner here is more than a right angle, and the one across from it less, and the passages go off between them in every direction at once. Your reflection in the glass is at a different angle from you. }
+  passage wizardly { The walls are dressed stone, old, and hung here and there with things it is better not to look at closely: charts, a mask, a hand. They have been the Wizard's a long time, and have the look of walls that listen. }
+  passage crypt_wall { The walls are marble, polished, carved with the Flathead crest at intervals and with nothing else, as though whoever built the crypt had been told to make it grand and had run out of ideas after the crest. }
+  passage mist_wall { There are no walls; there is the sphere, crystal, curved, a long way off in every direction and the wrong size, and the mist between you and it. }
   describe {
     if (self.get(:look) == 1) { text barrow }
     else if (self.get(:look) == 2) { text ravine }
@@ -253,6 +257,10 @@ kind Wall is Scenery {
     else if (self.get(:look) == 16) { text tiny_wall }
     else if (self.get(:look) == 17) { text dreary_wall }
     else if (self.get(:look) == 18) { text bank_wall }
+    else if (self.get(:look) == 19) { text glassy }
+    else if (self.get(:look) == 20) { text wizardly }
+    else if (self.get(:look) == 21) { text crypt_wall }
+    else if (self.get(:look) == 22) { text mist_wall }
     else { text plain }
   }
 }

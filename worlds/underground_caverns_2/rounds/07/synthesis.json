@@ -1,0 +1,534 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 3,
+        "of": 7
+      },
+      "claim": "The Oddly-angled Rooms still give no feedback a player can use. Every run that reached them (3 of 3) left stuck there. The three transcripts print the diamond window 93 times, and every one says 'flickering dimly' or 'dark': no run ever saw a count of two. A throw into a corner lands at the same 'flickering dimly' a correct first step would, and a throw prints no line saying it was a throw. A player therefore cannot tell a step from a throw, or one corner from another. The explorer typed 'go east' 36 times (the metrics' repetition list has 17 and 19 in a row). Both goal-seekers took the 'Babe Flathead' club and read the window's 'count' close-up, and neither made the link to running the bases.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 67,
+          "quote": "It glows, when it glows, by some count that is being kept: a flicker for one, a dim glow for two"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 81,
+          "quote": "There is no way to go in that direction ... window which is dark."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 66,
+          "quote": "go east (first of 17 in a row)"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 97,
+          "quote": "go east (first of 19 in a row)"
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 230
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 239,
+          "quote": "window which is flickering dimly"
+        }
+      ],
+      "recommendation": "Make a throw read differently from a step. When the draw throws the visitor into a corner, say so in a line, the way the carousel's 'You're not sure which direction is which.' does, so that a 'flickering' reached by walking means progress. Have the club's room line or close-up give its corner a baseball name ('first base', or a chalked bag), so 'Babe Flathead' becomes a direction to run in and not just a name. Then check that two correct steps in a row are possible from wherever the club is first found."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 4,
+        "of": 7
+      },
+      "claim": "All four short runs quit in the garden before ever reaching the Carousel, although all four quoted the Wizard's hook about the stone door. Three of them stood on the Path Near Stream, one move from the Carousel (the path's own line says the whirring comes from the southwest), and turned east into the garden. The newcomer went southeast from the Dark Tunnel and stopped at the gazebo. Last round's change put the hook in the Carousel's own description, but these players never got that far. Casual's report: 'I had no idea where the stone door with the question was.'",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 9,
+          "quote": "go southwest (Path Near Stream)"
+        },
+        {
+          "run": "casual-1",
+          "turn": 10,
+          "quote": "go east"
+        },
+        {
+          "run": "casual-1",
+          "turn": 17,
+          "quote": "Topiary (last line before quitting)"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 14
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 16,
+          "quote": "go east"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 11
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 12,
+          "quote": "go east"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 9,
+          "quote": "go southeast"
+        }
+      ],
+      "recommendation": "Tie the hook's 'room that will not keep still' to the whirring the Path Near Stream, Marble Hall and Topiary already mention. For example, the path's whirring line, the newspaper's Wizard item or the gazebo could say the noise is the room the Wizard's look meant. Or the hook itself could add 'where the whirring is'. Keep it in the narrator's voice, and keep it a pointer rather than a map."
+    },
+    {
+      "id": "P3",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 1,
+        "of": 7
+      },
+      "claim": "Round 7 was the brief's widening round for the fourth quarter, but the world declares the same 74 places as round 6. None of the Wizard's rooms, Rooms of Mist or end rooms appear in reach.places, and intent.md still calls the Trophy Room 'round 7's'. The stash that death and Filch fill therefore still cannot be reached. Opus lost every treasure twice: the balloon death at turn 107 ('It is nowhere you have been yet') and Filch at turn 170 (statuette and portrait). That loss is part of why the run stopped. The 'he keeps them' consolation now promises a room the round did not build.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 107,
+          "quote": "He keeps them; that is something. It is nowhere you have been yet."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 170,
+          "quote": "Several things you are carrying have disappeared!"
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 171
+        }
+      ],
+      "recommendation": "Find out whether the Q4 build landed; the declared place count says it did not. Until the Trophy Room exists, either soften the stash lines so they do not promise a room or build the Trophy Room first, since it is the part of Q4 that pays off three rounds of setup. Bring intent.md's 'round 7' references up to date either way."
+    },
+    {
+      "id": "P4",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 7
+      },
+      "claim": "A visitor who dies in the balloon's basket is resurrected still marked as inside it. Opus died over the Flathead Mountains at turn 107, woke in the barrow, and on the first move out was told 'You are on your own feet again.' The report flagged it as confusion.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 107
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 109,
+          "quote": "You are on your own feet again."
+        }
+      ],
+      "recommendation": "On death, take the visitor out of any vehicle (basket or bucket) before moving them to the barrow. Add a walkthrough or test case for dying in the balloon."
+    },
+    {
+      "id": "P5",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 7
+      },
+      "claim": "The glacier tells only players who already fight the dragon. Goal-seeker-1 tried pouring the teapot on it and burning it with a match, then gave up ('I found nothing else to melt it'). The explorer examined the ice and then the dragon and never linked them. Opus solved it only because he goaded the dragon for its own sake. The glacier's close-up reflection ('a dim adventurer looking back at you') is a good tell, but it points at the visitor, not at the dragon.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 46
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 47,
+          "quote": "You can't pour the china teapot on the glacier."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 48,
+          "quote": "With a matchbook??!?"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 122
+        },
+        {
+          "run": "explorer-1",
+          "turn": 155
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 51
+        }
+      ],
+      "recommendation": "Give the 'With a matchbook' refusal, or the glacier's close-up, a line saying it would take a great deal more fire than that. Have the dragon's close-up hint at its vanity, or a dislike of rivals, so the reflection has something to pair with. Keep the Zork answer the same."
+    },
+    {
+      "id": "P6",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 7
+      },
+      "claim": "The princess-following tells did not reach the player. At turn 125 her 'eyes fix on the way out' without naming it, though intent says the line names the room's way out. At turn 133 a player in the Carousel Room was told 'The princess walks east', which is off her route. He then reached the north end at turn 144, waited three turns hearing nothing, and found only a rose in the gazebo at turn 149. Nothing he saw said the key had gone for good. His report wished he knew where the princess and the unicorn went.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 125,
+          "quote": "She looks about the room, but her eyes fix on the way out."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 133,
+          "quote": "The princess walks east. She glances back at you as she goes."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 148
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 149,
+          "quote": "There is a fresh rose here."
+        }
+      ],
+      "recommendation": "Check that the 'eyes fix on' line names the direction in the Dragon's Lair. Find out why her departure line reached a visitor mid-throw in the Carousel; the throw may be passing the visitor through the Marble Hall. Once she has left for good, put a line about the unicorn and the key in the north end's or the gazebo's description (not only on 'examine'), so a late follower learns what was lost."
+    },
+    {
+      "id": "P7",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 7
+      },
+      "claim": "Losses pile up past recovery. Opus dropped the mat and letter opener in the Library to carry a book, and the balloon then floated out of the volcano with him. The Tiny Room's door was then unwinnable (turns 184-187) and the safe chain was cut off. One 'wait' is one balloon level, so a single wait at the Wide Ledge's height was fatal, and the only warning was 'Above you it is open to the sky.'",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 93,
+          "quote": "Place mat: Dropped. Letter opener: Dropped."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 106
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 107,
+          "quote": "The balloon floats majestically out of the volcano"
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 187
+        }
+      ],
+      "recommendation": "Keep Zork's death, but warn one move ahead: at the Wide Ledge's height with the receptacle open, say that the next rise clears the rim. Consider having the respawn scatter also collect what was left on a ledge the visitor can no longer reach, or say in the Library that what is left on the ledges stays there."
+    },
+    {
+      "id": "P8",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 7
+      },
+      "claim": "The Small Room's south wall is described as shimmering, but 'go south' gets the generic 'You can't go that way.' and 'enter curtain' gets 'You can't see any such thing.' Only 'enter wall' worked. In the Depository, by contrast, a refused 'go north' at the curtain is answered in voice.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 172,
+          "quote": "The south wall shimmers, very faintly"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 173,
+          "quote": "You can't go that way."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 175,
+          "quote": "You can't see any such thing."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 176
+        }
+      ],
+      "recommendation": "While a wall of a room beyond the curtain shimmers, let that wall's direction take the visitor through it. Let 'curtain' and 'light' name the shimmering wall."
+    },
+    {
+      "id": "P9",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 7
+      },
+      "claim": "'Look in' and 'look through' misfire on things that should answer them. 'Look in bucket' printed the refusal 'You can't look inside a wooden bucket.' and then 'The wooden bucket is empty.' in the same reply. 'Look through window' on the diamond window was refused, although the Tiny Room's window answers it.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 27,
+          "quote": "You can't look inside a wooden bucket. / The wooden bucket is empty."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 228,
+          "quote": "You can't look inside a diamond shaped window."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 185
+        }
+      ],
+      "recommendation": "Make the bucket answer 'look in' as a container, without the refusal. Give the diamond window a 'look through' that repeats its close-up."
+    },
+    {
+      "id": "P10",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 7
+      },
+      "claim": "In the Oddly-angled Room, 'examine walls' made the engine pick between two tied readings ('(the wall)', with a 'drawn' warning). It answered 'The walls are solid rock', contradicting the room's 'walls are made of some glassy substance'.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 225,
+          "quote": "The walls are solid rock, plain and entirely uninterested in you."
+        }
+      ],
+      "recommendation": "Give the nine Oddly-angled Rooms glassy walls of their own that override the generic wall, so the tie goes away."
+    },
+    {
+      "id": "P11",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 7
+      },
+      "claim": "In a corner holding only the club, 'take all' answered 'It's not clear what you're referring to.' The explorer's 'take all' in the club's corner took it ('Wooden club: Taken.').",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 66,
+          "quote": "It's not clear what you're referring to."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 33,
+          "quote": "Wooden club: Taken."
+        }
+      ],
+      "recommendation": "Reproduce it in the seeded run and find out what 'all' was resolving against (the window, the stair, or a hidden stand-in). If the world is supplying an ambiguous candidate, file it against the world; if 'all' is resolving wrongly, file a Sprout issue."
+    },
+    {
+      "id": "P12",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 7
+      },
+      "claim": "Some reasonable phrasings went unread. 'Answer \"a well\"' got the hollow laugh where Zork's parser drops the article. 'Pry box with letter opener' was an unknown sentence. 'Ask the stone door a question' in the Path Near Stream resolved to the floor ('You can't talk to the floor!').",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 22,
+          "quote": "A hollow laugh seems to come from the stone door."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 73,
+          "quote": "That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 15,
+          "quote": "You can't talk to the floor!"
+        }
+      ],
+      "recommendation": "Accept 'a well' and 'the well' in the riddle. Add 'pry' and 'force' as synonyms answered by the safe's and box's 'rusted shut' line. Check why 'stone door' matched the path's floor, and drop 'stone' from the floor's words there if it is the cause."
+    },
+    {
+      "id": "P13",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 7
+      },
+      "claim": "The West Teller's Room does not name its way back to the Entrance. Opus tried southeast and then east three times ('You can't go that way.') before typing south, which accounts for four of the round's unread lines.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 173
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 176
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 178
+        }
+      ],
+      "recommendation": "Add the teller rooms' south exit to their descriptions in Zork's voice, or answer 'southeast' there with the way that does lead back."
+    },
+    {
+      "id": "P14",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 7,
+        "of": 7
+      },
+      "claim": "The Wizard's first call works as the round's opening. All 7 runs got the hook, and all 7 reports quote it as what gave them a goal. The Fantasize refusal ('has the grace to look embarrassed') is quoted by 4 reports and accounts for 7 of the round's 8 refused lines.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 4
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 4
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 4
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 5
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 4
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 8
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 8
+        },
+        {
+          "run": "explorer-1",
+          "turn": 31
+        }
+      ],
+      "recommendation": "Keep the hook and the illusion refusals as they are. P2 is the gap between them and the Carousel."
+    }
+  ],
+  "legibility": {
+    "verdict": "legible",
+    "why": "Every player read the frame the intent sets out: a Zork II treasure hunt south of a ravine, with a doddering Wizard who casts F-words, hoards the Empire's treasure and plays tricks with illusions. The two long runs also named the set pieces (riddle door, carousel, dragon and glacier, balloon, bank walls, princess), and opus understood that the treasures are 'kept' and are the point. The short runs got the premise from the hook but saw only the first rooms, so they matched only in part. No one read the Oddly-angled Rooms as a baseball diamond, and no one learned the carousel's works are the robot's. Those secrets stayed illegible, but the world's purpose did not.",
+    "runs": [
+      {
+        "run": "casual-1",
+        "understood": "A Zork-style cave treasure hunt south of a ravine, with a Wizard haunting the caverns and the Empire's treasures further in.",
+        "matches": "partly"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "A Zork-style adventure: barrow, ravine, a Wizard who has hoarded the Empire's treasures south of the ravine, and a garden with a gazebo.",
+        "matches": "partly"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A Zork/Colossal Cave treasure exploration with a meddling Wizard whose words conjure phantoms or fear, and treasures south of a ravine.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "A Zork-style underground empire with a taunting Wizard who makes illusions, and treasures hidden further south.",
+        "matches": "partly"
+      },
+      {
+        "run": "explorer-1",
+        "understood": "A Zork II-style empire of caverns, garden, bank and maze, with a pranking Wizard casting F-spells and treasures to collect via riddles and water puzzles.",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A Zork II-style empire where the Wizard hoards the Empire's lost treasures south of the ravine; riddle door, spinning carousel, dragon, ice wall and glass maze.",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1-opus",
+        "understood": "A treasure hunt against a senile, petulant Wizard who steals what you pick up. The job is to work out the machinery and monsters (riddle, dragon, balloon, bank walls, spinning room) and get the treasures back from wherever he hoards them.",
+        "matches": "yes"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.11,
+      "after": 0.05
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.03,
+      "after": 0.01
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 30,
+      "after": 28
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 5,
+      "after": 15
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 631,
+      "after": 720
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 62,
+      "after": 75
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 65,
+      "after": 108
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 1299,
+      "after": 1391
+    }
+  ]
+}

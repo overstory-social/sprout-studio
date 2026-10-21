@@ -1,0 +1,259 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "Three of three runs that reached the Oddly-angled Rooms left stuck there, and the transcripts bear out that a throw read exactly like a step. The move now says what it was in the narrator's voice (a right step 'runs straight, for once'; a wrong one 'turns more corners than it has any right to' and loses the count; a draw into a corner says the window has woken), each corner room has a canvas base nailed to its floor with a close-up that says a runner touches the next one on round, the club's close-up says a bat is for running the bases with, and the window's close-up names its grades as bases. Zork's own room lines and the draw itself are untouched; from any corner the next two steps are always possible, since the diamond is a cycle."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Four short runs quoted the hook and turned east one move short of the Carousel. The whirring the Path Near Stream, the Marble Hall and the newspaper already mention is now tied to the hook's words: the hook says the room that will not keep still is heard before it is seen, the two whirring lines say it is something very large that will not keep still, and the newspaper's Wizard item mentions the room and the whirring. A pointer in the narrator's voice, not a map."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The brief's schedule names round 7 for Q4 and round 5's revision widened to Q3 the same way, so the widening is the brief's direction, not the author's initiative. The fourth quarter is built whole: the Guarded Room and its lizard, the Wizard's Workshop, Workroom, Trophy Room and Quarters, the Pentagram Room and the demon, the Aquarium Room and the Murky Room, the four Rooms of Mist, the Cerberus Room, the Crypt Anteroom, the Crypt and the Landing; the wand in a visitor's hand, the menhir floated and the Kennel opened, the stash is the Trophy Room's cabinet, and it counts toward the demon's fee. The walkthrough plays to the Landing at 400 of 400, and intent.md's 'round 7' references are current."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "A world bug: dying in the basket left `:in_balloon` set. Death now takes the visitor out of any vehicle before the scatter, and revision7_balloon.json dies over the Flathead Mountains, walks the Rooms of Mist and steps out of the barrow without the stray line."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "The Zork answer is unchanged; the tells are added in voice. The glacier, burned with a match or without, says it would take a great deal more heat than that, the kind that comes out of something's mouth; the teapot can be poured over it (and into the bucket), the hand doing the pouring since only it can see the water, and the ice says water is not what it wants; and the dragon's close-up says he has caught sight of himself in the brass of the lamp and does not care for the other dragon in it."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Three faults, each fixed: the 'eyes fix on' line in the lair now names the blackened doorway to the south; the princess's and the dragon's turns were told the room the Carousel's exit put the visitor in before the throw (after command runs before the gate's handler, friction 74), and are now sent two sends later from where the visitor stands; and once she has ridden off without giving the key, the north end's and the gazebo's own descriptions say so, with the hoofprint and the hedge pushed through."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "Accepted in the part the brief allows: near the Wide Ledge the air now says that a balloon that rises from here rises out of the volcano for good and that the ledge is the last place to come down, one move ahead of the death. Rejected in the rest: the death, the one-wait-one-level clock and the scatter are Zork's mechanics, which the brief says stay faithful, and collecting what was left on a ledge would change what dying costs."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "A world bug against the room's own words. While a wall of a room beyond the curtain shimmers, its direction leads back to the Depository, and 'curtain', 'light' and 'shimmer' name the shimmering wall, which answers 'enter' as the wall does; the walk back by direction closes the curtain as the walk through the wall does."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Friction 54 again: Thing's refusal reached the bucket by way of Vessel and Awaited (and the balloon the same way), and is left out now; the diamond window answers 'look through' with its close-up."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "A second thing called 'glassy walls' tied with the room's own wall. The diamond rooms' wall now has the glassy description as its own, and the other thing is the 'glassy substance'."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Reproduced from the seeded run: with nine things in hand, `all` bound the eight carried things, nearest first, and never reached the club, and the world's 'not clear' line was the wrong answer. The world now says the hands are too full for 'all' to see past them and asks for the thing by name; that `all` should leave out what the actor holds before counting to eight is an engine matter, logged as friction 73 for a Sprout issue."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "Accepted for 'pry' and 'force' (intents that read as 'open', answered by the safe's and the box's rusted-shut lines) and for the floor, which no longer answers to 'stone', so 'stone door' on the path is a thing that is not here rather than the floor. The quoted 'a well' is rejected: a quoted word is unbound to the parser (friction 57), and the unquoted 'a well' and 'the well' already open the door."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Both teller rooms now say the entrance hall is back to the south, in Zork's voice, as the brief allows for scenery a description names."
+    },
+    {
+      "answers": "P14",
+      "decision": "accept",
+      "reason": "Kept as it is: the hook and the illusion refusals are unchanged, and the gap between the hook and the Carousel is P2's."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The fourth quarter, built whole: the Guarded Room with its lizard door keeper and the Wizard's door (one door in two rooms), the Workshop (10), the Workroom with the three stands that make the black sphere, the Trophy Room with the cabinet that now holds what Filch and the dead give up, the Quarters that are never the same room twice, the Pentagram Room and the demon with his fee (counting the cabinet) and his orders ('demon, give me the wand' and the rest, as the robot is ordered), the Aquarium Room with the serpent and the clear sphere and the Murky Room; the Cerberus Room (10), the collar on the dog, the Crypt Anteroom (3), the Crypt (2) with the secret door that shows in the dark, and the Landing where the wand ends Zork II at 400; the four Rooms of Mist, which the dead now walk through with the spheres' visions, the face deciding at the end of them; the wand in hand (aimed, and a word said over it: Float on the menhir and the Kennel opened, Filch on the cabinet, Fry, Fluoresce, Fudge, the recharge lecture); the Wizard bound in the Pentagram Room, dejected when paid, gone when the demon takes his wand, and fleeing the black sphere; the gate's destinations, the score ceiling of 400, and Zork's scatter rules.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/workshop.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/crypt.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/mist.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/wizard.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/items.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/thing.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/menhir.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/volcano.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/garden.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/room.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/underground_caverns_2.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/sprout.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/README.md"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "The Oddly-angled Rooms tell a throw from a step: the narrator's lines on the move itself, a canvas base on each corner's floor with its own close-up, the club's close-up that says what a bat is for, and the window's close-up that names its grades as bases.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/menhir.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The whirring tied to the hook: the hook says the room that will not keep still is heard before it is seen; the Path Near Stream's and the Marble Hall's whirring lines say it is something very large that will not keep still; the newspaper's Wizard item mentions the room and the whirring.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/wizard.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/garden.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/items.sprout"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "Death takes the visitor out of the basket or the bucket before the scatter.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "The glacier's burn and melt lines say what heat it would take; the teapot pours over a thing and into the bucket, the hand doing the pouring, and the ice answers it; the dragon's close-up hints at his vanity.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/dragon.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/items.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/thing.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "The princess's 'eyes fix on' line names the lair's doorway; her turn and the dragon's are told the room the visitor ends the move in (two sends after the command, past the gate's move); the north end and the gazebo say in their descriptions that she rode off without waiting, once she has.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/dragon.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/garden.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "The volcano's air near the Wide Ledge says a balloon that rises from here rises out for good and the ledge is the last place to come down.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/volcano.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "A shimmering wall's direction leads back to the Depository, 'curtain' and 'light' name the shimmer, and the walk back by direction closes the curtain; the teller rooms name the way back to the entrance hall.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/bank.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "P8",
+        "P13"
+      ]
+    },
+    {
+      "what": "The bucket and the balloon answer 'look in' without Thing's refusal; the diamond window answers 'look through' with its close-up.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/well.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/volcano.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/menhir.sprout"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "The diamond rooms' walls are the room's own wall's to describe (a new wall look), and the other thing is the glassy substance.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/room.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/menhir.sprout"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "'take all' from a hand too full for the engine's eight says so and asks for the thing by name; the engine side is logged as friction 73.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/friction.md"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "'pry' and 'force' read as 'open' (two intents); the floor no longer answers to 'stone'.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/thing.sprout"
+      ],
+      "for": [
+        "P12"
+      ]
+    },
+    {
+      "what": "Tests: the walkthrough plays to the Landing at 400 (with 'force box' on the way); revision7_bucket, revision7_glacier, revision7_bank, revision7_maze and revision7_balloon cover the round's answers; the tests that pass through a death walk the Rooms of Mist; the tests whose expected lines changed (the hook, the newspaper, the Marble Hall, the teller rooms, the Carousel's first-look line, the Fantasize rolls) are regenerated and their diffs reviewed.",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/walkthrough.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision7_bucket.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision7_glacier.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision7_bank.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision7_maze.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision7_balloon.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/gas.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/robot_cage.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision6.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/bank_walls.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/bucket_count.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/gnome.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision3.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision6_dragon.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/revision6_volcano.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/volcano_gnome.json",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/world/tests/wizard_debut.json"
+      ],
+      "for": [
+        "P3",
+        "P4",
+        "P5",
+        "P8",
+        "P9",
+        "P10",
+        "P12",
+        "P13",
+        "P1",
+        "P2"
+      ]
+    },
+    {
+      "what": "intent.md brought up to the fourth quarter (the arc's new steps, the secrets of the demon's fee, the lizard, the black sphere, the sinking menhir, the aquarium, the crypt and the Landing, 'done' at 400) and the round's answers; friction.md entries 69 to 82 (the foot of the stair's ten ways, the crypt as a lit room that says it is dark, a room body that may not read the looker anywhere, unseen things out of reach of messages, `take all` from a full hand, after command before the gate's move, a handler's plain tell leaving out the actor, the incantation's answer, a guard that cannot tell a hand from a spell, I-WAND and the queue, Fluoresce lighting nothing, the demon's reach, the spheres' hand-written visions, two more doors in two rooms).",
+      "files": [
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/intent.md",
+        "/home/eslinger/code/sprout-studio/worlds/underground_caverns_2/friction.md"
+      ],
+      "for": [
+        "P3",
+        "P6",
+        "P11"
+      ]
+    }
+  ]
+}

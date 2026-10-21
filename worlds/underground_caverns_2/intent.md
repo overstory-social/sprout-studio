@@ -5,17 +5,22 @@ _The author's. Sealed from playtesters; never quoted in the world._
 ## What this is
 
 Zork II: The Wizard of Frobozz, ported as faithfully as Sprout allows,
-a quarter at a time. After rounds 5 and 6 three quarters stand: the first the
-brief names (the way in from the barrow to the garden, the Carousel Room
-and Room 8, the Riddle Room and the Pearl Room, the well and the Tea
+a quarter at a time, and whole since round 7. The four quarters: the first
+the brief names (the way in from the barrow to the garden, the Carousel
+Room and Room 8, the Riddle Room and the Pearl Room, the well and the Tea
 Room, the Posts Room and the Pool Room, and the robot's rooms), the
 second (the ravine's ledge and the Tiny and Dreary Rooms, the dragon's
-country from the Dragon Room to the Ice Room, and the Bank of Zork), and
-the third (the Lava Room and the Lava Tube, the Volcano View, the
-Cobwebby Corridor, the Volcano Bottom and the volcano's air at four
-heights, the Narrow Ledge and the Library, the Wide Ledge and the Dusty
-Room, the Menhir Room and the Kennel, the Stairway and the nine
-Oddly-angled Rooms). Every room's name and description is the original's
+country from the Dragon Room to the Ice Room, and the Bank of Zork), the
+third (the Lava Room and the Lava Tube, the Volcano View, the Cobwebby
+Corridor, the Volcano Bottom and the volcano's air at four heights, the
+Narrow Ledge and the Library, the Wide Ledge and the Dusty Room, the
+Menhir Room and the Kennel, the Stairway and the nine Oddly-angled
+Rooms), and the fourth, built in round 7 as the brief's schedule names it
+and as round 5 built the third (the Guarded Room and its lizard, the
+Wizard's Workshop, Workroom, Trophy Room and Quarters, the Pentagram Room
+and the demon, the Aquarium Room and the Murky Room, the four Rooms of
+Mist, the Cerberus Room, the Crypt Anteroom, the Crypt and the Landing).
+Every room's name and description is the original's
 from `2dungeon.zil` and `2actions.zil`, with a little more said where the
 brief asks for it, in the same voice. The narrator is Zork's: "Taken.",
 "Dropped.", the YUKS, the hollow laugh from the stone door.
@@ -39,7 +44,9 @@ much the product as the rooms are.
   visitors are and rolling, one time in ten, to appear, as `I-WIZARD`
   rolls; all twelve spells are cast, and since round 3 Fierce has the
   dragon to bite on and Fireproof its fire. What he steals (Filch) goes to
-  a stash that will become his Trophy Room's case in round 7. After round
+  the trophy cabinet in his Trophy Room, which since round 7 is a room a
+  visitor can stand in, and the cabinet a thing the demon can smash or the
+  wand's own Filch can empty onto the floor. After round
   2.5, by the director's steering over my fidelity objections: his first
   call is certain, the first time his clock finds a visitor out of the
   barrow (the Narrow Tunnel or the bridge, in play), and he casts one of
@@ -80,12 +87,17 @@ much the product as the rooms are.
   unicorn the room lists is not announced arriving in the same breath.
 - **The Deep Ford's ledge** was the edge of the first quarter; it leads up
   now, to the Ledge in Ravine.
-- **The Rooms of Mist are not built** (they are the end's, round 7), so a
-  death is answered with the demon's own words from the fourth Room of
-  Mist, said at once, and the visitor wakes in the barrow as Zork's
-  `GOTO INSIDE-BARROW` leaves them, their things scattered as
-  `RANDOMIZE-OBJECTS` scatters them: the lamp to the barrow, treasures to
-  the Wizard's stash, the rest to the gazebo. A third death is the end.
+- **The Rooms of Mist are built** (round 7): a death scatters what was
+  carried as `RANDOMIZE-OBJECTS` scatters it (the lamp to the barrow, the
+  gold key, the candy and the spheres to the Carousel Room, the Bank's
+  money where it fell if it fell in the Bank, treasures to the Wizard's
+  cabinet, the rest to the gazebo), and the dead walk west through red,
+  blue and white mist, each a crystal sphere seen from inside with a
+  vision of where the sphere's partner lies, to the black room, where the
+  face sends them back to the barrow twice and keeps them the third time;
+  and, with the demon loose in the Pentagram Room, keeps them at once, as
+  DEAD-PALANTIR does. Before round 7 the face's words were said at the
+  moment of death and the barrow came next.
 - **The princess can be followed** (P10): every room on her way home
   keeps a stand-in, unseen while she is in it, that says which way she
   went from here, that she has not come this way yet, or how she left for
@@ -104,16 +116,21 @@ much the product as the rooms are.
   Zork's voice; the Guarded Room beyond it is round 7's. With it and the
   Menhir Room built, every one of the Carousel's eight passages leads
   somewhere, and the spinning room's draw is Zork's seven.
-- **The Kennel is built and shut.** The menhir across its door is lifted
-  by the wand's Float, and the wand is the Wizard's, in his Workroom in
-  round 7; until then "southwest" from the Menhir Room is "You are
-  trying to walk through an enormous rock.", as Zork's is, and the
-  collar's fifteen points wait with it. The ceiling the score line
-  announces is 260, not 275, for that reason.
-- **The Oddly-angled Room at the foot of the stair has nine ways in
-  Zork and eight here** (friction 58): a place may have eight ways out,
-  and its up to the Stairway must be one, so its southwest, which when
-  the bases are run leads to a room with nothing in it but a window, is
+- **The Kennel opens on the wand's Float** (round 7): the menhir, pointed
+  at with the wand and told "float", rises for ten to twenty moves and
+  the passage beneath it beckons; when the word runs out it sinks, and
+  whoever is in the Kennel then is in the Kennel for good, unless the
+  demon has moved it (his "move the menhir" lays it down beside the
+  opening, "take the menhir" takes it away, "give me the menhir" drops it
+  at his master's feet in the Pentagram Room). Until the wand is had,
+  "southwest" from the Menhir Room is "You are trying to walk through an
+  enormous rock.", as Zork's is.
+- **The Oddly-angled Room at the foot of the stair has ten ways in
+  Zork and eight here** (friction 58, 69): a place may have eight ways
+  out, and its up to the Stairway and, since round 7, its down to the
+  Cerberus Room must be two of them, so its southwest, which when the
+  bases are run leads to a room with nothing in it but a window, and its
+  west, which then leads to a corner the next corner also leads to, are
   left out. Up and down typed in the other eight rooms are "You can't go
   that way." rather than Zork's draw. After round 6 (P3, P4): the room at
   the foot of the stair keeps its stairway in its BRIEF entry, since
@@ -121,10 +138,10 @@ much the product as the rooms are.
   all of them; and the no-way draw, which walks the visitor a room along
   and back (friction 65) and so ends in a room heading, says that the
   passage let them out where they started.
-- **The ways out of the built quarters** are present and turn the visitor
-  back in Zork's voice, each rockfall its own: the Cobwebby Corridor's
-  southwest and down (the Guarded Room), and the secret passage down from
-  the foot of the stair once the bases are run (the Cerberus Room).
+- **Every way out leads somewhere** since round 7: the Cobwebby
+  Corridor's southwest and down to the Guarded Room, and the secret
+  passage down from the foot of the stair to the Cerberus Room, which
+  were rockfalls in Zork's voice through round 6.
 - **The gazebo's table carries what Zork's does**: the matchbook and the
   letter opener came in with round 3, since the opener is the Tiny Room's
   key to the key, and the matchbook is a light of six matches, two moves
@@ -342,7 +359,64 @@ much the product as the rooms are.
    the foot of the stair swings down on a passage into unrelieved
    darkness, which ends in a fall of rock for now, and the rooms join as
    Zork joins them.
-14. The Wizard, every two minutes, one time in ten: he appears, waves his
+14. The Wizard's rooms (round 7): southwest from the Cobwebby Corridor,
+   the Guarded Room, with a stained and battered door at its south end
+   and a lizard's head imbedded in the door that snaps at a hand on the
+   handle or a key in the lock; fed the candy, it sleeps, and the gold
+   key the princess gave unlocks the door. South, the Wizard's Workshop
+   (10 points); west of it the Workroom, where the workbench carries
+   three stands, ruby, sapphire and diamond, and a sheet of notes with a
+   drawing of three circles round a black fourth; south of the Workshop
+   the Trophy Room, with the degree, the wands, the swords, the bottles,
+   the owl, the warning label, and the ornate cabinet imbedded in the
+   wall, under a fearful spell, holding whatever Filch and the dead gave
+   up. West of the Workroom the Aquarium Room, where a baby sea serpent
+   writhes in a huge tank with a clear crystal sphere in its sand: a
+   weapon or anything heavy thrown or swung at the glass breaks it, the
+   serpent dies on the floor, and the sphere (20) can be had; "break" the
+   tank, as against "attack" or "throw", and the serpent takes you with
+   it, as AQUARIUM-FCN has it. "In" is the Murky Room, and the end of
+   whoever goes in. South of the Aquarium Room, the Wizard's Quarters, a
+   different room every time it is looked at, never the same twice
+   running. The red sphere on the ruby stand, the blue on the sapphire
+   and the clear on the diamond: three puffs of smoke, and a black stand
+   of obsidian with a black sphere (30) in it. South of the Workroom, the
+   Pentagram Room: the black sphere put in the circle calls the demon,
+   and the Wizard materializes at once (Zork gives him up to four moves),
+   his clock stopped and his wand powerless. The demon's fee is ten
+   treasures (2 points each), counting what the Wizard's cabinet holds,
+   which is what the cabinet is for; paid, he does one thing: "demon,
+   give me the wand" (the wand, 30, and the Wizard runs for good),
+   "demon, kill the wizard" (the same, less politely), "demon, move the
+   menhir", "demon, take the menhir", "demon, give me the menhir",
+   "demon, kill cerberus" (too much for him), "demon, open the case"
+   (smashed, and everything in it), "demon, give me X" for anything
+   portable in the room, "demon, kill me". Before the fee, "My fee is
+   not paid!"; the brick as a gift breaks his contract and he goes.
+15. The wand in hand (round 7): pointed at a thing ("wave wand at X",
+   "point wand at X", "touch X with wand"), it glows for two moves, and a
+   word said over it ("float", "say float", "incant float", and the
+   rest) runs for ten to twenty moves: Float lifts the menhir, or a
+   portable thing out of reach, or the dog an inch; Filch brings a
+   portable thing to hand, or empties the Wizard's cabinet onto the
+   floor; Fry is the end of a portable thing; Fluoresce makes a thing
+   glow; Fudge smells of chocolate; Fierce on the dog is the end of you;
+   the other F-words have no obvious effect. Pointed again before the
+   word has run out, a lecture, or one time in twenty the end. The white
+   book in the Library says how, as it always did.
+16. The crypt (round 7): the secret passage down from the foot of the
+   stair, once the bases are run, to the Cerberus Room (10), where the
+   three-headed dog guards the arch east; the collar from the Kennel put
+   on it ("put collar on dog", "give collar to dog") makes it a dog, and
+   taking the collar back is the end of you. East, the Crypt Anteroom
+   (3), "Feel Free" over a marble door that squeaks; south, the Crypt
+   (2), the twelve Flatheads' heads on poles, which punish a hand laid on
+   them, and the carved crypt; with the lamp turned off, a faint outline
+   on the south wall with an F in it, a secret door that opens
+   noiselessly; south, the Landing, where the green lines read whoever
+   stands there: with the wand, the end of Zork II and 400 of 400;
+   without, the wardens, and the Rooms of Mist.
+17. The Wizard, every two minutes, one time in ten: he appears, waves his
    wand, speaks a word beginning with "F", and vanishes cackling. Feeble,
    Fumble, Fear, Filch, Freeze, Fall, Ferment, Fierce, Float, Fireproof,
    Fence, Fantasize: each changes what the visitor can do for three to
@@ -361,16 +435,19 @@ much the product as the rooms are.
    their length from the short half of the range (three to ten minutes),
    and Float's refusal points at "wait" as Freeze's does.
 
-"Done", for the three quarters, is: the riddle answered, the well risen,
-the pearl, the candy, the sphere and the violin taken, the robot told
-what to do and doing it, the carousel stopped, the dragon drowned, the
-statuette, the gold key, the portrait, the bills and the blue sphere
-taken, the ruby, the zorkmid, the stamp and the crown taken, and the
-bases run (260 of Zork II's 400), and the Wizard met and survived. 260 is
-the ceiling, and the world says so once it is reached: a line in the
-narrator's voice when the last point lands, and a parenthesis on the
-score line after (round 3's P7). The wand (30) and the collar (15) wait
-for the Wizard's own rooms.
+"Done" is Zork II done: the riddle answered, the well risen, the pearl,
+the candy, the sphere and the violin taken, the robot told what to do and
+doing it, the carousel stopped, the dragon drowned, the statuette, the
+gold key, the portrait, the bills and the blue sphere taken, the ruby, the
+zorkmid, the stamp and the crown taken, the bases run, the lizard fed and
+the door unlocked, the Workshop entered, the aquarium broken and the clear
+sphere taken, the three spheres made the black one, the demon called and
+paid ten treasures and the wand had off the Wizard, the menhir floated
+and the collar taken, the dog leashed, the anteroom and the crypt
+entered, and the Landing reached with the wand in hand: 400 of 400, and
+the rank of Master Adventurer without the "but somehow you don't feel
+done" that 400 points short of the Landing earn. The ceiling line of
+rounds 3 to 6 is gone with the ceiling.
 
 ## Secrets and interactions I hope players find
 
@@ -545,6 +622,34 @@ for the Wizard's own rooms.
   late for his appointment five moves after that. His fee is any
   treasure; his door leads down a chimney to the Volcano Bottom. Give
   him the brick and he is never seen again.
+- **The demon's fee counts the cabinet** (round 7): every treasure the
+  Wizard has filched or the dead gave up sits in his trophy cabinet, under
+  a spell no hand gets through, and every one of them counts toward the
+  ten the demon asks, as CASE-WORTH counts them. So a visitor who has lost
+  treasures to him has not lost them to the fee, and once the wand is had,
+  "wave wand at cabinet" and "filch" lays the lot at their feet. "Demon,
+  open the case" smashes it and everything in it, which is Zork's joke.
+- **The lizard eats what it is given**: the candy puts it to sleep; a
+  sphere it cannot chew and spits out; the brick goes down and pops; the
+  flask it will not have; anything else is crunched and gone.
+- **The black sphere frightens the Wizard**: with it in hand his clock
+  finds you and he leaves in unseemly haste, and each of the other
+  spheres carried takes a fifth off his will to cast (I-WIZARD's
+  CAST-PROB).
+- **The menhir sinks**: Float runs ten to twenty moves, and a visitor in
+  the Kennel when the word runs out is walled in, unless the demon has
+  laid the menhir down for good. The demon's "give me the menhir" drops it
+  at your feet in the Pentagram Room, which is funnier than useful.
+- **The aquarium answers to how it is broken**: thrown at or attacked with
+  a sword, the serpent dies short of your foot; "break the aquarium with
+  the sword", and it rends you first. The flask thrown at the glass is
+  poison gas for everybody.
+- **The crypt's door shows in the dark**: the room is lit only by what a
+  visitor brings, and the F on the south wall only when they bring
+  nothing; "turn off lamp", and the door is there to be opened. The heads
+  on the poles are not to be touched, and say so once.
+- **The Landing reads the hands**: the wand in them is the way down;
+  empty, the green lines are the end, and the Rooms of Mist again.
 - **The bat says who to be**: "Babe Flathead", burned into a club lying
   by the first base, is the hint that the Oddly-angled Rooms are a
   diamond to be run, southeast and round. The windows glow brighter base
@@ -553,4 +658,51 @@ for the Wizard's own rooms.
   room line, first description and plain, and the window's close-up says
   it glows by a count being kept, one step a grade, until what is counted
   comes round to where it began. The room lines keep Zork's own words for
-  the grades.
+  the grades. After round 7 (P1), when three runs could not tell a throw
+  from a step: a corner has a square canvas bag nailed to its floor, a
+  base, and its close-up says a runner touches the next one on round; the
+  club's close-up says a bat is for running the bases with, first to home;
+  the window's close-up names the grades as bases, a flicker for first and
+  brightest for home; and the move itself says what it was, in the
+  narrator's voice: a step from a corner the right way "runs straight, for
+  once", a wrong one "turns more corners than it has any right to" and
+  loses the count, and a draw into a corner from the room at the foot of
+  the stair says the window has woken.
+- **The whirring is the pointer** (round 7's P2): four short runs quoted
+  the hook and turned east into the garden one move short of the
+  Carousel, so the hook says the room that will not keep still is heard
+  before it is seen, the Path Near Stream's and the Marble Hall's whirring
+  lines say it is something very large that will not keep still, and the
+  newspaper's Wizard item mentions the whirring and the room. A pointer,
+  not a map.
+- **The glacier says what it wants** (round 7's P5): burned, with a match
+  or without, it says it would take a great deal more heat than that, the
+  kind that comes out of something's mouth; the teapot poured over it
+  freezes on the face of it and says water is not what it wants (the
+  teapot pours now, over a thing and into the bucket, and the hand that
+  holds it does the pouring, since it is the only thing that can see the
+  water in it, friction 61 again); and the dragon's close-up says he has
+  caught sight of himself in the brass of the lamp and does not care for
+  the other dragon in it.
+- **The princess, followed late** (round 7's P6): her "eyes fix on" line
+  in the lair names the blackened doorway to the south; her turn and the
+  dragon's are told the room the visitor ends the move in rather than the
+  one the Carousel's exit put them in before the throw (friction 74); and
+  once she has ridden off without giving the key, the north end and the
+  gazebo say so in their own descriptions, a hoofprint and a hedge pushed
+  through and nothing that says she waited.
+- **The wall of light is a way** (round 7's P8): while a wall of a room
+  beyond the curtain shimmers, its direction leads back to the Depository,
+  and "curtain" and "light" name the shimmer, which answers "enter" as the
+  wall does.
+- **The balloon says where the top is** (round 7's P7): near the Wide
+  Ledge the air says a balloon that rises from here rises out of the
+  volcano for good, and the ledge is the last place to come down. The
+  death itself, and what it costs, is Zork's.
+- **The teller rooms name the way back** (round 7's P13), the diamond
+  rooms' walls are the room's own wall's to describe (P10), the bucket
+  answers "look in" as a container (P9), "pry" and "force" are "open"
+  (P12), the floor is no longer "stone" so "stone door" does not find it
+  (P12), "take all" from a hand too full for the engine's eight says so
+  (P11, friction 73), and a visitor who dies in the basket is out of it
+  when they wake (P4).

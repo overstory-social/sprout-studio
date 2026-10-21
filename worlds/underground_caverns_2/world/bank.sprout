@@ -165,6 +165,33 @@ kind CurtainWall is Box, Scenery {
     send underground_caverns_2 :close_gate
   }
 }
+// The shimmer in a wall of a room beyond the curtain (round 7's P8): a
+// name for "curtain" and "light" while a wall of the room leads back,
+// answering as that wall does; unseen while none does.
+kind Shimmer is Scenery {
+  grammar { name "shimmering wall of light"  nouns "curtain", "light", "shimmer", "shimmering", "glow"  adjectives "shimmering", "faint", "wall" }
+  passage short { shimmering wall of light }
+  :room Dest default small_room
+  :side Direction default south
+  :active false
+  :unseen true
+  on :curtain_active (from, value) { self.set(:active, value == self.get(:room))  self.set(:unseen, value != self.get(:room)) }
+  describe { text "The {self.get(:side)} wall shimmers, very faintly, like the curtain of light in the Depository, and seems a little less there than the others. It is the way back, while it lasts, and it does not last." }
+  passage no_take { As you try, your hand seems to go through it. }
+  without as target for through from Thing
+  as target for through {
+    do {
+      say "You feel somewhat disoriented as you pass through..."
+      send actor :curtain_back
+    }
+  }
+  without as target for rub from Thing
+  as target for rub { do { say "As you try, your hand seems to go through it. It is not warm, and not cold, and not there, quite." } }
+  without as target for shift from Thing
+  as target for shift { do { say "As you try, your hand seems to go through it." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "Light, and more light, and nothing behind it that you can make out." } }
+}
 kind EastWall is CurtainWall { grammar { name "east wall"  nouns "wall"  adjectives "east", "eastern" }  :side east  passage short { east wall } }
 kind WestWall is CurtainWall { grammar { name "west wall"  nouns "wall"  adjectives "west", "western" }  :side west  passage short { west wall } }
 kind NorthWall is CurtainWall { grammar { name "north wall"  nouns "wall"  adjectives "north", "northern" }  :side north  passage short { north wall } }
@@ -307,6 +334,8 @@ object teller_west is TellerWest in underground_caverns_2 {
     You are in a small room, which was used by a bank officer who retrieved safety deposit boxes for the customer. On the north side of the room is a sign which reads "Viewing Room". On the west side of the room, above an open door, is a sign reading:
 
     BANK PERSONNEL ONLY
+
+    The entrance hall is back to the south.
   }
   object sign is BankSign {
     grammar { name "signs"  nouns "sign", "notice"  adjectives "two", "north", "west" }
@@ -339,6 +368,8 @@ object teller_east is TellerEast in underground_caverns_2 {
     You are in a small room, which was used by a bank officer who retrieved safety deposit boxes for the customer. On the north side of the room is a sign which reads "Viewing Room". On the east side of the room, above an open door, is a sign reading:
 
     BANK PERSONNEL ONLY
+
+    The entrance hall is back to the south.
   }
   object sign is BankSign {
     grammar { name "signs"  nouns "sign", "notice"  adjectives "two", "north", "east" }
@@ -365,6 +396,7 @@ object viewing_west is ViewingWest in underground_caverns_2 {
   grammar {
     name "West Viewing Room"
     exit south "south" -> bank_entrance
+    exit east "east" -> depository when (east_wall.get(:active))
   }
   :id viewing_west
   :walls 10
@@ -382,12 +414,14 @@ object viewing_west is ViewingWest in underground_caverns_2 {
   object west_wall is WestWall { :room viewing_west }
   object north_wall is NorthWall { :room viewing_west }
   object south_wall is SouthWall { :room viewing_west }
+  object shimmer is Shimmer { :room viewing_west  :side east }
 }
 
 object viewing_east is ViewingEast in underground_caverns_2 {
   grammar {
     name "East Viewing Room"
     exit south "south" -> bank_entrance
+    exit west "west" -> depository when (west_wall.get(:active))
   }
   :id viewing_east
   :walls 10
@@ -405,10 +439,14 @@ object viewing_east is ViewingEast in underground_caverns_2 {
   object west_wall is WestWall { :room viewing_east  :passes true }
   object north_wall is NorthWall { :room viewing_east }
   object south_wall is SouthWall { :room viewing_east }
+  object shimmer is Shimmer { :room viewing_east  :side west }
 }
 
 object small_room is SmallRoom in underground_caverns_2 {
-  grammar { name "Small Room" }
+  grammar {
+    name "Small Room"
+    exit south "south" -> depository when (south_wall.get(:active))
+  }
   :id small_room
   :walls 10
   passage body { This is a small, bare room with no distinguishing features. There are no exits from this room. {south_wall.shimmer} }
@@ -416,10 +454,14 @@ object small_room is SmallRoom in underground_caverns_2 {
   object west_wall is WestWall { :room small_room }
   object north_wall is NorthWall { :room small_room }
   object south_wall is SouthWall { :room small_room  :passes true }
+  object shimmer is Shimmer { :room small_room  :side south }
 }
 
 object vault is Vault in underground_caverns_2 {
-  grammar { name "Vault" }
+  grammar {
+    name "Vault"
+    exit north "north" -> depository when (north_wall.get(:active))
+  }
   :id vault
   :walls 10
   passage body { This is the Vault of the Bank of Zork, in which there are no doors. {north_wall.shimmer} }
@@ -428,6 +470,7 @@ object vault is Vault in underground_caverns_2 {
   object west_wall is WestWall { :room vault }
   object north_wall is NorthWall { :room vault  :passes true }
   object south_wall is SouthWall { :room vault }
+  object shimmer is Shimmer { :room vault  :side north }
 }
 
 object depository is Depository in underground_caverns_2 {

@@ -10,8 +10,8 @@
 // ... here." when it has none; `here_line` is that rule. A thing marked
 // `:ndesc` (Zork's NDESCBIT) is never listed.
 import {ask} from 'sprout'
-import {take, open, close, read, lamp_on, lamp_off, talk, greet, alarm, follow, look_in, look_under, search, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, fill, turn, tie, untie, burn, cut, through, give, throw, knock, play, count_things, pour_in, pour_on, spray, inflate, :consume, :filched, :grow, :ungrow, :zoom, :nestled, :fuel_lit, :bury, :die} from 'verbs'
-import {Matchbook} from 'items'
+import {take, open, close, read, lamp_on, lamp_off, talk, greet, alarm, follow, look_in, look_under, search, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, fill, turn, tie, untie, burn, cut, through, give, throw, knock, play, count_things, pour_in, pour_on, spray, inflate, :consume, :filched, :grow, :ungrow, :zoom, :nestled, :fuel_lit, :bury, :die, :wand_aimed, :wand_clear, :cast_word, :wand_fades, :disenchant} from 'verbs'
+import {Matchbook, Teapot, Water} from 'items'
 import {Adventurer} from 'adventurer'
 
 kind Thing {
@@ -92,8 +92,45 @@ kind Thing {
   as aim for throw      { do { say "Thrown." } }
   // Water poured in or over a thing: the water says what came of it
   // (items.sprout), and the thing says nothing, or the line came twice.
+  // The teapot poured over a thing (round 7's P5) is the thing's to answer.
   as container for pour_in { do { } }
-  as target for pour_on { do { } }
+  // The hand that pours has emptied the teapot already, and says whether
+  // there was anything in it (`:teapot_water`), since a thing cannot see
+  // into a teapot in somebody's hands.
+  as target for pour_on {
+    do {
+      if (item.is(Teapot) && actor.is(Adventurer)) {
+        if (actor.get(:teapot_water)) { say "The water from the teapot splashes over the {self.short}, runs off it to the floor, and evaporates." }
+        else { say "The teapot is empty." }
+      }
+    }
+  }
+
+  // The Wizard's wand, pointed at this (WAND-FCN's WAND-ON): the thing
+  // keeps that it is the one, so that a word said over the wand reaches
+  // it by broadcast and it answers as Zork's V-ENCHANT answers for a thing
+  // that is nobody in particular. The kinds the wand does something to
+  // (a portable thing, the menhir, the dog, its collar, the case) leave
+  // this answer out and write their own.
+  :aimed false
+  on :wand_aimed { self.set(:aimed, true) }
+  on :wand_clear { self.set(:aimed, false) }
+  on :wand_fades (from) { if (self.get(:aimed)) { tell from "The {self.short} stops glowing and the power within you weakens."  self.set(:aimed, false) } }
+  on :cast_word (from, value) {
+    if (self.get(:aimed)) {
+      if (value == :fudge) { self.set(:fudged, true)  tell from "A strong odor of chocolate permeates the room." }
+      else if (value == :fluoresce) { tell from "The {self.short} glows for a moment, and then thinks better of it; whatever it is made of does not hold a light." }
+      else if (value == :float || value == :fry || value == :filch) { tell from "The wand stops glowing, but there is no other apparent effect." }
+      else { tell from "That might have done something, but it's hard to tell with {self.a_short}." }
+    }
+  }
+  on :disenchant (from) {
+    if (self.get(:aimed)) {
+      self.set(:aimed, false)
+      if (self.get(:fudged)) { self.set(:fudged, false)  tell from "The sweet smell has dispersed." }
+    }
+  }
+  :fudged false
   as aim for spray      { do { say "The spray smells like a mixture of old socks and burning rubber. If I were a grue I'd sure stay clear!" } }
   as target for inflate { do { say "You can't inflate {self.a_short}, and it is not clear what it would be for if you could." } }
 }
@@ -125,6 +162,8 @@ kind Vessel is Thing { }
 // well it has left.
 kind Awaited is Thing { }
 kind Orderable is Thing { }
+// Whom "demon, <order>" is given to (GENIE-FCN): the demon.
+kind Demonic is Thing { }
 kind Wishing is Thing { }
 kind Crossable is Thing { }
 kind Leapable is Thing { }
@@ -181,7 +220,10 @@ kind Portable is Thing {
   :burning false
   :flame false
   on :nestled (from, value) { self.set(:in_receptacle, value) }
-  depart (to) { if (self.get(:burning)) { refuse "You don't really want to hold a burning {self.short}." } }
+  depart (to) {
+    if (self.get(:burning)) { refuse "You don't really want to hold a burning {self.short}." }
+    else if (self.get(:floating) && to.is(Adventurer)) { refuse "The {self.short} is floating in midair, out of reach." }
+  }
   without as target for burn from Thing
   as target for burn {
     do {
@@ -219,6 +261,33 @@ kind Portable is Thing {
   }
   // Buried by an explosion (I-FUSE's INVISIBLE): out of sight for good.
   on :bury { self.set(:unseen, true)  self.set(:ndesc, true) }
+  // The wand's words, said over a thing that can be carried (V-ENCHANT):
+  // Filch brings it to hand, Float lifts it out of reach until the spell
+  // wears off, Fry is the end of it, and Fluoresce lights it, after a
+  // fashion.
+  :floating false
+  :glowing false
+  without on :cast_word from Thing
+  on :cast_word (from, value) {
+    if (self.get(:aimed)) {
+      if (value == :filch) {
+        if (from.is(Adventurer)) { if (from.holds(self)) { tell from "You have it already, and the wand knows it." } else { move self to from  tell from "Filched!" } }
+      }
+      else if (value == :float) { self.set(:floating, true)  tell from "The {self.short} floats serenely in midair." }
+      else if (value == :fry) { tell from "The {self.short} goes up in a puff of smoke."  finally destroy self }
+      else if (value == :fluoresce) { self.set(:glowing, true)  tell from "The {self.short} begins to glow." }
+      else if (value == :fudge) { self.set(:fudged, true)  tell from "A strong odor of chocolate permeates the room." }
+      else { tell from "That might have done something, but it's hard to tell with {self.a_short}." }
+    }
+  }
+  without on :disenchant from Thing
+  on :disenchant (from) {
+    if (self.get(:aimed)) {
+      self.set(:aimed, false)
+      if (self.get(:floating)) { self.set(:floating, false)  tell from "The {self.short} sinks to the ground." }
+      if (self.get(:fudged)) { self.set(:fudged, false)  tell from "The sweet smell has dispersed." }
+    }
+  }
 }
 
 // A thing Zork describes only in its room's own words.

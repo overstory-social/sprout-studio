@@ -1,0 +1,942 @@
+// The Wizard's rooms (the fourth quarter): the Guarded Room with its
+// lizard door keeper, the Wizard's Workshop, the Workroom with the three
+// stands on the bench, the Trophy Room with the cabinet he keeps what he
+// takes in, his Quarters, the Pentagram Room and the demon it summons,
+// and the Aquarium Room with the baby sea serpent and the Murky Room in
+// the tank (GUARDIAN-ROOM-FCN, DOOR-KEEPER-FCN, WIZ-DOOR-FCN, WORKSHOP-FCN,
+// ARCANA-PSEUDO, STAND-FCN, TROPHY-PSEUDO, WIZARD-CASE-FCN, CASE-WORTH,
+// PENTAGRAM-FCN, GENIE-FCN, GENIE-LEAVES, WIZARD-QUARTERS-FCN,
+// AQUARIUM-FCN, SERPENT-FCN, DEAD-SERPENT-FCN, IN-AQUARIUM-FCN).
+//
+// The demon is an NPC who is ordered as the robot is, by a verb whose
+// first role is him (verbs.sprout). His fee is ten treasures, counting
+// what the Wizard's cabinet holds, which is what the cabinet is for.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Portable, Door, Demonic, Valuable} from 'thing'
+import {Box, Bag} from 'box'
+import {Room, DarkRoom} from 'room'
+import {Treasure, Readable, Candy, Flask, IronBox, Violin, Wand, Weapon, Palantir, RedSphere, BlueSphere, ClearSphere, BlackSphere, :reveal_sphere} from 'items'
+import {Light} from 'lamp'
+import {Adventurer} from 'adventurer'
+import {Wizard} from 'wizard'
+import {Brick, Fuse, cobwebby_corridor} from 'volcano'
+import {elsewhere, Elsewhere} from 'garden'
+import {GoldKey} from 'garden'
+import {Menhir} from 'menhir'
+import {ask} from 'sprout'
+import {take, open, close, unlock, lock, read, look_in, look_under, shift, rub, kick, attack, mung, greet, talk, alarm, follow, give, throw, put, through, board, smell, listen, climb_up, search, demon_give, demon_take, demon_move, demon_kill, demon_open, demon_other, demon_find, Dest, Answer, :wiz_fed, :wiz_locked, :wiz_open, :check_stands, :genie_summoned, :genie_departs, :case_worth, :case_smashed, :wizard_gone, :wizard_dejected, :surrender_wand, :freed_wand, :menhir_order, :cast_word, :disenchant, :open_gate, :gate_open, :close_gate, :consume, :die, :travel, :scored, :serpent_gone} from 'verbs'
+
+// The lizard head imbedded in the Wizard's door (DOOR-KEEPER): fed the
+// candy, it sleeps; fed anything else, it has opinions.
+kind Lizard is Scenery, Creature {
+  contains
+  grammar { name "lizard"  nouns "keeper", "guardian", "head", "doorkeeper"  adjectives "nasty", "nasty-looking", "sleepy", "lizard" }
+  :fed false
+  passage short { lizard }
+  describe { text "{if self.get(:fed)}A lizard head the size of your own, mounted in the door at about the height of a knocker, scaled and green, with its eyes shut and its jaw slack and a look of having eaten well. It is asleep, and lizards sleep a long time over a meal.{else}A lizard head the size of your own, imbedded in the door at about the height of a knocker, green, scaled, with a great many sharp teeth and two beady eyes that move to follow you. It is not carved. It is a lizard, and it is hungry, and the door is its.{/if}" }
+  passage no_take { {if self.get(:fed)}The lizard is part of the door, and asleep, and best left both.{else}The lizard snaps at your fingers, which you take back.{/if} }
+  on :wiz_fed { self.set(:fed, true) }
+  without as target for alarm from Creature
+  as target for alarm { do { if (self.get(:fed)) { say "Try as you may, you can't wake it." } else { say "The lizard is awake. You have its full attention, and it has teeth." } } }
+  without as target for greet from Creature
+  as target for greet { do { if (self.get(:fed)) { say "The lizard sleeps on." } else { say "The lizard hisses. It is not a greeting." } } }
+  without as target for talk from Creature
+  as target for talk { do { if (self.get(:fed)) { say "The lizard sleeps on." } else { say "The lizard hisses, and watches your hands. It is more interested in what you are holding than in what you are saying." } } }
+  without as target for ask from Thing
+  as target for ask { do { if (self.get(:fed)) { say "The lizard sleeps on." } else { say "The lizard hisses, and watches your hands. It is more interested in what you are holding than in what you are saying." } } }
+  as target for attack { do { say "The guardian seems impervious to your attack. In fact, your blows don't even seem to be landing." } }
+  without as target for mung from Thing
+  as target for mung { do { say "The guardian seems impervious to your attack. In fact, your blows don't even seem to be landing." } }
+  without as target for kick from Thing
+  as target for kick { do { say "The guardian seems impervious to your attack. In fact, your boot doesn't even seem to be landing." } }
+  without as target for rub from Thing
+  as target for rub { do { if (self.get(:fed)) { say "The lizard sleeps on, and is scaly." } else { say "The lizard snaps at your hand, which you take back in time." } } }
+  // Fed (DOOR-KEEPER-FCN's GIVE): the hand has put the gift in its mouth,
+  // or on the floor if it is a sphere (adventurer.sprout).
+  without as recipient for give from Thing
+  as recipient for give {
+    do {
+      if (self.get(:fed)) { say "He is asleep, at least for the moment." }
+      else if (item.is(Candy)) {
+        say "The guardian greedily wolfs down the candy, including the package. (It seemed to enjoy the grasshoppers particularly.) It then becomes quiet and its eyes close. (Lizards are known to sleep a long time while digesting their meals.)"
+        self.set(:fed, true)
+        broadcast :wiz_fed
+        send item :consume
+      }
+      else if (item.is(Flask)) { say "The lizard sniffs it experimentally, then looks at you angrily, hissing and snapping." }
+      else if (item.is(Brick)) { say "The guardian greedily wolfs it down. After a while, you hear a very small pop and the guardian's eyes bulge out. It hisses nastily at you."  send item :consume }
+      else if (item.is(Palantir)) { say "The guardian greedily gobbles the sphere, but finds it unchewable. He then tries repeatedly to swallow it whole, with disappointing results. Finally, he spits it on the ground." }
+      else if (item.is(Thing)) { say "The lizard wolfs down the {item.short}, crunching greedily."  send item :consume }
+    }
+  }
+  without as aim for throw from Thing
+  as aim for throw { do { if (target.is(Thing)) { say "The lizard snaps the {target.short} out of the air, considers it, and lets it fall. It wants to be fed, not thrown at."  move target to here } } }
+}
+
+// The stained and battered door at the south end of the Guarded Room
+// (WIZ-DOOR), from either side: one door in two rooms (friction 48), each
+// keeping the other told. The lizard is on the north side only.
+kind WizDoor is Scenery, Door {
+  grammar { name "door"  nouns "handle", "bolt"  adjectives "stained", "battered", "strong", "strong-looking", "cobwebbed", "wooden", "oak", "workshop" }
+  passage short { door }
+  :locked true
+  :open false
+  :fed false
+  :far false
+  :implied false
+  passage close_up { {if self.get(:far)}The door is oak, cobwebbed on this side, and stained and battered on the other, and strong-looking from both. It is {if self.get(:open)}open{else}shut{if self.get(:locked)}, and bolted{/if}{/if}.{else}A door of oak, stained and battered and very strong-looking, with a handle, a bolt lock, and a lizard's head imbedded in it at about the height of a knocker{if self.get(:fed)}, asleep{else}, awake, and watching your hands{/if}. The door is {if self.get(:open)}open{else}shut{if self.get(:locked)}, and bolted{/if}{/if}. The lock is small, for a door this size, and takes a small key.{/if} }
+  describe { text close_up }
+  on :wiz_fed { self.set(:fed, true) }
+  on :wiz_locked (from, value) { self.set(:locked, value) }
+  on :wiz_open (from, value) { self.set(:open, value) }
+  passage bites { The lizard door keeper comes awake and bites at your hand. You jerk away just in time. }
+  as target for unlock {
+    do {
+      self.set(:implied, false)
+      if (actor.is(Adventurer)) { if (actor.get(:has_gold)) { self.set(:implied, true) } }
+      if (!self.get(:fed) && !self.get(:far)) {
+        say bites
+        if (bound tool) { if (tool.is(GoldKey) && chance(5)) { say "You drop the key, though."  move tool to here } }
+      }
+      else if (!self.get(:locked)) { say "It is already!" }
+      else if (bound tool) {
+        if (tool.is(GoldKey)) { self.set(:locked, false)  say "The key turns and the bolt clicks. The door is unlocked."  broadcast :wiz_locked with false }
+        else { say "That won't unlock it." }
+      }
+      else if (self.get(:implied)) { self.set(:locked, false)  say "(with the delicate gold key) The key turns and the bolt clicks. The door is unlocked."  broadcast :wiz_locked with false }
+      else { say "You'll need a key for that, and a small one." }
+    }
+  }
+  as target for lock {
+    do {
+      self.set(:implied, false)
+      if (actor.is(Adventurer)) { if (actor.get(:has_gold)) { self.set(:implied, true) } }
+      if (!self.get(:fed) && !self.get(:far)) { say bites }
+      else if (self.get(:locked)) { say "It is locked already." }
+      else if (self.get(:open)) { say "You'll have to close the door first." }
+      else if (bound tool) {
+        if (tool.is(GoldKey)) { self.set(:locked, true)  say "The door is now locked."  broadcast :wiz_locked with true }
+        else { say "That won't lock it." }
+      }
+      else if (self.get(:implied)) { self.set(:locked, true)  say "(with the delicate gold key) The door is now locked."  broadcast :wiz_locked with true }
+      else { say "You'll need a key for that, and a small one." }
+    }
+  }
+  without as target for open from Thing
+  as target for open {
+    do {
+      if (!self.get(:fed) && !self.get(:far)) { say "The lizard comes to life and snaps at you as you reach for the handle." }
+      else if (self.get(:open)) { say "I think you've already done that." }
+      else if (self.get(:locked)) { say "The door is locked!" }
+      else { self.set(:open, true)  say "The door creaks open."  broadcast :wiz_open with true }
+    }
+  }
+  without as target for close from Thing
+  as target for close {
+    do {
+      if (!self.get(:open)) { say "I think you've already done that." }
+      else { self.set(:open, false)  say "The door reluctantly closes."  broadcast :wiz_open with false }
+    }
+  }
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (self.get(:open)) { say "The door is open; the way through it is {if self.get(:far)}north{else}south{/if}." }
+      else if (!self.get(:fed) && !self.get(:far)) { say "The door is shut, and the lizard in it is not." }
+      else { say "The door is shut, and it is oak." }
+    }
+  }
+  without as target for kick from Thing
+  as target for kick { do { if (!self.get(:fed) && !self.get(:far)) { say "The lizard snaps at your boot, and the door does not notice." } else { say "The door is oak, and takes it well." } } }
+}
+
+kind GuardedRoom is DarkRoom {
+  :fed false
+  :door_open false
+  :candy_near false
+  on :wiz_fed { self.set(:fed, true) }
+  on :wiz_open (from, value) { self.set(:door_open, value) }
+  // Whether whoever is here has the candy about them, read off them as
+  // they come in and after every command, since a room's words may not
+  // read the one looking (friction 71).
+  on :entered (item, from) { if (item.is(Adventurer)) { self.set(:candy_near, item.get(:has_candy)) } }
+  after command { self.set(:candy_near, false)  each a: Adventurer in self { if (a.get(:has_candy)) { self.set(:candy_near, true) } } }
+}
+kind Workshop is DarkRoom {
+  :door_open false
+  on :wiz_open (from, value) { self.set(:door_open, value) }
+}
+
+object guarded_room is GuardedRoom in underground_caverns_2 {
+  grammar {
+    name "Guarded Room"
+    exit north "north" -> cobwebby_corridor
+    exit south "south" -> workshop when (self.get(:door_open))
+    exit south "south" refuse "The door is closed."
+    exit in "in" -> workshop when (self.get(:door_open))
+    exit in "in" refuse "The door is closed."
+  }
+  :id guarded_room
+  :walls 20
+  passage body { This room is cobwebby and musty, but tracks in the dust show that it has seen visitors recently. At the south end of the room is a stained and battered (but very strong-looking) door. To the north, a corridor exits.{if self.get(:door_open)} The door is open.{/if}{if self.get(:fed)} A sleepy-looking lizard head is mounted on the door.{else} Imbedded in the door is a nasty-looking lizard head, with sharp teeth and beady eyes. {if self.get(:candy_near)}The lizard is sniffing at you.{else}The eyes move to watch you approach.{/if}{/if} }
+  object lizard is Lizard
+  object door is WizDoor
+  object tracks is Scenery {
+    grammar { name "tracks"  nouns "track", "footprints", "dust", "prints"  adjectives "recent" }
+    passage short { tracks }
+    describe { text "Tracks in the dust, going from the corridor to the door and back, of a small foot in a long robe that drags: somebody who comes this way often, and has a key." }
+  }
+}
+
+object workshop is Workshop in underground_caverns_2 {
+  grammar {
+    name "Wizard's Workshop"
+    exit north "north" -> guarded_room when (self.get(:door_open))
+    exit north "north" refuse "The door is closed."
+    exit out "out" -> guarded_room when (self.get(:door_open))
+    exit out "out" refuse "The door is closed."
+    exit west "west" -> workroom
+    exit south "south" -> trophy_room
+  }
+  :id workshop
+  :value 10
+  :walls 20
+  passage body { You are standing in the entry hall of the Wizard's Workshop. Dark corridors lead west and south from here. The corridor to the west smells slightly of incense or candle smoke.{if self.get(:door_open)} The workshop door is open.{/if} }
+  object door is WizDoor { :far true }
+  object smoke is Scenery {
+    grammar { name "smell of incense"  nouns "smell", "incense", "smoke", "odor"  adjectives "candle", "faint" }
+    passage short { smell of incense }
+    describe { text "Incense, or candle smoke, or both, coming down the corridor from the west, where somebody keeps candles burning for a purpose, and the purpose is not light." }
+    without as target for smell from Thing
+    as target for smell { do { say "Incense and tallow, from the west, and under them something hot and metallic, as of a thing that has been worked on for a long time." } }
+  }
+}
+
+// A stand on the workbench (STAND-1, STAND-2, STAND-3): a surface the
+// size of one sphere. When the red sits on the ruby, the blue on the
+// sapphire and the clear on the diamond, the bench answers.
+kind Stand is Box {
+  grammar { name "stand"  nouns "stands"  adjectives "crystal" }
+  :open true
+  :surface true
+  :capacity 10
+  :ndesc true
+  passage short { stand }
+  passage no_take { The {self.short} is firmly attached to the bench. }
+  passage examined { A small stand of {self.stone}, cut like a cup to take something round, and fixed to the bench. {self.look_inside} }
+  passage stone default { crystal }
+  describe { text examined }
+  accept (item, from) { if (!item.is(Palantir)) { refuse "The stand is cut to take something round, and {item} is not it." } }
+  on :entered (item, from) { if (item.is(Palantir)) { broadcast :check_stands } }
+}
+kind RubyStand is Stand { grammar { name "ruby stand"  nouns "stand", "stands"  adjectives "ruby", "red", "crystal" }  passage short { ruby stand }  passage stone { ruby } }
+kind SapphireStand is Stand { grammar { name "sapphire stand"  nouns "stand", "stands"  adjectives "sapphire", "blue", "crystal" }  passage short { sapphire stand }  passage stone { sapphire } }
+kind DiamondStand is Stand { grammar { name "diamond stand"  nouns "stand", "stands"  adjectives "diamond", "clear", "crystal" }  passage short { diamond stand }  passage stone { diamond } }
+// The black obsidian stand (STAND-4): not there until the three spheres
+// have gone up in smoke.
+kind ObsidianStand is Stand {
+  grammar { name "black obsidian stand"  nouns "stand", "stands"  adjectives "black", "obsidian", "strange", "crystal" }
+  :hidden true
+  passage short { black obsidian stand }
+  passage stone { black obsidian }
+  passage ldesc { In the center of the triangle formed by the three stands is a black stand of obsidian. }
+  as target for any { permit { if (self.get(:hidden)) { refuse "You can't see any such thing." } } }
+  as tool for any { permit { if (self.get(:hidden)) { refuse "You can't see any such thing." } } }
+  on :reveal { self.set(:hidden, false)  self.set(:ndesc, false) }
+}
+
+// The Wizard's workbench (WORKBENCH): dark heavy wood bound with iron,
+// gouged, burned, written on, and littered with arcana; and the three
+// stands in a triangle in a clear space in the middle.
+kind Workbench is Box {
+  grammar { name "workbench"  nouns "bench", "table"  adjectives "work", "heavy", "wooden", "wizard's", "wizard", "dark" }
+  :open true
+  :surface true
+  :capacity 200
+  :ndesc true
+  :joined false
+  passage short { workbench }
+  passage examined { The bench is dark, heavy wood bound with iron, stained and gouged and burned, and most of it is under arcana: alembics, a mortar and pestle, small knives, scraps of vellum, wax candles, and notes in a crabbed hand. In a clear space in the middle, three stands, ruby, sapphire and diamond, are fixed in a triangle{if self.get(:joined)}, and a fourth, black, in the center of it{/if}. {self.look_inside} }
+  describe { text examined }
+  // The three spheres in the three stands (STAND-FCN): they go up in
+  // smoke, and the black one is there in the middle.
+  on :check_stands {
+    if (!self.get(:joined)) {
+      if (ruby_stand.count(RedSphere) > 0 && sapphire_stand.count(BlueSphere) > 0 && diamond_stand.count(ClearSphere) > 0) {
+        self.set(:joined, true)
+        broadcast :spheres_joined
+        each r: RedSphere in ruby_stand { send r :consume }
+        each b: BlueSphere in sapphire_stand { send b :consume }
+        each c: ClearSphere in diamond_stand { send c :consume }
+        send obsidian_stand :reveal
+        send obsidian_stand.black_sphere :reveal
+      }
+    }
+  }
+  object ruby_stand is RubyStand
+  object sapphire_stand is SapphireStand
+  object diamond_stand is DiamondStand
+  object obsidian_stand is ObsidianStand {
+    object black_sphere is BlackSphere {
+      :hidden true
+      as target for any { permit { if (self.get(:hidden)) { refuse "You can't see any such thing." } } }
+      as tool for any { permit { if (self.get(:hidden)) { refuse "You can't see any such thing." } } }
+      on :reveal { self.set(:hidden, false) }
+    }
+  }
+}
+message :reveal
+message :unseal
+message :seal
+message :spheres_joined
+
+kind Workroom is Room {
+  on :spheres_joined { each a: Adventurer in self { tell a joined_line } }
+  passage joined_line { As you place the last of the spheres in its stand, a low humming noise begins, and you can feel the hairs on the back of your neck begin to stand up. The three spheres begin to vibrate, faster and faster, as the noise becomes higher and higher pitched. Three puffs of smoke, one red, one blue, one white, rise up from empty stands. The spheres are gone! But in the center of the triangle formed by the stands is now a black stand of obsidian in which rests a strange black sphere. }
+}
+object workroom is Workroom in underground_caverns_2 {
+  grammar {
+    name "Wizard's Workroom"
+    exit east "east" -> workshop
+    exit south "south" -> pentagram
+    exit west "west" -> aquarium_room
+  }
+  :id workroom
+  :walls 20
+  passage body { This room is the Wizard's workroom. A hall continues east and west, and a larger room lies to the south. There are many shelves and racks on the walls, but the Wizard's workbench dominates the room. It is made of dark, heavy wood bound with iron. The workbench is stained from many years of use, and is deeply gouged as though some huge clawed animal was imprisoned on it. There are burn marks and even notes written in a crabbed hand. Many arcane items are scattered about the bench; alembics, mortar and pestle, small knives of various sizes, odd scraps of vellum, wax candles, and much more. In the center of a relatively clear area of the bench are affixed three stands - ruby, sapphire, and diamond - which form a triangle. }
+  object workbench is Workbench
+  object arcana is Scenery {
+    grammar { name "arcane items"  nouns "alembic", "alembics", "vellum", "candles", "knives", "mortar", "pestle", "junk"  adjectives "arcane", "wax", "small", "odd" }
+    passage short { arcane items }
+    describe { text "Alembics with the dregs of something in them, a mortar and pestle with the dregs of something else, small knives of various sizes, none clean, odd scraps of vellum, wax candles, and much more, all of it the sort of thing a wizard needs and a visitor does not." }
+    passage no_take { The stuff on the bench appears to be so much junk, and you decide that it would only get in your way if you took it. }
+  }
+  object notes is Scenery {
+    grammar { name "notes"  nouns "note", "writing", "hand", "marks"  adjectives "crabbed", "burn" }
+    passage short { notes }
+    passage words { The notes are in a crabbed hand and a tongue you do not read, and most of them are sums. One sheet is a drawing: three circles at the points of a triangle, each hatched a different way, and in the middle of the triangle a fourth, inked solid black, with a line from it to a word underlined three times. }
+    describe { text words }
+    without as target for read from Thing
+    as target for read { do { say words } }
+  }
+  object shelves is Scenery {
+    grammar { name "shelves"  nouns "shelf", "racks", "rack", "jars"  adjectives "many" }
+    passage short { shelves }
+    describe { text "Shelves and racks on every wall, of jars and bottles and bundles, labelled in the same crabbed hand, and none of the labels in a language you would want to read on a jar." }
+    passage no_take { Nothing on the shelves is labelled in a way that makes you want to pick it up. }
+  }
+  object gouges is Scenery {
+    grammar { name "gouges"  nouns "gouge", "scratches", "claw", "claws"  adjectives "deep", "clawed" }
+    passage short { gouges }
+    describe { text "The gouges in the bench are deep and parallel, four at a time, and a long way apart: whatever was imprisoned on it had claws the size of your hand, and did not care for the bench." }
+  }
+}
+
+// The Wizard's trophy cabinet (WIZARD-CASE): imbedded in the wall, glass,
+// and protected by a fearful spell. What he takes, by Filch or from the
+// dead, is kept in it; the demon can smash it, and the wand's own Filch
+// can empty it onto the floor.
+kind WizardCase is Box, Scenery {
+  grammar { name "trophy cabinet"  nouns "case", "cabinet", "glass"  adjectives "ornate", "trophy", "wizard's", "wizards", "wizard", "smashed", "broken" }
+  :open true
+  :transparent true
+  :capacity 10000
+  :ndesc false
+  :smashed false
+  :worth 0 min 0 max 100
+  passage short { trophy cabinet }
+  passage ldesc { {if self.get(:smashed)}Shards of a smashed trophy case litter the room.{else}Imbedded in the wall is an ornate trophy cabinet.{/if} }
+  passage examined { {if self.get(:smashed)}The cabinet is shards, on the floor and in the wall where it was, and whatever it held is shards too.{else}An ornate cabinet imbedded in the wall, glass-fronted, gilt at the corners, with a lock no key was ever cut for. The air in front of it hums very faintly, and your hand, held near it, does not want to go nearer. {self.look_inside}{/if} }
+  describe { text examined }
+  passage spell { The case is protected by a fearful spell. You cannot touch it in any way. }
+  passage no_take { {self.spell} }
+  // Thing's answer to "look in" arrives by way of Scenery (friction 54).
+  without as target for look_in from Thing
+  // Shut to hands, open to the Wizard's magic: what Filch and the dead
+  // give up goes in while the spell lets it (`:unseal`, sent ahead of the
+  // gate by whoever is losing it), and nothing comes out by hand.
+  :unsealed false
+  on :unseal { self.set(:unsealed, true) }
+  on :seal { self.set(:unsealed, false) }
+  without accept from Box
+  accept (item, from) { if (!self.get(:unsealed)) { refuse spell } }
+  without release from Box
+  release (item, to) { if (mover.is(Adventurer)) { refuse spell } }
+  without as target for open from Box
+  as target for open { do { if (self.get(:smashed)) { say "There is no case left to open." } else { say spell } } }
+  without as target for close from Box
+  as target for close { do { if (self.get(:smashed)) { say "There is no case left to close." } else { say spell } } }
+  without as target for mung from Thing
+  as target for mung { do { if (self.get(:smashed)) { say "It is smashed already." } else { say spell } } }
+  without as target for shift from Thing
+  as target for shift { do { say spell } }
+  without as target for rub from Thing
+  as target for rub { do { say spell } }
+  without as target for kick from Thing
+  as target for kick { do { say spell } }
+  as target for attack { do { say spell } }
+  as aim for throw { do { if (target.is(Thing)) { say "The {target.short} stops a hand's breadth short of the glass, as though it had hit something, and drops."  move target to here } } }
+  on :entered (item, from) { if (item.is(Treasure)) { self.adjust(:worth, 1)  broadcast :case_worth with self.get(:worth) } }
+  on :left (item, to) { if (item.is(Treasure)) { self.adjust(:worth, -1)  broadcast :case_worth with self.get(:worth) } }
+  // Smashed by the demon (WIZARD-CASE-FCN): everything in it smashes too.
+  on :case_smashed {
+    if (!self.get(:smashed)) {
+      self.set(:smashed, true)
+      self.set(:worth, 0)
+      broadcast :case_worth with 0
+      each t: Thing in self { send t :consume }
+    }
+  }
+  // The wand's Filch, cast on the case: its contents at the caster's feet.
+  without on :cast_word from Thing
+  on :cast_word (from, value) {
+    if (self.get(:aimed)) {
+      if (value == :filch) {
+        if (self.get(:smashed)) { tell from "There is nothing left in the case to filch." }
+        else if (self.count(Thing) == 0) { tell from "The case is empty, and the spell has nothing to let go of." }
+        else { if (trophy_room.is(Room)) { each t: Thing in self { move t to trophy_room } }  tell from "The contents of the case are arrayed at your feet." }
+      }
+      else { tell from "The wand stops glowing, but there is no other apparent effect; the spell on the case is older than the one you said." }
+    }
+  }
+}
+
+kind TrophyThing is Scenery {
+  passage shock { As your fingers near it, you get a nasty shock (but fortunately not a fatal one). }
+  passage no_take { {self.shock} }
+  without as target for rub from Thing
+  as target for rub { do { say shock } }
+  without as target for shift from Thing
+  as target for shift { do { say shock } }
+}
+
+object trophy_room is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Trophy Room"
+    exit north "north" -> workshop
+  }
+  :id trophy_room
+  :walls 20
+  passage body { This is the Wizard's trophy room, filled with memorabilia of various sorts. On one wall is the Wizard's D. T. (Doctor of Thaumaturgy) degree from GUE Tech. Several old magic wands are mounted on a wand rack. A collection of dull and nicked swords testify to the fate of many foolhardy adventurers. Small bottles contain discarded homunculi (a few preserved in alcohol). There is a stuffed owl on a perch. }
+  object wizard_case is WizardCase
+  object label is Scenery {
+    grammar { name "warning label"  nouns "label", "warning", "sign"  adjectives "warning", "hand-lettered" }
+    :ndesc false
+    passage short { warning label }
+    passage ldesc { A hand-lettered label is affixed to the wall. }
+    passage words {
+      Warning!
+
+      The exhibits in this room are the property of the mighty Wizard of Frobozz (me), and are the fruits of diligent labor and study over many years. He who touches anything will regret it.
+
+      (signed)
+      Frobozz
+    }
+    describe { text words }
+    without as target for read from Thing
+    as target for read { do { say words } }
+  }
+  object degree is TrophyThing {
+    grammar { name "degree"  nouns "diploma", "d.t.", "doctorate"  adjectives "wizard's", "thaumaturgy" }
+    passage short { degree }
+    passage words { The text is in some obscure tongue. All that can be made out is a reference to "sending in a matchbook cover." }
+    describe { text "A framed degree, Doctor of Thaumaturgy, from GUE Tech, with a seal and a ribbon, in an obscure tongue. It can be read, after a fashion." }
+    without as target for read from Thing
+    as target for read { do { say words } }
+  }
+  object wands is TrophyThing {
+    grammar { name "set of used wands"  nouns "wands", "rack", "set"  adjectives "old", "worn", "used", "magic" }
+    passage short { set of used wands }
+    describe { text "Several old wands on a rack, worn pale at the grip and dark at the tip, every one of them retired: a wand, it seems, is good for so many words and no more. The one he carries is not among them." }
+  }
+  object swords is TrophyThing {
+    grammar { name "nicked swords"  nouns "swords", "sword", "collection"  adjectives "dull", "nicked", "old" }
+    passage short { nicked swords }
+    describe { text "A collection of swords, dull and nicked, mounted in a fan on the wall, none of them Elvish and none of them any use to their owners, who were foolhardy, the room says, and are not here to argue." }
+  }
+  object bottles is TrophyThing {
+    grammar { name "small bottles"  nouns "bottles", "bottle", "homunculi", "homunculus"  adjectives "small", "discarded" }
+    passage short { small bottles }
+    describe { text "Small bottles in a row, each with a homunculus in it, discarded: a little man an inch high, some dried, a few preserved in alcohol, and one that turns to look at you, which you decide it did not." }
+  }
+  object memorabilia is TrophyThing {
+    grammar { name "memorabilia"  nouns "exhibits", "exhibit", "trophies", "trophy", "collection"  adjectives "various", "wizard's" }
+    passage short { memorabilia }
+    describe { text "Memorabilia of various sorts, which is to say everything in the room that is not the cabinet: the degree, the wands, the swords, the bottles and the owl, each with a little card under it in the crabbed hand, and each, the label says, better not touched." }
+  }
+  object owl is TrophyThing {
+    grammar { name "stuffed owl"  nouns "owl", "perch", "bird"  adjectives "stuffed" }
+    passage short { stuffed owl }
+    describe { text "A stuffed owl on a perch, with glass eyes, looking at the cabinet. It has been looking at the cabinet for a long time, and has not seen anything leave it." }
+  }
+}
+
+// The Wizard's Quarters (WIZARD-QUARTERS-FCN): a different room every time
+// it is looked at.
+// Never the same room twice running (WIZQLAST): the draw a look may not
+// make is made as a visitor comes in and after every command here.
+kind Quarters is DarkRoom {
+  :pick 0 min 0 max 7
+  :last 0 min 0 max 7
+  on :entered (item, from) { if (item.is(Adventurer)) { send self :refurnish } }
+  after command { send self :refurnish }
+  on :refurnish {
+    self.set(:pick, random(8))
+    if (self.get(:pick) == self.get(:last)) { if (self.get(:pick) == 7) { self.set(:pick, 6) } else { self.adjust(:pick, 1) } }
+    self.set(:last, self.get(:pick))
+  }
+  passage body { This is where the Wizard of Frobozz lives. The room is {if self.get(:pick) == 0}sparsely furnished and almost monkish in its austerity.{else if self.get(:pick) == 1}an opulently furnished seraglio out of an Arabian folktale.{else if self.get(:pick) == 2}decorated in the Louis XIV style.{else if self.get(:pick) == 3}overhung with palm-trees and lianas. The only furniture is a hammock.{else if self.get(:pick) == 4}constructed of delicate and wispy cloud-stuffs.{else if self.get(:pick) == 5}furnished in plastic and metal and looks like the control deck of a spaceship.{else if self.get(:pick) == 6}a suburban bedroom out of the 1950's, complete with bunk beds.{else}a dank and dimly lighted cave, its floor piled with furs and old bones.{/if} }
+}
+message :refurnish
+object quarters is Quarters in underground_caverns_2 {
+  grammar {
+    name "Wizard's Quarters"
+    exit north "north" -> aquarium_room
+  }
+  :id quarters
+  :walls 20
+  object furnishings is Scenery {
+    grammar { name "furnishings"  nouns "furniture", "bed", "hammock", "furs", "bones", "palm-trees", "bunk"  adjectives "wizard's", "odd" }
+    passage short { furnishings }
+    describe { text "It is whatever it was when you last looked, and will be something else when you look again. It is not furniture; it is the Wizard's idea of furniture, which is to say whatever he last read about, and he reads a great deal and finishes nothing." }
+    passage no_take { Your hand goes through it, which is one answer to the question of whether it is really there. }
+  }
+}
+
+// The pentagram drawn on the floor (PENTAGRAM): the black sphere put in
+// its circle calls the demon.
+kind Pentagram is Box {
+  grammar { name "pentagram"  nouns "star", "circle", "chalk", "lines"  adjectives "great", "chalk", "black" }
+  :open true
+  :surface true
+  :capacity 200
+  :ndesc true
+  :summoned false
+  passage short { pentagram }
+  passage examined { A great pentagram drawn on the floor in black chalk, each line gone over many times, and in the center of it a black circle, filled in, the size of a dinner plate, with a ring of wax round it where candles have stood. The circle is the kind of place something is put. {self.look_inside} }
+  describe { text examined }
+  passage no_take { The pentagram is drawn on the floor, and the floor is staying where it is. }
+  without as target for through from Thing
+  as target for through { do { say "You try to enter the pentagram, but are forced back by an invisible power." } }
+  without as target for rub from Thing
+  as target for rub { do { say "The chalk does not come off on your fingers, which chalk should. It has been gone over too many times, and with too much intent." } }
+  on :entered (item, from) {
+    if (item.is(BlackSphere) && !self.get(:summoned)) {
+      self.set(:summoned, true)
+      send item :consume
+      if (from.is(Adventurer)) { tell from summoning }
+      broadcast :genie_summoned
+    }
+  }
+  passage summoning { A cold wind blows outward from the sphere. The candles flicker, and a low moan, almost inaudible, is heard. It rises in volume and pitch until it becomes a high-pitched keening. A dim shape becomes visible in the air above the sphere. The shape resolves into a large and somewhat formidable looking demon. He looks around, tests the walls of the pentagram experimentally, then sees you! "Hmm, a new master..." he says under his breath. "Greetings, oh master! Wouldst desire a service, as our contract stateth? For some pittance of wealth, some trifle, I will gratify thy desires to the utmost limit of my powers, and they are not inconsiderable." He makes a pass with his massive arms and the walls begin to shake a little. Another pass and the shaking stops. "A nice effect... I find it makes for a better relationship to give such a demonstration early on." He grins vilely. }
+}
+
+// The menhir, the three-headed dog and the trophy cabinet, as the
+// Pentagram Room knows them (GLOBAL-MENHIR, GLOBAL-CERBERUS,
+// GLOBAL-WIZARD-CASE): names for the demon to be ordered about, and
+// answers in voice for anyone else.
+kind FarMenhir is Scenery {
+  grammar { name "menhir"  nouns "rock", "stone", "doorstop"  adjectives "enormous", "huge", "heavy", "large", "standing" }
+  passage short { menhir }
+  describe { text "The menhir is not here; it is in the quarry south of the room that spins, twenty feet of it, leaning across a doorway with an F carved on it. From here it is a word, which is the kind of thing a demon takes orders in." }
+  passage no_take { The menhir is a long way from here, and would weigh many tons if it were not. }
+}
+kind FarCerberus is Scenery, Creature {
+  grammar { name "three-headed dog"  nouns "cerberus", "dog", "hound", "monster"  adjectives "huge", "giant", "three", "headed", "three-headed" }
+  passage short { three-headed dog }
+  describe { text "He's not here." }
+  passage no_take { He's not here. }
+  as target for any { permit { refuse "He's not here." } }
+}
+kind FarCase is Scenery {
+  grammar { name "trophy cabinet"  nouns "case", "cabinet"  adjectives "trophy", "wizard's", "wizards", "wizard" }
+  passage short { trophy cabinet }
+  describe { text "The Wizard's trophy cabinet is in his trophy room, south of the entry hall, imbedded in the wall and under a spell; from here it is a word, which is the kind of thing a demon takes orders in." }
+  passage no_take { The case is protected by a fearful spell. You cannot touch it in any way, and it is not here to be touched. }
+}
+
+// The demon (GENIE): an NPC who floats in midair over the pentagram once
+// the black sphere has called him, takes a fee, and does one thing.
+kind Genie is Creature, Demonic, sprout.Actor {
+  roams
+  pass any (true)
+  grammar { name "demon"  nouns "genie", "djinn", "devil", "servant", "spirit"  adjectives "large", "formidable", "huge", "greasy" }
+  :ready false
+  :hoard 0 min 0 max 20
+  :case_worth 0 min 0 max 100
+  :total 0 min 0 max 120
+  :gone false
+  passage short { demon }
+  passage ldesc { There is a demon floating in midair here. }
+  passage arrives { {if false}.{/if} }
+  passage leaves { {if false}.{/if} }
+  passage not_yours { The demon's hand closes, and what was in it is not in it. }
+  passage held_fast { The demon is rather larger than you are, and floating, and amused. }
+  describe { text "He is a demon, large and somewhat formidable, floating in the air above the pentagram with his arms folded: red, in the way of a thing that has been near fire a long time, with horns, a forked tongue that comes out when he thinks, and hands the size of doors. He is looking at you the way a banker looks at a customer{if self.get(:ready)}, whose account is in order{else}, whose account is not yet in order{/if}. His grin is the worst thing about him, and it is not the only thing." }
+  on :case_worth (from, value) { self.set(:case_worth, value)  self.set(:total, self.get(:hoard) + value) }
+  passage thanks { {if self.get(:total) == 1}Most fine, master! But 'tis not enough. I will do a great service, and are not great services bought at great price?{else if self.get(:total) == 2}Very nice, but not enough!{else if self.get(:total) == 3}Ah, truly magnificent! Keep them coming.{else if self.get(:total) == 4}Almost halfway there, oh worthy one!{else if self.get(:total) == 5}Oh, such beauty! Your generosity almost overwhelms me!{else if self.get(:total) == 6}Truly I shall do thee a wonderful service when thou hast finished!{else if self.get(:total) == 7}Truly you are most generous! But still, this is yet not enough.{else if self.get(:total) == 8}A fine gift, mighty one, you have almost reached my fee.{else}Wondrous fine, master! But one treasure is yet to be given!{/if} }
+  passage unpaid { "My fee is not paid! I perform no tasks for free! We demons have a strong union these days." }
+  without as target for greet from Creature
+  as target for greet { do { say "The genie grins demonically, but says nothing." } }
+  without as target for talk from Creature
+  as target for talk { do { say "The genie grins demonically, but says nothing. He is waiting to be told something, by name, and paid first." } }
+  without as target for ask from Thing
+  as target for ask { do { say "\"I am not permitted to answer questions. The terms of my contract are explicit on this matter, learned one. Surely you would not wish to violate my contract?\" He licks his lips with a forked tongue like a snake's. \"The penalty clauses are ... hmm ... devilish.\"" } }
+  as target for attack { do { say "The demon laughs uproariously." } }
+  without as target for mung from Thing
+  as target for mung { do { say "The demon laughs uproariously." } }
+  without as target for kick from Thing
+  as target for kick { do { say "The demon laughs uproariously." } }
+  without as target for rub from Thing
+  as target for rub { do { say "The demon is hot to the touch, and laughs." } }
+  without as target for follow from Creature
+  as target for follow { do { say "The demon is going nowhere until he is paid, and then nowhere you could follow." } }
+  // His fee (GENIE-FCN's GIVE): the hand has put the gift in his
+  // (adventurer.sprout). A treasure counts; a treasure in the Wizard's
+  // case counts too; the brick ends the contract; anything else he eats.
+  without as recipient for give from Thing
+  as recipient for give {
+    do {
+      if (item.is(IronBox) && item.count(Violin) > 0) {
+        say "The genie frowns briefly, then {if item.get(:open)}looks inside{else}opens{/if} the box. He smiles horribly."
+        each v: Violin in item { send v :consume }
+        send item :consume
+        self.set(:was_ready, self.get(:ready))
+        self.adjust(:hoard, 1)
+        self.set(:total, self.get(:hoard) + self.get(:case_worth))
+        send actor :scored with 2
+        if (self.get(:total) >= 10 && !self.get(:ready)) { self.set(:ready, true)  broadcast :wizard_dejected }
+        say paid_line
+      }
+      else if (item.is(Treasure)) {
+        send item :consume
+        self.set(:was_ready, self.get(:ready))
+        self.adjust(:hoard, 1)
+        self.set(:total, self.get(:hoard) + self.get(:case_worth))
+        send actor :scored with 2
+        if (self.get(:total) >= 10 && !self.get(:ready)) { self.set(:ready, true)  broadcast :wizard_dejected }
+        say paid_line
+      }
+      else if (item.is(Brick)) { say "\"I fear that this violates my contract, oh foolish one. Thus, I am free to depart.\""  send item :consume  send self :genie_leaves }
+      else if (item.is(Thing)) { say "The demon gladly takes the {item.short} and smiles balefully, revealing enormous fangs."  send item :consume }
+    }
+  }
+  passage paid_line { {if self.get(:total) >= 10}{if self.get(:was_ready)}"Most generous, but the fee is paid; say what you would have done."{else}"This will do for my fee. 'Tis a paltry hoard, but as you have done me a small service by loosing me from this wizard, it will suffice."{/if}{else}"{self.thanks}"{if self.get(:total) == 8}
+
+    The Wizard looks at you as if you are a madman. He tears his beard and stares at you fearfully.{/if}{/if} }
+  :was_ready false
+  passage departs { The genie departs, his agreement fulfilled. }
+  as aim for throw { do { if (target.is(Thing)) { say "The demon catches the {target.short} in one enormous hand and looks at it. \"A gift is handed over, oh master, not thrown.\" He hands it back."  move target to actor } } }
+
+  // Orders (GENIE-FCN as WINNER): one thing, for the fee.
+  as target for demon_give {
+    do {
+      if (!self.get(:ready)) { say unpaid }
+      else if (item.is(Wand)) {
+        say "\"I hear and obey!\" says the demon. He stretches out an enormous hand towards the wand. The Wizard is unsure what to do, pointing it threateningly at the demon, then at you. \"Fudge!\" he cries, but aside from a strong odor of chocolate in the air, there is no effect. The demon plucks the wand out of his hand (it's about toothpick-size to him) and gingerly lays it before you. He fades into the smoke, which disperses. The wizard runs from the room in terror."
+        broadcast :surrender_wand
+        send self :genie_leaves
+      }
+      else if (item.is(FarMenhir)) {
+        say "He waves his hands, and the menhir drops softly at your feet."
+        broadcast :menhir_order with 3
+        say departs
+        send self :genie_leaves
+      }
+      else if (item.is(FarCase)) { say "\"Were it possible, this would be my fondest wish, but alas...\"" }
+      else if (item.is(Portable)) {
+        if (actor.holds(item)) { say "\"You have it already, oh master. Is this a test?\"" }
+        else { say "The {item.short} appears before you and settles to the ground."  move item to here  say departs  send self :genie_leaves }
+      }
+      else { say "\"Were it possible, this would be my fondest wish, but alas...\"" }
+    }
+  }
+  as target for demon_take {
+    do {
+      if (!self.get(:ready)) { say unpaid }
+      else if (item.is(FarMenhir)) {
+        say "The demon flashes away for a second. \"I have little use for such a thing, but perhaps as a doorstop...\""
+        broadcast :menhir_order with 2
+        say departs
+        send self :genie_leaves
+      }
+      else if (item.is(Wand)) {
+        say "\"This I do gladly, oh fool!\" cackles the demon gleefully. He stretches out an enormous hand towards the wand and taking it like a toothpick (this is a large demon), points it at himself. \"Free!\" he commands, and the demon and his wand vanish forever."
+        send item :consume
+        broadcast :wizard_gone
+        send self :genie_leaves
+      }
+      else if (item.is(Portable)) {
+        say "The demon snaps his fingers, the {item.short} spins wildly in the air in front of him, then he and it depart."
+        send item :consume
+        send self :genie_leaves
+      }
+      else { say "\"I fear that I cannot take such a thing.\"" }
+    }
+  }
+  as target for demon_move {
+    do {
+      if (!self.get(:ready)) { say unpaid }
+      else if (item.is(FarMenhir)) {
+        say "The demon is gone for a moment. \"A trifle... My little finger alone was enough.\""
+        broadcast :menhir_order with 1
+        say departs
+        send self :genie_leaves
+      }
+      else { say "\"Apologies, oh master, but even for such a one as I this is not possible.\" He seems somewhat chagrined to have to admit this." }
+    }
+  }
+  as target for demon_kill {
+    do {
+      if (!self.get(:ready)) { say unpaid }
+      else if (item.is(FarCerberus)) { say "\"This may prove taxing, but we'll see. Perhaps I'll tame him for a pup instead.\" The demon disappears for an instant, then reappears. He looks rather gnawed and scratched. He winces. \"Too much for me. Puppy dog, indeed. You're welcome to him. Never did like dogs anyway... Any other orders, oh beneficent one?\"" }
+      else if (item.is(Wizard)) {
+        say "The demon grins hideously. \"This has been my desire e'er since this charlatan bent me to his service. I perform this deed with pleasure!\" The demon forms himself back into a cloud of greasy smoke. The cloud envelops the Wizard, who waves his wand fruitlessly, mumbling various phrases which begin with \"F\". A horrible scream is heard, and the smoke begins to clear. Nothing remains of the Wizard but his wand."
+        broadcast :surrender_wand
+        say departs
+        send self :genie_leaves
+      }
+      else if (item.is(Adventurer)) {
+        say "\"Foolish mortal, if you insist...\" The demon crushes you with one blow of his enormous hand."
+        send self :genie_leaves
+        if (actor.is(Adventurer)) { send actor :die }
+      }
+      else if (item.is(Thing)) { say "\"I know no way to kill {item.a_short}.\"" }
+      else { say "\"I know no way to kill that.\"" }
+    }
+  }
+  as target for demon_open {
+    do {
+      if (!self.get(:ready)) { say unpaid }
+      else if (item.is(FarCase)) {
+        say "The demon smashes the case into smithereens. Everything in it smashes as well."
+        broadcast :case_smashed
+      }
+      else { say "\"Apologies, oh master, but even for such a one as I this is not possible.\" He seems somewhat chagrined to have to admit this." }
+    }
+  }
+  as target for demon_find {
+    do {
+      if (!self.get(:ready)) { say unpaid }
+      else { say "\"I am not permitted to perform such menial tasks. The terms of my contract are explicit on this matter, learned one. Surely you would not wish to violate my contract?\" He licks his lips with a forked tongue like a snake's. \"The penalty clauses are ... hmm ... devilish.\"" }
+    }
+  }
+  as target for demon_other {
+    do {
+      if (!self.get(:ready)) { say unpaid }
+      else { say "\"Apologies, oh master, but even for such a one as I this is not possible.\" He seems somewhat chagrined to have to admit this." }
+    }
+  }
+  // Summoned: out of Elsewhere and into the air over the pentagram.
+  on :genie_summoned { if (!self.get(:gone) && here.is(Elsewhere)) { move self to pentagram } }
+  // Gone (GENIE-LEAVES): his agreement fulfilled, or his contract broken.
+  on :genie_leaves {
+    self.set(:gone, true)
+    self.set(:unseen, true)
+    move self to elsewhere
+    broadcast :genie_departs
+  }
+}
+message :genie_leaves
+
+object pentagram is Room in underground_caverns_2 {
+  grammar {
+    name "Pentagram Room"
+    exit north "north" -> workroom
+  }
+  :id pentagram
+  :walls 20
+  passage body { In this room, inscribed on the floor, is a great pentagram drawn with black chalk. In its center is a black circle. }
+  object pentagram_figure is Pentagram
+  object candles is Scenery {
+    grammar { name "candles"  nouns "candle", "wax", "flames"  adjectives "black", "tall" }
+    passage short { candles }
+    describe { text "Tall candles stand at the points of the pentagram, black, and burning without getting shorter, which is the kind of candle a wizard keeps. They flicker when there is no draught." }
+    passage no_take { The candles are fixed in their own wax, and the wax to the floor, and you have the feeling they would not come anyway. }
+  }
+  object far_menhir is FarMenhir
+  object far_cerberus is FarCerberus
+  object far_case is FarCase
+}
+
+// The aquarium (AQUARIUM): glass, salt water, sand, a baby sea serpent,
+// and in the sand a clear crystal sphere.
+kind Aquarium is Box {
+  grammar { name "aquarium"  nouns "tank", "glass"  adjectives "huge", "shattered", "broken" }
+  :open true
+  :capacity 200
+  :ndesc false
+  :shattered false
+  passage short { aquarium }
+  passage ldesc { {if self.get(:shattered)}A shattered aquarium fills the northern half of the room.{else}Filling the northern half of the room is a huge aquarium.{/if} }
+  passage examined { {if self.get(:shattered)}The aquarium is a frame of iron with no glass left in it to speak of, and sand and a great deal of wet on the floor around it, and nothing swimming.{else}The aquarium is huge, glass on an iron frame, and full of salt water and sand, lit from the east so that the light moves in it. Something long is swimming in it, and watching you. The glass is thick, as it would have to be, but it is glass.{/if} }
+  describe { text examined }
+  passage no_take { The aquarium is the size of a room and full of water. }
+  without as target for look_in from Box
+  as target for look_in {
+    do {
+      if (self.get(:shattered)) { say "Sand, and broken glass, and water going down into the sand{if self.count(ClearSphere) > 0}, and a clear crystal sphere lying in the sand{/if}." }
+      else { say "In the aquarium is a baby sea-serpent who eyes you suspiciously. His scaly body writhes about in the huge tank." }
+    }
+  }
+  without as target for through from Thing
+  as target for through { do { send actor :travel with :murky_room  say "" } }
+  // Struck or thrown at (AQUARIUM-FCN): a weapon or a heavy thing breaks
+  // the glass, the serpent spills out and dies, and the sphere is there in
+  // the sand; a broken flask is the end of the breaker; anything else
+  // bounces off. Breaking it with a blow (MUNG) is fatal; attacking it,
+  // or throwing, is not.
+  passage dead_line { He tries to slither across the stone floor towards you. Fortunately, he expires mere inches away from biting off your foot. A clear crystal sphere sits amid the sand and broken glass on the bottom of the aquarium. }
+  passage mung_line { He manages to rend you limb from limb before he drowns in the air. }
+  :breaks false
+  passage fists { You pound on the glass with your fists. The serpent watches with interest. The glass does not. }
+  passage shatter_front { shatters the glass wall of the aquarium, spilling out an impressive amount of salt water and wet sand. It also spills out an extremely annoyed sea serpent who bites angrily at the }
+  passage shatter_back { , and then at you. He is having difficulty breathing, and he seems to hold you responsible for his current problem. }
+  as target for attack {
+    do {
+      if (self.get(:shattered)) { say "The aquarium is already broken!" }
+      else if (bound weapon) {
+        if (weapon.is(Thing)) {
+          self.set(:breaks, weapon.is(Weapon) || weapon.get(:size) > 10)
+          if (weapon.is(Flask)) { say "The flask shatters, and poison gas fills the room!"  send weapon :consume  if (actor.is(Adventurer)) { send actor :die } }
+          else if (self.get(:breaks)) {
+            say "The {weapon.short} {self.shatter_front} {weapon.short}{self.shatter_back}"
+            say dead_line
+            send self :shatter
+          }
+          else { say "The {weapon.short} bounces harmlessly off the glass." }
+        }
+      }
+      else { say fists }
+    }
+  }
+  without as target for mung from Thing
+  as target for mung {
+    do {
+      if (self.get(:shattered)) { say "The aquarium is already broken!" }
+      else if (bound tool) {
+        if (tool.is(Thing)) {
+          self.set(:breaks, tool.is(Weapon) || tool.get(:size) > 10)
+          if (tool.is(Flask)) { say "The flask shatters, and poison gas fills the room!"  send tool :consume  if (actor.is(Adventurer)) { send actor :die } }
+          else if (self.get(:breaks)) {
+            say "The {tool.short} {self.shatter_front} {tool.short}{self.shatter_back}"
+            say mung_line
+            send self :shatter
+            if (actor.is(Adventurer)) { say "I guess you were too careless."  send actor :die }
+          }
+          else { say "The {tool.short} bounces harmlessly off the glass." }
+        }
+      }
+      else { say fists }
+    }
+  }
+  as aim for throw {
+    do {
+      if (target.is(Thing)) {
+        self.set(:breaks, target.is(Weapon) || target.get(:size) > 10)
+        if (self.get(:shattered)) { say "The aquarium is already broken!" }
+        else if (target.is(Flask)) { say "The flask shatters, and poison gas fills the room!"  send target :consume  if (actor.is(Adventurer)) { send actor :die } }
+        else if (self.get(:breaks)) {
+          say "The {target.short} {self.shatter_front} {target.short}{self.shatter_back}"
+          say dead_line
+          send self :shatter
+        }
+        else { say "The {target.short} bounces harmlessly off the glass." }
+      }
+    }
+  }
+  on :shatter {
+    self.set(:shattered, true)
+    broadcast :serpent_gone
+    each c: ClearSphere in self { send c :reveal_sphere }
+    each s: Serpent in self { send s :spill }
+    if (aquarium_room.is(Room)) { spawn DeadSerpent in aquarium_room }
+  }
+}
+message :shatter
+message :spill
+
+// The baby sea serpent (SERPENT): in the tank until the glass goes.
+kind Serpent is Scenery, Creature {
+  grammar { name "baby sea serpent"  nouns "serpent", "snake", "sea-serpent"  adjectives "baby", "sea", "scaly" }
+  :ndesc false
+  passage short { baby sea serpent }
+  passage ldesc { There is a baby sea serpent swimming in the aquarium. }
+  describe { text "A sea serpent, and a baby one, which is to say the length of a boat, with flippers and a mouth full of dagger teeth and beady green eyes that follow you round the room. It writhes. It is hungry, in the way of the young." }
+  passage no_take { He takes you instead. *Uurrp!* }
+  as target for attack { do { say "He swims towards you with a powerful stroke of his flippers, dagger-like teeth dripping. Fortunately, he doesn't want to crash into the aquarium wall, and contents himself with splashing you with water." } }
+  without as target for mung from Thing
+  as target for mung { do { say "He swims towards you with a powerful stroke of his flippers, dagger-like teeth dripping. Fortunately, he doesn't want to crash into the aquarium wall, and contents himself with splashing you with water." } }
+  without as target for greet from Creature
+  as target for greet { do { say "The serpent only stares hungrily at you." } }
+  without as target for talk from Creature
+  as target for talk { do { say "The serpent only stares hungrily at you." } }
+  without as target for ask from Thing
+  as target for ask { do { say "The serpent only stares hungrily at you." } }
+  without as recipient for give from Thing
+  as recipient for give { do { say "He takes you instead. *Uurrp!*"  if (actor.is(Adventurer)) { send actor :die } } }
+  without as aim for throw from Thing
+  as aim for throw { do { if (target.is(Thing)) { say "The {target.short} splashes into the tank. The serpent examines it, and then you, and prefers you."  move target to here } } }
+  on :spill { finally destroy self }
+}
+// What is left of him on the floor (DEAD-SERPENT).
+kind DeadSerpent is Scenery {
+  grammar { name "dead sea serpent"  nouns "serpent", "snake", "heap", "sea-serpent", "corpse"  adjectives "dead", "baby", "sea" }
+  :ndesc false
+  passage short { dead sea serpent }
+  passage ldesc { There is a dead sea serpent in a heap here. }
+  describe { text "A baby sea serpent, dead, in a heap on the floor among the sand and the glass, with its flippers spread and its mouth open and its green eyes gone dull. It was only a baby. It is as big as a small whale." }
+  passage no_take { This may only be a baby sea serpent, but it's as big as a small whale. }
+  without as target for smell from Thing
+  as target for smell { do { say "Fish, and salt, and more fish. It is not getting better." } }
+}
+
+kind AquariumRoom is Room { }
+object aquarium_room is AquariumRoom in underground_caverns_2 {
+  grammar {
+    name "Aquarium Room"
+    exit east "east" -> workroom
+    exit south "south" -> quarters
+    exit in "in" -> murky_room
+  }
+  :id aquarium_room
+  :walls 20
+  passage body { Here a dark hallway turns a corner. To the south is a dark room, to the east is fitful light. }
+  object aquarium is Aquarium {
+    object serpent is Serpent
+    object clear_sphere is ClearSphere
+  }
+  object fitful_light is Scenery {
+    grammar { name "fitful light"  nouns "light", "glow"  adjectives "fitful", "east" }
+    passage short { fitful light }
+    describe { text "Light from the east, fitful, as of candles in a draught, from the room the hall turns into." }
+  }
+}
+
+// Inside the tank (IN-AQUARIUM): sand, murk, and the serpent, or the
+// glass; nobody who goes in comes out.
+object murky_room is Room in underground_caverns_2 {
+  grammar {
+    name "Murky Room"
+    exit out "out" -> aquarium_room
+  }
+  :id murky_room
+  :walls 20
+  :drowned false
+  passage body { There is a sandy floor here, and your vision seems murky and blurred. The wall you are looking at is nicely dressed stone. }
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      if (aquarium_room.aquarium.get(:shattered)) { tell item "Oh dear, you have cut yourself severely on the broken glass. I'm afraid you've bled to death." }
+      else { tell item "You drop into the aquarium with a splash (which attracts the serpent). He greedily eats you. He's just a baby, after all, and needs all the food he can get." }
+      send item :die
+    }
+  }
+  object sand is Scenery {
+    grammar { name "sand"  nouns "floor", "murk"  adjectives "sandy", "wet" }
+    passage short { sand }
+    describe { text "Sand, under water, and your feet in it." }
+  }
+}
+
+// The demon, kept Elsewhere until the black sphere calls him.
+object genie is Genie in elsewhere { }

@@ -1,0 +1,113 @@
+// The four Rooms of Mist (DEAD-PALANTIR-1 to -4): where the dead go.
+// Red, blue and white, each a crystal sphere seen from inside, with the
+// world outside it blurred; and the black, where the face is, which sends
+// the dead back to the barrow twice and keeps them the third time
+// (JIGS-UP, DEAD-PALANTIR). The visitor arrives in the red room with
+// their things already scattered (adventurer.sprout), and walks west.
+import * as sprout from 'sprout'
+import {Thing, Scenery} from 'thing'
+import {Room} from 'room'
+import {Adventurer} from 'adventurer'
+import {look_in, mung, through, Dest, :red_at, :blue_at, :clear_at, :face, :serpent_gone} from 'verbs'
+
+// A room of mist: described in full every time, since a death is a death.
+kind MistRoom is Room {
+  grammar { article none }
+  :red Dest default closet
+  :blue Dest default dreary_room
+  :clear Dest default murky_room
+  :red_moved false
+  :blue_moved false
+  :clear_moved false
+  :serpent true
+  on :red_at (from, value) { self.set(:red, value)  self.set(:red_moved, true) }
+  on :blue_at (from, value) { self.set(:blue, value)  self.set(:blue_moved, true) }
+  on :clear_at (from, value) { self.set(:clear, value)  self.set(:clear_moved, true) }
+  on :serpent_gone { self.set(:serpent, false) }
+  passage described { {self.full} }
+  passage colour default { red }
+  passage next default { blue }
+  // What is seen out through the mist: the room the sphere lies in, as
+  // the spheres' own visions show it (items.sprout), or, while the sphere
+  // has never been moved, Zork's blurred glimpse.
+  passage vision_of { {if self.get(:shown) == :closet}a dingy closet, with words chiselled into one wall, and a notice about a footpad, and a doorway north{else if self.get(:shown) == :dreary_room}a small and rather dreary room, lit red from a crack in one wall, with a dusty wooden table in the middle of it and a massive wooden door{else if self.get(:shown) == :murky_room}a floor of sand, seen through water, and the dressed stone of a wall beyond it{else if self.get(:shown) == :aquarium_room}a corner of a dark hallway, and a great tank of glass with sand and water in it, lit fitfully from the east{else if self.get(:shown) == :workroom}a room of shelves and racks, and a workbench of dark wood bound with iron, with three small stands set on it in a triangle{else if self.get(:shown) == :carousel}a large circular room whose ceiling is lost in gloom, with eight identical passages leaving it{else if self.get(:shown) == :trophy_room}a room of memorabilia, swords and wands and small bottles, and an ornate cabinet set into one wall{else if self.get(:shown) == :pentagram}a room with a great pentagram drawn on its floor in black chalk, and a black circle in the middle of it{else if self.get(:shown) == :elsewhere}only darkness{else}a room you half know, which the mist thickens over before it comes clear{/if} }
+  :shown Dest default nowhere
+  passage body {
+    You are inside a huge crystalline sphere filled with thin {self.colour} mist. The mist becomes {self.next} to the west.
+
+    You strain to look out through the mist... {self.glimpse}
+  }
+  passage glimpse default { {if false}.{/if} }
+}
+kind RedMist is MistRoom {
+  passage colour { red }
+  passage next { blue }
+  passage glimpse { {if self.get(:red_moved)}As you peer through the mist, a strangely colored vision of a huge room takes shape... You see {self.vision_of}.{else}You see a small room with a sign on the wall, but it is too blurry to read.{/if} }
+  on :entered (item, from) { if (item.is(Adventurer)) { self.set(:shown, self.get(:red)) } }
+}
+kind BlueMist is MistRoom {
+  passage colour { blue }
+  passage next { white }
+  passage glimpse { {if self.get(:blue_moved)}As you peer through the mist, a strangely colored vision of a huge room takes shape... You see {self.vision_of}.{else}You look out into a large, dreary room with a great door and a huge table. There is an odd glow to the mist.{/if} }
+  on :entered (item, from) { if (item.is(Adventurer)) { self.set(:shown, self.get(:blue)) } }
+}
+kind WhiteMist is MistRoom {
+  passage colour { white }
+  passage next { black }
+  passage glimpse { {if self.get(:clear_moved)}As you peer through the mist, a strangely colored vision of a huge room takes shape... You see {self.vision_of}.{else}A strange blurry room is barely visible.{if self.get(:serpent)} An odd sinuous shadow crosses the mist as you look.{/if}{/if} }
+  on :entered (item, from) { if (item.is(Adventurer)) { self.set(:shown, self.get(:clear)) } }
+}
+// The black room: the face, which decides.
+kind BlackMist is MistRoom {
+  passage body { You follow a corridor of black mist into a black walled spherical room. }
+  on :entered (item, from) { if (item.is(Adventurer)) { send item :face } }
+}
+
+kind MistWall is Scenery {
+  grammar { name "mist"  nouns "sphere", "crystal", "wall", "fog", "corridor"  adjectives "thin", "red", "blue", "white", "black", "crystalline", "huge" }
+  passage short { mist }
+  describe { text "The mist is thin and everywhere, and the sphere you are in is crystal, huge, and curved, and whatever is on the other side of it is a long way off and the wrong size. To the west the mist changes color. There is nowhere else to go, and nothing to do here but go there." }
+  passage no_take { Your hand closes on mist, which is what mist is for. }
+  without as target for mung from Thing
+  as target for mung { do { say "The sphere is unbreakable, from this side as from the other." } }
+  without as target for through from Thing
+  as target for through { do { say "You walk into the crystal, which is further off than it looked, and then nearer, and does not let you through. West is the way the mist goes." } }
+  without as target for look_in from Thing
+  as target for look_in { do { say "You strain to look out through the mist, and the mist looks back." } }
+}
+
+object mist_red is RedMist in underground_caverns_2 {
+  grammar {
+    name "Room of Red Mist"
+    exit west "west" -> mist_blue
+  }
+  :id mist_red
+  :walls 22
+  object mist is MistWall
+}
+object mist_blue is BlueMist in underground_caverns_2 {
+  grammar {
+    name "Room of Blue Mist"
+    exit west "west" -> mist_white
+  }
+  :id mist_blue
+  :walls 22
+  object mist is MistWall
+}
+object mist_white is WhiteMist in underground_caverns_2 {
+  grammar {
+    name "Room of White Mist"
+    exit west "west" -> mist_black
+  }
+  :id mist_white
+  :walls 22
+  object mist is MistWall
+}
+object mist_black is BlackMist in underground_caverns_2 {
+  grammar { name "Room of Black Mist" }
+  :id mist_black
+  :walls 22
+  object mist is MistWall {
+    describe { text "The mist is black, and the walls of the sphere are black, and there is nothing to see but the face, when it comes." }
+  }
+}

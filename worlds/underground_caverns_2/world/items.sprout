@@ -6,7 +6,8 @@ import {Adventurer} from 'adventurer'
 import {Bag, Box} from 'box'
 import {Light} from 'lamp'
 import {Room, CakeSafe, Watery, Wonderland, TeaRoomLike, PostsLike, ChasmEdge} from 'room'
-import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, burn, lamp_on, lamp_off, count_things, turn, shift, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt, :light, :mat_under, :mat_moved} from 'verbs'
+import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, burn, lamp_on, lamp_off, count_things, turn, shift, raise, aim_wand, Dest, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt, :light, :mat_under, :mat_moved, :red_at, :blue_at, :clear_at, :freed_wand, :open_gate, :gate_open, :close_gate} from 'verbs'
+import {Elsewhere} from 'garden'
 import {Bucket} from 'well'
 import {Pool} from 'posts'
 import {Stream} from 'way_in'
@@ -170,8 +171,26 @@ kind StreamWater is Scenery, Drinkable, Fillable {
 
 // The china teapot from the gazebo: open, lidless, and the only thing
 // that holds water.
-kind Teapot is Bag, Fillable {
+kind Teapot is Bag, Fillable, Pourable {
   grammar { name "china teapot"  nouns "teapot", "pot"  adjectives "china", "tea" }
+  // "pour teapot into bucket" and "pour teapot on the ice" (round 7's P5):
+  // the hand has moved the water where it goes (adventurer.sprout); the
+  // teapot says what it did, and the thing poured over answers for itself.
+  as target for pour {
+    do {
+      if (self.count(Water) == 0) { say "The teapot is empty." }
+      else if (here.is(Bucket)) { each w: Water in self { move w to here }  say "There is now a puddle in the bottom of the wooden bucket." }
+      else { say "The water spills to the floor and evaporates."  each w: Water in self { send w :consume } }
+    }
+  }
+  as item for pour_in {
+    do {
+      if (self.count(Water) == 0) { say "The teapot is empty." }
+      else if (container.is(Bucket)) { say "There is now a puddle in the bottom of the wooden bucket." }
+      else if (container.is(Thing)) { say "The water leaks out of the {container.short} and evaporates immediately."  each w: Water in self { send w :consume } }
+    }
+  }
+  as item for pour_on { do { } }
   :open true
   :transparent true
   :capacity 4
@@ -274,7 +293,7 @@ kind Newspaper is Readable {
 
     WIZARD STILL AT LARGE
 
-    The Wizard of Frobozz, dismissed from the court of Lord Dimwit Flathead for turning the royal mountain into a very large pile of gravel, is believed to have retired to the caverns south of the ravine, taking with him a quantity of the Empire's loose property (a pearl necklace, a Stradivarius and a crystal sphere are mentioned in the inventory, and the Bank of Zork has declined to comment on the rest). He is described as doddering, petulant and armed with a wand, and the public is advised not to let him finish a word.
+    The Wizard of Frobozz, dismissed from the court of Lord Dimwit Flathead for turning the royal mountain into a very large pile of gravel, is believed to have retired to the caverns south of the ravine, taking with him a quantity of the Empire's loose property (a pearl necklace, a Stradivarius and a crystal sphere are mentioned in the inventory, and the Bank of Zork has declined to comment on the rest). Visitors report a loud whirring from somewhere past the garden, as of a room that will not keep still, and nobody who has walked into it has come out the way they expected. He is described as doddering, petulant and armed with a wand, and the public is advised not to let him finish a word.
 
     "Zork II: The Wizard of Frobozz" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc.
   }
@@ -566,25 +585,134 @@ kind IronBox is Bag {
   }
 }
 
-// The red crystal sphere in the Dingy Closet (PALANTIR-1). Reaching for
-// it is the closet's business (machine.sprout).
-kind Sphere is Treasure {
-  grammar { name "red crystal sphere"  nouns "sphere", "ball", "palantir", "crystal", "treasure"  adjectives "red", "crystal", "beautiful" }
+// The crystal spheres (PALANTIR-1 to PALANTIR-4, PALANTIR, PALANTIR-LOOK):
+// the red in the Dingy Closet, the blue on the Dreary Room's table, the
+// clear in the sand of the aquarium, and the black that the three make
+// together on the Wizard's workbench. Looked into, each shows the room the
+// next one round lies in: red the blue's, blue the clear's, clear the
+// red's, and the black a face. A room is out of range of a sphere
+// (friction 47), so each sphere tells the others where it has got to
+// (`:red_at` and the rest), and the vision is written for the rooms a
+// sphere lies in long enough to be looked for.
+kind Palantir is Treasure {
   :size 10
-  :value 20
   :keep true
+  // Where each of the three lies, as told by broadcast; and whether each
+  // has been moved, for the Rooms of Mist.
+  :red Dest default closet
+  :blue Dest default dreary_room
+  :clear Dest default murky_room
+  :red_moved false
+  :blue_moved false
+  :clear_moved false
+  on :red_at (from, value) { self.set(:red, value)  self.set(:red_moved, true) }
+  on :blue_at (from, value) { self.set(:blue, value)  self.set(:blue_moved, true) }
+  on :clear_at (from, value) { self.set(:clear, value)  self.set(:clear_moved, true) }
+  describe { text "There is something misty in the sphere. Perhaps if you were to look into it..." }
+  without as target for mung from Thing
+  as target for mung { do { say "The sphere is unbreakable." } }
+  // The vision of a room, by which room: the few a sphere comes to rest
+  // in, and a word for the rest.
+  passage vision_of { {if self.get(:shown) == :closet}a dingy closet, with words chiselled into one wall, and a notice about a footpad, and a doorway north{else if self.get(:shown) == :dreary_room}a small and rather dreary room, lit red from a crack in one wall, with a dusty wooden table in the middle of it and a massive wooden door{else if self.get(:shown) == :murky_room}a floor of sand, seen through water, and the dressed stone of a wall beyond it, and a shadow that passes overhead{else if self.get(:shown) == :aquarium_room}a corner of a dark hallway, and a great tank of glass with sand and water in it, lit fitfully from the east{else if self.get(:shown) == :workroom}a room of shelves and racks, and a workbench of dark wood bound with iron, with three small stands set on it in a triangle{else if self.get(:shown) == :carousel}a large circular room whose ceiling is lost in gloom, with eight identical passages leaving it{else if self.get(:shown) == :trophy_room}a room of memorabilia, swords and wands and small bottles, and an ornate cabinet set into one wall{else if self.get(:shown) == :pentagram}a room with a great pentagram drawn on its floor in black chalk, and a black circle in the middle of it{else if self.get(:shown) == :elsewhere}darkness{else}a room you half know, which the mist thickens over before it comes clear{/if} }
+  :shown Dest default nowhere
+  passage looked { {if self.get(:shown) == :elsewhere}You see only darkness.{else}As you peer into the sphere, a strange vision takes shape of a distant room, which can be described clearly....
+
+    You see {self.vision_of}.{if self.get(:with_you)} An astonished adventurer is staring into a crystal sphere.{/if}
+
+    The vision fades, revealing only an ordinary crystal sphere.{/if} }
+  :with_you false
+  without as target for look_in from Thing
+}
+// Each sphere tells the others where it is, every time it moves: the room
+// it lies in, or the room whoever carries it stands in, or nowhere.
+kind RedSphere is Palantir {
+  grammar { name "red crystal sphere"  nouns "sphere", "ball", "palantir", "crystal", "treasure"  adjectives "red", "crystal", "beautiful" }
+  :value 20
   // Hidden, after the gas has had the closet.
   :gone false
   passage short { red crystal sphere }
   passage ldesc { There is a beautiful red crystal sphere here. }
-  describe { text "There is something misty in the sphere. Perhaps if you were to look into it..." }
   // Through the bars of the cage it can be seen and not had.
   depart (to) { if (mover.is(Adventurer)) { if (mover.get(:caged)) { refuse "You can't reach it through the bars of the cage." } } }
   as target for any { permit { if (self.get(:gone)) { refuse "You can't see any such thing." } } }
-  without as target for look_in from Thing
-  as target for look_in { do { say "You see only darkness." } }
+  on :moved (from, to) {
+    if (to.is(Room)) { broadcast :red_at with to.get(:id) }
+    else if (to.is(Adventurer)) { broadcast :red_at with to.get(:last_room) }
+    else if (to.is(Elsewhere)) { broadcast :red_at with :elsewhere }
+    else { broadcast :red_at with :nowhere }
+  }
+  as target for look_in {
+    do {
+      self.set(:shown, self.get(:blue))
+      self.set(:with_you, actor.is(Adventurer) && actor.holds(self) && self.get(:blue) == self.get(:red))
+      say looked
+    }
+  }
   on :poisoned { self.set(:gone, true)  self.set(:ndesc, true) }
   on :lost { self.set(:gone, true)  self.set(:ndesc, true)  self.set(:unseen, true) }
+  on :consume { broadcast :red_at with :elsewhere }
+}
+kind Sphere is RedSphere { }
+kind BlueSphere is Palantir {
+  grammar { name "blue crystal sphere"  nouns "sphere", "ball", "palantir", "crystal", "treasure"  adjectives "blue", "crystal" }
+  :value 20
+  :has_fdesc true
+  passage short { blue crystal sphere }
+  passage fdesc { In the center of the table sits a blue crystal sphere. }
+  passage ldesc { There is a blue crystal sphere here. }
+  on :moved (from, to) {
+    if (to.is(Room)) { broadcast :blue_at with to.get(:id) }
+    else if (to.is(Adventurer)) { broadcast :blue_at with to.get(:last_room) }
+    else if (to.is(Elsewhere)) { broadcast :blue_at with :elsewhere }
+    else { broadcast :blue_at with :nowhere }
+  }
+  as target for look_in {
+    do {
+      self.set(:shown, self.get(:clear))
+      self.set(:with_you, actor.is(Adventurer) && actor.holds(self) && self.get(:clear) == self.get(:blue))
+      say looked
+    }
+  }
+  on :consume { broadcast :blue_at with :elsewhere }
+}
+kind ClearSphere is Palantir {
+  grammar { name "clear crystal sphere"  nouns "sphere", "ball", "palantir", "crystal", "treasure"  adjectives "clear", "white", "crystal" }
+  :value 20
+  // In the sand at the bottom of the aquarium until the glass goes: a
+  // thing marked unseen is out of reach of a message as of a hand
+  // (friction 72), so it hides by its own flag.
+  :hidden true
+  :ndesc true
+  passage short { clear crystal sphere }
+  passage ldesc { There is a clear crystal sphere lying in the sand. }
+  as target for any { permit { if (self.get(:hidden)) { refuse "You can't see any such thing." } } }
+  as tool for any { permit { if (self.get(:hidden)) { refuse "You can't see any such thing." } } }
+  on :reveal_sphere { self.set(:hidden, false)  self.set(:ndesc, false) }
+  on :moved (from, to) {
+    if (to.is(Room)) { broadcast :clear_at with to.get(:id) }
+    else if (to.is(Adventurer)) { broadcast :clear_at with to.get(:last_room) }
+    else if (to.is(Elsewhere)) { broadcast :clear_at with :elsewhere }
+    else { broadcast :clear_at with :nowhere }
+  }
+  as target for look_in {
+    do {
+      self.set(:shown, self.get(:red))
+      self.set(:with_you, actor.is(Adventurer) && actor.holds(self) && self.get(:red) == self.get(:clear))
+      say looked
+    }
+  }
+  on :consume { broadcast :clear_at with :elsewhere }
+}
+message :reveal_sphere
+// The black crystal sphere (PALANTIR-4): what the three make on the
+// Wizard's bench, and what calls the demon.
+kind BlackSphere is Palantir {
+  grammar { name "black crystal sphere"  nouns "sphere", "ball", "palantir", "crystal", "treasure"  adjectives "black", "strange", "crystal" }
+  :value 30
+  passage short { black crystal sphere }
+  passage ldesc { There is a strange black sphere here. }
+  describe { text "There is something misty in the sphere, and the mist is black, and it moves, which the mist in the others did not. Perhaps if you were to look into it..." }
+  as target for look_in { do { say "As you peer into the sphere, a strange vision takes shape...a huge and fearful face with yellow eyes. The face peers out at you expectantly." } }
 }
 message :lost
 
@@ -597,13 +725,24 @@ kind MangledCage is Portable {
   describe { text "It is what is left of the solid steel cage: bars bent every which way, a door that will never shut again, and a dent the shape of a robot's shoulder. It weighs a great deal." }
 }
 
-// The Wizard's wand, in his hand (WAND): a treasure he does not part with.
+// The Wizard's wand (WAND): a treasure he does not part with, until the
+// demon parts him from it; then a wand in a hand, to be pointed and
+// spoken over (aim_wand and incant, adventurer.sprout).
 kind Wand is Treasure {
-  grammar { name "Wizard's magic wand"  nouns "wand"  adjectives "magic", "wizard's", "wizards" }
+  grammar { name "magic wand"  nouns "wand"  adjectives "magic", "wizard's", "wizards", "wizard" }
   :ndesc true
+  :size 5
   :value 30
-  passage short { Wizard's magic wand }
-  describe { text "The wand is a foot of some dark wood, worn pale where the Wizard grips it, and glowing, when it glows, a faint blue at the tip. He has not let go of it." }
+  :free false
+  passage short { magic wand }
+  passage ldesc { There is a magic wand here. }
+  describe { text "{if self.get(:free)}The wand is a foot of some dark wood, worn pale where the Wizard gripped it, and warm, and it hums very faintly against the hand, as though it had been told something and were waiting to be told to whom. The book in the Library, if you read it, said how these are used: pointed at a thing, and then a word said over them.{else}The wand is a foot of some dark wood, worn pale where the Wizard grips it, and glowing, when it glows, a faint blue at the tip. He has not let go of it.{/if}" }
+  on :freed_wand { self.set(:free, true)  self.set(:ndesc, false) }
+  without as target for raise from Thing
+  as target for raise { do { say "The wand grows warm and seems to vibrate." } }
+  // Pointed at itself or waved at nothing: the wand's part says nothing;
+  // the hand that holds it says what came of it (adventurer.sprout).
+  as target for aim_wand { do { } }
 }
 
 // The letter opener from the gazebo's tea table (LETTER-OPENER): the
@@ -735,23 +874,6 @@ kind Brochure is Readable {
   passage ldesc { There is a bank brochure here. }
   describe { text "It is a small piece of paper, worn soft at the folds, printed once in the Bank's colours and read since by everybody who came through here. It can be read, barely." }
   passage words { The paper is barely readable. You can only make out "... valuables are completely safe ... advanced magic technology ... impossible to take valuables from the depository ... either teller's ... Many customers faint ... teller pops in ... seems to walk through ... walls ..." }
-}
-
-// The blue crystal sphere on the Dreary Room's table (PALANTIR-2).
-kind BlueSphere is Treasure {
-  grammar { name "blue crystal sphere"  nouns "sphere", "ball", "palantir", "crystal", "treasure"  adjectives "blue", "crystal" }
-  :size 10
-  :value 20
-  :keep true
-  :has_fdesc true
-  passage short { blue crystal sphere }
-  passage fdesc { In the center of the table sits a blue crystal sphere. }
-  passage ldesc { There is a blue crystal sphere here. }
-  describe { text "There is something misty in the sphere. Perhaps if you were to look into it..." }
-  without as target for look_in from Thing
-  as target for look_in { do { say "As you peer into the sphere, a strange vision takes shape of a distant room, which can be described clearly.... And then does not: the mist in the sphere thickens before the room comes clear, and you are left with a sense of a great deal of machinery, and somebody muttering. The vision fades, revealing only an ordinary crystal sphere." } }
-  without as target for mung from Thing
-  as target for mung { do { say "The sphere is unbreakable." } }
 }
 
 // The rose the princess plucks from the arbor (ROSE).
