@@ -1,0 +1,250 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The window's close-up promises dark when the count is lost and the room contradicted it; the count now goes on the move it is lost, and the fresh draw says only that the window has woken."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Three runs reached the dog long before the collar and read one snap four times; grading what is offered and pointing up the stair toward the kennel is Zork's joke made legible, with Zork's snap kept for anything else."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "A room whose rule is that every passage leads somewhere should not answer 'up' with the parser; 'up' and 'down' while it spins, and the passages taken or entered by name, are answered in the narrator's voice. 'take the passage that climbs' stays the parser's: 'that climbs' is not a relative phrase the language can read (friction 86)."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Zork's draw stays, as the brief wants; the pointer to the works becomes concrete by sound, under the floor and past the well, in the first-throw line and the Circular Room. The request to put the narrator's invitation ahead of Zork's 'Eight identical passages' is declined within the acceptance: Zork's text stays whole and first in every room."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "As round 6 did for the cakes, the tell comes before the cost and the cost stays Zork's: the lizard's close-up says what it is hungry for, and the line for a thing eaten says it was not what it wanted, so a visitor who fed it the fuse knows the fuse is lost."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Intent says the first call carries the hook and one of three spells; seed 6's ordinary roll in the barrow spent the debut on Fear with no hook. His first appearance is now his first call wherever it falls, with a seeded test on seed 6."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "A plain tell stops at the room's occupants and a visitor in the bucket, basket or cage is the occupant of a thing in the room; every line of the Wizard's turn is now told to the visitor who told him where they were (friction 85)."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "The princess is the only route to the gold key and the Wizard's door; a visitor two moves behind her read 'Dragon Room' and nothing else. Her footprints are on every room she has passed, in BRIEF as in full, until she has ridden off."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "A warning read four times without consequence teaches that it is safe; it now says what it warns of, in full once and in short after: another blow before he cools is the last, and a walk cools him."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The end line names what goes where the room showed something, the illusion's words are answered in voice for two commands after, and the ZORK I copy answers to 'zork i'."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "'The teapot is empty' and 'the fords are where it comes up' are already the world's answers to this intent elsewhere; 'water' typed where there is none now gets them too, by a stand-in the teapot keeps (friction 87)."
+    },
+    {
+      "answers": "P12",
+      "decision": "reject",
+      "reason": "A fidelity slip, but not one the world can fix: articles are dropped by the parser where a value is expected, quotation marks are not, so the symbol role reads '\"a' and arrives unbound, and no phrase can be written with a quotation mark in it. Logged as friction 83 for Sprout, not worked around."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Round 5's hold was set in :moved, which is queued behind the clock, so it had never held; the clock now reads the arrival itself off the room the command began in (friction 84)."
+    },
+    {
+      "answers": "P14",
+      "decision": "accept",
+      "reason": "The two walls the point names, the dog and the princess's key, are answered by P2 and P8, and the turn sinks by P1 and P4; that is the world's share. Filtering accidental same-line repeats from the repetition metric is the studio's tooling, not the world's, and is not changed here."
+    }
+  ],
+  "changes": [
+    {
+      "what": "A wrong step from a base zeroes the count and broadcasts it on that move, so the landing room's window reads dark; the fresh draw into a corner says only that the window has woken. New seeded test on seed 5.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/revision8_diamond.json",
+        "worlds/underground_caverns_2/world/tests/revision7_maze.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "Cerberus grades what is offered: food is not what it is hungry for, the pearl necklace gets a sniff and a scratch at the bare neck as the right idea and the wrong size, anything else Zork's snap; its close-up has a head lift up the stair toward the quarry and the leaning stone with the F.",
+      "files": [
+        "worlds/underground_caverns_2/world/crypt.sprout"
+      ],
+      "for": [
+        "P2",
+        "P14"
+      ]
+    },
+    {
+      "what": "'Up' and 'down' in the spinning Carousel are answered by the visitor's no_way passage in the narrator's voice; the passages take 'climbing', 'one' and the compass adjectives, and 'take'/'enter'/'go through' a passage says a way is walked into.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/carousel.sprout",
+        "worlds/underground_caverns_2/world/room.sprout",
+        "worlds/underground_caverns_2/world/tests/revision8_water.json"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "The first-throw line says where the works are by the sound, under the floor and toward the climbing passage, past the well; the Circular Room says the whirring comes from above the shaft, past the top of it. Every test that reads those lines updated.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/well.sprout",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json",
+        "worlds/underground_caverns_2/world/tests/bucket.json",
+        "worlds/underground_caverns_2/world/tests/bucket_count.json",
+        "worlds/underground_caverns_2/world/tests/bucket_strain.json",
+        "worlds/underground_caverns_2/world/tests/bucket_wait.json",
+        "worlds/underground_caverns_2/world/tests/cakes.json",
+        "worlds/underground_caverns_2/world/tests/gas.json",
+        "worlds/underground_caverns_2/world/tests/gnome.json",
+        "worlds/underground_caverns_2/world/tests/revision3.json",
+        "worlds/underground_caverns_2/world/tests/revision5.json",
+        "worlds/underground_caverns_2/world/tests/revision6.json",
+        "worlds/underground_caverns_2/world/tests/revision6_dragon.json",
+        "worlds/underground_caverns_2/world/tests/revision6_volcano.json",
+        "worlds/underground_caverns_2/world/tests/revision7_balloon.json",
+        "worlds/underground_caverns_2/world/tests/revision7_bank.json",
+        "worlds/underground_caverns_2/world/tests/revision7_bucket.json",
+        "worlds/underground_caverns_2/world/tests/revision7_glacier.json",
+        "worlds/underground_caverns_2/world/tests/revision7_maze.json",
+        "worlds/underground_caverns_2/world/tests/riddle.json",
+        "worlds/underground_caverns_2/world/tests/robot.json",
+        "worlds/underground_caverns_2/world/tests/robot_cage.json",
+        "worlds/underground_caverns_2/world/tests/volcano_gnome.json",
+        "worlds/underground_caverns_2/world/tests/bank_walls.json"
+      ],
+      "for": [
+        "P4",
+        "P14"
+      ]
+    },
+    {
+      "what": "The lizard head's close-up (now a named passage, over the 600-character cap, friction 88) says what it is hungry for and that anything else is swallowed out of habit and not given back; the line for a thing eaten says it was not what the lizard wanted and it is as hungry as before.",
+      "files": [
+        "worlds/underground_caverns_2/world/workshop.sprout",
+        "worlds/underground_caverns_2/world/tests/cakes.json"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "The Wizard's first appearance is his first call wherever it falls, the barrow included: one of Feeble, Fumble and Fantasize, with the hook. Seeded test reproducing seed 6's early roll.",
+      "files": [
+        "worlds/underground_caverns_2/world/wizard.sprout",
+        "worlds/underground_caverns_2/world/tests/revision8_wizard.json",
+        "worlds/underground_caverns_2/world/tests/wizard_debut.json"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "Every line of the Wizard's turn is 'tell from', addressed to the visitor who told him where they were, so a visitor in the bucket, the basket or the cage reads his appearance, wave and word.",
+      "files": [
+        "worlds/underground_caverns_2/world/wizard.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "The princess's stand-in in every room she has passed lists her footprints and the way they lead, in BRIEF as in full, until she has ridden off.",
+      "files": [
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P8",
+        "P14"
+      ]
+    },
+    {
+      "what": "The dragon's 'very careful now' warning says, in full the first time and in brackets after, that another blow before he has had a move to cool is the last and that walking off cools him; blows route through a :dragon_blow message that tracks whether the warning has been shown.",
+      "files": [
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/tests/revision6_dragon.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "Fantasize's end line names what vanishes where this room showed something; the illusion fades over two commands, answering a reach for it with the word having worn off before the parser has it back; the ZORK I copy answers to 'zork i'.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/room.sprout",
+        "worlds/underground_caverns_2/world/tests/wizard_debut.json"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "A NoWater stand-in kept inside the teapot, Pourable but not a Thing so nothing lists or counts it, in reach while the pot is empty and the room is not Watery, answering every verb with where the water is; Pourable made a bare marker kind.",
+      "files": [
+        "worlds/underground_caverns_2/world/items.sprout",
+        "worlds/underground_caverns_2/world/thing.sprout",
+        "worlds/underground_caverns_2/world/tests/revision8_water.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "The garden clock rolls nothing on the move a visitor arrives at the north end, read off :last_room in the visitor's after command rather than a hold set in the queued :moved; tests that expected the unicorn to bound away on arrival now expect it listed.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/riddle.json",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P13"
+      ]
+    },
+    {
+      "what": "intent.md records each accepted change under its mechanism; friction.md gains entries 83 to 88 (the quoted riddle answer, after command ahead of the queued :moved, plain tell and nested places, 'up' with eight ways out, a noun for what is not there, the 600-character text cap); README lists revision8 among the per-round tests.",
+      "files": [
+        "worlds/underground_caverns_2/intent.md",
+        "worlds/underground_caverns_2/friction.md",
+        "worlds/underground_caverns_2/world/README.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P13",
+        "P14"
+      ]
+    }
+  ]
+}

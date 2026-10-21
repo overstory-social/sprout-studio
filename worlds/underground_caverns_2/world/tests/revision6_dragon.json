@@ -40,7 +40,8 @@
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
       { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
-      { "reader": "Marta", "kind": "said", "words": "The unicorn bounds lightly away." }
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "enter gazebo", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
@@ -53,11 +54,11 @@
       { "reader": "Marta", "kind": "described", "words": "A matchbook" }
     ] },
     { "as": "Marta", "type": "take teapot", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
     { "as": "Marta", "type": "take newspaper", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." },
-      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "read newspaper", "expect": [
       { "reader": "Marta", "kind": "said", "words": "** U.S. News and Dungeon Report **" },
@@ -68,15 +69,18 @@
       { "reader": "Marta", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." }
     ] },
     { "as": "Marta", "type": "drop newspaper", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+      { "reader": "Marta", "kind": "said", "words": "Dropped." },
+      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
     ] },
     { "as": "Marta", "type": "out", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "said", "words": "The unicorn bounds lightly away." },
-      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
     { "as": "Marta", "type": "ne", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Shallow Ford" }
@@ -106,7 +110,7 @@
     ] },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You're not sure which direction is which. This room is very disorienting." },
-      { "reader": "Marta", "kind": "said", "words": "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works." },
+      { "reader": "Marta", "kind": "said", "words": "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works; and the works are not in that room so much as under it and off to one side, by the sound, which is loudest low down and toward the passage that climbs, as though the machinery were somewhere past the well at the end of that way." },
       { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
       { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
@@ -124,13 +128,13 @@
     ] },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Circular Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." },
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." },
       { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
     ] },
     { "as": "Marta", "type": "get in bucket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are now in the wooden bucket." },
       { "reader": "Marta", "kind": "described", "words": "Circular Room, in the wooden bucket" },
-      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." }
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." }
     ] },
     { "as": "Marta", "type": "pour water into bucket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "There is now a puddle in the bottom of the wooden bucket." },
@@ -277,12 +281,12 @@
       { "reader": "Marta", "kind": "said", "words": "The teapot is now full of water." },
       { "reader": "Marta", "kind": "told", "words": "The bucket descends and comes to a stop." },
       { "reader": "Marta", "kind": "told", "words": "Circular Room, in the wooden bucket" },
-      { "reader": "Marta", "kind": "told", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." }
+      { "reader": "Marta", "kind": "told", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." }
     ] },
     { "as": "Marta", "type": "get out", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are on your own feet again." },
       { "reader": "Marta", "kind": "described", "words": "Circular Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." },
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." },
       { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." },
       { "reader": "Marta", "kind": "said", "words": "The cake frosted with orange letters has crumbled to dust. Whatever was baked into it does not keep this far from the table it was laid on." }
     ] },
@@ -379,7 +383,7 @@
       { "reader": "Marta", "kind": "told", "words": "The dragon continues to watch you carefully." }
     ] },
     { "as": "Marta", "type": "kick dragon", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You've made him rather angry. You had better be very careful now." },
+      { "reader": "Marta", "kind": "said", "words": "You've made him rather angry. You had better be very careful now. Another blow before he has had a move to cool would be the last thing you did; he cools a little with every move you give him, and follows while he is still interested, which is the trick of it." },
       { "reader": "Marta", "kind": "told", "words": "The dragon continues to watch you carefully." }
     ] },
     { "as": "Marta", "type": "s", "expect": [

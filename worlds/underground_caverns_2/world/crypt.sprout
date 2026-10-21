@@ -9,7 +9,7 @@ import * as sprout from 'sprout'
 import {Thing, Scenery, Creature, Portable, Door} from 'thing'
 import {Box} from 'box'
 import {Room, DarkRoom} from 'room'
-import {Treasure, Readable, Wand} from 'items'
+import {Treasure, Readable, Wand, Food, Pearl} from 'items'
 import {Light} from 'lamp'
 import {Adventurer} from 'adventurer'
 import {Collar, diamond_5} from 'menhir'
@@ -32,7 +32,7 @@ kind Cerberus is Creature, Box {
   passage leaves { {if false}.{/if} }
   passage not_yours { The dog growls, and keeps what it has. }
   passage held_fast { The dog is the size of an elephant, and has three opinions about being picked up. }
-  passage close_up { {if self.get(:leashed)}A dog the size of an elephant, with three heads, all three of them grinning insipidly, and a tail that goes back and forth and knocks small rocks about. Round its neck, or necks, is a huge dog collar, and it is wearing the collar the way a dog wears a thing it has wanted for a long time. It is yours, for as long as the collar is its.{else}A dog, more or less: the size of an elephant, with three heads, six eyes, and more teeth than you have time to count, all of them bared. It stands across the archway to the east and does not look as though it means to lie down. Its necks are bare, and it keeps scratching at them with a hind foot the size of a cart, the way a dog does that has lost something it was used to wearing.{/if} }
+  passage close_up { {if self.get(:leashed)}A dog the size of an elephant, with three heads, all three of them grinning insipidly, and a tail that goes back and forth and knocks small rocks about. Round its neck, or necks, is a huge dog collar, and it is wearing the collar the way a dog wears a thing it has wanted for a long time. It is yours, for as long as the collar is its.{else}A dog, more or less: the size of an elephant, with three heads, six eyes, and more teeth than you have time to count, all of them bared. It stands across the archway to the east and does not look as though it means to lie down. Its necks are bare, and it keeps scratching at them with a hind foot the size of a cart, the way a dog does that has lost something it was used to wearing; and between scratches one head or another lifts and looks up the marble stair, the way a dog looks toward home, which for a dog this size would be a kennel the size of a quarry, and somewhere up there, past the stair and the leaning stone with the F cut in it, there is a quarry.{/if} }
   describe { text close_up }
   passage snaps { The three-headed dog snaps at you viciously! }
   without as target for look_in from Thing
@@ -94,7 +94,17 @@ kind Cerberus is Creature, Box {
   }
   // The collar, put on it (CERBERUS-FCN's PUT-ON): the hand has put it
   // round the dog's neck (adventurer.sprout), and the dog is a dog again.
-  accept (item, from) { if (!item.is(Collar)) { refuse "{if self.get(:leashed)}The dog sniffs at it, and loses interest.{else}The three-headed dog snaps at you viciously!{/if}" } }
+  // What is offered it, graded (round 8's P2): food it is not hungry for,
+  // a thing to wear that is the right idea and the wrong size, and a
+  // hand reaching past it with anything else, which gets Zork's snap.
+  accept (item, from) {
+    if (!item.is(Collar)) {
+      if (self.get(:leashed)) { refuse "The dog sniffs at it, and loses interest." }
+      else if (item.is(Food)) { refuse "One head sniffs at {item}, and the other two do not bother; it is not hungry, or not for that. It goes back to scratching at its necks." }
+      else if (item.is(Pearl)) { refuse "The middle head sniffs at the necklace, and a hind foot comes up and scratches at the bare neck under it. It is the right idea and the wrong size: whatever went round those necks was made for three of them, and did not come from a jeweller. The dog snaps at you, less viciously than before, as if you had nearly understood something." }
+      else { refuse "The three-headed dog snaps at you viciously! Whatever it wants, it is not that, and it is not you." }
+    }
+  }
   on :entered (item, from) {
     if (item.is(Collar)) {
       self.set(:leashed, true)

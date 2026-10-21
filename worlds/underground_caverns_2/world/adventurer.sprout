@@ -15,7 +15,7 @@ import {Box, Bag} from 'box'
 import {Lamp, Light, BrokenLamp} from 'lamp'
 import {Matchbook} from 'items'
 import {Weapon, Sword, Treasure, Food, Water, StreamWater, Teapot, Repellent, Sphere, Palantir, BlackSphere, Wand, Cake, RedCake, BlueCake, OrangeCake, EatMeCake, Candy, Flask, Bills, Portrait, PlaceMat, RobotLabel, Rose, RustyKey} from 'items'
-import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike, DragonCountry, CurtainRoom, Illusion, Grue} from 'room'
+import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike, DragonCountry, CurtainRoom, Illusion, Grue, :fade} from 'room'
 import {go, look, examine, inventory, wait, help} from 'sprout'
 import {guarded_room, workshop, workroom, trophy_room, quarters, pentagram, aquarium_room, murky_room, Lizard, Genie, Pentagram, :unseal, :seal} from 'workshop'
 import {cerberus_room, crypt_anteroom, crypt, landing, Cerberus, Heads, :won} from 'crypt'
@@ -104,6 +104,7 @@ kind Adventurer is sprout.Visitor {
   // How many times Fantasize has been cast on them: each casting is a
   // number, and every room's illusion rolls itself once for it.
   :fantasy 0 min 0 max 100000
+  :fantasy_here false
   // The bucket's hundred moves (I-BUCKET), counted here, since the bucket
   // at the top of the well is out of everyone's reach and nothing but a
   // visitor's command is a move: while it is up with water in it, every
@@ -211,6 +212,11 @@ kind Adventurer is sprout.Visitor {
   passage frozen { You are frozen solid. You might as well wait it out, because you can't do anything else in this state. }
   passage flap { I suppose you plan to do that by flapping your arms? You are five feet off the floor and will be until the Wizard's word wears off; you might as well wait it out. }
   passage fence { An invisible fence of magical force bars your way. }
+  // A direction no way out answers: Zork's line, except in the Carousel
+  // Room while it spins, where "up" was the first thing three visitors
+  // typed on reading that one passage climbs (round 8's P3). The room
+  // has its eight ways and no ninth, so the answer is the narrator's.
+  passage no_way { {if self.get(:at_carousel) && self.get(:spinning) && (way == "up" || way == "down")}There is no {way} to it: the passage that climbs is one of the eight, and it goes round with the floor like the rest, so the only way into it is to pick a passage and walk. If the floor obliges, it climbs.{else}You can't go that way.{/if} }
   passage too_heavy { Your load is too heavy{if self.get(:load_allowed) < 100}, especially in light of your condition{/if}. }
 
   passage help {
@@ -295,6 +301,11 @@ kind Adventurer is sprout.Visitor {
       if (here.is(Garden)) {
         if (self.get(:unicorn_gone)) { }
         else if (self.get(:unicorn_hold) > 0) { self.adjust(:unicorn_hold, -1) }
+        // The move that brings a visitor to the north end rolls nothing
+        // (round 5's P8, again in round 8's P13): `:moved`, which holds the
+        // clock, is queued behind this, so the arrival is read off the room
+        // this command began in, which `:last_room` still names.
+        else if (here.is(GardenNorth) && self.get(:last_room) != :garden_north) { }
         else if (self.get(:unicorn_home) && random(3) == 0) {
           self.set(:unicorn_home, false)
           self.set(:unicorn_hold, 2)
@@ -385,6 +396,8 @@ kind Adventurer is sprout.Visitor {
       // volcano's other clocks; a wait runs them three times (wait, below).
       broadcast :balloon_tick
       send self :volcano_clock
+      // An illusion the spell has left behind fades by the command.
+      if (here.is(Room)) { each m: Illusion in here { if (m.get(:fading) > 0) { send m :fade } } }
       if (self.get(:moves) == 1) { broadcast :wizard_start }
     }
   }
@@ -546,8 +559,13 @@ kind Adventurer is sprout.Visitor {
       tell self "There is a faint pop, as of something invisible giving way, and the fence that was round you is gone."
     }
     else if (s == :fantasize) {
+      // Named by what goes, where this room showed something (round 8's
+      // P10); the illusion keeps its words for two more commands, so a
+      // reach for it is still answered in voice.
+      self.set(:fantasy_here, false)
+      if (here.is(Room)) { each m: Illusion in here { if (m.get(:which) > 0) { self.set(:fantasy_here, true)  tell self "The room, which had been looking a little odd round the edges, settles down and is only a room: {m.named}, which was never there, has stopped being there." } } }
+      if (!self.get(:fantasy_here)) { tell self "The room, which had been looking a little odd round the edges, settles down and is only a room." }
       broadcast :fantasize with 0
-      tell self "The room, which had been looking a little odd round the edges, settles down and is only a room."
     }
   }
   // The bucket, up with water in it, and down again.
@@ -758,7 +776,7 @@ kind Adventurer is sprout.Visitor {
         // a mechanism, and a mechanism has an off switch somewhere.
         if (!self.get(:spun_told)) {
           self.set(:spun_told, true)
-          say "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works."
+          say "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works; and the works are not in that room so much as under it and off to one side, by the sound, which is loudest low down and toward the passage that climbs, as though the machinery were somewhere past the well at the end of that way."
         }
         // Zork's draw among all seven passages but the west (CAROUSEL-
         // ROOM-FCN), every one of which leads somewhere now (friction 29).
@@ -825,7 +843,15 @@ kind Adventurer is sprout.Visitor {
             if (f == 2) { self.set(:dest, :diamond_4) } else if (f == 4) { self.set(:dest, :diamond_8) } else if (f == 8) { self.set(:dest, :diamond_6) } else { self.set(:dest, :diamond_2) }
             send underground_caverns_2 :open_gate
           }
-          else { say "The passage turns more corners than it has any right to, and lets you out somewhere you did not aim for. Whatever was being counted has lost count."  send self :diamond_loss }
+          else {
+            // The count goes on the move it is lost (round 8's P1), so the
+            // window in the room the throw lands in reads dark, as its own
+            // close-up says it will.
+            say "The passage turns more corners than it has any right to, and lets you out somewhere you did not aim for. Whatever was being counted has lost count."
+            self.set(:diamond_count, 0)
+            broadcast :diamond_count with 0
+            send self :diamond_loss
+          }
         }
         else {
           if (self.get(:diamond_count) > 0) { say "Whatever was being counted has lost count." }

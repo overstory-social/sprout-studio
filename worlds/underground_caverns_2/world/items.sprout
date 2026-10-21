@@ -169,10 +169,29 @@ kind StreamWater is Scenery, Drinkable, Fillable {
   }
 }
 
+// The water the teapot does not hold (round 8's P11): "water" typed where
+// there is none, with the teapot in reach, was the parser's not-here. The
+// stand-in is in reach while the teapot is empty and the stream is not
+// here, and answers every verb with where the water is. Not a Thing, so
+// nothing lists or counts it.
+kind NoWater is Pourable {
+  grammar { name "water"  nouns "liquid", "h2o"  adjectives "fresh", "cold", "clear" }
+  passage short { water }
+  passage no_water { The teapot is empty: there is no water in it, and none here to put in it. The water is at the fords, where the stream comes up to meet you, and the teapot is what carries it from there. }
+  on :present (from, value) { self.set(:unseen, !value) }
+  as target for any { permit { refuse no_water } }
+  as tool for any { permit { refuse no_water } }
+}
+message :present with boolean
+
 // The china teapot from the gazebo: open, lidless, and the only thing
 // that holds water.
 kind Teapot is Bag, Fillable, Pourable {
   grammar { name "china teapot"  nouns "teapot", "pot"  adjectives "china", "tea" }
+  object no_water is NoWater
+  // Carried, the teapot keeps its stand-in told after every command:
+  // in reach while the pot is empty and the room has no water of its own.
+  after command { send no_water :present with (self.count(Water) == 0 && !here.is(Watery)) }
   // "pour teapot into bucket" and "pour teapot on the ice" (round 7's P5):
   // the hand has moved the water where it goes (adventurer.sprout); the
   // teapot says what it did, and the thing poured over answers for itself.

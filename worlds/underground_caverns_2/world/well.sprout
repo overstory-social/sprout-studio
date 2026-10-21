@@ -308,7 +308,7 @@ object well_bottom is WellBottom in underground_caverns_2 {
   }
   :id well_bottom
   :walls 6
-  passage body { This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west.{if self.count(Bucket) == 0} A rope hangs down the middle of the room from the dark above, taut, with nothing on the end of it; whatever hauled the bucket up will presumably let it down again when it is done with it.{/if} }
+  passage body { This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it.{if self.count(Bucket) == 0} A rope hangs down the middle of the room from the dark above, taut, with nothing on the end of it; whatever hauled the bucket up will presumably let it down again when it is done with it.{/if} }
   object bucket is Bucket
   object etchings is BottomEtchings
   object well is WellBottomWall

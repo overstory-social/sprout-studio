@@ -271,6 +271,8 @@ kind Tunnel is Scenery {
   grammar { name "passage"  nouns "tunnel", "crawlway", "passageway", "path", "corridor"  adjectives "dark", "smoky", "narrow", "wide" }
   passage short { passage }
   describe { text "The passage is cut through the rock, and goes where it goes. The ways out of here are described above, and you may take any of them." }
+  // "take passage" (round 8's P3): a way is taken by walking into it.
+  passage no_take { A passage is not a thing to be picked up; it is a way, and the way to take it is to walk into it. Say which. }
   without as target for through from Thing
   as target for through { do { say "Use compass directions for movement, and say which way." } }
 }
@@ -298,6 +300,7 @@ kind Ceiling is Scenery {
 // description; here the illusion is rolled once for each casting of the
 // spell, one room in two, and stays in the room, listed with what is
 // really there, until the spell wears off.
+message :fade
 kind Illusion is Scenery {
   grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "sphere", "convention", "wizards", "copy", "zork"  adjectives "bulging", "yellow", "gold", "convention", "pile", "zork", "i" }
   passage short { basilisk }
@@ -308,10 +311,24 @@ kind Illusion is Scenery {
   :which 0 min 0 max 8
   :cast 0 min 0 max 100000
   :unseen true
+  // The spell worn off, the illusion is off the room's list at once and
+  // out of reach two commands later (round 8's P10), so a reach for it on
+  // the move after is answered with the word having worn off and not by
+  // the parser.
+  :fading 0 min 0 max 2
+  on :fade {
+    if (self.get(:fading) > 0) {
+      self.adjust(:fading, -1)
+      if (self.get(:fading) == 0) { self.set(:which, 0)  self.set(:unseen, true) }
+    }
+  }
   passage named {{if self.get(:which) == 1}a pile of jewels{else if self.get(:which) == 2}a gold ingot{else if self.get(:which) == 3}a basilisk{else if self.get(:which) == 4}a bulging chest{else if self.get(:which) == 5}a yellow sphere{else if self.get(:which) == 6}a grue{else if self.get(:which) == 7}a convention of wizards{else}a copy of ZORK I{/if}}
   passage ldesc { There is {self.named} here. }
   on :fantasize (from, value) {
-    if (value == 0) { self.set(:which, 0)  self.set(:ndesc, true)  self.set(:unseen, true) }
+    if (value == 0) {
+      self.set(:ndesc, true)
+      if (self.get(:which) > 0) { self.set(:fading, 2) } else { self.set(:unseen, true) }
+    }
     else if (self.get(:cast) != value) {
       self.set(:cast, value)
       if (random(2) == 0) { self.set(:which, 1 + random(8))  self.set(:ndesc, false)  self.set(:unseen, false) }

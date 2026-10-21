@@ -40,7 +40,8 @@
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
       { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
-      { "reader": "Marta", "kind": "said", "words": "The unicorn bounds lightly away." }
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "enter gazebo", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
@@ -53,18 +54,15 @@
       { "reader": "Marta", "kind": "described", "words": "A matchbook" }
     ] },
     { "as": "Marta", "type": "take teapot", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
     { "as": "Marta", "type": "out", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
-      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
-      { "reader": "Marta", "kind": "told", "words": "There is a beautiful unicorn eating roses here. Around his neck is a red satin ribbon on which is strung a tiny key." },
-      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
     ] },
     { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
-      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
     ] },
     { "as": "Marta", "type": "ne", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Shallow Ford" }
@@ -89,10 +87,12 @@
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
-      { "reader": "Marta", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." }
+      { "reader": "Marta", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." },
+      { "reader": "Marta", "kind": "described", "words": "The disorientation is not all in your head. The floor, if you stand still on it a moment, is turning, slowly, and the eight passages go round with it, so that the one you came in by is already somewhere else. They all lead somewhere, every one of them; it is only a question of which, and the only way to settle that is to pick one and walk into it. The one that climbs a little, when it comes round, has a draught down it that smells of old brick and older water, and once, faintly, from up that way, you hear the grinding of a very heavy stone door." }
     ] },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You're not sure which direction is which. This room is very disorienting." },
+      { "reader": "Marta", "kind": "said", "words": "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works; and the works are not in that room so much as under it and off to one side, by the sound, which is loudest low down and toward the passage that climbs, as though the machinery were somewhere past the well at the end of that way." },
       { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
       { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
@@ -110,7 +110,7 @@
     ] },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Circular Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." },
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." },
       { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
     ] },
     { "as": "Marta", "type": "examine bucket", "expect": [
@@ -128,7 +128,7 @@
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Circular Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. A rope hangs down the middle of the room from the dark above, taut, with nothing on the end of it; whatever hauled the bucket up will presumably let it down again when it is done with it." }
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it. A rope hangs down the middle of the room from the dark above, taut, with nothing on the end of it; whatever hauled the bucket up will presumably let it down again when it is done with it." }
     ] },
     { "as": "Marta", "type": "examine bucket", "expect": [
       { "reader": "Marta", "kind": "described", "words": "The bucket is not here. It went up the shaft on its rope, and the rope is still here, taut, going up into the dark with nothing on the end of it that you can see. Whatever hauled it up will presumably let it down again when it is done with it, which, buckets being what they are, will be when it is dry. You could wait for it. It would be a long wait. (WAIT FOR THE BUCKET passes the whole of it at once.)" }
@@ -160,7 +160,7 @@
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Circular Room" },
-      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." },
+      { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." },
       { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
     ] },
     { "as": "Marta", "type": "score", "expect": [

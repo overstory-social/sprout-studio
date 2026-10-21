@@ -64,7 +64,12 @@ much the product as the rooms are.
   the hook names the pearls, nearest, behind a stone door that asks a
   question, and "a room that will not keep still" between them and the
   rest, since three short runs quit at the Carousel having seen where but
-  not what.
+  not what. After round 8 (P6) his first appearance is his first call
+  wherever his clock finds the visitor, the barrow included: seed 6's
+  ordinary roll found one still in the barrow, cast Fear, gave no hook, and
+  spent the debut. And every line of his turn is told to the visitor
+  rather than to the room (P7, friction 85), since a visitor in the bucket
+  read "You begin to feel lightheaded" and never saw him.
 - **The unicorn is in**, since it is the garden's own and the sword glows
   for it; the gold key round its neck stays round its neck until the
   princess asks, which since round 3 she can. After round 1, when three
@@ -84,7 +89,10 @@ much the product as the rooms are.
   alternated every other move (friction 43), and says "bounds lightly
   away" only where it can be seen to (P3). After round 5 (P8) the clock
   also holds it for the move a visitor arrives at the north end, so a
-  unicorn the room lists is not announced arriving in the same breath.
+  unicorn the room lists is not announced arriving in the same breath;
+  which round 8 (P13) found had never held, the hold being set in `:moved`
+  and `:moved` queued behind the clock (friction 84), so the clock reads
+  the arrival itself now, off the room the command began in.
 - **The Deep Ford's ledge** was the edge of the first quarter; it leads up
   now, to the Ledge in Ravine.
 - **The Rooms of Mist are built** (round 7): a death scatters what was
@@ -184,7 +192,15 @@ much the product as the rooms are.
   down it and, once, the grinding of a very heavy stone door: the door
   the hook promised. The first-throw line now says the throw was the
   floor's doing, rather than announcing the floor. Three rounds running,
-  short runs quit on the move they entered it.
+  short runs quit on the move they entered it. After round 8 (P3, P4):
+  "up" and "down" while it spins are answered in the narrator's voice,
+  by the visitor's own `no_way` line (friction 86), since the room has its
+  eight ways and no ninth; the passages taken or entered by name say that
+  a way is walked into; and the first-throw line and the Circular Room
+  say where the works are by the sound, under the floor and past the
+  well. The synthesis asked for the narrator's invitation ahead of Zork's
+  "Eight identical passages"; Zork's text stays whole and first, as it
+  does in every room.
 - **The cakes keep in the bucket** as they do at the Top of Well, since
   Zork's vehicle is in the room it stands in (round 3's P11), and the
   crumble line says why a cake crumbled. After round 5 (P6) the Posts
@@ -517,7 +533,11 @@ rounds 3 to 6 is gone with the ceiling.
   mine. Since round 4 the refusal opens with the verb's own clause, an eye
   for looking and a blow for striking (P11), and the grue the spell shows
   is answered for by the room's grue, which says that a grue in plain
-  sight is the one thing no grue has ever been (P12).
+  sight is the one thing no grue has ever been (P12). After round 8 (P10)
+  the spell's end names what goes, where this room showed something
+  ("a basilisk, which was never there, has stopped being there"), and the
+  illusion's words are answered for two commands more, with the word
+  having worn off, before the parser has them back.
 - **Brief mode is Zork's**: a room seen again is named and no more. The
   first time it happens, one parenthetical line says LOOK, VERBOSE and
   BRIEF, and is not said again.
@@ -557,6 +577,11 @@ rounds 3 to 6 is gone with the ceiling.
   Since round 6 (P8) the "interest runs out" line is heard in the Ice
   Room as well as in the dragon's own country, which is where a visitor
   who kicked it twice and walked straight on is standing when it gives up.
+  After round 8 (P9) the "very careful now" warning says what it warns
+  of, once in full and in brackets after: another blow before he has had
+  a move to cool is the last, and a walk cools him; a visitor who struck,
+  walked, struck and walked read the warning four times with no
+  consequence, learned it was safe, and struck twice in one room.
 - **The dragon takes gifts**: a treasure given to it is "excused for a
   moment" and goes into the chest in its lair, where it can be had back
   once the dragon is dead; anything else is refused.
@@ -631,7 +656,26 @@ rounds 3 to 6 is gone with the ceiling.
   open the case" smashes it and everything in it, which is Zork's joke.
 - **The lizard eats what it is given**: the candy puts it to sleep; a
   sphere it cannot chew and spits out; the brick goes down and pops; the
-  flask it will not have; anything else is crunched and gone.
+  flask it will not have; anything else is crunched and gone. After round
+  8 (P5), as round 6 did for the cakes, the tells come before the cost
+  and the cost stays Zork's: the lizard's close-up says what it is hungry
+  for (something with legs that crunches, which is the candy's label) and
+  that anything else put in its mouth is swallowed out of habit and not
+  given back; and the line for a thing eaten says it was not what the
+  lizard wanted and that it is as hungry as before, so a visitor who fed
+  it the fuse knows the fuse is lost.
+- **The dog grades what it is offered** (round 8's P2): food it is not
+  hungry for, the necklace the right idea and the wrong size, with a
+  scratch at the bare neck, and anything else Zork's snap; and its
+  close-up, between scratches, has a head lift and look up the stair
+  toward the quarry and the leaning stone with the F on it, which is where
+  its kennel is. Three runs reached it long before the collar could be had
+  and read one identical snap four times.
+- **"Water" where there is none** (round 8's P11): with the teapot in
+  reach, empty, and no stream here, "water" names a stand-in the teapot
+  keeps, which answers every verb with where the water is, the fords; at
+  a ford, or with water in the pot, it is out of reach and the real water
+  answers (friction 87).
 - **The black sphere frightens the Wizard**: with it in hand his clock
   finds you and he leaves in unseemly haste, and each of the other
   spheres carried takes a fifth off his will to cast (I-WIZARD's
@@ -667,7 +711,12 @@ rounds 3 to 6 is gone with the ceiling.
   narrator's voice: a step from a corner the right way "runs straight, for
   once", a wrong one "turns more corners than it has any right to" and
   loses the count, and a draw into a corner from the room at the foot of
-  the stair says the window has woken.
+  the stair says the window has woken. After round 8 (P1) the count goes
+  on the move it is lost, so the window in the room the throw lands in
+  reads dark, as its close-up promises; before, the count stood until the
+  next move, the landing room's window kept the old grade, and the next
+  draw said "lost count" and "has woken" in one breath, which four runs
+  read as noise.
 - **The whirring is the pointer** (round 7's P2): four short runs quoted
   the hook and turned east into the garden one move short of the
   Carousel, so the hook says the room that will not keep still is heard
@@ -690,7 +739,10 @@ rounds 3 to 6 is gone with the ceiling.
   one the Carousel's exit put them in before the throw (friction 74); and
   once she has ridden off without giving the key, the north end and the
   gazebo say so in their own descriptions, a hoofprint and a hedge pushed
-  through and nothing that says she waited.
+  through and nothing that says she waited. After round 8 (P8) every room
+  she has passed lists her footprints and the way they lead, in BRIEF as
+  in full, until she has ridden off: a visitor two moves behind her read
+  "Dragon Room" and nothing else, and never found her.
 - **The wall of light is a way** (round 7's P8): while a wall of a room
   beyond the curtain shimmers, its direction leads back to the Depository,
   and "curtain" and "light" name the shimmer, which answers "enter" as the

@@ -8,7 +8,7 @@ import * as sprout from 'sprout'
 import {Thing, Scenery} from 'thing'
 import {Room, DarkRoom} from 'room'
 import {IronBox, Violin, Repellent} from 'items'
-import {listen, read, :flip, :zoom} from 'verbs'
+import {listen, read, through, :flip, :zoom} from 'verbs'
 import {Adventurer} from 'adventurer'
 import {marble_hall, stream_path, topiary} from 'garden'
 import {riddle_room} from 'riddle'
@@ -28,9 +28,16 @@ kind CarouselRoom is DarkRoom {
 }
 
 kind EightPassages is Scenery {
-  grammar { name "passages"  nouns "passage", "exits", "exit", "eight"  adjectives "identical", "eight" }
+  grammar { name "passages"  nouns "passage", "exits", "exit", "eight", "one"  adjectives "identical", "eight", "climbing", "southeast", "northwest", "southwest", "misty", "cobwebbed" }
   passage short { passages }
   describe { text "Eight passages, one at each point of the compass, and every one of them very nearly like the others: the same height, the same rough arch, the same dark beyond it. Very nearly. The one on the southeast side, if you can keep track of which that is, climbs a little, and a draught comes down it that smells of old brick and older water; the one on the northwest side breathes out a cold, wet mist; the one on the southwest side has cobwebs across it, broken in the middle. Whoever cut them wanted you to have to think." }
+  // Taken or entered by name (round 8's P3): the passages are the eight
+  // ways out, and the room gives them by compass point and takes them
+  // back the same way.
+  passage walk_in { The passages are the eight ways out of here, and the room hands them to you by compass point, north round to northwest, and takes them back the same way. Pick a point and walk; which passage you get is the floor's business, while it turns. }
+  passage no_take { {self.walk_in} }
+  without as target for through from Thing
+  as target for through { do { say walk_in } }
 }
 
 object carousel_room is CarouselRoom in underground_caverns_2 {

@@ -56,7 +56,14 @@ kind Dragon is Creature, sprout.Actor {
   // one is the last. Said as literals in the blow's own body, since a
   // passage is rendered after the turn's clocks have cooled him.
   :blow_at 0 min 0 max 100
-  passage struck { {if self.get(:blow_at) >= 2}You've made him rather angry. You had better be very careful now.{else if self.get(:blow_at) == 1}That captured his interest. He stares at you balefully.{else}{one of}The dragon is surprised and interested (for the moment).{or}That did no damage, but he turns his smoky yellow eyes in your direction and sighs.{or}Dragon hide is tough as steel, but you have succeeded in annoying him a bit. He looks at you as if deciding whether or not to eat you.{/one of}{/if} }
+  // The warning says what it warns of (round 8's P9): a blow struck
+  // before he has cooled is the last, and a walk cools him; said in full
+  // the first time and in short after, since a visitor who struck and
+  // walked and struck again read it four times and learned it was safe.
+  :warned false
+  :warn_shown false
+  passage struck { {if self.get(:blow_at) >= 2}You've made him rather angry. You had better be very careful now.{if !self.get(:warn_shown)} Another blow before he has had a move to cool would be the last thing you did; he cools a little with every move you give him, and follows while he is still interested, which is the trick of it.{else} (Another blow at once would be the last.){/if}{else if self.get(:blow_at) == 1}That captured his interest. He stares at you balefully.{else}{one of}The dragon is surprised and interested (for the moment).{or}That did no damage, but he turns his smoky yellow eyes in your direction and sighs.{or}Dragon hide is tough as steel, but you have succeeded in annoying him a bit. He looks at you as if deciding whether or not to eat you.{/one of}{/if} }
+  on :dragon_blow { self.set(:blow_at, self.get(:anger))  self.set(:warn_shown, self.get(:warned))  if (self.get(:anger) >= 2) { self.set(:warned, true) } }
 
   // Provoked: so much anger, and his turn runs from now on (I-DRAGON).
   // The first provocation runs his turn at once, as DRAGON-FCN's QUEUE
@@ -91,17 +98,17 @@ kind Dragon is Creature, sprout.Actor {
   as target for rub { do { say "Dragon hide is tough as steel, and warm, and the dragon turns one yellow eye on your hand until you take it back."  send self :provoke with 1 } }
   as target for attack {
     do {
-      if (bound weapon) { self.set(:blow_at, self.get(:anger))  say struck } else { say "With your bare hands? I doubt the dragon even noticed." }
+      if (bound weapon) { send self :dragon_blow  say struck } else { say "With your bare hands? I doubt the dragon even noticed." }
       send self :provoke with 4
     }
   }
   without as target for mung from Thing
-  as target for mung { do { self.set(:blow_at, self.get(:anger))  say struck  send self :provoke with 4 } }
+  as target for mung { do { send self :dragon_blow  say struck  send self :provoke with 4 } }
   without as target for kick from Thing
-  as target for kick { do { self.set(:blow_at, self.get(:anger))  say struck  send self :provoke with 4 } }
+  as target for kick { do { send self :dragon_blow  say struck  send self :provoke with 4 } }
   as aim for throw {
     do {
-      if (target.is(Thing)) { self.set(:blow_at, self.get(:anger))  say "The {target.short} bounces off the dragon's hide. {self.struck}"  send self :provoke with 4 }
+      if (target.is(Thing)) { send self :dragon_blow  say "The {target.short} bounces off the dragon's hide. {self.struck}"  send self :provoke with 4 }
     }
   }
   // A gift (DRAGON-FCN's GIVE): a treasure is taken away to the lair and
@@ -239,6 +246,7 @@ kind Dragon is Creature, sprout.Actor {
   }
 }
 message :go_home
+message :dragon_blow
 
 // What the flood leaves of him, at the Deep Ford (DEAD-DRAGON).
 kind DeadDragon is Scenery {
@@ -413,15 +421,21 @@ kind AbsentPrincess is Scenery, Creature {
   :step 0 min 0 max 15
   :walking false
   :gone Gone default walking
+  // Where she has passed, her footprints are on the room's list, in BRIEF
+  // as in full (round 8's P8), until she has ridden off: a visitor two
+  // moves behind her read the room's name and nothing else.
+  passage ldesc { The princess's footprints, small and bare, lead {self.went} from here; she passed this way not long ago, and she does not wait. }
   on :princess_step (from, value) {
     self.set(:step, value)
     self.set(:walking, true)
     if (self.get(:last)) { self.set(:unseen, value >= self.get(:order)) }
     else { self.set(:unseen, value == self.get(:order)) }
+    self.set(:ndesc, self.get(:last) || value <= self.get(:order))
   }
   on :princess_gone (from, value) {
     self.set(:walking, false)
     self.set(:unseen, false)
+    self.set(:ndesc, true)
     if (value == 0) { self.set(:gone, :rode_off_with_key_given) }
     else if (value == 1) { self.set(:gone, :rode_off_with_key) }
     else { self.set(:gone, :fried) }

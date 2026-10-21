@@ -177,10 +177,17 @@ kind Wizard is Creature, sprout.Actor {
   // something in it besides walking, and casts something harmless.
   :debut false
   // His turn, told by a visitor where they stand. He goes there, says his
-  // piece, and goes.
+  // piece, and goes. Every line is told to the one who told him where
+  // they are (round 8's P7): a plain tell reaches the room's occupants,
+  // and a visitor in the bucket, the basket or the cage is the occupant
+  // of something in the room, and missed him entirely.
   on :wizard_turn (from, value) {
     if (from.is(Adventurer) && !self.get(:bound) && !self.get(:dead) && value != :mist_red && value != :mist_blue && value != :mist_white && value != :mist_black && value != :murky_room && value != :landing) {
-      let first = !self.get(:debut) && value != :barrow
+      // His first appearance is his first call wherever it falls (round
+      // 8's P6): certain the first time his clock finds a visitor out of
+      // the barrow, and by the ordinary roll inside it, but the hook and
+      // one of the three harmless words either way.
+      let first = !self.get(:debut)
       // The spheres in the visitor's hands cool him (I-WIZARD's
       // CAST-PROB), and the Black Crystal sends him off in a hurry.
       let pcnt = from.get(:spheres_held)
@@ -190,10 +197,10 @@ kind Wizard is Creature, sprout.Actor {
       if (!here.is(Elsewhere)) {
         // Already somewhere, lingering: four times in five he goes.
         if (random(5) < 4) {
-          if (!from.get(:in_dark)) { tell "The Wizard vanishes." }
+          if (!from.get(:in_dark)) { tell from "The Wizard vanishes." }
           send self :vanish
         }
-      } else if (first || random(10) == 0) {
+      } else if ((first && value != :barrow) || random(10) == 0) {
         self.set(:debut, true)
         if (value == :barrow) { move self to inside_barrow }
         else if (value == :narrow_tunnel) { move self to narrow_tunnel }
@@ -275,40 +282,40 @@ kind Wizard is Creature, sprout.Actor {
         else if (value == :crypt_anteroom) { move self to crypt_anteroom }
         else if (value == :crypt) { move self to crypt }
         let dark = from.get(:in_dark)
-        if (dark) { tell "You feel a slight outrush of air as something moves nearby." }
-        else if (here.is(Wonderland)) { tell "A huge and terrible wizard appears before you, as large as the largest tree! He looks down on you as you would look upon a gnat!" }
-        else if (here.is(Airy)) { tell "The Wizard appears, floating nonchalantly in the air beside you. He grins sideways at you." }
-        else { tell "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." }
+        if (dark) { tell from "You feel a slight outrush of air as something moves nearby." }
+        else if (here.is(Wonderland)) { tell from "A huge and terrible wizard appears before you, as large as the largest tree! He looks down on you as you would look upon a gnat!" }
+        else if (here.is(Airy)) { tell from "The Wizard appears, floating nonchalantly in the air beside you. He grins sideways at you." }
+        else { tell from "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." }
         if (from.get(:has_black)) {
-          if (dark) { tell "You feel a sudden inrush of air as though something disappeared." }
-          else { tell "The Wizard notices that you carry the Black Crystal, and with an unseemly haste, he disappears." }
+          if (dark) { tell from "You feel a sudden inrush of air as though something disappeared." }
+          else { tell from "The Wizard notices that you carry the Black Crystal, and with an unseemly haste, he disappears." }
           send self :vanish
         }
         else if (first) {
           // His first call: the wand, a word, and one of the spells that
           // cost nothing but a little dignity.
-          if (dark) { tell "Suddenly, illuminated by the faint blue glow of a magic wand pointed in your direction, you see the Wizard!" }
-          else { tell "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." }
+          if (dark) { tell from "Suddenly, illuminated by the faint blue glow of a magic wand pointed in your direction, you see the Wizard!" }
+          else { tell from "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." }
           // What he is afraid of, read off him (round 4's P8): a short
           // visit that meets him and nothing else should leave knowing
           // there is something to want, and where.
-          tell "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you; the pearls nearest, behind a stone door that asks a question, and the rest further in, past a room that will not keep still, which you will hear before you see it."
+          tell from "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you; the pearls nearest, behind a stone door that asks a question, and the rest further in, past a room that will not keep still, which you will hear before you see it."
           let r = random(3)
           if (r == 0) { self.set(:spell, :feeble) }
           else if (r == 1) { self.set(:spell, :fumble) }
           else { self.set(:spell, :fantasize) }
           self.adjust(:cast, 1)
-          tell "The Wizard, in a deep and resonant voice, speaks the word \"{self.spell_name}!\" He then vanishes, cackling gleefully."
+          tell from "The Wizard, in a deep and resonant voice, speaks the word \"{self.spell_name}!\" He then vanishes, cackling gleefully."
           act enchant (target: from)
           send self :vanish
         }
         else if (random(5) == 0) {
-          if (dark) { tell "You hear low, confused muttering." }
-          else { tell "He mutters something (muffled by his beard) and disappears as suddenly as he came." }
+          if (dark) { tell from "You hear low, confused muttering." }
+          else { tell from "He mutters something (muffled by his beard) and disappears as suddenly as he came." }
           send self :vanish
         } else {
-          if (dark) { tell "Suddenly, illuminated by the faint blue glow of a magic wand pointed in your direction, you see the Wizard!" }
-          else { tell "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow." }
+          if (dark) { tell from "Suddenly, illuminated by the faint blue glow of a magic wand pointed in your direction, you see the Wizard!" }
+          else { tell from "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow." }
           if (random(5) < 4 - pcnt) {
             let r = random(12)
             if (r == 0) { self.set(:spell, :feeble) }
@@ -324,18 +331,18 @@ kind Wizard is Creature, sprout.Actor {
             else if (r == 10) { if (early) { self.set(:spell, :fantasize) } else { self.set(:spell, :fence) } }
             else { self.set(:spell, :fantasize) }
             self.adjust(:cast, 1)
-            if (random(4) < 3) { tell "The Wizard, in a deep and resonant voice, speaks the word \"{self.spell_name}!\" He then vanishes, cackling gleefully." }
-            else { tell "The Wizard, almost inaudibly, whispers a word beginning with \"F,\" and then disappears, chuckling nastily." }
+            if (random(4) < 3) { tell from "The Wizard, in a deep and resonant voice, speaks the word \"{self.spell_name}!\" He then vanishes, cackling gleefully." }
+            else { tell from "The Wizard, almost inaudibly, whispers a word beginning with \"F,\" and then disappears, chuckling nastily." }
             act enchant (target: from)
             send self :vanish
           } else if (random(2) == 0) {
-            tell "There is a loud crackling noise. Blue smoke rises from out of the Wizard's sleeve. He sighs and disappears."
+            tell from "There is a loud crackling noise. Blue smoke rises from out of the Wizard's sleeve. He sighs and disappears."
             send self :vanish
           } else if (random(2) == 0) {
-            tell "The Wizard incants \"{one of}Feeble{or}Fumble{or}Fear{or}Filch{or}Freeze{or}Fall{or}Ferment{or}Fierce{or}Float{or}Fireproof{or}Fence{or}Fantasize{/one of}!\" but nothing happens. He shakes the wand. Nothing happens. With a slightly embarrassed glance in your direction, he vanishes."
+            tell from "The Wizard incants \"{one of}Feeble{or}Fumble{or}Fear{or}Filch{or}Freeze{or}Fall{or}Ferment{or}Fierce{or}Float{or}Fireproof{or}Fence{or}Fantasize{/one of}!\" but nothing happens. He shakes the wand. Nothing happens. With a slightly embarrassed glance in your direction, he vanishes."
             send self :vanish
           } else {
-            tell "The Wizard seems about to say something, but thinks better of it, and peers at you from under his bushy eyebrows."
+            tell from "The Wizard seems about to say something, but thinks better of it, and peers at you from under his bushy eyebrows."
             self.set(:announced, true)
             send from :wizard_near with true
           }

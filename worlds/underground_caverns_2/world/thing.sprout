@@ -155,7 +155,9 @@ kind Fillable is Thing {
     }
   }
 }
-kind Pourable is Thing { }
+// A marker and no more: the teapot's stand-in for the water it does not
+// hold is Pourable without being a Thing, so no list counts it.
+kind Pourable { }
 kind Sprayable is Thing { }
 kind Vessel is Thing { }
 // What can be waited for: the bucket, and its stand-in at the end of the

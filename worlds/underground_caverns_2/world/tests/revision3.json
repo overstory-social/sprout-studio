@@ -40,7 +40,8 @@
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
       { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
-      { "reader": "Marta", "kind": "said", "words": "The unicorn bounds lightly away." }
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "enter gazebo", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
@@ -53,14 +54,14 @@
       { "reader": "Marta", "kind": "described", "words": "A matchbook" }
     ] },
     { "as": "Marta", "type": "take key", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The unicorn is not in sight from here. It was cropping grass at the north end of the garden a little while ago, and will be again when it has forgotten you, which with unicorns is never long; whatever hangs round its neck comes and goes with it." }
+      { "reader": "Marta", "kind": "refused", "words": "The unicorn is way up at the north end of the garden, and so is whatever hangs round its neck." }
     ] },
     { "as": "Marta", "type": "smell roses", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "They smell as roses smell, only more so, as though they were making a point of it." }
+      { "reader": "Marta", "kind": "said", "words": "They smell as roses smell, only more so, as though they were making a point of it." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
     { "as": "Marta", "type": "take newspaper", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." },
-      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "read newspaper", "expect": [
       { "reader": "Marta", "kind": "said", "words": "** U.S. News and Dungeon Report **" },
@@ -71,18 +72,21 @@
       { "reader": "Marta", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." }
     ] },
     { "as": "Marta", "type": "take opener", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." }
+      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
     ] },
     { "as": "Marta", "type": "out", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "said", "words": "The unicorn bounds lightly away." },
-      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "examine unicorn", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The unicorn is not here just now. It bounded off into the hedges, the way it does, and the key went with it, round its neck; it comes back when it has forgotten you, which, with unicorns, is never long." }
+      { "reader": "Marta", "kind": "described", "words": "The unicorn shies away as you approach for a closer look, but you do notice a tiny gold key hanging from a red satin ribbon looped around the animal's neck. The ribbon is tied in the sort of bow that is meant to be untied by somebody in particular, a lady by the look of the knot, and the unicorn's look makes it plain that you are not the somebody, and that nobody in this garden is. It will wait for her. You need not." }
     ] },
     { "as": "Marta", "type": "take key", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The unicorn is not here just now. It bounded off into the hedges, the way it does, and the key went with it, round its neck; it comes back when it has forgotten you, which, with unicorns, is never long." }
+      { "reader": "Marta", "kind": "said", "words": "The unicorn, unsurprised by this evidence that you are indeed the uncouth sort of vagabond it suspected you were, melts into the hedges and is gone." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },

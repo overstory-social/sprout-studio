@@ -94,7 +94,7 @@
       { "reader": "Marta", "kind": "said", "words": "Time passes..." },
       { "level": "info", "text": "passes: 90 seconds" },
       { "level": "info", "text": "underground_caverns_2#1 woke, 180 seconds after it asked" },
-      { "reader": "Marta", "kind": "told", "words": "The room, which had been looking a little odd round the edges, settles down and is only a room." },
+      { "reader": "Marta", "kind": "told", "words": "The room, which had been looking a little odd round the edges, settles down and is only a room: a gold ingot, which was never there, has stopped being there." },
       { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
     ] },
     { "as": "Marta", "type": "look", "expect": [
@@ -102,7 +102,7 @@
       { "reader": "Marta", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
     ] },
     { "as": "Marta", "type": "examine ingot", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+      { "reader": "Marta", "kind": "refused", "words": "There is nothing of the kind here. If there was a moment ago, the Wizard had a word in it, and the word has worn off." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Your score is 0 (total of 400 points), in 22 moves." },

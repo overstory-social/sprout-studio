@@ -1,0 +1,90 @@
+{
+  "about": "Round 8's P6: the Wizard's first appearance is his first call wherever it falls. Seed 6's roll finds the visitor still in the barrow on his second clock, and he casts one of Feeble, Fumble and Fantasize, with the hook, rather than Fear with none.",
+  "steps": [
+    { "seed": 6 },
+    { "seed": 2258064501 },
+    { "arrive": "Ash", "expect": [
+      { "reader": "Ash", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Ash", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Ash", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Ash", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "seed": 10065456 },
+    { "as": "Ash", "type": "examine lantern", "expect": [
+      { "reader": "Ash", "kind": "described", "words": "It is a battery-powered brass lantern of a make you could swear you have carried before, dented in the same places, with a stout handle and a glass somebody has kept clean. It has that look of a thing that has been through one adventure already and would rather not discuss it." },
+      { "reader": "Ash", "kind": "described", "words": "The lamp is turned off." }
+    ] },
+    { "seed": 2848299567 },
+    { "tick": true, "expect": [] },
+    { "seed": 868282189 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2328385914 },
+    { "as": "Ash", "type": "examine sword", "expect": [
+      { "reader": "Ash", "kind": "described", "words": "It is an Elvish sword of great antiquity, long and light, with runes down the blade that you cannot read and a hilt worn to the shape of somebody else's hand. It has the look of a sword that has been places." }
+    ] },
+    { "seed": 303928501 },
+    { "tick": true, "expect": [] },
+    { "seed": 19489881 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3955348776 },
+    { "as": "Ash", "type": "take all", "expect": [
+      { "reader": "Ash", "kind": "said", "words": "Lamp: Taken." },
+      { "reader": "Ash", "kind": "said", "words": "Elvish sword: Taken." }
+    ] },
+    { "seed": 4168504735 },
+    { "tick": true, "expect": [] },
+    { "seed": 902170156 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4011483957 },
+    { "as": "Ash", "type": "look", "expect": [
+      { "reader": "Ash", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Ash", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." }
+    ] },
+    { "seed": 1643853317 },
+    { "tick": true, "expect": [] },
+    { "seed": 96000374 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 221364729 },
+    { "as": "Ash", "type": "examine glow", "expect": [
+      { "reader": "Ash", "kind": "described", "words": "A faint glow, greenish and steady, at the far end of the tunnel to the south. It is not daylight. It is not firelight either." }
+    ] },
+    { "seed": 1945602465 },
+    { "tick": true, "expect": [] },
+    { "seed": 3368259837 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2711299529 },
+    { "as": "Ash", "type": "turn on lamp", "expect": [
+      { "reader": "Ash", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "seed": 2066080874 },
+    { "tick": true, "expect": [] },
+    { "seed": 1746561886 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 855613249 },
+    { "as": "Ash", "type": "go north", "expect": [
+      { "reader": "Ash", "kind": "refused", "words": "You may not recall, but when you entered, the door of the barrow shut behind you. There is no way out." }
+    ] },
+    { "seed": 4242911474 },
+    { "tick": true, "expect": [] },
+    { "seed": 4059303518 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1155894819 },
+    { "as": "Ash", "type": "examine tunnel", "expect": [
+      { "reader": "Ash", "kind": "described", "words": "The passage is cut through the rock, and goes where it goes. The ways out of here are described above, and you may take any of them." }
+    ] },
+    { "seed": 4058223395 },
+    { "tick": true, "expect": [] },
+    { "seed": 3665272734 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" },
+      { "reader": "Ash", "kind": "told", "words": "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." },
+      { "reader": "Ash", "kind": "told", "words": "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." },
+      { "reader": "Ash", "kind": "told", "words": "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you; the pearls nearest, behind a stone door that asks a question, and the rest further in, past a room that will not keep still, which you will hear before you see it." },
+      { "reader": "Ash", "kind": "told", "words": "The Wizard, in a deep and resonant voice, speaks the word \"Feeble!\" He then vanishes, cackling gleefully." },
+      { "reader": "Ash", "kind": "told", "words": "All at once you feel very tired." },
+      { "reader": "Ash", "kind": "told", "words": "In fact, you feel so weak that you drop the lamp." }
+    ] }
+  ]
+}

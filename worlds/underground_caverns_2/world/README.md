@@ -28,7 +28,7 @@ scripts in `tests/`; `tests/walkthrough.json` plays from the barrow to the
 Landing, 400 of 400 points, and the others each one puzzle or one round's
 answers: the bucket, the cakes, the robot and the cage, the gnome and the
 Bank's walls, the riddle, the balloon left untied, the Volcano Gnome, and
-each refining round's answers (`revision3` to `revision7`, the last two in
+each refining round's answers (`revision3` to `revision8`, the last three in
 parts).
 
 ## Credits

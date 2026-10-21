@@ -1152,3 +1152,78 @@ caverns' numbers are written "caverns N"._
 - The Wizard's door and the crypt door are each two doors keeping each
   other told, as the Tiny Room's is; the lizard is on one side only.
 - **Spec:** Objects.
+
+### 83. The riddle's answer in quotation marks
+
+- Round 8's P12: `answer "a well"` is refused with the hollow laugh, where
+  `answer a well` opens the door. The article is dropped where a noun or
+  a value is expected, as the spec says; the quotation marks are not, so
+  the word the symbol role reads is `"a`, which is no option of `Answer`,
+  and the role arrives unbound. A phrase cannot be written with a
+  quotation mark in it, so the world has no way to read the quoted form.
+  Zork's parser strips the quotes. For Sprout: an issue.
+- **Spec:** Parsing › Matching a line (Articles); Verbs › Value roles.
+
+### 84. `after command` runs before the queued `:moved` (74 again)
+
+- Round 5's P8 held the garden's clock for the move a visitor arrives at
+  the north end by setting the hold in `on :moved`; round 8's P13 found
+  the unicorn listed and announced in the same breath again. `:moved` is
+  a queued message and `after command` runs ahead of the queue, so the
+  hold was set after the clock had rolled, and held the following move
+  instead. The clock reads the arrival off `:last_room`, which `on
+  :moved` has not yet brought up to date, and rolls nothing on that move.
+- **Spec:** Verbs › After a command ("before what an engine verb answers,
+  which follows the queue").
+
+### 85. A plain `tell` from a handler stops at the room's occupants (75 again)
+
+- Round 8's P7: the Wizard, told where a visitor is, goes to their room
+  and says his lines with a plain `tell`, which reaches the actors in his
+  place; a visitor in the bucket is an occupant of a thing in the room,
+  not of the room, and read nothing but the spell's effect. Every line of
+  his turn is `tell from`, the one who told him where they were, which
+  reaches into the bucket, the basket and the cage since each passes.
+- **Spec:** Other people › Who hears it ("every actor in the telling
+  object's place").
+
+### 86. "Up" in a room with eight ways out (58 again)
+
+- Round 8's P3: three visitors typed `up` in the Carousel Room on reading
+  that one passage climbs, and read the parser's "You can't go that way."
+  in a room whose rule is that every passage leads somewhere. The room
+  has its eight exits and a refusing ninth is still an exit. The answer
+  is the visitor's own `no_way` passage, which reads `way` and the
+  visitor's whereabouts, and says in the narrator's voice that the
+  climbing passage is one of the eight and goes round with the floor.
+  `take the passage that climbs` is still the parser's not-here: "that
+  climbs" is not one of the closed set of relative phrases, and nothing
+  a world writes can read it.
+- **Spec:** Verbs › Exits (eight ways out; `no_way`); Prose › Engine
+  lines; Parsing › Matching a line (relative phrases).
+
+### 87. A noun for what is not there
+
+- **Wanted:** "water" typed with the teapot in hand and no stream here
+  (`pour water into bucket` with an empty pot, `fill teapot with water`
+  in the gazebo) answered with where the water is, as `fill teapot` alone
+  already is (round 8's P11).
+- **Wrote instead:** a stand-in for the water the teapot does not hold,
+  kept inside the teapot, which `Pourable` must admit to `pour`'s roles
+  and no list or count may see, so `Pourable` is no longer a `Thing` and
+  the stand-in is `Pourable` alone; it refuses every verb with one line
+  by `as target for any` and `as tool for any`, and the teapot's own
+  `after command` puts it out of reach wherever the stream is, so that it
+  never draws against the real water, and brings it back where the pot is
+  empty and the room dry. A teapot set down keeps the state it was last
+  carried in.
+- **Spec:** Range › Unseen; Parsing › Choosing a reading; Verbs › After
+  a command.
+
+### 88. A quoted `text` is capped at 600 characters
+
+- The lizard's close-up, grown by a sentence for round 8's P5, crossed
+  the cap on a `text` in quotes and is a passage now, said by name, as
+  the compiler suggests. Not a complaint; noted so the next long
+  close-up starts as a passage.
+- **Spec:** Limits › Static caps (`literalCharacters`).

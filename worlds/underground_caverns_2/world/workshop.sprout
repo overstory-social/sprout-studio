@@ -33,7 +33,8 @@ kind Lizard is Scenery, Creature {
   grammar { name "lizard"  nouns "keeper", "guardian", "head", "doorkeeper"  adjectives "nasty", "nasty-looking", "sleepy", "lizard" }
   :fed false
   passage short { lizard }
-  describe { text "{if self.get(:fed)}A lizard head the size of your own, mounted in the door at about the height of a knocker, scaled and green, with its eyes shut and its jaw slack and a look of having eaten well. It is asleep, and lizards sleep a long time over a meal.{else}A lizard head the size of your own, imbedded in the door at about the height of a knocker, green, scaled, with a great many sharp teeth and two beady eyes that move to follow you. It is not carved. It is a lizard, and it is hungry, and the door is its.{/if}" }
+  passage close_up { {if self.get(:fed)}A lizard head the size of your own, mounted in the door at about the height of a knocker, scaled and green, with its eyes shut and its jaw slack and a look of having eaten well. It is asleep, and lizards sleep a long time over a meal.{else}A lizard head the size of your own, imbedded in the door at about the height of a knocker, green, scaled, with a great many sharp teeth and two beady eyes that move to follow you. It is not carved. It is a lizard, and it is hungry, and the door is its. Its tongue flicks at the air the way a lizard's does when there are insects about: what it is hungry for is the kind of thing lizards eat, something that had legs and crunches, and a great deal of it. Anything else put in its mouth it will swallow out of habit, and not give back, and go on being hungry.{/if} }
+  describe { text close_up }
   passage no_take { {if self.get(:fed)}The lizard is part of the door, and asleep, and best left both.{else}The lizard snaps at your fingers, which you take back.{/if} }
   on :wiz_fed { self.set(:fed, true) }
   without as target for alarm from Creature
@@ -64,9 +65,12 @@ kind Lizard is Scenery, Creature {
         send item :consume
       }
       else if (item.is(Flask)) { say "The lizard sniffs it experimentally, then looks at you angrily, hissing and snapping." }
-      else if (item.is(Brick)) { say "The guardian greedily wolfs it down. After a while, you hear a very small pop and the guardian's eyes bulge out. It hisses nastily at you."  send item :consume }
+      else if (item.is(Brick)) { say "The guardian greedily wolfs it down. After a while, you hear a very small pop and the guardian's eyes bulge out. It hisses nastily at you. It was not what it wanted, and it is gone, and the lizard is as hungry as before."  send item :consume }
       else if (item.is(Palantir)) { say "The guardian greedily gobbles the sphere, but finds it unchewable. He then tries repeatedly to swallow it whole, with disappointing results. Finally, he spits it on the ground." }
-      else if (item.is(Thing)) { say "The lizard wolfs down the {item.short}, crunching greedily."  send item :consume }
+      // Eaten out of habit (round 8's P5): the thing is gone, and the line
+      // says it was not what the lizard wanted, so that a visitor who fed
+      // it the fuse knows the fuse is lost and the lizard still hungry.
+      else if (item.is(Thing)) { say "The lizard wolfs down the {item.short}, crunching greedily, and looks at you afterward with its tongue going, exactly as hungry as before. That was not what it wanted; it ate it because it was there, and it will not be giving it back."  send item :consume }
     }
   }
   without as aim for throw from Thing
