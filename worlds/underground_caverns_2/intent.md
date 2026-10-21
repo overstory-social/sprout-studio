@@ -5,7 +5,7 @@ _The author's. Sealed from playtesters; never quoted in the world._
 ## What this is
 
 Zork II: The Wizard of Frobozz, ported as faithfully as Sprout allows,
-a quarter at a time. After round 5 three quarters stand: the first the
+a quarter at a time. After rounds 5 and 6 three quarters stand: the first the
 brief names (the way in from the barrow to the garden, the Carousel Room
 and Room 8, the Riddle Room and the Pearl Room, the well and the Tea
 Room, the Posts Room and the Pool Room, and the robot's rooms), the
@@ -115,7 +115,12 @@ much the product as the rooms are.
   and its up to the Stairway must be one, so its southwest, which when
   the bases are run leads to a room with nothing in it but a window, is
   left out. Up and down typed in the other eight rooms are "You can't go
-  that way." rather than Zork's draw.
+  that way." rather than Zork's draw. After round 6 (P3, P4): the room at
+  the foot of the stair keeps its stairway in its BRIEF entry, since
+  named alone it looked like the other eight and players typed "up" in
+  all of them; and the no-way draw, which walks the visitor a room along
+  and back (friction 65) and so ends in a room heading, says that the
+  passage let them out where they started.
 - **The ways out of the built quarters** are present and turn the visitor
   back in Zork's voice, each rockfall its own: the Cobwebby Corridor's
   southwest and down (the Guarded Room), and the secret passage down from
@@ -153,13 +158,29 @@ much the product as the rooms are.
   and that a thing that is turned can be stopped by whoever finds the
   works. West while it spins is always a throw, as Zork's is; the two
   west exits are one now (friction 58), and a visitor who lands in Room 8
-  with the room still spinning is thrown from there.
+  with the room still spinning is thrown from there. After round 6 (P2,
+  and the director's steering that a casual visitor should have something
+  to want early), the room's own description, until it has thrown a
+  visitor twice, says in the narrator's voice that the floor is turning,
+  that every passage leads somewhere and the way to find out where is to
+  walk into one, and that the one that climbs has a draught of old brick
+  down it and, once, the grinding of a very heavy stone door: the door
+  the hook promised. The first-throw line now says the throw was the
+  floor's doing, rather than announcing the floor. Three rounds running,
+  short runs quit on the move they entered it.
 - **The cakes keep in the bucket** as they do at the Top of Well, since
   Zork's vehicle is in the room it stands in (round 3's P11), and the
   crumble line says why a cake crumbled. After round 5 (P6) the Posts
   Room says that whatever was left on the roof up there is out of reach,
   and the blue cake's close-up says it is small enough to pocket, which,
-  for a cake laid beside one marked Eat Me, may be the point.
+  for a cake laid beside one marked Eat Me, may be the point. After round
+  6 (P5), when both runs that reached the table were stranded and both
+  drowned, the tells come before the cost: the Eat-Me cake's close-up
+  says the cake is half of the trick and the other half is on the same
+  table, the table's says a guest who means to leave it their own size
+  takes more than one cake, and the pool's close-up and "look under" say
+  it is deeper than a swimmer and that whoever goes in does not come out.
+  The drowning itself is Zork's, one command, as before.
 - **The robot reaching for the sphere is Zork's** (round 5's P3): both
   opus runs sent the robot for the sphere to spare themselves the cage,
   and SPHERE-FCN has an answer for that, which is that the cage falls on
@@ -334,7 +355,11 @@ much the product as the rooms are.
    the spell is cast, one room in two gets one of the eight, and it stays
    listed with what is really there until the spell ends. Filch, since
    round 5 (P9), says how many things went, and the first thing that
-   vanishes at a touch names the Wizard's word as the cause.
+   vanishes at a touch names the Wizard's word as the cause; since round
+   6 (P6) it says they went where the Wizard keeps what he takes. Since
+   round 6 (P15) Freeze and Float, the two that refuse every move, draw
+   their length from the short half of the range (three to ten minutes),
+   and Float's refusal points at "wait" as Freeze's does.
 
 "Done", for the three quarters, is: the riddle answered, the well risen,
 the pearl, the candy, the sphere and the violin taken, the robot told
@@ -364,10 +389,17 @@ for the Wizard's own rooms.
   and an order to the robot while it stands in another room is answered
   in voice by its stand-in, which says where it is (P2, P3). Since round
   5 the stand-in answers an order to go as well (P4), and the robot sent
-  for the sphere instead of you is the robot's last errand.
+  for the sphere instead of you is the robot's last errand. The stand-in
+  answers a look with the same line since round 6 (P14), reworded to fit
+  one ("not here, to be looked at or to hear you"), because its `any`
+  refusal cannot let a look through (friction 67).
 - **Dying costs more than ten points**: the lamp goes back to the barrow,
   treasures to the Wizard's stash (out of reach until his rooms are
   built), and everything else to the gazebo; the third death is the end.
+  Since round 6 (P6) the demon's return says where it all went, and that
+  what was worth anything is kept by the Wizard somewhere not yet seen;
+  Filch's count says the same of what it took. A player who knows the
+  treasures are kept has a reason to find his rooms in round 7.
 - **The sword glows** blue near the unicorn, in its room as next door
   since round 4 (P13: five runs read the bright glow as the Wizard), and
   brightly when the Wizard stands in the room and stays; it is the only
@@ -412,6 +444,12 @@ for the Wizard's own rooms.
 - **Brief mode is Zork's**: a room seen again is named and no more. The
   first time it happens, one parenthetical line says LOOK, VERBOSE and
   BRIEF, and is not said again.
+- **"Examine room" is "look"** since round 6 (P11): every room holds a
+  thing called "room" (and "chamber", "place", "surroundings") whose
+  close-up is the room's own description, because the room's own name
+  words are refused wherever anything in it answers better. The Pool
+  Room's "hazy something" can be examined too, and is answered with the
+  pool's close-up until the pool is gone.
 - **The Wizard's spells interact**: Feeble makes the load fifty; Fumble
   drops things from a full hand; Float puts the floor out of reach and,
   at the Top of Well, ends in a long fall; Fear sends the visitor fleeing
@@ -439,6 +477,9 @@ for the Wizard's own rooms.
   by the Cool Room, and the way to the glacier is to strike it again on
   the bridge and again in the Cool Room, so that it is still interested
   when it sees itself. Sneak past it to the lair and it doubles back.
+  Since round 6 (P8) the "interest runs out" line is heard in the Ice
+  Room as well as in the dragon's own country, which is where a visitor
+  who kicked it twice and walked straight on is standing when it gives up.
 - **The dragon takes gifts**: a treasure given to it is "excused for a
   moment" and goes into the chest in its lair, where it can be had back
   once the dragon is dead; anything else is refused.
@@ -463,7 +504,10 @@ for the Wizard's own rooms.
 - **The key without the mat is lost**: the push sends it somewhere that
   is not a room, and the game says nothing, as Zork says nothing. The mat
   pulled from under the door, rather than taken, is drawn out and the key
-  falls off it (round 4's P9).
+  falls off it (round 4's P9). Since round 6 (P13) "unlock door" with the
+  rusty key in hand and none named uses it, "(with the rusty iron key)",
+  as Zork's parser would have implied it; the visitor's own part of
+  `unlock` tells the door whether the key is held (friction 61 again).
 - **The bucket's tide-line says what water it wants**: fresh, the kind the
   stream has at a ford and a teapot carries (round 4's P4).
 - **The matchbook is a light**: six matches, two moves each, for a visitor
@@ -487,7 +531,12 @@ for the Wizard's own rooms.
   in is wrecked in one move and comes down in five; whoever is in the
   room with it goes with it. In the hole in the safe it opens the safe,
   and the Dusty Room's card, read too late, says the room was built on
-  weak rock.
+  weak rock. Since round 6 (P7) the blast heard from outside says the rock
+  has not stopped moving and what is wanted from in there wants getting
+  quickly, and "wait" while any of the volcano's countdowns runs says it
+  is spending three moves. The window is still Zork's five, and a wait
+  inside it still costs three of them; a visitor who waits, walks in and
+  takes the crown dies with it, in Zork as here.
 - **The Wide Ledge collapses** thirteen moves after the blast, and a
   balloon tied to it goes down with it, rider and all; untied, it is left
   "with no place to land", and floats off.
@@ -499,4 +548,9 @@ for the Wizard's own rooms.
 - **The bat says who to be**: "Babe Flathead", burned into a club lying
   by the first base, is the hint that the Oddly-angled Rooms are a
   diamond to be run, southeast and round. The windows glow brighter base
-  by base, and go dark when the count is lost.
+  by base, and go dark when the count is lost. After round 6 (P3), when
+  no run in two rounds had examined the club, the name is on the club's
+  room line, first description and plain, and the window's close-up says
+  it glows by a count being kept, one step a grade, until what is counted
+  comes round to where it began. The room lines keep Zork's own words for
+  the grades.

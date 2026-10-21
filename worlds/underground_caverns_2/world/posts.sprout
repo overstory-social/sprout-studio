@@ -34,11 +34,16 @@ kind Pool is Box, Drinkable, Leapable, Watery {
   pass any (false)
   passage short { pool of tears }
   passage ldesc { The leak has submerged the depressed area in a pool of tears. There is a hazy something at the deepest part of the pool. }
-  describe { text "The pool fills the depressed half of the room, salt water from the leak overhead, and it is deeper than it looks. Something hazy lies at the deepest part of it, the shape of a package, if a package could lie under water and keep its shape." }
+  // The depth is said before it costs (round 6's P5): both runs that
+  // reached it went in.
+  describe { text "The pool fills the depressed half of the room, salt water from the leak overhead, and it is deeper than it looks: deeper than you are tall, at your present size, several times over, and a visitor who goes into it does not come out of it. Something hazy lies at the deepest part of it, the shape of a package, if a package could lie under water and keep its shape." }
   as target for any { permit { if (self.get(:gone)) { refuse "You can't see any such thing." } } }
   as target for drink { do { say "The water is extremely salty." } }
   without as target for look_under from Thing
-  as target for look_under { do { say "You'd probably have to enter the pool to see what's below the surface." } }
+  as target for look_under { do { say "You'd probably have to enter the pool to see what's below the surface, and you would not come up again; it is a great deal deeper than you are tall." } }
+  // Thing's "You can't look inside" arrives by way of Drinkable as well
+  // (friction 54; round 6's P9).
+  without as target for look_in from Thing
   without as target for look_in from Box
   as target for look_in { do { say "Through the water, which is not clear, you can make out something hazy at the deepest part, the size and shape of a package. It is not coming to you." } }
   as target for leap_at {
@@ -113,6 +118,14 @@ object pool_room is PoolRoom in underground_caverns_2 {
     describe { text "The ceiling is a very long way up, and the leak is in it, somewhere: a thread of water comes down out of the dark and does not stop." }
   }
   object pool is Pool
+  // The hazy something the pool's line names (round 6's P11), answered
+  // with the pool's own close-up while the pool is there.
+  object hazy is Scenery {
+    grammar { name "hazy something"  nouns "something", "shape", "haze", "thing"  adjectives "hazy", "sunken", "submerged", "deepest" }
+    passage short { hazy something }
+    describe { text "{if pool_room.pool.is(Pool)}{if pool_room.pool.get(:gone)}Nothing is hazy here now: the pool has gone, and whatever lay under it is lying in plain sight.{else}Through the water, which is not clear, you can make out something hazy at the deepest part, the size and shape of a package. It is not coming to you, and the water between you and it is a great deal deeper than you are tall.{/if}{/if}" }
+    passage no_take { It is under the pool, and the pool is deeper than you are tall. Something would have to happen to the pool first. }
+  }
   object water is StreamWater {
     :salty true
     grammar { name "salty water"  nouns "water", "quantity", "liquid"  adjectives "salty", "salt" }

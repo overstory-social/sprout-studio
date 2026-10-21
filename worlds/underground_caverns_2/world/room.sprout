@@ -17,7 +17,7 @@ import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
 import {examine} from 'sprout'
-import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, attack, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize, :conjured, :explosion, :explosion_at, :collapse, :bury, :die} from 'verbs'
+import {read, listen, search, smell, look_in, look_under, shift, climb_up, climb_down, take, through, attack, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize, :conjured, :explosion, :explosion_at, :collapse, :bury, :die} from 'verbs'
 import {Portable} from 'thing'
 
 kind Room is sprout.Place {
@@ -38,6 +38,7 @@ kind Room is sprout.Place {
   object floor is Floor
   object ceiling is Ceiling
   object mirage is Illusion
+  object surroundings is Surroundings
 
   remembers { :visits 0 min 0 max 2 }
   :visited false
@@ -338,6 +339,24 @@ kind Illusion is Scenery {
 }
 
 // What an explosion leaves in a room (EXPLOSION).
+// The room as a thing to examine (round 6's P11): "examine room" is
+// answered with the room's own description. A room's own name words are
+// refused where anything in it answers better (Room, above), so this is a
+// thing in every room, answering to "room" and the like, and reading the
+// room it is in.
+kind Surroundings is Scenery {
+  grammar { name "room"  nouns "chamber", "place", "surroundings", "area", "everything", "here"  adjectives "this", "whole", "entire" }
+  passage short { room }
+  describe { text "{if here.is(Room)}{here.full}{/if}" }
+  passage no_take { {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of} }
+  without as target for search from Thing
+  as target for search { do { say "{if here.is(Room)}{here.full}{/if}" } }
+  without as target for smell from Thing
+  as target for smell { do { say "It smells like a room." } }
+  without as target for listen from Thing
+  as target for listen { do { say "You hear nothing a room does not usually make." } }
+}
+
 kind Debris is Scenery {
   grammar { name "debris"  nouns "rubble", "wreckage", "explosion"  adjectives "explosion" }
   :ndesc false

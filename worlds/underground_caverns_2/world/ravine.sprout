@@ -52,9 +52,24 @@ kind PDoor is Scenery, Door {
         }
         else if (tool.is(GoldKey)) { say "It doesn't fit the lock." }
         else { say "It can't be unlocked with that." }
-      } else { say "You'll need a key for that, and the right one." }
+      } else {
+        // No key named: the rusty one in hand is implied (round 6's P13),
+        // read off the visitor as their own part of `unlock` left it.
+        self.set(:implied, false)
+        if (actor.is(Adventurer)) { if (actor.get(:has_rusty)) { self.set(:implied, true) } }
+        if (self.get(:implied)) {
+          if (!self.get(:locked)) { say "(with the rusty iron key) The door is already unlocked." }
+          else {
+            self.set(:locked, false)
+            say "(with the rusty iron key) The door is now unlocked."
+            broadcast :pdoor_locked with false
+          }
+        }
+        else { say "You'll need a key for that, and the right one." }
+      }
     }
   }
+  :implied false
   as target for lock {
     do {
       if (bound tool) {
@@ -69,7 +84,20 @@ kind PDoor is Scenery, Door {
         }
         else if (tool.is(GoldKey)) { say "It doesn't fit the lock." }
         else { say "It can't be locked with that." }
-      } else { say "You'll need a key for that, and the right one." }
+      } else {
+        self.set(:implied, false)
+        if (actor.is(Adventurer)) { if (actor.get(:has_rusty)) { self.set(:implied, true) } }
+        if (self.get(:implied)) {
+          if (self.get(:open)) { say "You'll have to close the door first." }
+          else if (self.get(:locked)) { say "The door is already locked." }
+          else {
+            self.set(:locked, true)
+            say "(with the rusty iron key) The door is locked."
+            broadcast :pdoor_locked with true
+          }
+        }
+        else { say "You'll need a key for that, and the right one." }
+      }
     }
   }
   without as target for open from Thing

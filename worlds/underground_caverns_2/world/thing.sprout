@@ -189,7 +189,10 @@ kind Portable is Thing {
       if (bound tool) {
         if (tool.is(Matchbook)) { if (tool.get(:lit)) { self.set(:flame, true) } }
         if (!self.get(:flame)) {
-          if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" }
+          // An unlit matchbook is Zork's "With a matchbook??!?", with a
+          // word about what would do (round 6's P9).
+          if (tool.is(Matchbook)) { say "With {tool.a_short}??!? A match would do, if one of them were struck first." }
+          else if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" }
         }
       } else {
         if (actor.is(Adventurer)) { if (actor.get(:has_flame)) { self.set(:flame, true) } }

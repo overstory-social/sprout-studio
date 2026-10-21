@@ -45,7 +45,7 @@ kind DiamondWindow is Scenery {
   passage short { diamond shaped window }
   passage state { {if self.get(:glow) >= 5}glowing serenely{else if self.get(:glow) == 4}glowing brightly{else if self.get(:glow) == 3}glowing{else if self.get(:glow) == 2}dimly glowing{else if self.get(:glow) == 1}flickering dimly{else}dark{/if} }
   passage ldesc { On the floor is a very small diamond shaped window which is {self.state}. }
-  describe { text "On the floor is a very small diamond shaped window which is {self.state}. It is set flush with the floor, and whatever is under it is a long way down, or a long way off." }
+  describe { text "On the floor is a very small diamond shaped window which is {self.state}. It is set flush with the floor, and whatever is under it is a long way down, or a long way off. It glows, when it glows, by some count that is being kept: a flicker for one, a dim glow for two, and brighter after that, until whatever is being counted comes round to where it began; and it goes dark when the count is lost." }
   passage no_take { The window is an integral part of the floor. }
   without as target for mung from Thing
   as target for mung { do { say "The window is diamond-hard and cannot be broken." } }
@@ -61,8 +61,10 @@ kind Bat is Weapon, Readable {
   :moving false
   :to Dest default diamond_2
   passage short { wooden club }
-  passage fdesc { A long wooden club lies on the ground near the diamond-shaped window. The club is curiously burned at the thick end. }
-  passage ldesc { There is a wooden club here. }
+  // The name is on the room line as well as under `read` (round 6's P3):
+  // nobody in three rounds examined the club.
+  passage fdesc { A long wooden club lies on the ground near the diamond-shaped window. The club is curiously burned at the thick end, and burned into the handle, in letters large enough to read from where you stand, is the name "Babe Flathead". }
+  passage ldesc { There is a wooden club here, with the name "Babe Flathead" burned into the handle. }
   passage words { The words "Babe Flathead" are burned into the wood. }
   describe { text "It is a long wooden club, thicker at one end than the other, and burned at the thick end as though it had been used to stir a fire, or had hit something very hot. There are words burned into it, which can be read." }
   without as target for read from Thing
@@ -206,6 +208,15 @@ object diamond_5 is DiamondRoom in underground_caverns_2 {
   }
   :id diamond_5
   passage body { This is a room with oddly angled walls and passages in all directions. The walls are made of some glassy substance. A marble stairway leads upward.{if self.get(:solved)} The floor has swung down at the end of the stairway to reveal a secret passage leading down into unrelieved darkness.{/if} }
+  // Seen again by name alone, the stair is still the one thing that tells
+  // this room from the other eight (round 6's P3).
+  passage brief {
+    {self.title}
+
+    A marble stairway leads upward.{if self.get(:solved)} The floor has swung down at its foot on a secret passage leading down.{/if}
+
+    {self.objects}
+  }
   object window is DiamondWindow { :ndesc true }
   object stairs is Scenery {
     grammar { name "stairs"  nouns "stairway", "steps", "staircase", "stair"  adjectives "marble", "stone", "upward" }

@@ -48,7 +48,9 @@ object carousel_room is CarouselRoom in underground_caverns_2 {
   :id carousel
   passage body { You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room.{if self.get(:spinning)}
 
-    A loud whirring sound comes from all around, and you feel sort of disoriented in here.{/if}{if self.get(:spins) >= 2}
+    A loud whirring sound comes from all around, and you feel sort of disoriented in here.{/if}{if self.get(:spinning) && self.get(:spins) < 2}
+
+    The disorientation is not all in your head. The floor, if you stand still on it a moment, is turning, slowly, and the eight passages go round with it, so that the one you came in by is already somewhere else. They all lead somewhere, every one of them; it is only a question of which, and the only way to settle that is to pick one and walk into it. The one that climbs a little, when it comes round, has a draught down it that smells of old brick and older water, and once, faintly, from up that way, you hear the grinding of a very heavy stone door.{/if}{if self.get(:spins) >= 2}
 
     You have been thrown out of here enough times now to have noticed that the passages are not quite identical after all: one, on the northwest side, breathes out a cold mist, one, on the southeast side, climbs, and one, on the southwest side, has cobwebs across the mouth of it.{/if} }
   object passages is EightPassages

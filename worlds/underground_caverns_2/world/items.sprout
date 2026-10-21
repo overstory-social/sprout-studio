@@ -510,7 +510,9 @@ kind EatMeCake is Cake {
   passage short { cake frosted with green letters }
   passage letters { Eat Me }
   passage plain_words { The icing spells out "Eat Me." }
-  describe { text "It is a small round cake, iced green, with letters piped on top in a darker green. The letters are large enough to read." }
+  // The trick is told before it costs (round 6's P5): the cake is half of
+  // it, and the other half is on the same table.
+  describe { text "It is a small round cake, iced green, with letters piped on top in a darker green. The letters are large enough to read. If you have read the book this table was laid out of, you will recall that a cake like this is only half of the trick, and that whoever eats it and means to come back to their own size wants the other half about them first, from the same table." }
 }
 kind BlueCake is Cake {
   grammar { name "cake frosted with blue letters"  nouns "cake", "icing", "cakes", "letters", "letter"  adjectives "blue", "frosted" }

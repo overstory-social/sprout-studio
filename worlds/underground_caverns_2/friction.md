@@ -913,3 +913,82 @@ caverns' numbers are written "caverns N"._
   (`:balloon_land`), which is the same puzzle one command shorter: the
   wire must still be tied in three moves or the balloon goes without you.
 - **Spec:** Verbs › Exits; Places inside places.
+
+## After round 6
+
+### 65. A draw cannot stand in a `permit`, so a way that is no way is walked and walked back
+
+- **Wanted:** DIAMOND-MOTION's "There is no way to go in that direction.",
+  a third of the time from the room at the foot of the stair: a refusal,
+  nobody moves, no room heading.
+- **Found:** round 6's P4. The visitor's own `go` runs after the engine's
+  move (friction 58), so by the time the draw is made they are a room
+  along, and the gate moves them back, and the move back is an arrival:
+  the no-way line is followed by the room's heading as if they had walked
+  somewhere. The draw cannot be made earlier, in the `permit`, where a
+  refusal would stop the move: chance is forbidden there (Chance › Where
+  chance is forbidden). A draw made in advance, in a handler, and read by
+  the `permit` would refuse "up" from that room as readily as any compass
+  way, since the `permit` cannot read the direction either (friction 58).
+  And a move a body makes always describes the place arrived at (Movement
+  and consent › After the move): there is no quiet move.
+- **Wrote instead:** the line says where the passage let them out, "turns
+  a corner that is more than a corner, and lets you out where you
+  started", so the heading that follows reads as the same room; and the
+  room at the foot of the stair keeps its stairway in its BRIEF entry, so
+  the heading says which room that is.
+- **Spec:** Chance › Where chance is forbidden; Movement and consent ›
+  After the move; Verbs › The actor's own part.
+
+### 66. A particle the parser cannot read is answered as a missing thing (an engine note)
+
+- Round 6's P10, filed here for Sprout: "push the menhir with the sword",
+  "take the sword too", "pull the place mat back" and "wait for the
+  floating to stop" are all answered "You can't see any such thing.", the
+  world's `not_here`, with the menhir, the sword and the mat in plain
+  sight. The noun resolved; a trailing word, an adverb or a `with` clause
+  no phrase of the verb carries did not, and the spec's order (Range: a
+  reading, then `cannot` or `not_carrying`, then `not_here`, then
+  `unknown`) lands on `not_here` because no phrase read whole. A player
+  reads that as the thing being absent. Nothing a world writes changes it:
+  `not_here` is said with no binding that says which word failed, so the
+  world cannot even name the word. The studio never patches Sprout; this
+  wants an issue there, for a line that names the word the parser did not
+  understand when the nouns it did understand are in range.
+- **Spec:** Parsing › When nothing matches; Range (`not_here`).
+
+### 67. `as target for any` refuses the engine's `examine` too
+
+- Round 6's P14: the robot's stand-in answers every verb with its "not
+  here to hear you" line by `as target for any { permit { refuse absent }
+  }`, and that includes `examine`, which the engine answers with the
+  thing's `describe`; a look at the absent robot was told the robot could
+  not hear. A play for `examine` beside the `any` cannot let the look
+  through, since every `permit` runs and any refusal decides (Kinds › How
+  members combine), and the `any` cannot tell a look from an order. The
+  line says "to be looked at or to hear you" now, which is the honest
+  answer in both cases, but a stand-in that wanted a look of its own would
+  have to list every verb it refuses instead of `any`.
+- **Spec:** Verbs › Roles compose (`as target for any`); The two passes.
+
+### 68. The engine's line for `wait` follows the actor's own (a note)
+
+- Round 6's P7: the visitor's `as actor for wait` says "(That is three
+  moves of waiting ...)" and the world's `waited`, "Time passes...", is
+  printed after it, since an engine verb's answer "follows the queue"
+  (Verbs › After a command). So a line meant to qualify "Time passes..."
+  has to be written to stand before it. Harmless; noted because the
+  natural sentence runs the other way.
+- **Spec:** Verbs › After a command; Prose › Engine lines.
+
+### 54, again: the trap sprung three more times
+
+- Round 6's P9: "open purple book" (Book is Bag, Readable: Thing's `open`
+  by way of Readable), "look in pool" (Pool is Box, Drinkable, …: Thing's
+  `look_in` by way of Drinkable) and "light string with match" (Fuse is
+  Portable, Switchable: Thing's `burn` by way of Switchable, whose own
+  play is a `permit` only, so Thing's `do` still arrives through it). Each
+  printed Zork's default and then its own answer. Three more `without`s,
+  each naming Thing. The rule in 54 holds; the trap is that a `without`
+  reads as if it settled the member, and settles only one path.
+- **Spec:** Kinds › Suppressing a contribution.

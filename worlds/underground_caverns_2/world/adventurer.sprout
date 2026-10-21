@@ -14,7 +14,7 @@ import {Thing, Portable, Scenery, Creature, Valuable, Button} from 'thing'
 import {Box, Bag} from 'box'
 import {Lamp, Light, BrokenLamp} from 'lamp'
 import {Matchbook} from 'items'
-import {Weapon, Sword, Treasure, Food, Water, StreamWater, Teapot, Repellent, Sphere, Cake, RedCake, BlueCake, OrangeCake, EatMeCake, Candy, Flask, Bills, Portrait, PlaceMat, RobotLabel, Rose} from 'items'
+import {Weapon, Sword, Treasure, Food, Water, StreamWater, Teapot, Repellent, Sphere, Cake, RedCake, BlueCake, OrangeCake, EatMeCake, Candy, Flask, Bills, Portrait, PlaceMat, RobotLabel, Rose, RustyKey} from 'items'
 import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike, DragonCountry, CurtainRoom, Illusion, Grue} from 'room'
 import {go, look, examine, inventory, wait, help} from 'sprout'
 import {ask} from 'sprout'
@@ -29,7 +29,7 @@ import {low_room, machine_room, dingy_closet, Robot, CagePlace, LowRoom, Machine
 import {Wizard, Fence, enchant} from 'wizard'
 import {oblivion} from 'oblivion'
 import {ravine_ledge, ledge_end, tiny_room, dreary_room, TinyRoom, DrearyRoom, PDoor, Keyhole} from 'ravine'
-import {dragon_room, dragon_lair, fresco_room, stone_bridge, cool_room, ice_room, Dragon, Princess, DragonRoom, :princess_walking, :vanish_princess} from 'dragon'
+import {dragon_room, dragon_lair, fresco_room, stone_bridge, cool_room, ice_room, Dragon, Princess, DragonRoom, IceRoom, :princess_walking, :vanish_princess} from 'dragon'
 import {bank_entrance, teller_west, teller_east, viewing_west, viewing_east, small_room, vault, depository, office, Gnome, Curtain, CurtainWall, DepositBox, Depository, SmallRoom, Vault, :curtain_pass, :curtain_back} from 'bank'
 import {lava_room, lava_tube, volcano_view, cobwebby_corridor, volcano_bottom, ledge_1, library, ledge_2, safe_room, Balloon, VolcanoRoom, VolcanoLedge, VolcanoGnome, Brick, Fuse, Slot, Receptacle, :thrown_out, :wreck_now} from 'volcano'
 import {menhir_room, kennel, stairway, diamond_1, diamond_2, diamond_3, diamond_4, diamond_5, diamond_6, diamond_7, diamond_8, diamond_9, DiamondRoom, DiamondBase} from 'menhir'
@@ -172,11 +172,17 @@ kind Adventurer is sprout.Visitor {
   :filch_told false
   :has_flame false
   :filch_count 0 min 0 max 50
+  // What a death sent to the Wizard's keeping, counted so the demon's
+  // return can say so (round 6's P6); and whether the rusty key is in hand,
+  // set by the visitor's own part of `unlock` for the door's to read, as
+  // `:has_flame` is for the fuse (friction 61).
+  :lost 0 min 0 max 50
+  :has_rusty false
 
   passage hands_full { You're holding too many things already! It is your hands that are full, not your back; set something down. }
   passage over { Everything has gone black, and nothing further will happen to you in this game. }
   passage frozen { You are frozen solid. You might as well wait it out, because you can't do anything else in this state. }
-  passage flap { I suppose you plan to do that by flapping your arms? }
+  passage flap { I suppose you plan to do that by flapping your arms? You are five feet off the floor and will be until the Wizard's word wears off; you might as well wait it out. }
   passage fence { An invisible fence of magical force bars your way. }
   passage too_heavy { Your load is too heavy{if self.get(:load_allowed) < 100}, especially in light of your condition{/if}. }
 
@@ -384,7 +390,9 @@ kind Adventurer is sprout.Visitor {
   pass :fuse_out (true)
   pass :explosion (true)
   on :explosion_at (from, value) {
-    tell self "There is an explosion nearby."
+    // The window is five moves, and it is said from its start (round 6's
+    // P7): the rock has not stopped moving.
+    tell self "There is an explosion nearby. After the bang there is a sound of rock settling, and it goes on, which is not the sound of rock that has finished; whatever you want from in there wants getting quickly."
     self.set(:munged_room, value)
     self.set(:safe_left, 5)
   }
@@ -509,7 +517,11 @@ kind Adventurer is sprout.Visitor {
         // Five to thirty-five moves (I-WIZARD), three to eighteen minutes
         // at half a minute a move; in the first thirty moves of play, the
         // shortest of them, so a short first visit is not all spell.
+        // The two that refuse every move, Freeze and Float, draw from the
+        // short end of the range, since every minute of them is dead time
+        // (round 6's P15).
         if (self.get(:moves) < 30) { self.set(:spell_left, 3) }
+        else if (s == :freeze || s == :float) { self.set(:spell_left, 3 + random(8)) }
         else { self.set(:spell_left, 3 + random(16)) }
         cancel wakes
         wake in (self.get(:spell_left)) minutes
@@ -533,6 +545,9 @@ kind Adventurer is sprout.Visitor {
           if (self.get(:filching)) {
             if (self.get(:filch_count) > 1) { tell self "Several things you are carrying have disappeared!" }
             else { tell self "Something you are carrying has disappeared!" }
+            // Where it went (round 6's P6): a thing kept is a thing that
+            // can be had back.
+            tell self "{if self.get(:filch_count) > 1}They have{else}It has{/if} gone where the Wizard keeps what he takes, and he keeps it, which is something; it is nowhere you have been yet."
             self.set(:dest, :filch)
             send underground_caverns_2 :open_gate
           }
@@ -616,7 +631,9 @@ kind Adventurer is sprout.Visitor {
   // The dragon's interest run out behind them, where they cannot see it
   // (round 4's P6).
   on :dragon_bored {
-    let near = here.is(DragonCountry)
+    // The Ice Room is where he is led, so it is near enough to hear him
+    // give up (round 6's P8).
+    let near = here.is(DragonCountry) || here.is(IceRoom)
     if (here.is(Room)) { if (near && here.count(Dragon) == 0) { tell self "Somewhere behind you the dragon's interest runs out: you hear him stop, with a scrape of scales on stone, and go back the way he came." } }
   }
   // Into the cage, and out of it by the robot.
@@ -693,7 +710,7 @@ kind Adventurer is sprout.Visitor {
         // a mechanism, and a mechanism has an off switch somewhere.
         if (!self.get(:spun_told)) {
           self.set(:spun_told, true)
-          say "The floor, you realize a moment too late, has been turning under you the whole time, slowly, with you on it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works."
+          say "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works."
         }
         // Zork's draw among all seven passages but the west (CAROUSEL-
         // ROOM-FCN), every one of which leads somewhere now (friction 29).
@@ -765,7 +782,10 @@ kind Adventurer is sprout.Visitor {
           self.set(:diamond_count, 0)
           broadcast :diamond_count with 0
           let r = random(12)
-          if (r < 4) { say "There is no way to go in that direction."  self.set(:dest, was)  send underground_caverns_2 :open_gate }
+          // A way that is no way: the visitor has already been moved a
+          // room along (friction 58), and is moved back, which reads as an
+          // arrival, so the line says where the passage let them out.
+          if (r < 4) { say "There is no way to go in that direction: the passage goes a little way, turns a corner that is more than a corner, and lets you out where you started."  self.set(:dest, was)  send underground_caverns_2 :open_gate }
           else if (r < 6) { send self :diamond_loss }
           else {
             self.set(:diamond_count, 1)
@@ -942,12 +962,17 @@ kind Adventurer is sprout.Visitor {
       // RANDOMIZE-OBJECTS: the lamp to the barrow, the sphere and the candy
       // to the Carousel Room, treasures to the Wizard's case, the rest to
       // the gazebo; and then the barrow.
+      self.set(:lost, 0)
       each t: Thing in self {
         if (t.is(Lamp)) { move t to inside_barrow }
         else if (t.is(Sphere) || t.is(Candy)) { move t to carousel_room }
-        else if (t.is(Treasure)) { move t to elsewhere.stash }
+        else if (t.is(Treasure)) { self.adjust(:lost, 1)  move t to elsewhere.stash }
         else { move t to gazebo }
       }
+      // Where what was carried went (round 6's P6): the lamp to the barrow,
+      // the rest to the gazebo, and the treasures to the Wizard's keeping,
+      // which is not nowhere.
+      if (self.get(:lost) > 0) { tell self "Of what you were carrying, the lamp has gone back where you found it and the rest to the gazebo, except {if self.get(:lost) > 1}the things that were worth anything, which have{else}the one thing that was worth anything, which has{/if} gone where the Wizard keeps such things. He keeps them; that is something. It is nowhere you have been yet." }
       move self to inside_barrow
     } else if (d == :filch) {
       each t: Treasure in self { if (!t.get(:keep)) { move t to elsewhere.stash } }
@@ -1382,6 +1407,9 @@ kind Adventurer is sprout.Visitor {
     do {
       pass 90 seconds
       self.adjust(:moves, 2)
+      // Waiting through a countdown the visitor lit (round 6's P7): three
+      // moves of it, said before they are spent.
+      if (self.get(:safe_left) > 0 || self.get(:ledge_left) > 0 || self.get(:fuse_left) > 0) { say "(That is three moves of waiting, and the rock has not stopped counting.)" }
       broadcast :balloon_tick
       broadcast :balloon_tick
       send self :volcano_clock
@@ -1393,8 +1421,15 @@ kind Adventurer is sprout.Visitor {
       if (self.get(:gnome_left) > 1) { self.adjust(:gnome_left, -2) }
     }
   }
-  as actor for unlock     { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for lock       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  // Unlocked or locked with no key named: whether the rusty key is in hand
+  // is set here, before the door's part runs, since a target's part cannot
+  // see into the hands (friction 61; round 6's P13).
+  as actor for unlock     { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+    do { self.set(:has_rusty, self.count(RustyKey) > 0) }
+  }
+  as actor for lock       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+    do { self.set(:has_rusty, self.count(RustyKey) > 0) }
+  }
   as actor for melt       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   // The place mat under the Tiny Room's door, and the robot's paper
   // (PDOOR-FCN's PUT-UNDER): the door says what came of it.

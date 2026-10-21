@@ -21,8 +21,9 @@ who shows the stranded the way out for a fee.
 scripts in `tests/`; `tests/walkthrough.json` plays from the barrow to the
 end of the third quarter, 260 of 400 points, and the others each one
 puzzle or one round's answers: the bucket, the cakes, the robot and the
-cage, the gnome and the Bank's walls, the riddle, the balloon left untied
-and the Volcano Gnome.
+cage, the gnome and the Bank's walls, the riddle, the balloon left untied,
+the Volcano Gnome, and each refining round's answers (`revision3` to
+`revision6`, the last in three parts).
 
 ## Credits
 

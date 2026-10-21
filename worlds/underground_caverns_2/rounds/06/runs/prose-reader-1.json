@@ -1,0 +1,233 @@
+{
+  "steps": [
+    { "seed": 9 },
+    { "seed": 853534204 },
+    { "arrive": "Dell", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Inside the Barrow" },
+      { "reader": "Dell", "kind": "described", "words": "You are inside an ancient barrow hidden deep within a dark forest. The barrow opens into a narrow tunnel at its southern end. You can see a faint glow at the far end." },
+      { "reader": "Dell", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
+      { "reader": "Dell", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
+    ] },
+    { "seed": 3655922532 },
+    { "as": "Dell", "type": "examine lantern", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a battery-powered brass lantern of a make you could swear you have carried before, dented in the same places, with a stout handle and a glass somebody has kept clean. It has that look of a thing that has been through one adventure already and would rather not discuss it." },
+      { "reader": "Dell", "kind": "described", "words": "The lamp is turned off." }
+    ] },
+    { "seed": 608880792 },
+    { "tick": true, "expect": [] },
+    { "seed": 3529053154 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3108716229 },
+    { "as": "Dell", "type": "take all", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Lamp: Taken." },
+      { "reader": "Dell", "kind": "said", "words": "Elvish sword: Taken." }
+    ] },
+    { "seed": 2958638087 },
+    { "tick": true, "expect": [] },
+    { "seed": 1128367080 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3949025947 },
+    { "as": "Dell", "type": "go south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Narrow Tunnel" },
+      { "reader": "Dell", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
+    ] },
+    { "seed": 562046525 },
+    { "tick": true, "expect": [] },
+    { "seed": 2715667106 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2997954918 },
+    { "as": "Dell", "type": "turn on lamp", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "seed": 2522371549 },
+    { "tick": true, "expect": [] },
+    { "seed": 1217321642 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" },
+      { "reader": "Dell", "kind": "told", "words": "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." },
+      { "reader": "Dell", "kind": "told", "words": "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." },
+      { "reader": "Dell", "kind": "told", "words": "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you; the pearls nearest, behind a stone door that asks a question, and the rest further in, past a room that will not keep still." },
+      { "reader": "Dell", "kind": "told", "words": "The Wizard, in a deep and resonant voice, speaks the word \"Fantasize!\" He then vanishes, cackling gleefully." }
+    ] },
+    { "seed": 4027892162 },
+    { "as": "Dell", "type": "examine bridge", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The foot bridge is crude but sturdy: a dozen planks lashed across two tree trunks that somebody carried a long way, with a rope on either side for the nervous. It crosses the ravine to the south." }
+    ] },
+    { "seed": 1232752176 },
+    { "tick": true, "expect": [] },
+    { "seed": 3136491386 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2757257720 },
+    { "as": "Dell", "type": "go south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Foot Bridge" },
+      { "reader": "Dell", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
+    ] },
+    { "seed": 1575981240 },
+    { "tick": true, "expect": [] },
+    { "seed": 2300153573 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3854468244 },
+    { "as": "Dell", "type": "go south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Great Cavern" },
+      { "reader": "Dell", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." },
+      { "reader": "Dell", "kind": "described", "words": "There is a pile of jewels here." }
+    ] },
+    { "seed": 3717546984 },
+    { "tick": true, "expect": [] },
+    { "seed": 1955618786 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3752460204 },
+    { "as": "Dell", "type": "take jewels", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now." }
+    ] },
+    { "seed": 815253435 },
+    { "tick": true, "expect": [] },
+    { "seed": 2908904160 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 1432631155 },
+    { "as": "Dell", "type": "go southwest", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Shallow Ford" },
+      { "reader": "Dell", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." }
+    ] },
+    { "seed": 206566038 },
+    { "tick": true, "expect": [] },
+    { "seed": 3763730880 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 878477069 },
+    { "as": "Dell", "type": "go south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Dark Tunnel" },
+      { "reader": "Dell", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
+    ] },
+    { "seed": 2260682765 },
+    { "tick": true, "expect": [] },
+    { "seed": 2122104082 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "underground_caverns_2#1 woke, 180 seconds after it asked" },
+      { "reader": "Dell", "kind": "told", "words": "The room, which had been looking a little odd round the edges, settles down and is only a room." }
+    ] },
+    { "seed": 320989984 },
+    { "as": "Dell", "type": "go southwest", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Path Near Stream" },
+      { "reader": "Dell", "kind": "described", "words": "The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction. On the east is a ruined archway choked with vegetation." }
+    ] },
+    { "seed": 3582974239 },
+    { "tick": true, "expect": [] },
+    { "seed": 3022475510 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 845240649 },
+    { "as": "Dell", "type": "go east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Formal Garden" },
+      { "reader": "Dell", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." },
+      { "reader": "Dell", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "seed": 293481143 },
+    { "tick": true, "expect": [] },
+    { "seed": 2099378430 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 1330153052 },
+    { "as": "Dell", "type": "go north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Dell", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Dell", "kind": "said", "words": "The unicorn bounds lightly away." },
+      { "reader": "Dell", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 2829222530 },
+    { "tick": true, "expect": [] },
+    { "seed": 1254782621 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2376621794 },
+    { "as": "Dell", "type": "enter gazebo", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Gazebo" },
+      { "reader": "Dell", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
+      { "reader": "Dell", "kind": "described", "words": "Sitting on the tea table is:" },
+      { "reader": "Dell", "kind": "described", "words": "A newspaper" },
+      { "reader": "Dell", "kind": "described", "words": "A place mat" },
+      { "reader": "Dell", "kind": "described", "words": "A china teapot" },
+      { "reader": "Dell", "kind": "described", "words": "A letter opener" },
+      { "reader": "Dell", "kind": "described", "words": "A matchbook" }
+    ] },
+    { "seed": 4110580879 },
+    { "tick": true, "expect": [] },
+    { "seed": 2439051183 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 687732792 },
+    { "as": "Dell", "type": "read newspaper", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "** U.S. News and Dungeon Report **" },
+      { "reader": "Dell", "kind": "said", "words": "FAMED ADVENTURER TO EXPLORE GREAT UNDERGROUND EMPIRE" },
+      { "reader": "Dell", "kind": "said", "words": "Our correspondents report that a world-famous and battle-hardened adventurer has been seen in the vicinity of the Great Underground Empire. Local grues have been reported sharpening their (slavering) fangs...." },
+      { "reader": "Dell", "kind": "said", "words": "WIZARD STILL AT LARGE" },
+      { "reader": "Dell", "kind": "said", "words": "The Wizard of Frobozz, dismissed from the court of Lord Dimwit Flathead for turning the royal mountain into a very large pile of gravel, is believed to have retired to the caverns south of the ravine, taking with him a quantity of the Empire's loose property (a pearl necklace, a Stradivarius and a crystal sphere are mentioned in the inventory, and the Bank of Zork has declined to comment on the rest). He is described as doddering, petulant and armed with a wand, and the public is advised not to let him finish a word." },
+      { "reader": "Dell", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." }
+    ] },
+    { "seed": 2222814462 },
+    { "tick": true, "expect": [] },
+    { "seed": 1397288032 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2305369943 },
+    { "as": "Dell", "type": "examine teapot", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a china teapot, white with a blue pattern of a bridge and some birds, and chipped at the spout. It has no lid, which is either a loss or a convenience." },
+      { "reader": "Dell", "kind": "described", "words": "The china teapot is empty." }
+    ] },
+    { "seed": 3434887872 },
+    { "tick": true, "expect": [] },
+    { "seed": 2478482009 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 2635793589 },
+    { "as": "Dell", "type": "take matchbook, letter opener", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Matchbook: Taken." },
+      { "reader": "Dell", "kind": "said", "words": "Letter opener: Taken." }
+    ] },
+    { "seed": 2291499079 },
+    { "tick": true, "expect": [] },
+    { "seed": 2820067325 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2133890592 },
+    { "as": "Dell", "type": "go out", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "North End of Garden" },
+      { "reader": "Dell", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+    ] },
+    { "seed": 772026408 },
+    { "tick": true, "expect": [] },
+    { "seed": 3992972143 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2563721938 },
+    { "as": "Dell", "type": "go south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Formal Garden" }
+    ] },
+    { "seed": 2753754049 },
+    { "tick": true, "expect": [] },
+    { "seed": 2375136294 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2820862748 },
+    { "as": "Dell", "type": "go south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Topiary" },
+      { "reader": "Dell", "kind": "described", "words": "This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel." }
+    ] },
+    { "seed": 4219930371 },
+    { "tick": true, "expect": [] },
+    { "seed": 3940526617 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
+    ] },
+    { "seed": 92055293 },
+    { "as": "Dell", "type": "go west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Carousel Room" },
+      { "reader": "Dell", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
+      { "reader": "Dell", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." }
+    ] },
+    { "seed": 3142849586 },
+    { "tick": true, "expect": [] },
+    { "seed": 408201491 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2859814346 },
+    { "leave": "Dell", "expect": [
+      { "reader": "Dell", "kind": "notice", "words": "You leave, and take what you carry with you." }
+    ] }
+  ]
+}

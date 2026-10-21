@@ -659,6 +659,9 @@ kind Fuse is Portable, Switchable {
   }
   without as target for burn from Switchable
   without as target for burn from Portable
+  // Thing's "With a matchbook??!?" arrives by way of Switchable as well
+  // (friction 54; round 6's P9).
+  without as target for burn from Thing
   as target for burn {
     do {
       self.set(:flame, false)
@@ -693,7 +696,11 @@ kind Book is Bag, Readable {
   without as target for read from Readable
   as target for read { do { if (bound tool) { say "You can't read it through that." } else { say words } } }
   on :touch { self.set(:touched, true) }
+  // Thing's answers arrive a second time by way of Readable (friction 54;
+  // round 6's P9): left out again here.
   without as target for look_in from Thing
+  without as target for open from Thing
+  without as target for close from Thing
 }
 kind GreenBook is Book {
   grammar { name "green book"  nouns "book", "cover", "books"  adjectives "handsome", "green", "leather" }
