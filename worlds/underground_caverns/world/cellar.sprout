@@ -2,7 +2,7 @@
 // whoever comes down the first time, and the Troll Room.
 import {Thing, Scenery, Door} from 'thing'
 import {Axe} from 'items'
-import {DarkRoom, CellarPicture, TrollRoomPicture} from 'room'
+import {DarkRoom} from 'room'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
 import {Troll} from 'troll'
@@ -11,8 +11,12 @@ import {east_of_chasm} from 'gallery'
 import {living_room} from 'house'
 import {maze_1} from 'maze'
 import {east_west_passage} from 'east'
+import {Illustrated} from 'picture'
+extension media 1
 
-object cellar is DarkRoom, CellarPicture in underground_caverns {
+object cellar is DarkRoom, Illustrated in underground_caverns {
+  :picture "pictures/cellar.png"
+  :caption "the cellar"
   :tour 1
   grammar {
     name "Cellar"
@@ -185,7 +189,9 @@ object cellar is DarkRoom, CellarPicture in underground_caverns {
   :walls 1
 }
 
-object troll_room is DarkRoom, TrollRoomPicture in underground_caverns {
+object troll_room is DarkRoom, Illustrated in underground_caverns {
+  :picture "pictures/troll.png"
+  :caption "the troll room"
   :tour 2
   grammar {
     name "Troll Room"

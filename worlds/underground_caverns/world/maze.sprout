@@ -12,13 +12,15 @@
 // goes through it; Maze 6's way down into Maze 5 is an ordinary one, and
 // says nothing.
 import {Thing, Scenery} from 'thing'
-import {DarkRoom, MazePicture} from 'room'
+import {DarkRoom} from 'room'
 import {Skeleton, BurnedLantern, RustyKnife, SkeletonKey, CoinBag} from 'remains'
 import {GratingBelow} from 'grating'
 import {read, :grate_open, :grate_unlock, :cyclops_gone} from 'verbs'
 import {cyclops_room} from 'cyclops'
 import {troll_room} from 'cellar'
 import {grating_clearing} from 'above_ground'
+import {Illustrated} from 'picture'
+extension media 1
 
 kind Maze is DarkRoom {
   grammar { name "Maze" }
@@ -48,7 +50,9 @@ kind MazePassages is Scenery {
   }
 }
 
-object maze_1 is Maze, MazePicture in underground_caverns {
+object maze_1 is Maze, Illustrated in underground_caverns {
+  :picture "pictures/maze.png"
+  :caption "the maze"
   :tour 6
   grammar {
     exit east  "east"  -> troll_room

@@ -23,13 +23,17 @@ import {open, close, look_in, read, climb_over, leap_at, through, climb_up, clim
 import {engravings_cave} from 'east'
 import {HadesGate} from 'hades'
 import {BelowAltar, tiny_cave} from 'mirror'
+import {Illustrated} from 'picture'
+extension media 1
 
 // The rooms the rope and the coffin and the prayer care about.
 kind DomeRoom is DarkRoom { :roped false }
 kind AltarRoom is Room { }
 kind TempleRoom is Room { }
 
-object dome_room is DomeRoom in underground_caverns {
+object dome_room is DomeRoom, Illustrated in underground_caverns {
+  :picture "pictures/dome.png"
+  :caption "the dome"
   :tour 38
   grammar {
     name "Dome Room"
@@ -74,7 +78,9 @@ object dome_room is DomeRoom in underground_caverns {
   }
 }
 
-object torch_room is DarkRoom in underground_caverns {
+object torch_room is DarkRoom, Illustrated in underground_caverns {
+  :picture "pictures/dome.png"
+  :caption "the dome"
   :tour 39
   grammar {
     name "Torch Room"
@@ -618,7 +624,9 @@ kind BlackBook is Readable {
 // The gold coffin of Ramses II: a treasure, and a box with the sceptre in
 // it. It weighs 55 of the 100 a visitor can carry, as Zork's does, and it
 // will not go down the hole in the Altar's floor.
-kind Coffin is Box, Treasure {
+kind Coffin is Box, Treasure, Illustrated {
+  :picture "pictures/coffin.png"
+  :caption "the gold coffin"
   grammar { name "gold coffin"  nouns "coffin", "casket", "treasure", "sarcophagus"  adjectives "solid", "gold", "golden" }
   without as target for close from Thing
   without as target for look_in from Thing
@@ -699,7 +707,9 @@ kind Sceptre is Treasure, Sharp {
 // here is the same bell, hot): it cannot be taken or rung, what burns is
 // consumed against it, and it cools in twenty moves (I-XBH), or at once
 // with water poured on it.
-kind Bell is Portable {
+kind Bell is Portable, Illustrated {
+  :picture "pictures/bell.png"
+  :caption "the brass bell"
   grammar { name "brass bell"  nouns "bell"  adjectives "small", "brass", "hot", "red" }
   :hot false
   passage short { {if self.get(:hot)}red hot brass bell{else}brass bell{/if} }
@@ -708,6 +718,7 @@ kind Bell is Portable {
   describe {
     if (self.get(:hot)) { text "The bell glows a dull red from lip to handle, and the air above it shivers. The wooden handle has charred black. It ticks faintly as it cools, very slowly, in no hurry to be picked up." }
     else { text "It is a small brass bell with a wooden handle, of the kind used to call the faithful, or the servants, or the dead; the temple does not say which. It is polished bright where a great many hands have held it." }
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
   }
   as target for ring {
     do {

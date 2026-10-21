@@ -17,6 +17,8 @@ import {Vessel} from 'boat'
 import {cross, listen, through, climb_up, climb_down, dig, look_in, look_under, take, leap_at, drink, swim, open, close, Dest, :travel, :rainbow, :die, :consume} from 'verbs'
 import {damp_cave} from 'east'
 import {clearing, forest_3} from 'above_ground'
+import {Illustrated} from 'picture'
+extension media 1
 
 message :dig_sand
 
@@ -377,7 +379,9 @@ object cliff_middle is Room in underground_caverns {
   }
 }
 
-object canyon_view is Room, CanyonRim in underground_caverns {
+object canyon_view is Room, CanyonRim, Illustrated in underground_caverns {
+  :picture "pictures/canyon-view.png"
+  :caption "the Great Canyon"
   grammar {
     name "Canyon View"
     exit east      "east"      -> cliff_middle
@@ -665,13 +669,18 @@ kind Sand is Scenery, Diggable {
   }
 }
 
-kind Scarab is Treasure {
+kind Scarab is Treasure, Illustrated {
+  :picture "pictures/scarab.png"
+  :caption "the jeweled scarab"
   grammar { name "beautiful jeweled scarab"  nouns "scarab", "bug", "beetle", "treasure"  adjectives "beautiful", "carved", "jeweled", "jewelled" }
   :size 8
   :value 5
   :tvalue 5
   passage short { beautiful jeweled scarab }
-  describe { text "It is a scarab beetle carved from some deep blue stone and set with jewels along the ridges of its wings, so finely made that it looks about to walk off your hand. Sand is still caught in the crevices of its legs." }
+  describe {
+    text "It is a scarab beetle carved from some deep blue stone and set with jewels along the ridges of its wings, so finely made that it looks about to walk off your hand. Sand is still caught in the crevices of its legs."
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
+  }
 }
 
 kind PotOfGold is Treasure {

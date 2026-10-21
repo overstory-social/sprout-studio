@@ -27,6 +27,8 @@ import {:bats, :gas, take, drop, put, open, close, look_in, search, raise, lower
 import {examine} from 'sprout'
 import {cold_passage} from 'mirror'
 import {cellar} from 'cellar'
+import {Illustrated} from 'picture'
+extension media 1
 
 message :cage with boolean
 message :run
@@ -164,13 +166,18 @@ object squeaky_room is DarkRoom, Squeaky in underground_caverns {
 // The vampire bat (BAT-F, BAT-D): on the ceiling, holding his nose, where
 // there is garlic in hand or on the floor; anywhere else, swooping. Who he
 // carries off, he carries off by their own feet (adventurer.sprout).
-kind Bat is Thing, Creature {
+kind Bat is Thing, Creature, Illustrated {
+  :picture "pictures/bat.png"
+  :caption "the vampire bat"
   grammar { name "vampire bat"  nouns "bat", "vampire"  adjectives "vampire", "deranged", "large" }
   passage short { bat }
   passage calm { In the corner of the room on the ceiling is a large vampire bat who is obviously deranged and holding his nose. }
   passage swoop { A large vampire bat, hanging from the ceiling, swoops down at you! }
   passage no_take { You can't reach him; he's on the ceiling. }
-  describe { text "He is a large vampire bat, as bats go, and he goes: leathery, beady-eyed and plainly unwell in his mind. He has the look of something that has been underground too long and has come to an understanding with the dark. Just now he is clinging to the ceiling with his feet and holding his nose with both wings." }
+  describe {
+    text "He is a large vampire bat, as bats go, and he goes: leathery, beady-eyed and plainly unwell in his mind. He has the look of something that has been underground too long and has come to an understanding with the dark. Just now he is clinging to the ceiling with his feet and holding his nose with both wings."
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
+  }
   without as target for talk from Creature
   as target for talk { do { say "Fweep! Fweep! Fweep! Fweep! Fweep!" } }
   without as target for greet from Creature
@@ -194,7 +201,9 @@ kind Bat is Thing, Creature {
   }
 }
 
-object bat_room is DarkRoom, Squeaky in underground_caverns {
+object bat_room is DarkRoom, Squeaky, Illustrated in underground_caverns {
+  :picture "pictures/bat.png"
+  :caption "the vampire bat"
   :tour 0
   grammar {
     name "Bat Room"
@@ -223,14 +232,19 @@ object bat_room is DarkRoom, Squeaky in underground_caverns {
   }
 }
 
-kind Jade is Treasure {
+kind Jade is Treasure, Illustrated {
+  :picture "pictures/jade-figurine.png"
+  :caption "the jade figurine"
   grammar { name "jade figurine"  nouns "figurine", "jade", "statuette", "figure", "treasure"  adjectives "exquisite", "jade" }
   :size 10
   :value 5
   :tvalue 5
   passage short { jade figurine }
   passage ldesc { There is an exquisite jade figurine here. }
-  describe { text "It is a figurine of green jade no longer than your hand, carved as a small, round-bellied person sitting cross-legged and smiling at something nobody else has noticed. The stone is cool and so smooth it seems wet. Whoever carved it had all the time in the world, and used it." }
+  describe {
+    text "It is a figurine of green jade no longer than your hand, carved as a small, round-bellied person sitting cross-legged and smiling at something nobody else has noticed. The stone is cool and so smooth it seems wet. Whoever carved it had all the time in the world, and used it."
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
+  }
 }
 
 kind Bracelet is Treasure {

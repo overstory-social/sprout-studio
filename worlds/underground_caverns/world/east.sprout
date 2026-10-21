@@ -24,6 +24,8 @@ import {dome_room} from 'temple'
 import {Tidal, dam_room} from 'dam'
 import {reservoir_south} from 'reservoir'
 import {white_cliffs_north, CliffCave} from 'river'
+import {Illustrated} from 'picture'
+extension media 1
 
 object east_west_passage is DarkRoom in underground_caverns {
   :tour 29
@@ -285,7 +287,9 @@ object north_south_passage is DarkRoom in underground_caverns {
   }
 }
 
-object chasm_room is DarkRoom, Perilous, ChasmEdge in underground_caverns {
+object chasm_room is DarkRoom, Perilous, ChasmEdge, Illustrated in underground_caverns {
+  :picture "pictures/chasm.png"
+  :caption "the chasm"
   :tour 35
   grammar {
     name "Chasm"

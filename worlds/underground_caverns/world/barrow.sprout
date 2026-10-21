@@ -13,6 +13,8 @@ import {Readable} from 'items'
 import {Adventurer} from 'adventurer'
 import {west_of_house} from 'above_ground'
 import {open, close, read, through, cross, climb_over, look_in, knock, shift, :travel, :finish} from 'verbs'
+import {Illustrated} from 'picture'
+extension media 1
 
 // The ancient parchment (MAP): read, it shows the way to the barrow.
 kind AncientMap is Readable {
@@ -25,7 +27,9 @@ kind AncientMap is Readable {
   describe { text "It is a sheet of parchment gone the color of weak tea, soft as cloth at the folds, drawn on in a brown ink by someone with a steady hand and a liking for small trees. Nobody put it in the trophy case; it was simply there, among the treasures, as though it had been waiting for them. {self.words}" }
 }
 
-object stone_barrow is Room in underground_caverns {
+object stone_barrow is Room, Illustrated in underground_caverns {
+  :picture "pictures/stone-barrow.png"
+  :caption "the stone barrow"
   grammar {
     name "Stone Barrow"
     exit northeast "northeast" -> west_of_house
