@@ -4,7 +4,7 @@
 import {Thing, Portable, Scenery} from 'thing'
 import {Box} from 'box'
 import {Readable, Treasure} from 'items'
-import {Room, Forest, Woodland, Woods, Trees, WhiteHousePicture, ClearingPicture} from 'room'
+import {Room, Forest, Woodland, Woods, Trees} from 'room'
 import {TreeTop, Nest, Egg, Canary} from 'tree'
 import {Songful} from 'room'
 import {Adventurer} from 'adventurer'
@@ -16,8 +16,12 @@ import {take, open, read, cross, climb_up, climb_down, climb_over, :window_sync,
 import {kitchen} from 'house'
 import {canyon_view} from 'river'
 import {stone_barrow} from 'barrow'
+import {Illustrated} from 'picture'
+extension media 1
 
-object west_of_house is Room, WhiteHousePicture in underground_caverns {
+object west_of_house is Room, Illustrated in underground_caverns {
+  :picture "pictures/white-house.png"
+  :caption "the white house"
   grammar {
     name "West of House"
     exit north     "north"      -> north_of_house
@@ -326,7 +330,9 @@ object up_a_tree is TreeTop in underground_caverns {
   }
 }
 
-object grating_clearing is Forest, ClearingPicture in underground_caverns {
+object grating_clearing is Forest, Illustrated in underground_caverns {
+  :picture "pictures/grating.png"
+  :caption "the clearing"
   grammar {
     name "Clearing"
     exit north "north"   refuse "The forest becomes impenetrable to the north."

@@ -22,6 +22,8 @@ import {Adventurer} from 'adventurer'
 import {tiny_cave} from 'mirror'
 import {ask} from 'sprout'
 import {take, give, mung, alarm, burn, clear, climb_down, climb_over, climb_up, close, cross, cut, deflate, drink, eat, fill, greet, inflate, kick, kiss, knock, lamp_off, lamp_on, land, launch, leap_at, listen, lock, look_behind, look_in, look_under, lower, oil, open, plug, pour, raise, read, ring, rub, rub_with, search, shake, shift, smell, squeeze, talk, tally, through, tie, turn, turn_with, unlock, untie, walk_around, wave, wind, :travel, :rite, :rite_lit, :rite_read, :consume, :die, :reckon} from 'verbs'
+import {Illustrated} from 'picture'
+extension media 1
 
 // The Entrance to Hades: the rite's clock, and whether it has been done.
 // `:phase` is 0 while the spirits jeer, 1 while they reel from the bell
@@ -297,12 +299,17 @@ kind Lament is Scenery {
 
 // The crystal skull (SKULL): ten points taken, ten more in the trophy case,
 // the last twenty of Zork's 350.
-kind Skull is Treasure {
+kind Skull is Treasure, Illustrated {
+  :picture "pictures/crystal-skull.png"
+  :caption "the crystal skull"
   grammar { name "crystal skull"  nouns "skull", "head", "treasure"  adjectives "crystal", "carved", "grinning" }
   :has_fdesc true
   :value 10
   :tvalue 10
   passage short { crystal skull }
   passage fdesc { Lying in one corner of the room is a beautifully carved crystal skull. It appears to be grinning at you rather nastily. }
-  describe { text "It is a human skull, life-size and perfect to the last tooth, carved out of a single piece of rock crystal so clear that you can see your own fingers through it, and so cold it seems to drink the warmth out of them. Whoever carved it knew exactly what a skull looks like from the inside. It is grinning at you rather nastily, which, being a skull, it cannot help." }
+  describe {
+    text "It is a human skull, life-size and perfect to the last tooth, carved out of a single piece of rock crystal so clear that you can see your own fingers through it, and so cold it seems to drink the warmth out of them. Whoever carved it knew exactly what a skull looks like from the inside. It is grinning at you rather nastily, which, being a skull, it cannot help."
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
+  }
 }

@@ -12,6 +12,8 @@ import {Forest, Songful} from 'room'
 import {Adventurer} from 'adventurer'
 import {open, close, look_in, wind, :fall, :landed, :smash, :open_gate, :gate_open, :close_gate, :scored, :pry, :shed, mung} from 'verbs'
 import {forest_path} from 'above_ground'
+import {Illustrated} from 'picture'
+extension media 1
 
 kind TreeTop is Forest, Songful {
   // Something has come into the tree that nobody let go of (the canary's
@@ -61,7 +63,9 @@ kind Nest is Bag {
 
 // Zork's EGG and BROKEN-EGG are two objects; here they are one, which
 // remembers that it has been broken.
-kind Egg is Box, Treasure {
+kind Egg is Box, Treasure, Illustrated {
+  :picture "pictures/egg.png"
+  :caption "the jewel-encrusted egg"
   without as target for close from Thing
   without as target for look_in from Thing
   without as target for open from Thing
@@ -138,10 +142,13 @@ kind Egg is Box, Treasure {
   }
 }
 
-kind Canary is Treasure {
+kind Canary is Treasure, Illustrated {
+  :picture "pictures/canary.png"
+  :caption "the clockwork canary"
   describe {
     if (self.get(:broken)) { text "The canary is gold, and clockwork, and done for. Its eye sockets are empty, its silver beak is crumpled, and behind the cracked crystal window under its wing the machinery has the look of something that has sung its last and knows it." }
     else { text "The canary is gold, and clockwork, and very nearly alive: ruby eyes, a silver beak, every feather chased in the metal. Through a crystal window below its left wing you can see intricate machinery inside, and a key to wind it with. It appears to have wound down." }
+    if (seen == :examine && !self.get(:broken)) { media.show(self.get(:picture), self.get(:caption)) }
   }
   :broken false
   // Zork's SING-SONG: the songbird comes only once.

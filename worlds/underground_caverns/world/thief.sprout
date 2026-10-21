@@ -49,6 +49,7 @@ import {sandy_cave} from 'river'
 import {narrow_corridor, mirror_room_2, winding_passage, tiny_cave, mirror_room_1, twisting_passage, small_cave, cold_passage} from 'mirror'
 import {slide_room, mine_entrance, squeaky_room, shaft_room, smelly_room, mine_1, mine_2, mine_3, mine_4, ladder_top, ladder_bottom, coal_dead_end, machine_room} from 'mine'
 import {entrance_to_hades, land_of_the_dead} from 'hades'
+import {Illustrated} from 'picture'
 extension media 1
 
 message :disgorge with integer
@@ -107,7 +108,9 @@ kind Stiletto is Weapon {
   describe { text "It is a stiletto: a thin, three-sided blade on a plain black hilt, made for going between things, ribs among them. It is spotless. Its owner takes better care of it than of anything else he owns, which is saying something, since everything else he owns used to be somebody else's." }
 }
 
-kind Thief is Thing, sprout.Actor, Creature {
+kind Thief is Thing, sprout.Actor, Creature, Illustrated {
+  :picture "pictures/thief.png"
+  :caption "the thief"
   roams
   grammar { name "thief"  nouns "robber", "man", "person", "gentleman", "individual", "crook"  adjectives "shady", "suspicious", "seedy", "suspicious-looking", "seedy-looking" }
   :capacity 60
@@ -182,7 +185,7 @@ kind Thief is Thing, sprout.Actor, Creature {
   describe {
     if (self.get(:strength) < 0) { text "The thief lies where he fell, out cold, with his bag beneath him and an expression of pained surprise, as of a man whose luck has never let him down before. Even unconscious he keeps one hand on the bag." }
     else { text "The thief is a slippery character with beady eyes that flit back and forth. He carries, along with an unmistakable arrogance, a large bag over his shoulder and a vicious stiletto, whose blade is aimed menacingly in your direction. I'd watch out if I were you." }
-    if (seen == :look) { media.show("pictures/thief.png", "the thief") }
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
   }
 
   without as target for listen from Thing

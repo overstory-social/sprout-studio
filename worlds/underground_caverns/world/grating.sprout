@@ -11,6 +11,7 @@ import {grating_clearing} from 'above_ground'
 import {grating_room} from 'maze'
 import {SkeletonKey} from 'remains'
 import {Adventurer} from 'adventurer'
+import {Illustrated} from 'picture'
 extension media 1
 
 kind Leaves is Portable, Countable {
@@ -105,7 +106,9 @@ kind Grating is Scenery, Lockable, Door {
 
 // The grating from the Clearing: the lock is on the other side. It cannot
 // be seen or named until the leaves are moved off it.
-kind GratingAbove is Grating {
+kind GratingAbove is Grating, Illustrated {
+  :picture "pictures/grating.png"
+  :caption "the grating"
   :unseen true
   on :grate_revealed (from) { self.set(:unseen, false) }
   passage view {
@@ -115,7 +118,7 @@ kind GratingAbove is Grating {
   }
   describe {
     text view
-    if (seen == :look) { media.show("pictures/grating.png", "the grating") }
+    if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
   }
 
   as target for open {

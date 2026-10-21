@@ -10,6 +10,8 @@ import {open, close, climb_up, climb_down, look_in, mung, :travel, :scored} from
 import {cellar} from 'cellar'
 import {kitchen, living_room} from 'house'
 import {Abyss} from 'east'
+import {Illustrated} from 'picture'
+extension media 1
 
 object east_of_chasm is DarkRoom, Perilous, ChasmEdge in underground_caverns {
   :tour 3
@@ -72,7 +74,9 @@ object gallery is Room in underground_caverns {
 
 // Zork's PAINTING: four points when it is first taken, six in the trophy
 // case, and nothing at all once somebody has put a blade through it.
-kind Painting is Treasure {
+kind Painting is Treasure, Illustrated {
+  :picture "pictures/painting.png"
+  :caption "the painting"
   :burnable true
   grammar { name "painting"  nouns "art", "canvas", "masterpiece", "picture"  adjectives "beautiful" }
   :has_fdesc true
@@ -86,6 +90,7 @@ kind Painting is Treasure {
   describe {
     if (self.get(:ruined)) { text "It was a painting of unparalleled beauty. It is now a canvas with a hole in it, and the hole is the only part anyone will remember." }
     else { text "It is a painting of a sunlit valley, done with such tenderness that it is hard to look at it for long, and harder to look away. The signature in the corner is too modest to read. The artist was a neglected genius, and it shows." }
+    if (seen == :examine && !self.get(:ruined)) { media.show(self.get(:picture), self.get(:caption)) }
   }
 
   without as target for mung from Thing
