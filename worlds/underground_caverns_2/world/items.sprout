@@ -1,11 +1,12 @@
 // The kinds of portable thing Zork II treats specially: weapons,
 // treasures, food, things with writing on them, water and what holds it,
 // and the cakes of the Tea Room.
-import {Portable, Thing, Scenery, Drinkable, Pourable, Fillable, Sprayable, Valuable} from 'thing'
+import {Portable, Thing, Scenery, Drinkable, Pourable, Fillable, Sprayable, Valuable, Switchable} from 'thing'
 import {Adventurer} from 'adventurer'
 import {Bag, Box} from 'box'
+import {Light} from 'lamp'
 import {Room, CakeSafe, Watery, Wonderland, TeaRoomLike, PostsLike, ChasmEdge} from 'room'
-import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt} from 'verbs'
+import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, burn, lamp_on, lamp_off, count_things, turn, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt, :light, :mat_under, :mat_moved} from 'verbs'
 import {Bucket} from 'well'
 import {Pool} from 'posts'
 import {Stream} from 'way_in'
@@ -171,6 +172,7 @@ kind Teapot is Bag, Fillable {
   :transparent true
   :capacity 4
   :size 5
+  :hand_did false
   passage short { china teapot }
   // Thing's "You can't look inside" arrives a second time by way of
   // Fillable (friction 22).
@@ -187,7 +189,12 @@ kind Teapot is Bag, Fillable {
   without as target for fill from Fillable
   as target for fill {
     do {
-      if (self.count(Water) > 0) { say "The teapot isn't currently empty." }
+      // Water named as the tool (the bucket's): the adventurer's own part
+      // has moved it, or said why not (round 3's P11).
+      self.set(:hand_did, false)
+      if (bound tool) { if (tool.is(Water)) { self.set(:hand_did, true) } }
+      if (self.get(:hand_did)) { }
+      else if (self.count(Water) > 0) { say "The teapot isn't currently empty." }
       else if (here.is(Watery)) {
         if (!actor.holds(self)) { say "You don't have the teapot." }
         else {
@@ -212,6 +219,18 @@ kind PlaceMat is Bag {
   :surface true
   :capacity 20
   :size 12
+  // Under the Tiny Room's door (PLACE-MAT-FCN): the door lists it, and the
+  // room does not; moved from there, whatever fell on it falls off.
+  :under_door false
+  on :mat_under (from, value) { self.set(:under_door, value)  self.set(:ndesc, value) }
+  on :moved (from, to) {
+    if (self.get(:under_door)) {
+      self.set(:under_door, false)
+      self.set(:ndesc, false)
+      broadcast :mat_under with false
+      broadcast :mat_moved
+    }
+  }
   passage short { place mat }
   // A surface with nothing on it says nothing about its contents.
   passage examined { It is a place mat of woven straw, frayed at one corner, and thin enough to slide under most doors, should you ever need to slide something under a door.
@@ -221,8 +240,11 @@ kind PlaceMat is Bag {
 }
 
 // The newspaper from the gazebo (NEWSPAPER).
+// "paper" is a word of the newspaper's by adjective only, so that the
+// robot's green paper, named by its noun, wins the word when both are in
+// hand (round 3's P5).
 kind Newspaper is Readable {
-  grammar { name "newspaper"  nouns "paper", "news"  adjectives "news" }
+  grammar { name "newspaper"  nouns "news", "report"  adjectives "news", "paper", "dungeon" }
   :burnable true
   :size 2
   passage short { newspaper }
@@ -233,6 +255,10 @@ kind Newspaper is Readable {
     FAMED ADVENTURER TO EXPLORE GREAT UNDERGROUND EMPIRE
 
     Our correspondents report that a world-famous and battle-hardened adventurer has been seen in the vicinity of the Great Underground Empire. Local grues have been reported sharpening their (slavering) fangs....
+
+    WIZARD STILL AT LARGE
+
+    The Wizard of Frobozz, dismissed from the court of Lord Dimwit Flathead for turning the royal mountain into a very large pile of gravel, is believed to have retired to the caverns south of the ravine, taking with him a quantity of the Empire's loose property (a pearl necklace, a Stradivarius and a crystal sphere are mentioned in the inventory, and the Bank of Zork has declined to comment on the rest). He is described as doddering, petulant and armed with a wand, and the public is advised not to let him finish a word.
 
     "Zork II: The Wizard of Frobozz" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc.
   }
@@ -458,7 +484,7 @@ kind Cake is Food, Readable {
   }
   after command {
     if (!here.is(CakeSafe)) {
-      say "The {self.short} has crumbled to dust."
+      say "The {self.short} has crumbled to dust. Whatever was baked into it does not keep this far from the table it was laid on."
       destroy self
     }
   }
@@ -558,4 +584,175 @@ kind Wand is Treasure {
   :value 30
   passage short { Wizard's magic wand }
   describe { text "The wand is a foot of some dark wood, worn pale where the Wizard grips it, and glowing, when it glows, a faint blue at the tip. He has not let go of it." }
+}
+
+// The letter opener from the gazebo's tea table (LETTER-OPENER): the
+// thing that fits the Tiny Room's keyhole.
+kind LetterOpener is Portable {
+  grammar { name "letter opener"  nouns "opener", "knife", "blade"  adjectives "letter", "thin", "silver" }
+  :size 2
+  passage short { letter opener }
+  passage ldesc { There is a letter opener here. }
+  describe { text "It is a letter opener, thin and silver and a little bent, of the sort that opens letters and, in a pinch, a great many other things. It would fit through a keyhole." }
+}
+
+// The matchbook from the gazebo's tea table (MATCH): six matches, each a
+// light for two moves, and an advertisement.
+kind Matchbook is Readable, Light {
+  grammar { name "matchbook"  nouns "match", "matches", "book"  adjectives "zork", "paper" }
+  :size 2
+  :burnable true
+  :matches 6 min 0 max 6
+  :burning 0 min 0 max 2
+  without as target for lamp_on from Switchable
+  without as target for lamp_off from Switchable
+  without as target for burn from Thing
+  without as target for count_things from Thing
+  passage short { matchbook }
+  passage ldesc { There is a matchbook saying "Visit ZORK I" here. }
+  describe { text "It is a paper matchbook, the cover printed \">> Visit Exotic ZORK I <<\", with {if self.get(:matches) == 0}no matches left in it{else if self.get(:matches) == 1}one match left in it{else}{self.get(:matches)} matches in it{/if}.{if self.get(:lit)} A match is burning.{else} No match is burning.{/if}" }
+  passage words {
+    ">> Visit Exotic ZORK I <<
+
+    Consult the Frobozz Magic Travel Agency, or visit your local computer store for more details."
+  }
+  as target for lamp_on {
+    permit { if (self.get(:lit)) { refuse "A match is already burning." } }
+    do {
+      if (self.get(:matches) == 0) { say "I'm afraid you have run out of matches." }
+      else {
+        self.adjust(:matches, -1)
+        self.set(:lit, true)
+        self.set(:burning, 2)
+        say "One of the matches starts to burn."
+        if (actor.holds(self)) { send actor :light with 1 }
+      }
+    }
+  }
+  as target for burn {
+    do {
+      if (self.get(:lit)) { say "A match is already burning." }
+      else if (self.get(:matches) == 0) { say "I'm afraid you have run out of matches." }
+      else {
+        self.adjust(:matches, -1)
+        self.set(:lit, true)
+        self.set(:burning, 2)
+        say "One of the matches starts to burn."
+        if (actor.holds(self)) { send actor :light with 1 }
+      }
+    }
+  }
+  as target for lamp_off {
+    permit { if (!self.get(:lit)) { refuse "No match is burning." } }
+    do { self.set(:lit, false)  self.set(:burning, 0)  say "The match is out."  if (actor.holds(self)) { send actor :light with -1 } }
+  }
+  as target for count_things { do { say "You have {if self.get(:matches) == 0}no matches{else if self.get(:matches) == 1}one match{else}{self.get(:matches)} matches{/if}." } }
+  after command {
+    if (self.get(:lit)) {
+      self.adjust(:burning, -1)
+      if (self.get(:burning) == 0) {
+        self.set(:lit, false)
+        say "The match has gone out."
+        if (actor.holds(self)) { send actor :light with -1 }
+      }
+    }
+  }
+}
+
+// The rusty iron key, in the far keyhole of the Tiny Room's door until it
+// is pushed out (KEY, PKEY-FCN). Turned in the lock, it locks or unlocks.
+kind RustyKey is Portable {
+  grammar { name "rusty iron key"  nouns "key"  adjectives "rusty", "iron" }
+  :size 2
+  // Lying on the place mat under the door, out of the room's list until
+  // the mat is moved.
+  :on_mat false
+  passage short { rusty iron key }
+  passage ldesc { There is a rusty iron key here. }
+  describe { text "It is an iron key, rusty, heavy for its size, with a bow like a clover leaf and a bit that has opened one lock in its life and means to go on opening it." }
+}
+
+// The golden dragon statuette in the rotten chest (STATUETTE).
+kind Statuette is Treasure {
+  grammar { name "golden dragon statuette"  nouns "statuette", "dragon", "statue", "treasure"  adjectives "gold", "golden", "wrought" }
+  :size 10
+  :value 20
+  :has_fdesc true
+  passage short { golden dragon statuette }
+  passage fdesc { Nestled in the chest is a wrought gold statuette of a dragon. }
+  passage ldesc { There is a golden dragon statuette here. }
+  describe { text "It is a dragon wrought in gold, coiled on a base of the same, every scale chased by somebody who had seen one and lived: the neck arched, the mouth open, and a small ruby set where the fire would come out. It is the size of your hand and weighs like a brick." }
+}
+
+// The stack of zorkmid bills in the Vault (BILLS).
+kind Bills is Treasure, Readable {
+  grammar { name "stack of zorkmid bills"  nouns "bills", "stack", "money", "treasure", "zorkmids", "cash"  adjectives "neat", "many", "zorkmid" }
+  :size 10
+  :value 25
+  :burnable true
+  :has_fdesc true
+  passage short { stack of zorkmid bills }
+  passage fdesc { On the floor sit 200 neatly stacked zorkmid bills. }
+  passage ldesc { 200 neatly stacked zorkmid bills are here. }
+  passage words { Each bill is worth 100 zorkmids, and bears the legend "In Frobs We Trust". }
+  describe { text "Two hundred zorkmid bills, stacked with a neatness that suggests nobody has touched them since the day the Bank closed, each one printed with the face of Lord Dimwit Flathead looking excessive. They can be read, if you like reading money." }
+  without as target for read from Thing
+  without as target for eat from Thing
+  as target for eat { do { say "Talk about eating rich foods!" } }
+  without as target for burn from Thing
+  as target for burn { do { say "Nothing like having money to burn!" } }
+}
+
+// The portrait of J. Pierpont Flathead in the Chairman's Office (PORTRAIT).
+kind Portrait is Treasure {
+  grammar { name "portrait of J. Pierpont Flathead"  nouns "portrait", "painting", "art", "picture", "treasure", "flathead"  adjectives "flathead" }
+  :size 25
+  :value 20
+  :burnable true
+  :has_fdesc true
+  passage short { portrait of J. Pierpont Flathead }
+  passage fdesc { A portrait of J. Pierpont Flathead hangs on the wall. }
+  passage ldesc { The portrait of J. Pierpont Flathead is here. }
+  describe { text "It is a portrait in oils of J. Pierpont Flathead, Chairman, in a gilt frame too heavy for the wall it hung on: a large man with small eyes, a great deal of chin, and the expression of somebody who has just been told the Bank is his. The plate on the frame says \"J. PIERPONT FLATHEAD, CHAIRMAN\", in case the expression had not." }
+}
+
+// The bank brochure on the Depository's floor (BANK-BROCHURE).
+kind Brochure is Readable {
+  grammar { name "bank brochure"  nouns "brochure", "paper", "piece", "leaflet"  adjectives "bank", "small", "worn" }
+  :size 2
+  :burnable true
+  :has_fdesc true
+  passage short { bank brochure }
+  passage fdesc { On the ground is a small, worn piece of paper. }
+  passage ldesc { There is a bank brochure here. }
+  describe { text "It is a small piece of paper, worn soft at the folds, printed once in the Bank's colours and read since by everybody who came through here. It can be read, barely." }
+  passage words { The paper is barely readable. You can only make out "... valuables are completely safe ... advanced magic technology ... impossible to take valuables from the depository ... either teller's ... Many customers faint ... teller pops in ... seems to walk through ... walls ..." }
+}
+
+// The blue crystal sphere on the Dreary Room's table (PALANTIR-2).
+kind BlueSphere is Treasure {
+  grammar { name "blue crystal sphere"  nouns "sphere", "ball", "palantir", "crystal", "treasure"  adjectives "blue", "crystal" }
+  :size 10
+  :value 20
+  :keep true
+  :has_fdesc true
+  passage short { blue crystal sphere }
+  passage fdesc { In the center of the table sits a blue crystal sphere. }
+  passage ldesc { There is a blue crystal sphere here. }
+  describe { text "There is something misty in the sphere. Perhaps if you were to look into it..." }
+  without as target for look_in from Thing
+  as target for look_in { do { say "As you peer into the sphere, a strange vision takes shape of a distant room, which can be described clearly.... And then does not: the mist in the sphere thickens before the room comes clear, and you are left with a sense of a great deal of machinery, and somebody muttering. The vision fades, revealing only an ordinary crystal sphere." } }
+  without as target for mung from Thing
+  as target for mung { do { say "The sphere is unbreakable." } }
+}
+
+// The rose the princess plucks from the arbor (ROSE).
+kind Rose is Portable {
+  grammar { name "fresh rose"  nouns "rose", "flower"  adjectives "fresh", "red" }
+  :size 1
+  passage short { fresh rose }
+  passage ldesc { There is a fresh rose here. }
+  describe { text "It is a rose, red and fresh and very thorny, plucked from the arbor by a princess, which is not a thing that happens to most roses." }
+  without as target for smell from Thing
+  as target for smell { do { say "It smells as a rose should, and a little of the princess, which is to say of dragon smoke and old gowns." } }
 }

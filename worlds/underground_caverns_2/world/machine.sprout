@@ -12,7 +12,7 @@ import {Sphere, RobotLabel, MangledCage} from 'items'
 import {tea_room} from 'well'
 import {Adventurer} from 'adventurer'
 import {ask} from 'sprout'
-import {take, give, throw, mung, open, close, look_in, shift, read, listen, smell, raise, greet, talk, alarm, follow, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, Direction, :flip, :zoom, :cage_fall, :cage_lift, :freed, :poisoned, :robot_out, :die} from 'verbs'
+import {take, give, throw, mung, open, close, look_in, shift, read, listen, smell, raise, greet, talk, alarm, follow, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, Direction, Dest, :flip, :zoom, :cage_fall, :cage_lift, :freed, :poisoned, :robot_out, :robot_at, :die} from 'verbs'
 
 kind LowRoom is Room, CakeSafe { }
 kind MachineRoom is Room, CakeSafe { }
@@ -166,6 +166,12 @@ kind Robot is Creature, Orderable, sprout.Actor {
   as actor for take {
     do { each t of target { move t to self } }
   }
+  // Wherever it arrives, it tells its stand-ins which room, so that the
+  // one there steps aside and the others answer for it (round 3's P3).
+  on :moved (from, to) {
+    if (to.is(Room)) { broadcast :robot_at with to.get(:id) }
+    else if (to.is(CagePlace)) { broadcast :robot_at with :closet }
+  }
   // The cage falls while it stands in the closet: it is caught too
   // (SPHERE-FCN), and is out of sight in there.
   on :cage_fall {
@@ -178,6 +184,26 @@ kind Robot is Creature, Orderable, sprout.Actor {
     move self out
     self.set(:ndesc, false)
   }
+}
+
+// The robot's name, in the rooms it is ordered about in, while the robot
+// is elsewhere: an order given where it is not is read by the parser as
+// no sentence at all (friction 7), so each of its rooms keeps a stand-in,
+// unseen while the robot is there, that answers every verb in voice and
+// says where the robot has got to.
+kind AbsentRobot is Scenery, Orderable, Creature {
+  grammar { name "robot"  nouns "r2d2", "c3po", "robby", "machine", "automaton"  adjectives "late-model", "metal" }
+  passage short { robot }
+  :room Dest default low_room
+  :robot_room Dest default low_room
+  on :robot_at (from, value) { self.set(:robot_room, value)  self.set(:unseen, value == self.get(:room)) }
+  passage absent { The robot is not here to hear you. It is {if self.get(:robot_room) == :low_room}in the Low Room{else if self.get(:robot_room) == :machine}in the Machine Room{else if self.get(:robot_room) == :closet}in the Dingy Closet{else if self.get(:robot_room) == :tea_room}in the Tea Room{else}wherever you last sent it{/if}, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does. }
+  as target for any { permit { refuse absent } }
+  as tool for any { permit { refuse absent } }
+  without as recipient for give from Thing
+  as recipient for give { permit { refuse absent } }
+  without as aim for throw from Thing
+  as aim for throw { permit { refuse absent } }
 }
 
 // The three buttons (ROUND-BUTTON, SQUARE-BUTTON, TRIANGULAR-BUTTON): a
@@ -252,8 +278,10 @@ kind CagePlace is sprout.Place, CakeSafe {
   passage trapped { Cage
 
     You are trapped inside a solid steel cage.{if self.count(Robot) > 0} The robot is in here with you, bent nearly double, and humming.{/if} }
+  passage close_up { The bars are steel, as thick as your wrist and set too close to get a shoulder through, and the whole cage is one piece from the ceiling it fell out of to the floor it sits on; there is no door, no lock, and nothing a person could lift. A greenish gas is coming in through the floor, slowly, and finding its way up through the bars, which it has no trouble with.{if self.count(Robot) > 0} The robot is in here with you, bent nearly double, humming, and apparently unbothered by the gas, which is one advantage of having no lungs.{else} The robot is not in here with you; if it were, it would be the kind of thing that could lift a cage.{/if} }
   describe {
-    if (self.holds(actor)) { text trapped }
+    if (self.holds(actor) && seen == :examine) { text close_up }
+    else if (self.holds(actor)) { text trapped }
     else if (self.get(:lifted)) { text "The cage is gone from here, hurled across the room; what is left of it lies mangled on the floor." }
     else { text "A solid steel cage, fallen from the ceiling, and whatever is inside it is staying there." }
   }
@@ -274,6 +302,11 @@ kind CagePlace is sprout.Place, CakeSafe {
       each r: Robot in self { send r :robot_out }
       each a: Adventurer in self { send a :freed }
     }
+  }
+  // Each move in the cage, the gas is a little thicker: a clock a caged
+  // visitor can read (round 3's P2).
+  after command {
+    if (!self.get(:lifted)) { tell actor "The gas is thicker than it was." }
   }
   // The gas (I-SPHERE): whoever is still in the cage dies of it, and the
   // closet is no place to go back to.
@@ -299,6 +332,7 @@ object low_room is LowRoom in underground_caverns_2 {
   :id low_room
   passage body { You are in a circular room with a low ceiling. There are exits to the east and southeast. }
   object robot is Robot
+  object absent_robot is AbsentRobot { :room low_room  :unseen true }
   object label is RobotLabel
   object low_ceiling is Scenery {
     grammar { name "low ceiling"  nouns "ceiling", "roof"  adjectives "low" }
@@ -317,6 +351,7 @@ object machine_room is MachineRoom in underground_caverns_2 {
   :id machine
   :closet_sealed false
   on :poisoned { self.set(:closet_sealed, true) }
+  object absent_robot is AbsentRobot { :room machine }
   passage body {
     This is a large room full of assorted heavy machinery, whirring noisily. The room smells of burned resistors. Along one wall are three buttons which are, respectively, round, triangular, and square. Naturally, above these buttons are instructions written in EBCDIC. A large sign in English above all the buttons says
 
@@ -379,6 +414,7 @@ object dingy_closet is Closet in underground_caverns_2 {
     There doesn't seem to be any footpad here, however.
   }
   on :poisoned { self.set(:munged, true) }
+  object absent_robot is AbsentRobot { :room closet }
   object sphere is Sphere
   object words is Scenery {
     grammar { name "words"  nouns "notice", "writing", "chiselling", "inscription"  adjectives "chiselled", "chiseled" }

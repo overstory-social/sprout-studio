@@ -16,7 +16,7 @@ import {Light} from 'lamp'
 import {Water, EatMeCake, BlueCake, OrangeCake, RedCake} from 'items'
 import {Adventurer} from 'adventurer'
 import {pearl_room} from 'riddle'
-import {low_room} from 'machine'
+import {low_room, AbsentRobot} from 'machine'
 import {read, look_in, look_under, climb_up, climb_down, kick, burn, board, disembark, through, wish, put, throw, look_down, knock, pour_in, shift, Dest, :room_sealed, :open_gate, :gate_open, :close_gate, :die, :consume, :bucket_lift, :bucket_up, :bucket_down, :bucket_dry} from 'verbs'
 
 // What the bucket is about: nothing; straining at its rope, the move after
@@ -24,7 +24,9 @@ import {read, look_in, look_under, climb_up, climb_down, kick, burn, board, dise
 // water was taken out; coming down because the water dried.
 enum Errand { idle, straining, rise, descend, dry }
 
-kind Bucket is sprout.Place, Box, Vessel, Awaited {
+// A cake keeps in the bucket, as it does at the Top of Well: Zork's
+// vehicle is in the room it stands in (round 3's P11).
+kind Bucket is sprout.Place, Box, Vessel, Awaited, CakeSafe {
   :open true
   :capacity 100
   :size 100
@@ -232,7 +234,7 @@ kind WellTopMouth is Box, Wishing {
 kind MissingBucket is Scenery, Vessel, Awaited {
   grammar { name "wooden bucket"  nouns "bucket", "pail"  adjectives "wooden", "large", "missing", "absent" }
   passage short { wooden bucket }
-  passage away { {if here.is(WellTop)}The bucket is at the bottom of the well, at the far end of the rope, where it goes when there is nothing in it to keep it up. It goes up for water, not for company; there is no water in it down there, and no way to put any in from here.{else}The bucket is not here. It went up the shaft on its rope, and the rope is still here, taut, going up into the dark with nothing on the end of it that you can see. Whatever hauled it up will presumably let it down again when it is done with it, which, buckets being what they are, will be when it is dry. You could wait for it. It would be a long wait.{/if} }
+  passage away { {if here.is(WellTop)}The bucket is at the bottom of the well, at the far end of the rope, where it goes when there is nothing in it to keep it up. It goes up for water, not for company; there is no water in it down there, and no way to put any in from here.{else}The bucket is not here. It went up the shaft on its rope, and the rope is still here, taut, going up into the dark with nothing on the end of it that you can see. Whatever hauled it up will presumably let it down again when it is done with it, which, buckets being what they are, will be when it is dry. You could wait for it. It would be a long wait. (WAIT FOR THE BUCKET passes the whole of it at once.){/if} }
   describe { text away }
   passage no_take { The bucket is not here to take, and it would be far too large to carry if it were. }
   on :consume { finally destroy self }
@@ -304,7 +306,11 @@ object well_bottom is WellBottom in underground_caverns_2 {
   }
   // Zork's "Time passes...", and, while the bucket is up, what it is
   // passing against.
-  passage waited { Time passes...{if self.count(Bucket) == 0} The rope stays taut, and the bucket stays up wherever it has gone. It came down once, so it will presumably come down again; you could wait for the bucket, and it would be a long wait.{/if} }
+  // Zork's player typed WAIT thirty-four times for the hundred moves;
+  // here the whole wait is one command, said in Zork's parenthetical
+  // (round 3's P1: the line that only described the wait was read as
+  // description).
+  passage waited { Time passes...{if self.count(Bucket) == 0} The rope stays taut, and the bucket stays up wherever it has gone. It came down once, so it will presumably come down again, when whatever is in it has dried; it would be a long wait. (WAIT FOR THE BUCKET passes the whole of it at once.){/if} }
 }
 
 object well_top is WellTop in underground_caverns_2 {
@@ -364,6 +370,7 @@ object tea_room is TeaRoom in underground_caverns_2 {
   :id tea_room
   :posts_sealed false
   on :room_sealed (from, value) { if (value == :posts) { self.set(:posts_sealed, true) } }
+  object absent_robot is AbsentRobot { :room tea_room }
   passage body { This is a small room containing a large oblong table, no doubt set for afternoon tea. It is clear from the objects on the table that the users were indeed mad. In the eastern corner of the room is a small hole (no more than four inches high). There are passageways leading away to the west and the northwest. }
   object table is Box {
     grammar { name "large oblong table"  nouns "table"  adjectives "large", "oblong", "tea" }

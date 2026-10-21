@@ -12,6 +12,7 @@ import {listen, read, :flip, :zoom} from 'verbs'
 import {Adventurer} from 'adventurer'
 import {marble_hall, stream_path, topiary} from 'garden'
 import {riddle_room} from 'riddle'
+import {cool_room} from 'dragon'
 
 kind CarouselRoom is DarkRoom {
   :spinning true
@@ -27,7 +28,7 @@ kind CarouselRoom is DarkRoom {
 kind EightPassages is Scenery {
   grammar { name "passages"  nouns "passage", "exits", "exit", "eight"  adjectives "identical", "eight" }
   passage short { passages }
-  describe { text "Eight passages, one at each point of the compass, and every one of them very nearly like the others: the same height, the same rough arch, the same dark beyond it. Very nearly. The one on the southeast side, if you can keep track of which that is, climbs a little, and a draught comes down it that smells of old brick and older water. Whoever cut them wanted you to have to think." }
+  describe { text "Eight passages, one at each point of the compass, and every one of them very nearly like the others: the same height, the same rough arch, the same dark beyond it. Very nearly. The one on the southeast side, if you can keep track of which that is, climbs a little, and a draught comes down it that smells of old brick and older water; the one on the northwest side breathes out a cold, wet mist. Whoever cut them wanted you to have to think." }
 }
 
 object carousel_room is CarouselRoom in underground_caverns_2 {
@@ -41,14 +42,14 @@ object carousel_room is CarouselRoom in underground_caverns_2 {
     exit southwest "southwest" refuse "The passage southwest is choked with a fall of rock not far in. Whatever lies beyond it will have to wait."
     exit west "west" -> room_8 when (!self.get(:spinning))
     exit west "west" -> carousel_room
-    exit northwest "northwest" refuse "The passage northwest goes a little way and stops at a slide of broken rock that has come down from the roof lately and is still settling; a stone trickles out of it as you watch. Whatever lies beyond it will have to wait."
+    exit northwest "northwest" -> cool_room
   }
   :id carousel
   passage body { You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room.{if self.get(:spinning)}
 
-    A loud whirring sound comes from all around, and you feel sort of disoriented in here.{/if}{if self.get(:spins) >= 3}
+    A loud whirring sound comes from all around, and you feel sort of disoriented in here.{/if}{if self.get(:spins) >= 2}
 
-    You have been thrown out of here enough times now to have noticed that the passages are not quite identical after all: three of them end in rock, and one, on the southeast side, climbs.{/if} }
+    You have been thrown out of here enough times now to have noticed that the passages are not quite identical after all: two of them end in rock, one, on the northwest side, breathes out a cold mist, and one, on the southeast side, climbs.{/if} }
   object passages is EightPassages
   object whirring is Scenery {
     grammar { name "whirring sound"  nouns "whirring", "sound", "noise", "whirr"  adjectives "loud" }

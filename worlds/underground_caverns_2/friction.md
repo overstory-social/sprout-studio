@@ -111,6 +111,14 @@ caverns' numbers are written "caverns N"._
   But a phrase may contain a comma: `"[target], go [way]"` compiles and
   reads `robot, go east` whole, before the comma is tried as a command
   separator.
+- **After round 3:** the robot's rooms each keep a stand-in (`AbsentRobot`,
+  unseen while the robot is there) that answers an order in voice and says
+  where the robot has got to, so `robot, lift cage` from the cage with the
+  robot in the Low Room is no longer `unknown` (round 3's P3). What still
+  falls to `unknown` is an order naming a thing out of reach, `robot, push
+  square button` from the closet: the phrase's `item` binds nothing, the
+  comma reading fails, and the line is split; the spec's `not_here` for a
+  noun that names nothing in reach is never reached.
 - **Wrote instead:** eight order verbs with the robot as first role
   (`robot_go` with a `Direction` value role, `robot_push` typed by
   `Button`, `robot_lift`, `robot_drop`, `robot_other`, `robot_eat`,
@@ -357,6 +365,8 @@ caverns' numbers are written "caverns N"._
   south, southwest and northwest passages are built. The three refusing
   exits still answer a deliberate direction with the rockfall.
 - **Spec:** none; the brief's Scope.
+- **After round 3:** the northwest passage leads to the Cool Room, so the
+  draw is `random(5)`; south and southwest still refuse.
 
 ### 30. A `describe` cannot tell `examine` from `look`
 
@@ -587,3 +597,125 @@ caverns' numbers are written "caverns N"._
   two counts, and the first to reach nought would bring the bucket down;
   the brief's world is played alone.
 - **Spec:** Verbs › After a command; Range.
+
+## After round 3
+
+### 42. The dragon's claw costs no anger
+
+- **Wanted:** DRAGON-FCN: walking north past the dragon is blocked with
+  the claw line and adds three to its anger.
+- **Found:** a refusing exit's words are pure, and a `go` its exit refused
+  runs no `after command`, so nothing in the world runs on that move.
+- **Wrote instead:** the exit refuses with the claw line and the dragon's
+  anger is untouched; examining it, greeting it, striking it and giving to
+  it anger it as Zork's do (the actor's own part of `examine` has a `do`,
+  which the spec does not promise for an engine verb and the compiler
+  allows).
+- **Spec:** Verbs › Exits; After a command.
+
+### 43. Consecutive turns draw alike
+
+- **Wanted:** I-PRINCESS, queued for one move three times in four and for
+  two otherwise: a roll each move for whether she steps.
+- **Found:** rolled each move in her handler, `random(4) < 3` failed on
+  eight consecutive turns, and in the same turns the garden's own rolls
+  (`random(3) == 0`, `random(4) == 0`) alternated with a period of exactly
+  two, as every recorded script here shows ("The unicorn bounds lightly
+  away" every other `look`). The turns' seeds are not independent of each
+  other for a draw at the same point in the same handler.
+- **Wrote instead:** she takes her step every move, and rolls once after
+  it for a one-move pause, so no roll decides whether she walks; the
+  dragon's "looks bored" roll and the carousel's draw are left as they
+  are. The observation is the finding: a `{one of}` or a `random` read at
+  the same point of successive turns is not a fair coin.
+- **Spec:** Chance › The seed; Time › Determinism.
+
+### 44. What an actor carries, only the actor gives
+
+- **Wanted:** I-UNICORN: the princess takes the ribbon and the key goes to
+  the visitor; written as the visitor's own handler moving the key out of
+  the unicorn with the gate open.
+- **Found:** `sprout.Actor`'s `release` refuses any mover but itself, a
+  refused `move` ends the handler, and a handler has nobody to say the
+  refusal to: the scene's words printed and the key stayed round the
+  unicorn's neck, with nothing to say why.
+- **Wrote instead:** the visitor sends the unicorn `:unicorn_scene` and
+  the unicorn moves the key itself, to the sender.
+- **Spec:** Movement and consent › The three roles; Verbs › Moving
+  something; Events › Handlers do not refuse.
+
+### 45. A roamer's way home must not be narrowed
+
+- **Wanted:** the princess, in the Marble Hall, going through the wall she
+  has opened to the Path Near Stream: `move self to stream_path`, which a
+  roaming NPC may do from anywhere.
+- **Found:** the compiler asks that an imported name be narrowed with
+  `is()` before a property is read through it or its contents walked
+  (friction 18), and I narrowed the moves the same way; but `is()` on a
+  name out of range is `NameOutOfRange`, a fault, while the roaming move
+  itself is in range by definition. Two faults in a playtest-length script
+  before the princess had crossed the hall.
+- **Wrote instead:** every roaming move is written bare, as the Wizard's
+  always were; names are narrowed only where they are read or walked, with
+  the gate open.
+- **Spec:** Actors and visitors (`roams`); Names › Identifiers and scope;
+  Range.
+
+### 46. A thing in a hand speaks to nobody
+
+- **Wanted:** PLACE-MAT-FCN: the mat taken from under the door, and the key
+  lying on it falls to the floor: the mat broadcasts `:mat_moved` from its
+  `on :moved`, and the key on the floor hears it.
+- **Found:** by then the mat is in the visitor's hands, and `sprout.Actor`
+  passes nothing, so the broadcast went up to the visitor and stopped: the
+  key stayed unlisted and the fall was never told.
+- **Wrote instead:** the adventurer passes `:mat_moved` and `:mat_under`,
+  as it passes `:snuffed`.
+- **Spec:** Events › Containers route; Range.
+
+### 47. A window into a room that is out of range
+
+- **Wanted:** PWINDOW-FCN and PKH-FCN: looking through the barred window or
+  the keyhole of the Tiny Room's door describes the room on the other side
+  (GO&LOOK), and the keyhole shows light only if the far room is lit.
+- **Found:** a room is out of range of a room, and a `describe` cannot read
+  through a name that is out of range (friction 13).
+- **Wrote instead:** each window's view is written by hand, in the voice,
+  naming what is really there and no more; the keyhole says it sees a
+  lighted room from the Tiny Room's side (the Dreary Room is always lit)
+  and no light from the other, since whether somebody stands in the Tiny
+  Room with a lamp is not readable from the Dreary Room.
+- **Spec:** Range; Prose › Describing.
+
+### 48. One door in two rooms, one wall in four
+
+- **Wanted:** PDOOR, LID-1/2, KEYHOLE-1/2, and the Bank's SEWL, SWWL, SSWL
+  and SNWL: LOCAL-GLOBALS, one object each, seen from several rooms.
+- **Found:** a thing is in one place. The door is two doors that keep each
+  other told by broadcast (`:pdoor_locked`, `:pdoor_open`, `:mat_under`),
+  the keyholes two that each know whether the far one holds the key
+  (`:key_far`), and the Bank's four walls are sixteen objects, four to a
+  room, with the room's own stand-in wall (friction, room.sprout's `Wall`)
+  stepping aside as unseen there so that "east wall" never ties.
+- **Spec:** Objects; The world model › Unseen; Events › Sending.
+
+### 49. Two keys, one word, and a draw
+
+- Round 3's P5, seen again in the walkthrough: with the gold key and the
+  rusty key both in hand, "unlock door with key" is a tie the parser draws
+  from the seed and announces with `meant`, "(the delicate gold key)", and
+  the door says it doesn't fit. Zork would have asked which. Nothing in the
+  world can ask either; the walkthrough says "iron key". The same for
+  "examine cakes" naming one of four: a plural has no reading over every
+  match.
+- **Spec:** Parsing › Choosing a reading; Sequences, again and all.
+
+### 50. The curtain's room is chosen by the room left, not the way walked
+
+- Not friction, a note: DEPOSITORY-FCN keys the curtain's destination on
+  the direction the visitor walked in by; `on :entered (item, from)` gives
+  the room they left instead, which here comes to the same table (the West
+  Teller's Room is only ever entered from by walking east), and takes the
+  return through a wall of light in its stride, since the Vault and the
+  Small Room are only ever left that way.
+- **Spec:** Events › Receiving.

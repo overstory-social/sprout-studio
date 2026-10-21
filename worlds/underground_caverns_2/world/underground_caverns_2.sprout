@@ -1,5 +1,5 @@
-// Zork II: The Wizard of Frobozz, the first quarter of it: the barrow to
-// the Carousel. The world keeps Zork's narrator for the lines the engine
+// Zork II: The Wizard of Frobozz, the first two quarters of it: the
+// barrow to the Carousel, and the dragon and the Bank. The world keeps Zork's narrator for the lines the engine
 // speaks for itself, and a gate: a room cannot reach another, so where
 // Zork moves a body or a thing across the map at a stroke (dying, the
 // carousel's random turn, the bucket rising), whoever needs to asks the
@@ -10,7 +10,8 @@ import {Person} from 'person'
 import {Adventurer} from 'adventurer'
 import {go} from 'sprout'
 import {inside_barrow} from 'way_in'
-import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize} from 'verbs'
+import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :robot_at, :dragon_turn, :dragon_watch, :ice_melted, :princess_turn, :secret_door, :curtain_active, :gnome_come, :gnome_go, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :mat_moved, :key_far} from 'verbs'
+import {:princess_walking} from 'dragon'
 
 world underground_caverns_2 is sprout.World {
   visitors are Person
@@ -38,6 +39,26 @@ world underground_caverns_2 is sprout.World {
   pass :bucket_down (true)
   pass :bucket_dry (true)
   pass :fantasize (true)
+  // The robot's whereabouts, for its stand-ins; the dragon's and the
+  // princess's clocks, which only a visitor's moves can run; the ice
+  // melting, the secret door opening; the Bank's curtain and its gnome;
+  // and the Tiny Room's door, one door in two rooms.
+  pass :robot_at (true)
+  pass :dragon_turn (true)
+  pass :dragon_watch (true)
+  pass :ice_melted (true)
+  pass :princess_turn (true)
+  pass :princess_walking (true)
+  pass :secret_door (true)
+  pass :curtain_active (true)
+  pass :gnome_come (true)
+  pass :gnome_go (true)
+  pass :pdoor_locked (true)
+  pass :pdoor_open (true)
+  pass :mat_under (true)
+  pass :push_key (true)
+  pass :mat_moved (true)
+  pass :key_far (true)
 
   on :open_gate (from) {
     self.set(:gate, true)

@@ -13,13 +13,13 @@ import * as sprout from 'sprout'
 import {Thing, Portable, Scenery, Creature, Valuable, Button} from 'thing'
 import {Box, Bag} from 'box'
 import {Lamp, Light, BrokenLamp} from 'lamp'
-import {Weapon, Sword, Treasure, Food, Water, StreamWater, Teapot, Repellent, Sphere, Cake, RedCake, BlueCake, OrangeCake, EatMeCake, Candy, Flask} from 'items'
-import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike} from 'room'
+import {Weapon, Sword, Treasure, Food, Water, StreamWater, Teapot, Repellent, Sphere, Cake, RedCake, BlueCake, OrangeCake, EatMeCake, Candy, Flask, Bills, Portrait, PlaceMat, RobotLabel, Rose} from 'items'
+import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike, DragonCountry, CurtainRoom} from 'room'
 import {go, look, examine, inventory, wait, help} from 'sprout'
 import {ask} from 'sprout'
-import {take, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, wait_for, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant, sleep, Dest, Spell, Mode, Answer, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :wizard_near, :brief_hint} from 'verbs'
+import {take, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, wait_for, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant, sleep, put_under, unlock, lock, melt, Dest, Spell, Mode, Answer, :dragon_turn, :dragon_watch, :provoke, :princess_turn, :princess_awake, :unicorn_scene, :curtain_active, :mat_under, :mat_moved, :gnome_come, :gnome_go, :tally, :curtain_closes, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :wizard_near, :brief_hint} from 'verbs'
 import {inside_barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, Bridge, Chasm, Moss} from 'way_in'
-import {garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, elsewhere, Unicorn, DistantUnicorn, GardenNorth, TopiaryRoom, Elsewhere, NearCarousel, GoldKey, GazeboInside} from 'garden'
+import {garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, elsewhere, Unicorn, DistantUnicorn, GardenNorth, TopiaryRoom, Elsewhere, NearCarousel, GoldKey, Gazebo, GazeboInside} from 'garden'
 import {carousel_room, room_8, CarouselRoom} from 'carousel'
 import {riddle_room, pearl_room, RiddleRoom, StoneDoor} from 'riddle'
 import {well_bottom, well_top, tea_room, Bucket, MissingBucket, WellTopMouth, TeaRoom, WellTop, WellBottom} from 'well'
@@ -27,6 +27,9 @@ import {posts_room, pool_room, Pool, PoolRoom} from 'posts'
 import {low_room, machine_room, dingy_closet, Robot, CagePlace, LowRoom, MachineRoom, Closet} from 'machine'
 import {Wizard, Fence, enchant} from 'wizard'
 import {oblivion} from 'oblivion'
+import {ravine_ledge, ledge_end, tiny_room, dreary_room, TinyRoom, DrearyRoom, PDoor, Keyhole} from 'ravine'
+import {dragon_room, dragon_lair, fresco_room, stone_bridge, cool_room, ice_room, Dragon, Princess, DragonRoom, :princess_walking, :vanish_princess} from 'dragon'
+import {bank_entrance, teller_west, teller_east, viewing_west, viewing_east, small_room, vault, depository, office, Gnome, Curtain, CurtainWall, Depository, SmallRoom, Vault, :curtain_pass, :curtain_back} from 'bank'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -100,6 +103,29 @@ kind Adventurer is sprout.Visitor {
   // well as on the sword: a message to the sword is queued, so two
   // settlings in one turn would both find it unchanged and say so twice.
   :glow_now 0 min 0 max 2
+  // What this much of the empire has to give (round 3's P7): the first
+  // two quarters' points, after which the score says so.
+  :ceiling 190 min 0 max 400
+  :ceiling_told false
+  // The Bank's money in hand (BKLEAVEE): the bills and the portrait set
+  // off the alarm at the Depository's doors.
+  :bank_loot 0 min 0 max 10
+  // The curtain of light (I-CURTAIN): twelve moves after a pass, it
+  // closes, and in the Small Room the Gnome of Zurich comes three moves
+  // later and goes twelve after that.
+  :curtain_left 0 min 0 max 12
+  :gnome_in 0 min 0 max 3
+  :gnome_left 0 min 0 max 12
+  :gnome_shown false
+  // The dragon's turn runs while it is angry (I-DRAGON), the princess's
+  // while she is walking home (I-PRINCESS): each is asked, each move,
+  // which room this visitor stands in.
+  :dragon_active false
+  :princess_walking false
+  // The robot's paper, slid under the Tiny Room's door, goes through the
+  // gate to the far room.
+  :sending_label false
+  :label_to Dest default dreary_room
 
   passage hands_full { You're holding too many things already! }
   passage over { Everything has gone black, and nothing further will happen to you in this game. }
@@ -127,29 +153,50 @@ kind Adventurer is sprout.Visitor {
   passage score_line {
     Your score is {self.get(:score)} (total of 400 points), in {self.get(:moves)} {if self.get(:moves) == 1}move{else}moves{/if}.
 
-    This score gives you the rank of {self.rank}.
+    This score gives you the rank of {self.rank}.{if self.get(:score) >= self.get(:ceiling)}
+
+    (That is everything this much of the Empire has to give. What the rest of the 400 are for lies behind rock that has not finished falling, and will keep.){/if}
   }
+  passage key_scene { Shyly, a unicorn peeks out of the hedges. It notices the princess and seems captivated. It approaches her and bows its head as though curtseying to her. Around its neck is a red satin ribbon on which is strung a delicate gold key. The princess takes the ribbon and uses it to tie up her hair. She looks at you and then, smiling, hands you the key and a fresh rose which she plucks from the arbor. "You may have use of such a thing," she says. "It is the least I can do for one who rescued me from a fate I dare not contemplate." With that, she mounts the unicorn (side-saddle, of course) and rides off into the gloom. }
+  passage ceiling_beat { Somewhere a long way off, something that keeps count clears its throat. You have the feeling, which is not a comfortable one, that this much of the Great Underground Empire has given up everything it had to give, and that the rest of it lies behind rock that is still settling, and will keep. }
 
   on :entered (item, from) {
     if (item.is(Thing)) { self.adjust(:load, item.get(:size)) }
+    if (item.is(Bills) || item.is(Portrait)) { self.adjust(:bank_loot, 1) }
     if (item.is(Treasure)) {
       if (item.get(:value) > 0) {
         self.adjust(:score, item.get(:value))
         send item :claimed
+        send self :tally
       }
     }
   }
   on :left (item, to) {
     if (item.is(Thing)) { self.adjust(:load, 0 - item.get(:size)) }
+    if (item.is(Bills) || item.is(Portrait)) { self.adjust(:bank_loot, -1) }
   }
 
-  on :scored (from, value) { self.adjust(:score, value) }
+  on :scored (from, value) { self.adjust(:score, value)  send self :tally }
+  // The built quarters' last point: one line, once (round 3's P7).
+  on :tally {
+    if (self.get(:score) >= self.get(:ceiling) && !self.get(:ceiling_told)) {
+      self.set(:ceiling_told, true)
+      tell self ceiling_beat
+    }
+  }
 
   // Zork's CLOCKER: every command counts a move, but the ones about the
   // game itself (`score`, `verbose`, `quit` and the like), which say so.
   // The move also drives every clock only a visitor's moves can: the
   // Wizard's, the garden's, a spell's, the repellent's.
   after command {
+    // The load, reckoned afresh: a thing eaten or crumbled in the hand is
+    // destroyed and sends no word of leaving, so its weight would stay.
+    self.set(:load, 0)
+    each t: Thing in self {
+      self.adjust(:load, t.get(:size))
+      if (t.is(Box)) { self.adjust(:load, t.get(:held)) }
+    }
     if (self.get(:aside)) { self.set(:aside, false) }
     else if (!self.get(:finished)) {
       self.adjust(:moves, 1)
@@ -201,11 +248,12 @@ kind Adventurer is sprout.Visitor {
         if (self.get(:spell) == :fierce) {
           each u: Unicorn in here { say "You are maddened by an overwhelming ferocity, and attack the unicorn instead."  act attack (target: u) }
           each w: Wizard in here { say "You are maddened by an overwhelming ferocity, and attack the Wizard of Frobozz instead."  act attack (target: w) }
+          each d: Dragon in here { say "You are maddened by an overwhelming ferocity, and attack the dragon instead."  act attack (target: d) }
         }
         // Fear: fled from (MAGIC-ACTOR's S-FEAR).
         else if (self.get(:spell) == :fear) {
-          if (here.count(Unicorn) > 0 || here.count(Wizard) > 0) {
-            say "All at once, you are overcome by fear! There is a {if here.count(Unicorn) > 0}unicorn{else}Wizard of Frobozz{/if} in here! Maybe it's after you!"
+          if (here.count(Unicorn) > 0 || here.count(Wizard) > 0 || here.count(Dragon) > 0) {
+            say "All at once, you are overcome by fear! There is a {if here.count(Unicorn) > 0}unicorn{else if here.count(Dragon) > 0}dragon{else}Wizard of Frobozz{/if} in here! Maybe it's after you!"
             if (here.is(Bucket)) { say "You huddle in the corner, terrified." }
             else {
               say "You run from the room screaming in terror!"
@@ -214,8 +262,57 @@ kind Adventurer is sprout.Visitor {
           }
         }
       }
+      // The curtain of light, closing (I-CURTAIN); the Gnome of Zurich,
+      // coming and going (I-ZGNOME, I-ZGNOME-OUT).
+      if (self.get(:curtain_left) > 0) {
+        self.adjust(:curtain_left, -1)
+        if (self.get(:curtain_left) == 0) { send self :curtain_closes }
+      }
+      if (self.get(:gnome_in) > 0) {
+        self.adjust(:gnome_in, -1)
+        if (self.get(:gnome_in) == 0 && here.is(SmallRoom)) { self.set(:gnome_left, 12)  broadcast :gnome_come }
+      }
+      if (self.get(:gnome_left) > 0) {
+        self.adjust(:gnome_left, -1)
+        if (self.get(:gnome_left) == 0) { broadcast :gnome_go }
+      }
+      // The dragon's turn (I-DRAGON) and the princess's (I-PRINCESS),
+      // each told where this visitor stands.
+      if (self.get(:dragon_active) && here.is(Room)) { broadcast :dragon_turn with here.get(:id) }
+      if (self.get(:princess_walking) && here.is(Room)) { broadcast :princess_turn with here.get(:id) }
       if (self.get(:moves) == 1) { broadcast :wizard_start }
     }
+  }
+  on :dragon_watch (from, value) { self.set(:dragon_active, value) }
+  on :princess_walking (from, value) { self.set(:princess_walking, value) }
+  // Through the curtain, and back through a wall of light.
+  on :curtain_pass (from, value) {
+    self.set(:curtain_left, 12)
+    broadcast :curtain_active with value
+    send self :travel with value
+  }
+  on :curtain_back {
+    self.set(:curtain_left, 0)
+    broadcast :curtain_active with :nowhere
+    send self :travel with :depository
+  }
+  on :curtain_closes {
+    broadcast :curtain_active with :nowhere
+    if (here.is(Vault)) {
+      tell self "A metallic voice says \"Hello, Intruder! Your unauthorized presence in the vault of the Bank of Zork has set off all sorts of nasty surprises, most of which are fatal. This message brought to you by the Frobozz Magic Vault Company.\""
+      send self :die
+    }
+    else if (here.is(CurtainRoom)) {
+      tell self "You hear a faint voice say \"Curtain Door Closed.\""
+      if (here.is(SmallRoom) && !self.get(:gnome_shown)) { self.set(:gnome_shown, true)  self.set(:gnome_in, 3) }
+    }
+  }
+  // The princess home, and the unicorn come to her (I-UNICORN): the key
+  // and a rose, by way of the gate, since the unicorn is in the garden
+  // and the visitor may be in the gazebo.
+  on :unicorn_scene {
+    self.set(:dest, :key_scene)
+    send underground_caverns_2 :open_gate
   }
   // The Wizard's clock asks where they are: answered while no spell is on
   // them (I-WIZARD casts nothing over a spell still running).
@@ -346,6 +443,10 @@ kind Adventurer is sprout.Visitor {
   }
   on :room_lit (from, value) { self.set(:room_dark, !value) }
   pass :snuffed (true)
+  // The place mat, taken from under the Tiny Room's door, tells the key
+  // on it from the hand that took it.
+  pass :mat_moved (true)
+  pass :mat_under (true)
   on :snuffed (from) { if (self.holds(from)) { send self :light with -1 } }
 
   // The carousel's buttons, and the unicorn's whereabouts, as the world
@@ -428,15 +529,16 @@ kind Adventurer is sprout.Visitor {
         // and west, or four times in five any other, is a random one of
         // seven.
         say "You're not sure which direction is which. This room is very disorienting."
-        // While the quarters beyond the south, southwest and northwest
-        // passages are not built, the draw is among the four that are
-        // (friction 29); Zork draws among all seven.
+        // While the quarters beyond the south and southwest passages are
+        // not built, the draw is among the five that are (friction 29);
+        // Zork draws among all seven.
         if (here.is(CarouselRoom) || random(5) < 4) {
           self.set(:spun, true)
-          let r = random(4)
+          let r = random(5)
           if (r == 0) { self.set(:dest, :marble_hall) }
           else if (r == 1) { self.set(:dest, :stream_path) }
           else if (r == 2) { self.set(:dest, :topiary) }
+          else if (r == 3) { self.set(:dest, :cool_room) }
           else { self.set(:dest, :riddle) }
           send underground_caverns_2 :open_gate
         }
@@ -590,6 +692,12 @@ kind Adventurer is sprout.Visitor {
     } else if (d == :filch) {
       each t: Treasure in self { if (!t.get(:keep)) { move t to elsewhere.stash } }
       each t: Treasure in here { if (t.get(:marked)) { move t to elsewhere.stash } }
+    } else if (d == :key_scene) {
+      tell self key_scene
+      send garden_north.unicorn :unicorn_scene
+      spawn Rose in self
+      if (gazebo.is(Room)) { each p: Princess in gazebo { send p :vanish_princess } }
+      if (garden_north.is(Room)) { each p: Princess in garden_north { send p :vanish_princess } }
     } else if (d == :posts) {
       // EATME-FCN: what lies on the Tea Room's floor grows huge and goes
       // with the visitor; what is on the table stays on the table.
@@ -628,8 +736,44 @@ kind Adventurer is sprout.Visitor {
         move self to formal_garden
       } else if (d == :barrow) {
         move self to inside_barrow
+      } else if (d == :cool_room) {
+        if (cool_room.is(DarkRoom)) { if (!self.get(:own_light) && !cool_room.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to cool_room
+      } else if (d == :ravine_ledge) {
+        if (ravine_ledge.is(DarkRoom)) { if (!self.get(:own_light) && !ravine_ledge.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to ravine_ledge
+      } else if (d == :tiny_room) {
+        if (tiny_room.is(DarkRoom)) { if (!self.get(:own_light) && !tiny_room.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to tiny_room
+      } else if (d == :deep_ford) {
+        if (deep_ford.is(DarkRoom)) { if (!self.get(:own_light) && !deep_ford.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to deep_ford
+      } else if (d == :stone_bridge) {
+        if (stone_bridge.is(DarkRoom)) { if (!self.get(:own_light) && !stone_bridge.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to stone_bridge
+      } else if (d == :bank_entrance) {
+        if (bank_entrance.is(DarkRoom)) { if (!self.get(:own_light) && !bank_entrance.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to bank_entrance
+      } else if (d == :depository) {
+        move self to depository
+      } else if (d == :viewing_west) {
+        if (viewing_west.is(DarkRoom)) { if (!self.get(:own_light) && !viewing_west.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to viewing_west
+      } else if (d == :viewing_east) {
+        if (viewing_east.is(DarkRoom)) { if (!self.get(:own_light) && !viewing_east.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to viewing_east
+      } else if (d == :small_room) {
+        if (small_room.is(DarkRoom)) { if (!self.get(:own_light) && !small_room.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to small_room
+      } else if (d == :vault) {
+        if (vault.is(DarkRoom)) { if (!self.get(:own_light) && !vault.get(:alight)) { tell self "You have moved into a dark place." } }
+        move self to vault
       }
       self.set(:spun, false)
+    }
+    if (self.get(:sending_label)) {
+      self.set(:sending_label, false)
+      each l: RobotLabel in self { if (self.get(:label_to) == :dreary_room) { move l to dreary_room } else { move l to tiny_room } }
     }
     send underground_caverns_2 :close_gate
   }
@@ -786,6 +930,7 @@ kind Adventurer is sprout.Visitor {
       else if (item.is(Portable)) {
         if (container.holds(item)) { say "The {item.short} is already in the {container.short}." }
         else if (container.is(WellTopMouth)) { move item to container }
+        else if (container.is(Curtain) || container.is(CurtainWall)) { move item to container }
         else {
           move item to container
           say "Done."
@@ -804,6 +949,11 @@ kind Adventurer is sprout.Visitor {
   as actor for give { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (recipient.is(Robot)) { move item to recipient }
+      else if (recipient.is(Dragon)) { if (item.is(Treasure)) { move item to recipient } }
+      else if (recipient.is(Gnome)) {
+        if (item.is(Light)) { if (item.get(:lit) && self.holds(item)) { send self :light with -1 } }
+        move item to recipient
+      }
       else if (recipient.is(Wizard)) {
         let was_lit = item.is(Light) && self.holds(item) && here.is(DarkRoom) && self.get(:light) == 1 && !here.get(:floor_lit)
         if (item.is(Light)) { if (item.get(:lit) && self.holds(item)) { send self :light with -1 } }
@@ -839,6 +989,9 @@ kind Adventurer is sprout.Visitor {
         }
         else if (aim.is(Wizard)) { move target to aim }
         else if (aim.is(WellTopMouth)) { move target to aim }
+        else if (aim.is(Curtain) || aim.is(CurtainWall)) { move target to aim }
+        else if (aim.is(Dragon) || aim.is(Princess)) { move target to here }
+        else if (aim.is(Gnome)) { move target to aim }
         else if (aim.is(Robot)) { move target to here }
         else if (aim.is(Unicorn) && target.is(Thing)) {
           move target to here
@@ -861,7 +1014,7 @@ kind Adventurer is sprout.Visitor {
 
   as actor for attack { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
-      if (target.is(Unicorn) || target.is(Wizard)) { }
+      if (target.is(Unicorn) || target.is(Wizard) || target.is(Dragon) || target.is(Princess) || target.is(Gnome)) { }
       else if (target.is(Robot)) { say "I've known strange people, but fighting a robot?" }
       else if (target.is(Fence)) { say "The {if bound weapon}{if weapon.is(Thing)}{weapon.short}{else}blow{/if}{else}blow{/if} goes through the fence as though it weren't there, which, as far as it is concerned, it isn't. You, on the other hand, can't follow it." }
       else if (target.is(Thing)) { say "I've known strange people, but fighting {target.a_short}?" }
@@ -911,7 +1064,12 @@ kind Adventurer is sprout.Visitor {
   as actor for incant { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "You don't have a wand, and without one the word comes out as a sort of cough. Nothing happens." } }
   as actor for sleep { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "The Wizard's domain is no place for a nap. Things happen to people who nap here." } }
   as actor for look       { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen } }
+    do {
+      if (target.is(Dragon)) { send target :provoke with 1 }
+      else if (target.is(Princess)) { if (!target.get(:awake)) { send target :princess_awake } }
+    }
+  }
   as actor for inventory  { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
   // Zork's WAIT is three moves: the clock passes three of them, counted,
   // and the bucket's count with it.
@@ -922,6 +1080,27 @@ kind Adventurer is sprout.Visitor {
       if (self.get(:bucket_away)) {
         if (self.get(:bucket_wait) > 2) { self.adjust(:bucket_wait, -2) } else { self.set(:bucket_wait, 0) }
       }
+      if (self.get(:curtain_left) > 1) { self.adjust(:curtain_left, -2) }
+      if (self.get(:gnome_left) > 1) { self.adjust(:gnome_left, -2) }
+    }
+  }
+  as actor for unlock     { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for lock       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for melt       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  // The place mat under the Tiny Room's door, and the robot's paper
+  // (PDOOR-FCN's PUT-UNDER): the door says what came of it.
+  as actor for put_under  { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+    do {
+      if (target.is(PDoor)) {
+        if (item.is(PlaceMat)) { if (!target.get(:mat_under)) { move item to here } }
+        else if (item.is(RobotLabel)) {
+          self.set(:sending_label, true)
+          self.set(:label_to, target.get(:beyond))
+          send underground_caverns_2 :open_gate
+        }
+      }
+      else if (target.is(Thing) && item.is(Thing)) { say "There is no getting the {item.short} under the {target.short}." }
+      else { say yuk }
     }
   }
   as actor for open       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
@@ -969,14 +1148,29 @@ kind Adventurer is sprout.Visitor {
   as actor for knock      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for mung       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for through    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
-    do { if (target.is(Bucket)) { act board (target: target) } }
+    do {
+      if (target.is(Bucket)) { act board (target: target) }
+      // The gazebo is entered on the spot, not by the gate, so the move is
+      // made before the garden's clock runs (round 3's P6).
+      else if (target.is(Gazebo) && !target.is(GazeboInside)) { move self in }
+    }
   }
   as actor for kick       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for rub        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for wave       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "You wave the {target.short} about. Nothing comes of it but a faint breeze." } }
   as actor for shake      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for squeeze    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for fill       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for fill       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+    do {
+      if (bound tool) {
+        if (tool.is(Water) && target.is(Teapot)) {
+          if (target.count(Water) > 0) { say "The teapot isn't currently empty." }
+          else if (!self.holds(target)) { say "You don't have the teapot." }
+          else { move tool to target  say "The teapot is now full of water." }
+        }
+      }
+    }
+  }
   // Water poured: what is in a hand cannot reach the room around it, so
   // the hand does the pouring (the water says what came of it).
   as actor for pour       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
@@ -1068,7 +1262,7 @@ kind Adventurer is sprout.Visitor {
   as actor for get_out_bare { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (here.is(Bucket)) { say "You are on your own feet again."  self.set(:in_bucket, false)  move self out }
-      else if (here.count(GazeboInside) > 0) { say ""  send self :travel with :garden_north }
+      else if (here.count(GazeboInside) > 0) { say ""  move self out }
       else { say "You're not in anything, unless you count the Wizard's domain, and there is no getting out of that." }
     }
   }

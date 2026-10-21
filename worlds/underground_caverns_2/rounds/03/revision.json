@@ -1,0 +1,227 @@
+{
+  "decisions": [
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "Director's steering: round 3 widens to Q2 whole. Built: the Ledge in Ravine, End of Ledge, Tiny Room and Dreary Room (the oak door, lids, keyholes, the mat-and-letter-opener puzzle, the blue sphere); the Dragon Room, Dragon's Lair, Fresco Room, Stone Bridge, Cool Room and Ice Room (the dragon as an NPC with Zork's anger arithmetic, following the visitor through the exits of its room, dying of its reflection in the glacier; the princess as an NPC who wakes and walks home step by step, opens the Marble Hall's secret door, and gives up the gold key through the unicorn; the rotten chest and the statuette); and the Bank of Zork's nine rooms (the curtain of light keyed on the way the Depository was entered, the walls of light that lead back for twelve moves, the alarm at the doors, the Gnome of Zurich). The Deep Ford's ledge and the Carousel's northwest passage open; the gazebo's table gains Zork's matchbook and letter opener; the Wizard's clock learns the nineteen rooms; the walkthrough plays to 190 of 400. Round 4 adds no territory."
+    },
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The count was right (explorer's cap landed on the hundredth move) and the death does not reset it; the failure is that 'you could wait for the bucket' reads as description. Zork's own hint form is the parenthetical, which the world already uses for BRIEF, so the bottom's waited line and the absent bucket's close-up now carry '(WAIT FOR THE BUCKET passes the whole of it at once.)'. A second plain wait doing the long wait is refused: plain wait is Zork's three moves everywhere."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Accepted in two parts, refused in one. The cage has a close-up of its own under examine (the bars nobody could lift, the gas coming through the floor, the robot's presence or absence remarked on), and the gas thickens a line a move, a clock a caged visitor can read. Refused: a caged wait of one move. Zork's WAIT is three moves whatever the room, and the six moves the intent promises are Zork's six; the tells are what the visitor lacked, not time."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "An unseen stand-in robot in the Low Room, Machine Room, Dingy Closet and Tea Room, seen only while the real robot is elsewhere, answers every order and verb in voice and says which room the robot is in; 'robot, lift cage' from the cage is no longer unknown. robot_drop gains 'give [item] to me' and 'hand me [item]'. What stays unknown is an order naming a thing out of reach ('robot, push square button' from the closet): the comma reading fails to bind and the parser splits the line, logged under friction 7 as the language's."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The illusion answers to 'zork' (in place of 'book', which no listing line shows) and the adjectives 'zork' and 'i'; the other seven were checked against their listing lines, and the grue is every room's own object already."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Accepted in the world's half: the newspaper's 'paper' is an adjective now, so the robot's green paper, named by its noun, wins the word when both are in hand, and 'take paper' at the gazebo still finds the newspaper. The tie draw and the plural are the spec's (Choosing a reading: 'the parser never asks which was meant'), logged as friction 49 with a second case found in the walkthrough, two keys answering 'key'."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "The cause was queue order: the gazebo was entered by the world's gate, three hops deep, and the garden's clock in after command broadcast two hops deep, so the unicorn's arrival was told with the visitor still at the north end and then the sword re-settled on the move. 'enter gazebo' and 'get out' are now the adventurer's own move self in / out, made on the spot before the clock runs; the beat lands in the room the visitor ends the move in and the sword settles once. The north end keeps a stand-in unicorn, unseen while the unicorn is home, so 'take key' and 'examine unicorn' the moment it has gone are answered in voice."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "When the last point of the built quarters lands (190 now), a line in the narrator's voice says this much of the Empire has given up what it had and the rest lies behind rock still settling; the score line carries the same as a parenthesis from then on. One number to move when round 5 widens."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "The newspaper, which every short run read, has a second item in the Report's own register: the Wizard at large south of the ravine with the Empire's loose property, a pearl necklace, a Stradivarius and a crystal sphere named. No tutorial; Zork states no goal and neither does the world."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Not quite as recommended, for fidelity: I-SWORD runs at the end of a move and finds the Wizard only if he is still in the room, so a call that begins and ends in one beat never reached Zork's sword at all. The Wizard now tells the sword only when he lingers, and tells it he has gone only if he had told it he was there. The one-beat flicker is gone; the pre-glow is not added, since he arrives without having been anywhere."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The north end's body says the dark tunnel is through the break in the hedge, one clause in the house's voice beside Zork's sentence."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "'fill teapot with water' now takes the bucket's water (the adventurer's own part moves it, the teapot stays silent for a water tool), and the ford's water still fills it. The bucket is CakeSafe, as Zork's vehicle is in the room it stands in, so a cake crumbles on the step out of the well's rooms, and the crumble line says why."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "'answer a well' was already read as the answer (friction 38); what opus typed was the quoted form, friction 33, which stays. cross takes 'cross [target] south/north' and 'to the south/north'. The gazebo holds the garden's roses, with a close-up of their own."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Both round 2.5 changes kept; the carousel tells after two throw-outs rather than three, and the tell names the northwest passage's mist now that it leads somewhere."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Q2 built whole: the ravine's four rooms with the one door seen from two rooms, two keyholes that know whether the far one holds the key, the mat under the door and the key pushed out onto it, the barred window and the blue sphere; new verbs put_under, unlock, lock, melt; Dest options, messages and the world's pass rules for the new clocks.",
+      "files": [
+        "worlds/underground_caverns_2/world/ravine.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/underground_caverns_2.sprout",
+        "worlds/underground_caverns_2/world/sprout.json"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "The dragon's country: six rooms; the dragon NPC with Zork's anger arithmetic, reacting on the provoking turn, following through its room's exits, doubling back, killing (fireproof variant included), drowning at the glacier and lying dead at the Deep Ford; the princess NPC woken by examine, speech, touch or the chest's hinges, walking home a step a move by a countdown pace, opening the secret door, giving up the key through the unicorn or leaving a rose; the rotten chest; the Ice Room's rockfalls for Q3.",
+      "files": [
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/garden.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "The Bank of Zork: nine rooms; the curtain of light keyed on the room the Depository was entered from, walls of light that lead back for twelve moves and take a thing put into them, the curtain's twelve-move clock and the vault's fatal voice, the alarm at the Depository's doors as the tellers' rooms' accept guards, the Gnome of Zurich who comes three moves after the curtain closes and shows the way out for a treasure; the bills, portrait, brochure and cube.",
+      "files": [
+        "worlds/underground_caverns_2/world/bank.sprout",
+        "worlds/underground_caverns_2/world/items.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/room.sprout"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "Q1 opened onto Q2: the Deep Ford's north and up lead to the ledge; the Carousel's northwest passage leads to the Cool Room and the spinning draw is among five; the Marble Hall and Path Near Stream carry the secret door; the gazebo's table gains the letter opener and the matchbook (a light of six matches); the Wizard's clock reaches the nineteen new rooms; Fierce and Fear know the dragon; the load is reckoned afresh each move so a cake eaten in the hand no longer weighs.",
+      "files": [
+        "worlds/underground_caverns_2/world/garden.sprout",
+        "worlds/underground_caverns_2/world/carousel.sprout",
+        "worlds/underground_caverns_2/world/wizard.sprout",
+        "worlds/underground_caverns_2/world/items.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout"
+      ],
+      "for": [
+        "S1",
+        "P13"
+      ]
+    },
+    {
+      "what": "The bucket's wait named in Zork's parenthetical on the Circular Room's waited line and the absent bucket's close-up.",
+      "files": [
+        "worlds/underground_caverns_2/world/well.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The cage's close-up under examine and the gas-thickens line each move; the AbsentRobot stand-ins in the robot's four rooms, told where the robot is by its own :moved; robot_drop's 'give [item] to me' phrases.",
+      "files": [
+        "worlds/underground_caverns_2/world/machine.sprout",
+        "worlds/underground_caverns_2/world/well.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout"
+      ],
+      "for": [
+        "P2",
+        "P3"
+      ]
+    },
+    {
+      "what": "The illusion's ZORK I words; the newspaper's 'paper' demoted to an adjective; the newspaper's second item; the cake crumble line; the teapot filled from the bucket's water; the bucket a CakeSafe place.",
+      "files": [
+        "worlds/underground_caverns_2/world/room.sprout",
+        "worlds/underground_caverns_2/world/items.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/well.sprout"
+      ],
+      "for": [
+        "P4",
+        "P5",
+        "P8",
+        "P11"
+      ]
+    },
+    {
+      "what": "The gazebo entered and left by the adventurer's own move self in / out so the garden's clock runs in the right room; an AbsentUnicorn stand-in at the north end, unseen while the unicorn is home, answering for the key; the key's words on every garden stand-in; the north end names the dark tunnel; the gazebo's roses; cross with a direction.",
+      "files": [
+        "worlds/underground_caverns_2/world/garden.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout"
+      ],
+      "for": [
+        "P6",
+        "P10",
+        "P12"
+      ]
+    },
+    {
+      "what": "The closing beat when the built quarters' last point lands and the score line's parenthesis after it; the sword told of the Wizard only when he lingers.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/wizard.sprout"
+      ],
+      "for": [
+        "P7",
+        "P9"
+      ]
+    },
+    {
+      "what": "Tests: the walkthrough extended through Q2 to 190 of 400 (seed 5); gnome.json and revision3.json new; gas.json extended with the cage's tells and the absent robot; wizard_debut re-seeded for a Fantasize debut without the sword flicker; the nine Q1 scripts re-seeded so the carousel's widened draw lands where each expects, and re-recorded.",
+      "files": [
+        "worlds/underground_caverns_2/world/tests/walkthrough.json",
+        "worlds/underground_caverns_2/world/tests/gnome.json",
+        "worlds/underground_caverns_2/world/tests/revision3.json",
+        "worlds/underground_caverns_2/world/tests/gas.json",
+        "worlds/underground_caverns_2/world/tests/wizard_debut.json",
+        "worlds/underground_caverns_2/world/tests/bucket.json",
+        "worlds/underground_caverns_2/world/tests/bucket_count.json",
+        "worlds/underground_caverns_2/world/tests/bucket_strain.json",
+        "worlds/underground_caverns_2/world/tests/bucket_wait.json",
+        "worlds/underground_caverns_2/world/tests/cakes.json",
+        "worlds/underground_caverns_2/world/tests/riddle.json",
+        "worlds/underground_caverns_2/world/tests/robot.json",
+        "worlds/underground_caverns_2/world/tests/take_all.json"
+      ],
+      "for": [
+        "S1",
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P9",
+        "P12"
+      ]
+    },
+    {
+      "what": "intent.md kept current (Q2's arc, the 190 ceiling, the new secrets: the dragon's arithmetic and its gifts, the princess as a clock, the Bank's trick, the lost key); friction.md gains entries 42 to 50 (the claw costs no anger; consecutive turns draw alike; an actor's things only it gives; a roamer's move must not be narrowed; a thing in a hand speaks to nobody; a window into an out-of-range room; one door in two rooms and one wall in four; two keys and a draw; the curtain keyed on the room left) and after-round notes on 7 and 29; README names the second quarter.",
+      "files": [
+        "worlds/underground_caverns_2/intent.md",
+        "worlds/underground_caverns_2/friction.md",
+        "worlds/underground_caverns_2/world/README.md"
+      ],
+      "for": [
+        "S1",
+        "P3",
+        "P5",
+        "P13"
+      ]
+    }
+  ]
+}

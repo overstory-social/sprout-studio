@@ -115,7 +115,7 @@ verb throw {
   synonyms "toss", "hurl", "chuck"
 }
 verb kick { role target  "kick [target]"  "taunt [target]" }
-verb rub { role target  "rub [target]"  "touch [target]"  "feel [target]"  "pat [target]"  "pet [target]"  "stroke [target]"  "caress [target]" }
+verb rub { role target  "rub [target]"  "touch [target]"  "feel [target]"  "pat [target]"  "pet [target]"  "stroke [target]"  "caress [target]"  "kiss [target]" }
 verb wave { role target: Portable carried  "wave [target]"  "brandish [target]"  "flourish [target]"  "wave [target] around" }
 verb shake { role target  "shake [target]" }
 verb squeeze { role target  "squeeze [target]"  "hug [target]"  "embrace [target]" }
@@ -148,7 +148,11 @@ verb talk {
 }
 verb greet { role target: Creature  "hello [target]"  "hi [target]"  "greet [target]"  "say hello to [target]"  "hello, [target]"  "hi, [target]"  "[target], hello"  "[target], hi" }
 verb follow { role target: Creature  "follow [target]"  "chase [target]"  "pursue [target]"  "go after [target]"  "find [target]"  "where is [target]"  "look for [target]" }
-verb cross { role target: Crossable  "cross [target]"  "ford [target]"  "walk across [target]"  "go across [target]" }
+verb cross {
+  role target: Crossable
+  "cross [target]"  "ford [target]"  "walk across [target]"  "go across [target]"
+  "cross [target] south"  "cross [target] north"  "cross [target] to the south"  "cross [target] to the north"
+}
 verb leap_at {
   role target: Leapable
   "jump [target]"  "jump over [target]"  "jump into [target]"  "jump in [target]"
@@ -227,7 +231,7 @@ verb robot_drop {
   role target: Orderable
   role item
   "[target], drop [item]"  "[target], put down [item]"  "tell [target] to drop [item]"  "[target], give me [item]"
-  "tell [target] to give me [item]"  "ask [target] for [item]"  "[target], throw [item]"  "tell [target] to throw [item]"
+  "tell [target] to give me [item]"  "ask [target] for [item]"  "[target], give [item] to me"  "[target], hand me [item]"
 }
 verb robot_other {
   role target: Orderable
@@ -290,6 +294,26 @@ verb wait_for {
   "wait for [target]"  "wait for [target] to come down"  "wait for [target] to return"  "wait for [target] to come back"
   "wait on [target]"  "await [target]"  "wait here for [target]"  "wait until [target] comes down"
 }
+// The Tiny Room's door: a place mat slid under it, the letter opener in
+// the keyhole, the key turned (PDOOR-FCN, PKH-FCN, PKEY-FCN). `unlock`
+// replaces the library's, so the door answers in Zork's words.
+verb put_under {
+  role item carried
+  role target
+  "put [item] under [target]"  "slide [item] under [target]"  "slip [item] under [target]"
+  "push [item] under [target]"  "put [item] beneath [target]"
+}
+verb unlock {
+  role target
+  role tool carried
+  "unlock [target] with [tool]"  "unlock [target]"  "unlock [target] using [tool]"  "use [tool] to unlock [target]"
+}
+verb lock {
+  role target
+  role tool carried
+  "lock [target] with [tool]"  "lock [target]"  "lock [target] using [tool]"
+}
+verb melt { role target  role tool  "melt [target]"  "thaw [target]"  "melt [target] with [tool]" }
 verb get_out_bare { "get out"  "climb out"  "stand up"  "get out of the bucket"  "climb out of the bucket"  "disembark"  "exit"  "leave" }
 intent put_in_well {
   "throw [x] down [y]"  "drop [x] down [y]"  "throw [x] into [y]"  "put [x] down [y]"  "lower [x] into [y]"  "lower [x] down [y]"
@@ -319,7 +343,7 @@ intent hand_over {
 // Where somebody or something may be sent by the world's gate, and which
 // room a room is: every place keeps its own, so that what stands in it
 // (the visitor, the Wizard's clock, the bucket) can name it to another.
-enum Dest { nowhere, barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, carousel, room_8, riddle, pearl, well_bottom, well_top, tea_room, posts, pool, low_room, machine, closet, cage, elsewhere, oblivion, filch, scatter, in_bucket, out_of_bucket, cage_out }
+enum Dest { nowhere, barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, carousel, room_8, riddle, pearl, well_bottom, well_top, tea_room, posts, pool, low_room, machine, closet, cage, elsewhere, oblivion, filch, scatter, in_bucket, out_of_bucket, cage_out, ravine_ledge, ledge_end, tiny_room, dreary_room, dragon_room, dragon_lair, fresco, stone_bridge, cool_room, ice_room, bank_entrance, teller_west, teller_east, viewing_west, viewing_east, small_room, vault, depository, office, key_scene, dragon_dead }
 
 // The Wizard's spells (SPELL?), and none.
 enum Spell { none, feeble, fumble, fear, filch, freeze, fall, ferment, fierce, float, fireproof, fence, fantasize }
@@ -427,3 +451,37 @@ message :bucket_dry
 message :fantasize with integer
 // A room seen again in BRIEF: the one-time word about VERBOSE.
 message :brief_hint
+// The robot, arrived somewhere: its stand-ins hear which room, so that an
+// order given where it is not is answered in voice (round 3's P3).
+message :robot_at with Dest
+// The dragon (I-DRAGON): provoked, by so much; asked each move where the
+// visitor is while it cares; and whether it cares.
+message :provoke with integer
+message :dragon_turn with Dest
+message :dragon_watch with boolean
+// The ice melted: the lair's way opens, the Ice Room's west passage too.
+message :ice_melted
+// The princess (I-PRINCESS): woken; asked each move where the visitor is;
+// gone home; and the secret door she opens in the Marble Hall.
+message :princess_awake
+message :princess_turn with Dest
+message :secret_door
+message :unicorn_scene
+// The Bank of Zork's curtain (SCOL): which room it opens on now, the
+// twelve moves it stays open for, and the Gnome of Zurich.
+message :curtain_active with Dest
+message :gnome_come
+message :gnome_go
+// The Tiny Room's door, both sides of it: unlocked, opened, the mat under
+// it, the key pushed out of the far keyhole, the mat moved.
+message :pdoor_locked with boolean
+message :pdoor_open with boolean
+message :mat_under with boolean
+message :push_key with Dest
+message :pushed with Dest
+message :mat_moved
+message :key_far with boolean
+// The score, changed: the built quarters' ceiling is checked once.
+message :tally
+// The curtain of light's twelve moves run out.
+message :curtain_closes

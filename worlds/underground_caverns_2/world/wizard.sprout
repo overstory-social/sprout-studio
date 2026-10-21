@@ -19,6 +19,9 @@ import {riddle_room, pearl_room} from 'riddle'
 import {well_bottom, well_top, tea_room} from 'well'
 import {posts_room, pool_room} from 'posts'
 import {low_room, machine_room, dingy_closet} from 'machine'
+import {ravine_ledge, ledge_end, tiny_room, dreary_room} from 'ravine'
+import {dragon_room, dragon_lair, fresco_room, stone_bridge, cool_room, ice_room} from 'dragon'
+import {bank_entrance, teller_west, teller_east, viewing_west, viewing_east, small_room, vault, depository, office} from 'bank'
 import {ask} from 'sprout'
 import {attack, mung, greet, talk, give, follow, kick, rub, throw, through, shift, squeeze, climb_up, look_in, Spell, Dest, :consume, :wizard_start, :where_are_you, :wizard_turn, :vanish, :wizard_near, :settle} from 'verbs'
 
@@ -92,10 +95,15 @@ kind Wizard is Creature, sprout.Actor {
   without as recipient for give from Thing
   as recipient for give { do { say "\"Thank you.\"" } }
 
-  // Going: the sword in any hand here stops glowing for him first.
+  // Going: the sword in any hand here stops glowing for him first, where
+  // it had begun to. I-SWORD looks for him at the end of a move, so a
+  // call that begins and ends in one move never reaches the sword at all
+  // (round 3's P9): the sword glows only when he lingers.
+  :announced false
   on :vanish {
     if (!here.is(Elsewhere)) {
-      each a: Adventurer in here { send a :wizard_near with false }
+      if (self.get(:announced)) { each a: Adventurer in here { send a :wizard_near with false } }
+      self.set(:announced, false)
       move self to elsewhere
     }
   }
@@ -159,7 +167,25 @@ kind Wizard is Creature, sprout.Actor {
         else if (value == :low_room) { move self to low_room }
         else if (value == :machine) { move self to machine_room }
         else if (value == :closet) { move self to dingy_closet }
-        send from :wizard_near with true
+        else if (value == :ravine_ledge) { move self to ravine_ledge }
+        else if (value == :ledge_end) { move self to ledge_end }
+        else if (value == :tiny_room) { move self to tiny_room }
+        else if (value == :dreary_room) { move self to dreary_room }
+        else if (value == :dragon_room) { move self to dragon_room }
+        else if (value == :dragon_lair) { move self to dragon_lair }
+        else if (value == :fresco) { move self to fresco_room }
+        else if (value == :stone_bridge) { move self to stone_bridge }
+        else if (value == :cool_room) { move self to cool_room }
+        else if (value == :ice_room) { move self to ice_room }
+        else if (value == :bank_entrance) { move self to bank_entrance }
+        else if (value == :teller_west) { move self to teller_west }
+        else if (value == :teller_east) { move self to teller_east }
+        else if (value == :viewing_west) { move self to viewing_west }
+        else if (value == :viewing_east) { move self to viewing_east }
+        else if (value == :small_room) { move self to small_room }
+        else if (value == :vault) { move self to vault }
+        else if (value == :depository) { move self to depository }
+        else if (value == :office) { move self to office }
         let dark = from.get(:in_dark)
         if (dark) { tell "You feel a slight outrush of air as something moves nearby." }
         else if (here.is(Wonderland)) { tell "A huge and terrible wizard appears before you, as large as the largest tree! He looks down on you as you would look upon a gnat!" }
@@ -213,6 +239,8 @@ kind Wizard is Creature, sprout.Actor {
             send self :vanish
           } else {
             tell "The Wizard seems about to say something, but thinks better of it, and peers at you from under his bushy eyebrows."
+            self.set(:announced, true)
+            send from :wizard_near with true
           }
         }
       }

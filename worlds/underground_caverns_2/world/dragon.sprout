@@ -1,0 +1,611 @@
+// The dragon's country: the Dragon Room, the Dragon's Lair, the Fresco
+// Room, the Stone Bridge, the Cool Room and the Ice Room; the huge red
+// dragon, who follows whoever has annoyed him and dies of his own
+// reflection; the princess in the lair, who walks home once woken; and
+// the rotten chest with the statuette (DRAGON-FCN, I-DRAGON,
+// DRAGON-LEAVES, GLACIER-ROOM-FCN, GLACIER-FCN, CHEST-FCN, PRINCESS-FCN,
+// I-PRINCESS, I-UNICORN).
+//
+// Neither NPC can see where a visitor is, so each is driven by the
+// visitor's own moves (adventurer.sprout): the dragon is asked each move,
+// while it cares, which room the visitor stands in, and walks the ways
+// out of its room after them as FIND-TARGET walks its exits; the
+// princess is asked each move and takes the next step of her way home.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Portable, Valuable, Door} from 'thing'
+import {Box, Bag} from 'box'
+import {Room, DarkRoom, Bridged, ChasmEdge, DragonCountry} from 'room'
+import {Treasure, Statuette, Rose} from 'items'
+import {Chasm, Stream, Bridge, BridgeUnder} from 'way_in'
+import {Adventurer} from 'adventurer'
+import {ledge_end} from 'ravine'
+import {bank_entrance} from 'bank'
+import {carousel_room} from 'carousel'
+import {elsewhere, deep_ford, stream_path, Elsewhere} from 'garden'
+import {ask} from 'sprout'
+import {attack, mung, kick, greet, talk, give, throw, rub, alarm, follow, open, close, melt, cross, listen, smell, through, Spell, Dest, Direction, :provoke, :dragon_turn, :dragon_watch, :ice_melted, :princess_awake, :princess_turn, :secret_door, :unicorn_scene, :scored, :die, :open_gate, :gate_open, :close_gate, :consume, :travel} from 'verbs'
+
+// The huge red dragon (DRAGON): an NPC that lies in the Dragon Room,
+// watching, and follows whoever has made it angry, out of mingled
+// curiosity and anger, as far as the Ice Room, where it meets itself.
+kind Dragon is Creature, sprout.Actor {
+  roams
+  pass any (true)
+  :anger 0 min 0 max 100
+  :watching false
+  :dead false
+  grammar { name "huge red dragon"  nouns "dragon", "smaug", "worm", "beast"  adjectives "huge", "red" }
+  passage short { huge red dragon }
+  passage fdesc { A huge red dragon is lying here, blocking the entrance to a tunnel leading north. Smoke curls from his nostrils and out between his teeth. }
+  passage ldesc { A huge red dragon is lying on the rocks here, watching. }
+  passage arrives { The dragon follows you, out of mingled curiosity and anger. }
+  passage leaves { {if false}.{/if} }
+  passage not_yours { The dragon does not give things back. }
+  passage held_fast { The dragon weighs rather more than you do, and is awake. }
+  describe { text "He turns and looks back at you, his cat's eyes yellow in the gloom. You start to feel weak, and quickly turn away." }
+  passage glacier_scene {
+    As the dragon enters, he sees his reflection on the icy surface of the glacier at its western end. He becomes enraged: There is another dragon here, behind that glass, he thinks! Dragons are smart, but sometimes naive, and this one has never seen ice before. He rears up to his full height to challenge this intruder into his territory. He roars a challenge! The intruder responds! The dragon takes a deep breath, and out of his mouth pours a massive gout of flame. It washes over the ice, which melts rapidly, sending out torrents of water and a huge cloud of steam! You manage to clamber up to a small shelf, but the dragon is terrified! A huge splash goes down his throat! There is a muffled explosion and the dragon, a puzzled expression on his face, dies. He is carried away by the water.
+
+    When the flood recedes you climb gingerly down. While no trace of the dragon can be found, the melting of the ice has revealed a passage leading west.
+  }
+  passage amused { The dragon looks amused. He speaks in a voice so deep you feel it rather than hear it, but the tongue is unknown to you. You find yourself almost hypnotized. }
+  passage annoyed { {one of}Dragon hide is tough as steel, but you have succeeded in annoying him a bit. He looks at you as if deciding whether or not to eat you.{or}That captured his interest. He stares at you balefully.{or}The dragon is surprised and interested (for the moment).{or}You've made him rather angry. You had better be very careful now.{or}That did no damage, but he turns his smoky yellow eyes in your direction and sighs.{/one of} }
+
+  // Provoked: so much anger, and his turn runs from now on (I-DRAGON).
+  // The first provocation runs his turn at once, as DRAGON-FCN's QUEUE
+  // does, since the visitor's clock hears of him only next move.
+  on :provoke (from, value) {
+    self.adjust(:anger, value)
+    if (!self.get(:watching)) {
+      self.set(:watching, true)
+      broadcast :dragon_watch with true
+      if (self.get(:anger) > 6) {
+        each a: Adventurer in here {
+          if (a.get(:spell) == :fireproof) { tell a "The dragon tires of this game. With an almost bored yawn, he opens his mouth and blasts you with a great gout of fire, but it washes over you harmlessly." }
+          else { tell a "The dragon tires of this game. With an almost bored yawn, he opens his mouth and incinerates you in a blast of white-hot dragon fire."  send a :die  send self :go_home }
+        }
+      } else {
+        tell "The dragon continues to watch you carefully."
+        if (self.get(:anger) >= 2) { self.adjust(:anger, -2) } else { self.set(:anger, 0) }
+      }
+    }
+  }
+  without as target for greet from Creature
+  as target for greet { do { say amused  send self :provoke with 2 } }
+  without as target for talk from Creature
+  as target for talk { do { say amused  send self :provoke with 2 } }
+  without as target for ask from Thing
+  as target for ask { do { say amused  send self :provoke with 2 } }
+  without as target for alarm from Creature
+  as target for alarm { do { say "The dragon is awake, and watching you, which you would have noticed if you had looked." } }
+  without as target for follow from Creature
+  as target for follow { do { say "The dragon is right here. It is the following that is the dragon's department." } }
+  without as target for rub from Thing
+  as target for rub { do { say "Dragon hide is tough as steel, and warm, and the dragon turns one yellow eye on your hand until you take it back."  send self :provoke with 1 } }
+  as target for attack {
+    do {
+      if (bound weapon) { say annoyed } else { say "With your bare hands? I doubt the dragon even noticed." }
+      send self :provoke with 4
+    }
+  }
+  without as target for mung from Thing
+  as target for mung { do { say annoyed  send self :provoke with 4 } }
+  without as target for kick from Thing
+  as target for kick { do { say annoyed  send self :provoke with 4 } }
+  as aim for throw {
+    do {
+      if (target.is(Thing)) { say "The {target.short} bounces off the dragon's hide. {self.annoyed}"  send self :provoke with 4 }
+    }
+  }
+  // A gift (DRAGON-FCN's GIVE): a treasure is taken away to the lair and
+  // not brought back; anything else is refused. The adventurer's own part
+  // has put a treasure in the dragon's hands; the dragon moves it to the
+  // chest on its next turn.
+  without as recipient for give from Thing
+  as recipient for give {
+    do {
+      send self :provoke with 1
+      if (item.is(Treasure)) { say "The dragon is pleased by your gift, excuses himself for a moment, and returns without it."  self.set(:gifted, true) }
+      else { say "The dragon refuses your gift." }
+    }
+  }
+  :gifted false
+
+  // His turn, told by the visitor where they stand (I-DRAGON).
+  on :dragon_turn (from, value) {
+    if (!self.get(:dead) && from.is(Adventurer) && here.is(Room)) {
+      let mine = here.get(:id)
+      if (self.get(:gifted)) {
+        self.set(:gifted, false)
+        self.set(:stowing, true)
+        send underground_caverns_2 :open_gate
+      }
+      if (self.get(:anger) > 6) {
+        if (value == mine) {
+          if (from.get(:spell) == :fireproof) {
+            tell from "The dragon tires of this game. With an almost bored yawn, he opens his mouth and blasts you with a great gout of fire, but it washes over you harmlessly."
+          } else {
+            tell from "The dragon tires of this game. With an almost bored yawn, he opens his mouth and incinerates you in a blast of white-hot dragon fire."
+            send from :die
+            send self :go_home
+          }
+        }
+      }
+      else if (value == :dragon_room && mine != :dragon_room) {
+        // Sneaked past while he was out: he doubles back.
+        self.set(:charging, true)
+        send underground_caverns_2 :open_gate
+      }
+      else if (self.get(:anger) == 0) {
+        if (value == mine && random(2) == 0) { tell from "The dragon looks bored." }
+        else {
+          if (value == mine) {
+            if (mine == :dragon_room) { tell from "The dragon seems to have lost interest in you." }
+            else { tell from "The dragon seems to have lost interest in you. He wanders off." }
+          }
+          send self :go_home
+        }
+      }
+      else if (value == mine) {
+        tell from "The dragon continues to watch you carefully."
+      }
+      else if (value == :carousel || value == :tiny_room || value == :ravine_ledge || value == :fresco || value == :bank_entrance || value == :dragon_lair) {
+        if (random(4) == 0) { send self :go_home }
+      }
+      else if (value == :ice_room && mine == :cool_room) {
+        // The glacier: he sees himself, and that is the end of him. He
+        // goes in unseen, so that the scene is the whole of his arrival.
+        self.set(:unseen, true)
+        move self west
+        tell from glacier_scene
+        send from :scored with 5
+        self.set(:dead, true)
+        self.set(:watching, false)
+        broadcast :dragon_watch with false
+        broadcast :ice_melted
+        self.set(:dying, true)
+        send underground_caverns_2 :open_gate
+      }
+      else {
+        // A way out of his room leads where they are: he takes it.
+        if (mine == :dragon_room) {
+          if (value == :ledge_end) { move self east }
+          else if (value == :stone_bridge) { move self south }
+        } else if (mine == :ledge_end) {
+          if (value == :dragon_room) { move self north }
+        } else if (mine == :stone_bridge) {
+          if (value == :dragon_room) { move self north }
+          else if (value == :cool_room) { move self south }
+        } else if (mine == :cool_room) {
+          if (value == :stone_bridge) { move self north }
+        }
+      }
+      if (!self.get(:dead)) {
+        if (self.get(:anger) >= 2) { self.adjust(:anger, -2) } else { self.set(:anger, 0) }
+      }
+    }
+  }
+  // Home to the Dragon Room, and no longer watching (DRAGON-LEAVES).
+  on :go_home {
+    if (!self.get(:dead)) {
+      if (!here.is(DragonRoom)) { self.set(:unseen, true)  move self to dragon_room  self.set(:unseen, false) }
+      self.set(:anger, 0)
+      self.set(:watching, false)
+      broadcast :dragon_watch with false
+    }
+  }
+  :charging false
+  :dying false
+  :stowing false
+  on :gate_open {
+    if (self.get(:charging)) {
+      self.set(:charging, false)
+      self.set(:unseen, true)
+      move self to dragon_room
+      self.set(:unseen, false)
+      if (dragon_room.is(DragonRoom)) { each a: Adventurer in dragon_room {
+        tell a "The dragon doubles back and charges into the room, maddened by your attempt to sneak past him. His eyes glow with a white heat of anger."
+        if (a.get(:spell) == :fireproof) { tell a "A huge ball of flame envelops you, but you don't even feel the heat. The dragon is puzzled, but not too puzzled to crush you in his jaws." }
+        else { tell a "Worse for you, his mouth opens and a great gout of flame puffs out and consumes you on the spot." }
+        send a :die
+      } }
+      self.set(:anger, 0)
+      self.set(:watching, false)
+      broadcast :dragon_watch with false
+    }
+    if (self.get(:stowing)) {
+      self.set(:stowing, false)
+      if (dragon_lair.chest.is(RottenChest)) {
+        if (dragon_lair.chest.get(:open)) { each t: Treasure in self { move t to dragon_lair.chest } }
+        else if (dragon_lair.is(Room)) { each t: Treasure in self { move t to dragon_lair } }
+      }
+    }
+    if (self.get(:dying)) {
+      self.set(:dying, false)
+      if (deep_ford.is(Room)) { move elsewhere.dead_dragon to deep_ford }
+      move self to elsewhere
+    }
+    send underground_caverns_2 :close_gate
+  }
+}
+message :go_home
+
+// What the flood leaves of him, at the Deep Ford (DEAD-DRAGON).
+kind DeadDragon is Scenery {
+  grammar { name "huge dead dragon"  nouns "dragon", "smaug", "worm", "corpse", "body"  adjectives "huge", "dead", "red" }
+  :ndesc false
+  passage short { huge dead dragon }
+  passage ldesc { A huge dead dragon is lying half blocking the stream. }
+  describe { text "The dragon lies on its side in the stream, which has not managed to move it and goes round, every scale of it the dull red of a fire that has gone out. Its eyes are shut. Its mouth is open, and a little steam still comes out of it, which is all the fire it has left. It is the first dragon you have seen that you could get close to, and it is not an improvement." }
+  passage no_take { The dragon weighs rather more than the stream does, and the stream could not move it either. }
+  without as target for smell from Thing
+  as target for smell { do { say "Wet dragon. It is not a smell that will catch on." } }
+}
+
+// The beautiful princess (PRINCESS): in a trance in the lair until woken,
+// and then an NPC who walks home to the gazebo, step by step, glancing
+// back; the unicorn comes to her there, and she gives up the key.
+kind Princess is Creature, sprout.Actor {
+  roams
+  pass any (true)
+  :awake false
+  :step 0 min 0 max 15
+  :gone false
+  // Where she was before her last step, and the way she went, for
+  // whoever is following (PRFOLLOW).
+  :last_way Direction default south
+  :came_from Direction default north
+  grammar { name "beautiful princess"  nouns "princess", "woman", "lady", "girl", "maiden"  adjectives "beautiful", "young", "dishevelled", "unkempt" }
+  passage short { beautiful princess }
+  passage ldesc { {if self.get(:awake)}There is a dishevelled and slightly unkempt princess here.{else}A beautiful young woman, wearing a dirty and bedraggled gown, sits on a rock in the corner. Her hair is unkempt and she is oblivious to your presence, almost in a trance.{/if} }
+  passage arrives { {if false}.{/if} }
+  passage leaves { {if false}.{/if} }
+  passage not_yours { The princess keeps what she has, which is not much. }
+  passage held_fast { One does not pick up a princess. It isn't done. }
+  describe { text "{if self.get(:awake)}She is a princess, obviously: the gown was good once, and the bearing still is, under the dirt and the dragon smoke, and she holds her head the way people do who have had it held for them. Her hair is unkempt, and she is not looking at you so much as past you, at the way out.{else}A beautiful young woman in a gown that was white, sitting on a rock with her hands in her lap and her eyes on nothing. She does not see you. She has the look of somebody who stopped expecting anything a long time ago and would need to be told, slowly, that something had happened.{/if}" }
+  passage wakes { The princess (for she is obviously one) shakes herself awake, then notices you for the first time. She smiles. "Thank you for rescuing me from that horrid worm," she says. "I must depart. My parents will be worried about me." With that, she arises, looking purposefully out of the lair. }
+  passage ignores { The princess ignores you. She looks about the room, but her eyes fix on the {if self.get(:step) == 0}way out{else if self.get(:step) == 1}passage east{else if self.get(:step) == 2}ledge{else if self.get(:step) == 3}rock face{else if self.get(:step) == 4}hall to the south{else if self.get(:step) == 5}east wall{else if self.get(:step) == 6}archway{else if self.get(:step) == 7}path north{else if self.get(:step) == 8}gazebo{else}garden outside{/if}. }
+  passage trance { She's in a trance! }
+
+  // Woken (ALARM, or the chest's squeak): her walk begins.
+  on :princess_awake {
+    if (!self.get(:awake)) {
+      self.set(:awake, true)
+      tell wakes
+      broadcast :princess_walking with true
+    }
+  }
+  without as target for alarm from Creature
+  as target for alarm { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  without as target for greet from Creature
+  as target for greet { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  without as target for talk from Creature
+  as target for talk { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  without as target for ask from Thing
+  as target for ask { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  without as target for rub from Thing
+  as target for rub { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  without as target for follow from Creature
+  as target for follow { do { say "You can't follow her until she leaves..." } }
+  without as recipient for give from Thing
+  as recipient for give { do { if (self.get(:awake)) { say "The princess shakes her head. \"I have what I need,\" she says, \"which is the way out.\"" } else { say trance } } }
+  without as aim for throw from Thing
+  as aim for throw { do { if (target.is(Thing)) { say "The {target.short} lands at her feet. {if self.get(:awake)}She steps over it.{else}She does not notice.{/if}" } } }
+  // Laid a hand on in anger: the Wizard, of all people, objects
+  // (PRINCESS-FCN's ATTACK).
+  as target for attack { do { say fried  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
+  without as target for mung from Thing
+  as target for mung { do { say fried  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
+  without as target for kick from Thing
+  as target for kick { do { say fried  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
+  passage fried { The princess screams as you approach. "Won't someone deliver me from this awful fate?" she cries. Just in time, the Wizard of Frobozz appears, seeming to unroll himself out of nothing like a window shade. "Fry!" he intones, and a massive bolt of lightning reduces you to a pile of smoking ashes. (Serves you right, too, if you ask me.) }
+  on :vanish_princess { self.set(:gone, true)  self.set(:unseen, true)  move self to elsewhere  broadcast :princess_walking with false }
+
+  // Her turn, told by the visitor where they stand (I-PRINCESS): three
+  // times in four she takes the next step of her way home, and says so
+  // to whoever she leaves and whoever she finds.
+  on :princess_turn (from, value) {
+    if (self.get(:awake) && !self.get(:gone) && from.is(Adventurer)) {
+      if (self.get(:step) >= 9) {
+        // Home: the unicorn comes to her in six moves (I-UNICORN).
+        self.adjust(:step, 1)
+        if (self.get(:step) >= 15) {
+          self.set(:gone, true)
+          broadcast :princess_walking with false
+          if (value == :gazebo || value == :garden_north) { send from :unicorn_scene }
+          else {
+            // Nobody to give the key to: she goes, and leaves a rose.
+            spawn Rose in here
+            self.set(:unseen, true)
+            move self to elsewhere
+          }
+        }
+      }
+      else if (self.get(:pause) > 0) { self.adjust(:pause, -1) }
+      else if (here.is(Room)) {
+        // I-PRINCESS queues itself for one move, or one time in four for
+        // two: a pause rolled after each step, never a roll to take one.
+        if (random(4) == 0) { self.set(:pause, 1) }
+        let was = here.get(:id)
+        let s = self.get(:step)
+        // Where this step goes (PRDIRS), and what whoever is left behind
+        // reads, said before she goes, since a person out of her range
+        // is told nothing.
+        if (s == 0) { self.set(:now, :dragon_room)  self.set(:last_way, :south)  self.set(:came_from, :north) }
+        else if (s == 1) { self.set(:now, :ledge_end)  self.set(:last_way, :east)  self.set(:came_from, :west) }
+        else if (s == 2) { self.set(:now, :ravine_ledge)  self.set(:last_way, :east)  self.set(:came_from, :west) }
+        else if (s == 3) { self.set(:now, :deep_ford)  self.set(:last_way, :down)  self.set(:came_from, :up) }
+        else if (s == 4) { self.set(:now, :marble_hall)  self.set(:last_way, :south)  self.set(:came_from, :north) }
+        else if (s == 5) { self.set(:now, :stream_path)  self.set(:last_way, :east)  self.set(:came_from, :west) }
+        else if (s == 6) { self.set(:now, :formal_garden)  self.set(:last_way, :east)  self.set(:came_from, :west) }
+        else if (s == 7) { self.set(:now, :garden_north)  self.set(:last_way, :north)  self.set(:came_from, :south) }
+        else { self.set(:now, :gazebo)  self.set(:last_way, :inside)  self.set(:came_from, :outside) }
+        if (value == was) {
+          if (s == 5) { tell from "The princess presses a loose piece of marble in the wall and a large section of the wall slides away, revealing a passage to the east. She enters it." }
+          else if (was == :garden_north) { tell from "The princess enters the gazebo." }
+          else if (was == :ravine_ledge) { tell from "The princess climbs daintily down the rock face." }
+          else { tell from "The princess walks {self.get(:last_way)}. She glances back at you as she goes." }
+        }
+        if (s == 5) { broadcast :secret_door  move self to stream_path }
+        else if (s == 0) { move self south }
+        else if (s == 1) { move self east }
+        else if (s == 2) { move self east }
+        else if (s == 3) { move self down }
+        else if (s == 4) { move self south }
+        else if (s == 6) { move self east }
+        else if (s == 7) { move self north }
+        else { move self in }
+        self.adjust(:step, 1)
+        let now = self.get(:now)
+        if (value == now) {
+          if (now == :gazebo) { tell from "The princess joins you in the gazebo." }
+          else if (now == :deep_ford) { tell from "The princess climbs down the rock wall onto the beach." }
+          else if (now == :stream_path) { tell from "The princess appears from behind some rocks, as though she had walked through a wall." }
+          else { tell from "The princess enters from the {self.get(:came_from)}. She seems surprised to see you." }
+        }
+      }
+    }
+  }
+  :now Dest default dragon_lair
+  :pause 0 min 0 max 2
+}
+message :princess_walking with boolean
+message :vanish_princess
+
+// The rotten wooden chest in the lair (CHEST): rusty hinges that give one
+// time in four, and a squeak that wakes the princess.
+kind RottenChest is Bag {
+  grammar { name "rotten wooden chest"  nouns "chest", "trunk"  adjectives "rotten", "old", "wooden" }
+  :open false
+  :capacity 40
+  :size 40
+  :has_fdesc true
+  :plain 0
+  passage short { rotten wooden chest }
+  passage fdesc { A rotten old wooden chest is in one corner among the debris. }
+  passage ldesc { There is a rotten wooden chest here. }
+  passage examined { It is a wooden chest, old, and rotten along the bottom where it has stood in the damp, with hinges gone to rust and a hasp with no lock on it. {self.look_inside} }
+  without as target for open from Box
+  as target for open {
+    permit { if (self.get(:open)) { refuse "I think you've already done that." } }
+    do {
+      if (random(4) == 0) {
+        self.set(:open, true)
+        say opened_line
+        each p: Princess in here { if (!p.get(:awake)) { say "The opening of the squeaky lid startles the young woman."  send p :princess_awake } }
+      } else {
+        say "The hinges are very rusty, but they seem to be starting to give. You can probably open it if you try again. There is something bumping around inside."
+        each p: Princess in here { if (!p.get(:awake)) { say "All this rummaging around has startled the young woman."  send p :princess_awake } }
+      }
+    }
+  }
+}
+
+// The glacier (ICE): the western half of the Ice Room, until the dragon
+// looks at it.
+kind Glacier is Scenery {
+  grammar { name "glacier"  nouns "ice", "mass", "wall"  adjectives "cold", "icy", "large" }
+  passage short { glacier }
+  :ndesc false
+  passage ldesc { A mass of ice fills the western half of the room. }
+  describe { text "A mass of ice, blue-white and faintly translucent, fills the western half of the room from floor to roof, and goes back into the dark further than you can see. The face of it is smooth as glass, and in it, if you stand close, there is a dim adventurer looking back at you with a lamp. It gives off cold the way a fire gives off heat." }
+  passage no_take { The glacier is rather larger than you are, and colder, and attached. }
+  as target for melt { do { say "This is a big glacier; you'll need a lot of heat." } }
+  without as target for through from Thing
+  as target for through { do { say "You walk into the glacier. The glacier does not notice, and you are colder for it." } }
+  on :ice_melted { self.set(:ndesc, true)  self.set(:unseen, true) }
+}
+
+kind DragonRoom is DarkRoom, Bridged, DragonCountry {
+  :melted false
+  on :ice_melted { self.set(:melted, true) }
+}
+kind IceRoom is DarkRoom {
+  :melted false
+  on :ice_melted { self.set(:melted, true) }
+}
+
+object dragon_room is DragonRoom in underground_caverns_2 {
+  grammar {
+    name "Dragon Room"
+    exit east "east" -> ledge_end
+    exit north "north" -> dragon_lair when (self.get(:melted))
+    exit north "north" refuse "The dragon puts out a claw, grins (all of his sword-sharp teeth glinting in the light), and blocks your way."
+    exit in "in" -> dragon_lair when (self.get(:melted))
+    exit in "in" refuse "The dragon hisses at you and blocks your way."
+    exit west "west" -> fresco_room
+    exit south "south" -> stone_bridge
+  }
+  :id dragon_room
+  :walls 11
+  passage body { The room is a large cavern full of broken stone. The walls are scorched and there are deep scratches on the floor. A sooty dry smell is very strong here. A paved path winds from a large passage to the west, through the room, and across a huge stone bridge to the south. To the east a small crack is visible. A dark and smokey tunnel leads north. }
+  object dragon is Dragon
+  object bridge is Bridge {
+    grammar { name "stone bridge"  nouns "bridge"  adjectives "huge", "stone", "ruined" }
+    passage short { stone bridge }
+    describe { text "A huge stone bridge, ruined and still impressive, crosses the chasm to the south on arches that nobody has mortared in a thousand years. The paved path goes over it." }
+    without as target for cross from Bridge
+    as target for cross { do { send actor :travel with :stone_bridge  say "" } }
+  }
+  object scratches is Scenery {
+    grammar { name "scratches"  nouns "scratch", "marks", "floor"  adjectives "deep" }
+    passage short { scratches }
+    describe { text "The scratches in the floor are deep, and parallel, four at a time, and a little further apart than your fingers can spread. They go toward the tunnel to the north and away from it, many times." }
+  }
+  object broken_stone is Scenery {
+    grammar { name "broken stone"  nouns "stone", "stones", "rubble"  adjectives "broken" }
+    passage short { broken stone }
+    describe { text "The floor is littered with broken stone, some of it fallen and some of it, from the look of the edges, bitten." }
+  }
+  object smell is Scenery {
+    grammar { name "sooty smell"  nouns "smell", "soot", "odor"  adjectives "sooty", "dry", "strong" }
+    passage short { sooty smell }
+    describe { text "The smell is of soot, and of something hot and dry and animal, very strong, and it comes from the dragon, or from the tunnel the dragon is lying in front of, or from both." }
+    without as target for smell from Thing
+    as target for smell { do { say "Soot, and sulphur, and dragon, in that order and then all at once." } }
+  }
+  object small_crack is Scenery {
+    grammar { name "small crack"  nouns "crack", "opening"  adjectives "small" }
+    passage short { small crack }
+    describe { text "To the east a small crack in the cavern wall opens onto the ravine, and a ledge beyond it. It is the way you came, if you came that way." }
+  }
+  object tunnel_north is Scenery {
+    grammar { name "smokey tunnel"  nouns "tunnel", "lair", "entrance"  adjectives "dark", "smokey", "smoky" }
+    passage short { smokey tunnel }
+    describe { text "{if dragon_room.is(DragonRoom)}{if dragon_room.get(:melted)}A dark and smoky tunnel leads north, into what was the dragon's lair, and is now only a lair.{else}A dark and smoky tunnel leads north, and the dragon is lying across the mouth of it, and does not look as though it would move for anything you could offer.{/if}{/if}" }
+  }
+  object paved_path is Scenery {
+    grammar { name "paved path"  nouns "path", "paving"  adjectives "paved" }
+    passage short { paved path }
+    describe { text "The path is paved with flat stones, worn, and winds from the passage on the west through the room and out over the bridge to the south. Somebody built it to be walked on by a great many people, a long time ago, and now it is walked on by you and lain on by a dragon." }
+  }
+}
+
+object dragon_lair is DarkRoom, DragonCountry in underground_caverns_2 {
+  grammar {
+    name "Dragon's Lair"
+    exit south "south" -> dragon_room
+    exit out "out" -> dragon_room
+  }
+  :id dragon_lair
+  :walls 11
+  passage body { You are in the dragon's lair, where the rock walls are scarred by flame. A blackened doorway leads to the south. }
+  object chest is RottenChest {
+    object statuette is Statuette
+  }
+  object princess is Princess
+  object doorway is Scenery, Door {
+    grammar { name "blackened doorway"  nouns "doorway", "door", "opening"  adjectives "blackened" }
+    passage short { blackened doorway }
+    describe { text "The doorway to the south is blackened, inside and out, and a little wider at the bottom than it was built, where something large has gone through it often." }
+  }
+  object debris is Scenery {
+    grammar { name "debris"  nouns "bones", "bone", "rubbish", "litter"  adjectives "old" }
+    passage short { debris }
+    describe { text "The floor of the lair is debris: bones, mostly, of things that walked in on two legs and four, and the odd buckle and boot-heel, and in one corner the chest." }
+  }
+}
+
+object fresco_room is DarkRoom, DragonCountry in underground_caverns_2 {
+  grammar {
+    name "Fresco Room"
+    exit east "east" -> dragon_room
+    exit west "west" -> bank_entrance
+  }
+  :id fresco
+  :walls 12
+  passage body { A path leads east-west through a room decorated with beautiful frescoes of someone battling dragons and rescuing fair maidens. It is hard to tell who is doing this as those parts of the frescoes have been blackened and cracked by intense heat. }
+  object frescoes is Scenery {
+    grammar { name "frescoes"  nouns "fresco", "paintings", "painting", "maidens", "dragons"  adjectives "beautiful", "blackened", "cracked" }
+    passage short { frescoes }
+    describe { text "The frescoes run the length of both walls: somebody in armor battling dragons on the north wall, and the same somebody rescuing fair maidens on the south, in colors that have kept better than the plaster. Every face that would tell you who he was has been blackened and cracked by heat, with a thoroughness that looks deliberate, as though the dragons had come by afterwards and had views." }
+  }
+}
+
+object stone_bridge is DarkRoom, Bridged, ChasmEdge, DragonCountry in underground_caverns_2 {
+  grammar {
+    name "Stone Bridge"
+    exit north "north" -> dragon_room
+    exit south "south" -> cool_room
+    exit down "down" refuse "It's a long way down."
+  }
+  :id stone_bridge
+  :walls 2
+  passage body { This is the middle of a ruined but still impressive stone bridge spanning a deep chasm. Water flows far beneath. A paved path leads north into a large open space. To the south, the path leads into a misty tunnel. }
+  object bridge is BridgeUnder {
+    grammar { name "stone bridge"  nouns "bridge", "arches"  adjectives "stone", "ruined", "impressive" }
+    passage short { stone bridge }
+    describe { text "You are standing on it: a bridge of stone, ruined at the parapets and sound underfoot, carried over the chasm on arches that have outlasted whoever cut them. The paved path goes over it. It does not creak. It has never creaked." }
+  }
+  object chasm is Chasm {
+    describe { text "The chasm goes down under the bridge further than your light does, and somewhere at the bottom of it water is flowing, a long way off, in no hurry to be anywhere." }
+  }
+  object stream is Stream {
+    describe { text "Water flows far beneath the bridge, heard rather than seen, going where water goes." }
+  }
+  object misty_tunnel is Scenery {
+    grammar { name "misty tunnel"  nouns "tunnel", "mist"  adjectives "misty" }
+    passage short { misty tunnel }
+    describe { text "To the south the path goes off the bridge into a tunnel with mist standing in the mouth of it, cold, and coming out a little at a time." }
+  }
+}
+
+object cool_room is DarkRoom, DragonCountry in underground_caverns_2 {
+  grammar {
+    name "Cool Room"
+    exit southeast "southeast" -> carousel_room
+    exit north "north" -> stone_bridge
+    exit west "west" -> ice_room
+  }
+  :id cool_room
+  :walls 14
+  passage body { The room is cool and damp. The air is misty. A twisty path from the southeast splits here toward a wide northerly stone bridge, and a narrow westerly tunnel. It is from the latter that the mist and chill seem to originate. }
+  object mist is Scenery {
+    grammar { name "mist"  nouns "air", "chill", "fog"  adjectives "misty", "cold", "damp" }
+    passage short { mist }
+    describe { text "The mist hangs in the room at about the height of your knees and comes out of the tunnel to the west a little at a time, cold enough to see your breath in, and smelling of nothing at all, which is what very cold water smells of." }
+  }
+  object twisty_path is Scenery {
+    grammar { name "twisty path"  nouns "path"  adjectives "twisty" }
+    passage short { twisty path }
+    describe { text "The path comes in from the southeast, twisting, and splits: one way north onto the bridge, and one west into the tunnel the mist comes out of." }
+  }
+  object bridge is Bridge {
+    grammar { name "stone bridge"  nouns "bridge"  adjectives "wide", "stone", "northerly" }
+    passage short { stone bridge }
+    describe { text "To the north the path goes out onto a wide stone bridge over the chasm, ruined at the edges and whole in the middle." }
+    without as target for cross from Bridge
+    as target for cross { do { send actor :travel with :stone_bridge  say "" } }
+  }
+}
+
+object ice_room is IceRoom in underground_caverns_2 {
+  grammar {
+    name "Ice Room"
+    exit east "east" -> cool_room
+    exit west "west" refuse "The passage west is damp and scorched and still partly full of steam, and a little way along it a fall of rock has come down behind the glacier, where the glacier was holding it up. Whatever lies beyond it will have to wait." when (self.get(:melted))
+    exit west "west" refuse "You don't even have an ice-pick."
+    exit up "up" refuse "The lava tube goes up from the top of the fallen rocks, and so do you, for a little way, until a slab that was wedged across it lets go and comes down past you with a great deal of company. The way up has gone, for now. Whatever lies beyond it will have to wait."
+  }
+  :id ice_room
+  :walls 13
+  passage body { This is a large hall of ancient lava, since worn smooth by the movement of a glacier. A large passage exits to the east and an upward lava tube is at the top of a jumble of fallen rocks.{if self.get(:melted)}
+
+    A damp and scorched passage leads west. It is still partly full of steam.{/if} }
+  object glacier is Glacier
+  object lava_tube is Scenery {
+    grammar { name "lava tube"  nouns "tube", "chimney", "rocks", "jumble"  adjectives "upward", "lava", "fallen" }
+    passage short { lava tube }
+    describe { text "At the top of a jumble of fallen rocks a tube of lava goes up into the dark, round and smooth as a drainpipe, and nearly as wide. It would be a tight climb." }
+  }
+  object steam is Scenery {
+    grammar { name "steam"  nouns "passage", "vapor"  adjectives "damp", "scorched", "west" }
+    passage short { steam }
+    :unseen true
+    on :ice_melted { self.set(:unseen, false) }
+    describe { text "The passage to the west, where the glacier was, is damp and scorched both, which takes some doing, and still partly full of steam that smells very faintly of dragon." }
+  }
+}
+
+// What the dragon leaves at the Deep Ford, kept Elsewhere until then.
+object dead_dragon is DeadDragon in elsewhere { }

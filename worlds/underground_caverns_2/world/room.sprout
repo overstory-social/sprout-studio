@@ -25,7 +25,7 @@ kind Room is sprout.Place {
   :glow 0 min 0 max 2
   :id Dest default nowhere
   // Which walls these are, for the wall to describe.
-  :walls 0 min 0 max 9
+  :walls 0 min 0 max 20
   // Zork's RMUNGBIT: the room is not to be entered again, and its exits
   // say why (the closet full of gas, a room blown up by a cake).
   :munged false
@@ -165,6 +165,12 @@ kind CakeSafe { }
 kind Airy { }
 // Where a fresh-water stream can be reached (GLOBAL-WATER).
 kind Watery { }
+// The dragon's country: where the dragon follows a visitor it is angry
+// with (I-DRAGON's FIND-TARGET walks the exits of its room).
+kind DragonCountry { }
+// The Bank of Zork's rooms behind the curtain of light, where the walls
+// are each their own thing and one of them lets a walker through (SCOL).
+kind CurtainRoom { }
 
 // Zork's EAST-WALL, WEST-WALL and the rest, GLOBAL-OBJECTS: the
 // surrounding wall, in every room. Sprout has no object that is everywhere
@@ -173,8 +179,10 @@ kind Watery { }
 kind Wall is Scenery {
   grammar { name "wall"  nouns "walls"  adjectives "east", "west", "north", "south", "eastern", "western", "cavern", "surrounding" }
   passage short { wall }
-  :look 0 min 0 max 9
-  on :wall_look (from, value) { self.set(:look, value) }
+  :look 0 min 0 max 20
+  // In the Bank's rooms the walls are each their own thing (bank.sprout),
+  // so the one that stands for all four steps aside there.
+  on :wall_look (from, value) { self.set(:look, value)  self.set(:unseen, value == 10) }
   passage plain { The walls are solid rock, plain and entirely uninterested in you. }
   passage barrow { The walls of the barrow are great flat stones set on end, older than anything you have ever seen, and fitted without mortar by someone who did not expect to be back. }
   passage ravine { The walls of the ravine are steep and crumbly, the sort of rock that comes away in the hand and takes the hand with it. }
@@ -185,6 +193,14 @@ kind Wall is Scenery {
   passage riddle_wall { The walls are bare on all sides, which is the point of the room: there is nothing to look at but the riddle. }
   passage carved { The walls are rough rock. Somebody has gone to the trouble of carving a number into one of them. }
   passage chiselled { The walls of the closet are rough stone, and somebody with time on their hands has chiselled a notice into one of them. }
+  passage scorched { The walls are scorched black to twice your height, and above that merely smoked, and here and there the rock itself has run like wax and set again. Whatever did it was not a campfire. }
+  passage frescoed { The walls are covered in frescoes, or were: somebody battling dragons and rescuing fair maidens, in the flat bright style of people who had never met either, and the parts that would say who have been blackened and cracked by heat. The dragons came out of it better than the hero did. }
+  passage lava { The walls are old lava, black and glassy, worn smooth to the height of a tall man by something very heavy that went by here a long time ago and was in no hurry. }
+  passage misty { The walls are wet, and the mist beads on them and runs, and where it runs the rock has gone the greenish white of things that are never dry. }
+  passage ledge_wall { The ravine wall goes up beside you, steep and crumbly, and down below you, steeper. It is not a wall one leans on. }
+  passage tiny_wall { The walls are rough, close, and carved rather than grown, and the door takes up most of the one it is in. }
+  passage dreary_wall { The walls are plain rock, and dreary, as advertised; one of them has a crack in it that glows red, which is the only thing in the room with any life in it. }
+  passage bank_wall { The walls are marble, veined grey, and were once panelled; the panelling has gone the way of the furniture, and the scavengers took the brackets too. }
   describe {
     if (self.get(:look) == 1) { text barrow }
     else if (self.get(:look) == 2) { text ravine }
@@ -195,6 +211,14 @@ kind Wall is Scenery {
     else if (self.get(:look) == 7) { text riddle_wall }
     else if (self.get(:look) == 8) { text carved }
     else if (self.get(:look) == 9) { text chiselled }
+    else if (self.get(:look) == 11) { text scorched }
+    else if (self.get(:look) == 12) { text frescoed }
+    else if (self.get(:look) == 13) { text lava }
+    else if (self.get(:look) == 14) { text misty }
+    else if (self.get(:look) == 15) { text ledge_wall }
+    else if (self.get(:look) == 16) { text tiny_wall }
+    else if (self.get(:look) == 17) { text dreary_wall }
+    else if (self.get(:look) == 18) { text bank_wall }
     else { text plain }
   }
 }
@@ -233,7 +257,7 @@ kind Ceiling is Scenery {
 // spell, one room in two, and stays in the room, listed with what is
 // really there, until the spell wears off.
 kind Illusion is Scenery {
-  grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "sphere", "convention", "wizards", "copy", "book"  adjectives "bulging", "yellow", "gold", "convention", "pile" }
+  grammar { name "basilisk"  nouns "jewels", "ingot", "chest", "sphere", "convention", "wizards", "copy", "zork"  adjectives "bulging", "yellow", "gold", "convention", "pile", "zork", "i" }
   passage short { basilisk }
   // Which of the eight it is this time, and for which casting it rolled.
   // While it shows nothing it is unseen, so its words name nothing: the

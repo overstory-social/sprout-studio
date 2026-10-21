@@ -1,0 +1,471 @@
+// The Bank of Zork: its Entrance, the two Tellers' Rooms, the two Viewing
+// Rooms, the Safety Depository with its shimmering curtain of light, the
+// Chairman's Office, and the Small Room and the Vault behind the curtain;
+// the walls of light that move a walker; and the Gnome of Zurich, who
+// comes for a customer shut in the Small Room (BANK-ENTRANCE, TELLER-ROOM,
+// DEPOSITORY-FCN, SCOL-OBJECT, SCOLWALL, SCOL-GO, SCOL-THROUGH, I-CURTAIN,
+// I-ZGNOME, ZGNOME-FCN, I-ZGNOME-OUT, BKLEAVEE, BKLEAVEW, CUBE-F).
+//
+// Zork's curtain opens on a room chosen by the way the visitor last came
+// into the Depository, and for twelve moves after a pass one wall of the
+// room beyond leads back; the Depository keeps the first, and the visitor
+// counts the twelve (adventurer.sprout).
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Portable, Door} from 'thing'
+import {Box} from 'box'
+import {Room, DarkRoom, CurtainRoom} from 'room'
+import {Treasure, Bills, Portrait, Brochure} from 'items'
+import {Light} from 'lamp'
+import {Adventurer} from 'adventurer'
+import {fresco_room} from 'dragon'
+import {elsewhere, Elsewhere} from 'garden'
+import {ask} from 'sprout'
+import {read, through, shift, take, rub, attack, mung, kick, give, throw, greet, talk, put, look_in, Direction, Dest, :curtain_active, :gnome_come, :gnome_go, :travel, :open_gate, :gate_open, :close_gate, :consume, :light} from 'verbs'
+
+// The visitor passing through the curtain to the room it opens on, and
+// back through a wall of light to the Depository.
+message :curtain_pass with Dest
+message :curtain_back
+// The curtain, used: it opens on nothing until the Depository is entered
+// again.
+message :clear_curtain
+
+kind Depository is Room {
+  // Which room the curtain opens on (SCOL-ROOM), by the way in.
+  :curtain Dest default viewing_west
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      if (from.is(TellerWest)) { self.set(:curtain, :viewing_east) }
+      else if (from.is(TellerEast)) { self.set(:curtain, :viewing_west) }
+      else if (from.is(Office)) { self.set(:curtain, :small_room) }
+      else if (from.is(Vault)) { self.set(:curtain, :small_room) }
+      else if (from.is(SmallRoom)) { self.set(:curtain, :vault) }
+      else if (from.is(ViewingWest)) { self.set(:curtain, :viewing_west) }
+      else if (from.is(ViewingEast)) { self.set(:curtain, :viewing_east) }
+    }
+  }
+  on :clear_curtain { self.set(:curtain, :nowhere) }
+}
+kind TellerWest is DarkRoom { }
+kind TellerEast is DarkRoom { }
+kind Office is DarkRoom { }
+kind ViewingWest is DarkRoom, CurtainRoom { }
+kind ViewingEast is DarkRoom, CurtainRoom { }
+kind SmallRoom is DarkRoom, CurtainRoom { }
+kind Vault is DarkRoom, CurtainRoom { }
+
+// The shimmering curtain of light, the Depository's north wall (CURTAIN):
+// walked through, it puts the walker in the room it opens on; a thing
+// thrown or put into it goes there too, and it closes behind it.
+kind Curtain is Box, Scenery {
+  grammar { name "shimmering curtain of light"  nouns "curtain", "light", "wall", "shimmer"  adjectives "shimmering", "north", "northern" }
+  passage short { shimmering curtain of light }
+  :open true
+  :capacity 1000
+  :sending false
+  describe { text "The northern wall of the room is a curtain of light, shimmering, floor to ceiling and wall to wall, the pale gold of a lamp seen through water. It is not warm. Nothing can be seen through it, and your hand, when you hold it near, is lit on one side and goes on being a hand." }
+  passage no_take { As you try, your hand seems to go through it. }
+  without as target for shift from Thing
+  as target for shift { do { say "As you try, your hand seems to go through it." } }
+  without as target for rub from Thing
+  as target for rub { do { say "As you try, your hand seems to go through it. It is not warm, and not cold, and not there, quite." } }
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (here.is(Depository)) {
+        let d = here.get(:curtain)
+        if (d == :nowhere) { say "You can't go more than part way through the curtain." }
+        else {
+          say "You feel somewhat disoriented as you pass through..."
+          send actor :curtain_pass with d
+        }
+      }
+    }
+  }
+  without as target for look_in from Box
+  as target for look_in { do { say "Light, and more light, and nothing behind it that you can make out." } }
+  on :entered (item, from) {
+    if (item.is(Thing)) {
+      self.set(:sending, true)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  on :gate_open {
+    if (self.get(:sending)) {
+      self.set(:sending, false)
+      if (depository.is(Depository)) {
+        let d = depository.get(:curtain)
+        each t: Thing in self {
+          if (d == :nowhere) { tell "The {t.short} goes part way into the curtain and comes out again, as though the curtain had thought better of it."  if (depository.is(Room)) { move t to depository } }
+          else {
+            tell "The curtain dims slightly as the {t.short} passes through."
+            if (d == :viewing_west) { if (viewing_west.is(Room)) { move t to viewing_west } }
+            else if (d == :viewing_east) { if (viewing_east.is(Room)) { move t to viewing_east } }
+            else if (d == :small_room) { if (small_room.is(Room)) { move t to small_room } }
+            else { if (vault.is(Room)) { move t to vault } }
+          }
+        }
+        if (d != :nowhere) { send depository :clear_curtain }
+      }
+    }
+    send underground_caverns_2 :close_gate
+  }
+}
+
+// A wall of one of the rooms beyond the curtain (SEWL, SWWL, SSWL, SNWL):
+// one of the four, for twelve moves after the visitor comes through,
+// leads back to the Depository, and takes a thing put into it there.
+kind CurtainWall is Box, Scenery {
+  grammar { name "wall"  nouns "walls" }
+  passage short { wall }
+  :open true
+  :capacity 1000
+  :side Direction default north
+  :room Dest default small_room
+  // Whether this is the wall of its room that leads, and whether the
+  // curtain is open on this room now.
+  :passes false
+  :active false
+  :sending false
+  on :curtain_active (from, value) { self.set(:active, value == self.get(:room)) }
+  describe { text "{if self.get(:passes) && self.get(:active)}The {self.get(:side)} wall shimmers, very faintly, like the curtain of light in the Depository, and seems a little less there than the others.{else}The {self.get(:side)} wall is plain stone, and solid, as far as looking can tell.{/if}" }
+  passage no_take { {if self.get(:passes) && self.get(:active)}As you try, your hand seems to go through it.{else}The wall is attached to the rest of the building.{/if} }
+  without as target for shift from Thing
+  as target for shift { do { if (self.get(:passes) && self.get(:active)) { say "As you try, your hand seems to go through it." } else { say "The wall does not move. It is a wall." } } }
+  without as target for rub from Thing
+  as target for rub { do { if (self.get(:passes) && self.get(:active)) { say "As you try, your hand seems to go through it." } else { say "Cold stone, and solid." } } }
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (self.get(:passes) && self.get(:active)) {
+        say "You feel somewhat disoriented as you pass through..."
+        send actor :curtain_back
+      }
+      else { say "You hit your head against the {self.get(:side)} wall as you attempt this feat." }
+    }
+  }
+  without as target for look_in from Box
+  as target for look_in { do { say "It is a wall. There is no inside to it that you can see." } }
+  accept (item, from) {
+    if (!(self.get(:passes) && self.get(:active))) { refuse "The wall is solid, and whatever you had in mind stays on this side of it." }
+  }
+  on :entered (item, from) {
+    if (item.is(Thing)) {
+      self.set(:sending, true)
+      send underground_caverns_2 :open_gate
+    }
+  }
+  on :gate_open {
+    if (self.get(:sending)) {
+      self.set(:sending, false)
+      if (depository.is(Room)) { each t: Thing in self { tell "The {t.short} passes through the wall and vanishes."  move t to depository } }
+    }
+    send underground_caverns_2 :close_gate
+  }
+}
+kind EastWall is CurtainWall { grammar { name "east wall"  nouns "wall"  adjectives "east", "eastern" }  :side east  passage short { east wall } }
+kind WestWall is CurtainWall { grammar { name "west wall"  nouns "wall"  adjectives "west", "western" }  :side west  passage short { west wall } }
+kind NorthWall is CurtainWall { grammar { name "north wall"  nouns "wall"  adjectives "north", "northern" }  :side north  passage short { north wall } }
+kind SouthWall is CurtainWall { grammar { name "south wall"  nouns "wall"  adjectives "south", "southern" }  :side south  passage short { south wall } }
+
+// The Gnome of Zurich (GNOME-OF-ZURICH): an NPC who materializes in the
+// Small Room for a customer the curtain has shut in, and shows them out
+// for a consideration.
+kind Gnome is Creature, sprout.Actor {
+  roams
+  pass any (true)
+  grammar { name "Gnome of Zurich"  nouns "gnome", "zurich", "banker"  adjectives "epicene", "zurich", "impatient" }
+  passage short { Gnome of Zurich }
+  passage ldesc { There is a Gnome of Zurich here. }
+  passage arrives { An epicene gnome of Zurich wearing a three-piece suit and carrying a safety deposit box materializes in the room. "You seem to have forgotten to deposit your valuables," he says, tapping the lid of the box impatiently. "We don't usually allow customers to use the boxes here, but we can make this ONE exception, I suppose..." He looks askance at you over his wire-rimmed bifocals. }
+  passage leaves { The gnome looks impatient: "I may have another customer waiting; you'll just have to fend for yourself, I'm afraid." He disappears, leaving you alone. }
+  passage not_yours { The gnome clutches it possessively. }
+  passage held_fast { The gnome is not a thing one picks up, and says so with a look. }
+  describe { text "He is a gnome, small and neat and of no particular sex, in a three-piece suit of banker's grey with a watch-chain across the waistcoat, and wire-rimmed bifocals he looks over rather than through. He carries a safety deposit box under one arm and taps its lid. He has the air of a man whose time is money, and whose money is somebody else's." }
+  without as target for greet from Creature
+  as target for greet { do { say "The gnome appears increasingly impatient." } }
+  without as target for talk from Creature
+  as target for talk { do { say "The gnome appears increasingly impatient." } }
+  without as target for ask from Thing
+  as target for ask { do { say "The gnome appears increasingly impatient." } }
+  as target for attack { do { say "The gnome says \"Well, I never...\" and disappears with a snap of his fingers, leaving you alone."  send self :gnome_vanish } }
+  without as target for mung from Thing
+  as target for mung { do { say "The gnome says \"Well, I never...\" and disappears with a snap of his fingers, leaving you alone."  send self :gnome_vanish } }
+  without as target for kick from Thing
+  as target for kick { do { say "The gnome says \"Well, I never...\" and disappears with a snap of his fingers, leaving you alone."  send self :gnome_vanish } }
+  // A gift (ZGNOME-FCN): the adventurer's own part has put it in his
+  // hands. A treasure goes in the box and the customer is shown out;
+  // anything else goes over his shoulder.
+  without as recipient for give from Thing
+  as recipient for give {
+    do {
+      if (item.is(Treasure)) {
+        say "The gnome carefully places the {item.short} in the deposit box. \"Let me show you the way out,\" he says, making it clear he will be pleased to see the last of you. Then, you are momentarily disoriented, and when you recover you are back at the Bank Entrance."
+        move item to deposit_box
+        send actor :travel with :bank_entrance
+        send self :gnome_vanish
+      }
+      else if (item.is(Thing)) {
+        say "\"I wouldn't put THAT in a safety deposit box,\" remarks the gnome with disdain, tossing it over his shoulder, where it disappears with an understated \"pop\"."
+        send item :consume
+      }
+    }
+  }
+  as aim for throw { do { if (target.is(Thing)) { say "The gnome catches the {target.short} and looks at it over his bifocals. \"If you wish to make a deposit,\" he says, \"you will hand it to me like a civilized person.\" He hands it back."  move target to actor } } }
+  on :gnome_come { if (!here.is(SmallRoom)) { self.set(:unseen, false)  move self to small_room } }
+  on :gnome_go { if (here.is(SmallRoom)) { move self to elsewhere } }
+  on :gnome_vanish { if (here.is(SmallRoom)) { self.set(:unseen, true)  move self to elsewhere  self.set(:unseen, false) } }
+  object deposit_box is Box {
+    grammar { name "safety deposit box"  nouns "box"  adjectives "safety", "deposit" }
+    :open true
+    :ndesc true
+    :capacity 1000
+    passage short { safety deposit box }
+    passage examined { A safety deposit box, steel, with the Bank's crest on the lid and the gnome's hand on the box. }
+    describe { text examined }
+  }
+}
+message :gnome_vanish
+
+kind BankSign is Scenery {
+  grammar { name "sign"  nouns "signs", "notice", "lettering"  adjectives "two", "bank" }
+  passage short { sign }
+  passage words default { {if false}.{/if} }
+  describe { text words }
+  without as target for read from Thing
+  as target for read { do { say words } }
+}
+
+object bank_entrance is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "Bank Entrance"
+    exit northwest "northwest" -> teller_west
+    exit northeast "northeast" -> teller_east
+    exit east "east" -> fresco_room
+  }
+  :id bank_entrance
+  :walls 18
+  passage body {
+    This is the entrance hall of the Bank of Zork, the largest banking institution of the Great Underground Empire. A partial account of its history is in "The Lives of the Twelve Flatheads," in the chapter on J. Pierpont Flathead. A more detailed history (albeit less objective) may be found in Flathead's outrageous autobiography "I'm Rich and You Aren't - So There!". Most of the furniture has been ravaged by passing scavengers. All that remains are two signs at the northwest and northeast corners of the room, which say:
+
+    <--  VIEWING ROOMS  -->
+
+    The way out (ornate but tasteful) is to the east.
+  }
+  object signs is BankSign {
+    grammar { name "signs"  nouns "sign", "notice"  adjectives "two" }
+    passage short { signs }
+    passage words { Two signs, one at the northwest corner and one at the northeast, each with an arrow, and between them they say: <--  VIEWING ROOMS  -->. }
+  }
+  object furniture is Scenery {
+    grammar { name "furniture"  nouns "remains", "wreckage", "desk", "counter"  adjectives "ravaged", "broken" }
+    passage short { furniture }
+    describe { text "What the scavengers left of the furniture: a leg here, a drawer there, a brass rail that was too well bolted down to take, and a great deal of splinters. It was mahogany, once, and tasteful." }
+  }
+  object way_out is Scenery, Door {
+    grammar { name "way out"  nouns "doorway", "entrance", "exit", "door"  adjectives "ornate", "tasteful", "east" }
+    passage short { way out }
+    describe { text "The way out, to the east, is an archway of carved marble, ornate but tasteful, with the Bank's name over it in letters somebody has tried and failed to pry off." }
+  }
+}
+
+object teller_west is TellerWest in underground_caverns_2 {
+  grammar {
+    name "West Teller's Room"
+    exit north "north" -> viewing_west
+    exit south "south" -> bank_entrance
+    exit west "west" -> depository
+  }
+  :id teller_west
+  :walls 18
+  // The alarm (BKLEAVEW): nobody carries the Bank's money out of the
+  // Depository by the door.
+  accept (item, from) {
+    if (item.is(Adventurer) && from.is(Depository)) {
+      if (item.get(:bank_loot) > 0) { refuse "An alarm rings briefly, and an invisible force bars your way." }
+    }
+  }
+  passage body {
+    You are in a small room, which was used by a bank officer who retrieved safety deposit boxes for the customer. On the north side of the room is a sign which reads "Viewing Room". On the west side of the room, above an open door, is a sign reading:
+
+    BANK PERSONNEL ONLY
+  }
+  object sign is BankSign {
+    grammar { name "signs"  nouns "sign", "notice"  adjectives "two", "north", "west" }
+    passage short { signs }
+    passage words { Two signs: one on the north side, "Viewing Room", and one on the west side above an open door, "BANK PERSONNEL ONLY". The second is the one that gets read. }
+  }
+  object open_door is Scenery, Door {
+    grammar { name "open door"  nouns "door", "doorway"  adjectives "open", "west" }
+    passage short { open door }
+    describe { text "An open door on the west side of the room, under the sign that says who may use it. It has no lock, and never needed one, which tells you something about the Bank's confidence in what lies beyond." }
+  }
+}
+
+object teller_east is TellerEast in underground_caverns_2 {
+  grammar {
+    name "East Teller's Room"
+    exit north "north" -> viewing_east
+    exit south "south" -> bank_entrance
+    exit east "east" -> depository
+  }
+  :id teller_east
+  :walls 18
+  accept (item, from) {
+    if (item.is(Adventurer) && from.is(Depository)) {
+      if (item.get(:bank_loot) > 0) { refuse "An alarm rings briefly, and an invisible force bars your way." }
+    }
+  }
+  passage body {
+    You are in a small room, which was used by a bank officer who retrieved safety deposit boxes for the customer. On the north side of the room is a sign which reads "Viewing Room". On the east side of the room, above an open door, is a sign reading:
+
+    BANK PERSONNEL ONLY
+  }
+  object sign is BankSign {
+    grammar { name "signs"  nouns "sign", "notice"  adjectives "two", "north", "east" }
+    passage short { signs }
+    passage words { Two signs: one on the north side, "Viewing Room", and one on the east side above an open door, "BANK PERSONNEL ONLY". The second is the one that gets read. }
+  }
+  object open_door is Scenery, Door {
+    grammar { name "open door"  nouns "door", "doorway"  adjectives "open", "east" }
+    passage short { open door }
+    describe { text "An open door on the east side of the room, under the sign that says who may use it. It has no lock, and never needed one, which tells you something about the Bank's confidence in what lies beyond." }
+  }
+}
+
+kind ViewingSign is BankSign {
+  grammar { name "sign"  nouns "notice"  adjectives "north" }
+  passage words {
+    "Remain here while the teller retrieves your safety deposit box. When you are finished, leave the box, and exit to the south. Safety deposit boxes cannot be removed from this room!
+
+    Thank You for Banking at the Zork!"
+  }
+}
+
+object viewing_west is ViewingWest in underground_caverns_2 {
+  grammar {
+    name "West Viewing Room"
+    exit south "south" -> bank_entrance
+  }
+  :id viewing_west
+  :walls 10
+  passage body {
+    This room was used by holders of safety deposit boxes to view their contents. On the north side of the room is a sign which says:
+
+    "Remain here while the teller retrieves your safety deposit box. When you are finished, leave the box, and exit to the south. Safety deposit boxes cannot be removed from this room!
+
+    Thank You for Banking at the Zork!"
+  }
+  object sign is ViewingSign
+  object east_wall is EastWall { :room viewing_west  :passes true }
+  object west_wall is WestWall { :room viewing_west }
+  object north_wall is NorthWall { :room viewing_west }
+  object south_wall is SouthWall { :room viewing_west }
+}
+
+object viewing_east is ViewingEast in underground_caverns_2 {
+  grammar {
+    name "East Viewing Room"
+    exit south "south" -> bank_entrance
+  }
+  :id viewing_east
+  :walls 10
+  passage body {
+    This room was used by holders of safety deposit boxes to view their contents. On the north side of the room is a sign which says
+
+    "Remain here while the teller retrieves your safety deposit box. When you are finished, leave the box, and exit to the south. Safety deposit boxes cannot be removed from this room!
+
+    Thank You for Banking at the Zork!"
+  }
+  object sign is ViewingSign
+  object east_wall is EastWall { :room viewing_east }
+  object west_wall is WestWall { :room viewing_east  :passes true }
+  object north_wall is NorthWall { :room viewing_east }
+  object south_wall is SouthWall { :room viewing_east }
+}
+
+object small_room is SmallRoom in underground_caverns_2 {
+  grammar { name "Small Room" }
+  :id small_room
+  :walls 10
+  passage body { This is a small, bare room with no distinguishing features. There are no exits from this room. }
+  object east_wall is EastWall { :room small_room }
+  object west_wall is WestWall { :room small_room }
+  object north_wall is NorthWall { :room small_room }
+  object south_wall is SouthWall { :room small_room  :passes true }
+}
+
+object vault is Vault in underground_caverns_2 {
+  grammar { name "Vault" }
+  :id vault
+  :walls 10
+  passage body { This is the Vault of the Bank of Zork, in which there are no doors. }
+  object bills is Bills
+  object east_wall is EastWall { :room vault }
+  object west_wall is WestWall { :room vault }
+  object north_wall is NorthWall { :room vault  :passes true }
+  object south_wall is SouthWall { :room vault }
+}
+
+object depository is Depository in underground_caverns_2 {
+  grammar {
+    name "Safety Depository"
+    exit north "north" refuse "There is a curtain of light there. It is not the kind of thing one goes north through; it is the kind of thing one goes through."
+    exit west "west" -> teller_west
+    exit east "east" -> teller_east
+    exit south "south" -> office
+  }
+  :id depository
+  :walls 18
+  passage body { This is a large rectangular room. The east and west walls were used for storing safety deposit boxes, but all have been carefully removed by evil persons. To the east, west, and south of the room are large doorways. The northern "wall" of the room is a shimmering curtain of light. In the center of the room is a large stone cube, about 10 feet on a side. Engraved on the side of the cube is some lettering. }
+  object curtain is Curtain
+  object brochure is Brochure
+  object cube is Scenery {
+    grammar { name "large stone cube"  nouns "cube", "vault", "letter", "lettering", "engraving"  adjectives "large", "stone", "engraved" }
+    passage short { large stone cube }
+    passage words {
+      Engraved on the side of the cube:
+
+      Bank of Zork
+
+      VAULT
+
+      *722 GUE*
+
+      Frobozz Magic Vault Company
+    }
+    describe { text "A cube of stone, ten feet on a side, in the middle of the room, with no door, no seam and no keyhole, and lettering engraved on one face. It is, the lettering says, the Vault. How one gets into it is not engraved. {self.words}" }
+    without as target for read from Thing
+    as target for read { do { say words } }
+  }
+  object doorways is Scenery {
+    grammar { name "doorways"  nouns "doorway", "door", "doors"  adjectives "large", "east", "west", "south" }
+    passage short { doorways }
+    describe { text "Large doorways to the east, the west and the south, framed in marble and standing open; the tellers' rooms lie east and west, and the Chairman's office south." }
+  }
+  object box_walls is Scenery {
+    grammar { name "deposit box walls"  nouns "boxes", "racks", "shelves"  adjectives "empty", "east", "west" }
+    passage short { deposit box walls }
+    describe { text "The east and west walls are racks from floor to ceiling, built for safety deposit boxes, and every box has been carefully removed, by evil persons, as the Bank would put it, or by persons who wanted boxes." }
+  }
+}
+
+object office is Office in underground_caverns_2 {
+  grammar {
+    name "Chairman's Office"
+    exit north "north" -> depository
+  }
+  :id office
+  :walls 18
+  passage body { This room was the office of the Chairman of the Bank of Zork. Like the other rooms here, it has been extensively vandalized. The lone exit is to the north. }
+  object portrait is Portrait
+  object vandalism is Scenery {
+    grammar { name "vandalism"  nouns "desk", "chair", "wreckage", "damage"  adjectives "extensive", "vandalized" }
+    passage short { vandalism }
+    describe { text "The office has been vandalized with a thoroughness that looks personal: the desk is in pieces, the chair is in fewer, and somebody has written on the wall what they thought of the Chairman, which the Bank would not want repeated." }
+  }
+}
+
+// The Gnome of Zurich, kept Elsewhere until the curtain shuts a customer
+// in the Small Room.
+object gnome is Gnome in elsewhere { }

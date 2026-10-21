@@ -1,0 +1,420 @@
+// The ravine's ledge and what is up the rock face from it: the Ledge in
+// Ravine, the End of Ledge, the Tiny Room and the Dreary Room, with the
+// massive oak door between the last two and the business of its lock
+// (RAVINE-LEDGE, LEDGE-TUNNEL, TINY-ROOM-FCN, DREARY-ROOM-FCN, P-DOOR,
+// PDOOR-FCN, PKH-FCN, PLID-FCN, PKEY-FCN, PWINDOW-FCN, PLACE-MAT-FCN).
+//
+// Zork's door, lids and keyholes are LOCAL-GLOBALS, one of each seen from
+// both rooms; a thing here is in one room, so the door is two doors that
+// keep each other told, and the keyholes two keyholes that each know
+// whether the far one holds the key.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Door, Portable} from 'thing'
+import {Box} from 'box'
+import {Room, DarkRoom, ChasmEdge} from 'room'
+import {RustyKey, LetterOpener, BlueSphere, PlaceMat, RobotLabel, Newspaper} from 'items'
+import {GoldKey, deep_ford} from 'garden'
+import {Chasm, Stream} from 'way_in'
+import {dragon_room} from 'dragon'
+import {Adventurer} from 'adventurer'
+import {open, close, unlock, lock, put_under, look_in, look_under, raise, lower, shift, turn, through, smell, climb_up, climb_down, Direction, Dest, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :pushed, :mat_moved, :key_far, :open_gate, :gate_open, :close_gate, :travel} from 'verbs'
+
+// The massive wooden door, from either side (PDOOR). Its lock answers to
+// the rusty key, and the place mat slid under it is where the key lands
+// when pushed out of the far keyhole.
+kind PDoor is Scenery, Door {
+  grammar { name "massive wooden door"  nouns "door", "bolt", "lock", "frame"  adjectives "massive", "wooden", "oak", "huge" }
+  passage short { massive wooden door }
+  :locked true
+  :open false
+  :mat_under false
+  :key_on_mat false
+  // Which way the door is from here, and which room is on the other side.
+  :side Direction default north
+  :beyond Dest default dreary_room
+  describe { text "It is a massive door of oak, bound with iron, with a small window in it barred with iron, and a formidable bolt lock set within the frame beside it. It is {if self.get(:open)}open{else}shut{if self.get(:locked)}, and the bolt is across{/if}{/if}.{if self.get(:mat_under)} The edge of a place mat is visible under it.{/if}" }
+  on :pdoor_locked (from, value) { self.set(:locked, value) }
+  on :pdoor_open (from, value) { self.set(:open, value) }
+  on :mat_under (from, value) { self.set(:mat_under, value)  if (!value) { self.set(:key_on_mat, false) } }
+  on :push_key (from, value) { if (self.get(:mat_under)) { self.set(:key_on_mat, true) } }
+  on :mat_moved { self.set(:key_on_mat, false) }
+
+  as target for unlock {
+    do {
+      if (bound tool) {
+        if (tool.is(RustyKey)) {
+          if (!self.get(:locked)) { say "The door is already unlocked." }
+          else {
+            self.set(:locked, false)
+            say "The door is now unlocked."
+            broadcast :pdoor_locked with false
+          }
+        }
+        else if (tool.is(GoldKey)) { say "It doesn't fit the lock." }
+        else { say "It can't be unlocked with that." }
+      } else { say "You'll need a key for that, and the right one." }
+    }
+  }
+  as target for lock {
+    do {
+      if (bound tool) {
+        if (tool.is(RustyKey)) {
+          if (self.get(:open)) { say "You'll have to close the door first." }
+          else if (self.get(:locked)) { say "The door is already locked." }
+          else {
+            self.set(:locked, true)
+            say "The door is locked."
+            broadcast :pdoor_locked with true
+          }
+        }
+        else if (tool.is(GoldKey)) { say "It doesn't fit the lock." }
+        else { say "It can't be locked with that." }
+      } else { say "You'll need a key for that, and the right one." }
+    }
+  }
+  without as target for open from Thing
+  as target for open {
+    do {
+      if (self.get(:open)) { say "I think you've already done that." }
+      else if (self.get(:locked)) { say "The door is locked." }
+      else {
+        self.set(:open, true)
+        say "The door is now open."
+        broadcast :pdoor_open with true
+      }
+    }
+  }
+  without as target for close from Thing
+  as target for close {
+    do {
+      if (!self.get(:open)) { say "I think you've already done that." }
+      else {
+        self.set(:open, false)
+        say "The door is now closed."
+        broadcast :pdoor_open with false
+      }
+    }
+  }
+  without as target for look_under from Thing
+  as target for look_under {
+    do {
+      if (self.get(:mat_under)) { say "The place mat is under the door.{if self.get(:key_on_mat)} Lying on it is a rusty iron key.{/if}" }
+      else { say "There is a gap under the door of the kind that a draught gets through, and dust, and not much else. Something flat might." }
+    }
+  }
+  // The mat, the robot's paper, the newspaper: the adventurer's own part
+  // does the moving (adventurer.sprout); the door says what came of it.
+  as target for put_under {
+    do {
+      if (item.is(PlaceMat)) {
+        if (self.get(:mat_under)) { say "The place mat is under the door already." }
+        else {
+          say "The place mat fits easily under the door."
+          self.set(:mat_under, true)
+          broadcast :mat_under with true
+        }
+      }
+      else if (item.is(RobotLabel)) { say "The paper is very small and vanishes under the door." }
+      else if (item.is(Newspaper)) { say "The newspaper crumples up and won't go under the door." }
+      else if (item.is(Thing)) { say "The {item.short} won't fit under the door." }
+      else { say "That won't fit under the door." }
+    }
+  }
+  without as target for through from Thing
+  as target for through {
+    do {
+      if (self.get(:open)) { say "The door is open; the way through it is {self.get(:side)}." }
+      else { say "The door is shut, and it is oak." }
+    }
+  }
+}
+
+// The barred window in the door (PWINDOW): the other room, seen through
+// it; a room is out of range of a room, so what is seen is written here.
+kind DoorWindow is Scenery, Door {
+  grammar { name "barred window"  nouns "window", "bars"  adjectives "small", "barred", "iron" }
+  passage short { barred window }
+  :open false
+  on :pdoor_open (from, value) { self.set(:open, value) }
+  passage view default { {if false}.{/if} }
+  describe { text "A small window in the door, barred with iron, at about the height of a face. One can see through it, between the bars." }
+  without as target for look_in from Thing
+  as target for look_in {
+    do {
+      if (self.get(:open)) { say "The door is open, dummy." }
+      else { say view }
+    }
+  }
+  without as target for through from Thing
+  as target for through { do { say "Perhaps if you were diced...." } }
+}
+kind TinyWindow is DoorWindow {
+  passage view { Through the bars you can see a small and rather dreary room, lit red from one side by a glow that comes out of a crack in the wall, and in the middle of it a dusty wooden table. There is something on the table, round, that takes the red light and gives it back blue. }
+}
+kind DrearyWindow is DoorWindow {
+  passage view { Through the bars you can see a tiny room, carved out of the rock, with nothing in it to speak of and a way down out of one side of it that looks precarious even from here. Whether it is lit depends on whether somebody with a lamp is standing in it. }
+}
+
+// The thin metal lid over a keyhole (LID-1, LID-2).
+kind KeyholeLid is Scenery {
+  grammar { name "metal lid"  nouns "lid", "cover"  adjectives "thin", "metal" }
+  passage short { metal lid }
+  :open false
+  describe { text "A thin metal lid on a pin, over the keyhole, of the kind that keeps the dust out and the curious busy. It is {if self.get(:open)}swung open{else}closed over the keyhole{/if}." }
+  without as target for open from Thing
+  as target for open {
+    do {
+      if (self.get(:open)) { say "I think you've already done that." }
+      else { self.set(:open, true)  say "The lid is now open."  each k: Keyhole in here { send k :lid with true } }
+    }
+  }
+  passage lifted { {if self.get(:open)}I think you've already done that.{else}The lid is now open.{/if} }
+  without as target for raise from Thing
+  as target for raise { do { say lifted  if (!self.get(:open)) { self.set(:open, true)  each k: Keyhole in here { send k :lid with true } } } }
+  without as target for shift from Thing
+  as target for shift { do { say lifted  if (!self.get(:open)) { self.set(:open, true)  each k: Keyhole in here { send k :lid with true } } } }
+  without as target for close from Thing
+  as target for close {
+    do {
+      if (!self.get(:open)) { say "I think you've already done that." }
+      else {
+        self.set(:closing, true)
+        each k: Keyhole in here { if (k.count(Thing) > 0) { self.set(:closing, false) } }
+        if (self.get(:closing)) { self.set(:open, false)  say "The lid covers the keyhole."  each k: Keyhole in here { send k :lid with false } }
+        else { say "The keyhole is occupied." }
+      }
+    }
+  }
+  :closing false
+  without as target for lower from Thing
+  as target for lower {
+    do {
+      if (!self.get(:open)) { say "I think you've already done that." }
+      else {
+        self.set(:closing, true)
+        each k: Keyhole in here { if (k.count(Thing) > 0) { self.set(:closing, false) } }
+        if (self.get(:closing)) { self.set(:open, false)  say "The lid covers the keyhole."  each k: Keyhole in here { send k :lid with false } }
+        else { say "The keyhole is occupied." }
+      }
+    }
+  }
+  without as target for look_under from Thing
+  as target for look_under { do { say "There's a keyhole behind the lid." } }
+}
+message :lid with boolean
+
+// A keyhole in the lock (KEYHOLE-1, KEYHOLE-2): the letter opener or the
+// key goes in, and pushes out whatever is in the keyhole on the far side.
+kind Keyhole is Box {
+  grammar { name "keyhole"  nouns "hole"  adjectives "small" }
+  passage short { keyhole }
+  :open true
+  :capacity 2
+  :ndesc true
+  :lidded true
+  :far_key false
+  :room Dest default tiny_room
+  :far_room Dest default dreary_room
+  on :lid (from, value) { self.set(:lidded, !value) }
+  on :key_far (from, value) { if (from != self) { self.set(:far_key, value) } }
+  passage examined { A keyhole in the lock, for a key with a bit the size of your thumb.{if self.get(:lidded)} A thin metal lid covers it.{else if self.count(Thing) > 0} {self.look_inside}{/if} }
+  // The door's description says what is in the keyhole; the room's list
+  // need not say it again.
+  passage inside_lines { {if false}.{/if} }
+  accept (item, from) {
+    if (self.get(:lidded)) { refuse "The lid is in the way." }
+    else if (self.count(Thing) > 0) { refuse "The keyhole is blocked." }
+    else if (!item.is(LetterOpener) && !item.is(RustyKey)) { refuse "That doesn't fit." }
+  }
+  on :entered (item, from) {
+    if (item.is(RustyKey)) { broadcast :key_far with true }
+    if (item.is(LetterOpener) || item.is(RustyKey)) {
+      if (self.get(:far_key)) {
+        tell "There is a faint noise from behind the door and a small cloud of dust rises from beneath it."
+        broadcast :push_key with self.get(:room)
+      }
+    }
+  }
+  on :left (item, to) { if (item.is(RustyKey)) { broadcast :key_far with false } }
+  // The far keyhole's push reaches the key in this one.
+  on :push_key (from, value) { if (from != self) { each k: RustyKey in self { send k :pushed with value } } }
+  without as target for look_in from Box
+  as target for look_in {
+    do {
+      if (self.get(:lidded)) { say "The lid is in the way." }
+      else if (self.count(Thing) > 0) { say "{self.look_inside}" }
+      else if (self.get(:far_key)) { say "No light can be seen through the keyhole." }
+      else if (self.get(:room) == :tiny_room) { say "You can see a lighted room at the other end." }
+      else { say "No light can be seen through the keyhole." }
+    }
+  }
+}
+
+// The key, pushed out of its keyhole (PKH-FCN): onto the mat if the mat is
+// under the door, and otherwise into the crack, and gone.
+kind PushedKey is RustyKey {
+  :mat_under false
+  :pushing false
+  :to Dest default tiny_room
+  on :mat_under (from, value) { self.set(:mat_under, value) }
+  on :pushed (from, value) {
+    self.set(:to, value)
+    self.set(:pushing, true)
+    send underground_caverns_2 :open_gate
+  }
+  on :gate_open {
+    if (self.get(:pushing)) {
+      self.set(:pushing, false)
+      if (self.get(:mat_under)) {
+        self.set(:on_mat, true)
+        self.set(:ndesc, true)
+        if (self.get(:to) == :tiny_room) { if (tiny_room.is(Room)) { move self to tiny_room } } else { if (dreary_room.is(Room)) { move self to dreary_room } }
+      } else {
+        finally destroy self
+      }
+    }
+    send underground_caverns_2 :close_gate
+  }
+  // The mat moved from under the door: the key falls off it.
+  on :mat_moved {
+    if (self.get(:on_mat)) {
+      self.set(:on_mat, false)
+      self.set(:ndesc, false)
+      tell "As the place mat is moved, a rusty iron key falls from it and onto the floor."
+    }
+  }
+  without as target for turn from Thing
+  as target for turn {
+    do {
+      self.set(:turned, false)
+      each d: PDoor in here {
+        if (!self.get(:turned)) {
+          self.set(:turned, true)
+          if (d.get(:locked)) { say "The door is now unlocked."  broadcast :pdoor_locked with false }
+          else if (d.get(:open)) { say "You'll have to close the door first." }
+          else { say "The door is locked."  broadcast :pdoor_locked with true }
+        }
+      }
+      if (!self.get(:turned)) { say "You turn the key in the air, where it does nothing." }
+    }
+  }
+  :turned false
+}
+
+kind TinyRoom is DarkRoom { }
+kind DrearyRoom is Room { }
+
+object ravine_ledge is DarkRoom, ChasmEdge in underground_caverns_2 {
+  grammar {
+    name "Ledge in Ravine"
+    exit up "up" -> tiny_room
+    exit south "south" -> deep_ford
+    exit down "down" -> deep_ford
+    exit west "west" -> ledge_end
+  }
+  :id ravine_ledge
+  :walls 15
+  passage body { You are on a narrow ledge near the bottom of a deep ravine. The ledge continues to the west. A precarious climb up to another tiny ledge is possible. A short scramble down the rock face leads to a stream. }
+  object chasm is Chasm
+  object stream is Stream
+  object tiny_ledge is Scenery {
+    grammar { name "tiny ledge"  nouns "ledge", "shelf", "climb"  adjectives "tiny", "precarious", "another" }
+    passage short { tiny ledge }
+    describe { text "Above you, a tiny ledge, hardly more than a lip of rock, with the dark of an opening behind it. The climb up to it is precarious, which is to say possible, and the sort of thing one does once and then thinks about." }
+    without as target for climb_up from Thing
+    as target for climb_up { do { send actor :travel with :tiny_room  say "" } }
+  }
+  object rock_face is Scenery {
+    grammar { name "rock face"  nouns "face", "rock", "scramble"  adjectives "rock", "steep" }
+    passage short { rock face }
+    describe { text "The rock face goes down from the ledge to the stream, a short scramble, and up from it to the tiny ledge, a longer and less pleasant one. It is wet, and crumbly, and has opinions about your boots." }
+    without as target for climb_down from Thing
+    as target for climb_down { do { send actor :travel with :deep_ford  say "" } }
+    without as target for climb_up from Thing
+    as target for climb_up { do { send actor :travel with :tiny_room  say "" } }
+  }
+}
+
+object ledge_end is DarkRoom in underground_caverns_2 {
+  grammar {
+    name "End of Ledge"
+    exit east "east" -> ravine_ledge
+    exit north "north" -> dragon_room
+    exit in "in" -> dragon_room
+    exit down "down" refuse "There are a lot of sharp rocks down there."
+  }
+  :id ledge_end
+  :walls 15
+  passage body { A ledge from the east ends here, and a tunnel leads north into the wall. There is a rather odd smokey odor in the warm air of the tunnel. }
+  object odor is Scenery {
+    grammar { name "smokey odor"  nouns "odor", "smell", "smoke", "air"  adjectives "odd", "smokey", "smoky", "warm" }
+    passage short { smokey odor }
+    describe { text "The air coming out of the tunnel is warm, which no air in this place has been, and it smells of smoke: not wood smoke, and not coal, but something with a sulphur edge to it, as though whatever is burning in there had been burning for a very long time and did not need fuel." }
+    without as target for smell from Thing
+    as target for smell { do { say "Smoke, warm and sulphurous, from the tunnel to the north, and under it something like a very large animal that has not been washed." } }
+  }
+  object sharp_rocks is Scenery {
+    grammar { name "sharp rocks"  nouns "rocks", "rock"  adjectives "sharp", "many" }
+    passage short { sharp rocks }
+    describe { text "Below the ledge the ravine floor is a litter of sharp rocks, every one of them pointing up. There are a lot of them." }
+  }
+}
+
+object tiny_room is TinyRoom in underground_caverns_2 {
+  grammar {
+    name "Tiny Room"
+    exit north "north" -> dreary_room when (door.get(:open))
+    exit north "north" refuse "The door is shut."
+    exit in "in" -> dreary_room when (door.get(:open))
+    exit in "in" refuse "The door is shut."
+    exit down "down" -> ravine_ledge
+  }
+  :id tiny_room
+  :walls 16
+  passage body { This is a tiny room carved out of the wall of the ravine. There is an exit down a precarious climb. On the north side of the room is a massive wooden door, which has a small window barred with iron. A formidable bolt lock is set within the door frame. A keyhole {if !lid.get(:open)}covered by a thin metal lid {/if}lies within the lock.{for u: Thing in keyhole} A {u.short} is in place within the keyhole.{/for}{if door.get(:mat_under)} The edge of a place mat is visible under the door.{if door.get(:key_on_mat)} Lying on the place mat is a rusty iron key.{/if}{/if} }
+  object door is PDoor { :side north  :beyond dreary_room }
+  object window is TinyWindow
+  object lid is KeyholeLid
+  object keyhole is Keyhole { :room tiny_room  :far_room dreary_room  :far_key true }
+  object chasm is Chasm
+}
+
+object dreary_room is DrearyRoom in underground_caverns_2 {
+  grammar {
+    name "Dreary Room"
+    exit south "south" -> tiny_room when (door.get(:open))
+    exit south "south" refuse "The door is shut."
+    exit out "out" -> tiny_room when (door.get(:open))
+    exit out "out" refuse "The door is shut."
+  }
+  :id dreary_room
+  :walls 17
+  passage body { This is a small and rather dreary room, eerily illuminated by a red glow emanating from a crack in one wall. The light falls upon a dusty wooden table in the center of the room. On the south side of the room is a massive wooden door, which has a small window barred with iron. A formidable bolt lock is set within the door frame. A keyhole {if !lid.get(:open)}covered by a thin metal lid {/if}lies within the lock.{for u: Thing in keyhole} A {u.short} is in place within the keyhole.{/for}{if door.get(:mat_under)} The edge of a place mat is visible under the door.{if door.get(:key_on_mat)} Lying on the place mat is a rusty iron key.{/if}{/if} }
+  object door is PDoor { :side south  :beyond tiny_room }
+  object window is DrearyWindow
+  object lid is KeyholeLid { :open true }
+  object keyhole is Keyhole {
+    :room dreary_room
+    :far_room tiny_room
+    :lidded false
+    :plain 1
+    object key is PushedKey
+  }
+  object table is Box {
+    grammar { name "dusty wooden table"  nouns "table"  adjectives "dusty", "wooden" }
+    :open true
+    :surface true
+    :capacity 40
+    :ndesc true
+    passage short { dusty wooden table }
+    passage examined { A wooden table, dusty, in the middle of the room, with the red light on it. {self.look_inside} }
+    object sphere is BlueSphere
+  }
+  object crack is Scenery {
+    grammar { name "narrow crack"  nouns "crack", "glow", "light"  adjectives "narrow", "red" }
+    passage short { narrow crack }
+    describe { text "A narrow crack in the wall, no wider than a finger, and out of it a red glow, steady, as of something very hot a long way back in the rock. It is warm to stand near. Whatever is on the other side of it is not a room." }
+    without as target for look_in from Thing
+    as target for look_in { do { say "Red, and more red, and heat on your face. The crack goes back further than the light does." } }
+  }
+}
