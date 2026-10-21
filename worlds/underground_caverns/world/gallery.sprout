@@ -13,9 +13,7 @@ import {Abyss} from 'east'
 import {Illustrated} from 'picture'
 extension media 1
 
-object east_of_chasm is DarkRoom, Perilous, ChasmEdge, Illustrated in underground_caverns {
-  :picture "pictures/chasm.png"
-  :caption "the chasm"
+object east_of_chasm is DarkRoom, Perilous, ChasmEdge in underground_caverns {
   :tour 3
   grammar {
     name "East of Chasm"
@@ -45,9 +43,7 @@ object east_of_chasm is DarkRoom, Perilous, ChasmEdge, Illustrated in undergroun
   }
 }
 
-object gallery is Room, Illustrated in underground_caverns {
-  :picture "pictures/gallery.png"
-  :caption "the gallery"
+object gallery is Room in underground_caverns {
   :tour 4
   grammar {
     name "Gallery"

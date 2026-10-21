@@ -201,9 +201,7 @@ kind Bat is Thing, Creature, Illustrated {
   }
 }
 
-object bat_room is DarkRoom, Squeaky, Illustrated in underground_caverns {
-  :picture "pictures/bat.png"
-  :caption "the vampire bat"
+object bat_room is DarkRoom, Squeaky in underground_caverns {
   :tour 0
   grammar {
     name "Bat Room"

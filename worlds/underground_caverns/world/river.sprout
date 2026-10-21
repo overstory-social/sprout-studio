@@ -379,9 +379,7 @@ object cliff_middle is Room in underground_caverns {
   }
 }
 
-object canyon_view is Room, CanyonRim, Illustrated in underground_caverns {
-  :picture "pictures/canyon-view.png"
-  :caption "the Great Canyon"
+object canyon_view is Room, CanyonRim in underground_caverns {
   grammar {
     name "Canyon View"
     exit east      "east"      -> cliff_middle

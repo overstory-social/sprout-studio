@@ -194,9 +194,7 @@ object behind_house is Room, Outdoors in underground_caverns {
   }
 }
 
-object forest_1 is Woodland, Illustrated in underground_caverns {
-  :picture "pictures/forest.png"
-  :caption "the forest"
+object forest_1 is Woodland in underground_caverns {
   grammar {
     name "Forest"
     exit up    "tree"  refuse "There is no tree here suitable for climbing."
@@ -214,9 +212,7 @@ object forest_1 is Woodland, Illustrated in underground_caverns {
   }
 }
 
-object forest_2 is Woodland, Illustrated in underground_caverns {
-  :picture "pictures/forest.png"
-  :caption "the forest"
+object forest_2 is Woodland in underground_caverns {
   grammar {
     name "Forest"
     exit up    "tree"  refuse "There is no tree here suitable for climbing."
@@ -256,9 +252,7 @@ object mountains is Forest in underground_caverns {
   }
 }
 
-object forest_3 is Woodland, Illustrated in underground_caverns {
-  :picture "pictures/forest.png"
-  :caption "the forest"
+object forest_3 is Woodland in underground_caverns {
   grammar {
     name "Forest"
     exit up        "tree"      refuse "There is no tree here suitable for climbing."
@@ -272,9 +266,7 @@ object forest_3 is Woodland, Illustrated in underground_caverns {
   object house is DistantHouse
 }
 
-object forest_path is Forest, Songful, Illustrated in underground_caverns {
-  :picture "pictures/forest.png"
-  :caption "the forest path"
+object forest_path is Forest, Songful in underground_caverns {
   grammar {
     name "Forest Path"
     exit up    "tree"  -> up_a_tree
@@ -391,9 +383,7 @@ object grating_clearing is Forest, Illustrated in underground_caverns {
   object house is DistantHouse
 }
 
-object clearing is Forest, Illustrated in underground_caverns {
-  :picture "pictures/forest.png"
-  :caption "the forest"
+object clearing is Forest in underground_caverns {
   grammar {
     name "Clearing"
     exit up    "tree"  refuse "There is no tree here suitable for climbing."

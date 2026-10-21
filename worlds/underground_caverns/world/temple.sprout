@@ -31,9 +31,7 @@ kind DomeRoom is DarkRoom { :roped false }
 kind AltarRoom is Room { }
 kind TempleRoom is Room { }
 
-object dome_room is DomeRoom, Illustrated in underground_caverns {
-  :picture "pictures/dome.png"
-  :caption "the dome"
+object dome_room is DomeRoom in underground_caverns {
   :tour 38
   grammar {
     name "Dome Room"
@@ -78,9 +76,7 @@ object dome_room is DomeRoom, Illustrated in underground_caverns {
   }
 }
 
-object torch_room is DarkRoom, Illustrated in underground_caverns {
-  :picture "pictures/dome.png"
-  :caption "the dome"
+object torch_room is DarkRoom in underground_caverns {
   :tour 39
   grammar {
     name "Torch Room"

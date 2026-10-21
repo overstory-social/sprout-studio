@@ -33,9 +33,7 @@ kind HadesGate is Room {
   :phase 0 min 0 max 2
 }
 
-object entrance_to_hades is HadesGate, Illustrated in underground_caverns {
-  :picture "pictures/entrance-to-hades.png"
-  :caption "the gates of Hades"
+object entrance_to_hades is HadesGate in underground_caverns {
   :tour 69
   grammar {
     name "Entrance to Hades"
@@ -130,9 +128,7 @@ object entrance_to_hades is HadesGate, Illustrated in underground_caverns {
   }
 }
 
-object land_of_the_dead is Room, Illustrated in underground_caverns {
-  :picture "pictures/land-of-the-dead.png"
-  :caption "the Land of the Living Dead"
+object land_of_the_dead is Room in underground_caverns {
   :tour 70
   grammar {
     name "Land of the Dead"

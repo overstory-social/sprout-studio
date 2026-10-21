@@ -1,11 +1,11 @@
 # Picture credits
 
 Every plate in this folder is a 400x240 1-bit composition. The first eleven were painted for
-this world, some with CC0 sprites placed in them (the packs below). The rest are public-domain
-engravings and paintings, and photographs released under CC0, each cropped, toned and
-dithered to one bit for this world; a thing is cut out of its backdrop and set on black (or
-on white, for the canary and the garlic). Only public-domain
-and CC0 sources are used: none is CC BY, CC BY-SA, NC or ND. Each licence was read on the
+this world, some with CC0 sprites placed in them (the packs below). The rest are things seen
+close up on examine, from public-domain engravings and paintings and from photographs
+released under CC0, each cropped, toned and dithered to one bit for this world; a thing is
+cut out of its backdrop and set on black (or on white, for the canary and the garlic). Rooms
+stay drawn. Only public-domain and CC0 sources are used: none is CC BY, CC BY-SA, NC or ND. Each licence was read on the
 source's own Wikimedia Commons file page, quoted below as that page's licence template.
 "Used" lists the plate(s) the source is in.
 
@@ -42,50 +42,12 @@ source's own Wikimedia Commons file page, quoted below as that page's licence te
 
 Each entry: the work, its maker, the page's licence, the file page, and the plate.
 
-### Rooms
+### Things
 
-- *Inferno*, Plate 8, Canto III: "Abandon all hope ye who enter here" — Gustave Doré, 1857.
-  Public domain: `{{PD-Art|PD-old-auto-1923|deathyear=1883}}`.
-  https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Dante_Alighieri_-_Inferno_-_Plate_8_(Canto_III_-_Abandon_all_hope_ye_who_enter_here).jpg
-  — Used: `entrance-to-hades.png` (the gateway, cropped).
-- *Inferno*, Plate 10, Canto III: Charon herds the sinners onto his boat — Gustave Doré, 1857.
-  Public domain: `{{PD-Art|PD-old-auto-expired|deathyear=1883}}`.
-  https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Dante_Alighieri_-_Inferno_-_Plate_10_(Canto_III_-_Charon_herds_the_sinners_onto_his_boat).jpg
-  — Used: `land-of-the-dead.png`.
-- *Inferno*, Plate 1: "I found myself within a forest dark" — Gustave Doré, 1857. Public domain:
-  `{{PD-Art|PD-old-auto-expired|deathyear=1883}}`.
-  https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Dante_Alighieri_-_Inferno_-_Plate_1_(I_found_myself_within_a_forest_dark...).jpg
-  — Used: `forest.png`.
-- *Grand Canyon of the Yellowstone* — Thomas Moran, 1893–1901, Smithsonian American Art Museum.
-  Public domain: `{{Licensed-PD-Art|PD-1923|PD-USGov-SI}}`.
-  https://commons.wikimedia.org/wiki/File:Thomas_Moran_-_Grand_Canyon_of_the_Yellowstone_-_Smithsonian.jpg
-  — Used: `canyon-view.png`.
-- *Mammoth Cave, Kentucky: Crossing the River Styx* — wood engraving, 1877, Library of Congress.
-  Public domain: `{{PD-old-100-1923}}`.
-  https://commons.wikimedia.org/wiki/File:Mammoth_Cave,_Kentucky-_Crossing_the_River_Styx_LCCN2002707269.jpg
-  — Used: `frigid-river.png`.
-- *The Maelstrom in Mammoth Cave* — wood engraving, 1859, Library of Congress. Public domain:
-  `{{PD-old-100-1923}}`.
-  https://commons.wikimedia.org/wiki/File:%22The_Maelstrom_in_Mammoth_Cave%22_LCCN2002705654.tif
-  — Used: `chasm.png`.
-- *Interior of the Pantheon* (Det indre af Pantheon) — Giovanni Battista Piranesi, 1768, Statens
-  Museum for Kunst. Public domain: `{{Licensed-PD-Art|PD-old|Cc-zero}}`.
-  https://commons.wikimedia.org/wiki/File:Giovanni_Battista_Piranesi,_Det_indre_af_Pantheon,_1768,_KKSgb9860-86,_Statens_Museum_for_Kunst.jpg
-  — Used: `dome.png`.
-- *Mr Thomas Hope's Picture Gallery, Duchess Street, London* — anonymous engraving, 1821, Yale
-  Center for British Art. CC0: `{{cc-zero}}`.
-  https://commons.wikimedia.org/wiki/File:Anonymous_-_Mr_Thomas_Hope%27s_Picture_Gallery,_Duchess_Street,_London_-_B1977.14.4771_-_Yale_Center_for_British_Art.jpg
-  — Used: `gallery.png`.
-- *Wayland's Smithy, Oxfordshire* — photograph by Mertbiol, 2025. CC0: `{{self|cc-zero}}`.
-  https://commons.wikimedia.org/wiki/File:Wayland%27s_Smithy,_Oxfordshire_-_August_2025.jpg
-  — Used: `stone-barrow.png`.
 - *Kunstformen der Natur*, plate 67: Chiroptera — Ernst Haeckel, 1904. Public domain:
   `{{PD-old-100}}`. https://commons.wikimedia.org/wiki/File:Haeckel_Chiroptera.jpg
   — Used: `bat.png` (the long-eared bat at its centre, white on black; the bats around it
   are left out).
-
-### Things
-
 - Gatchina Palace Egg (closed) — House of Fabergé, 1901, Walters Art Museum 44500. Public
   domain: `{{Walters Art Museum license|PD-old-auto|deathyear=1920}}`.
   https://commons.wikimedia.org/wiki/File:House_of_Faberg%C3%A9_-_Gatchina_Palace_Egg_-_Walters_44500_-_Closed.jpg
