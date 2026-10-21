@@ -50,19 +50,17 @@
       { "reader": "Marta", "kind": "described", "words": "A place mat" },
       { "reader": "Marta", "kind": "described", "words": "A china teapot" },
       { "reader": "Marta", "kind": "described", "words": "A letter opener" },
-      { "reader": "Marta", "kind": "described", "words": "A matchbook" },
-      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
+      { "reader": "Marta", "kind": "described", "words": "A matchbook" }
     ] },
     { "as": "Marta", "type": "take teapot", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." },
-      { "reader": "Marta", "kind": "said", "words": "The unicorn bounds lightly away." }
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "out", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
       { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
       { "reader": "Marta", "kind": "told", "words": "There is a beautiful unicorn eating roses here. Around his neck is a red satin ribbon on which is strung a tiny key." },
-      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
@@ -78,16 +76,11 @@
       { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
     ] },
     { "as": "Marta", "type": "se", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
-      { "reader": "Marta", "kind": "told", "words": "There is a beautiful unicorn eating roses here. Around his neck is a red satin ribbon on which is strung a tiny key." },
-      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+      { "reader": "Marta", "kind": "described", "words": "North End of Garden" }
     ] },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Formal Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." },
-      { "reader": "Marta", "kind": "said", "words": "The unicorn bounds lightly away." },
-      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." }
     ] },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Topiary" },
@@ -121,7 +114,7 @@
       { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
     ] },
     { "as": "Marta", "type": "examine bucket", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago, and the rope above it is taut as though it would like to again. Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets." },
+      { "reader": "Marta", "kind": "described", "words": "It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago: fresh water, by the lack of any salt crust, the kind the stream has where it comes up to meet you at a ford, and the kind a teapot would carry; and the rope above it is taut as though it would like to again. Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets." },
       { "reader": "Marta", "kind": "described", "words": "The wooden bucket is empty." }
     ] },
     { "as": "Marta", "type": "pour water into bucket", "expect": [
@@ -143,9 +136,8 @@
       { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" },
       { "reader": "Marta", "kind": "told", "words": "A strange little man in a long cloak appears suddenly in the room. He is wearing a high pointed hat embroidered with astrological signs. He has a long, stringy, and unkempt beard." },
       { "reader": "Marta", "kind": "told", "words": "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." },
-      { "reader": "Marta", "kind": "told", "words": "The Wizard, in a deep and resonant voice, speaks the word \"Feeble!\" He then vanishes, cackling gleefully." },
-      { "reader": "Marta", "kind": "told", "words": "All at once you feel very tired." },
-      { "reader": "Marta", "kind": "told", "words": "In fact, you feel so weak that you drop the lamp." }
+      { "reader": "Marta", "kind": "told", "words": "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you." },
+      { "reader": "Marta", "kind": "told", "words": "The Wizard, in a deep and resonant voice, speaks the word \"Fantasize!\" He then vanishes, cackling gleefully." }
     ] },
     { "as": "Marta", "type": "wait", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Time passes... The rope stays taut, and the bucket stays up wherever it has gone. It came down once, so it will presumably come down again, when whatever is in it has dried; it would be a long wait. (WAIT FOR THE BUCKET passes the whole of it at once.)" },
@@ -203,7 +195,7 @@
       { "reader": "Marta", "kind": "said", "words": "Time passes... The rope stays taut, and the bucket stays up wherever it has gone. It came down once, so it will presumably come down again, when whatever is in it has dried; it would be a long wait. (WAIT FOR THE BUCKET passes the whole of it at once.)" },
       { "level": "info", "text": "passes: 90 seconds" },
       { "level": "info", "text": "underground_caverns_2#1 woke, 1080 seconds after it asked" },
-      { "reader": "Marta", "kind": "told", "words": "You feel more energetic now." },
+      { "reader": "Marta", "kind": "told", "words": "The room, which had been looking a little odd round the edges, settles down and is only a room." },
       { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
     ] },
     { "as": "Marta", "type": "wait", "expect": [
@@ -305,7 +297,6 @@
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Circular Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west." },
-      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here (providing light)." },
       { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
     ] },
     { "as": "Marta", "type": "score", "expect": [

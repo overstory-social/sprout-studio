@@ -1,0 +1,257 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "A real bug, and in the quarter's best scene. The cause was not Filch (Zork's S-FILCH only acts on ITAKE, and the handover is exempt here too) but a path: `send garden_north.unicorn :unicorn_scene` named what the north end held, and the unicorn had bounded off on that very move, so the send reached nothing and nothing said so; the walkthrough had passed by luck of the draw. The unicorn is now asked by broadcast wherever it is, and goes for good once the princess rides it, key given or not, as Zork's REMOVE takes it; the stand-ins say so and whether the key went with her. With the key in hand 'gold key' resolves to the key (hands are nearer than the room, Parsing › Choosing a reading), verified. The walkthrough covers the scene; a Filch-during-handover branch is not added since the handover never went through `take`."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Zork's one-in-four roll, drawn at the same point of successive turns, is not a fair coin here (friction 43, now 56). The chest is a counter: the second try opens it, exactly as the first try's line promises. The walkthrough and the gnome test both open it twice."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "I-GARDEN prints 'bounds lightly away' only where the unicorn can be seen to go; it is now said only at the North End. The gazebo's and Formal Garden's stand-in says, while the unicorn is away, that it was at the north end a moment ago and will be again, instead of 'Unicorn? What unicorn?'."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Accepted as scoped by its own recommendation: nothing revised on reach alone. The one check it asks for is done: the bucket's tide-line now says the water it held was fresh, the kind the stream has at a ford and a teapot carries. The round 5 brief and the walkthrough's coverage of the Tea Room and the robot (which it keeps) are the director's and already true respectively."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "Four of seven runs, and the brief wants a short visit to find something to want, not a wall. 'untie', 'cut' and 'take ribbon' are answered in voice and without the melt; the unicorn's, the ribbon's and the key's close-ups now say the somebody is a lady who is not in this garden and that nothing done here will get the key off. The key still waits for the princess, as Zork has it."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "The arithmetic was never readable. A blow's reply is now graded by his anger as the blow lands (a shrug, a stare, then 'You had better be very careful now' for the blow before the last) rather than drawn, and when his interest runs out behind a visitor who walked on, they are told they hear him turn back. Snapshots are needed since a passage renders after the turn's clocks (friction 52)."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The trick stays Zork's; the alarm's line now says it is the doorway that knows the Bank's property, and that the curtain was not built by the same people, in the voice of the 'not the kind of thing one goes north through' line."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Four short runs and no hook is the round's plainest finding. Zork's Wizard never speaks but the word, so the hook is the narrator's, read off him: his eye goes to your empty hands and relaxes; it is all south of the ravine, every treasure the Empire mislaid, and not yet found. The first-spell draw is now even among three (it was two-in-four Fantasize, which the alike draws of friction 43 made six of seven)."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Thing's shift reached the mat twice (by Box and by Portable, the spec's Suppressing a contribution). The mat now has one answer: pulled from under the door it is drawn out and the key falls off it, as with 'take mat'; pulled anywhere else, 'reveals nothing'."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "The direction was wrong because the passage was rendered after she had stepped (friction 52); her gaze now names the way out of the room she is spoken to in. 'follow princess' from a room she has left is answered by a stand-in in every room on her way home, saying which way she went, that she has not come this way yet, or how she left for good."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "The most quoted line kept, its first clause now the verb's: an eye for examine, a blow for attack, kick, break and throw, no mouth for give and ask, the hand for everything else. The language would not let the illusion do this itself (a wildcard permit answers first, friction 51), so the actor's own part chooses."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "The conjured grue is now the room's own grue's to answer for: while shown, every verb and its close-up say that a grue in plain sight in the light is the one thing no grue has ever been, and name the Wizard's word, so it reads as the illusion it is."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Five of seven, and intent.md always said faint blue for the unicorn and bright for the Wizard; the code gave the unicorn the bright glow in its own room. Faint blue now in its room as next door; 'very brightly' is the Wizard's alone."
+    },
+    {
+      "answers": "P14",
+      "decision": "accept",
+      "reason": "The scene dangled the one reward the brief's soft walls take away. The melt's reveal now hears the rockfall come down in the same breath, and the Ice Room's description says the roof has come down a little way along the passage; the exit's refusal stands."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The unicorn is asked for the key by broadcast (`:unicorn_rides`), wherever it has bounded off to, and goes for good once ridden, key given or not; the princess sends the same when nobody was there; stand-ins hear `:unicorn_gone` with whether the key was given and say so; the key's close-up changes once it is in hand.",
+      "files": [
+        "worlds/underground_caverns_2/world/garden.sprout",
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/underground_caverns_2.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The rotten chest opens on the second try (a `:tried` counter in place of the one-in-four roll); the walkthrough and the gnome test open it twice.",
+      "files": [
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json",
+        "worlds/underground_caverns_2/world/tests/gnome.json"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "'The unicorn bounds lightly away' is said only at the North End; the gazebo's and Formal Garden's stand-in says where the unicorn is while it is away; the garden's clock holds the unicorn put for two moves after it comes or goes.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/garden.sprout"
+      ],
+      "for": [
+        "P3",
+        "P5"
+      ]
+    },
+    {
+      "what": "The bucket's tide-line says the water it held was fresh, the kind the stream has at a ford and a teapot carries.",
+      "files": [
+        "worlds/underground_caverns_2/world/well.sprout"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "A new `untie` verb with Thing's default; the ribbon, the gold key and the unicorn answer untie, cut, tie, take and move in voice, pointing to a lady who is not in this garden, without the melt; new test `tests/revision4.json` covers them.",
+      "files": [
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/thing.sprout",
+        "worlds/underground_caverns_2/world/garden.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/revision4.json",
+        "worlds/underground_caverns_2/world/README.md"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "The dragon's strike replies are graded by anger via a `:blow_at` snapshot (shrug, stare, warning before the fatal blow); `:dragon_bored` is broadcast when his interest runs out behind a visitor who walked on, and the visitor hears him turn back.",
+      "files": [
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/underground_caverns_2.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "The Bank's alarm at both tellers' doors says it is the doorway that knows the Bank's property, and that the curtain was not built by the same people.",
+      "files": [
+        "worlds/underground_caverns_2/world/bank.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "The Wizard's first call carries the hook in the narrator's voice (his eye on your empty hands; the treasures south of the ravine, not yet found), and the first spell is drawn evenly among Feeble, Fumble and Fantasize; the debut test regenerated.",
+      "files": [
+        "worlds/underground_caverns_2/world/wizard.sprout",
+        "worlds/underground_caverns_2/world/tests/wizard_debut.json"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "The place mat leaves out Thing's shift along both paths and answers pull/move itself: drawn out from under the door with the key falling off (`:unmat`), or 'reveals nothing'; the walkthrough pulls it.",
+      "files": [
+        "worlds/underground_caverns_2/world/items.sprout",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "The princess's gaze line names the way out of the room she is spoken to in (a `:seen_step` snapshot); `AbsentPrincess` stand-ins in all ten rooms of her way home answer 'follow princess' and her other words, driven by `:princess_step` and `:princess_gone`; the walkthrough follows her from the Dragon Room.",
+      "files": [
+        "worlds/underground_caverns_2/world/dragon.sprout",
+        "worlds/underground_caverns_2/world/ravine.sprout",
+        "worlds/underground_caverns_2/world/garden.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout",
+        "worlds/underground_caverns_2/world/underground_caverns_2.sprout",
+        "worlds/underground_caverns_2/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "The illusion's refusal opens with the verb's clause (look, strike, speak), chosen in the actor's permits for examine, attack, mung, kick, throw, give and ask since the illusion's wildcard answers first; the debut test strikes, kicks, gives to and throws at the ingot.",
+      "files": [
+        "worlds/underground_caverns_2/world/room.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/wizard_debut.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "The illusion tells the room's grue `:conjured` when it shows a grue; the conjured grue's close-up and every verb on it say a grue in plain sight is no grue, and name the Wizard's word.",
+      "files": [
+        "worlds/underground_caverns_2/world/room.sprout",
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/verbs.sprout"
+      ],
+      "for": [
+        "P12"
+      ]
+    },
+    {
+      "what": "The sword glows faint blue for the unicorn in its own room as well as next door; 'very brightly' is the lingering Wizard's alone; every test script regenerated for the glow and the scoped bounds-away line.",
+      "files": [
+        "worlds/underground_caverns_2/world/adventurer.sprout",
+        "worlds/underground_caverns_2/world/tests/bucket.json",
+        "worlds/underground_caverns_2/world/tests/bucket_count.json",
+        "worlds/underground_caverns_2/world/tests/bucket_strain.json",
+        "worlds/underground_caverns_2/world/tests/bucket_wait.json",
+        "worlds/underground_caverns_2/world/tests/cakes.json",
+        "worlds/underground_caverns_2/world/tests/gas.json",
+        "worlds/underground_caverns_2/world/tests/revision3.json",
+        "worlds/underground_caverns_2/world/tests/riddle.json",
+        "worlds/underground_caverns_2/world/tests/robot.json",
+        "worlds/underground_caverns_2/world/tests/take_all.json"
+      ],
+      "for": [
+        "P13",
+        "P3"
+      ]
+    },
+    {
+      "what": "The glacier scene hears the rockfall come down in the same breath as the reveal, and the Ice Room's melted description says the roof has come down along the west passage.",
+      "files": [
+        "worlds/underground_caverns_2/world/dragon.sprout"
+      ],
+      "for": [
+        "P14"
+      ]
+    },
+    {
+      "what": "intent.md kept current (the unicorn gone for good, the followable princess, the graded dragon, the hook, the glow, the illusion's clauses, the chest, the mat, the bucket's tell); friction.md entries 51 to 56 (a wildcard's permit answers first; a passage renders after the move's clocks; a declared object's path does not follow it; a member left out along one path arrives by another; two glows in one move say nothing; the alike draws again).",
+      "files": [
+        "worlds/underground_caverns_2/intent.md",
+        "worlds/underground_caverns_2/friction.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P6",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P13"
+      ]
+    }
+  ]
+}

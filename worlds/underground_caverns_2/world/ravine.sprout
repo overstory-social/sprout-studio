@@ -15,7 +15,7 @@ import {Room, DarkRoom, ChasmEdge} from 'room'
 import {RustyKey, LetterOpener, BlueSphere, PlaceMat, RobotLabel, Newspaper} from 'items'
 import {GoldKey, deep_ford} from 'garden'
 import {Chasm, Stream} from 'way_in'
-import {dragon_room} from 'dragon'
+import {dragon_room, AbsentPrincess} from 'dragon'
 import {Adventurer} from 'adventurer'
 import {open, close, unlock, lock, put_under, look_in, look_under, raise, lower, shift, turn, through, smell, climb_up, climb_down, Direction, Dest, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :pushed, :mat_moved, :key_far, :open_gate, :gate_open, :close_gate, :travel} from 'verbs'
 
@@ -315,6 +315,7 @@ object ravine_ledge is DarkRoom, ChasmEdge in underground_caverns_2 {
   :id ravine_ledge
   :walls 15
   passage body { You are on a narrow ledge near the bottom of a deep ravine. The ledge continues to the west. A precarious climb up to another tiny ledge is possible. A short scramble down the rock face leads to a stream. }
+  object other_princess is AbsentPrincess { :order 3  :way down }
   object chasm is Chasm
   object stream is Stream
   object tiny_ledge is Scenery {
@@ -346,6 +347,7 @@ object ledge_end is DarkRoom in underground_caverns_2 {
   :id ledge_end
   :walls 15
   passage body { A ledge from the east ends here, and a tunnel leads north into the wall. There is a rather odd smokey odor in the warm air of the tunnel. }
+  object other_princess is AbsentPrincess { :order 2  :way east }
   object odor is Scenery {
     grammar { name "smokey odor"  nouns "odor", "smell", "smoke", "air"  adjectives "odd", "smokey", "smoky", "warm" }
     passage short { smokey odor }

@@ -13,7 +13,8 @@ the princess that goes home.
 
 `sprout check .` checks it, and `sprout test .` runs its tests, the
 scripts in `tests/`; `tests/walkthrough.json` plays from the barrow to the
-end of the second quarter, 190 of 400 points.
+end of the second quarter, 190 of 400 points, and `tests/revision4.json`
+the garden's answers about the unicorn's ribbon and key.
 
 ## Credits
 

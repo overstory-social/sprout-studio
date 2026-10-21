@@ -14,10 +14,10 @@ import {Thing, Portable, Scenery, Creature, Valuable, Button} from 'thing'
 import {Box, Bag} from 'box'
 import {Lamp, Light, BrokenLamp} from 'lamp'
 import {Weapon, Sword, Treasure, Food, Water, StreamWater, Teapot, Repellent, Sphere, Cake, RedCake, BlueCake, OrangeCake, EatMeCake, Candy, Flask, Bills, Portrait, PlaceMat, RobotLabel, Rose} from 'items'
-import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike, DragonCountry, CurtainRoom} from 'room'
+import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Wonderland, CakeSafe, Airy, Watery, PostsLike, DragonCountry, CurtainRoom, Illusion, Grue} from 'room'
 import {go, look, examine, inventory, wait, help} from 'sprout'
 import {ask} from 'sprout'
-import {take, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, wait_for, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant, sleep, put_under, unlock, lock, melt, Dest, Spell, Mode, Answer, :dragon_turn, :dragon_watch, :provoke, :princess_turn, :princess_awake, :unicorn_scene, :curtain_active, :mat_under, :mat_moved, :gnome_come, :gnome_go, :tally, :curtain_closes, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :wizard_near, :brief_hint} from 'verbs'
+import {take, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, wait_for, robot_go, robot_push, robot_lift, robot_drop, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant, sleep, put_under, unlock, lock, melt, untie, Dest, Spell, Mode, Answer, :dragon_turn, :dragon_watch, :dragon_bored, :provoke, :princess_turn, :princess_awake, :unicorn_scene, :curtain_active, :mat_under, :mat_moved, :gnome_come, :gnome_go, :tally, :curtain_closes, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :wizard_near, :brief_hint, :unicorn_rides, :unicorn_gone} from 'verbs'
 import {inside_barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, Bridge, Chasm, Moss} from 'way_in'
 import {garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, elsewhere, Unicorn, DistantUnicorn, GardenNorth, TopiaryRoom, Elsewhere, NearCarousel, GoldKey, Gazebo, GazeboInside} from 'garden'
 import {carousel_room, room_8, CarouselRoom} from 'carousel'
@@ -78,6 +78,12 @@ kind Adventurer is sprout.Visitor {
   // (I-GARDEN), and the grue repellent (I-SPRAY).
   :unicorn_home true
   :expecting false
+  // Ridden off by the princess, and the garden's clock done with it; and
+  // the moves it stays put after coming or going, since a roll at the
+  // same point of successive turns alternates (friction 43), and the
+  // unicorn was bounding off and back every other move.
+  :unicorn_gone false
+  :unicorn_hold 0 min 0 max 3
   :topiary 0 min 0 max 2
   :sprayed false
   :spray_left 0 min 0 max 8
@@ -220,14 +226,20 @@ kind Adventurer is sprout.Visitor {
       // The garden (I-GARDEN): the unicorn comes and goes, and the topiary
       // creeps.
       if (here.is(Garden)) {
-        if (self.get(:unicorn_home) && random(3) == 0) {
+        if (self.get(:unicorn_gone)) { }
+        else if (self.get(:unicorn_hold) > 0) { self.adjust(:unicorn_hold, -1) }
+        else if (self.get(:unicorn_home) && random(3) == 0) {
           self.set(:unicorn_home, false)
+          self.set(:unicorn_hold, 2)
           broadcast :bound_away
-          if (!here.is(TopiaryRoom)) { say "The unicorn bounds lightly away." }
+          // Said where it can be seen to go (I-GARDEN; round 4's P3).
+          if (here.is(GardenNorth)) { say "The unicorn bounds lightly away." }
         } else if (!self.get(:unicorn_home) && random(4) == 0 && !here.is(TopiaryRoom)) {
           self.set(:expecting, true)
+          self.set(:unicorn_hold, 2)
           broadcast :come_back
-        } else if (here.is(TopiaryRoom)) {
+        }
+        if (here.is(TopiaryRoom)) {
           if (self.get(:topiary) == 0 && random(100) < 12) {
             self.set(:topiary, 1)
             say "You look around, and strangely, the topiary animals seem to have changed position slightly."
@@ -459,7 +471,7 @@ kind Adventurer is sprout.Visitor {
       self.set(:expecting, false)
       if (here.is(GardenNorth)) {
         tell self "{one of}There is a large, white animal partly hidden behind some trees.{or}You catch a glimpse of something white between two hedges.{or}A unicorn is cropping grass on the other side of the room. A gold key hangs from a ribbon around its neck.{or}There is a beautiful unicorn eating roses here. Around his neck is a red satin ribbon on which is strung a tiny key.{/one of}"
-        send self :settle with 2
+        send self :settle with 1
       }
       else if (here.is(Garden)) {
         tell self "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck."
@@ -467,6 +479,18 @@ kind Adventurer is sprout.Visitor {
       }
     }
     if (!value) { self.set(:expecting, false)  if (here.is(Room)) { send self :settle with 0 } }
+  }
+  // Ridden off for good: the garden's clock is done with it.
+  on :unicorn_gone (from, value) {
+    self.set(:unicorn_gone, true)
+    self.set(:unicorn_home, false)
+    self.set(:expecting, false)
+  }
+  // The dragon's interest run out behind them, where they cannot see it
+  // (round 4's P6).
+  on :dragon_bored {
+    let near = here.is(DragonCountry)
+    if (here.is(Room)) { if (near && here.count(Dragon) == 0) { tell self "Somewhere behind you the dragon's interest runs out: you hear him stop, with a scrape of scales on stone, and go back the way he came." } }
   }
   // Into the cage, and out of it by the robot.
   on :caged { move self to dingy_closet.cage }
@@ -600,15 +624,16 @@ kind Adventurer is sprout.Visitor {
     self.set(:at_down, to.is(RiddleRoom) || to.is(WellTop) || to.is(PostsLike))
     if (from.is(Garden) && !to.is(Garden) && !to.is(Bucket)) {
       self.set(:topiary, 0)
-      if (self.get(:unicorn_home)) {
+      if (self.get(:unicorn_home) && !self.get(:unicorn_gone)) {
         self.set(:unicorn_home, false)
         broadcast :bound_away
       }
     }
     if (to.is(Room) && !self.get(:devoured)) {
       if (!to.is(DarkRoom)) { self.set(:room_dark, false) }
-      if (to.is(GardenNorth) && self.get(:unicorn_home)) { send self :settle with 2 }
-      else if (to.is(Garden) && !to.is(TopiaryRoom) && self.get(:unicorn_home)) { send self :settle with 1 }
+      // The unicorn is a faint blue glow, in its room as next door; the
+      // Wizard, lingering, is the only bright one (round 4's P13).
+      if (to.is(Garden) && !to.is(TopiaryRoom) && self.get(:unicorn_home)) { send self :settle with 1 }
       else if (to.count(Wizard) > 0) { send self :settle with 2 }
       else { send self :settle with 0 }
     }
@@ -617,7 +642,6 @@ kind Adventurer is sprout.Visitor {
   // a visitor reads an arrival's line and is sent no `:arrived`.
   on :wizard_near (from, value) {
     if (value) { send self :settle with 2 }
-    else if (here.is(GardenNorth) && self.get(:unicorn_home) && here.count(Unicorn) > 0) { send self :settle with 2 }
     else if (here.is(Garden) && !here.is(TopiaryRoom) && self.get(:unicorn_home)) { send self :settle with 1 }
     else { send self :settle with 0 }
   }
@@ -694,7 +718,8 @@ kind Adventurer is sprout.Visitor {
       each t: Treasure in here { if (t.get(:marked)) { move t to elsewhere.stash } }
     } else if (d == :key_scene) {
       tell self key_scene
-      send garden_north.unicorn :unicorn_scene
+      // Asked by broadcast, wherever it has bounded off to (round 4's P1).
+      broadcast :unicorn_rides
       spawn Rose in self
       if (gazebo.is(Room)) { each p: Princess in gazebo { send p :vanish_princess } }
       if (garden_north.is(Room)) { each p: Princess in garden_north { send p :vanish_princess } }
@@ -946,7 +971,9 @@ kind Adventurer is sprout.Visitor {
     send self :die
   }
 
-  as actor for give { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for give { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    if (recipient.is(Illusion)) { refuse "{recipient.gone_speak}" }
+  }
     do {
       if (recipient.is(Robot)) { move item to recipient }
       else if (recipient.is(Dragon)) { if (item.is(Treasure)) { move item to recipient } }
@@ -965,7 +992,9 @@ kind Adventurer is sprout.Visitor {
 
   // Zork's THROW: out of the hand and onto the floor, or at whatever
   // answers for itself.
-  as actor for throw { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for throw { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    if (bound aim) { if (aim.is(Illusion)) { refuse "{aim.gone_strike}" } }
+  }
     do {
       if (target.is(Water)) { }
       else if (target.is(Flask)) { }
@@ -1012,7 +1041,13 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for attack { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  // The Wizard's illusion, struck or looked at: the refusal's first clause
+  // is the verb's, chosen here since the illusion's own wildcard would
+  // answer first (round 4's P11); and the grue his word shows, struck.
+  as actor for attack { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    if (target.is(Illusion)) { refuse "{target.gone_strike}" }
+    if (target.is(Grue)) { if (target.get(:conjured)) { refuse "{target.struck_through}" } }
+  }
     do {
       if (target.is(Unicorn) || target.is(Wizard) || target.is(Dragon) || target.is(Princess) || target.is(Gnome)) { }
       else if (target.is(Robot)) { say "I've known strange people, but fighting a robot?" }
@@ -1064,7 +1099,9 @@ kind Adventurer is sprout.Visitor {
   as actor for incant { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "You don't have a wand, and without one the word comes out as a sort of cough. Nothing happens." } }
   as actor for sleep { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "The Wizard's domain is no place for a nap. Things happen to people who nap here." } }
   as actor for look       { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen }
+      if (target.is(Illusion)) { refuse "{target.gone_look}" }
+    }
     do {
       if (target.is(Dragon)) { send target :provoke with 1 }
       else if (target.is(Princess)) { if (!target.get(:awake)) { send target :princess_awake } }
@@ -1121,7 +1158,9 @@ kind Adventurer is sprout.Visitor {
   } }
   as actor for smell      { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for listen     { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for ask        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for ask        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    if (target.is(Illusion)) { refuse "{target.gone_speak}" }
+  } }
   as actor for listen_here { permit { if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (here.is(CarouselRoom)) { if (here.get(:spinning)) { say "A loud whirring, from all around, as of a great deal of machinery going round. It makes it hard to think about directions." } else { say "Nothing. The whirring has stopped, and the room is still." } }
@@ -1146,7 +1185,9 @@ kind Adventurer is sprout.Visitor {
     do { if (target.is(Bucket)) { act board (target: target) } }
   }
   as actor for knock      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for mung       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for mung       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    if (target.is(Illusion)) { refuse "{target.gone_strike}" }
+  } }
   as actor for through    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (target.is(Bucket)) { act board (target: target) }
@@ -1155,7 +1196,9 @@ kind Adventurer is sprout.Visitor {
       else if (target.is(Gazebo) && !target.is(GazeboInside)) { move self in }
     }
   }
-  as actor for kick       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for kick       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    if (target.is(Illusion)) { refuse "{target.gone_strike}" }
+  } }
   as actor for rub        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for wave       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "You wave the {target.short} about. Nothing comes of it but a faint breeze." } }
   as actor for shake      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
@@ -1196,6 +1239,7 @@ kind Adventurer is sprout.Visitor {
   }
   as actor for turn       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for tie        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for untie      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for burn       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for cut        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for play       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }

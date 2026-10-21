@@ -10,7 +10,7 @@
 // ... here." when it has none; `here_line` is that rule. A thing marked
 // `:ndesc` (Zork's NDESCBIT) is never listed.
 import {ask} from 'sprout'
-import {take, open, close, read, lamp_on, lamp_off, talk, greet, alarm, follow, look_in, look_under, search, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, fill, turn, tie, burn, cut, through, give, throw, knock, play, count_things, pour_in, pour_on, spray, :consume, :filched, :grow, :ungrow, :zoom} from 'verbs'
+import {take, open, close, read, lamp_on, lamp_off, talk, greet, alarm, follow, look_in, look_under, search, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, fill, turn, tie, untie, burn, cut, through, give, throw, knock, play, count_things, pour_in, pour_on, spray, :consume, :filched, :grow, :ungrow, :zoom} from 'verbs'
 
 kind Thing {
   grammar { article the }
@@ -71,6 +71,7 @@ kind Thing {
       else { say "You'll have to say what to tie the {self.short} to." }
     }
   }
+  as target for untie { do { say "The {self.short} isn't tied to anything." } }
   as target for burn {
     do {
       if (bound tool) { if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" } }

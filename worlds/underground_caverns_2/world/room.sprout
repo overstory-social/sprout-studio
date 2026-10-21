@@ -16,7 +16,8 @@ import {Thing, Scenery} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
-import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize} from 'verbs'
+import {examine} from 'sprout'
+import {read, listen, search, look_in, look_under, shift, climb_up, climb_down, take, through, attack, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize, :conjured} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -275,10 +276,31 @@ kind Illusion is Scenery {
       if (random(2) == 0) { self.set(:which, 1 + random(8))  self.set(:ndesc, false)  self.set(:unseen, false) }
       else { self.set(:which, 0)  self.set(:ndesc, true)  self.set(:unseen, true) }
     }
+    // The grue it shows is the room's own grue's to answer for, since that
+    // one owns the word (round 4's P12): named as the room beside it
+    // declares it, from where this one sits.
+    send grue :conjured with self.get(:which) == 6
   }
+  // The refusal's first clause is the verb's: a hand for taking, an eye
+  // for looking, a blow for striking (round 4's P11); the rest is the
+  // same, since it is the part that was quoted. The actor's own part
+  // chooses among them, since this one's wildcard would answer first.
+  passage never_there { It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now. }
+  passage worn_off { There is nothing of the kind here. If there was a moment ago, the Wizard had a word in it, and the word has worn off. }
   passage gone {
-    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}Your hand closes on nothing, and your eye on less. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now.{else}There is nothing of the kind here. If there was a moment ago, the Wizard had a word in it, and the word has worn off.{/if}
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}Your hand closes on nothing, and your eye on less. {self.never_there}{else}{self.worn_off}{/if}
   }
+  passage gone_look {
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}You look, and look again, and your eye closes on nothing, and the harder you look the less there is. {self.never_there}{else}{self.worn_off}{/if}
+  }
+  passage gone_strike {
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}Your blow goes through it, and your eye after it, and neither finds anything to stop on. {self.never_there}{else}{self.worn_off}{/if}
+  }
+  passage gone_speak {
+    {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}It does not answer, having no mouth, nor anything else. {self.never_there}{else}{self.worn_off}{/if}
+  }
+  // The wildcard runs before any play for a verb, so the verb's clause is
+  // the actor's to choose (adventurer.sprout), from these.
   as target for any { permit { refuse gone } }
   as tool for any { permit { refuse gone } }
 }
@@ -288,7 +310,14 @@ kind Grue is Scenery {
   grammar { name "lurking grue"  nouns "grue", "grues"  adjectives "lurking", "sinister", "hungry", "silent" }
   passage short { lurking grue }
   passage absent { There is no grue here, but I'm sure there is at least one lurking in the darkness nearby. I wouldn't let my light go out if I were you! }
-  describe { text "The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale." }
+  // Shown by the Wizard's word (round 4's P12): a grue in plain sight is
+  // the one thing no grue has ever been, and it says so.
+  :conjured false
+  on :conjured (from, value) { self.set(:conjured, value) }
+  passage plain_sight { There is a grue here, in the light, in plain sight, which no grue has ever been or ever would be: it has the lamp-lit, slightly transparent look of something the Wizard thought of. A real one would have had you by now. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now. }
+  passage struck_through { Your blow goes through the grue, which is not how grues work; the dark would have had you by now. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now. }
+  describe { if (self.get(:conjured)) { text plain_sight } else { text "The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale." } }
+  as target for any { permit { if (self.get(:conjured)) { refuse plain_sight } } }
   without as target for listen from Thing
   as target for listen { do { say "It makes no sound but is always lurking in the darkness nearby." } }
   without as target for search from Thing

@@ -45,7 +45,11 @@ much the product as the rooms are.
   round 3 the sword glows for him only when he lingers, as I-SWORD, run at
   the end of a move, would only ever have found him: a call that begins
   and ends in one move never reaches the sword, and the "very brightly /
-  no longer glowing" flicker of one beat is gone (round 3's P9).
+  no longer glowing" flicker of one beat is gone (round 3's P9). After
+  round 4 his first call carries the hook (P8): a line in the narrator's
+  voice, not his, that reads off him what he is afraid of, that the
+  treasures are south of the ravine and not yet found; and the first spell
+  is drawn evenly among Feeble, Fumble and Fantasize.
 - **The unicorn is in**, since it is the garden's own and the sword glows
   for it; the gold key round its neck stays round its neck until the
   princess asks, which since round 3 she can. After round 1, when three
@@ -53,7 +57,17 @@ much the product as the rooms are.
   close-ups say the key is being kept for somebody in particular, who is
   not you. After round 3 the north end keeps a stand-in for the unicorn
   while it is away, unseen while it is home, so "take key" the moment it
-  has bounded off is answered in voice and not by the parser (P6).
+  has bounded off is answered in voice and not by the parser (P6). After
+  round 4 (P5), when the explorer spent forty-five moves on it, the
+  close-ups say the somebody is a lady and that she is not in this
+  garden, and nothing done here will get the key off; "untie ribbon",
+  "cut ribbon" and "take ribbon" are answered in that voice and without
+  the melt. And the unicorn is gone for good once the princess has ridden
+  it off, key given or not, as Zork's REMOVE takes it (P1): the stand-ins
+  say so, and say whether the key went with her. The garden's clock holds
+  the unicorn put for two moves after it comes or goes, since the roll
+  alternated every other move (friction 43), and says "bounds lightly
+  away" only where it can be seen to (P3).
 - **The Deep Ford's ledge** was the edge of the first quarter; it leads up
   now, to the Ledge in Ravine.
 - **The Rooms of Mist are not built** (they are the end's, round 7), so a
@@ -62,6 +76,11 @@ much the product as the rooms are.
   `GOTO INSIDE-BARROW` leaves them, their things scattered as
   `RANDOMIZE-OBJECTS` scatters them: the lamp to the barrow, treasures to
   the Wizard's stash, the rest to the gazebo. A third death is the end.
+- **The princess can be followed** (P10): every room on her way home
+  keeps a stand-in, unseen while she is in it, that says which way she
+  went from here, that she has not come this way yet, or how she left for
+  good; and her "eyes fix on" line names the way out of the room she is
+  spoken to in.
 - **The Marble Hall's secret door** opens when the princess presses the
   loose marble on her way home, and stays open: east of the Marble Hall
   and west of the Path Near Stream lead through it from then on.
@@ -167,12 +186,16 @@ much the product as the rooms are.
    Examine it, greet it, strike it: it grows angry and follows, out of
    mingled curiosity and anger, as far as the Stone Bridge and the Cool
    Room, where its anger cools two a move; past seven it incinerates
-   whoever provoked it. Led west into the Ice Room, it meets its own
+   whoever provoked it. Since round 4 (P6) a blow's reply is graded rather
+   than drawn (a shrug, a stare, and "You had better be very careful now"
+   for the blow before the last), and when its interest runs out behind a
+   visitor who has walked on, they hear it turn back. Led west into the Ice Room, it meets its own
    reflection in the glacier, breathes fire, and drowns in the melt (5
    points); the dead dragon lies at the Deep Ford, the Ice Room's west
-   passage opens on steam and a rockfall, and the lair is open: the
-   rotten chest with the golden statuette (20) and the princess in a
-   trance.
+   passage opens on steam and a rockfall, heard coming down in the same
+   breath as the reveal (round 4's P14), and the lair is open: the rotten
+   chest with the golden statuette (20), whose hinges give on the second
+   try as the first try's line promises (P2), and the princess in a trance.
 10. The princess: woken (examined, spoken to, or startled by the chest's
    hinges), she walks home a step a move, glancing back: the Dragon Room,
    the ledge, down to the Deep Ford, the Marble Hall, where she presses a
@@ -196,7 +219,9 @@ much the product as the rooms are.
    box, takes a treasure for the way out, and goes after twelve. The
    Depository's doors sound an alarm against the bills and the portrait;
    the curtain does not: carry them through it into a viewing room and
-   walk out south.
+   walk out south. Since round 4 the alarm's line says it is the doorway
+   that knows the Bank's property, and that the curtain was not built by
+   the same people (P7).
 12. The Wizard, every two minutes, one time in ten: he appears, waves his
    wand, speaks a word beginning with "F", and vanishes cackling. Feeble,
    Fumble, Fear, Filch, Freeze, Fall, Ferment, Fierce, Float, Fireproof,
@@ -239,8 +264,9 @@ rooms.
 - **Dying costs more than ten points**: the lamp goes back to the barrow,
   treasures to the Wizard's stash (out of reach until his rooms are
   built), and everything else to the gazebo; the third death is the end.
-- **The sword glows** blue near the unicorn and brightly when the Wizard
-  stands in the room and stays, as `I-SWORD` has it; it is the only
+- **The sword glows** blue near the unicorn, in its room as next door
+  since round 4 (P13: five runs read the bright glow as the Wizard), and
+  brightly when the Wizard stands in the room and stays; it is the only
   warning of either. (It never did glow for the Wizard before round 2.5:
   a visitor is sent no `:arrived`, friction 40; he tells the sword himself
   now, and only when he lingers.)
@@ -275,7 +301,10 @@ rooms.
   answers to its words only while it is shown; the copy of ZORK I answers
   to "zork" since round 3 (P4); the yellow sphere beside the closet's real
   one is a coin-toss on "take sphere", which is the Wizard's joke and not
-  mine.
+  mine. Since round 4 the refusal opens with the verb's own clause, an eye
+  for looking and a blow for striking (P11), and the grue the spell shows
+  is answered for by the room's grue, which says that a grue in plain
+  sight is the one thing no grue has ever been (P12).
 - **Brief mode is Zork's**: a room seen again is named and no more. The
   first time it happens, one parenthetical line says LOOK, VERBOSE and
   BRIEF, and is not said again.
@@ -327,7 +356,11 @@ rooms.
   curtain, and it lands in the room the curtain opens on, and the curtain
   closes behind it.
 - **The key without the mat is lost**: the push sends it somewhere that
-  is not a room, and the game says nothing, as Zork says nothing.
+  is not a room, and the game says nothing, as Zork says nothing. The mat
+  pulled from under the door, rather than taken, is drawn out and the key
+  falls off it (round 4's P9).
+- **The bucket's tide-line says what water it wants**: fresh, the kind the
+  stream has at a ford and a teapot carries (round 4's P4).
 - **The matchbook is a light**: six matches, two moves each, for a visitor
   who has lost the lamp to the Wizard.
 - **Two keys answer to "key"**: with both in hand the parser draws, and

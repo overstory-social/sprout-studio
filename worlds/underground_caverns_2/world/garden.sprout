@@ -13,8 +13,9 @@ import {carousel_room} from 'carousel'
 import {Adventurer} from 'adventurer'
 import {ask} from 'sprout'
 import {examine} from 'sprout'
-import {take, rub, mung, attack, follow, greet, talk, through, cross, smell, listen, look_in, climb_up, shift, give, throw, :travel, :bound_away, :come_back, :frighten, :unicorn_at, :secret_door, :unicorn_scene, :consume} from 'verbs'
+import {take, rub, mung, attack, follow, greet, talk, through, cross, smell, listen, look_in, climb_up, shift, give, throw, cut, untie, tie, :travel, :bound_away, :come_back, :frighten, :unicorn_at, :secret_door, :unicorn_scene, :unicorn_rides, :unicorn_gone, :consume} from 'verbs'
 import {ravine_ledge} from 'ravine'
+import {AbsentPrincess} from 'dragon'
 
 // The unicorn: an NPC that roams between the north end of the garden and
 // Elsewhere, as I-GARDEN moves it, and melts into the hedges when it is
@@ -31,15 +32,27 @@ kind Unicorn is Creature, sprout.Actor {
   passage not_yours { The unicorn shies away as you approach. }
   passage held_fast { {self.melts} }
   passage melts { The unicorn, unsurprised by this evidence that you are indeed the uncouth sort of vagabond it suspected you were, melts into the hedges and is gone. }
-  // Whether the princess has had the ribbon and given away the key.
-  :ridden false
-  describe { text "{if self.get(:ridden)}The unicorn shies away as you approach for a closer look. There is nothing round its neck now; the princess has the ribbon in her hair, and you have what hung from it, and the unicorn looks as though it would like both back.{else}The unicorn shies away as you approach for a closer look, but you do notice a tiny gold key hanging from a red satin ribbon looped around the animal's neck. The ribbon is tied in the sort of bow that is meant to be untied by somebody in particular, and the unicorn's look makes it plain that you are not the somebody.{/if}" }
+  // Ridden off by the princess, and gone for good (I-UNICORN's REMOVE).
+  :gone false
+  describe { text "The unicorn shies away as you approach for a closer look, but you do notice a tiny gold key hanging from a red satin ribbon looped around the animal's neck. The ribbon is tied in the sort of bow that is meant to be untied by somebody in particular, a lady by the look of the knot, and the unicorn's look makes it plain that you are not the somebody, and that nobody in this garden is. It will wait for her. You need not." }
   // The princess, home: the unicorn gives up the key to the one she
-  // names, since only it may let go of what it carries (I-UNICORN).
-  on :unicorn_scene (from) {
-    self.set(:ridden, true)
-    each k: GoldKey in self { move k to from }
-    each r: Scenery in self { send r :consume }
+  // names, since only it may let go of what it carries (I-UNICORN), and
+  // goes, as she rides it off; asked by broadcast, since it may have
+  // bounded off into the hedges on the very move she wants it (round 4's
+  // P1). Where nobody was there to be given the key, the princess asks,
+  // and the key goes with them both.
+  on :unicorn_rides (from) {
+    if (!self.get(:gone)) {
+      self.set(:gone, true)
+      self.set(:frightened, false)
+      if (from.is(Adventurer)) { each k: GoldKey in self { move k to from } }
+      else { each k: GoldKey in self { send k :consume } }
+      each r: Scenery in self { send r :consume }
+      self.set(:unseen, true)
+      move self to elsewhere
+      broadcast :unicorn_at with false
+      broadcast :unicorn_gone with from.is(Adventurer)
+    }
   }
   without as recipient for give from Thing
   as recipient for give { do { if (item.is(Thing)) { say "The unicorn regards the {item.short} with polite incomprehension, and goes back to cropping grass." } else { say "The unicorn is not interested." } } }
@@ -76,7 +89,8 @@ kind Unicorn is Creature, sprout.Actor {
     }
   }
   on :come_back {
-    if (self.get(:frightened)) { self.set(:frightened, false) }
+    if (self.get(:gone)) { }
+    else if (self.get(:frightened)) { self.set(:frightened, false) }
     else if (here.is(Elsewhere)) {
       move self to garden_north
       broadcast :unicorn_at with true
@@ -84,10 +98,22 @@ kind Unicorn is Creature, sprout.Actor {
   }
   object gold_key is GoldKey
   object ribbon is Scenery {
-    grammar { name "ribbon"  nouns "satin"  adjectives "velvet", "satin", "red" }
+    grammar { name "ribbon"  nouns "satin", "bow", "knot"  adjectives "velvet", "satin", "red" }
     passage short { ribbon }
-    describe { text "It is a ribbon of red satin, looped round the unicorn's neck and tied in a bow by somebody the unicorn liked better than it likes you. A tiny gold key hangs from it." }
+    describe { text "It is a ribbon of red satin, looped round the unicorn's neck and tied in a bow by somebody the unicorn liked better than it likes you. A tiny gold key hangs from it. The bow is the kind a lady ties, and the kind only she unties." }
     on :consume { finally destroy self }
+    // Untied, cut, pulled at or taken: the bow is not the visitor's to
+    // undo, and the unicorn keeps it out of reach (round 4's P5).
+    passage not_yours_to_untie { The bow was tied for somebody in particular to untie, and the unicorn, which has views about who, lifts its head out of reach of your hands and keeps it there until you stop. She is not in this garden. The unicorn can wait for her; it has been. }
+    passage no_take { {self.not_yours_to_untie} }
+    without as target for untie from Thing
+    as target for untie { do { say not_yours_to_untie } }
+    without as target for tie from Thing
+    as target for tie { do { say "It is tied already, and better than you could tie it." } }
+    without as target for shift from Thing
+    as target for shift { do { say not_yours_to_untie } }
+    without as target for cut from Thing
+    as target for cut { do { say "The unicorn backs a step for every step you take toward it with that in your hand, and the ribbon goes with it. It was tied by somebody the unicorn liked better, and it is not coming off for anybody else." } }
   }
 }
 
@@ -99,7 +125,9 @@ kind GoldKey is Treasure {
   :value 15
   passage short { delicate gold key }
   passage ldesc { There is a delicate gold key here. }
-  describe { text "The key is tiny and gold and delicate, the kind that opens something small and valuable, and it hangs from a red satin ribbon round the unicorn's neck. It is being kept for somebody, and the unicorn knows who, and it is watching you look at it." }
+  describe { text "{if self.get(:touched)}The key is tiny and gold and delicate, the kind that opens something small and valuable. It hung from a red satin ribbon round a unicorn's neck until a princess untied it, and whatever it opens is not in this much of the Empire.{else}The key is tiny and gold and delicate, the kind that opens something small and valuable, and it hangs from a red satin ribbon round the unicorn's neck. It is being kept for somebody, and the unicorn knows who, and it is watching you look at it. Whoever she is, she is not in this garden, and nothing you do here will get it off.{/if}" }
+  without as target for untie from Thing
+  as target for untie { do { say "The key hangs from the ribbon, and the ribbon is tied in a bow that was tied for somebody in particular to untie. The unicorn lifts its head out of reach of your hands. She is not in this garden; the unicorn can wait for her, and you need not." } }
 }
 
 // The unicorn as every garden room but the north end knows it (GLOBAL-UNICORN).
@@ -107,8 +135,13 @@ kind DistantUnicorn is Scenery, Creature {
   grammar { name "unicorn"  nouns "animal", "key", "ribbon", "horse"  adjectives "beautiful", "white", "gold", "tiny" }
   passage short { unicorn }
   :home true
+  // Ridden off for good, and whether the key was given first.
+  :gone false
+  :given false
   on :unicorn_at (from, value) { self.set(:home, value) }
-  passage far_off { {if self.get(:home)}The unicorn is way up at the north end of the garden, and so is whatever hangs round its neck.{else}Unicorn? What unicorn?{/if} }
+  on :unicorn_gone (from, value) { self.set(:gone, true)  self.set(:given, value)  self.set(:home, false) }
+  passage ridden_off { {if self.get(:given)}The unicorn is gone: the princess rode off on it into the gloom, with its ribbon in her hair, and what hung from the ribbon she gave to you.{else}The unicorn is gone, and the princess with it, into the gloom; she rode off with the ribbon in her hair and the key still on the ribbon, since there was nobody in the garden to give it to.{/if} }
+  passage far_off { {if self.get(:gone)}{self.ridden_off}{else if self.get(:home)}The unicorn is way up at the north end of the garden, and so is whatever hangs round its neck.{else}The unicorn is not in sight from here. It was cropping grass at the north end of the garden a little while ago, and will be again when it has forgotten you, which with unicorns is never long; whatever hangs round its neck comes and goes with it.{/if} }
   as target for any { permit { refuse far_off } }
   without as recipient for give from Thing
   as recipient for give { permit { refuse far_off } }
@@ -162,12 +195,13 @@ kind AbsentUnicorn is DistantUnicorn {
   :unseen true
   :home true
   on :unicorn_at (from, value) { self.set(:home, value)  self.set(:unseen, value) }
-  passage far_off { The unicorn is not here just now. It bounded off into the hedges, the way it does, and the key went with it, round its neck; it comes back when it has forgotten you, which, with unicorns, is never long. }
+  on :unicorn_gone (from, value) { self.set(:gone, true)  self.set(:given, value)  self.set(:home, false)  self.set(:unseen, false) }
+  passage far_off { {if self.get(:gone)}{self.ridden_off}{else}The unicorn is not here just now. It bounded off into the hedges, the way it does, and the key went with it, round its neck; it comes back when it has forgotten you, which, with unicorns, is never long.{/if} }
 }
 // The unicorn the Topiary names is hedge; the real one is the garden's
 // stand-in's business (GLOBAL-UNICORN).
 kind HedgeUnicorn is DistantUnicorn {
-  passage far_off { The unicorn here is hedge, clipped to the shape of one, and not a good likeness: the horn is a branch somebody tied up. The real one{if self.get(:home)}, way up at the north end of the garden,{else}, wherever it has got to,{/if} would not be flattered. }
+  passage far_off { The unicorn here is hedge, clipped to the shape of one, and not a good likeness: the horn is a branch somebody tied up. The real one{if self.get(:gone)}, wherever the princess has ridden it to,{else if self.get(:home)}, way up at the north end of the garden,{else}, wherever it has got to,{/if} would not be flattered. }
 }
 kind RoseBush is Scenery {
   grammar { name "roses"  nouns "bush", "arbor", "rose", "rosebed", "flowers"  adjectives "rose", "red" }
@@ -270,6 +304,7 @@ object garden_north is GardenNorth in underground_caverns_2 {
   // never tie for the word; while it is away, "unicorn" and "key" are
   // answered in voice.
   object other_unicorn is AbsentUnicorn
+  object other_princess is AbsentPrincess { :order 8  :way inside }
   object gazebo_outside is Gazebo
   object hedge is Hedges
   object roses is RoseBush
@@ -292,6 +327,7 @@ object gazebo is Room, Garden in underground_caverns_2 {
   :walls 4
   passage body { This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo. }
   object other_unicorn is DistantUnicorn
+  object other_princess is AbsentPrincess { :order 9  :last true }
   object gazebo_inside is GazeboInside
   object table is Box {
     grammar { name "tea table"  nouns "table"  adjectives "tea", "small", "round" }
@@ -331,6 +367,7 @@ object formal_garden is Room, Garden in underground_caverns_2 {
   :walls 4
   passage body { This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west. }
   object other_unicorn is DistantUnicorn
+  object other_princess is AbsentPrincess { :order 7  :way north }
   object hedge is Hedges
   object moss is Moss
   object path is GardenPath
@@ -384,6 +421,7 @@ object stream_path is NearCarousel, Bridged, ChasmEdge in underground_caverns_2 
   :secret false
   on :secret_door { self.set(:secret, true) }
   passage body { The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction. On the east is a ruined archway choked with vegetation.{if self.get(:secret)} Behind some rocks to the west, a section of wall stands slid aside, and a passage leads through it into a marble hall.{/if} }
+  object other_princess is AbsentPrincess { :order 6  :way east }
   object rocks is Scenery {
     grammar { name "rocks"  nouns "rock", "boulders", "section"  adjectives "some", "loose" }
     passage short { rocks }
@@ -413,6 +451,7 @@ object marble_hall is NearCarousel in underground_caverns_2 {
   :secret false
   on :secret_door { self.set(:secret, true) }
   passage body { This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room.{if self.get(:secret)} A large section of the east wall has slid away, revealing a passage to the east.{/if} }
+  object other_princess is AbsentPrincess { :order 5  :way east }
   object loose_marble is Scenery {
     grammar { name "loose piece of marble"  nouns "piece", "panel", "section"  adjectives "loose" }
     passage short { loose piece of marble }
@@ -446,6 +485,7 @@ object deep_ford is DarkRoom, Watery, ChasmEdge in underground_caverns_2 {
   :id deep_ford
   :walls 2
   passage body { You are fording the stream at a deep but not impossible spot. The water is very cold. The walls of the ravine rise to east and west. There is a small ledge along the north wall of the ravine. To the south is the entrance to a well-constructed but somewhat ruined hall. }
+  object other_princess is AbsentPrincess { :order 4  :way south }
   object water is StreamWater {
     describe { text "The water is very cold, and deep here, up to your knees and pulling at them, and clear enough to see the gravel it is trying to take you down to. It would fill a teapot." }
   }

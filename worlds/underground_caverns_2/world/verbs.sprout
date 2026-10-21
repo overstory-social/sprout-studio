@@ -165,6 +165,10 @@ intent swim_in {
 }
 verb turn { role target  "turn [target]"  "turn [target] over"  "turn over [target]"  "flip [target] over"  "turn page of [target]" }
 verb tie { role target  role tool  "tie [target] to [tool]"  "tie [target]"  "attach [target] to [tool]"  "fasten [target] to [tool]" }
+// The ribbon round the unicorn's neck, and the bow in it (round 4's P5):
+// nothing Zork ever let anyone untie, but a visitor who tries is answered
+// in voice rather than by the parser.
+verb untie { role target  "untie [target]"  "unfasten [target]"  "undo [target]"  "loosen [target]"  "unknot [target]"  "untie [target] from [tool]"  role tool }
 verb burn {
   role target
   role tool
@@ -467,6 +471,23 @@ message :princess_awake
 message :princess_turn with Dest
 message :secret_door
 message :unicorn_scene
+// The princess home and the unicorn come to her (I-UNICORN): the
+// visitor's own part, with the gate open, asks the unicorn, wherever it
+// has bounded off to, to give up the key and go; the stand-ins hear that
+// it is gone, and whether the key went with it (round 4's P1).
+message :unicorn_rides
+message :unicorn_gone with boolean
+// The princess (I-PRINCESS), for her stand-ins along the way home: each
+// step she takes, counted, and her going, by which of three ways (round
+// 4's P10).
+message :princess_step with integer
+message :princess_gone with integer
+// The dragon, its interest run out while it was following (DRAGON-LEAVES
+// out of the visitor's sight), for whoever it was following (round 4's P6).
+message :dragon_bored
+// The Fantasize spell's grue, shown or not: the room's own grue answers
+// for the word, so it is told (round 4's P12).
+message :conjured with boolean
 // The Bank of Zork's curtain (SCOL): which room it opens on now, the
 // twelve moves it stays open for, and the Gnome of Zurich.
 message :curtain_active with Dest

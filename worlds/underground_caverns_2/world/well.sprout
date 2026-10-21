@@ -51,7 +51,7 @@ kind Bucket is sprout.Place, Box, Vessel, Awaited, CakeSafe {
   passage short { wooden bucket }
   passage ldesc { There is a wooden bucket here, 3 feet in diameter and 3 feet high. }
   passage inside_view {{if self.get(:at) == :well_top}{if well_top.is(WellTop)}{well_top.bucket_view}{/if}{else}{if well_bottom.is(WellBottom)}{well_bottom.bucket_view}{/if}{/if}}
-  passage examined { It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago, and the rope above it is taut as though it would like to again.{if !self.holds(actor)} Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets.{/if}
+  passage examined { It is a wooden bucket, 3 feet across and 3 feet high, bound with iron hoops, and hung on a rope that goes up into the dark further than your light can follow. It is big enough to sit in, and somebody, from the wear on the rim, has. Inside, a dark ring a hand's breadth up the staves says it has held water, and not long ago: fresh water, by the lack of any salt crust, the kind the stream has where it comes up to meet you at a ford, and the kind a teapot would carry; and the rope above it is taut as though it would like to again.{if !self.holds(actor)} Whatever it is that makes it go up, it will go up with what is in it and without what is not; that is the whole art of buckets.{/if}
 
     {self.look_inside} }
   // Examined, from inside it or out, the bucket; looked at from inside,

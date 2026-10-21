@@ -23,7 +23,7 @@ import {bank_entrance} from 'bank'
 import {carousel_room} from 'carousel'
 import {elsewhere, deep_ford, stream_path, Elsewhere} from 'garden'
 import {ask} from 'sprout'
-import {attack, mung, kick, greet, talk, give, throw, rub, alarm, follow, open, close, melt, cross, listen, smell, through, Spell, Dest, Direction, :provoke, :dragon_turn, :dragon_watch, :ice_melted, :princess_awake, :princess_turn, :secret_door, :unicorn_scene, :scored, :die, :open_gate, :gate_open, :close_gate, :consume, :travel} from 'verbs'
+import {attack, mung, kick, greet, talk, give, throw, rub, alarm, follow, open, close, melt, cross, listen, smell, through, Spell, Dest, Direction, :provoke, :dragon_turn, :dragon_watch, :dragon_bored, :ice_melted, :princess_awake, :princess_turn, :princess_step, :princess_gone, :secret_door, :unicorn_scene, :unicorn_rides, :scored, :die, :open_gate, :gate_open, :close_gate, :consume, :travel} from 'verbs'
 
 // The huge red dragon (DRAGON): an NPC that lies in the Dragon Room,
 // watching, and follows whoever has made it angry, out of mingled
@@ -46,10 +46,16 @@ kind Dragon is Creature, sprout.Actor {
   passage glacier_scene {
     As the dragon enters, he sees his reflection on the icy surface of the glacier at its western end. He becomes enraged: There is another dragon here, behind that glass, he thinks! Dragons are smart, but sometimes naive, and this one has never seen ice before. He rears up to his full height to challenge this intruder into his territory. He roars a challenge! The intruder responds! The dragon takes a deep breath, and out of his mouth pours a massive gout of flame. It washes over the ice, which melts rapidly, sending out torrents of water and a huge cloud of steam! You manage to clamber up to a small shelf, but the dragon is terrified! A huge splash goes down his throat! There is a muffled explosion and the dragon, a puzzled expression on his face, dies. He is carried away by the water.
 
-    When the flood recedes you climb gingerly down. While no trace of the dragon can be found, the melting of the ice has revealed a passage leading west.
+    When the flood recedes you climb gingerly down. While no trace of the dragon can be found, the melting of the ice has revealed a passage leading west; and as the steam thins you hear, a little way along it, a fall of rock come down where the glacier was holding it up, and go on coming down for some time. Whatever lies beyond it will have to wait.
   }
   passage amused { The dragon looks amused. He speaks in a voice so deep you feel it rather than hear it, but the tongue is unknown to you. You find yourself almost hypnotized. }
-  passage annoyed { {one of}Dragon hide is tough as steel, but you have succeeded in annoying him a bit. He looks at you as if deciding whether or not to eat you.{or}That captured his interest. He stares at you balefully.{or}The dragon is surprised and interested (for the moment).{or}You've made him rather angry. You had better be very careful now.{or}That did no damage, but he turns his smoky yellow eyes in your direction and sighs.{/one of} }
+  // What a blow gets, by how angry he already is (DRAGON-FCN's lines,
+  // ordered rather than drawn, round 4's P6): the first is a shrug, the
+  // second a stare, and the third the warning, since a blow after that
+  // one is the last. Said as literals in the blow's own body, since a
+  // passage is rendered after the turn's clocks have cooled him.
+  :blow_at 0 min 0 max 100
+  passage struck { {if self.get(:blow_at) >= 2}You've made him rather angry. You had better be very careful now.{else if self.get(:blow_at) == 1}That captured his interest. He stares at you balefully.{else}{one of}The dragon is surprised and interested (for the moment).{or}That did no damage, but he turns his smoky yellow eyes in your direction and sighs.{or}Dragon hide is tough as steel, but you have succeeded in annoying him a bit. He looks at you as if deciding whether or not to eat you.{/one of}{/if} }
 
   // Provoked: so much anger, and his turn runs from now on (I-DRAGON).
   // The first provocation runs his turn at once, as DRAGON-FCN's QUEUE
@@ -84,17 +90,17 @@ kind Dragon is Creature, sprout.Actor {
   as target for rub { do { say "Dragon hide is tough as steel, and warm, and the dragon turns one yellow eye on your hand until you take it back."  send self :provoke with 1 } }
   as target for attack {
     do {
-      if (bound weapon) { say annoyed } else { say "With your bare hands? I doubt the dragon even noticed." }
+      if (bound weapon) { self.set(:blow_at, self.get(:anger))  say struck } else { say "With your bare hands? I doubt the dragon even noticed." }
       send self :provoke with 4
     }
   }
   without as target for mung from Thing
-  as target for mung { do { say annoyed  send self :provoke with 4 } }
+  as target for mung { do { self.set(:blow_at, self.get(:anger))  say struck  send self :provoke with 4 } }
   without as target for kick from Thing
-  as target for kick { do { say annoyed  send self :provoke with 4 } }
+  as target for kick { do { self.set(:blow_at, self.get(:anger))  say struck  send self :provoke with 4 } }
   as aim for throw {
     do {
-      if (target.is(Thing)) { say "The {target.short} bounces off the dragon's hide. {self.annoyed}"  send self :provoke with 4 }
+      if (target.is(Thing)) { self.set(:blow_at, self.get(:anger))  say "The {target.short} bounces off the dragon's hide. {self.struck}"  send self :provoke with 4 }
     }
   }
   // A gift (DRAGON-FCN's GIVE): a treasure is taken away to the lair and
@@ -143,6 +149,9 @@ kind Dragon is Creature, sprout.Actor {
             if (mine == :dragon_room) { tell from "The dragon seems to have lost interest in you." }
             else { tell from "The dragon seems to have lost interest in you. He wanders off." }
           }
+          // Out of the visitor's sight, his turning back is heard rather
+          // than seen (round 4's P6).
+          else if (mine != :dragon_room) { broadcast :dragon_bored }
           send self :go_home
         }
       }
@@ -264,8 +273,15 @@ kind Princess is Creature, sprout.Actor {
   passage held_fast { One does not pick up a princess. It isn't done. }
   describe { text "{if self.get(:awake)}She is a princess, obviously: the gown was good once, and the bearing still is, under the dirt and the dragon smoke, and she holds her head the way people do who have had it held for them. Her hair is unkempt, and she is not looking at you so much as past you, at the way out.{else}A beautiful young woman in a gown that was white, sitting on a rock with her hands in her lap and her eyes on nothing. She does not see you. She has the look of somebody who stopped expecting anything a long time ago and would need to be told, slowly, that something had happened.{/if}" }
   passage wakes { The princess (for she is obviously one) shakes herself awake, then notices you for the first time. She smiles. "Thank you for rescuing me from that horrid worm," she says. "I must depart. My parents will be worried about me." With that, she arises, looking purposefully out of the lair. }
-  passage ignores { The princess ignores you. She looks about the room, but her eyes fix on the {if self.get(:step) == 0}way out{else if self.get(:step) == 1}passage east{else if self.get(:step) == 2}ledge{else if self.get(:step) == 3}rock face{else if self.get(:step) == 4}hall to the south{else if self.get(:step) == 5}east wall{else if self.get(:step) == 6}archway{else if self.get(:step) == 7}path north{else if self.get(:step) == 8}gazebo{else}garden outside{/if}. }
+  // Where her eyes go: the way out of the room she is in as she is spoken
+  // to, kept apart from `:step`, since a passage is rendered after the
+  // move's clocks have walked her on (round 4's P10).
+  :seen_step 0 min 0 max 15
+  passage ignores { The princess ignores you. She looks about the room, but her eyes fix on the {if self.get(:seen_step) == 0}way out{else if self.get(:seen_step) == 1}small crack to the east{else if self.get(:seen_step) == 2}ledge to the east{else if self.get(:seen_step) == 3}rock face{else if self.get(:seen_step) == 4}hall to the south{else if self.get(:seen_step) == 5}east wall{else if self.get(:seen_step) == 6}archway{else if self.get(:seen_step) == 7}path north{else if self.get(:seen_step) == 8}gazebo{else}garden outside, with no great interest{/if}. }
   passage trance { She's in a trance! }
+  // How she went, for her stand-ins: ridden off with the key given, ridden
+  // off with the key, or whisked away by the Wizard.
+  :how 0 min 0 max 2
 
   // Woken (ALARM, or the chest's squeak): her walk begins.
   on :princess_awake {
@@ -273,33 +289,40 @@ kind Princess is Creature, sprout.Actor {
       self.set(:awake, true)
       tell wakes
       broadcast :princess_walking with true
+      broadcast :princess_step with 0
     }
   }
   without as target for alarm from Creature
-  as target for alarm { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  as target for alarm { do { if (self.get(:awake)) { self.set(:seen_step, self.get(:step))  say ignores } else { say ""  send self :princess_awake } } }
   without as target for greet from Creature
-  as target for greet { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  as target for greet { do { if (self.get(:awake)) { self.set(:seen_step, self.get(:step))  say ignores } else { say ""  send self :princess_awake } } }
   without as target for talk from Creature
-  as target for talk { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  as target for talk { do { if (self.get(:awake)) { self.set(:seen_step, self.get(:step))  say ignores } else { say ""  send self :princess_awake } } }
   without as target for ask from Thing
-  as target for ask { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  as target for ask { do { if (self.get(:awake)) { self.set(:seen_step, self.get(:step))  say ignores } else { say ""  send self :princess_awake } } }
   without as target for rub from Thing
-  as target for rub { do { if (self.get(:awake)) { say ignores } else { say ""  send self :princess_awake } } }
+  as target for rub { do { if (self.get(:awake)) { self.set(:seen_step, self.get(:step))  say ignores } else { say ""  send self :princess_awake } } }
   without as target for follow from Creature
-  as target for follow { do { say "You can't follow her until she leaves..." } }
+  as target for follow { do { if (self.get(:awake)) { say "You can't follow her until she leaves, and she is leaving; keep up." } else { say "She is going nowhere. She's in a trance!" } } }
   without as recipient for give from Thing
   as recipient for give { do { if (self.get(:awake)) { say "The princess shakes her head. \"I have what I need,\" she says, \"which is the way out.\"" } else { say trance } } }
   without as aim for throw from Thing
   as aim for throw { do { if (target.is(Thing)) { say "The {target.short} lands at her feet. {if self.get(:awake)}She steps over it.{else}She does not notice.{/if}" } } }
   // Laid a hand on in anger: the Wizard, of all people, objects
   // (PRINCESS-FCN's ATTACK).
-  as target for attack { do { say fried  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
+  as target for attack { do { say fried  self.set(:how, 2)  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
   without as target for mung from Thing
-  as target for mung { do { say fried  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
+  as target for mung { do { say fried  self.set(:how, 2)  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
   without as target for kick from Thing
-  as target for kick { do { say fried  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
+  as target for kick { do { say fried  self.set(:how, 2)  send self :vanish_princess  if (actor.is(Adventurer)) { send actor :die } } }
   passage fried { The princess screams as you approach. "Won't someone deliver me from this awful fate?" she cries. Just in time, the Wizard of Frobozz appears, seeming to unroll himself out of nothing like a window shade. "Fry!" he intones, and a massive bolt of lightning reduces you to a pile of smoking ashes. (Serves you right, too, if you ask me.) }
-  on :vanish_princess { self.set(:gone, true)  self.set(:unseen, true)  move self to elsewhere  broadcast :princess_walking with false }
+  on :vanish_princess {
+    self.set(:gone, true)
+    self.set(:unseen, true)
+    move self to elsewhere
+    broadcast :princess_walking with false
+    broadcast :princess_gone with self.get(:how)
+  }
 
   // Her turn, told by the visitor where they stand (I-PRINCESS): three
   // times in four she takes the next step of her way home, and says so
@@ -310,14 +333,14 @@ kind Princess is Creature, sprout.Actor {
         // Home: the unicorn comes to her in six moves (I-UNICORN).
         self.adjust(:step, 1)
         if (self.get(:step) >= 15) {
-          self.set(:gone, true)
-          broadcast :princess_walking with false
-          if (value == :gazebo || value == :garden_north) { send from :unicorn_scene }
+          if (value == :gazebo || value == :garden_north) { self.set(:how, 0)  send from :unicorn_scene }
           else {
-            // Nobody to give the key to: she goes, and leaves a rose.
+            // Nobody to give the key to: she goes, on the unicorn, with
+            // the key, and leaves a rose.
             spawn Rose in here
-            self.set(:unseen, true)
-            move self to elsewhere
+            self.set(:how, 1)
+            broadcast :unicorn_rides
+            send self :vanish_princess
           }
         }
       }
@@ -356,6 +379,7 @@ kind Princess is Creature, sprout.Actor {
         else if (s == 7) { move self north }
         else { move self in }
         self.adjust(:step, 1)
+        broadcast :princess_step with self.get(:step)
         let now = self.get(:now)
         if (value == now) {
           if (now == :gazebo) { tell from "The princess joins you in the gazebo." }
@@ -372,8 +396,48 @@ kind Princess is Creature, sprout.Actor {
 message :princess_walking with boolean
 message :vanish_princess
 
-// The rotten wooden chest in the lair (CHEST): rusty hinges that give one
-// time in four, and a squeak that wakes the princess.
+// The princess as every room on her way home knows her while she is not
+// in it (PRFOLLOW, which Zork has none of): unseen while she is here, or
+// still in her trance, and otherwise saying which way she went from
+// here, or that she has not come this way yet, or how she left for good
+// (round 4's P10). Each keeps the step at which she leaves its room.
+enum Gone { walking, rode_off_with_key_given, rode_off_with_key, fried }
+kind AbsentPrincess is Scenery, Creature {
+  grammar { name "princess"  nouns "woman", "lady", "girl", "maiden"  adjectives "beautiful", "young", "dishevelled", "unkempt" }
+  passage short { princess }
+  :unseen true
+  :order 0 min 0 max 9
+  :last false
+  :way Direction default south
+  :step 0 min 0 max 15
+  :walking false
+  :gone Gone default walking
+  on :princess_step (from, value) {
+    self.set(:step, value)
+    self.set(:walking, true)
+    if (self.get(:last)) { self.set(:unseen, value >= self.get(:order)) }
+    else { self.set(:unseen, value == self.get(:order)) }
+  }
+  on :princess_gone (from, value) {
+    self.set(:walking, false)
+    self.set(:unseen, false)
+    if (value == 0) { self.set(:gone, :rode_off_with_key_given) }
+    else if (value == 1) { self.set(:gone, :rode_off_with_key) }
+    else { self.set(:gone, :fried) }
+  }
+  passage went { {if self.get(:way) == :inside}into the gazebo{else if self.get(:way) == :down}down the rock face{else}{self.get(:way)}{/if} }
+  passage far_off { {if self.get(:gone) == :rode_off_with_key_given}The princess has gone: home, and then further than that, on the unicorn's back, into the gloom. She left you the key and a rose, and that was the whole of her thanks, and more than most people get.{else if self.get(:gone) == :rode_off_with_key}The princess has gone, home and then further, on the unicorn's back, and she did not wait for you; there is a rose in the gazebo to say so, and the key went with her.{else if self.get(:gone) == :fried}The princess is gone. The Wizard saw to that, after what you did, and wherever he put her she is better off.{else if self.get(:step) < self.get(:order)}The princess is not here yet. She is on her way home from the dragon's lair, a step at a time, glancing back, and this is on her way; wait, and she will come through.{else}The princess went {self.went} from here, glancing back as she went. She walks a step at a time and does not wait; go the same way and you will catch her.{/if} }
+  as target for any { permit { refuse far_off } }
+  without as recipient for give from Thing
+  as recipient for give { permit { refuse far_off } }
+  without as aim for throw from Thing
+  as aim for throw { permit { refuse far_off } }
+}
+
+// The rotten wooden chest in the lair (CHEST): rusty hinges that give on
+// the second try, as the first try's line promises (round 4's P2: Zork's
+// one-in-four roll, drawn at the same point of successive turns, is not a
+// fair coin, friction 43), and a squeak that wakes the princess.
 kind RottenChest is Bag {
   grammar { name "rotten wooden chest"  nouns "chest", "trunk"  adjectives "rotten", "old", "wooden" }
   :open false
@@ -381,6 +445,7 @@ kind RottenChest is Bag {
   :size 40
   :has_fdesc true
   :plain 0
+  :tried false
   passage short { rotten wooden chest }
   passage fdesc { A rotten old wooden chest is in one corner among the debris. }
   passage ldesc { There is a rotten wooden chest here. }
@@ -389,11 +454,12 @@ kind RottenChest is Bag {
   as target for open {
     permit { if (self.get(:open)) { refuse "I think you've already done that." } }
     do {
-      if (random(4) == 0) {
+      if (self.get(:tried)) {
         self.set(:open, true)
         say opened_line
         each p: Princess in here { if (!p.get(:awake)) { say "The opening of the squeaky lid startles the young woman."  send p :princess_awake } }
       } else {
+        self.set(:tried, true)
         say "The hinges are very rusty, but they seem to be starting to give. You can probably open it if you try again. There is something bumping around inside."
         each p: Princess in here { if (!p.get(:awake)) { say "All this rummaging around has startled the young woman."  send p :princess_awake } }
       }
@@ -440,6 +506,7 @@ object dragon_room is DragonRoom in underground_caverns_2 {
   :walls 11
   passage body { The room is a large cavern full of broken stone. The walls are scorched and there are deep scratches on the floor. A sooty dry smell is very strong here. A paved path winds from a large passage to the west, through the room, and across a huge stone bridge to the south. To the east a small crack is visible. A dark and smokey tunnel leads north. }
   object dragon is Dragon
+  object other_princess is AbsentPrincess { :order 1  :way east }
   object bridge is Bridge {
     grammar { name "stone bridge"  nouns "bridge"  adjectives "huge", "stone", "ruined" }
     passage short { stone bridge }
@@ -494,6 +561,7 @@ object dragon_lair is DarkRoom, DragonCountry in underground_caverns_2 {
     object statuette is Statuette
   }
   object princess is Princess
+  object other_princess is AbsentPrincess { :order 0  :way south }
   object doorway is Scenery, Door {
     grammar { name "blackened doorway"  nouns "doorway", "door", "opening"  adjectives "blackened" }
     passage short { blackened doorway }
@@ -591,7 +659,7 @@ object ice_room is IceRoom in underground_caverns_2 {
   :walls 13
   passage body { This is a large hall of ancient lava, since worn smooth by the movement of a glacier. A large passage exits to the east and an upward lava tube is at the top of a jumble of fallen rocks.{if self.get(:melted)}
 
-    A damp and scorched passage leads west. It is still partly full of steam.{/if} }
+    A damp and scorched passage leads west. It is still partly full of steam, and a little way along it, where the glacier was holding the roof up, the roof has come down.{/if} }
   object glacier is Glacier
   object lava_tube is Scenery {
     grammar { name "lava tube"  nouns "tube", "chimney", "rocks", "jumble"  adjectives "upward", "lava", "fallen" }

@@ -719,3 +719,95 @@ caverns' numbers are written "caverns N"._
   return through a wall of light in its stride, since the Vault and the
   Small Room are only ever left that way.
 - **Spec:** Events › Receiving.
+
+## After round 4
+
+### 51. A wildcard's permit answers before the verb's own
+
+- **Wanted:** round 4's P11: the Fantasize illusion's refusal opening with
+  the verb's clause, an eye for `examine`, a blow for `attack`, a hand for
+  `take`, written as `as target for examine { permit { refuse gone_look } }`
+  beside its `as target for any { permit { refuse gone } }`.
+- **Found:** a participant's wildcard permits run before its permits for
+  the verb, and the first refusal is the whole answer, so the verb's play
+  was never reached: every verb read "Your hand closes on nothing". A
+  wildcard cannot know the verb, and a passage cannot read it either.
+- **Wrote instead:** the clause is chosen in the actor's own part, whose
+  permit runs before any role's: `as actor for examine` refuses with
+  `{target.gone_look}` where the target is an `Illusion`, and `attack`,
+  `mung`, `kick`, `throw` and `give` likewise; the illusion keeps the
+  passages and the wildcard keeps the long tail. The same for the
+  conjured grue's `attack`. A thing that wants one voice for most verbs
+  and another for three has to be answered for by whoever acts on it.
+- **Spec:** Verbs › Roles compose; The two passes.
+
+### 52. A passage is rendered after the move's clocks have run
+
+- **Wanted:** the princess's "her eyes fix on the passage east" (PRINCESS-
+  FCN) naming the way out of the room she is spoken to in, read off her
+  `:step`; and the dragon's strike reply graded by his anger as the blow
+  lands (round 4's P10 and P6).
+- **Found:** what a body says is rendered after the turn's bodies have
+  run, the `after command` and the queue among them, so `{self.get(:step)}`
+  in the `ignores` passage read the step she had already taken by the end
+  of the move ("her eyes fix on the passage east. The princess walks
+  south."), and a reply graded on `:anger` would have read him two cooler.
+- **Wrote instead:** a snapshot property written in the `do` and read by
+  the passage: `:seen_step`, `:blow_at`. Nothing else in the turn writes
+  them, so the words are the moment's. The spec says where rendering falls
+  (The seed: "after every draw the turn's bodies made"); that a slot reads
+  the end of the turn rather than the moment of the `say` is a consequence
+  worth a sentence under Prose.
+- **Spec:** Chance › The seed; Prose › Slots.
+
+### 53. A declared object's path does not follow it
+
+- **Wanted:** I-UNICORN: the visitor's part, with the gate open, asking the
+  unicorn for the key with `send garden_north.unicorn :unicorn_scene`.
+- **Found:** round 4's P1. The path names what `garden_north` holds when
+  the body runs; the unicorn had bounded off to Elsewhere on that same
+  move (the garden's clock runs before the princess's in the visitor's
+  `after command`), the send reached nothing, and nothing said so: the
+  scene's words printed, the key stayed on the unicorn, and the unicorn
+  came back wearing it. The walkthrough had passed by luck of the draw.
+- **Wrote instead:** a broadcast, `:unicorn_rides`, that the unicorn hears
+  wherever it is while the gate is open, and that the princess also sends
+  when there was nobody to give the key to, so the unicorn goes with her
+  either way, as Zork's REMOVE takes it. The stand-ins hear
+  `:unicorn_gone` with whether the key was given.
+- **Spec:** Names › Identifiers and scope; Events › Sending.
+
+### 54. A member left out along one path still arrives by another
+
+- Round 4's P9, and the spec's own rule (Suppressing a contribution): the
+  place mat is a `Bag`, which is `Box, Portable`; `Portable` leaves out
+  `Thing`'s `shift` and writes its own, but `Box` does not, so the mat
+  answered "pull" twice, once as a thing and once as a portable. Two
+  `without`s on the mat, naming both sources, and then its own play. Not
+  friction so much as a trap: a kind that composes two kinds of one root
+  has to leave out the root's member as many times as it arrives.
+- **Spec:** Kinds › Suppressing a contribution.
+
+### 55. A glow that begins and ends in one move says nothing
+
+- A note. Arriving at the north end with the sword, with the unicorn
+  there, sends the sword `:settle with 1`; the garden's clock on the same
+  move may send the unicorn off and the sword `:settle with 0`. Both
+  handlers run, each `tell self` a different line, and the visitor reads
+  neither: the move ends with the sword as it began, and the words of the
+  two tells are gone with it. Harmless here (nothing happened, nothing is
+  said), and consistent with round 3's reading of I-SWORD, but a `tell`
+  from a queued handler is not, it seems, a line of its own: the turn's
+  account is read at its end. The spec's Prose table says a `tell` reaches
+  its audience; it does not say two in one turn may cancel.
+- **Spec:** Prose; Events › Sending.
+
+### 56. The same draw at the same point, again (amends 43)
+
+- Round 4's P2 and P8: the rotten chest's one-in-four roll failed six
+  times across two visits, and the Wizard's first-call draw, two in four
+  for Fantasize, came up Fantasize in six runs of seven. Both are at the
+  same point of the same handler on successive turns, as 43 found. The
+  chest is a counter now (the second try opens it, as its line promised),
+  and the first call draws evenly among three; the observation stands.
+- **Spec:** Chance › The seed; Time › Determinism.

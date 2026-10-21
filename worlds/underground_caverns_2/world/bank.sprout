@@ -282,9 +282,10 @@ object teller_west is TellerWest in underground_caverns_2 {
   // Depository by the door.
   accept (item, from) {
     if (item.is(Adventurer) && from.is(Depository)) {
-      if (item.get(:bank_loot) > 0) { refuse "An alarm rings briefly, and an invisible force bars your way." }
+      if (item.get(:bank_loot) > 0) { refuse alarm_line }
     }
   }
+  passage alarm_line { An alarm rings briefly, and an invisible force bars your way. It is the doorway that bars it, not the room: the Bank built its doorways to know its own property going through them, and whatever you are carrying, they know. The curtain of light was not built by the same people. }
   passage body {
     You are in a small room, which was used by a bank officer who retrieved safety deposit boxes for the customer. On the north side of the room is a sign which reads "Viewing Room". On the west side of the room, above an open door, is a sign reading:
 
@@ -313,9 +314,10 @@ object teller_east is TellerEast in underground_caverns_2 {
   :walls 18
   accept (item, from) {
     if (item.is(Adventurer) && from.is(Depository)) {
-      if (item.get(:bank_loot) > 0) { refuse "An alarm rings briefly, and an invisible force bars your way." }
+      if (item.get(:bank_loot) > 0) { refuse alarm_line }
     }
   }
+  passage alarm_line { An alarm rings briefly, and an invisible force bars your way. It is the doorway that bars it, not the room: the Bank built its doorways to know its own property going through them, and whatever you are carrying, they know. The curtain of light was not built by the same people. }
   passage body {
     You are in a small room, which was used by a bank officer who retrieved safety deposit boxes for the customer. On the north side of the room is a sign which reads "Viewing Room". On the east side of the room, above an open door, is a sign reading:
 

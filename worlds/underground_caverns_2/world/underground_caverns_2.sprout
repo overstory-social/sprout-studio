@@ -10,7 +10,7 @@ import {Person} from 'person'
 import {Adventurer} from 'adventurer'
 import {go} from 'sprout'
 import {inside_barrow} from 'way_in'
-import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :robot_at, :dragon_turn, :dragon_watch, :ice_melted, :princess_turn, :secret_door, :curtain_active, :gnome_come, :gnome_go, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :mat_moved, :key_far} from 'verbs'
+import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :unicorn_rides, :unicorn_gone, :princess_step, :princess_gone, :dragon_bored, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :robot_at, :dragon_turn, :dragon_watch, :ice_melted, :princess_turn, :secret_door, :curtain_active, :gnome_come, :gnome_go, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :mat_moved, :key_far} from 'verbs'
 import {:princess_walking} from 'dragon'
 
 world underground_caverns_2 is sprout.World {
@@ -29,6 +29,8 @@ world underground_caverns_2 is sprout.World {
   pass :unicorn_at (true)
   pass :bound_away (true)
   pass :come_back (true)
+  pass :unicorn_rides (true)
+  pass :unicorn_gone (true)
   pass :flip (true)
   pass :zoom (true)
   pass :room_sealed (true)
@@ -49,6 +51,9 @@ world underground_caverns_2 is sprout.World {
   pass :ice_melted (true)
   pass :princess_turn (true)
   pass :princess_walking (true)
+  pass :princess_step (true)
+  pass :princess_gone (true)
+  pass :dragon_bored (true)
   pass :secret_door (true)
   pass :curtain_active (true)
   pass :gnome_come (true)

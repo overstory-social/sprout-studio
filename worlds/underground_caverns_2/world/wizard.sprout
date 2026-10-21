@@ -196,7 +196,11 @@ kind Wizard is Creature, sprout.Actor {
           // cost nothing but a little dignity.
           if (dark) { tell "Suddenly, illuminated by the faint blue glow of a magic wand pointed in your direction, you see the Wizard!" }
           else { tell "The Wizard draws forth his wand and waves it in your direction. It begins to glow with a faint blue glow. He peers at you from under his bushy eyebrows, as though you were not at all what he had been expecting, and had turned up anyway." }
-          let r = random(4)
+          // What he is afraid of, read off him (round 4's P8): a short
+          // visit that meets him and nothing else should leave knowing
+          // there is something to want, and where.
+          tell "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you."
+          let r = random(3)
           if (r == 0) { self.set(:spell, :feeble) }
           else if (r == 1) { self.set(:spell, :fumble) }
           else { self.set(:spell, :fantasize) }

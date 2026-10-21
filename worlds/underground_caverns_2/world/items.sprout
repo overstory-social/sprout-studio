@@ -6,11 +6,15 @@ import {Adventurer} from 'adventurer'
 import {Bag, Box} from 'box'
 import {Light} from 'lamp'
 import {Room, CakeSafe, Watery, Wonderland, TeaRoomLike, PostsLike, ChasmEdge} from 'room'
-import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, burn, lamp_on, lamp_off, count_things, turn, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt, :light, :mat_under, :mat_moved} from 'verbs'
+import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, burn, lamp_on, lamp_off, count_things, turn, shift, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt, :light, :mat_under, :mat_moved} from 'verbs'
 import {Bucket} from 'well'
 import {Pool} from 'posts'
 import {Stream} from 'way_in'
 import {examine} from 'sprout'
+
+// The place mat, drawn out from under the Tiny Room's door by hand or by
+// being taken: one handler for both (round 4's P9).
+message :unmat
 
 // A weapon (Zork's WEAPONBIT).
 kind Weapon is Portable { }
@@ -223,12 +227,24 @@ kind PlaceMat is Bag {
   // room does not; moved from there, whatever fell on it falls off.
   :under_door false
   on :mat_under (from, value) { self.set(:under_door, value)  self.set(:ndesc, value) }
-  on :moved (from, to) {
+  on :moved (from, to) { if (self.get(:under_door)) { send self :unmat } }
+  on :unmat {
     if (self.get(:under_door)) {
       self.set(:under_door, false)
       self.set(:ndesc, false)
       broadcast :mat_under with false
       broadcast :mat_moved
+    }
+  }
+  // Pulled or pushed where it lies: drawn out from under the door, and
+  // whatever fell on it falls off (round 4's P9). Thing's answer reaches
+  // this one twice, by way of Box and of Portable, so both are left out.
+  without as target for shift from Thing
+  without as target for shift from Portable
+  as target for shift {
+    do {
+      if (self.get(:under_door)) { say "You draw the place mat out from under the door."  send self :unmat }
+      else { say "Moving the place mat reveals nothing." }
     }
   }
   passage short { place mat }
