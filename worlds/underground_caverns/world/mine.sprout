@@ -60,17 +60,11 @@ kind Chute is Box, Scenery {
   passage examined { The slide is a steep chute of riveted sheet metal, polished to a shine by everything that has gone down it, and it twists away out of sight into the dark below. It goes down a long way. It does not, by the look of it, come back up. }
   passage no_take { The slide is riveted to the floor, and to the walls, and very probably to whatever is at the bottom. }
   without as target for look_in from Box
-  without as target for look_in from Thing
-  without as target for open from Thing
-  without as target for close from Thing
   as target for look_in { do { say "The slide twists away downward, out of sight. Whatever is at the bottom is a long way down." } }
   without as target for close from Box
   as target for close { do { say "You cannot close that." } }
-  without as target for climb_down from Thing
   as target for climb_down { do { say "You tumble down the slide...."  send actor :travel with :cellar } }
-  without as target for climb_up from Thing
   as target for climb_up { do { say "The slide is far too steep and smooth to climb. It is a one-way sort of arrangement." } }
-  without as target for through from Thing
   as target for through { do { say "You tumble down the slide...."  send actor :travel with :cellar } }
   on :entered (item, from) {
     if (item.is(Thing)) { send underground_caverns :open_gate }
@@ -99,7 +93,6 @@ object slide_room is DarkRoom in underground_caverns {
     passage short { letters }
     passage only { It only SAYS "Granite Wall". }
     describe { text "Someone has etched the words \"Granite Wall\" into the south wall, in careful capitals, as if to settle an argument. The wall they are etched on is ordinary dark rock, shot with seams of coal." }
-    without as target for read from Thing
     as target for read { do { say only } }
   }
   object opening is Scenery {
@@ -134,7 +127,6 @@ object mine_entrance is DarkRoom in underground_caverns {
     grammar { name "shaft"  nouns "mine", "entrance", "tunnel"  adjectives "coal", "west", "mine" }
     passage short { shaft }
     describe { text "The mine shaft goes into the west wall, square-cut and shored with timbers that were new a long time ago. Over the mouth of it someone has nailed a board, and on the board someone else has painted, and then painted out, a word that might have been WELCOME." }
-    without as target for through from Thing
     as target for through { do { say "Go west, if you mean it." } }
   }
 }
@@ -153,7 +145,6 @@ object squeaky_room is DarkRoom, Squeaky in underground_caverns {
     grammar { name "squeaky sounds"  nouns "sounds", "sound", "squeaks", "squeak", "squeaking", "noise", "noises"  adjectives "squeaky", "strange" }
     passage short { squeaky sounds }
     describe { text "You cannot see a sound, but you can hear this one well enough: a thin, high squeaking from the passage to the north, now and then rising to something like a word." }
-    without as target for listen from Thing
     as target for listen { do { say "From the north comes a high, thin squeaking, and every so often something that sounds remarkably like \"Fweep!\"" } }
   }
   object passage_north is Scenery {
@@ -178,15 +169,10 @@ kind Bat is Thing, Creature, Illustrated {
     text "He is a large vampire bat, as bats go, and he goes: leathery, beady-eyed and plainly unwell in his mind. He has the look of something that has been underground too long and has come to an understanding with the dark. Just now he is clinging to the ceiling with his feet and holding his nose with both wings."
     if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
   }
-  without as target for talk from Creature
   as target for talk { do { say "Fweep! Fweep! Fweep! Fweep! Fweep!" } }
-  without as target for greet from Creature
   as target for greet { do { say "Fweep! Fweep! Fweep! Fweep! Fweep!" } }
-  without as target for listen from Thing
   as target for listen { do { say "Fweep!" } }
-  without as target for smell from Thing
   as target for smell { do { say "He smells of guano. He seems to think the same of you, or of something you have about you." } }
-  without as target for mung from Thing
   as target for mung {
     do {
       if (here.count(Garlic) > 0) { say no_take }
@@ -288,11 +274,8 @@ kind Cage is Box {
   as target for close { do { say "You cannot close that." } }
   without as target for open from Box
   as target for open { do { say "It is already open." } }
-  without as target for climb_down from Thing
   as target for climb_down { do { say "You wouldn't fit and would die if you could." } }
-  without as target for through from Thing
   as target for through { do { say "You wouldn't fit and would die if you could." } }
-  without as target for shift from Thing
   as target for shift { do { say "The basket swings a little on its chain, and comes back." } }
 }
 
@@ -306,7 +289,6 @@ kind Basket is Cage, Lowerable {
   passage examined { {self.view}{if self.count(Thing) > 0}
 
     {self.look_inside}{/if} }
-  without as target for raise from Thing
   as target for raise {
     do {
       if (self.get(:top)) { say dummy }
@@ -317,7 +299,6 @@ kind Basket is Cage, Lowerable {
       }
     }
   }
-  without as target for lower from Lowerable
   as target for lower {
     do {
       if (!self.get(:top)) { say dummy }
@@ -351,7 +332,6 @@ kind FarBasket is Cage, Lowerable {
   accept (item, from) { refuse "The basket is at the other end of the chain." }
   without as target for look_in from Box
   as target for look_in { do { say away } }
-  without as target for raise from Thing
   as target for raise {
     do {
       if (self.get(:top)) { say dummy }
@@ -362,7 +342,6 @@ kind FarBasket is Cage, Lowerable {
       }
     }
   }
-  without as target for lower from Lowerable
   as target for lower {
     do {
       if (!self.get(:top)) { say dummy }
@@ -381,15 +360,10 @@ kind Chain is Scenery, Lowerable {
   passage short { iron chain }
   passage no_take { The chain is secure. }
   describe { text "The chain secures a basket within the shaft." }
-  without as target for shift from Thing
   as target for shift { do { say "The chain is secure." } }
-  without as target for raise from Thing
   as target for raise { do { say "Perhaps you should do that to the basket." } }
-  without as target for lower from Lowerable
   as target for lower { do { say "Perhaps you should do that to the basket." } }
-  without as target for climb_down from Thing
   as target for climb_down { do { say "The chain is greasy, the shaft is narrow, and the bottom is a long way down. You wouldn't fit and would die if you could." } }
-  without as target for climb_up from Thing
   as target for climb_up { do { say "The chain is greasy, the shaft is narrow, and the top is a long way up. You wouldn't fit and would die if you could." } }
 }
 
@@ -410,18 +384,14 @@ object shaft_room is DarkRoom, ShaftTop in underground_caverns {
     grammar { name "small shaft"  nouns "shaft", "hole", "pit"  adjectives "small", "narrow" }
     passage short { small shaft }
     describe { text "The shaft goes straight down through the floor, square and narrow, into a darkness your light does not reach the bottom of. A draught comes up it, smelling of coal. It is wide enough for the basket and not for you. Whatever is at the bottom is in the dark, and will want a light of its own to be seen by; a light that goes down in the basket stays down with it, and is not up here with you. Better, then, to send down a light you can spare than the one you see by: something that burns on its own, and has never been known to go out." }
-    without as target for climb_down from Thing
     as target for climb_down { do { say "You wouldn't fit and would die if you could." } }
-    without as target for through from Thing
     as target for through { do { say "You wouldn't fit and would die if you could." } }
-    without as target for look_in from Thing
     as target for look_in { do { say "The shaft goes down into the dark further than your light can follow. The chain goes with it.{if shaft_room.count(Basket) > 0} The basket hangs at the top, at the end of it.{else} Somewhere at the bottom, at the end of it, is the basket.{/if} Down there it is as dark as it is anywhere, and nobody has left a light on." } }
   }
   object framework is Scenery {
     grammar { name "metal framework"  nouns "framework", "frame", "winch", "pulley", "gantry"  adjectives "metal", "iron" }
     passage short { metal framework }
     describe { text "Over the shaft stands a framework of riveted iron girders, with a pulley at the top and a big crank-handled winch at the side, and over the pulley runs the heavy iron chain. The winch is greased, which is more than can be said for anything else down here." }
-    without as target for turn from Thing
     as target for turn { do { say "Perhaps you should raise or lower the basket." } }
   }
 }
@@ -456,7 +426,6 @@ object smelly_room is DarkRoom, Reeking in underground_caverns {
 kind Gas is Scenery {
   grammar { name "gas"  nouns "odor", "odour", "smell", "stench", "air", "fumes"  adjectives "coal", "foul" }
   passage short { gas }
-  without as target for smell from Thing
   as target for smell { do { say "It smells like coal gas in here." } }
 }
 
@@ -688,7 +657,6 @@ object lower_shaft is DarkRoom, Crawlspace, DraftyEnd in underground_caverns {
     grammar { name "long shaft"  nouns "shaft", "bottom"  adjectives "long" }
     passage short { long shaft }
     describe { text "The shaft comes down through the ceiling from a long way above, and the chain comes down it, and here they both stop. Looking up, you can see nothing but dark and chain." }
-    without as target for climb_up from Thing
     as target for climb_up { do { say "You wouldn't fit and would die if you could." } }
   }
 }
@@ -711,7 +679,6 @@ object machine_room is DarkRoom in underground_caverns {
     grammar { name "switch"  nouns "start"  adjectives "start" }
     passage short { switch }
     describe { text "The switch is set into the face of the machine and labelled \"START\" in letters that have been polished by thumbs. It has no handle at all, only a narrow slot across its face, about 1/16 by 1/4 inch, of a shape that would suit the tip of a small flat tool." }
-    without as target for turn_with from Mechanism
     as target for turn_with {
       do {
         if (tool.is(Screwdriver)) {
@@ -724,7 +691,6 @@ object machine_room is DarkRoom in underground_caverns {
         else { say "Your bare hands don't appear to be enough." }
       }
     }
-    without as target for shift from Thing
     as target for shift { do { say "Your bare hands don't appear to be enough." } }
   }
 }
@@ -745,9 +711,6 @@ kind Machine is Box, Scenery, Mechanism, Switchable {
 
     {self.look_inside} }
   without as target for open from Box
-  without as target for open from Thing
-  without as target for close from Thing
-  without as target for look_in from Thing
   as target for open {
     do {
       if (self.get(:open)) { say dummy }
@@ -767,9 +730,7 @@ kind Machine is Box, Scenery, Mechanism, Switchable {
       } else { say dummy }
     }
   }
-  without as target for lamp_on from Switchable
   as target for lamp_on { do { say "It's not clear how to turn it on with your bare hands." } }
-  without as target for turn_with from Mechanism
   as target for turn_with {
     do {
       if (tool.is(Screwdriver)) {
@@ -812,21 +773,13 @@ kind Slag is Thing, Squeezable {
   describe { text crumbles }
   as target for examine { do { destroy self } }
   as target for take { do { destroy self } }
-  without as target for rub from Thing
   as target for rub { do { say crumbles  destroy self } }
-  without as target for shift from Thing
   as target for shift { do { say crumbles  destroy self } }
-  without as target for raise from Thing
   as target for raise { do { say crumbles  destroy self } }
-  without as target for kick from Thing
   as target for kick { do { say crumbles  destroy self } }
-  without as target for mung from Thing
   as target for mung { do { say crumbles  destroy self } }
   as target for squeeze { do { say crumbles  destroy self } }
-  without as target for smell from Thing
   as target for smell { do { say crumbles  destroy self } }
-  without as target for read from Thing
   as target for read { do { say crumbles  destroy self } }
-  without as target for look_under from Thing
   as target for look_under { do { say crumbles  destroy self } }
 }

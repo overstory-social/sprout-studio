@@ -235,7 +235,6 @@ kind ChimneyTop { }
 // inherits a line of its own, so it tells the wall, as a visitor comes in,
 // which walls these are.
 kind Wall is Scenery {
-  without as target for read from Thing
   as target for read {
     do {
       if (self.get(:look) == 9) { say "It only SAYS \"Granite Wall\"." }
@@ -277,12 +276,8 @@ kind Grue is Scenery {
   passage short { lurking grue }
   passage absent { There is no grue here, but I'm sure there is at least one lurking in the darkness nearby. I wouldn't let my light go out if I were you! }
   describe { text "The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale." }
-  without as target for listen from Thing
   as target for listen { do { say "It makes no sound but is always lurking in the darkness nearby." } }
-  without as target for search from Thing
   as target for search { do { say absent } }
-  without as target for look_in from Thing
   as target for look_in { do { say absent } }
-  without as target for look_under from Thing
   as target for look_under { do { say absent } }
 }

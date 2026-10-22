@@ -9,10 +9,10 @@ import {TreeTop, Nest, Egg, Canary} from 'tree'
 import {Songful} from 'room'
 import {Adventurer} from 'adventurer'
 import {WhiteHouse, DistantHouse, Boards, BoardedWindow, FrontDoor, TreeAbove, TreeBelow} from 'scenery'
-import {KitchenWindow, Outdoors} from 'house'
+import {kitchen_window, Outdoors} from 'house'
 import {Leaves, Ground, GratingAbove} from 'grating'
 import {grating_room} from 'maze'
-import {take, open, read, cross, climb_up, climb_down, climb_over, :window_sync, :reveal, :travel, :grate_open, :grate_revealed, :won} from 'verbs'
+import {take, open, read, cross, climb_up, climb_down, climb_over, :reveal, :travel, :grate_open, :grate_revealed, :won} from 'verbs'
 import {kitchen} from 'house'
 import {canyon_view} from 'river'
 import {stone_barrow} from 'barrow'
@@ -148,23 +148,21 @@ object behind_house is Room, Outdoors in underground_caverns {
     exit southwest "southwest" -> south_of_house
     exit northwest "northwest" -> north_of_house
     exit east      "east"      -> clearing
-    exit west      "window"    -> kitchen when (self.get(:window_open))
+    exit west      "window"    -> kitchen when (kitchen_window.get(:open))
     exit west      "window"    refuse "The kitchen window is closed."
-    exit in        "house"     -> kitchen when (self.get(:window_open))
+    exit in        "house"     -> kitchen when (kitchen_window.get(:open))
     exit in        "house"     refuse "The kitchen window is closed."
   }
-  :window_open false
   passage body {
-    You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is {if self.get(:window_open)}open.{else}slightly ajar.{/if}
+    You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is {if kitchen_window.get(:open)}open.{else}slightly ajar.{/if}
   }
-  on :window_sync (from, value) { self.set(:window_open, value) }
 
   object house is WhiteHouse {
     :around south_side
     without as target for open from WhiteHouse
     as target for open {
       do {
-        if (behind_house.get(:window_open)) {
+        if (kitchen_window.get(:open)) {
           send actor :travel with :kitchen
           say ""
         }
@@ -172,7 +170,6 @@ object behind_house is Room, Outdoors in underground_caverns {
       }
     }
   }
-  object window is KitchenWindow
   object forest is Woods {
     passage view { The forest begins where the path does, to the east, and keeps a respectful distance from the house, which it has perhaps been asked to do. }
   }
@@ -188,7 +185,7 @@ object behind_house is Room, Outdoors in underground_caverns {
     grammar { name "corner"  adjectives "house" }
     passage short { corner }
     passage view {
-      In the corner of the house, where the walls meet, is a small window which is {if behind_house.get(:window_open)}open.{else}slightly ajar.{/if} It is the only one on the house that is not boarded.
+      In the corner of the house, where the walls meet, is a small window which is {if kitchen_window.get(:open)}open.{else}slightly ajar.{/if} It is the only one on the house that is not boarded.
     }
     describe { text view }
   }
@@ -242,8 +239,6 @@ object mountains is Forest in underground_caverns {
     describe { text "The mountains rise sheer and grey beyond the last of the trees. They are impassable, and they look it." }
     // MOUNTAIN-RANGE-F: CLIMB, said of the mountains, is CLIMB UP.
     synonyms climb_up: "climb"
-    without as target for climb_up from Thing
-    without as target for climb_down from Thing
     as target for climb_up   { do { say "Don't you believe me? The mountains are impassable!" } }
     as target for climb_down { do { say "Don't you believe me? The mountains are impassable!" } }
   }

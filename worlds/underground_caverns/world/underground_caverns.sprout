@@ -10,7 +10,7 @@ import {Person} from 'person'
 import {Adventurer} from 'adventurer'
 import {go} from 'sprout'
 import {west_of_house} from 'above_ground'
-import {:shatter, :open_gate, :gate_open, :close_gate, :trap_sync, :window_sync, :troll_gone, :unbar, :grate_unlock, :grate_open, :grate_revealed, :dome_rope, :thief_start, :summon, :far_voice, :magic, :cyclops_gone, :tide, :gate_flag, :rainbow, :flooded, :won} from 'verbs'
+import {:shatter, :open_gate, :gate_open, :close_gate, :trap_sync, :troll_gone, :unbar, :grate_unlock, :grate_open, :grate_revealed, :dome_rope, :thief_start, :summon, :far_voice, :magic, :cyclops_gone, :tide, :gate_flag, :rainbow, :flooded, :won} from 'verbs'
 
 world underground_caverns is sprout.World {
   visitors are Person
@@ -23,7 +23,6 @@ world underground_caverns is sprout.World {
   // as the world's `pass any` never answers for a move's notices (Places):
   // the rest of the Empire hears nothing of it.
   pass :trap_sync (true)
-  pass :window_sync (true)
   pass :troll_gone (true)
   pass :unbar (true)
   pass :grate_unlock (true)
@@ -63,5 +62,7 @@ world underground_caverns is sprout.World {
   passage nothing_happens { Nothing happens. }
   passage waited          { Time passes... }
   passage not_carrying    { You don't have {thing}. }
+  // `drop all` and its kind with nothing in hand: Zork's own word for it.
+  passage empty_handed    { You are empty-handed. }
   passage too_heavy       { {if to.is(Adventurer)}{to.too_heavy}{else}{to} cannot hold {item}.{/if} }
 }

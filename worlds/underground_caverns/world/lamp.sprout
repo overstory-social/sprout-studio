@@ -37,8 +37,6 @@ kind Lamp is Light, Illustrated {
   :life 385 min 0 max 385
   :age 0 min 0 max 4
   :burned_out false
-  without as target for lamp_on from Switchable
-  without as target for lamp_off from Switchable
 
   // Examined, the lamp says what it is, then Zork's line for whether it is lit.
   describe {

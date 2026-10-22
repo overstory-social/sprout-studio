@@ -1,6 +1,7 @@
 // Everything in the Empire that a visitor can see and name. A thing answers
-// each of Zork's general verbs with Zork's default refusal; a thing that does
-// something better leaves the default out with `without` and writes its own.
+// each of Zork's general verbs with Zork's default refusal, written as a
+// `default` play, so a thing that does something better writes its own and
+// the stock answer steps aside, by whatever path it arrives.
 // A verb for one sort of thing (inflate, wind, unlock …) is typed by a kind
 // below instead, so it is offered only where such a thing is in range.
 //
@@ -40,6 +41,7 @@ kind Thing {
     {if !self.get(:ndesc)}{if self.get(:has_fdesc) && !self.get(:touched)}{self.fdesc}{else}{self.ldesc}{/if}{/if}
   }
   passage inside_lines default { {if false}.{/if} }
+  passage held_lines default { {if false}.{/if} }
   passage no_take default {
     {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}
   }
@@ -80,34 +82,34 @@ kind Thing {
   on :fall   { self.set(:falling, true) }
   on :landed { self.set(:falling, false) }
 
-  as target for open       { do { say "You must tell me how to do that to a {self.short}." } }
-  as target for close      { do { say "You must tell me how to do that to a {self.short}." } }
-  as target for read       { do { say "How does one read a {self.short}?" } }
-  as target for look_in    { do { say "You can't look inside a {self.short}." } }
-  as target for look_under { do { say "There is nothing but dust there." } }
-  as target for search     { do { say "You find nothing unusual." } }
-  as target for shift      { do { say "You can't move the {self.short}." } }
-  as target for raise      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
-  as target for smell      { do { say "It smells like a {self.short}." } }
-  as target for listen     { do { say "The {self.short} makes no sound." } }
-  as target for climb_up   { do { say "You can't do that!" } }
-  as target for climb_down { do { say "You can't do that!" } }
-  as target for mung       { do { say "Nice try." } }
+  as target for open default       { do { say "You must tell me how to do that to a {self.short}." } }
+  as target for close default      { do { say "You must tell me how to do that to a {self.short}." } }
+  as target for read default       { do { say "How does one read a {self.short}?" } }
+  as target for look_in default    { do { say "You can't look inside a {self.short}." } }
+  as target for look_under default { do { say "There is nothing but dust there." } }
+  as target for search default     { do { say "You find nothing unusual." } }
+  as target for shift default      { do { say "You can't move the {self.short}." } }
+  as target for raise default      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
+  as target for smell default      { do { say "It smells like a {self.short}." } }
+  as target for listen default     { do { say "The {self.short} makes no sound." } }
+  as target for climb_up default   { do { say "You can't do that!" } }
+  as target for climb_down default { do { say "You can't do that!" } }
+  as target for mung default       { do { say "Nice try." } }
   // Zork's HACK-HACK, and the rest of its small change.
-  as target for kick    { do { say "Kicking the {self.short} {self.hacked}" } }
-  as target for rub     { do { say "Fiddling with the {self.short} {self.hacked}" } }
-  as target for rub_with { do { say "Fiddling with the {self.short} {self.hacked}" } }
-  as target for shake   { do { say "You can't take it; thus, you can't shake it!" } }
-  as target for fill {
+  as target for kick default    { do { say "Kicking the {self.short} {self.hacked}" } }
+  as target for rub default     { do { say "Fiddling with the {self.short} {self.hacked}" } }
+  as target for rub_with default { do { say "Fiddling with the {self.short} {self.hacked}" } }
+  as target for shake default   { do { say "You can't take it; thus, you can't shake it!" } }
+  as target for fill default {
     do {
       if (bound tool) { say "You may know how to do that, but I don't." }
       else { say "There's nothing to fill it with." }
     }
   }
-  as target for turn     { do { say "Your bare hands don't appear to be enough." } }
+  as target for turn default     { do { say "Your bare hands don't appear to be enough." } }
   // Zork's PRE-BURN and V-BURN: something burning to do it with, and then a
   // thing that burns is gone, and the one holding it with it.
-  as target for burn {
+  as target for burn default {
     do {
       if (bound tool) {
         if (tool.is(Flame)) {
@@ -127,7 +129,7 @@ kind Thing {
     }
   }
   // Zork's V-CUT, short of the slicing of what burns.
-  as target for cut {
+  as target for cut default {
     do {
       if (bound tool) {
         if (tool.is(Weapon)) { say "Strange concept, cutting the {self.short}...." }
@@ -136,9 +138,9 @@ kind Thing {
       } else { say "You'll have to say what to cut the {self.short} with." }
     }
   }
-  as target for ask     { do { say "You can't talk to the {self.short}!" } }
-  as target for through { do { say "You hit your head against the {self.short} as you attempt this feat." } }
-  as recipient for give {
+  as target for ask default     { do { say "You can't talk to the {self.short}!" } }
+  as target for through default { do { say "You hit your head against the {self.short} as you attempt this feat." } }
+  as recipient for give default {
     do {
       if (item.is(Thing)) { say "You can't give a {item.short} to a {self.short}!" }
     }
@@ -148,29 +150,29 @@ kind Thing {
 // The kinds a verb for one sort of thing is typed by. A role of a kind is
 // filled only by what composes it (the spec's Declaring a verb), so the verb
 // is not offered where nothing of the kind is in range. Each kind carries
-// Zork's default answer, which a thing that does better leaves out with
-// `without`.
+// Zork's default answer, as a `default` play that steps aside for a thing's
+// own.
 
 // The boat, folded, inflated or punctured: V-INFLATE.
 kind Inflatable is Thing {
-  as target for inflate   { do { say "How can you inflate that?" } }
+  as target for inflate default   { do { say "How can you inflate that?" } }
 }
 
 // What turns on and off: the lights, and the coal mine's machine.
 kind Switchable is Thing {
-  as target for lamp_on    { do { say "You can't turn that on." } }
-  as target for lamp_off   { do { say "You can't turn that off." } }
+  as target for lamp_on default    { do { say "You can't turn that on." } }
+  as target for lamp_off default   { do { say "You can't turn that off." } }
 }
 
 // What has a lock: the grating, and the gates of Hell.
 kind Lockable is Thing {
-  as target for unlock     { do { say "It doesn't seem to work." } }
-  as target for lock       { do { say "It doesn't seem to work." } }
+  as target for unlock default     { do { say "It doesn't seem to work." } }
+  as target for lock default       { do { say "It doesn't seem to work." } }
 }
 
 // What a visitor might tie up: the rope, and the Cyclops.
 kind Tieable is Thing {
-  as target for tie {
+  as target for tie default {
     do {
       if (bound tool) {
         if (tool.is(Thing)) { say "You can't tie the {self.short} to that." }
@@ -182,18 +184,18 @@ kind Tieable is Thing {
 
 // The basket on its chain, and the chain.
 kind Lowerable is Thing {
-  as target for lower      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
+  as target for lower default      { do { say "Playing in this way with the {self.short} {self.hacked}" } }
 }
 
 // What leaks, or might: the dam, its leak, and the punctured boat (V-PLUG).
 kind Pluggable is Thing {
-  as target for plug      { do { say "This has no effect." } }
+  as target for plug default      { do { say "This has no effect." } }
 }
 
 // What turns with a tool, or might take oil: the bolt, the machine and its switch.
 kind Mechanism is Thing {
-  as target for turn_with { do { say "You can't turn that!" } }
-  as target for oil       { do { say "You probably put spinach in your gas tank, too." } }
+  as target for turn_with default { do { say "You can't turn that!" } }
+  as target for oil default       { do { say "You probably put spinach in your gas tank, too." } }
 }
 
 // What a visitor might dig in: the rubble, the sand and the beaches. It has
@@ -205,15 +207,15 @@ kind Diggable is Thing { }
 // Cyclops, the bat and the spirits. Zork's answers for anyone who has none
 // of their own.
 kind Creature is Thing {
-  as target for talk  { do { say "You can't talk to the {self.short}!" } }
-  as target for greet { do { say "It's a well known fact that only schizophrenics say \"Hello\" to a {self.short}." } }
-  as target for alarm { do { say "The {self.short} isn't sleeping." } }
+  as target for talk default  { do { say "You can't talk to the {self.short}!" } }
+  as target for greet default { do { say "It's a well known fact that only schizophrenics say \"Hello\" to a {self.short}." } }
+  as target for alarm default { do { say "The {self.short} isn't sleeping." } }
 }
 
 // What a visitor might knock on (Zork's DOORBIT): the doors, the grating, the kitchen window
 // and the gates of Hell.
 kind Door is Thing {
-  as target for knock { do { say "Nobody's home." } }
+  as target for knock default { do { say "Nobody's home." } }
 }
 
 // What answers one verb in its own words, and so types that verb's role, as
@@ -225,7 +227,7 @@ kind Crossable is Thing { }
 kind Barrier is Thing { }
 kind Leapable is Thing {
   // Zork's V-SKIP, for what has no words of its own: the canyons.
-  as target for leap_at { do { say "{one of}Very good. Now you can go to the second grade.{or}Are you enjoying yourself?{or}Wheeeeeeeeee!!!!!{or}Do you expect me to applaud?{/one of}" } }
+  as target for leap_at default { do { say "{one of}Very good. Now you can go to the second grade.{or}Are you enjoying yourself?{or}Wheeeeeeeeee!!!!!{or}Do you expect me to applaud?{/one of}" } }
 }
 kind Kissable is Thing { }
 kind Squeezable is Thing { }
@@ -245,13 +247,10 @@ kind Portable is Thing {
     if (value && from.is(Thief)) { move self to from }
   }
 
-  without as target for shift from Thing
   as target for shift { do { say "Moving the {self.short} reveals nothing." } }
 
-  without as target for shake from Thing
   as target for shake { do { say "Shaken." } }
 
-  without as target for through from Thing
   as target for through {
     do {
       if (actor.holds(self)) { say "That would involve quite a contortion!" }

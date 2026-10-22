@@ -2216,3 +2216,41 @@ it and went up, and got Zork's bare refusals.
   after the Altar; the bottle refilled; small things through the grating;
   the torch at the shaft and the machine; the egg given to the thief; the
   Grating Room from below; the grue; the lamp burning out.
+
+## After round 16, again: the refine at Sprout 2c85fd7
+
+Round 16 was synthesised a second time, with its metrics replayed against
+the revised world at a newer Sprout. The replays drifted from what was
+played (P1), so its deltas say nothing about the world; the points as
+played are the ones answered above, and every one of them was already made
+or kept. This revision is the director's steering (S1): the studio pin
+moved to Sprout 5380ce6 and then 2c85fd7, and wherever a new feature does
+the job a workaround did, the workaround goes. Zork I stays whole; no new
+scope. Version 0.4.0, since saves of 0.3.0 cannot be read.
+
+- **The Empire's stock answers step aside.** Zork's default answers on
+  `Thing` and the kinds that type a verb are `default` plays, so a thing
+  with better words just writes them; about 300 `without`s are gone.
+- **The spirits and the dead are one rule each.** GHOSTS-F is one wildcard
+  that leaves out the verbs the spirits answer in their own voice;
+  DEAD-FUNCTION's "You can't even do that." is one wildcard on the
+  adventurer, and a verb added later is covered without remembering.
+- **The kitchen window is one window,** standing in both rooms.
+- **The chimney is the Studio's way up again,** a permit on `go` that
+  reads the way taken, not a note kept on arrival.
+- **The inventory nests as Zork's does,** indented, a held box's contents
+  under it; a box's contents in a room are indented too. The round-16
+  player who read the bottle as inside the sack is the reason.
+- **`drop all` with empty hands** says "You are empty-handed.", where for a
+  day it said the chimney's line (friction 141).
+- **The Loud Room's echoes no longer count a move,** and the echo is
+  lower-case, as Zork's is.
+- Smaller: the grating and the Altar's hole count the key and the coffin
+  in hand themselves; DIAGNOSE multiplies.
+
+### What round 17 should watch, besides the list above
+
+- **The indented inventory:** whether a player now reads what is in the
+  sack and what is in hand correctly.
+- **Lines restated in brackets** ("(knock on the boarded door)"): whether
+  players read the restatement as the world understanding them.

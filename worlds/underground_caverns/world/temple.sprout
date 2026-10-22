@@ -110,9 +110,7 @@ object torch_room is DarkRoom in underground_caverns {
       passage short { rope }
       passage no_take { You cannot reach the rope. }
       describe { text "The end of the rope hangs from the railing far above, swaying a little, some five feet above your head: just out of reach, the way ropes are when it matters." }
-      without as target for climb_up from Thing
       as target for climb_up { do { say "You cannot reach the rope." } }
-      without as target for climb_down from Thing
       as target for climb_down { do { say "You cannot reach the rope." } }
     }
   }
@@ -155,7 +153,6 @@ object temple is TempleRoom in underground_caverns {
       The prayer is inscribed in an ancient script, rarely used today. It seems to be a philippic against small insects, absent-mindedness, and the picking up and dropping of small objects. The final verse consigns trespassers to the land of the dead. All evidence indicates that the beliefs of the ancient Zorkers were obscure.
     }
     describe { text "The inscription is cut deep into the east wall, in an ancient script, rarely used today. It is probably a prayer. Read, it may say so." }
-    without as target for read from Thing
     as target for read { do { say words } }
   }
   object pillars is Scenery {
@@ -197,17 +194,13 @@ object altar is AltarRoom in underground_caverns {
     grammar { name "small hole"  nouns "hole", "corner", "darkness"  adjectives "small", "dark" }
     passage short { small hole }
     describe { text "The hole in the corner of the floor is small and round and goes straight down into darkness. A cold draught comes up out of it, and with it a faint sound, like a great many people sighing a very long way off. It is wide enough for a body, though not for much of a coffin, and you probably could not get back up it." }
-    passage down { {if actor.is(Adventurer)}{if actor.get(:coffins) > 0}You haven't a prayer of getting the coffin down there.{/if}{/if} }
-    without as target for look_in from Thing
+    passage down { {if actor.is(Adventurer)}{if actor.count(Coffin) > 0}You haven't a prayer of getting the coffin down there.{/if}{/if} }
     as target for look_in { do { say "It is dark down there, and a long way down, and something further down still is sighing." } }
     // Down the hole by name, or into it, or through it: the way down, which
     // will not take the coffin (COFFIN-CURE).
-    without as target for climb_down from Thing
-    as target for climb_down { do { if (actor.is(Adventurer)) { if (actor.get(:coffins) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
-    without as target for through from Thing
-    as target for through { do { if (actor.is(Adventurer)) { if (actor.get(:coffins) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
-    without as target for leap_at from Leapable
-    as target for leap_at { do { if (actor.is(Adventurer)) { if (actor.get(:coffins) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
+    as target for climb_down { do { if (actor.is(Adventurer)) { if (actor.count(Coffin) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
+    as target for through { do { if (actor.is(Adventurer)) { if (actor.count(Coffin) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
+    as target for leap_at { do { if (actor.is(Adventurer)) { if (actor.count(Coffin) > 0) { say down } else { send actor :travel with :tiny_cave  say "" } } } }
   }
   object hall is TempleHall {
     passage view { This end of the temple is plainer than the other, as though everything worth the effort had been saved for the altar. Your footsteps come back to you from the north end a moment late. }
@@ -259,7 +252,6 @@ kind Rope is Portable, Tieable {
     if (self.get(:tied)) { text "The rope is tied fast to the wooden railing and hangs down over it into the room below, ending about ten feet from the floor. The knot looks good. You tied it, so you would know." }
     else { text "It is a good length of stout hemp rope, coiled with more care than anything else in the attic was put away. Someone expected to need it." }
   }
-  without as target for tie from Tieable
   as target for tie {
     do {
       if (bound tool) {
@@ -287,14 +279,12 @@ kind Rope is Portable, Tieable {
       } else { say "It is not tied to anything." }
     }
   }
-  without as target for climb_down from Thing
   as target for climb_down {
     do {
       if (self.get(:tied) && here.is(DomeRoom)) { send actor :travel with :torch_room  say "" }
       else { say "You can't do that!" }
     }
   }
-  without as target for climb_up from Thing
   as target for climb_up {
     do {
       if (self.get(:tied)) { say "The rope goes down from here, and so would you." }
@@ -310,7 +300,6 @@ kind Railing is Scenery, Barrier, Leapable {
   passage view default { It is a wooden railing. }
   passage below default { The railing is twenty feet over your head, and so is everything beyond it. }
   describe { text view }
-  without as target for look_in from Thing
   as target for look_in { do { say below } }
   // Over the Dome's rail is Zork's leap, and its end (DOME-ROOM-FCN).
   as target for climb_over {
@@ -321,7 +310,6 @@ kind Railing is Scenery, Barrier, Leapable {
       } else { say "The railing is twenty feet over your head." }
     }
   }
-  without as target for leap_at from Leapable
   as target for leap_at {
     do {
       if (here.is(DomeRoom)) {
@@ -404,9 +392,7 @@ kind Torch is Treasure, Flame {
   describe {
     text "It is a torch of old ivory, yellowed and carved along its length with a procession of tiny figures, every one of them carrying a tiny torch. The flame at its head burns steadily, without smoke and without visible fuel, and shows no sign of ever having been lit or of ever going out. Left anywhere, you suspect, it would go on lighting the place whether or not anyone was there to see by it. The torch is burning."
   }
-  without as target for lamp_on from Switchable
   as target for lamp_on { do { say "It is already on." } }
-  without as target for lamp_off from Switchable
   as target for lamp_off { do { say "You nearly burn your hand trying to extinguish the flame." } }
 }
 
@@ -467,7 +453,6 @@ kind Candles is Flame, Countable {
     }
   }
 
-  without as target for lamp_on from Switchable
   as target for lamp_on {
     do {
       // Lit already with the match in hand, by the lighter's own part.
@@ -477,7 +462,6 @@ kind Candles is Flame, Countable {
       else { say "You should say what to light them with." }
     }
   }
-  without as target for lamp_off from Switchable
   as target for lamp_off {
     do {
       if (self.get(:lit)) {
@@ -504,7 +488,6 @@ kind Candles is Flame, Countable {
       } else { say "The candles are not lighted." }
     }
   }
-  without as target for burn from Thing
   as target for burn {
     do {
       if (self.get(:stage) >= 4) { say "Alas, there's not much left of the candles. Certainly not enough to burn." }
@@ -592,15 +575,11 @@ kind BlackBook is Readable {
       else { say words }
     }
   }
-  without as target for open from Thing
   as target for open { do { say "The book is already open to page 569." } }
-  without as target for close from Thing
   as target for close { do { say "As hard as you try, the book cannot be closed." } }
-  without as target for turn from Thing
   as target for turn {
     do { say "Beside page 569, there is only one other page with any legible printing on it. Most of it is unreadable, but the subject seems to be the banishment of evil. Apparently, certain noises, lights, and prayers are efficacious in this regard." }
   }
-  without as target for burn from Thing
   as target for burn {
     do {
       if (bound tool) {
@@ -624,9 +603,6 @@ kind Coffin is Box, Treasure, Illustrated {
   :picture "pictures/coffin.png"
   :caption "the gold coffin"
   grammar { name "gold coffin"  nouns "coffin", "casket", "treasure", "sarcophagus"  adjectives "solid", "gold", "golden" }
-  without as target for close from Thing
-  without as target for look_in from Thing
-  without as target for open from Thing
   :size 55
   :value 10
   :tvalue 15
@@ -677,7 +653,6 @@ kind Sceptre is Treasure, Sharp {
       } else { say dazzle }
     }
   }
-  without as target for raise from Thing
   as target for raise {
     do {
       if (here.is(RainbowFoot)) {
@@ -734,14 +709,12 @@ kind Bell is Portable, Illustrated {
       } else { say "Ding, dong." }
     }
   }
-  without as target for rub from Thing
   as target for rub {
     do {
       if (self.get(:hot)) { say "The heat from the bell is too intense." }
       else { say "Fiddling with the {self.short} {self.hacked}" }
     }
   }
-  without as target for rub_with from Thing
   as target for rub_with {
     do {
       if (self.get(:hot)) {

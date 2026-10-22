@@ -66,9 +66,6 @@ kind Nest is Bag {
 kind Egg is Box, Treasure, Illustrated {
   :picture "pictures/egg.png"
   :caption "the jewel-encrusted egg"
-  without as target for close from Thing
-  without as target for look_in from Thing
-  without as target for open from Thing
   :broken false
   :tried false
   // Opened by someone with the tools and the expertise (the thief's
@@ -116,7 +113,6 @@ kind Egg is Box, Treasure, Illustrated {
   }
 
   // Zork's BAD-EGG: broken open by force, it opens, and is ruined.
-  without as target for mung from Thing
   as target for mung {
     do {
       if (self.get(:broken)) { say "Nice try." }

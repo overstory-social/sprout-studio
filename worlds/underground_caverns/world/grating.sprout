@@ -10,7 +10,6 @@ import {open, close, unlock, lock, look_under, tally, shift, look_in, :reveal, :
 import {grating_clearing} from 'above_ground'
 import {grating_room} from 'maze'
 import {SkeletonKey} from 'remains'
-import {Adventurer} from 'adventurer'
 import {Illustrated} from 'picture'
 extension media 1
 
@@ -37,7 +36,6 @@ kind Leaves is Portable, Countable {
     }
   }
 
-  without as target for look_under from Thing
   as target for look_under {
     do {
       if (self.get(:hiding)) {
@@ -81,10 +79,8 @@ kind Grating is Scenery, Lockable, Door {
   passage dummy {{one of}Look around.{or}Too late for that.{or}Have your eyes checked.{/one of}}
 
   without as target for open from Thing
-  without as target for close from Thing
   without as target for unlock from Lockable
   without as target for lock from Lockable
-  without as target for look_in from Thing
   as target for look_in {
     do {
       if (self.get(:open)) { say "The grating is open, but I can't tell what's beyond it." }
@@ -212,7 +208,7 @@ kind GratingBelow is Grating {
         self.set(:unlocked, true)
         say "The grate is unlocked."
         broadcast :grate_unlock with true
-      } else if (actor.is(Adventurer) && actor.get(:keys) > 0) {
+      } else if (actor.count(SkeletonKey) > 0) {
         self.set(:unlocked, true)
         say "(with the skeleton key)"
         say "The grate is unlocked."

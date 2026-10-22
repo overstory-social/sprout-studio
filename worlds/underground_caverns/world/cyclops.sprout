@@ -113,7 +113,6 @@ object cyclops_room is CyclopsRoom in underground_caverns {
       if (cyclops_room.get(:magic)) { text "Where the east wall was solid rock there is now a cyclops-sized opening, ragged at the edges, with the rubble of the wall scattered beyond it into a passage. Whoever went through it did not stop to open it first." }
       else { text "The east wall is solid rock, grey and unremarkable and much like any other wall, except that something very large has leaned against it often enough to polish it." }
     }
-    without as target for through from Thing
     as target for through {
       do {
         if (cyclops_room.get(:magic)) { send actor :travel with :strange  say "" }
@@ -164,52 +163,43 @@ kind Cyclops is Thing, sprout.Actor, Tieable, Creature, Illustrated {
     else { send underground_caverns.cyclops_room :cyc_state with 0 }
   }
 
-  without as target for listen from Thing
   as target for listen {
     do {
       if (self.get(:asleep)) { say "The cyclops makes no sound." }
       else { say "You can hear his stomach rumbling." }
     }
   }
-  without as target for talk from Creature
   as target for talk {
     do {
       if (self.get(:asleep)) { say "No use talking to him. He's fast asleep." }
       else { say "The cyclops prefers eating to making conversation." }
     }
   }
-  without as target for ask from Thing
   as target for ask {
     do {
       if (self.get(:asleep)) { say "No use talking to him. He's fast asleep." }
       else { say "The cyclops prefers eating to making conversation." }
     }
   }
-  without as target for greet from Creature
   as target for greet { do { say "The cyclops bows his head to you in greeting." } }
-  without as target for tie from Tieable
   as target for tie { do { say "You cannot tie the cyclops, though he is fit to be tied." } }
-  without as target for shift from Thing
   as target for shift { do { say no_take } }
 
   // Waking him (ALARM, KICK, ATTACK, BURN, MUNG on a sleeping cyclops): he
   // remembers how cross he was, and comes up fighting.
   passage roused { The cyclops yawns and stares at the thing that woke him up. }
-  without as target for alarm from Creature
   as target for alarm {
     do {
       if (self.get(:asleep)) { say roused  send self :waken }
       else { say "The cyclops isn't sleeping." }
     }
   }
-  without as target for kick from Thing
   as target for kick {
     do {
       if (self.get(:asleep)) { say roused  send self :waken }
       else { say "Kicking the cyclops {self.hacked}" }
     }
   }
-  without as target for burn from Thing
   as target for burn {
     do {
       if (self.get(:asleep)) { say roused  send self :waken }
@@ -228,7 +218,6 @@ kind Cyclops is Thing, sprout.Actor, Tieable, Creature, Illustrated {
       }
     }
   }
-  without as target for mung from Thing
   as target for mung {
     do {
       if (self.get(:asleep)) { say roused  send self :waken }
@@ -253,7 +242,6 @@ kind Cyclops is Thing, sprout.Actor, Tieable, Creature, Illustrated {
   // A gift (CYCLOPS-FCN's GIVE): the lunch he eats, and wants a drink after;
   // the water, once he is thirsty, he drinks, bottle and all, and sleeps.
   // The visitor's own part has already handed over what he takes.
-  without as recipient for give from Thing
   as recipient for give {
     do {
       // Water, or the bottle with water in it.
@@ -445,13 +433,9 @@ object strange_passage is DarkRoom in underground_caverns {
     grammar { name "wooden door"  nouns "door", "opening", "hole", "lettering"  adjectives "old", "wooden", "large", "east", "cyclops-sized" }
     passage short { wooden door }
     describe { text "It is an old wooden door, much nailed, with a large opening smashed through the middle of it at about the height and width of a cyclops in a hurry. The splinters all point east. Through the opening you can see the inside of a house." }
-    without as target for open from Thing
-    without as target for close from Thing
     as target for open  { do { say "The door cannot be opened, but it hardly matters now." } }
     as target for close { do { say "There is not enough door left to close." } }
-    without as target for through from Thing
     as target for through { do { send actor :travel with :living_room  say "" } }
-    without as target for look_in from Thing
     as target for look_in { do { say "Through the opening you can see a living room, and a trophy case, and the end of a large oriental rug." } }
   }
   object passage_way is Scenery {
@@ -505,13 +489,9 @@ object treasure_room is TreasureRoom in underground_caverns {
     passage short { discarded bags }
     passage no_take { The bag crumbles at your touch into a little heap of dust and a smell of old leather, and you leave the rest of them alone. }
     describe { text "The bags lie all over the floor, dozens of them, sacks and satchels and purses, every one empty and every one so old that it crumbles at a touch. Somebody has been filling bags in this room for a very long time, and emptying them into somewhere else." }
-    without as target for shift from Thing
     as target for shift { do { say no_take } }
-    without as target for open from Thing
     as target for open { do { say no_take } }
-    without as target for look_in from Thing
     as target for look_in { do { say "They are all empty. Whatever was in them is somewhere else." } }
-    without as target for search from Thing
     as target for search { do { say "They are all empty. Whatever was in them is somewhere else." } }
   }
   object granite is Scenery {
@@ -533,9 +513,6 @@ kind Chalice is Box, Treasure, Illustrated {
   :picture "pictures/chalice.png"
   :caption "the silver chalice"
   grammar { name "chalice"  nouns "cup", "silver", "treasure", "goblet"  adjectives "silver", "engraved", "engravings", "intricately" }
-  without as target for close from Thing
-  without as target for look_in from Thing
-  without as target for open from Thing
   without as target for close from Box
   without as target for look_in from Box
   without as target for open from Box

@@ -70,11 +70,6 @@ kind LargeBag is Scenery {
   passage no_take {{if self.get(:pinned)}Sadly for you, the robber collapsed on top of the bag. Trying to take it would wake him.{else}The bag will be taken over his dead body.{/if}}
   passage examined { The bag is underneath the thief, so one can't say what, if anything, is inside. }
   describe { text examined }
-  without as target for open from Thing
-  without as target for close from Thing
-  without as target for look_in from Thing
-  without as target for search from Thing
-  without as target for shift from Thing
   as target for open    { do { say "Getting close enough would be a good trick." } }
   as target for close   { do { say "Getting close enough would be a good trick." } }
   as target for look_in { do { say examined } }
@@ -188,34 +183,27 @@ kind Thief is Thing, sprout.Actor, Creature, Illustrated {
     if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
   }
 
-  without as target for listen from Thing
   as target for listen { do { say "The thief says nothing, as you have not been formally introduced." } }
-  without as target for talk from Creature
   as target for talk { do { say "The thief is a strong, silent type." } }
-  without as target for ask from Thing
   as target for ask { do { say "The thief is a strong, silent type." } }
-  without as target for greet from Creature
   as target for greet {
     do {
       if (self.get(:strength) < 0) { say "The thief, being temporarily incapacitated, is unable to acknowledge your greeting with his usual graciousness." }
       else { say "The thief bows his head to you in greeting." }
     }
   }
-  without as target for alarm from Creature
   as target for alarm {
     do {
       if (self.get(:strength) < 0) { say "He seems to be deeply unconscious, and in no hurry to stop being so." }
       else { say "He's wide awake, or haven't you noticed..." }
     }
   }
-  without as target for shift from Thing
   as target for shift { do { say no_take } }
 
   // A gift, handed or thrown (Zork's ROBBER-FUNCTION): out cold, he comes
   // round for it; a treasure he stops to admire, and he is the slower for
   // it in a fight; anything else goes in the bag with thanks. The visitor's
   // own part has already put it in his hands.
-  without as recipient for give from Thing
   as recipient for give {
     do {
       if (item.is(Thing)) {
