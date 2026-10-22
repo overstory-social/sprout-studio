@@ -134,13 +134,13 @@ much the product as the rooms are.
   "southwest" from the Menhir Room is "You are trying to walk through an
   enormous rock.", as Zork's is.
 - **The Oddly-angled Room at the foot of the stair has ten ways in
-  Zork and eight here** (friction 58, 69): a place may have eight ways
-  out, and its up to the Stairway and, since round 7, its down to the
-  Cerberus Room must be two of them, so its southwest, which when the
-  bases are run leads to a room with nothing in it but a window, and its
-  west, which then leads to a corner the next corner also leads to, are
-  left out. Up and down typed in the other eight rooms are "You can't go
-  that way." rather than Zork's draw. After round 6 (P3, P4): the room at
+  Zork, and ten here since round 9.** Through round 8 a place had eight
+  ways out, so its southwest and its west were left out and up and down
+  in the other eight rooms were "You can't go that way." (friction 58,
+  69); the cap is 32 now and the way walked is `way` in the visitor's own
+  part of `go`, so every direction in every one of the nine is Zork's
+  draw, and after the bases are run its southwest leads to the room with
+  nothing in it and its west to a corner. After round 6 (P3, P4): the room at
   the foot of the stair keeps its stairway in its BRIEF entry, since
   named alone it looked like the other eight and players typed "up" in
   all of them; and the no-way draw, which walks the visitor a room along
@@ -200,7 +200,13 @@ much the product as the rooms are.
   say where the works are by the sound, under the floor and past the
   well. The synthesis asked for the narrator's invitation ahead of Zork's
   "Eight identical passages"; Zork's text stays whole and first, as it
-  does in every room.
+  does in every room. After round 9 (P4): "wait" and "wait for the
+  passages" while it spins say that standing still settles nothing, that
+  only walking into a passage does, and where the works are; and west,
+  which Zork always turns, is a way drawn as it is taken, one of the
+  seven, by the language's own `one of`; the other seven ways keep the
+  visitor's draw for Zork's four in five, which a drawn way cannot weigh
+  (friction 91). The rerolls themselves are Zork's and stay.
 - **The cakes keep in the bucket** as they do at the Top of Well, since
   Zork's vehicle is in the room it stands in (round 3's P11), and the
   crumble line says why a cake crumbled. After round 5 (P6) the Posts
@@ -213,7 +219,11 @@ much the product as the rooms are.
   table, the table's says a guest who means to leave it their own size
   takes more than one cake, and the pool's close-up and "look under" say
   it is deeper than a swimmer and that whoever goes in does not come out.
-  The drowning itself is Zork's, one command, as before.
+  The drowning itself is Zork's, one command, as before. After round 9
+  (P8), when both runs that went small took the green and the blue cakes
+  and no more: the table says a careful guest takes the lot, and the
+  pool's close-up says it is thin salt water of the kind a dry thing
+  dropped in it would drink up, which meets the red cake's "looks dry".
 - **The robot reaching for the sphere is Zork's** (round 5's P3): both
   opus runs sent the robot for the sphere to spare themselves the cage,
   and SPHERE-FCN has an answer for that, which is that the cage falls on
@@ -483,9 +493,14 @@ rounds 3 to 6 is gone with the ceiling.
   in voice by its stand-in, which says where it is (P2, P3). Since round
   5 the stand-in answers an order to go as well (P4), and the robot sent
   for the sphere instead of you is the robot's last errand. The stand-in
-  answers a look with the same line since round 6 (P14), reworded to fit
-  one ("not here, to be looked at or to hear you"), because its `any`
-  refusal cannot let a look through (friction 67).
+  answered a look with the same line from round 6 (P14), because its `any`
+  refusal could not let a look through (friction 67); since round 9 the
+  wildcard leaves `examine` out and the stand-in has a close-up of its
+  own, which says where the robot is to be looked at. After round 9 (P6)
+  the robot sent for the sphere dies with a line for the visitor as well
+  as for him: the cage is gas-tight for whoever is under it and not for
+  the closet, and the closet is small; a run read the robot's death and
+  then its own with nothing between.
 - **Dying costs more than ten points**: the lamp goes back to the barrow,
   treasures to the Wizard's stash (out of reach until his rooms are
   built), and everything else to the gazebo; the third death is the end.
@@ -663,7 +678,12 @@ rounds 3 to 6 is gone with the ceiling.
   that anything else put in its mouth is swallowed out of habit and not
   given back; and the line for a thing eaten says it was not what the
   lizard wanted and that it is as hungry as before, so a visitor who fed
-  it the fuse knows the fuse is lost.
+  it the fuse knows the fuse is lost. After round 9 (P3), when three of
+  four runs fed it the teapot, the mat or the newspaper before ever
+  examining it: the hunger tell is where every run reads first, in the
+  Guarded Room's description (its tongue at the air the way a lizard's
+  goes when there are insects about) and on the snap when a hand goes to
+  the handle or a key to the lock. The cost of a wrong gift stays Zork's.
 - **The dog grades what it is offered** (round 8's P2): food it is not
   hungry for, the necklace the right idea and the wrong size, with a
   scratch at the bare neck, and anything else Zork's snap; and its
@@ -687,7 +707,14 @@ rounds 3 to 6 is gone with the ceiling.
 - **The aquarium answers to how it is broken**: thrown at or attacked with
   a sword, the serpent dies short of your foot; "break the aquarium with
   the sword", and it rends you first. The flask thrown at the glass is
-  poison gas for everybody.
+  poison gas for everybody. After round 9 (P2, P6): the tell comes before
+  the cost, in the tank's close-up (glass breaks; the question is what
+  comes out and how near you stand; a thing thrown or a blade swung keeps
+  an arm between you and him, and breaking it like a window does not);
+  the dying glimpse names the sphere; and on the shatter the clear sphere
+  spills out with the sand onto the floor, where the room lists it, since
+  a run that died breaking the glass came back to a tank that showed
+  nothing and "search aquarium" found nothing unusual.
 - **The crypt's door shows in the dark**: the room is lit only by what a
   visitor brings, and the F on the south wall only when they bring
   nothing; "turn off lamp", and the door is there to be opened. The heads
@@ -716,7 +743,16 @@ rounds 3 to 6 is gone with the ceiling.
   reads dark, as its close-up promises; before, the count stood until the
   next move, the landing room's window kept the old grade, and the next
   draw said "lost count" and "has woken" in one breath, which four runs
-  read as noise.
+  read as noise. After round 9 (P1, P5): the window's close-up has the
+  world's own five grades, a flicker for the plate, dim for first, a glow
+  for second, bright for third and serene for home, and says which this
+  one is now and how many are left, since a runner three bases round read
+  "brightest of all for home" and stopped one short; the bright grade's
+  room line says it has one grade left in it; the bag's room line and
+  close-up say the bases are at the diamond's points, a diagonal apart,
+  since runners ran the compass points from the corners; and a wrong step
+  that was a compass point says the passage tried to go straight at a
+  diamond that has no straight sides.
 - **The whirring is the pointer** (round 7's P2): four short runs quoted
   the hook and turned east into the garden one move short of the
   Carousel, so the hook says the room that will not keep still is heard
@@ -732,7 +768,12 @@ rounds 3 to 6 is gone with the ceiling.
   holds it does the pouring, since it is the only thing that can see the
   water in it, friction 61 again); and the dragon's close-up says he has
   caught sight of himself in the brass of the lamp and does not care for
-  the other dragon in it.
+  the other dragon in it. After round 9 (P9), when two runs took the hint
+  and showed him the lamp and were told he refused the gift: "show" is a
+  verb of its own, and shown the lamp he glares at the small dragon in it
+  and looks round for a larger surface, which is the glacier without
+  naming it; shown a treasure he says he takes what is given, not what is
+  shown; everyone else is not interested.
 - **The princess, followed late** (round 7's P6): her "eyes fix on" line
   in the lair names the blackened doorway to the south; her turn and the
   dragon's are told the room the visitor ends the move in rather than the
@@ -758,3 +799,34 @@ rounds 3 to 6 is gone with the ceiling.
   (P12), "take all" from a hand too full for the engine's eight says so
   (P11, friction 73), and a visitor who dies in the basket is out of it
   when they wake (P4).
+- **Round 9's small answers** (P10 to P14): the flask opened and the water
+  thrown at the dragon each answer once, since a thing's stock answer now
+  steps aside for its own (friction 22's answer); the chasm and the mouse
+  hole answer "throw X into" in voice and keep the thing, where the
+  parser drew between two readings and refused flat (friction 90); "strike
+  a match" lights one, since the matchbook refuses to be fought and the
+  allowed reading wins; "leave the gazebo" leaves it; "climb into the
+  crack" enters it; a cake eaten off the table is taken first, "(Taken)",
+  as Zork's parser takes it; the sword's runes are read, and say they
+  cannot be; each Room of Mist has a vision that answers for the sign,
+  the door, the table and the shadow its glimpse names, too blurry to make
+  out, and the mist answers to "glowing" and "odd"; the north end of the
+  garden glimpses the tea table through the gazebo's railing, and the
+  bucket's teapot clause says where a teapot might be found.
+- **What the language took over in round 9** (the steering's list, each
+  entry of `friction.md` marked): the Freeze refusal and the game's end
+  are one `as actor for any except …`; the Illusion and the robot's
+  stand-in answer for themselves with `except`; the Wizard's door and the
+  crypt door are one object standing in two rooms; the ways out of the
+  Posts Room, the Pool Room and the Machine Room read the room they lead
+  to; the fuse and the doors see into the hands that hold the match and
+  the key; the Guarded Room's description reads the one looking; the
+  dragon's claw costs anger on a refused step north; the diamond reads
+  the way walked; `Thing`'s stock answers are defaults and three hundred
+  and sixty-six `without` lines are gone; the riddle, the closet's notice
+  and the well's etchings keep their shape; and the dragon's and the
+  princess's clocks, the wand's glow and the unicorn's hold run without
+  the two-sends-deep and skip-a-move workarounds. What stays, and why, is
+  in the entries: the spells' clock, the cage that passes, `tell from`,
+  `:wizard_near`, the Tiny Room's door and the Bank's walls, and the
+  maze's and the Carousel's weighted draws.

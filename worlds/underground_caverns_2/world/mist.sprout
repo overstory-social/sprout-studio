@@ -8,7 +8,7 @@ import * as sprout from 'sprout'
 import {Thing, Scenery} from 'thing'
 import {Room} from 'room'
 import {Adventurer} from 'adventurer'
-import {look_in, mung, through, Dest, :red_at, :blue_at, :clear_at, :face, :serpent_gone} from 'verbs'
+import {look_in, mung, through, read, Dest, :red_at, :blue_at, :clear_at, :face, :serpent_gone} from 'verbs'
 
 // A room of mist: described in full every time, since a death is a death.
 kind MistRoom is Room {
@@ -63,16 +63,22 @@ kind BlackMist is MistRoom {
   on :entered (item, from) { if (item.is(Adventurer)) { send item :face } }
 }
 
+// What a glimpse names (round 9's P13): the sign, the door, the table,
+// the shadow, the glow, all on the far side of the crystal and blurred.
+kind MistVision is Scenery {
+  grammar { name "vision"  nouns "sign", "door", "table", "shadow", "glow", "tank", "cabinet", "bench"  adjectives "blurry", "strange", "odd", "sinuous", "huge", "great", "dreary", "colored" }
+  passage short { vision }
+  describe { text "Whatever you are looking at is on the far side of the crystal and of the mist, and too blurry to make out more than you have: a shape, a color, the suggestion of a thing. It does not come clearer for staring, and nothing you do in here reaches it." }
+  passage no_take { It is on the far side of the crystal. Your hand is on this side. }
+  as target for read { do { say "It is too blurry to read, and on the wrong side of the crystal." } }
+}
 kind MistWall is Scenery {
-  grammar { name "mist"  nouns "sphere", "crystal", "wall", "fog", "corridor"  adjectives "thin", "red", "blue", "white", "black", "crystalline", "huge" }
+  grammar { name "mist"  nouns "sphere", "crystal", "wall", "fog", "corridor"  adjectives "thin", "red", "blue", "white", "black", "huge", "glowing", "odd" }
   passage short { mist }
   describe { text "The mist is thin and everywhere, and the sphere you are in is crystal, huge, and curved, and whatever is on the other side of it is a long way off and the wrong size. To the west the mist changes color. There is nowhere else to go, and nothing to do here but go there." }
   passage no_take { Your hand closes on mist, which is what mist is for. }
-  without as target for mung from Thing
   as target for mung { do { say "The sphere is unbreakable, from this side as from the other." } }
-  without as target for through from Thing
   as target for through { do { say "You walk into the crystal, which is further off than it looked, and then nearer, and does not let you through. West is the way the mist goes." } }
-  without as target for look_in from Thing
   as target for look_in { do { say "You strain to look out through the mist, and the mist looks back." } }
 }
 
@@ -84,6 +90,7 @@ object mist_red is RedMist in underground_caverns_2 {
   :id mist_red
   :walls 22
   object mist is MistWall
+  object vision is MistVision
 }
 object mist_blue is BlueMist in underground_caverns_2 {
   grammar {
@@ -93,6 +100,7 @@ object mist_blue is BlueMist in underground_caverns_2 {
   :id mist_blue
   :walls 22
   object mist is MistWall
+  object vision is MistVision
 }
 object mist_white is WhiteMist in underground_caverns_2 {
   grammar {
@@ -102,6 +110,7 @@ object mist_white is WhiteMist in underground_caverns_2 {
   :id mist_white
   :walls 22
   object mist is MistWall
+  object vision is MistVision
 }
 object mist_black is BlackMist in underground_caverns_2 {
   grammar { name "Room of Black Mist" }

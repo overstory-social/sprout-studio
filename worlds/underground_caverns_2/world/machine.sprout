@@ -11,7 +11,7 @@ import {Room, DarkRoom, CakeSafe} from 'room'
 import {Sphere, RobotLabel, MangledCage} from 'items'
 import {tea_room} from 'well'
 import {Adventurer} from 'adventurer'
-import {ask} from 'sprout'
+import {ask, examine} from 'sprout'
 import {take, give, throw, mung, open, close, look_in, shift, read, listen, smell, raise, greet, talk, alarm, follow, robot_go, robot_push, robot_lift, robot_drop, robot_give, robot_inventory, robot_other, robot_stuck, robot_eat, robot_see, Direction, Dest, :flip, :zoom, :cage_fall, :cage_lift, :freed, :poisoned, :robot_out, :robot_at, :die} from 'verbs'
 import {:lost} from 'items'
 message :cage_crush
@@ -44,30 +44,19 @@ kind Robot is Creature, Orderable, sprout.Actor {
   describe { text "It is a robot, late-model, as it will tell you itself: a tall tin body on two jointed legs, a head-like appendage with two dull lenses in it, and a pair of three-fingered hands held out in front of it as though waiting to be given something. A small plate on its chest says \"FROBOZZ MAGIC ROBOT COMPANY\". It hums.{if self.count(Thing) > 0} It is holding {for t: Thing in self}{if !$first}{if $last} and {else}, {/if}{/if}a {t.short}{/for}.{/if}" }
   as target for any { permit { if (self.get(:wrecked)) { refuse "You can't see any such thing." } } }
 
-  without as target for open from Thing
   as target for open { do { say "There's no access panel or door on the robot." } }
-  without as target for close from Thing
   as target for close { do { say "There's no access panel or door on the robot." } }
-  without as target for look_in from Thing
   as target for look_in { do { say "There's no access panel or door on the robot." } }
-  without as target for listen from Thing
   as target for listen { do { say "The robot hums, and now and then something inside it clicks over, like a clock thinking." } }
-  without as target for greet from Creature
   as target for greet { do { say "\"Hello, Master!\" says the robot, and waits to be told what to do." } }
-  without as target for talk from Creature
   as target for talk { do { say "\"At your service!\" says the robot. It is waiting for an order, which you give by saying \"Robot,\" and then what you want done." } }
-  without as target for ask from Thing
   as target for ask { do { say "\"My programming is insufficient to allow me to answer that,\" says the robot, apologetically." } }
-  without as target for alarm from Creature
   as target for alarm { do { say "The robot is quite awake, insofar as a robot is ever anything else." } }
-  without as target for follow from Creature
   as target for follow { do { say "The robot is right here, and will go where it is told." } }
   // A gift (ROBOT-FCN's GIVE): the visitor's own part has put it in the
   // robot's hands.
-  without as recipient for give from Thing
   as recipient for give { do { if (item.is(Thing)) { say "The robot gladly takes the {item.short} and nods his head-like appendage in thanks." } } }
   // Thrown at, or broken: it falls to pieces (shoddy construction).
-  without as target for mung from Thing
   as target for mung {
     do {
       say "The robot falls to the ground and (being of shoddy construction) disintegrates before your eyes."
@@ -127,6 +116,9 @@ kind Robot is Creature, Orderable, sprout.Actor {
       // and, Zork being Zork, of you.
       else if (item.is(Sphere) && here.is(Closet) && !here.get(:solved)) {
         say "As the robot reaches for the sphere, a solid steel cage falls from the ceiling, trapping him. You can faintly hear his last words: \"Whirr, buzz, click!\" A cloud of smoke rising from beneath the cage confirms your fears about the fate of your brave mechanical friend."
+        // Why the visitor dies of it (round 9's P6): the cage is gas-tight
+        // for whoever is under it and not for the closet.
+        say "The smoke is not only smoke. Whatever the cage lets in on whoever is under it, it lets a little out at the floor, yellowish and quick, and the closet is small. You get as far as the doorway."
         send item :lost
         send dingy_closet.cage :cage_crush
         send self :crushed
@@ -243,15 +235,17 @@ kind AbsentRobot is Scenery, Orderable, Creature {
   :robot_room Dest default low_room
   :dirs [Direction] default [north, south, east, west, northeast, northwest, southeast, southwest, up, down, inside, outside]
   on :robot_at (from, value) { self.set(:robot_room, value)  self.set(:unseen, value == self.get(:room)) }
-  passage absent { {if self.get(:robot_room) == :nowhere}The robot is under a steel cage in the Dingy Closet, and it has stopped humming. It will not be hearing anything again.{else}The robot is not here, to be looked at or to hear you. It is {if self.get(:robot_room) == :low_room}in the Low Room{else if self.get(:robot_room) == :machine}in the Machine Room{else if self.get(:robot_room) == :closet}in the Dingy Closet{else if self.get(:robot_room) == :tea_room}in the Tea Room{else}wherever you last sent it{/if}, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does.{/if} }
-  as target for any { permit { refuse absent } }
+  passage whereabouts { {if self.get(:robot_room) == :low_room}in the Low Room{else if self.get(:robot_room) == :machine}in the Machine Room{else if self.get(:robot_room) == :closet}in the Dingy Closet{else if self.get(:robot_room) == :tea_room}in the Tea Room{else}wherever you last sent it{/if} }
+  // Looked at, the stand-in says where the robot is to be looked at; the
+  // engine's `examine` is left out of its wildcard for that.
+  describe { text "{if self.get(:robot_room) == :nowhere}The robot is not here to be looked at. It is under a steel cage in the Dingy Closet, and it has stopped humming.{else}The robot is not here to be looked at. It is {self.whereabouts}, humming to itself and waiting to be told something.{/if}" }
+  passage absent { {if self.get(:robot_room) == :nowhere}The robot is under a steel cage in the Dingy Closet, and it has stopped humming. It will not be hearing anything again.{else}The robot is not here to hear you. It is {if self.get(:robot_room) == :low_room}in the Low Room{else if self.get(:robot_room) == :machine}in the Machine Room{else if self.get(:robot_room) == :closet}in the Dingy Closet{else if self.get(:robot_room) == :tea_room}in the Tea Room{else}wherever you last sent it{/if}, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does.{/if} }
+  as target for any except examine { permit { refuse absent } }
   // An order to go somewhere names a direction, a value the stand-in must
   // narrow before the wildcard can answer for it (round 5's P4).
   as target for robot_go { way from :dirs  permit { refuse absent } }
   as tool for any { permit { refuse absent } }
-  without as recipient for give from Thing
   as recipient for give { permit { refuse absent } }
-  without as aim for throw from Thing
   as aim for throw { permit { refuse absent } }
 }
 
@@ -261,7 +255,6 @@ kind RoundButton is Button {
   grammar { name "round button"  nouns "button"  adjectives "round" }
   passage short { round button }
   describe { text "A round button, brass, the size of a coin, set in the wall beside the other two. Above it the instructions are in EBCDIC, which is no help." }
-  without as target for shift from Thing
   as target for shift {
     do {
       if (actor.is(Robot)) {
@@ -278,7 +271,6 @@ kind SquareButton is Button {
   grammar { name "square button"  nouns "button"  adjectives "square" }
   passage short { square button }
   describe { text "A square button, brass, set in the wall beside the other two. Above it the instructions are in EBCDIC, which is no help." }
-  without as target for shift from Thing
   as target for shift {
     do {
       if (actor.is(Robot)) {
@@ -295,7 +287,6 @@ kind TriangularButton is Button {
   grammar { name "triangular button"  nouns "button"  adjectives "triangular", "triangle" }
   passage short { triangular button }
   describe { text "A triangular button, brass, set in the wall between the other two. Above it the instructions are in EBCDIC, which is no help." }
-  without as target for shift from Thing
   as target for shift {
     do {
       if (actor.is(Robot)) {
@@ -399,12 +390,10 @@ object machine_room is MachineRoom in underground_caverns_2 {
   grammar {
     name "Machine Room"
     exit west "west" -> low_room
-    exit south "south" -> dingy_closet when (!self.get(:closet_sealed))
+    exit south "south" -> dingy_closet when (!dingy_closet.get(:munged))
     exit south "south" refuse "You are stopped by a cloud of poisonous gas."
   }
   :id machine
-  :closet_sealed false
-  on :poisoned { self.set(:closet_sealed, true) }
   object absent_robot is AbsentRobot { :room machine }
   passage body {
     This is a large room full of assorted heavy machinery, whirring noisily. The room smells of burned resistors. Along one wall are three buttons which are, respectively, round, triangular, and square. Naturally, above these buttons are instructions written in EBCDIC. A large sign in English above all the buttons says
@@ -425,23 +414,19 @@ object machine_room is MachineRoom in underground_caverns_2 {
     grammar { name "sign"  nouns "warning", "notice"  adjectives "large", "english" }
     passage short { sign }
     describe { text "The sign says \"DANGER -- HIGH VOLTAGE\", in large capitals, in English, which is the only English in the room. It is not a decoration." }
-    without as target for read from Thing
     as target for read { do { say "\"DANGER -- HIGH VOLTAGE\"" } }
   }
   object instructions is Scenery {
     grammar { name "instructions"  nouns "ebcdic", "writing", "lettering"  adjectives "ebcdic" }
     passage short { instructions }
     describe { text "The instructions above the buttons are in EBCDIC, which was a way of writing things down that nobody has used since, and nobody enjoyed then." }
-    without as target for read from Thing
     as target for read { do { say "They're in EBCDIC. You can make out which lines go with which buttons, and nothing else, and a great deal of nothing else." } }
   }
   object machinery is Scenery {
     grammar { name "machinery"  nouns "machines", "machine", "equipment", "resistors"  adjectives "heavy", "assorted", "whirring" }
     passage short { machinery }
     describe { text "Heavy machinery of every sort, whirring: flywheels, belts, a dynamo the size of a cart, and a great deal of cable going into the floor. Somewhere under it all, something very large is being turned round and round, and the room smells of the resistors that have given up trying to stop it." }
-    without as target for listen from Thing
     as target for listen { do { say "Whirring, from every part of the room at once, and under it a deeper note from under the floor, going round." } }
-    without as target for smell from Thing
     as target for smell { do { say "Burned resistors. It is not a smell that improves." } }
   }
 }
@@ -457,13 +442,12 @@ object dingy_closet is Closet in underground_caverns_2 {
   passage body {
     This is a dingy closet adjacent to a larger room to the north. Chiselled into a wall are these words:
 
-    Protected by
-
-    FROBOZZ
-
-    Magic Alarm Company
-
-    (Hello, footpad!)
+    {verbatim}
+         Protected by
+            FROBOZZ
+      Magic Alarm Company
+       (Hello, footpad!)
+    {/verbatim}
 
     There doesn't seem to be any footpad here, however.{if cage.is(CagePlace)}{if cage.get(:crushed)}
 
@@ -477,16 +461,14 @@ object dingy_closet is Closet in underground_caverns_2 {
     grammar { name "words"  nouns "notice", "writing", "chiselling", "inscription"  adjectives "chiselled", "chiseled" }
     passage short { words }
     passage text_lines {
-      Protected by
-
-      FROBOZZ
-
-      Magic Alarm Company
-
-      (Hello, footpad!)
+      {verbatim}
+           Protected by
+              FROBOZZ
+        Magic Alarm Company
+         (Hello, footpad!)
+      {/verbatim}
     }
     describe { text text_lines }
-    without as target for read from Thing
     as target for read { do { say text_lines } }
   }
   object footpad is Scenery {

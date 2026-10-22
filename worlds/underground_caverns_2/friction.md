@@ -22,6 +22,7 @@ caverns' numbers are written "caverns N"._
   `actor.get(:spell)`. It works, and it means the verb carries nothing:
   anyone reading the reading sees `enchant`, not which spell.
 - **Spec:** Verbs › Acting; Verbs › Value roles.
+- **Answered by the language (Sprout 5380ce6):** an `act` fills a value role with an expression of its type, narrowed by the role-player's `from`. The Wizard casts `act enchant (target: from, spell: self.get(:spell))`, and `act enchant (target: actor, spell: :fear)` when struck; the visitor's part reads `spell`, narrowed `from :spells`. The reading carries the spell now, and the workaround is gone.
 
 ### 2. A spell that refuses every move never sees a move pass
 
@@ -42,6 +43,7 @@ caverns' numbers are written "caverns N"._
   frozen visitor who waits sees the spell run out in two to twelve waits;
   and in a visitor's first thirty moves a spell lasts the shortest three
   minutes and is never Freeze or Fence (round 2's P14).
+- **Answered by the language (Sprout 5380ce6):** `after command` follows a refused command, a refused `go` among them, so Zork's count of moves for Freeze, Float and Fence could be written. The world keeps the clock: the spells share the Wizard's unit, which is the host's clock, `wait` passes it, and the twelve spells' lengths and every test of them are written against it. Kept, as a design and not a gap.
 
 ### 3. No `as actor for any`
 
@@ -54,6 +56,7 @@ caverns' numbers are written "caverns N"._
   seventy lines of it, as the caverns wrote the dead visitor's (caverns
   125).
 - **Spec:** Verbs › Playing a role (the wildcard).
+- **Answered by the language (Sprout 5380ce6):** `as actor for any except help, score, diagnose, look, examine, inventory, wait, smell, listen, listen_here, smell_here, verbose, brief, superbrief, quit, restart, save, restore` carries the Freeze refusal and the game's end in one permit; ninety-five per-verb clauses and thirty-nine plays that held nothing else are gone. The verbs left out keep their own permits (`look` and its kin frozen but not over; `wait` over but not frozen), as they had.
 
 ### 4. The Wizard cannot find the visitor; the visitor's clock cannot wait for the room
 
@@ -78,6 +81,7 @@ caverns' numbers are written "caverns N"._
   his clock finds a visitor out of the barrow he appears and casts one of
   Feeble, Fumble and Fantasize (round 1's P15, a departure from I-WIZARD's
   one in ten, the director's).
+- **Answered by the language (Sprout 5380ce6):** the ordering this entry also complained of is gone: `after command` runs after what an engine verb answers, so a clock driven from it would read after the room on `look`. The Wizard keeps his own wake and `:where_are_you`, since an NPC still cannot find a visitor (caverns 83, 84); nothing of that is this batch's to answer.
 
 ### 5. An NPC's `say` is reported speech
 
@@ -190,6 +194,7 @@ caverns' numbers are written "caverns N"._
   a bad direction typed there is `no_way` where Zork would still move
   the visitor.
 - **Spec:** Verbs › Exits; Moving something; After the move.
+- **Answered by the language (Sprout 5380ce6):** a way may be drawn as it is taken: the Carousel's west is `-> one of (marble_hall, stream_path, topiary, riddle_room, menhir_room, cobwebby_corridor, cool_room) say "You're not sure which direction is which. This room is very disorienting." when (self.get(:spinning))`, and Room 8 is no longer passed through and thrown from. The other seven ways stay the visitor's own draw, since `one of` draws evenly and Zork's four in five cannot be written on it (friction 91); the part reads `way` and leaves west alone.
 
 ### 13. A way out cannot read the room it leads to
 
@@ -206,6 +211,7 @@ caverns' numbers are written "caverns N"._
   `:zooming`: a button reading it faulted the turn (`NameOutOfRange`), so
   each button keeps its own copy, set by the `:zoom` the world passes.
 - **Spec:** Range; Verbs › An exit may be conditional.
+- **Answered by the language (Sprout 5380ce6):** an exit's `when` reads the place it leads to. The Posts Room's east is `when (!pool_room.get(:munged))`, the Pool Room's west and out `when (!posts_room.get(:munged))`, the Machine Room's south `when (!dingy_closet.get(:munged))`; `:room_sealed`, `:pool_sealed`, `:posts_sealed` and `:closet_sealed` are gone. The buttons' copies of the Carousel's `:zooming` stay: a button is not an exit.
 
 ## Containers, range and hands
 
@@ -222,6 +228,7 @@ caverns' numbers are written "caverns N"._
   a `depart` guard reading the visitor's `:caged`. The gas and the
   Wizard's clock reach a caged visitor too, which does no harm.
 - **Spec:** Range.
+- **Answered by the language (Sprout 5380ce6):** two things shut in one container reach each other, so the cage need not pass for the robot to be named from inside it. It passes still, and the sphere's `depart` guard stays: the Wizard's voice and the gas reach a caged visitor through a cage that passes (842), and the guard's words are Zork's own "You can't reach it through the bars of the cage." Kept for those, not for 14.
 
 ### 15. A message sent from inside the cage reached nobody
 
@@ -240,6 +247,7 @@ caverns' numbers are written "caverns N"._
   `move self to` the bucket, since `sprout.Actor` passes nothing. The
   adventurer's own `pour`, `pour_in` and `take` parts do the moving; the
   water only says what came of it. **Spec:** Range.
+- **Answered by the language (Sprout 5380ce6):** not this one: 845 opens the actor's hands to the sight of a reading's participants, and says "the hands open to sight, not to reach: a send, a move or a name reaches what the actor carries no more than range does". The water in a teapot in a hand still cannot `move self to` the bucket; the hand still does the moving. Stands.
 
 ### 17. A declared vehicle's way out cannot be connected before it moves
 
@@ -281,6 +289,7 @@ caverns' numbers are written "caverns N"._
   and the etching's spaced letters collapse. The riddle is one sentence
   here, the closet notice is four paragraphs, and the etchings are
   described in prose rather than drawn. **Spec:** Prose › Passages.
+- **Answered by the language (Sprout 5380ce6):** `{verbatim}`. The riddle's four lines are verse again, in the room's body and on the riddle; the closet's notice is set as Zork sets it, in the body and under `read`; and the well's etchings are cut in a ring, whole at the top and crumbled at the bottom, with the prose that read them round kept after. Dropped.
 
 ### 21. Fantasize cannot roll in a description
 
@@ -303,6 +312,7 @@ caverns' numbers are written "caverns N"._
   don't think that the cake would agree with you" back through their
   second kind, printed beside the real answer. Each writes `without … from
   Thing` itself. **Spec:** Kinds › Suppressing a contribution.
+- **Answered by the language (Sprout 5380ce6):** a `default` play steps aside wherever another source plays the role for that verb. `Thing`'s stock answers are `default`, and `Creature`'s, `Door`'s, `Fillable`'s and `Switchable`'s `lamp_on` and `lamp_off`; three hundred and sixty-six `without` lines are gone. What stays: twenty-five that silence a play outright, which a default cannot do, and thirty-four that leave out `Box`'s, `Portable`'s, `Readable`'s, `Food`'s, `Bridge`'s, `Gazebo`'s and `WellRope`'s own plays, which are not stock answers and cannot be defaults (friction 92).
 
 ### 23. Things that are eaten warn
 
@@ -316,6 +326,7 @@ caverns' numbers are written "caverns N"._
 
 - Caverns 93: Zork's `<PROB <* .CNT ,FUMBLE-PROB>>` is `random(4) <
   count - 3`. **Spec:** Properties › What the compiler checks.
+- **Answered by the language (Sprout 5380ce6):** `*`. The Fumble roll is `random(100) < (self.count(Thing) - 3) * 25`, which is the probability it always was, written as one. Dropped.
 
 ### 25. `here.cage` is not a path
 
@@ -337,6 +348,7 @@ caverns' numbers are written "caverns N"._
   into from outside, from the Circular Room's `after command`, so when
   that move is `look`, "The bucket swiftly rises up, and is gone." reads
   before the room.
+- **Answered by the language (Sprout 5380ce6):** `after command` runs after what an engine verb answers, so the unicorn's bounding and the bucket's going come after the room on `look`. Nothing to drop; the order is right by the language.
 
 ### 28. `:unseen` is the library's, and was not used
 
@@ -367,6 +379,7 @@ caverns' numbers are written "caverns N"._
 - **Spec:** none; the brief's Scope.
 - **After round 3:** the northwest passage leads to the Cool Room, so the
   draw is `random(5)`; south and southwest still refuse.
+- **Answered by the language (Sprout 5380ce6):** see 12: the carousel's west is the language's draw among the seven; the rest the visitor's, for the weight.
 
 ### 30. A `describe` cannot tell `examine` from `look`
 
@@ -426,6 +439,7 @@ caverns' numbers are written "caverns N"._
   and never matches.
 - **Wrote instead:** nothing; the laugh stands for a quoted answer.
 - **Spec:** Parsing › Matching a line; The compiler › Lexical rules.
+- **Answered by the language (Sprout 5380ce6):** a quotation mark that opens or closes a word is dropped before the line is read: `answer "a well"` and `say "well"` read as `answer` with `word: :well`, and the stone door opens. Nothing was written to drop.
 
 ### 34. "enter gazebo" was the engine's `go`, read in part
 
@@ -548,6 +562,7 @@ caverns' numbers are written "caverns N"._
   drew. Removed; 32 stands as a record of what was not tried. The quoted
   form, `answer "a well"`, is still friction 33.
 - **Spec:** Parsing › Matching a line (articles); Verbs › Value roles.
+- **Answered by the language (Sprout 5380ce6):** see 33.
 
 ### 39. A thing's answer to a verb is not the thing's alone
 
@@ -559,6 +574,7 @@ caverns' numbers are written "caverns N"._
   other side: a verb with two participants that both have something to
   say says it twice.
 - **Spec:** Verbs › Playing a role; The two passes.
+- **Answered by the language (Sprout 5380ce6):** see 22: `Thing`'s `pour_in` and `pour_on` are `default`, so a thing with its own has one voice; the water still says what came of it where the thing has none.
 
 ## After round 2.5
 
@@ -579,6 +595,7 @@ caverns' numbers are written "caverns N"._
   glow from it, as it did from the dead handlers.
 - **Spec:** Movement and consent › Places (`arrives`, `:arrived`); Prose ›
   Engine lines.
+- **Answered by the language (Sprout 5380ce6):** a visitor is sent `:arrived` and `:departed`, so the adventurer could set the sword's glow off the Wizard's coming and going. It keeps `:wizard_near`: the glow is set only when he lingers (round 3's P9), a rule the Wizard knows and an arrival does not, and his lines and the sword's are told to the one visitor whose call he answered. Kept for the rule, not for 40.
 
 ### 41. The bucket cannot count its own moves
 
@@ -612,6 +629,7 @@ caverns' numbers are written "caverns N"._
   which the spec does not promise for an engine verb and the compiler
   allows).
 - **Spec:** Verbs › Exits; After a command.
+- **Answered by the language (Sprout 5380ce6):** `after command` follows a refused `go`, with `refused` true and `way` the direction. The adventurer's clock, on a refused north in the Dragon Room with the dragon alive, provokes him by three, as DRAGON-FCN does; the claw costs anger now. Dropped.
 
 ### 43. Consecutive turns draw alike
 
@@ -629,6 +647,7 @@ caverns' numbers are written "caverns N"._
   are. The observation is the finding: a `{one of}` or a `random` read at
   the same point of successive turns is not a fair coin.
 - **Spec:** Chance › The seed; Time › Determinism.
+- **Answered by the language (Sprout 5380ce6):** each scripted step draws from a seed of its own (837): the port's tests set the seed before every step, and a roll at the same point of successive turns is a fair coin in them. The princess's step-every-move and the chest's counter stay, since they read as well. Answered.
 
 ### 44. What an actor carries, only the actor gives
 
@@ -643,6 +662,7 @@ caverns' numbers are written "caverns N"._
   the unicorn moves the key itself, to the sender.
 - **Spec:** Movement and consent › The three roles; Verbs › Moving
   something; Events › Handlers do not refuse.
+- **Answered by the language (Sprout 5380ce6):** a lost move or send warns the author (840), so the silence this found is gone; the unicorn moving the key itself stays, since it is also the right shape (the actor's own thing is the actor's to give). Answered.
 
 ### 45. A roamer's way home must not be narrowed
 
@@ -672,6 +692,7 @@ caverns' numbers are written "caverns N"._
 - **Wrote instead:** the adventurer passes `:mat_moved` and `:mat_under`,
   as it passes `:snuffed`.
 - **Spec:** Events › Containers route; Range.
+- **Answered by the language (Sprout 5380ce6):** not this one: 845 is sight, not reach (see 16). The adventurer passes `:mat_moved` and `:mat_under` still. Stands.
 
 ### 47. A window into a room that is out of range
 
@@ -686,6 +707,7 @@ caverns' numbers are written "caverns N"._
   and no light from the other, since whether somebody stands in the Tiny
   Room with a lamp is not readable from the Dreary Room.
 - **Spec:** Range; Prose › Describing.
+- **Answered by the language (Sprout 5380ce6):** not this one: 834 lets an exit's `when` read the place it leads to and a `describe` show `{exit east}` of a place one of its exits leads to; the Tiny Room's window and keyhole look into a room no exit of theirs leads to while the door is shut, and the spheres into rooms across the map. The views stay written by hand. Stands, narrowed.
 
 ### 48. One door in two rooms, one wall in four
 
@@ -698,6 +720,7 @@ caverns' numbers are written "caverns N"._
   room, with the room's own stand-in wall (friction, room.sprout's `Wall`)
   stepping aside as unseen there so that "east wall" never ties.
 - **Spec:** Objects; The world model › Unseen; Events › Sending.
+- **Answered by the language (Sprout 5380ce6):** one object may stand in several places. The Wizard's door is `object wiz_door is WizDoor in guarded_room, workshop`, one property map, the side read off `here`; the crypt door is `object crypt_door is CryptDoor in crypt_anteroom, crypt`; `:wiz_locked`, `:wiz_open` and `:crypt_door` and the rooms' copies of the door's state are gone, and the rooms' ways read `wiz_door.get(:open)`. The Tiny Room's door, lids and keyholes, and the Bank's sixteen walls, stay as they were (friction 93).
 
 ### 49. Two keys, one word, and a draw
 
@@ -740,6 +763,7 @@ caverns' numbers are written "caverns N"._
   conjured grue's `attack`. A thing that wants one voice for most verbs
   and another for three has to be answered for by whoever acts on it.
 - **Spec:** Verbs › Roles compose; The two passes.
+- **Answered by the language (Sprout 5380ce6):** `as target for any except examine, attack, mung, kick, ask { permit { refuse gone } }` and a permit of its own for each of those, and the same for `as tool for any except throw, give, aim_wand`; the Illusion answers for itself, and the seven checks on the actor's parts are gone. Dropped.
 
 ### 52. A passage is rendered after the move's clocks have run
 
@@ -776,6 +800,7 @@ caverns' numbers are written "caverns N"._
   either way, as Zork's REMOVE takes it. The stand-ins hear
   `:unicorn_gone` with whether the key was given.
 - **Spec:** Names › Identifiers and scope; Events › Sending.
+- **Answered by the language (Sprout 5380ce6):** a lost send warns the author (840), so the failure this found would be heard; the broadcast stays, since it is the right shape for a thing that may have moved. Answered.
 
 ### 54. A member left out along one path still arrives by another
 
@@ -787,6 +812,7 @@ caverns' numbers are written "caverns N"._
   friction so much as a trap: a kind that composes two kinds of one root
   has to leave out the root's member as many times as it arrives.
 - **Spec:** Kinds › Suppressing a contribution.
+- **Answered by the language (Sprout 5380ce6):** see 22.
 
 ### 55. A glow that begins and ends in one move says nothing
 
@@ -811,6 +837,7 @@ caverns' numbers are written "caverns N"._
   chest is a counter now (the second try opens it, as its line promised),
   and the first call draws evenly among three; the observation stands.
 - **Spec:** Chance › The seed; Time › Determinism.
+- **Answered by the language (Sprout 5380ce6):** see 43.
 
 ## After round 5
 
@@ -823,6 +850,7 @@ caverns' numbers are written "caverns N"._
   `word` unbound. Nothing a world writes matches a quoted word (33), so
   the laugh stands for a quoted answer.
 - **Spec:** Parsing › Matching a line; The compiler › Lexical rules.
+- **Answered by the language (Sprout 5380ce6):** see 33.
 
 ### 58. A place may have eight ways out, and a part cannot read which way was walked
 
@@ -850,6 +878,7 @@ caverns' numbers are written "caverns N"._
   while the room spins is always thrown, which is Zork's west (Room 8 is
   a kind of its own so the part can tell).
 - **Spec:** Limits › Static caps; Verbs › Exits; The actor's own part.
+- **Answered by the language (Sprout 5380ce6):** `way` is bound in `as actor for go`, the direction written out, and the exits cap is 32 (831). The diamond's part reads the way walked off `way`, not off the pair of rooms (`:dn_to` is gone); the room at the foot of the stair has its ten ways, west and southwest restored, and the other eight their up and down, which the part answers as DIAMOND-MOTION does. Dropped.
 
 ### 59. Every turn of a script draws from the same seed (explains 43 and 56)
 
@@ -865,6 +894,7 @@ caverns' numbers are written "caverns N"._
   5 again after. A recorded test is a fair coin only where it changes the
   seed; a test that reads a roll should say which seed it rolled under.
 - **Spec:** Chance › The seed; the command line (`play`'s script steps).
+- **Answered by the language (Sprout 5380ce6):** see 43.
 
 ### 60. An NPC that never roamed cannot be moved to Elsewhere (a note)
 
@@ -874,6 +904,7 @@ caverns' numbers are written "caverns N"._
   out of range of low_room.robot`, which names the range and not the
   missing word. Added `roams`. The fault could say so.
 - **Spec:** Actors and visitors (`roams`); The compiler › Diagnostics.
+- **Answered by the language (Sprout 5380ce6):** a lost move warns (840). Answered; the robot keeps `roams`.
 
 ### 61. A target's part cannot see into the hands that hold the match
 
@@ -887,6 +918,7 @@ caverns' numbers are written "caverns N"._
   `actor.get(:has_flame)`, since a property of the actor is readable where
   what the actor carries is not.
 - **Spec:** Range (a refusal's words); Verbs › The two passes.
+- **Answered by the language (Sprout 5380ce6):** a role-player sees into the acting visitor's hands. The fuse, the brick and every burnable walk `each m: Matchbook in actor` for a lit match; the Wizard's door reads `actor.count(GoldKey)`, the Tiny Room's `actor.count(RustyKey)`; `:has_flame`, `:has_gold` and `:has_rusty` and the actor's parts of `burn`, `lamp_on`, `unlock` and `lock` that set them are gone. `:has_candy` stays, for a description, which does not see the hands.
 
 ### 62. `at` is a word of the language (a note)
 
@@ -939,6 +971,7 @@ caverns' numbers are written "caverns N"._
   the heading says which room that is.
 - **Spec:** Chance › Where chance is forbidden; Movement and consent ›
   After the move; Verbs › The actor's own part.
+- **Answered by the language (Sprout 5380ce6):** a way may be drawn with `refuse` among its choices, which is what this wanted; it draws evenly, and the foot of the stair's third of no way, sixth of a room that is not a corner and half of a corner cannot be written on it (friction 91). The walk-and-walk-back stays, with its line.
 
 ### 66. A particle the parser cannot read is answered as a missing thing (an engine note)
 
@@ -956,6 +989,7 @@ caverns' numbers are written "caverns N"._
   wants an issue there, for a line that names the word the parser did not
   understand when the nouns it did understand are in range.
 - **Spec:** Parsing › When nothing matches; Range (`not_here`).
+- **Answered by the language (Sprout 5380ce6):** leftover words are dropped and the reading restated (839): `push the menhir with the sword` is `(push the menhir)`. Answered; nothing was written.
 
 ### 67. `as target for any` refuses the engine's `examine` too
 
@@ -970,6 +1004,7 @@ caverns' numbers are written "caverns N"._
   answer in both cases, but a stand-in that wanted a look of its own would
   have to list every verb it refuses instead of `any`.
 - **Spec:** Verbs › Roles compose (`as target for any`); The two passes.
+- **Answered by the language (Sprout 5380ce6):** `as target for any except examine` on the robot's stand-in, and a `describe` of its own, so a look at the absent robot says where it is to be looked at and an order that it cannot hear. Dropped.
 
 ### 68. The engine's line for `wait` follows the actor's own (a note)
 
@@ -1005,6 +1040,7 @@ caverns' numbers are written "caverns N"._
   what a third of any direction there says anyway, and the corner that
   west led to once the bases are run is reached from the next corner.
 - **Spec:** Limits › Static caps; Exits.
+- **Answered by the language (Sprout 5380ce6):** see 58: the cap is 32, and DIAMOND-5's west and southwest are back; after the bases are run, southwest leads to the room with nothing in it, as Zork's does.
 
 ### 70. A room that is dark but whose things can be named
 
@@ -1018,6 +1054,7 @@ caverns' numbers are written "caverns N"._
   `:relight`, and its body reads its own count rather than the visitor's.
   The grue never comes to the crypt, which is Zork's own arrangement too.
 - **Spec:** Range › Sight; Places.
+- **Answered by the language (Sprout 5380ce6):** not this one: 835 is a thing in several places, and the crypt is one room that says it is dark. Stands.
 
 ### 71. A room's words may not read the one looking, anywhere
 
@@ -1032,6 +1069,7 @@ caverns' numbers are written "caverns N"._
   the crypt keeps `:lit_now`, and both bodies read their own property.
 - **Spec:** Prose › Passages ("it may then only be invoked from a body
   where those bindings exist"); How members combine.
+- **Answered by the language (Sprout 5380ce6):** a passage may ask `{if bound actor}`. The Guarded Room's body reads the one looking, `actor.get(:has_candy)`, inside it, and `:candy_near`, its `on :entered` and its `after command` are gone. The crypt keeps `:lit_now`, since the same count opens the secret door, which a passage cannot. Dropped where it was only this.
 
 ### 72. A thing marked unseen is out of reach of a message
 
@@ -1057,6 +1095,7 @@ caverns' numbers are written "caverns N"._
   that takes one thing. For Sprout: an issue.
 - **Spec:** Parsing › Sequences, again and all; Limits › Runtime budgets
   (`setRoleObjects`).
+- **Answered by the language (Sprout 5380ce6):** `all` in a set role leaves out what the actor carries before it counts (838); the world's "too full for all" line is gone. Dropped.
 
 ### 74. `after command` runs before the gate's move, and `here` is the room before the throw
 
@@ -1072,6 +1111,7 @@ caverns' numbers are written "caverns N"._
   help: that message is queued too.
 - **Spec:** Verbs › After a command ("before what an engine verb answers,
   which follows the queue"); Events, messages and the bus.
+- **Answered by the language (Sprout 5380ce6):** `after command` runs once the command's queue has drained, the gate's move among it, so `here` is where the visitor stands; the dragon's and the princess's turns are broadcast from the clock directly, and `:clocks_later` and `:clocks_now` are gone. Dropped.
 
 ### 75. A handler's plain `tell` leaves out the one acting
 
@@ -1082,6 +1122,7 @@ caverns' numbers are written "caverns N"._
   such answer is `tell from`, the broadcast's sender, and the demon's fee
   lines, first written in his `on :paid`, are said in his `do` for `give`.
 - **Spec:** Other people › Who hears it.
+- **Answered by the language (Sprout 5380ce6):** a plain `tell` crosses into a vessel that passes (842), so a visitor in the bucket would hear a plain `tell`. The world keeps `tell from`: it names the visitor whose call the Wizard answered, which a plain `tell` to every rider would not. Kept as the better line, not for 75.
 
 ### 76. A word said over the wand is the reading's own answer (63 again)
 
@@ -1115,6 +1156,7 @@ caverns' numbers are written "caverns N"._
   tick put the glow out under the word. The countdown skips the move a
   word is pending in (`:cast_pending`).
 - **Spec:** Verbs › After a command.
+- **Answered by the language (Sprout 5380ce6):** the word's handler runs before the clock now, so the clock no longer puts the glow out under the word; `:cast_pending` is gone and the walkthrough casts as it did. Dropped.
 
 ### 79. Fluoresce lights nothing
 
@@ -1146,12 +1188,14 @@ caverns' numbers are written "caverns N"._
   move, and the vision is a line for each of the rooms a sphere comes to
   rest in and a word for the rest.
 - **Spec:** Range.
+- **Answered by the language (Sprout 5380ce6):** see 47. Stands, narrowed.
 
 ### 82. One door in two rooms, twice more (48 again)
 
 - The Wizard's door and the crypt door are each two doors keeping each
   other told, as the Tiny Room's is; the lizard is on one side only.
 - **Spec:** Objects.
+- **Answered by the language (Sprout 5380ce6):** see 48: the crypt door is one object in two rooms.
 
 ### 83. The riddle's answer in quotation marks
 
@@ -1163,6 +1207,7 @@ caverns' numbers are written "caverns N"._
   quotation mark in it, so the world has no way to read the quoted form.
   Zork's parser strips the quotes. For Sprout: an issue.
 - **Spec:** Parsing › Matching a line (Articles); Verbs › Value roles.
+- **Answered by the language (Sprout 5380ce6):** see 33.
 
 ### 84. `after command` runs before the queued `:moved` (74 again)
 
@@ -1175,6 +1220,7 @@ caverns' numbers are written "caverns N"._
   :moved` has not yet brought up to date, and rolls nothing on that move.
 - **Spec:** Verbs › After a command ("before what an engine verb answers,
   which follows the queue").
+- **Answered by the language (Sprout 5380ce6):** `on :moved` runs before the clock, so the hold it sets on arriving at the north end holds, and the branch that read the arrival off `:last_room` was dead; gone. Dropped.
 
 ### 85. A plain `tell` from a handler stops at the room's occupants (75 again)
 
@@ -1186,6 +1232,7 @@ caverns' numbers are written "caverns N"._
   reaches into the bucket, the basket and the cage since each passes.
 - **Spec:** Other people › Who hears it ("every actor in the telling
   object's place").
+- **Answered by the language (Sprout 5380ce6):** see 75.
 
 ### 86. "Up" in a room with eight ways out (58 again)
 
@@ -1201,6 +1248,7 @@ caverns' numbers are written "caverns N"._
   a world writes can read it.
 - **Spec:** Verbs › Exits (eight ways out; `no_way`); Prose › Engine
   lines; Parsing › Matching a line (relative phrases).
+- **Answered by the language (Sprout 5380ce6):** not a leftover-words case (839 drops words after a reading; `up` here is a direction no way answers), and the visitor's `no_way` passage still answers it in voice. Stands.
 
 ### 87. A noun for what is not there
 
@@ -1219,6 +1267,7 @@ caverns' numbers are written "caverns N"._
   carried in.
 - **Spec:** Range › Unseen; Parsing › Choosing a reading; Verbs › After
   a command.
+- **Answered by the language (Sprout 5380ce6):** not quite: 839 drops words that follow a reading, and a noun in a slot of its own that names nothing in reach is still `not_here` ("look at gong"), so `pour water into bucket` with an empty pot would still be the parser's line. The stand-in stays.
 
 ### 88. A quoted `text` is capped at 600 characters
 
@@ -1249,3 +1298,76 @@ caverns' numbers are written "caverns N"._
   since the room is rendered against the state the turn commits.
 - **Spec:** Verbs › After a command; Prose (lines rendered once the
   turn's work is done).
+
+## After round 9
+
+The steering for round 9 named the friction entries Sprout 5380ce6 answers
+and asked that each be marked and each workaround dropped where the feature
+does its job; each entry above carries its answer. Two numbers the steering
+named, 93 and 101, are not entries of this log (its count was 89), and are
+taken to be another world's. What the round found new:
+
+### 90. A tie between readings is drawn in silence, and a plural names one
+
+- Round 9's P11, for Sprout. "look at the cakes" tied four ways and showed
+  one cake with `meant`; "ask the stone door a question back" drew the
+  break in the hedge; "throw sword into ravine" and "throw the red cake
+  into the hole" tied two partial readings and fell to a flat `cannot`.
+  The engine logs "drawn: the line read N ways that tied" and the visitor
+  reads the draw as an answer. Friction 49 said the same of the two keys.
+  A plural ought to answer for the set, or ask; a tie between partial
+  readings ought to say so. On the world's side the chasm and the mouse
+  hole compose `Abyss` and `throw_into` is a verb whose aim is one, so
+  both answer in voice and a thing thrown into the ravine is kept.
+- **Spec:** Parsing › Choosing a reading; Sequences, again and all.
+
+### 91. A drawn way draws evenly, and Zork's turns are weighted
+
+- **Wanted:** CAROUSEL-ROOM-FCN's four in five, DIAMOND-MOTION's third of
+  no way, sixth of a room that is not a corner and half of a corner, each
+  as `-> one of (...)`.
+- **Found:** "every choice is as likely as any other: a choice has no
+  weight, and naming one twice to weigh it is refused". So the Carousel's
+  west, which Zork always turns, is a drawn way, and its other seven ways
+  and the whole of the maze stay the visitor's own draw and gate, as
+  friction 12, 58 and 65 built them. A weight on a choice, or a choice
+  that is a draw of its own, would finish the job.
+- **Spec:** Verbs › A way drawn as it is taken.
+
+### 92. Only a root's stock answers can be defaults
+
+- Marking a `default` on every play a `without` named collided at once:
+  "`Curtain` gets a default `as target for open` from both `Thing` and
+  `Box`, and a default steps aside only for a play that is not one, so
+  both would answer." A kind between the root and the object (`Box`,
+  `Portable`, `Readable`) that writes a real play cannot mark it default
+  without colliding with the root's wherever the object reaches the root
+  by a second path; so its composers keep their `without`s, thirty-four of
+  them. The rule is sound (two stock answers should not both speak), and
+  the diagnostic says exactly what to do; noted so the next world marks
+  defaults at the root and nowhere else.
+- **Spec:** Kinds › How members combine (default plays).
+
+### 93. The doors and walls not yet one thing
+
+- The Wizard's door and the crypt door are one object in two rooms now
+  (48, 82). The Tiny Room's door, its lids and its keyholes stay pairs:
+  each side carries state of its own (which keyhole holds the key, which
+  lid is open, which side the mat shows under), and `here` can tell the
+  sides apart only where somebody is acting, not in a handler told by the
+  far side. The Bank's sixteen walls stay four to a room: which wall
+  shimmers is the room's, and one wall in four rooms would read `here` in
+  sixteen descriptions that were written for one room each. Both are a
+  rewrite for a widening round, not a refinement.
+- **Spec:** The world model › One thing in several places.
+
+### 94. A recording passes with lines it does not expect
+
+- `sprout test` fails only where an expected line is not said. The pin's
+  move to 2c85fd7 shifted a draw or two (the unicorn listed on a return
+  to the north end, the topiary stirring a move sooner), and every
+  recording passed with the new lines unexpected; `sprout play --write`
+  showed them. For Sprout: a way for a test to fail on a line it did not
+  expect, or for `test` to print what was said and not expected, so a
+  stale recording is seen. Every script is re-recorded this round.
+- **Spec:** The command line (`test`, `play --write`).

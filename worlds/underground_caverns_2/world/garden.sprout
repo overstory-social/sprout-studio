@@ -4,7 +4,7 @@
 // (2dungeon.zil; I-GARDEN, UNICORN-FCN, GLOBAL-UNICORN-FCN, GAZEBO-FCN,
 // HEDGES-F, ROSE-BUSH-FCN, PLACE-MAT-FCN.)
 import * as sprout from 'sprout'
-import {Thing, Scenery, Creature, Crossable, Portable, Door} from 'thing'
+import {Thing, Scenery, Creature, Crossable, Portable, Door, Leavable} from 'thing'
 import {Room, DarkRoom, Garden, Bridged, ChasmEdge, Watery} from 'room'
 import {Box} from 'box'
 import {Treasure, Newspaper, PlaceMat, Teapot, StreamWater, LetterOpener, Matchbook} from 'items'
@@ -13,7 +13,7 @@ import {carousel_room} from 'carousel'
 import {Adventurer} from 'adventurer'
 import {ask} from 'sprout'
 import {examine} from 'sprout'
-import {take, rub, mung, attack, follow, greet, talk, through, cross, smell, listen, look_in, climb_up, shift, give, throw, cut, untie, tie, :travel, :bound_away, :come_back, :frighten, :unicorn_at, :secret_door, :unicorn_scene, :unicorn_rides, :unicorn_gone, :consume} from 'verbs'
+import {take, rub, mung, attack, follow, greet, talk, through, cross, smell, listen, look_in, climb_up, shift, give, throw, cut, untie, tie, leave_it, :travel, :bound_away, :come_back, :frighten, :unicorn_at, :secret_door, :unicorn_scene, :unicorn_rides, :unicorn_gone, :consume} from 'verbs'
 import {ravine_ledge} from 'ravine'
 import {AbsentPrincess} from 'dragon'
 import {Brick} from 'volcano'
@@ -55,28 +55,17 @@ kind Unicorn is Creature, sprout.Actor {
       broadcast :unicorn_gone with from.is(Adventurer)
     }
   }
-  without as recipient for give from Thing
   as recipient for give { do { if (item.is(Thing)) { say "The unicorn regards the {item.short} with polite incomprehension, and goes back to cropping grass." } else { say "The unicorn is not interested." } } }
-  without as aim for throw from Thing
   as aim for throw { do { } }
-  without as target for greet from Creature
   as target for greet { do { say "The unicorn listens distractedly, then goes back to cropping grass." } }
-  without as target for talk from Creature
   as target for talk { do { say "The unicorn listens distractedly, then goes back to cropping grass." } }
-  without as target for ask from Thing
   as target for ask { do { say "The unicorn listens distractedly, then goes back to cropping grass." } }
-  without as target for follow from Creature
   as target for follow { do { say "The unicorn shies away as you approach." } }
-  without as target for listen from Thing
   as target for listen { do { say "The unicorn crops grass with a small, steady, tearing sound, and now and then snorts at nothing." } }
-  without as target for smell from Thing
   as target for smell { do { say "It smells of warm horse and crushed roses, which is a better smell than most of this place has." } }
-  without as target for rub from Thing
   as target for rub { do { say melts  send self :frighten } }
-  without as target for mung from Thing
   as target for mung { do { say melts  send self :frighten } }
   as target for attack { do { say melts  send self :frighten } }
-  without as target for shift from Thing
   as target for shift { do { say melts  send self :frighten } }
   on :frighten {
     self.set(:frightened, true)
@@ -107,13 +96,9 @@ kind Unicorn is Creature, sprout.Actor {
     // undo, and the unicorn keeps it out of reach (round 4's P5).
     passage not_yours_to_untie { The bow was tied for somebody in particular to untie, and the unicorn, which has views about who, lifts its head out of reach of your hands and keeps it there until you stop. She is not in this garden. The unicorn can wait for her; it has been. }
     passage no_take { {self.not_yours_to_untie} }
-    without as target for untie from Thing
     as target for untie { do { say not_yours_to_untie } }
-    without as target for tie from Thing
     as target for tie { do { say "It is tied already, and better than you could tie it." } }
-    without as target for shift from Thing
     as target for shift { do { say not_yours_to_untie } }
-    without as target for cut from Thing
     as target for cut { do { say "The unicorn backs a step for every step you take toward it with that in your hand, and the ribbon goes with it. It was tied by somebody the unicorn liked better, and it is not coming off for anybody else." } }
   }
 }
@@ -127,7 +112,6 @@ kind GoldKey is Treasure {
   passage short { delicate gold key }
   passage ldesc { There is a delicate gold key here. }
   describe { text "{if self.get(:touched)}The key is tiny and gold and delicate, the kind that opens something small and valuable. It hung from a red satin ribbon round a unicorn's neck until a princess untied it, and whatever it opens is not in this much of the Empire.{else}The key is tiny and gold and delicate, the kind that opens something small and valuable, and it hangs from a red satin ribbon round the unicorn's neck. It is being kept for somebody, and the unicorn knows who, and it is watching you look at it. Whoever she is, she is not in this garden, and nothing you do here will get it off.{/if}" }
-  without as target for untie from Thing
   as target for untie { do { say "The key hangs from the ribbon, and the ribbon is tied in a bow that was tied for somebody in particular to untie. The unicorn lifts its head out of reach of your hands. She is not in this garden; the unicorn can wait for her, and you need not." } }
 }
 
@@ -144,9 +128,7 @@ kind DistantUnicorn is Scenery, Creature {
   passage ridden_off { {if self.get(:given)}The unicorn is gone: the princess rode off on it into the gloom, with its ribbon in her hair, and what hung from the ribbon she gave to you.{else}The unicorn is gone, and the princess with it, into the gloom; she rode off with the ribbon in her hair and the key still on the ribbon, since there was nobody in the garden to give it to.{/if} }
   passage far_off { {if self.get(:gone)}{self.ridden_off}{else if self.get(:home)}The unicorn is way up at the north end of the garden, and so is whatever hangs round its neck.{else}The unicorn is not in sight from here. It was cropping grass at the north end of the garden a little while ago, and will be again when it has forgotten you, which with unicorns is never long; whatever hangs round its neck comes and goes with it.{/if} }
   as target for any { permit { refuse far_off } }
-  without as recipient for give from Thing
   as recipient for give { permit { refuse far_off } }
-  without as aim for throw from Thing
   as aim for throw { permit { refuse far_off } }
 }
 
@@ -155,7 +137,6 @@ kind Hedges is Scenery {
   passage short { hedge }
   describe { text "The hedges are tall and dense and very green for things that have never seen the sun, and they hide the cavern walls so well that you can forget, for a moment, that there are walls. They have been clipped by somebody with a steady hand and a long ladder." }
   passage no_take { The hedge is rooted, and you are not. }
-  without as target for through from Thing
   as target for through { do { say "The hedge is too dense to push through, and it pushes back." } }
 }
 kind TopiaryHedges is Hedges {
@@ -209,7 +190,6 @@ kind RoseBush is Scenery {
   passage short { roses }
   describe { text "The roses are red and heavy-headed and very thorny, and they climb everything they are near. They have the look of roses that have been talked to." }
   passage no_take { You prick your finger trying to take a rose, and jump back annoyed. The rose almost seemed to move its thorns into your path. }
-  without as target for smell from Thing
   as target for smell { do { say "They smell as roses smell, only more so, as though they were making a point of it." } }
 }
 kind Gazebo is Scenery {
@@ -219,13 +199,14 @@ kind Gazebo is Scenery {
   // The way in is the adventurer's own (adventurer.sprout), so the step
   // is made before the garden's clock runs, and the unicorn is reported in
   // the room the visitor ends the move in (round 3's P6).
-  without as target for through from Thing
   as target for through { do { say "" } }
 }
-kind GazeboInside is Gazebo {
+kind GazeboInside is Gazebo, Leavable {
   describe { text "You are in it. It is white-painted wood, eight-sided, with a bench round the inside of the railing and a tea table in the middle, and the roses have come up through the floorboards in one corner." }
   without as target for through from Gazebo
   as target for through { do { say "You're already in it." } }
+  // "leave the gazebo" (round 9's P12) is the way out.
+  as target for leave_it { do { send actor :travel with :garden_north  say "" } }
 }
 kind GardenPath is Scenery {
   grammar { name "path"  nouns "stones", "gravel"  adjectives "manicured", "white", "crushed", "small" }
@@ -247,21 +228,18 @@ kind Archway is Scenery, Door {
   grammar { name "ruined archway"  nouns "archway", "arch", "vegetation", "vines"  adjectives "ruined", "choked" }
   passage short { ruined archway }
   describe { text "The archway was somebody's idea of a grand entrance, once, and is now mostly vines. The way through it goes east, into the garden." }
-  without as target for through from Thing
   as target for through { do { send actor :travel with :formal_garden  say "" } }
 }
 kind Ledge is Scenery {
   grammar { name "ledge"  nouns "shelf"  adjectives "small", "narrow", "north" }
   passage short { ledge }
   describe { text "A narrow ledge runs along the north wall of the ravine, a little above the water, and goes somewhere west that is drier than this. A short scramble up the rock face would put you on it." }
-  without as target for climb_up from Thing
   as target for climb_up { do { send actor :travel with :ravine_ledge  say "" } }
 }
 kind WhirringSound is Scenery {
   grammar { name "whirring sound"  nouns "whirring", "sound", "noise", "whirr"  adjectives "faint", "annoying", "loud" }
   passage short { whirring sound }
   describe { text "The whirring comes from the southwest, steady and mechanical and faintly maddening, as of something very large going round and round and not stopping." }
-  without as target for listen from Thing
   as target for listen { do { say "A whirring, steady and mechanical, as of something very large going round and not stopping. It is coming from the southwest." } }
 }
 kind CrackedMarble is Scenery {
@@ -298,7 +276,7 @@ object garden_north is GardenNorth in underground_caverns_2 {
   }
   :id garden_north
   :walls 4
-  passage body { This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses.{if self.get(:rode_off) && !self.get(:given)} The hedge on the east side has been pushed through by something that left in a hurry, and there is a hoofprint in the rosebed. The unicorn has not been seen since, nor what hung round its neck.{/if} }
+  passage body { This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses; through its railing you can make out a tea table, laid, with things on it.{if self.get(:rode_off) && !self.get(:given)} The hedge on the east side has been pushed through by something that left in a hurry, and there is a hoofprint in the rosebed. The unicorn has not been seen since, nor what hung round its neck.{/if} }
   object unicorn is Unicorn
   // The unicorn's stand-in, unseen while the unicorn is home, so the two
   // never tie for the word; while it is away, "unicorn" and "key" are
@@ -460,7 +438,6 @@ object marble_hall is NearCarousel in underground_caverns_2 {
     grammar { name "loose piece of marble"  nouns "piece", "panel", "section"  adjectives "loose" }
     passage short { loose piece of marble }
     describe { text "{if marble_hall.is(NearCarousel)}{if marble_hall.get(:secret)}The piece of marble the princess pressed stands a little proud of the east wall, and the section beside it has slid away into the rock, leaving a passage east. Pressing it again does nothing; it has done its one trick.{else}The east wall is fine marble, veined and polished, and if any piece of it is looser than the rest you cannot find it by looking. That's a wall there.{/if}{/if}" }
-    without as target for shift from Thing
     as target for shift { do { say "{if marble_hall.is(NearCarousel)}{if marble_hall.get(:secret)}It has done its one trick; the wall stays open.{else}You press the marble here and there. It is marble, and does not care. If one piece of it is loose, it is waiting for somebody who knows which.{/if}{/if}" } }
   }
   object stream is Stream

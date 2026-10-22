@@ -24,7 +24,7 @@ import {ask} from 'sprout'
 import {take, drop, put, give, throw, attack, open, close, read, look_in, look_under, search, lamp_on, lamp_off, shift, raise, lower, eat, drink, smell, listen, smell_here, listen_here, climb_up, climb_down, knock, mung, through, kick, rub, wave, shake, squeeze, fill, pour, pour_in, pour_on, alarm, talk, greet, follow, cross, leap_at, swim, turn, tie, burn, cut, play, spray, wish, wish_bare, count_things, get_out_bare, answer, say_well, board, disembark, get_in_bare, wait_for, robot_go, robot_push, robot_lift, robot_drop, robot_give, robot_inventory, robot_other, robot_stuck, robot_eat, robot_see, score, diagnose, xyzzy, hello, jump, yell, zork, verbose, brief, superbrief, quit, restart, save, restore, curse, pray, walk_about, look_down, look_up, incant_bare, incant, aim_wand, word_float, word_fry, word_fluoresce, word_fudge, word_filch, sleep, put_under, unlock, lock, melt, untie, inflate, land, Dest, Spell, Mode, Answer, CastResult, :balloon_tick, :balloon_land, :gnome_due, :gnome_fidget, :vgnome_come, :vgnome_late, :fuse_lit, :fuse_out, :explosion, :explosion_at, :collapse, :diamond_count, :bat_to, :dragon_turn, :dragon_watch, :dragon_bored, :provoke, :princess_turn, :princess_awake, :unicorn_scene, :curtain_active, :mat_under, :mat_moved, :gnome_come, :gnome_go, :tally, :curtain_closes, :scored, :light, :relight, :room_lit, :grue, :glow, :wizard_start, :where_are_you, :open_gate, :gate_open, :close_gate, :die, :claimed, :settle, :travel, :snuffed, :consume, :wizard_turn, :unicorn_at, :bound_away, :come_back, :flip, :zoom, :riddle_open, :cage_fall, :freed, :enlarge, :shrink, :pool_gone, :munge, :boom, :grow, :ungrow, :shatter_lamp, :spell_ends, :riddle_answered, :filched, :salt, :caged, :frighten, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :wizard_near, :brief_hint, :unicorn_rides, :unicorn_gone, :wand_aimed, :wand_clear, :cast_word, :wand_fades, :disenchant, :genie_summoned, :genie_departs, :face} from 'verbs'
 import {inside_barrow, narrow_tunnel, foot_bridge, great_cavern, shallow_ford, dark_tunnel, Bridge, Chasm, Moss} from 'way_in'
 import {garden_north, gazebo, formal_garden, topiary, stream_path, marble_hall, deep_ford, elsewhere, Unicorn, DistantUnicorn, GardenNorth, TopiaryRoom, Elsewhere, NearCarousel, GoldKey, Gazebo, GazeboInside} from 'garden'
-import {carousel_room, room_8, CarouselRoom, RoomEight} from 'carousel'
+import {carousel_room, room_8, CarouselRoom, EightPassages} from 'carousel'
 import {riddle_room, pearl_room, RiddleRoom, StoneDoor} from 'riddle'
 import {well_bottom, well_top, tea_room, Bucket, MissingBucket, WellTopMouth, TeaRoom, WellTop, WellBottom} from 'well'
 import {posts_room, pool_room, Pool, PoolRoom} from 'posts'
@@ -168,31 +168,25 @@ kind Adventurer is sprout.Visitor {
   :diamond_solved false
   :bat_placed false
   :dn_from 0 min 0 max 9
-  :dn_to 0 min 0 max 9
-  :ddir 0 min 0 max 7
+  :ddir 0 min 0 max 8
   :want 0 min 0 max 7
   // The Carousel's first throw, told once (round 5's P5); and Filch's
   // touch, named once a casting (round 5's P9).
   :spun_told false
   :filch_told false
-  :has_flame false
   :filch_count 0 min 0 max 50
   // What a death sent to the Wizard's keeping, counted so the demon's
-  // return can say so (round 6's P6); and whether the rusty key is in hand,
-  // set by the visitor's own part of `unlock` for the door's to read, as
-  // `:has_flame` is for the fuse (friction 61).
+  // return can say so (round 6's P6).
   :lost 0 min 0 max 50
-  :has_rusty false
-  // The fourth quarter (round 7). What the hands hold that a room or a
-  // door wants to know of (the candy for the lizard, the gold key for the
-  // door, the black sphere and the other spheres for the Wizard), set at
-  // the end of every command, since nothing outside a visitor can see
-  // into their hands. The wand (WAND-ON, SPELL-USED, I-WAND, I-SPELL):
+  // The fourth quarter (round 7). What the hands hold that a room or the
+  // Wizard's clock wants to know of (the candy for the Guarded Room's
+  // description, the black sphere and the other spheres for the Wizard),
+  // set at the end of every command, since a description and a handler
+  // cannot see into their hands. The wand (WAND-ON, SPELL-USED, I-WAND, I-SPELL):
   // whether it is pointed at something, the two moves its glow lasts,
   // the word last said over it, and the ten to twenty moves that word
   // runs. And whether the game is won.
   :has_candy false
-  :has_gold false
   :has_black false
   :has_wand false
   :teapot_water false
@@ -202,12 +196,23 @@ kind Adventurer is sprout.Visitor {
   :spell_used Answer default well
   :word Answer default well
   :cast_result CastResult default none
-  :cast_pending false
   :casting false
   :cast_left 0 min 0 max 20
   :won false
   :summoned false
 
+  // The Wizard's Freeze, and the end of the game, refuse every verb at
+  // once (S-FREEZE; FINISHED): one permit on the actor's part of every
+  // verb, the engine's included, but for the few a frozen or finished
+  // visitor may still do, which keep their own permits below.
+  as actor for any except help, score, diagnose, look, examine, inventory, wait, smell, listen, listen_here, smell_here, verbose, brief, superbrief, quit, restart, save, restore {
+    permit {
+      if (self.get(:finished)) { refuse over }
+      if (self.get(:spell) == :freeze) { refuse frozen }
+    }
+  }
+
+  passage carousel_wait { You stand still, and the floor does not. The passages come round, one after another, the one that climbs among them, and go by again, and standing still settles nothing: only walking into one does, and which one you get is the floor's business while it turns. Whatever turns it could presumably be stopped, by whoever finds the works, which are under the floor and past the well by the sound of them. }
   passage hands_full { You're holding too many things already! It is your hands that are full, not your back; set something down. }
   passage over { Everything has gone black, and nothing further will happen to you in this game. }
   passage frozen { You are frozen solid. You might as well wait it out, because you can't do anything else in this state. }
@@ -280,6 +285,9 @@ kind Adventurer is sprout.Visitor {
     if (self.get(:aside)) { self.set(:aside, false) }
     else if (!self.get(:finished)) {
       self.adjust(:moves, 1)
+      // The dragon's claw (DRAGON-FCN): a walk north past him, which his
+      // room's way refuses, costs three of his patience, and he watches.
+      if (refused) { if (bound way) { if (way == :north && here.is(DragonRoom)) { each d: Dragon in here { if (!d.get(:dead)) { send d :provoke with 3 } } } } }
       // The bucket's count (I-BUCKET): one move off, and at nought the
       // water dries and the bucket comes down, this turn.
       if (self.get(:bucket_away)) {
@@ -303,10 +311,8 @@ kind Adventurer is sprout.Visitor {
         if (self.get(:unicorn_gone)) { }
         else if (self.get(:unicorn_hold) > 0) { self.adjust(:unicorn_hold, -1) }
         // The move that brings a visitor to the north end rolls nothing
-        // (round 5's P8, again in round 8's P13): `:moved`, which holds the
-        // clock, is queued behind this, so the arrival is read off the room
-        // this command began in, which `:last_room` still names.
-        else if (here.is(GardenNorth) && self.get(:last_room) != :garden_north) { }
+        // (round 5's P8): `on :moved` sets the hold, and runs before this
+        // clock does.
         else if (self.get(:unicorn_home) && random(3) == 0) {
           self.set(:unicorn_home, false)
           self.set(:unicorn_hold, 2)
@@ -370,14 +376,12 @@ kind Adventurer is sprout.Visitor {
       // The dragon's turn (I-DRAGON) and the princess's (I-PRINCESS),
       // each told where this visitor stands: the room they are in now,
       // which a throw may have carried them to since the move began
-      // (round 7's P6; `here` is the place as the command began).
-      // The gate's move is made by a handler further down the queue, so
-      // the broadcast is sent two sends later, from where the visitor
-      // then stands.
-      if (self.get(:dragon_active) || self.get(:princess_walking)) { send self :clocks_later }
+      // (round 7's P6); the clock runs once the command's queue, the
+      // gate's move among it, has drained, so `here` is that room.
+      if (self.get(:dragon_active) && here.is(Room)) { broadcast :dragon_turn with here.get(:id) }
+      if (self.get(:princess_walking) && here.is(Room)) { broadcast :princess_turn with here.get(:id) }
       // What the hands hold, for the rooms and doors that want to know.
       self.set(:has_candy, self.count(Candy) > 0)
-      self.set(:has_gold, self.count(GoldKey) > 0)
       self.set(:has_black, self.count(BlackSphere) > 0)
       self.set(:has_wand, self.count(Wand) > 0)
       self.set(:spheres_held, self.count(Palantir) - self.count(BlackSphere))
@@ -385,7 +389,7 @@ kind Adventurer is sprout.Visitor {
       // (I-SPELL), ten to twenty.
       // A word said this move is read after this clock (its handler is
       // further down the queue), so the glow is not counted off under it.
-      if (self.get(:wand_left) > 0 && !self.get(:cast_pending)) {
+      if (self.get(:wand_left) > 0) {
         self.adjust(:wand_left, -1)
         if (self.get(:wand_left) == 0 && self.get(:wand_on)) { self.set(:wand_on, false)  broadcast :wand_fades }
       }
@@ -401,11 +405,6 @@ kind Adventurer is sprout.Visitor {
       if (here.is(Room)) { each m: Illusion in here { if (m.get(:fading) > 0) { send m :fade } } }
       if (self.get(:moves) == 1) { broadcast :wizard_start }
     }
-  }
-  on :clocks_later { send self :clocks_now }
-  on :clocks_now {
-    if (self.get(:dragon_active) && here.is(Room)) { broadcast :dragon_turn with here.get(:id) }
-    if (self.get(:princess_walking) && here.is(Room)) { broadcast :princess_turn with here.get(:id) }
   }
   on :volcano_clock {
     // The fuse (I-FUSE): two moves, and then the brick it is in goes off.
@@ -576,9 +575,10 @@ kind Adventurer is sprout.Visitor {
   // The Wizard's spell, cast at them by his own act (I-WIZARD): what it
   // does at once, and the hint of what it will do.
   as target for enchant {
+    spell from :spells
     do {
-      if (actor.is(Wizard)) {
-        let s = actor.get(:spell)
+      if (actor.is(Wizard) && bound spell) {
+        let s = spell
         self.set(:spell, s)
         // Five to thirty-five moves (I-WIZARD), three to eighteen minutes
         // at half a minute a move; in the first thirty moves of play, the
@@ -730,8 +730,8 @@ kind Adventurer is sprout.Visitor {
   // the carousel has stopped, a turn the visitor did not choose.
   as actor for go {
     permit {
-      if (self.get(:finished)) { refuse over }
-      if (self.get(:spell) == :freeze) { refuse frozen }
+      
+      
       if (self.get(:spell) == :float) { refuse flap }
       if (self.get(:spell) == :fence) { refuse fence }
     }
@@ -769,10 +769,11 @@ kind Adventurer is sprout.Visitor {
         }
       }
       if (self.get(:at_carousel) && self.get(:spinning) && here.is(Room) && !self.get(:devoured)) {
-        // CAROUSEL-ROOM-FCN: every way out but up and down is announced,
-        // and west, or four times in five any other, is a random one of
+        // CAROUSEL-ROOM-FCN: west is a way drawn as it is taken
+        // (carousel.sprout), and has announced itself; any other way is
+        // announced here, and four times in five goes a random one of
         // seven.
-        say "You're not sure which direction is which. This room is very disorienting."
+        if (way != "west") { say "You're not sure which direction is which. This room is very disorienting." }
         // Said once, the first time it happens (round 5's P5): the room is
         // a mechanism, and a mechanism has an off switch somewhere.
         if (!self.get(:spun_told)) {
@@ -781,7 +782,7 @@ kind Adventurer is sprout.Visitor {
         }
         // Zork's draw among all seven passages but the west (CAROUSEL-
         // ROOM-FCN), every one of which leads somewhere now (friction 29).
-        if (here.is(RoomEight) || random(5) < 4) {
+        if (way != "west" && random(5) < 4) {
           self.set(:spun, true)
           let r = random(7)
           if (r == 0) { self.set(:dest, :marble_hall) }
@@ -794,10 +795,10 @@ kind Adventurer is sprout.Visitor {
           send underground_caverns_2 :open_gate
         }
       }
-      // The Oddly-angled Rooms (DIAMOND-MOTION). The way walked is read
-      // off where it led, since each room's eight ways lead to the eight
-      // others in one fixed order (menhir.sprout, friction 58): north to
-      // northwest, the rooms in their numbers. Then: run, Zork's own ways
+      // The Oddly-angled Rooms (DIAMOND-MOTION). Each room's eight ways
+      // lead to the eight others (menhir.sprout), and the way walked is
+      // `way`; the room this move began in is `:last_room`. Then: run,
+      // Zork's own ways
       // and "You can't go that way."; from a corner with a count, the
       // right way is the next corner and the wrong way a draw; from
       // anywhere else, a way that is no way, a draw, or a corner with the
@@ -805,16 +806,15 @@ kind Adventurer is sprout.Visitor {
       else if (self.get(:at_diamond) && here.is(DiamondRoom)) {
         let was = self.get(:last_room)
         if (was == :diamond_1) { self.set(:dn_from, 1) } else if (was == :diamond_2) { self.set(:dn_from, 2) } else if (was == :diamond_3) { self.set(:dn_from, 3) } else if (was == :diamond_4) { self.set(:dn_from, 4) } else if (was == :diamond_5) { self.set(:dn_from, 5) } else if (was == :diamond_6) { self.set(:dn_from, 6) } else if (was == :diamond_7) { self.set(:dn_from, 7) } else if (was == :diamond_8) { self.set(:dn_from, 8) } else { self.set(:dn_from, 9) }
-        let now = here.get(:id)
-        if (now == :diamond_1) { self.set(:dn_to, 1) } else if (now == :diamond_2) { self.set(:dn_to, 2) } else if (now == :diamond_3) { self.set(:dn_to, 3) } else if (now == :diamond_4) { self.set(:dn_to, 4) } else if (now == :diamond_5) { self.set(:dn_to, 5) } else if (now == :diamond_6) { self.set(:dn_to, 6) } else if (now == :diamond_7) { self.set(:dn_to, 7) } else if (now == :diamond_8) { self.set(:dn_to, 8) } else { self.set(:dn_to, 9) }
-        if (self.get(:dn_to) < self.get(:dn_from)) { self.set(:ddir, self.get(:dn_to) - 1) } else { self.set(:ddir, self.get(:dn_to) - 2) }
+        // The way walked, north round to northwest as 0 to 7.
+        if (way == "north") { self.set(:ddir, 0) } else if (way == "northeast") { self.set(:ddir, 1) } else if (way == "east") { self.set(:ddir, 2) } else if (way == "southeast") { self.set(:ddir, 3) } else if (way == "south") { self.set(:ddir, 4) } else if (way == "southwest") { self.set(:ddir, 5) } else if (way == "west") { self.set(:ddir, 6) } else if (way == "northwest") { self.set(:ddir, 7) } else { self.set(:ddir, 8) }
         let f = self.get(:dn_from)
         let d = self.get(:ddir)
         self.set(:spun, true)
         self.set(:dest, :nowhere)
         if (self.get(:diamond_solved)) {
           if (f == 5) {
-            if (d == 7) { self.set(:dest, :diamond_1) } else if (d == 0) { self.set(:dest, :diamond_2) } else if (d == 1) { self.set(:dest, :diamond_3) } else if (d == 6) { self.set(:dest, :diamond_4) } else if (d == 2) { self.set(:dest, :diamond_6) } else if (d == 4) { self.set(:dest, :diamond_8) } else if (d == 3) { self.set(:dest, :diamond_9) }
+            if (d == 7) { self.set(:dest, :diamond_1) } else if (d == 0) { self.set(:dest, :diamond_2) } else if (d == 1) { self.set(:dest, :diamond_3) } else if (d == 6) { self.set(:dest, :diamond_4) } else if (d == 2) { self.set(:dest, :diamond_6) } else if (d == 5) { self.set(:dest, :diamond_7) } else if (d == 4) { self.set(:dest, :diamond_8) } else if (d == 3) { self.set(:dest, :diamond_9) }
           }
           else if (f == 1) { if (d == 3) { self.set(:dest, :diamond_5) } }
           else if (f == 2) { if (d == 4) { self.set(:dest, :diamond_5) } else if (d == 3) { self.set(:dest, :diamond_6) } else if (d == 5) { self.set(:dest, :diamond_4) } }
@@ -848,7 +848,10 @@ kind Adventurer is sprout.Visitor {
             // The count goes on the move it is lost (round 8's P1), so the
             // window in the room the throw lands in reads dark, as its own
             // close-up says it will.
-            say "The passage turns more corners than it has any right to, and lets you out somewhere you did not aim for. Whatever was being counted has lost count."
+            // A compass point from a corner (round 9's P5): the line says
+            // what a diamond's sides are.
+            if (d == 0 || d == 2 || d == 4 || d == 6) { say "The passage tries to go straight at a diamond, which has no straight sides, and turns more corners than it has any right to; it lets you out somewhere you did not aim for, and whatever was being counted has lost count. A runner's bases are at the corners, off the square, a diagonal apart." }
+            else { say "The passage turns more corners than it has any right to, and lets you out somewhere you did not aim for. Whatever was being counted has lost count." }
             self.set(:diamond_count, 0)
             broadcast :diamond_count with 0
             send self :diamond_loss
@@ -1226,7 +1229,7 @@ kind Adventurer is sprout.Visitor {
   // Taking several things at once, as Zork does: each answered with its
   // name before it. `all` leaves out what is already held.
   as actor for take {
-    permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    permit { 
       if (target.count == 1) {
         each t of target {
           if (t.is(Thing)) { if (self.holds(t)) { refuse "You already have that!" } }
@@ -1244,10 +1247,7 @@ kind Adventurer is sprout.Visitor {
           if (!self.holds(t) && !self.get(:nested)) { self.adjust(:fresh, 1) }
         }
       }
-      if (several && self.get(:fresh) == 0 && target.count >= 8) {
-        say "Your hands are too full for \"all\" to see past them; say which thing you want."
-      }
-      else if (several && self.get(:fresh) == 0 && target.count >= self.count(Thing)) {
+      if (several && self.get(:fresh) == 0 && target.count >= self.count(Thing)) {
         say "It's not clear what you're referring to."
       }
       else { each t of target {
@@ -1313,7 +1313,9 @@ kind Adventurer is sprout.Visitor {
           else if (t.is(Portable)) {
             if (self.get(:carry) + t.get(:size) > self.get(:load_allowed)) { say "{if several}{t.short}: {/if}{self.too_heavy}" }
             // Fumble (ITAKE): a full hand drops things.
-            else if (self.get(:spell) == :fumble && self.count(Thing) > 3 && random(4) < self.count(Thing) - 3) { say "{if several}{t.short}: {/if}You're holding too many things already!" }
+            // Fumble (ITAKE): a full hand drops things, PROB(25 a thing past
+            // three), as Zork multiplies it.
+            else if (self.get(:spell) == :fumble && self.count(Thing) > 3 && random(100) < (self.count(Thing) - 3) * 25) { say "{if several}{t.short}: {/if}You're holding too many things already!" }
             else if (self.count(Thing) > 7 && random(12) < self.count(Thing) - 7) { say "{if several}{t.short}: {/if}You're holding too many things already!" }
             // Filch: it vanishes at a touch (ITAKE's RIPOFF).
             else if (self.get(:spell) == :filch && t.is(Treasure) && !t.get(:keep)) {
@@ -1338,7 +1340,7 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for drop { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for drop { 
     do {
       let several = target.count > 1
       each t of target {
@@ -1363,7 +1365,7 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for put { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for put { 
     do {
       if (item == container) { say "How can you do that?" }
       else if (item.is(Water)) { act pour_in (item: item, container: container) }
@@ -1406,9 +1408,7 @@ kind Adventurer is sprout.Visitor {
     send self :die
   }
 
-  as actor for give { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
-    if (recipient.is(Illusion)) { refuse "{recipient.gone_speak}" }
-  }
+  as actor for give {
     do {
       if (recipient.is(Robot)) { move item to recipient }
       else if (recipient.is(Dragon)) { if (item.is(Treasure)) { move item to recipient } }
@@ -1433,9 +1433,7 @@ kind Adventurer is sprout.Visitor {
 
   // Zork's THROW: out of the hand and onto the floor, or at whatever
   // answers for itself.
-  as actor for throw { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
-    if (bound aim) { if (aim.is(Illusion)) { refuse "{aim.gone_strike}" } }
-  }
+  as actor for throw {
     do {
       if (target.is(Water)) { }
       else if (target.is(Flask)) { }
@@ -1485,8 +1483,7 @@ kind Adventurer is sprout.Visitor {
   // The Wizard's illusion, struck or looked at: the refusal's first clause
   // is the verb's, chosen here since the illusion's own wildcard would
   // answer first (round 4's P11); and the grue his word shows, struck.
-  as actor for attack { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
-    if (target.is(Illusion)) { refuse "{target.gone_strike}" }
+  as actor for attack { permit {
     if (target.is(Grue)) { if (target.get(:conjured)) { refuse "{target.struck_through}" } }
   }
     do {
@@ -1498,7 +1495,7 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for jump { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }  if (self.get(:spell) == :float) { refuse flap } }
+  as actor for jump { permit { if (self.get(:spell) == :float) { refuse flap } }
     do {
       if (here.is(RiddleRoom)) {
         say "This was not a very safe place to try jumping."
@@ -1530,25 +1527,23 @@ kind Adventurer is sprout.Visitor {
     }
   }
 
-  as actor for xyzzy { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "A hollow voice says \"Fool.\"" } }
-  as actor for hello { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for xyzzy { do { say "A hollow voice says \"Fool.\"" } }
+  as actor for hello { 
     do { say "{one of}Hello.{or}Good day.{or}Nice weather we've been having lately.{or}Goodbye.{/one of}" }
   }
-  as actor for yell { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "Aaaarrrrgggghhhh!" } }
-  as actor for zork { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "At your service!" } }
-  as actor for curse { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "Such language in a high-class establishment like this!" } }
-  as actor for incant_bare { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for yell { do { say "Aaaarrrrgggghhhh!" } }
+  as actor for zork { do { say "At your service!" } }
+  as actor for curse { do { say "Such language in a high-class establishment like this!" } }
+  as actor for incant_bare { 
     do {
       if (self.count(Wand) == 0) { say "You don't have a wand, and without one the word comes out as a sort of cough. Nothing happens." }
       else if (self.get(:wand_on)) { say "The wand is pointed and waiting. It wants a word, and the words it knows begin with F." }
       else { say "The incantation echoes back faintly, but nothing else happens. A wand is pointed at something first, and then a word said over it." }
     }
   }
-  as actor for sleep { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "The Wizard's domain is no place for a nap. Things happen to people who nap here." } }
+  as actor for sleep { do { say "The Wizard's domain is no place for a nap. Things happen to people who nap here." } }
   as actor for look       { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen }
-      if (target.is(Illusion)) { refuse "{target.gone_look}" }
-    }
+  as actor for examine    { permit { if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (target.is(Dragon)) { send target :provoke with 1 }
       else if (target.is(Princess)) { if (!target.get(:awake)) { send target :princess_awake } }
@@ -1559,6 +1554,9 @@ kind Adventurer is sprout.Visitor {
   // and the bucket's count with it.
   as actor for wait       { permit { if (self.get(:finished)) { refuse over } }
     do {
+      // Waiting for the floor (round 9's P4): standing still settles
+      // nothing, and the line says what would.
+      if (self.get(:at_carousel) && self.get(:spinning)) { say carousel_wait }
       pass 90 seconds
       self.adjust(:moves, 2)
       // Waiting through a countdown the visitor lit (round 6's P7): three
@@ -1575,19 +1573,9 @@ kind Adventurer is sprout.Visitor {
       if (self.get(:gnome_left) > 1) { self.adjust(:gnome_left, -2) }
     }
   }
-  // Unlocked or locked with no key named: whether the rusty key is in hand
-  // is set here, before the door's part runs, since a target's part cannot
-  // see into the hands (friction 61; round 6's P13).
-  as actor for unlock     { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
-    do { self.set(:has_rusty, self.count(RustyKey) > 0) }
-  }
-  as actor for lock       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
-    do { self.set(:has_rusty, self.count(RustyKey) > 0) }
-  }
-  as actor for melt       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   // The place mat under the Tiny Room's door, and the robot's paper
   // (PDOOR-FCN's PUT-UNDER): the door says what came of it.
-  as actor for put_under  { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for put_under  { 
     do {
       if (target.is(PDoor)) {
         if (item.is(PlaceMat)) { if (!target.get(:mat_under)) { move item to here } }
@@ -1601,29 +1589,12 @@ kind Adventurer is sprout.Visitor {
       else { say yuk }
     }
   }
-  as actor for open       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for close      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for read       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for look_in    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for look_under { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for search     { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for lamp_on    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
-    do { self.set(:has_flame, false)  each m: Matchbook in self { if (m.get(:lit)) { self.set(:has_flame, true) } } }
-  }
-  as actor for lamp_off   { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
   // A button pushed by a person (BUTTONS): the button answers, fatally.
-  as actor for shift      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for raise      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for lower      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for eat        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for drink      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+  as actor for drink      { permit { 
     if (target.is(Water) && !here.is(Bucket)) { each b: Bucket in here { if (b.holds(target)) { refuse "You'll need to get in the bucket to reach it." } } }
   } }
   as actor for smell      { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
   as actor for listen     { permit { if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for ask        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
-    if (target.is(Illusion)) { refuse "{target.gone_speak}" }
-  } }
   as actor for listen_here { permit { if (self.get(:spell) == :freeze) { refuse frozen } }
     do {
       if (here.is(CarouselRoom)) { if (here.get(:spinning)) { say "A loud whirring, from all around, as of a great deal of machinery going round. It makes it hard to think about directions." } else { say "Nothing. The whirring has stopped, and the room is still." } }
@@ -1643,18 +1614,13 @@ kind Adventurer is sprout.Visitor {
       else { say "You smell nothing out of the ordinary." }
     }
   }
-  as actor for climb_up   { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for climb_down { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for climb_down { 
     do {
       if (target.is(Bucket)) { act board (target: target) }
       else if (target.is(Balloon)) { act board (target: target) }
     }
   }
-  as actor for knock      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for mung       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
-    if (target.is(Illusion)) { refuse "{target.gone_strike}" }
-  } }
-  as actor for through    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for through    { 
     do {
       if (target.is(Bucket)) { act board (target: target) }
       else if (target.is(Balloon)) { act board (target: target) }
@@ -1663,14 +1629,8 @@ kind Adventurer is sprout.Visitor {
       else if (target.is(Gazebo) && !target.is(GazeboInside)) { move self in }
     }
   }
-  as actor for kick       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
-    if (target.is(Illusion)) { refuse "{target.gone_strike}" }
-  } }
-  as actor for rub        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for wave       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "You wave the {target.short} about. Nothing comes of it but a faint breeze." } }
-  as actor for shake      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for squeeze    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for fill       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for wave       { do { say "You wave the {target.short} about. Nothing comes of it but a faint breeze." } }
+  as actor for fill       { 
     do {
       if (bound tool) {
         if (tool.is(Water) && target.is(Teapot)) {
@@ -1683,10 +1643,10 @@ kind Adventurer is sprout.Visitor {
   }
   // Water poured: what is in a hand cannot reach the room around it, so
   // the hand does the pouring (the water says what came of it).
-  as actor for pour       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for pour       { 
     do { if (target.is(Water) && here.is(Bucket)) { move target to here } }
   }
-  as actor for pour_in    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for pour_in    { 
     do {
       if (item.is(Water)) {
         if (container.is(Bucket)) { move item to container }
@@ -1697,7 +1657,7 @@ kind Adventurer is sprout.Visitor {
   }
   // The teapot poured over a thing (round 7's P5): the hand empties it,
   // and says whether there was water to pour, for the thing to read.
-  as actor for pour_on    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for pour_on    { 
     do {
       if (item.is(Teapot)) {
         self.set(:teapot_water, item.count(Water) > 0)
@@ -1705,31 +1665,14 @@ kind Adventurer is sprout.Visitor {
       }
     }
   }
-  as actor for alarm      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for talk       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for greet      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for follow     { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for cross      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }  if (self.get(:spell) == :float) { refuse flap }  if (self.get(:spell) == :fence) { refuse fence } } }
-  as actor for leap_at    { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }  if (self.get(:spell) == :float) { refuse flap } } }
-  as actor for swim       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for cross      { permit { if (self.get(:spell) == :float) { refuse flap }  if (self.get(:spell) == :fence) { refuse fence } } }
+  as actor for leap_at    { permit { if (self.get(:spell) == :float) { refuse flap } } }
+  as actor for swim       { 
     do { if (here.is(Watery)) { say "You can't swim in the stream." } else { say "Go jump in a lake!" } }
   }
-  as actor for turn       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for tie        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for untie      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  // A lit match in hand is a flame (V-BURN's FLAMING?, FUSE-FCN): a thing
-  // set alight cannot see into the hands that hold the match, so the hand
-  // says whether it has one, and the thing reads that.
-  as actor for burn       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
-    do { self.set(:has_flame, false)  each m: Matchbook in self { if (m.get(:lit)) { self.set(:has_flame, true) } } }
-  }
-  as actor for cut        { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for play       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for count_things { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for wish_bare  { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "No one is listening." } }
-  as actor for wish       { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
+  as actor for wish_bare  { do { say "No one is listening." } }
   // The repellent, sprayed on oneself (REPELLENT-FCN, I-SPRAY).
-  as actor for spray      { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for spray      { 
     do {
       if (bound aim) {
         if (aim == self && target.is(Repellent)) {
@@ -1742,7 +1685,7 @@ kind Adventurer is sprout.Visitor {
     }
   }
   // The riddle (RIDDLE-ROOM-FCN): "well", said in the Riddle Room.
-  as actor for answer { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for answer { 
     word from :answers
     do {
       if (bound word) {
@@ -1752,7 +1695,7 @@ kind Adventurer is sprout.Visitor {
             else { say thunder  send self :riddle_answered }
           } else { say "Nothing happens." }
         }
-        else { self.set(:word, word)  self.set(:cast_pending, true)  send self :cast_now  say cast_line }
+        else { self.set(:word, word)  send self :cast_now  say cast_line }
       }
       else if (here.is(RiddleRoom)) {
         if (here.get(:open)) { say "The door is already open, and does not need telling twice." }
@@ -1761,26 +1704,25 @@ kind Adventurer is sprout.Visitor {
       else { say "Nothing happens." }
     }
   }
-  as actor for incant { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for incant { 
     word from :answers
     do {
-      if (bound word) { self.set(:word, word)  self.set(:cast_pending, true)  send self :cast_now  say cast_line }
+      if (bound word) { self.set(:word, word)  send self :cast_now  say cast_line }
       else if (self.count(Wand) == 0) { say "You don't have a wand, and without one the word comes out as a sort of cough. Nothing happens." }
       else { say "The incantation echoes back faintly, but nothing else happens." }
     }
   }
-  as actor for word_float { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { self.set(:word, :float)  self.set(:cast_pending, true)  send self :cast_now  say cast_line } }
-  as actor for word_fry { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { self.set(:word, :fry)  self.set(:cast_pending, true)  send self :cast_now  say cast_line } }
-  as actor for word_fluoresce { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { self.set(:word, :fluoresce)  self.set(:cast_pending, true)  send self :cast_now  say cast_line } }
-  as actor for word_fudge { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { self.set(:word, :fudge)  self.set(:cast_pending, true)  send self :cast_now  say cast_line } }
-  as actor for word_filch { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { self.set(:word, :filch)  self.set(:cast_pending, true)  send self :cast_now  say cast_line } }
+  as actor for word_float { do { self.set(:word, :float)  send self :cast_now  say cast_line } }
+  as actor for word_fry { do { self.set(:word, :fry)  send self :cast_now  say cast_line } }
+  as actor for word_fluoresce { do { self.set(:word, :fluoresce)  send self :cast_now  say cast_line } }
+  as actor for word_fudge { do { self.set(:word, :fudge)  send self :cast_now  say cast_line } }
+  as actor for word_filch { do { self.set(:word, :filch)  send self :cast_now  say cast_line } }
   // The word, said (V-INCANT): with the wand pointed at something, it
   // glows and the thing answers (V-ENCHANT, by broadcast); said again
   // before the last word has run out, nothing; said with no wand, a
   // cough. The reading's own answer is the line said here; the thing's
   // follows it.
   on :cast_now {
-    self.set(:cast_pending, false)
     if (self.count(Wand) == 0) { self.set(:cast_result, :nowand) }
     else if (self.get(:casting)) { self.set(:cast_result, :busy) }
     else if (self.get(:wand_on)) {
@@ -1799,7 +1741,7 @@ kind Adventurer is sprout.Visitor {
   // glows for two moves; at oneself or at the wand, a safety interlock;
   // while the last word still runs, a lecture, or, one time in twenty,
   // the end.
-  as actor for aim_wand { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for aim_wand { 
     do {
       if (self.get(:casting) || self.get(:wand_on)) {
         if (random(20) == 0) {
@@ -1822,7 +1764,7 @@ kind Adventurer is sprout.Visitor {
       else { say "At what?" }
     }
   }
-  as actor for say_well { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for say_well { 
     do {
       if (here.is(RiddleRoom)) {
         if (here.get(:open)) { say "The door is already open, and does not need telling twice." }
@@ -1838,7 +1780,7 @@ kind Adventurer is sprout.Visitor {
   // The bucket (V-BOARD, V-DISEMBARK), and the spells that keep one out
   // of it.
   as actor for board {
-    permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    permit { 
       if (target.is(Bucket)) {
         if (here.is(Bucket)) { refuse "You are already in the wooden bucket!" }
         else if (self.get(:spell) == :float) { refuse "You can't get down to it. You are floating five feet above the floor, and the bucket is on it." }
@@ -1868,7 +1810,7 @@ kind Adventurer is sprout.Visitor {
     }
   }
   // The balloon landed, by its own word (the blue label's LAND).
-  as actor for land { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for land { 
     do {
       if (here.is(Balloon)) {
         let where = here.get(:at)
@@ -1884,10 +1826,7 @@ kind Adventurer is sprout.Visitor {
       else { say "You are not in anything that could land, unless you count yourself, and you have landed." }
     }
   }
-  as actor for inflate { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_give { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_inventory { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for get_out_bare { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for get_out_bare { 
     do {
       if (here.is(Bucket)) { say "You are on your own feet again."  self.set(:in_bucket, false)  move self out }
       else if (here.is(Balloon)) {
@@ -1902,9 +1841,10 @@ kind Adventurer is sprout.Visitor {
   // Waiting for the bucket: at the bottom while it is up, the hundred
   // moves Zork's player waited through, at a stroke and counted; the count
   // goes to nought, and the bucket comes down in this turn's reckoning.
-  as actor for wait_for { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for wait_for { 
     do {
-      if (target.is(MissingBucket)) {
+      if (target.is(EightPassages)) { if (here.is(CarouselRoom) && self.get(:spinning)) { say carousel_wait  pass 90 seconds  self.adjust(:moves, 2) } else { say "The passages are not going anywhere; the floor has stopped. Pick one." } }
+      else if (target.is(MissingBucket)) {
         if (here.is(WellBottom) && self.get(:bucket_away)) {
           say "You wait. It is a long wait, and the rope stays taut through all of it, and the dark overhead has nothing to say; and then, a good deal later, the rope creaks."
           self.adjust(:moves, self.get(:bucket_wait) - 1)
@@ -1918,7 +1858,7 @@ kind Adventurer is sprout.Visitor {
       else { say "The bucket is here. It is you that is keeping it waiting." }
     }
   }
-  as actor for get_in_bare { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for get_in_bare { 
     do {
       if (here.count(Bucket) > 0) { each b: Bucket in here { act board (target: b) } }
       else if (here.count(Balloon) > 0) { each b: Balloon in here { act board (target: b) } }
@@ -1929,7 +1869,7 @@ kind Adventurer is sprout.Visitor {
     }
   }
   as actor for disembark {
-    permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen }
+    permit { 
       if (!here.is(Bucket) && !here.is(Balloon)) { refuse "You're not in that!" }
       else if (target != here) { refuse "You're not in that!" }
       if (here.is(Balloon)) {
@@ -1943,17 +1883,9 @@ kind Adventurer is sprout.Visitor {
       move self out
     }
   }
-  as actor for robot_go { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_push { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_lift { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_drop { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_eat { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_see { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_other { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for robot_stuck { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } }
-  as actor for pray { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "If you pray enough, your prayers may be answered." } }
-  as actor for walk_about { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } } do { say "Use compass directions for movement." } }
-  as actor for look_down { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for pray { do { say "If you pray enough, your prayers may be answered." } }
+  as actor for walk_about { do { say "Use compass directions for movement." } }
+  as actor for look_down { 
     do {
       if (here.is(WellTop)) { say "It's a long way down, and dark all the way. If there is anything at the bottom, it is keeping quiet about it." }
       else if (here.is(Bucket)) { if (here.get(:at) == :well_top) { say "Over the rim of the bucket there is a great deal of dark, going down. It's a long way down!" } else { say "The bottom of the bucket, which is wet." } }
@@ -1962,7 +1894,7 @@ kind Adventurer is sprout.Visitor {
       else { say "You see the floor, where you left it." }
     }
   }
-  as actor for look_up { permit { if (self.get(:finished)) { refuse over }  if (self.get(:spell) == :freeze) { refuse frozen } }
+  as actor for look_up { 
     do {
       if (here.is(Garden)) { say "If you don't look up, the illusion is of a cloudy day outside. You looked up. It is a cave roof, a long way up, with a great growth of glowing moss on it, and the illusion will take a moment to come back." }
       else if (here.is(CarouselRoom)) { say "The ceiling is lost in gloom, a long way up, and whatever is up there is whirring." }
@@ -1994,5 +1926,3 @@ message :room_falls
 message :ledge_falls
 message :diamond_loss
 message :cast_now
-message :clocks_later
-message :clocks_now

@@ -123,23 +123,19 @@ kind Balloon is sprout.Place, Box, Vessel {
     {t.indef}{/if}{/for}{/if} }
   passage no_take { The basket is far too heavy to carry, and the balloon is attached to it. }
 
-  without as target for inflate from Thing
   as target for inflate { do { say "It takes more than words to inflate a balloon." } }
   // Thing's answer to "look in" arrives by way of Vessel (friction 54;
   // round 7's P9).
   without as target for look_in from Thing
-  without as target for through from Thing
   as target for through { do { } }
   as target for board { do { } }
   as target for disembark { do { } }
   without as target for climb_up from Thing
   without as target for climb_down from Thing
-  without as target for kick from Thing
   as target for kick { do { say "The basket is wicker, and takes it well." } }
   without as target for burn from Box
   as target for burn { do { say "The basket is wicker, and would burn very nicely, with you in it. The receptacle is where the fire goes." } }
   // "tie balloon to hook" is the wire's business, done here as there.
-  without as target for tie from Thing
   as target for tie {
     do {
       if (bound tool) {
@@ -151,7 +147,6 @@ kind Balloon is sprout.Place, Box, Vessel {
       } else { say "You'll have to say what to tie the balloon to." }
     }
   }
-  without as target for untie from Thing
   as target for untie {
     do {
       if (self.get(:tied) == :nowhere) { say "The wire is not tied to anything." }
@@ -379,11 +374,8 @@ kind ClothBag is Scenery {
   passage short { cloth bag }
   passage no_take { The cloth bag is an integral part of the basket and cannot be removed. }
   describe { text "{if self.get(:full)}The bag is enormous, and full of hot air, and straining upward at the ropes that hold it to the basket.{else}The bag is enormous, of oiled cloth, and draped empty over the side of the basket, to which it is firmly attached. It wants filling, and the receptacle in the middle of the basket looks like what fills it.{/if}" }
-  without as target for open from Thing
   as target for open { do { say "The bag is enormous. The concept of opening it here is ludicrous." } }
-  without as target for look_in from Thing
   as target for look_in { do { say "It doesn't appear that there's anything inside." } }
-  without as target for inflate from Thing
   as target for inflate { do { say "It takes more than words to inflate a balloon." } }
 }
 
@@ -397,7 +389,6 @@ kind BraidedWire is Scenery {
   passage short { braided wire }
   passage no_take { The braided wire is an integral part of the basket and cannot be removed. The wire might possibly be tied, though. }
   describe { text "{if self.get(:tied)}The braided wire runs from the basket to a hook in the rock, and is tied to it with a knot you are rather proud of.{else}A length of braided wire, fastened to the basket at one end and dangling over the side at the other, with a loop in the free end that looks as though it was meant to go over something, a hook for instance.{/if}" }
-  without as target for tie from Thing
   as target for tie {
     do {
       if (bound tool) {
@@ -412,7 +403,6 @@ kind BraidedWire is Scenery {
       } else { say "You'll have to say what to tie the wire to." }
     }
   }
-  without as target for untie from Thing
   as target for untie {
     do {
       if (self.get(:tied)) { say "The wire falls off of the hook."  broadcast :untied }
@@ -481,20 +471,13 @@ kind VolcanoGnome is Creature, sprout.Actor {
   :gone false
   describe { text "He is a gnome, of the volcano: short, wide, the grey of the rock he came out of and about as yielding, with a waistcoat of some darker rock and a watch on a chain which he keeps looking at. He has the air of somebody with somewhere better to be, who will tell you about it for a consideration." }
   passage nervous { The gnome appears increasingly nervous. }
-  without as target for greet from Creature
   as target for greet { do { say nervous  broadcast :gnome_fidget } }
-  without as target for talk from Creature
   as target for talk { do { say nervous  broadcast :gnome_fidget } }
-  without as target for ask from Thing
   as target for ask { do { say nervous  broadcast :gnome_fidget } }
-  without as target for rub from Thing
   as target for rub { do { say nervous  broadcast :gnome_fidget } }
-  without as target for follow from Creature
   as target for follow { do { say "The gnome has not gone anywhere yet, and would like to." } }
   as target for attack { do { say "The gnome is rock, and your blow is not. He appears increasingly nervous, all the same."  broadcast :gnome_fidget } }
-  without as target for mung from Thing
   as target for mung { do { say "The gnome is rock, and your blow is not. He appears increasingly nervous, all the same."  broadcast :gnome_fidget } }
-  without as target for kick from Thing
   as target for kick { do { say "The gnome is rock, and your boot is not. He appears increasingly nervous, all the same."  broadcast :gnome_fidget } }
   // His fee (GNOME-FCN's GIVE): a treasure buys the way out, the brick
   // sends him off for good, and anything else is crunched. The hand has
@@ -503,7 +486,6 @@ kind VolcanoGnome is Creature, sprout.Actor {
   passage door_line { "Thank you very much for the {item.short}. I don't believe I've ever seen one as beautiful. Follow me," he says, and a door appears on the west end of the ledge. Through the door, you can see a narrow chimney sloping steeply downward. The gnome moves quickly, and disappears from sight. }
   passage brick_line { "That certainly wasn't what I had in mind," he says, and disappears. }
   passage crunch_line { "That wasn't quite what I had in mind," he says, crunching the {item.short} in his rock-hard hands. }
-  without as recipient for give from Thing
   as recipient for give {
     do {
       if (item.is(Treasure)) { say door_line  send item :consume  broadcast :gnome_door  send self :gnome_away with false }
@@ -511,7 +493,6 @@ kind VolcanoGnome is Creature, sprout.Actor {
       else if (item.is(Thing)) { say crunch_line  send item :consume }
     }
   }
-  without as aim for throw from Thing
   as aim for throw {
     do {
       if (target.is(Treasure)) { say "{self.catch_line}\"Thank you very much for the {target.short}. I don't believe I've ever seen one as beautiful. Follow me,\" he says, and a door appears on the west end of the ledge. Through the door, you can see a narrow chimney sloping steeply downward. The gnome moves quickly, and disappears from sight."  send target :consume  broadcast :gnome_door  send self :gnome_away with false }
@@ -550,7 +531,6 @@ kind GnomeDoor is Scenery, Door {
   passage short { small door }
   on :gnome_door { self.set(:unseen, false) }
   describe { text "A door in the rock at the west end of the ledge, which was not there before the gnome was, and through it a narrow chimney sloping steeply down toward the bottom of the volcano. It is the gnome's way out, and now yours." }
-  without as target for through from Thing
   as target for through { do { send actor :travel with :volcano_bottom  say "" } }
 }
 
@@ -615,7 +595,7 @@ kind Brick is Bag {
         if (tool.is(Matchbook)) { if (tool.get(:lit)) { self.set(:flame, true) } }
         if (!self.get(:flame)) { if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" } }
       } else {
-        if (actor.is(Adventurer)) { if (actor.get(:has_flame)) { self.set(:flame, true) } }
+        each m: Matchbook in actor { if (m.get(:lit)) { self.set(:flame, true) } }
         if (!self.get(:flame)) { say "You didn't say with what!" }
       }
       if (self.get(:flame)) {
@@ -625,7 +605,6 @@ kind Brick is Bag {
       }
     }
   }
-  without as target for smell from Thing
   as target for smell { do { say "It smells of clay, and faintly of something sharper that is not clay." } }
   // The fuse in it has burned down (I-FUSE): the explosion is where the
   // brick is, and the room says the rest.
@@ -651,21 +630,19 @@ kind Fuse is Portable, Switchable {
   passage ldesc { There is a coil of black, braided string here. }
   describe { text "It is a coil of thin black string, braided, and stiffer than string usually is, as though something had been worked into it.{if self.get(:lit)} It is burning, with a small bright hiss, and getting shorter.{/if} It would go through a hole the size of a finger." }
   on :in_brick (from, value) { self.set(:in_brick, value) }
-  without as target for lamp_on from Switchable
   as target for lamp_on {
     do {
       self.set(:flame, false)
-      if (actor.is(Adventurer)) { if (actor.get(:has_flame)) { self.set(:flame, true) } }
+      each m: Matchbook in actor { if (m.get(:lit)) { self.set(:flame, true) } }
       if (self.get(:lit)) { say "It is burning already." }
       else if (self.get(:flame)) { self.set(:lit, true)  say "The string starts to burn."  send actor :fuse_lit }
       else { say "You'd need a flame for that, and your hands are not one. A lit match would do." }
     }
   }
   without as target for burn from Switchable
-  without as target for burn from Portable
   // Thing's "With a matchbook??!?" arrives by way of Switchable as well
   // (friction 54; round 6's P9).
-  without as target for burn from Thing
+  without as target for burn from Portable
   as target for burn {
     do {
       self.set(:flame, false)
@@ -673,7 +650,7 @@ kind Fuse is Portable, Switchable {
         if (tool.is(Matchbook)) { if (tool.get(:lit)) { self.set(:flame, true) } else { say "The match is not lit." } }
         else if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" }
       } else {
-        if (actor.is(Adventurer)) { if (actor.get(:has_flame)) { self.set(:flame, true) } }
+        each m: Matchbook in actor { if (m.get(:lit)) { self.set(:flame, true) } }
         if (!self.get(:flame)) { say "You'd need a flame for that, and your hands are not one. A lit match would do." }
       }
       if (self.get(:flame)) {
@@ -696,7 +673,6 @@ kind Book is Bag, Readable {
   :fuel 200
   :has_fdesc true
   passage words { This book is written in a tongue with which I am unfamiliar. }
-  without as target for read from Thing
   without as target for read from Readable
   as target for read { do { if (bound tool) { say "You can't read it through that." } else { say words } } }
   on :touch { self.set(:touched, true) }
@@ -851,16 +827,14 @@ object lava_tube is DarkRoom in underground_caverns_2 {
     grammar { name "large crack"  nouns "crack", "opening", "split"  adjectives "large", "south" }
     passage short { large crack }
     describe { text "The crack is fairly wide. You should be able to get into it. It opens to the south, where the rock shifted once and did not shift back." }
-    without as target for through from Thing
     as target for through { do { send actor :travel with :cobwebby  say "" } }
+    as target for climb_down { do { send actor :travel with :cobwebby  say "" } }
   }
   object chimney is Scenery {
     grammar { name "chimney"  nouns "tube", "shaft"  adjectives "tight", "lava", "solidified" }
     passage short { chimney }
     describe { text "The chimney is lava, solidified, round and smooth and tight enough that you climb it with your back against one side and your boots against the other. It goes up a long way, to a glimmer, and down a long way, to the hall you came up from." }
-    without as target for climb_up from Thing
     as target for climb_up { do { send actor :travel with :volcano_view  say "" } }
-    without as target for climb_down from Thing
     as target for climb_down { do { send actor :travel with :ice_room  say "" } }
   }
 }
@@ -920,10 +894,9 @@ object cobwebby_corridor is DarkRoom in underground_caverns_2 {
     grammar { name "narrow crack"  nouns "crack", "opening"  adjectives "narrow", "high" }
     passage short { narrow crack }
     describe { text "The crack is fairly wide. You should be able to get into it. It is on the north side, high up, and what is beyond it goes up." }
-    without as target for through from Thing
     as target for through { do { send actor :travel with :lava_tube  say "" } }
-    without as target for climb_up from Thing
     as target for climb_up { do { send actor :travel with :lava_tube  say "" } }
+    as target for climb_down { do { send actor :travel with :lava_tube  say "" } }
   }
 }
 

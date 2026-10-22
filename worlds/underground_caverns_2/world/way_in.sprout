@@ -3,7 +3,7 @@
 // ravine, the stream and the bridge they share (2dungeon.zil, and
 // BRIDGE-FCN, CHASM-FCN, STREAM-FCN, MOSS-FCN, STALA-PSEUDO).
 import * as sprout from 'sprout'
-import {Thing, Scenery, Crossable, Leapable, Door} from 'thing'
+import {Thing, Scenery, Crossable, Leapable, Door, Abyss} from 'thing'
 import {Room, DarkRoom, Bridged, ChasmEdge, Watery} from 'room'
 import {Lamp} from 'lamp'
 import {Sword, StreamWater} from 'items'
@@ -17,18 +17,16 @@ kind Moss is Scenery {
   passage short { mosses }
   describe { text "The mosses cling to the roof of the cave in long grey-green beards, and glow a cold, steady, underwater sort of light, enough to see by and not enough to be comfortable in. Whatever they live on, it is not sunlight." }
   passage no_take { Some of the moss rubs off on you, but it stops glowing very quickly once plucked from its environment. }
-  without as target for rub from Thing
   as target for rub { do { say "Some of the moss rubs off on you, but it stops glowing very quickly once plucked from its environment." } }
 }
 
 // The ravine, in the rooms it winds through (CHASM).
-kind Chasm is Scenery, Leapable, Crossable {
+kind Chasm is Scenery, Leapable, Crossable, Abyss {
   grammar { name "chasm"  nouns "ravine", "gorge"  adjectives "deep" }
   passage short { chasm }
   describe { text "The ravine winds through the cavern, steep-sided and crumbly, and the stream at the bottom of it is a long way down and sounds further. The walls are not the climbing kind." }
   as target for leap_at { do { say "For a change, you look before leaping. You realize you would never survive." } }
   as target for cross { do { say "You'll have to find a bridge." } }
-  without as target for climb_down from Thing
   as target for climb_down { do { say "The walls of the ravine are steep and crumbly. You would not get far, and you would not get back." } }
 }
 
@@ -38,7 +36,6 @@ kind Stream is Scenery, Crossable {
   passage short { stream }
   describe { text "The stream runs along the bottom of the ravine, small and quick and silver where the moss-light catches it, going somewhere with the single-mindedness of water." }
   as target for cross { do { say "You'll have to find a ford or a bridge." } }
-  without as target for through from Thing
   as target for through { do { say "You can't swim in the stream." } }
 }
 
@@ -68,7 +65,6 @@ kind Stalagmites is Scenery {
   passage short { stalagmites }
   describe { text "Stalactites hang from the roof and stalagmites rise from the floor, of every size from a finger to a pillar, and where they have met they have made columns, wet and fluted and a little translucent in the moss-light. They have been at it for a very long time and are not finished." }
   passage no_take { The only ones you can reach are too large to successfully break off. }
-  without as target for mung from Thing
   as target for mung { do { say "The only ones you can reach are too large to successfully break off." } }
 }
 kind Shadows is Scenery {
@@ -86,9 +82,7 @@ kind BarrowDoor is Scenery, Door {
   grammar { name "door"  nouns "entrance", "doorway"  adjectives "barrow", "stone", "shut", "closed" }
   passage short { door }
   describe { text "The door of the barrow is a single slab of stone, shut, and set so flush with the wall that you could walk past it without knowing it was a door, which, from this side, is rather the point." }
-  without as target for open from Thing
   as target for open { do { say "The door of the barrow shut behind you when you entered, and it has no handle on this side. There is no way out." } }
-  without as target for knock from Door
   as target for knock { do { say "You knock. Nobody answers, which, given what is usually inside a barrow, is a relief." } }
 }
 // The cavern around the way in, and the forest the barrow is hidden in.

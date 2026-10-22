@@ -44,7 +44,7 @@
     { "seed": 5 },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses; through its railing you can make out a tea table, laid, with things on it." },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." }
     ] },
     { "seed": 5 },
@@ -111,7 +111,7 @@
       { "reader": "Marta", "kind": "said", "words": "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works; and the works are not in that room so much as under it and off to one side, by the sound, which is loudest low down and toward the passage that climbs, as though the machinery were somewhere past the well at the end of that way." },
       { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
-      { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
+      { "reader": "Marta", "kind": "described", "words": "What is tall as a house,\n  round as a cup,\nand all the king's horses\n  can't draw it up?\"" }
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "say well", "expect": [
@@ -195,10 +195,7 @@
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
       { "reader": "Marta", "kind": "described", "words": "This is a dingy closet adjacent to a larger room to the north. Chiselled into a wall are these words:" },
-      { "reader": "Marta", "kind": "described", "words": "Protected by" },
-      { "reader": "Marta", "kind": "described", "words": "FROBOZZ" },
-      { "reader": "Marta", "kind": "described", "words": "Magic Alarm Company" },
-      { "reader": "Marta", "kind": "described", "words": "(Hello, footpad!)" },
+      { "reader": "Marta", "kind": "described", "words": "     Protected by\n        FROBOZZ\n  Magic Alarm Company\n   (Hello, footpad!)" },
       { "reader": "Marta", "kind": "described", "words": "There doesn't seem to be any footpad here, however." },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
       { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
@@ -239,10 +236,7 @@
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
       { "reader": "Marta", "kind": "described", "words": "This is a dingy closet adjacent to a larger room to the north. Chiselled into a wall are these words:" },
-      { "reader": "Marta", "kind": "described", "words": "Protected by" },
-      { "reader": "Marta", "kind": "described", "words": "FROBOZZ" },
-      { "reader": "Marta", "kind": "described", "words": "Magic Alarm Company" },
-      { "reader": "Marta", "kind": "described", "words": "(Hello, footpad!)" },
+      { "reader": "Marta", "kind": "described", "words": "     Protected by\n        FROBOZZ\n  Magic Alarm Company\n   (Hello, footpad!)" },
       { "reader": "Marta", "kind": "described", "words": "There doesn't seem to be any footpad here, however." },
       { "reader": "Marta", "kind": "described", "words": "There is a mangled steel cage here." },
       { "reader": "Marta", "kind": "described", "words": "There is a robot here. It is holding a red crystal sphere." }
@@ -273,11 +267,11 @@
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "robot, go south", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The robot is not here, to be looked at or to hear you. It is in the Dingy Closet, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does." }
+      { "reader": "Marta", "kind": "refused", "words": "The robot is not here to hear you. It is in the Dingy Closet, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does." }
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "robot, go north", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The robot is not here, to be looked at or to hear you. It is in the Dingy Closet, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does." }
+      { "reader": "Marta", "kind": "refused", "words": "The robot is not here to hear you. It is in the Dingy Closet, humming to itself and waiting to be told something, and it will not hear it from here. An order carries about as far as your voice does." }
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [

@@ -1,0 +1,597 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "world-bug",
+      "severity": "high",
+      "consensus": {
+        "n": 1,
+        "of": 9
+      },
+      "claim": "The diamond window's close-up is off by one. The world has five grades: flickering, dimly glowing, glowing, glowing brightly, and glowing serenely for home (menhir.sprout:61). The close-up names only four and calls the brightest one home: 'a flicker for first, a dim glow for second, a glow for third, and brightest of all for home'. The landing corner flickers and is labelled 'first' though no base has been run yet. So a runner who has run three bases correctly reads 'glowing brightly', is told that means home, and stops one step short. The explorer ran SE, NE and NW correctly, examined the window, then tried 'open window', 'put string in window', 'touch bag' and 'wait', and walked away. Its report wished 'to learn what finishing the diamond maze actually did'. No run heard the squeal, so the passage to the Cerberus Room, the crypt and the Landing was reached by no one.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 125,
+          "quote": "The passage runs straight, for once, and lets you out where you meant to go. ... dimly glowing."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 128,
+          "quote": "On the floor is a very small diamond shaped window which is glowing brightly."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 129,
+          "quote": "a flicker for first, a dim glow for second, a glow for third, and brightest of all for home"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 130,
+          "quote": "open window -> You must tell me how to do that to a diamond shaped window."
+        }
+      ],
+      "recommendation": "Give the close-up the world's real scale: the flicker is the window waking at home, then dim for first, a glow for second, bright for third, and serene for home. Equivalently, stop saying 'brightest of all' for any grade short of home. Consider having the grade-4 room line say that one base is left."
+    },
+    {
+      "id": "P2",
+      "category": "world-bug",
+      "severity": "high",
+      "consensus": {
+        "n": 1,
+        "of": 9
+      },
+      "claim": "Once the aquarium is broken by the fatal route ('break aquarium with sword'), the clear crystal sphere is never shown again. On return the Aquarium Room lists only 'A shattered aquarium...' and the dead serpent, and 'search aquarium' says 'You find nothing unusual.' The player concluded the tank was empty. The mung path prints mung_line and leaves out dead_line, the only line that mentions the sphere. :shatter reveals the sphere but leaves it inside the Aquarium box, and neither the room's listing nor 'search' looks into the box. Without this sphere the black sphere, the demon, the wand and the Landing are all out of reach.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 223,
+          "quote": "He manages to rend you limb from limb before he drowns in the air. I guess you were too careless."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 241,
+          "quote": "A shattered aquarium fills the northern half of the room. There is a dead sea serpent in a heap here."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 242,
+          "quote": "search aquarium -> You find nothing unusual."
+        }
+      ],
+      "recommendation": "On :shatter, move the sphere onto the Aquarium Room floor so its ldesc ('There is a clear crystal sphere lying in the sand.') is listed. Alternatively, list the shattered box's contents with the room. Have 'search' read as 'look in' for containers. Check this with a test that breaks the tank by mung, dies, returns and takes the sphere."
+    },
+    {
+      "id": "P3",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 3,
+        "of": 9
+      },
+      "claim": "The lizard's tell still comes after the cost. Three of the four runs that met the lizard without candy fed it items the puzzles need: the teapot (the only way to carry water up the well), the place mat (the Tiny Room's key trick) and the newspaper (balloon fuel). The hunger tell is only in the close-up. The 'open door' snap and the room description, which every run read first, say nothing about what it eats. The Cobwebby Corridor is one carousel draw from the garden, so the lizard is met long before the candy exists. The newcomer read the close-up the turn after losing the teapot, which left the bucket and everything past it unwinnable.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 44,
+          "quote": "The lizard wolfs down the china teapot ... exactly as hungry as before."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 45,
+          "quote": "examine lizard -> ...something that had legs and crunches"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 40,
+          "quote": "feed the lizard the newspaper"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 41,
+          "quote": "feed the lizard the teapot"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 43,
+          "quote": "feed the lizard the place mat"
+        },
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 80,
+          "quote": "give the place mat to the lizard"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 38,
+          "quote": "examine head: the one run that read the tell first"
+        }
+      ],
+      "recommendation": "Put the hunger tell in the snap line ('snaps at you as you reach for the handle; its tongue goes at the air the way a lizard's does when there are insects about') and in the Guarded Room's description. Have the lizard refuse the teapot, mat and newspaper as it refuses the flask, or say the cost on the first offer. A run that loses the teapot to it cannot finish."
+    },
+    {
+      "id": "P4",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 6,
+        "of": 9
+      },
+      "claim": "The carousel's rerolls were the round's most-cited frustration. Players spent many turns walking out and back in to land in the Riddle Room or reach the well. One opus run never got its full teapot to the bucket because the throws scattered it. Round 8's in-voice 'up' and 'take the passage' answers worked ('A passage is not a thing to be picked up ... Say which.'). The cost now is the trip back once the riddle has been answered. Only two runs ever had the robot stop the floor (newcomer-1-opus t191, goal-seeker-1-opus t300), and neither used the stopped carousel.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 41,
+          "quote": "Spent many turns going in and out of the carousel trying to land in the Riddle Room."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 109,
+          "quote": "Riddle Room reached after fifteen throws from t95"
+        },
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 63,
+          "quote": "stand still and wait for the climbing passage -> That sentence isn't one I recognize."
+        },
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 128,
+          "quote": "put water in bucket (typed in the Topiary, after a throw) -> You can't see any such thing."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 100,
+          "quote": "every trip back to the riddle room a long guessing loop"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 15,
+          "quote": "The Carousel Room scrambles directions, so exploring it was random."
+        }
+      ],
+      "recommendation": "Keep Zork's draw. Answer 'wait' and 'wait for the passage' in the Carousel Room in the narrator's voice: the floor turns, the passage comes round and goes, and only walking settles it, and the works are what would stop it. After the riddle is answered, point harder at the robot's room, since a stopped floor is the real answer. A visitor thrown into a BRIEF room may not notice where they landed (parser-breaker-1-opus t121-128), so consider giving a throw's landing room in full the first time."
+    },
+    {
+      "id": "P5",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 3,
+        "of": 9
+      },
+      "claim": "Players run the diamond with compass points and almost never with diagonals. Goal-seeker-1 spent its last 36 turns in the Oddly-angled Rooms typing north, south, east and west from corners, and tried a diagonal from a corner only once, on its final turn. Each wrong step lost the count, and it never examined the bag or the club. The explorer read the bag at t95 and still spent about 30 turns on cardinal steps before trying SE at t125, which then 'ran straight'. The wrong-step line says the step was wrong but not that a runner runs the diamond's diagonals.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 73,
+          "quote": "The passage turns a corner too many ... the window in the floor here, though, has woken."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 108,
+          "quote": "go northwest -> ...Whatever was being counted has lost count. (the only diagonal from a corner)"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 95,
+          "quote": "examine bag: '...a runner touches them in order, the next one on round from this, and comes home.'"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 125,
+          "quote": "go southeast -> The passage runs straight, for once"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 33,
+          "quote": "The oddly-angled rooms looped back on themselves and I couldn't map them."
+        }
+      ],
+      "recommendation": "Put the diagonal into a line every runner reads. One way: the bag's room line can say it is nailed at a point of the diamond, so the next base is a corner away, off the square. Another: a cardinal step from a corner can say the passage tried to go straight at a diamond that has no straight sides. Keep the club's name as the main hint."
+    },
+    {
+      "id": "P6",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 9
+      },
+      "claim": "Two deaths came in a single command with no tell before them. Their text never says why the visitor died. Sending the robot for the sphere prints the robot's death and then '**** You have died ****', with no line about the visitor. The newcomer called it 'the robot's death, though it counted as mine' and quit at the barrow. 'Break aquarium with sword' kills, while 'attack' or 'throw' would not, and nothing in the aquarium's close-up warns about that difference. Both are Zork's mechanics; the trouble is how they read.",
+      "evidence": [
+        {
+          "run": "newcomer-1-opus",
+          "turn": 197,
+          "quote": "A cloud of smoke rising from beneath the cage confirms your fears ... **** You have died ****"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 202,
+          "quote": "quit at the barrow: 'Walking the whole way back felt like too much'"
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 212,
+          "quote": "break aquarium with ruby -> The moby ruby bounces harmlessly off the glass."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 223,
+          "quote": "break aquarium with sword -> ...rend you limb from limb"
+        }
+      ],
+      "recommendation": "Give the robot's death the visitor's own line: the grief, or the gas the cage lets in on whoever is standing by. That is the cause the intent names, and it is not said. Following round 6's practice of putting the tell before the cost, have the aquarium's close-up say the serpent will hold whoever lets the water out responsible, and that it is best let out from a distance. The cost stays Zork's."
+    },
+    {
+      "id": "P7",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 4,
+        "of": 9
+      },
+      "claim": "Deaths are where long runs end. Four runs died, each to one command, and each death meant a walk of 30 or more turns back from the barrow through the carousel. Two opus runs quit at the barrow straight after dying. The goal-seeker's two deaths cost it the turns it would have needed for the Tiny Room and the balloon before the cap.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 93,
+          "quote": "push triangular button -> There is a giant spark and you are fried to a crisp."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 223,
+          "quote": "aquarium death"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 212,
+          "quote": "open flask -> ...the vapors from the flask's contents are fatal."
+        },
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 173,
+          "quote": "The newspaper catches fire. Unfortunately, you were holding it at the time."
+        },
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 181,
+          "quote": "quit: 'Doing the whole trek again ... was more than I had patience for.'"
+        }
+      ],
+      "recommendation": "The cost is Zork's and stays. What can change is the tells before the deaths that have none (P6). The demon's return line could also say the way back is shorter than it looks, if the author is willing to name the Marble Hall door or the ravine route."
+    },
+    {
+      "id": "P8",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 9
+      },
+      "claim": "Both runs that went small took only the green and blue cakes. Round 6's tells ('the other half ... from the same table', a guest 'takes more than one cake') read as green plus blue. The red cake's use on the pool is only readable through the flask, which is in the Pool Room. Once they were back to full size the hole was 'Only a mouse', and the candy was lost for those runs.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 200,
+          "quote": "take green cake, blue cake"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 157,
+          "quote": "take the blue cake"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 179,
+          "quote": "go east -> Only a mouse could get in there."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 79,
+          "quote": "take all cakes (the run that got the candy)"
+        }
+      ],
+      "recommendation": "Seen while small, have the pool's close-up say it is the kind of water that a dry thing would drink up. The red cake 'looks dry' already, so the two lines would meet. Alternatively, the table's tell can say a careful guest takes whatever is on it that she may want down there."
+    },
+    {
+      "id": "P9",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 9
+      },
+      "claim": "The dragon's lamp hint ('caught sight of himself in the polished brass of your lamp') invites showing it the lamp. 'show lamp to dragon' is read as a gift ('The dragon refuses your gift.'), and 'hold lamp up to the dragon' is read as a take ('You already have that!').",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 242,
+          "quote": "show lamp to dragon -> The dragon refuses your gift."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 251,
+          "quote": "hold lamp up to the dragon -> (hold lamp) You already have that!"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 56,
+          "quote": "show the lantern to the dragon -> The dragon refuses your gift."
+        }
+      ],
+      "recommendation": "Give 'show X to dragon' its own answer. Shown the lamp, he glares at the small dragon in the brass and looks round for a bigger one. That points at the glacier without solving it."
+    },
+    {
+      "id": "P10",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 9
+      },
+      "claim": "Some commands get two contradictory answers in one move. 'open flask' says 'You must tell me how to do that to a stoppered glass flask' and then kills the visitor with its vapours. 'throw water at dragon' says the water 'splashes on the walls and evaporates', then 'Thrown.', then that it 'bounces off the dragon's hide'.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 212,
+          "quote": "You must tell me how to do that to a stoppered glass flask filled with liquid. As you pass out, you realize that the vapors from the flask's contents are fatal."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 252,
+          "quote": "The water splashes on the walls and evaporates. Thrown. The quantity of water bounces off the dragon's hide."
+        }
+      ],
+      "recommendation": "Make the flask's open handler the only answer, so the default open refusal does not also fire. Have the water's throw resolve once: either it splashes or it hits the dragon."
+    },
+    {
+      "id": "P11",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 3,
+        "of": 9
+      },
+      "claim": "The parser breaks ties silently by drawing at random, and some draws produce nonsense. 'look at the cakes' tied four ways and showed one cake. 'ask the stone door a question back' picked the break in the hedge. 'throw sword into ravine' and 'throw the red cake into the hole' tied two ways and fell to a flat 'You can't ...'. The engine logs 'drawn: the line read N ways that tied' each time. The player sees no question and no sign that a draw happened.",
+      "evidence": [
+        {
+          "run": "newcomer-1-opus",
+          "turn": 152,
+          "quote": "look at the cakes -> (the cake frosted with blue letters) [drawn: 4 ways tied]"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 178,
+          "quote": "throw the red cake into the hole -> You can't throw ... [drawn: 2 ways tied]"
+        },
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 17,
+          "quote": "throw sword into ravine -> You can't throw the elvish sword into the chasm. [drawn]"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 13,
+          "quote": "ask the stone door a question back -> You can't talk to the break in the hedge! [drawn]"
+        }
+      ],
+      "recommendation": "File it with Sprout. A plural noun should list or answer for the set, and a tie between readings should be asked about or named the way the take-a-key draw is. On the world side, give the chasm and the mouse hole an in-voice answer for 'throw/drop X into', as the brief's rule on refusals asks."
+    },
+    {
+      "id": "P12",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 9
+      },
+      "claim": "Several verb readings are wrong. 'strike a match' is read as attacking the matchbook. 'leave the gazebo' says 'You can't leave the gazebo.' while 'go out' works. 'climb into the crack' says 'You can't do that!' while 'enter crack' works. 'eat the green cake' on the table says 'You're not holding that.' where Zork would take it implicitly.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 52,
+          "quote": "strike a match -> I've known strange people, but fighting a matchbook?"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 27,
+          "quote": "leave the gazebo -> You can't leave the gazebo."
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 46,
+          "quote": "climb into the crack -> You can't do that!"
+        },
+        {
+          "run": "newcomer-1-opus",
+          "turn": 158,
+          "quote": "eat the green cake -> You're not holding that."
+        }
+      ],
+      "recommendation": "Make 'strike match' light a match, as Zork's parser has STRIKE with a match as LIGHT. Read 'leave X' as exiting X when the visitor is in it, and 'climb into X' as entering it. Take an edible thing implicitly on 'eat', with '(Taken)'."
+    },
+    {
+      "id": "P13",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 9
+      },
+      "claim": "Some things named in descriptions do not answer, against the brief's rule that every thing a description names can be examined. The sword's close-up names its runes, but 'read the runes' says 'You can't see any such thing.' The Room of Red Mist names a sign in its vision, and 'read sign' fails the same way. 'touch the glowing mist' fails because 'glowing' is not among the mist's adjectives, though the Blue Mist room says 'an odd glow to the mist'.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 8,
+          "quote": "read the runes -> You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 24,
+          "quote": "read sign -> You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1-opus",
+          "turn": 26,
+          "quote": "touch the glowing mist -> You can't see any such thing."
+        }
+      ],
+      "recommendation": "Give the sword's runes a noun and a line. Give each mist vision's named thing (the sign, the table, the door) a far stand-in that says it is too blurry, in voice. Add 'glowing' and 'odd' to the mist's adjectives."
+    },
+    {
+      "id": "P14",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 9
+      },
+      "claim": "The sonnet goal-seeker walked past the gazebo at t9 and never went in, so it never saw the teapot. At the bottom of the well the bucket's close-up named 'the kind a teapot would carry', and the player reported 'I found nothing to carry water in'. The tea things are listed only inside the gazebo.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 9,
+          "quote": "North End of Garden ... It appears to be a gazebo"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 32,
+          "quote": "...the kind a teapot would carry"
+        }
+      ],
+      "recommendation": "Let the North End's description glimpse a tea table laid in the gazebo, or have the bucket's teapot clause say that one stands on a tea table somewhere south of the ravine."
+    },
+    {
+      "id": "P15",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 9,
+        "of": 9
+      },
+      "claim": "Keep the Wizard's first call with its hook, and the Fantasize refusals. Every run quoted or acted on the hook ('the pearls nearest, behind a stone door that asks a question'), and every run that reached the Riddle Room answered 'well' on the first or second try. The 'room ... has the grace to look embarrassed' refusal was a delight in five reports. The casual run did not quit at the Carousel this round: its first throw put it in the Marble Hall, and it walked on to the dragon.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 4,
+          "quote": "the pearls nearest, behind a stone door that asks a question"
+        },
+        {
+          "run": "casual-1",
+          "turn": 4,
+          "quote": "It is all south of the ravine, his look says"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 8,
+          "quote": "take ingot -> ...has the grace to look embarrassed about it now."
+        },
+        {
+          "run": "casual-1",
+          "turn": 14,
+          "quote": "go north -> Marble Hall"
+        }
+      ],
+      "recommendation": "Leave as is."
+    }
+  ],
+  "legibility": {
+    "verdict": "legible",
+    "why": "All nine players described a Zork-style treasure hunt. In each, a petty Wizard who casts spells keeps the Empire's lost treasures south of the ravine, behind linked puzzles. Three runs named Zork II outright. The long runs listed the intent's arc in order: riddle, bucket, cakes, robot, dragon and glacier, princess and unicorn, lizard. The two short runs (casual, prose-reader) got the premise but saw too little to name the arc. What no player understood was the endgame: the diamond's purpose (P1), the spheres and the demon. Of all that, only the cabinet and the workbench's three stands were seen, by one run.",
+    "runs": [
+      {
+        "run": "casual-1",
+        "understood": "A cave-crawl treasure hunt. A wizard says the treasures lie south of the ravine, the pearls behind a riddling door, the rest past a spinning room.",
+        "matches": "partly"
+      },
+      {
+        "run": "explorer-1",
+        "understood": "A remixed Zork II: exploring the caverns south of the ravine while a meddling Wizard casts spells, with treasures behind a riddle door, a vault, a dragon, an Alice tea room and a baseball-diamond maze.",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A Colossal-Cave-style cave of mislaid treasures, with the Wizard's illusions as hints and puzzles in a carousel, a riddle door, a well bucket and a baseball maze.",
+        "matches": "partly"
+      },
+      {
+        "run": "goal-seeker-1-opus",
+        "understood": "A treasure hunt on the Wizard of Frobozz's turf through linked tricks (riddle, bucket, Alice cakes, a lizard bribed with candy, a dragon tricked into melting a glacier, a princess whose unicorn hands over the key), with the Wizard throwing spells at you throughout.",
+        "matches": "yes"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "A Zork-style cave adventure: a Wizard has hoarded the Empire's lost treasures south of a ravine, and the goal is to find them.",
+        "matches": "yes"
+      },
+      {
+        "run": "newcomer-1-opus",
+        "understood": "An odd little wizard has stolen the Empire's treasures and hidden them in caverns south of a ravine. The puzzles are about using things on your surroundings (dragon and ice, riddle, bucket, cakes, robot, a spinning room to stop), told with cheek.",
+        "matches": "yes"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A Zork II-style underground empire where a teasing wizard has the treasures south of a ravine, with a garden, a carousel, an ice room and a lizard-guarded door.",
+        "matches": "yes"
+      },
+      {
+        "run": "parser-breaker-1-opus",
+        "understood": "The old Zork II with a gentler voice: a petty, cackling Wizard hoarding the Empire's treasures across the ravine, with a unicorn's key, a lizard door, a riddle, a carousel, a dragon and glacier, and a balloon in a volcano.",
+        "matches": "yes"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "A cave-crawl treasure hunt in a Zork-like barrow, where a wizard says the treasures lie south of the ravine and his conjured illusions appear and fade.",
+        "matches": "partly"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.06,
+      "after": 0.09
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.01,
+      "after": 0.02
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 26,
+      "after": 27
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 27,
+      "after": 23
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 867,
+      "after": 880
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 88,
+      "after": 66
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 173,
+      "after": 163
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 1791,
+      "after": 1748
+    }
+  ]
+}

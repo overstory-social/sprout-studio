@@ -48,7 +48,7 @@
     { "seed": 5 },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses; through its railing you can make out a tea table, laid, with things on it." },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
       { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
@@ -138,7 +138,7 @@
       { "reader": "Marta", "kind": "said", "words": "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works; and the works are not in that room so much as under it and off to one side, by the sound, which is loudest low down and toward the passage that climbs, as though the machinery were somewhere past the well at the end of that way." },
       { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
-      { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
+      { "reader": "Marta", "kind": "described", "words": "What is tall as a house,\n  round as a cup,\nand all the king's horses\n  can't draw it up?\"" }
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "say well", "expect": [
@@ -269,10 +269,7 @@
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
       { "reader": "Marta", "kind": "described", "words": "This is a dingy closet adjacent to a larger room to the north. Chiselled into a wall are these words:" },
-      { "reader": "Marta", "kind": "described", "words": "Protected by" },
-      { "reader": "Marta", "kind": "described", "words": "FROBOZZ" },
-      { "reader": "Marta", "kind": "described", "words": "Magic Alarm Company" },
-      { "reader": "Marta", "kind": "described", "words": "(Hello, footpad!)" },
+      { "reader": "Marta", "kind": "described", "words": "     Protected by\n        FROBOZZ\n  Magic Alarm Company\n   (Hello, footpad!)" },
       { "reader": "Marta", "kind": "described", "words": "There doesn't seem to be any footpad here, however." },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
       { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
@@ -357,7 +354,7 @@
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great open door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
-      { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
+      { "reader": "Marta", "kind": "described", "words": "What is tall as a house,\n  round as a cup,\nand all the king's horses\n  can't draw it up?\"" }
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "nw", "expect": [
@@ -1535,7 +1532,7 @@
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "look through window", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "On the floor is a very small diamond shaped window which is dark. It is set flush with the floor, and whatever is under it is a long way down, or a long way off. It glows, when it glows, by some count that is being kept, the way a scoreboard keeps one: a flicker for first, a dim glow for second, a glow for third, and brightest of all for home, which is where whatever is being counted began; and it goes dark when the count is lost, which it is by any step but the right one." }
+      { "reader": "Marta", "kind": "said", "words": "On the floor is a very small diamond shaped window which is dark. It is set flush with the floor, and whatever is under it is a long way down, or a long way off. It glows, when it glows, by some count that is being kept, the way a scoreboard keeps one, in five grades: a flicker for the plate, where whatever is being counted begins; a dim glow for first; a glow for second; a bright glow for third; and a serene, settled glow for home, which is the plate again, come round to. It goes dark when the count is lost, which it is by any step but the right one. Just now it is dark: nothing is being counted." }
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
@@ -1566,7 +1563,10 @@
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't go that way." }
+      { "reader": "Marta", "kind": "said", "words": "There is no way to go in that direction: the passage goes a little way, turns a corner that is more than a corner, and lets you out where you started." },
+      { "reader": "Marta", "kind": "described", "words": "Oddly-angled Room" },
+      { "reader": "Marta", "kind": "described", "words": "A marble stairway leads upward." },
+      { "reader": "Marta", "kind": "described", "words": "There is a bulging chest here." }
     ] },
     { "seed": 5 },
     { "as": "Marta", "type": "ne", "expect": [

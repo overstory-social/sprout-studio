@@ -24,7 +24,7 @@ import {elsewhere, Elsewhere} from 'garden'
 import {GoldKey} from 'garden'
 import {Menhir} from 'menhir'
 import {ask} from 'sprout'
-import {take, open, close, unlock, lock, read, look_in, look_under, shift, rub, kick, attack, mung, greet, talk, alarm, follow, give, throw, put, through, board, smell, listen, climb_up, search, demon_give, demon_take, demon_move, demon_kill, demon_open, demon_other, demon_find, Dest, Answer, :wiz_fed, :wiz_locked, :wiz_open, :check_stands, :genie_summoned, :genie_departs, :case_worth, :case_smashed, :wizard_gone, :wizard_dejected, :surrender_wand, :freed_wand, :menhir_order, :cast_word, :disenchant, :open_gate, :gate_open, :close_gate, :consume, :die, :travel, :scored, :serpent_gone} from 'verbs'
+import {take, open, close, unlock, lock, read, look_in, look_under, shift, rub, kick, attack, mung, greet, talk, alarm, follow, give, throw, put, through, board, smell, listen, climb_up, search, demon_give, demon_take, demon_move, demon_kill, demon_open, demon_other, demon_find, Dest, Answer, :wiz_fed, :check_stands, :genie_summoned, :genie_departs, :case_worth, :case_smashed, :wizard_gone, :wizard_dejected, :surrender_wand, :freed_wand, :menhir_order, :cast_word, :disenchant, :open_gate, :gate_open, :close_gate, :consume, :die, :travel, :scored, :serpent_gone} from 'verbs'
 
 // The lizard head imbedded in the Wizard's door (DOOR-KEEPER): fed the
 // candy, it sleeps; fed anything else, it has opinions.
@@ -37,24 +37,16 @@ kind Lizard is Scenery, Creature {
   describe { text close_up }
   passage no_take { {if self.get(:fed)}The lizard is part of the door, and asleep, and best left both.{else}The lizard snaps at your fingers, which you take back.{/if} }
   on :wiz_fed { self.set(:fed, true) }
-  without as target for alarm from Creature
   as target for alarm { do { if (self.get(:fed)) { say "Try as you may, you can't wake it." } else { say "The lizard is awake. You have its full attention, and it has teeth." } } }
-  without as target for greet from Creature
   as target for greet { do { if (self.get(:fed)) { say "The lizard sleeps on." } else { say "The lizard hisses. It is not a greeting." } } }
-  without as target for talk from Creature
   as target for talk { do { if (self.get(:fed)) { say "The lizard sleeps on." } else { say "The lizard hisses, and watches your hands. It is more interested in what you are holding than in what you are saying." } } }
-  without as target for ask from Thing
   as target for ask { do { if (self.get(:fed)) { say "The lizard sleeps on." } else { say "The lizard hisses, and watches your hands. It is more interested in what you are holding than in what you are saying." } } }
   as target for attack { do { say "The guardian seems impervious to your attack. In fact, your blows don't even seem to be landing." } }
-  without as target for mung from Thing
   as target for mung { do { say "The guardian seems impervious to your attack. In fact, your blows don't even seem to be landing." } }
-  without as target for kick from Thing
   as target for kick { do { say "The guardian seems impervious to your attack. In fact, your boot doesn't even seem to be landing." } }
-  without as target for rub from Thing
   as target for rub { do { if (self.get(:fed)) { say "The lizard sleeps on, and is scaly." } else { say "The lizard snaps at your hand, which you take back in time." } } }
   // Fed (DOOR-KEEPER-FCN's GIVE): the hand has put the gift in its mouth,
   // or on the floor if it is a sphere (adventurer.sprout).
-  without as recipient for give from Thing
   as recipient for give {
     do {
       if (self.get(:fed)) { say "He is asleep, at least for the moment." }
@@ -73,118 +65,99 @@ kind Lizard is Scenery, Creature {
       else if (item.is(Thing)) { say "The lizard wolfs down the {item.short}, crunching greedily, and looks at you afterward with its tongue going, exactly as hungry as before. That was not what it wanted; it ate it because it was there, and it will not be giving it back."  send item :consume }
     }
   }
-  without as aim for throw from Thing
   as aim for throw { do { if (target.is(Thing)) { say "The lizard snaps the {target.short} out of the air, considers it, and lets it fall. It wants to be fed, not thrown at."  move target to here } } }
 }
 
 // The stained and battered door at the south end of the Guarded Room
-// (WIZ-DOOR), from either side: one door in two rooms (friction 48), each
-// keeping the other told. The lizard is on the north side only.
+// (WIZ-DOOR): one door, standing in both rooms, seen from either side.
+// The lizard is on the north side only, so the side a visitor stands on
+// is read off `here`.
 kind WizDoor is Scenery, Door {
   grammar { name "door"  nouns "handle", "bolt"  adjectives "stained", "battered", "strong", "strong-looking", "cobwebbed", "wooden", "oak", "workshop" }
   passage short { door }
   :locked true
   :open false
   :fed false
-  :far false
   :implied false
-  passage close_up { {if self.get(:far)}The door is oak, cobwebbed on this side, and stained and battered on the other, and strong-looking from both. It is {if self.get(:open)}open{else}shut{if self.get(:locked)}, and bolted{/if}{/if}.{else}A door of oak, stained and battered and very strong-looking, with a handle, a bolt lock, and a lizard's head imbedded in it at about the height of a knocker{if self.get(:fed)}, asleep{else}, awake, and watching your hands{/if}. The door is {if self.get(:open)}open{else}shut{if self.get(:locked)}, and bolted{/if}{/if}. The lock is small, for a door this size, and takes a small key.{/if} }
+  passage close_up { {if here.is(Workshop)}The door is oak, cobwebbed on this side, and stained and battered on the other, and strong-looking from both. It is {if self.get(:open)}open{else}shut{if self.get(:locked)}, and bolted{/if}{/if}.{else}A door of oak, stained and battered and very strong-looking, with a handle, a bolt lock, and a lizard's head imbedded in it at about the height of a knocker{if self.get(:fed)}, asleep{else}, awake, and watching your hands{/if}. The door is {if self.get(:open)}open{else}shut{if self.get(:locked)}, and bolted{/if}{/if}. The lock is small, for a door this size, and takes a small key.{/if} }
   describe { text close_up }
   on :wiz_fed { self.set(:fed, true) }
-  on :wiz_locked (from, value) { self.set(:locked, value) }
-  on :wiz_open (from, value) { self.set(:open, value) }
-  passage bites { The lizard door keeper comes awake and bites at your hand. You jerk away just in time. }
+  passage bites { The lizard door keeper comes awake and bites at your hand. You jerk away just in time. Its tongue goes at the air afterward, the way a lizard's does when there are insects about: it is hungry, and a hand is not what it is hungry for. }
   as target for unlock {
     do {
       self.set(:implied, false)
-      if (actor.is(Adventurer)) { if (actor.get(:has_gold)) { self.set(:implied, true) } }
-      if (!self.get(:fed) && !self.get(:far)) {
+      if (actor.count(GoldKey) > 0) { self.set(:implied, true) }
+      if (!self.get(:fed) && !here.is(Workshop)) {
         say bites
         if (bound tool) { if (tool.is(GoldKey) && chance(5)) { say "You drop the key, though."  move tool to here } }
       }
       else if (!self.get(:locked)) { say "It is already!" }
       else if (bound tool) {
-        if (tool.is(GoldKey)) { self.set(:locked, false)  say "The key turns and the bolt clicks. The door is unlocked."  broadcast :wiz_locked with false }
+        if (tool.is(GoldKey)) { self.set(:locked, false)  say "The key turns and the bolt clicks. The door is unlocked." }
         else { say "That won't unlock it." }
       }
-      else if (self.get(:implied)) { self.set(:locked, false)  say "(with the delicate gold key) The key turns and the bolt clicks. The door is unlocked."  broadcast :wiz_locked with false }
+      else if (self.get(:implied)) { self.set(:locked, false)  say "(with the delicate gold key) The key turns and the bolt clicks. The door is unlocked." }
       else { say "You'll need a key for that, and a small one." }
     }
   }
   as target for lock {
     do {
       self.set(:implied, false)
-      if (actor.is(Adventurer)) { if (actor.get(:has_gold)) { self.set(:implied, true) } }
-      if (!self.get(:fed) && !self.get(:far)) { say bites }
+      if (actor.count(GoldKey) > 0) { self.set(:implied, true) }
+      if (!self.get(:fed) && !here.is(Workshop)) { say bites }
       else if (self.get(:locked)) { say "It is locked already." }
       else if (self.get(:open)) { say "You'll have to close the door first." }
       else if (bound tool) {
-        if (tool.is(GoldKey)) { self.set(:locked, true)  say "The door is now locked."  broadcast :wiz_locked with true }
+        if (tool.is(GoldKey)) { self.set(:locked, true)  say "The door is now locked." }
         else { say "That won't lock it." }
       }
-      else if (self.get(:implied)) { self.set(:locked, true)  say "(with the delicate gold key) The door is now locked."  broadcast :wiz_locked with true }
+      else if (self.get(:implied)) { self.set(:locked, true)  say "(with the delicate gold key) The door is now locked." }
       else { say "You'll need a key for that, and a small one." }
     }
   }
-  without as target for open from Thing
   as target for open {
     do {
-      if (!self.get(:fed) && !self.get(:far)) { say "The lizard comes to life and snaps at you as you reach for the handle." }
+      if (!self.get(:fed) && !here.is(Workshop)) { say "The lizard comes to life and snaps at you as you reach for the handle, its tongue going at the air the way a lizard's does when there are insects about. It is hungry, and the handle is not what it is hungry for." }
       else if (self.get(:open)) { say "I think you've already done that." }
       else if (self.get(:locked)) { say "The door is locked!" }
-      else { self.set(:open, true)  say "The door creaks open."  broadcast :wiz_open with true }
+      else { self.set(:open, true)  say "The door creaks open." }
     }
   }
-  without as target for close from Thing
   as target for close {
     do {
       if (!self.get(:open)) { say "I think you've already done that." }
-      else { self.set(:open, false)  say "The door reluctantly closes."  broadcast :wiz_open with false }
+      else { self.set(:open, false)  say "The door reluctantly closes." }
     }
   }
-  without as target for through from Thing
   as target for through {
     do {
-      if (self.get(:open)) { say "The door is open; the way through it is {if self.get(:far)}north{else}south{/if}." }
-      else if (!self.get(:fed) && !self.get(:far)) { say "The door is shut, and the lizard in it is not." }
+      if (self.get(:open)) { say "The door is open; the way through it is {if here.is(Workshop)}north{else}south{/if}." }
+      else if (!self.get(:fed) && !here.is(Workshop)) { say "The door is shut, and the lizard in it is not." }
       else { say "The door is shut, and it is oak." }
     }
   }
-  without as target for kick from Thing
-  as target for kick { do { if (!self.get(:fed) && !self.get(:far)) { say "The lizard snaps at your boot, and the door does not notice." } else { say "The door is oak, and takes it well." } } }
+  as target for kick { do { if (!self.get(:fed) && !here.is(Workshop)) { say "The lizard snaps at your boot, and the door does not notice." } else { say "The door is oak, and takes it well." } } }
 }
 
 kind GuardedRoom is DarkRoom {
   :fed false
-  :door_open false
-  :candy_near false
   on :wiz_fed { self.set(:fed, true) }
-  on :wiz_open (from, value) { self.set(:door_open, value) }
-  // Whether whoever is here has the candy about them, read off them as
-  // they come in and after every command, since a room's words may not
-  // read the one looking (friction 71).
-  on :entered (item, from) { if (item.is(Adventurer)) { self.set(:candy_near, item.get(:has_candy)) } }
-  after command { self.set(:candy_near, false)  each a: Adventurer in self { if (a.get(:has_candy)) { self.set(:candy_near, true) } } }
 }
-kind Workshop is DarkRoom {
-  :door_open false
-  on :wiz_open (from, value) { self.set(:door_open, value) }
-}
+kind Workshop is DarkRoom { }
 
 object guarded_room is GuardedRoom in underground_caverns_2 {
   grammar {
     name "Guarded Room"
     exit north "north" -> cobwebby_corridor
-    exit south "south" -> workshop when (self.get(:door_open))
+    exit south "south" -> workshop when (wiz_door.get(:open))
     exit south "south" refuse "The door is closed."
-    exit in "in" -> workshop when (self.get(:door_open))
+    exit in "in" -> workshop when (wiz_door.get(:open))
     exit in "in" refuse "The door is closed."
   }
   :id guarded_room
   :walls 20
-  passage body { This room is cobwebby and musty, but tracks in the dust show that it has seen visitors recently. At the south end of the room is a stained and battered (but very strong-looking) door. To the north, a corridor exits.{if self.get(:door_open)} The door is open.{/if}{if self.get(:fed)} A sleepy-looking lizard head is mounted on the door.{else} Imbedded in the door is a nasty-looking lizard head, with sharp teeth and beady eyes. {if self.get(:candy_near)}The lizard is sniffing at you.{else}The eyes move to watch you approach.{/if}{/if} }
+  passage body { This room is cobwebby and musty, but tracks in the dust show that it has seen visitors recently. At the south end of the room is a stained and battered (but very strong-looking) door. To the north, a corridor exits.{if wiz_door.get(:open)} The door is open.{/if}{if self.get(:fed)} A sleepy-looking lizard head is mounted on the door.{else} Imbedded in the door is a nasty-looking lizard head, with sharp teeth and beady eyes. {if bound actor}{if actor.is(Adventurer) && actor.get(:has_candy)}The lizard is sniffing at you, and its tongue is going.{else}The eyes move to watch you approach, and its tongue flicks at the air the way a lizard's does when there are insects about: it is hungry, and it is the door's.{/if}{else}The eyes move to watch the room.{/if}{/if} }
   object lizard is Lizard
-  object door is WizDoor
   object tracks is Scenery {
     grammar { name "tracks"  nouns "track", "footprints", "dust", "prints"  adjectives "recent" }
     passage short { tracks }
@@ -195,9 +168,9 @@ object guarded_room is GuardedRoom in underground_caverns_2 {
 object workshop is Workshop in underground_caverns_2 {
   grammar {
     name "Wizard's Workshop"
-    exit north "north" -> guarded_room when (self.get(:door_open))
+    exit north "north" -> guarded_room when (wiz_door.get(:open))
     exit north "north" refuse "The door is closed."
-    exit out "out" -> guarded_room when (self.get(:door_open))
+    exit out "out" -> guarded_room when (wiz_door.get(:open))
     exit out "out" refuse "The door is closed."
     exit west "west" -> workroom
     exit south "south" -> trophy_room
@@ -205,13 +178,11 @@ object workshop is Workshop in underground_caverns_2 {
   :id workshop
   :value 10
   :walls 20
-  passage body { You are standing in the entry hall of the Wizard's Workshop. Dark corridors lead west and south from here. The corridor to the west smells slightly of incense or candle smoke.{if self.get(:door_open)} The workshop door is open.{/if} }
-  object door is WizDoor { :far true }
+  passage body { You are standing in the entry hall of the Wizard's Workshop. Dark corridors lead west and south from here. The corridor to the west smells slightly of incense or candle smoke.{if wiz_door.get(:open)} The workshop door is open.{/if} }
   object smoke is Scenery {
     grammar { name "smell of incense"  nouns "smell", "incense", "smoke", "odor"  adjectives "candle", "faint" }
     passage short { smell of incense }
     describe { text "Incense, or candle smoke, or both, coming down the corridor from the west, where somebody keeps candles burning for a purpose, and the purpose is not light." }
-    without as target for smell from Thing
     as target for smell { do { say "Incense and tallow, from the west, and under them something hot and metallic, as of a thing that has been worked on for a long time." } }
   }
 }
@@ -219,6 +190,9 @@ object workshop is Workshop in underground_caverns_2 {
 // A stand on the workbench (STAND-1, STAND-2, STAND-3): a surface the
 // size of one sphere. When the red sits on the ruby, the blue on the
 // sapphire and the clear on the diamond, the bench answers.
+// One door in two rooms (the spec's One thing in several places).
+object wiz_door is WizDoor in guarded_room, workshop
+
 kind Stand is Box {
   grammar { name "stand"  nouns "stands"  adjectives "crystal" }
   :open true
@@ -320,7 +294,6 @@ object workroom is Workroom in underground_caverns_2 {
     passage short { notes }
     passage words { The notes are in a crabbed hand and a tongue you do not read, and most of them are sums. One sheet is a drawing: three circles at the points of a triangle, each hatched a different way, and in the middle of the triangle a fourth, inked solid black, with a line from it to a word underlined three times. }
     describe { text words }
-    without as target for read from Thing
     as target for read { do { say words } }
   }
   object shelves is Scenery {
@@ -370,13 +343,9 @@ kind WizardCase is Box, Scenery {
   as target for open { do { if (self.get(:smashed)) { say "There is no case left to open." } else { say spell } } }
   without as target for close from Box
   as target for close { do { if (self.get(:smashed)) { say "There is no case left to close." } else { say spell } } }
-  without as target for mung from Thing
   as target for mung { do { if (self.get(:smashed)) { say "It is smashed already." } else { say spell } } }
-  without as target for shift from Thing
   as target for shift { do { say spell } }
-  without as target for rub from Thing
   as target for rub { do { say spell } }
-  without as target for kick from Thing
   as target for kick { do { say spell } }
   as target for attack { do { say spell } }
   as aim for throw { do { if (target.is(Thing)) { say "The {target.short} stops a hand's breadth short of the glass, as though it had hit something, and drops."  move target to here } } }
@@ -408,9 +377,7 @@ kind WizardCase is Box, Scenery {
 kind TrophyThing is Scenery {
   passage shock { As your fingers near it, you get a nasty shock (but fortunately not a fatal one). }
   passage no_take { {self.shock} }
-  without as target for rub from Thing
   as target for rub { do { say shock } }
-  without as target for shift from Thing
   as target for shift { do { say shock } }
 }
 
@@ -437,7 +404,6 @@ object trophy_room is DarkRoom in underground_caverns_2 {
       Frobozz
     }
     describe { text words }
-    without as target for read from Thing
     as target for read { do { say words } }
   }
   object degree is TrophyThing {
@@ -445,7 +411,6 @@ object trophy_room is DarkRoom in underground_caverns_2 {
     passage short { degree }
     passage words { The text is in some obscure tongue. All that can be made out is a reference to "sending in a matchbook cover." }
     describe { text "A framed degree, Doctor of Thaumaturgy, from GUE Tech, with a seal and a ribbon, in an obscure tongue. It can be read, after a fashion." }
-    without as target for read from Thing
     as target for read { do { say words } }
   }
   object wands is TrophyThing {
@@ -520,9 +485,7 @@ kind Pentagram is Box {
   passage examined { A great pentagram drawn on the floor in black chalk, each line gone over many times, and in the center of it a black circle, filled in, the size of a dinner plate, with a ring of wax round it where candles have stood. The circle is the kind of place something is put. {self.look_inside} }
   describe { text examined }
   passage no_take { The pentagram is drawn on the floor, and the floor is staying where it is. }
-  without as target for through from Thing
   as target for through { do { say "You try to enter the pentagram, but are forced back by an invisible power." } }
-  without as target for rub from Thing
   as target for rub { do { say "The chalk does not come off on your fingers, which chalk should. It has been gone over too many times, and with too much intent." } }
   on :entered (item, from) {
     if (item.is(BlackSphere) && !self.get(:summoned)) {
@@ -580,25 +543,17 @@ kind Genie is Creature, Demonic, sprout.Actor {
   on :case_worth (from, value) { self.set(:case_worth, value)  self.set(:total, self.get(:hoard) + value) }
   passage thanks { {if self.get(:total) == 1}Most fine, master! But 'tis not enough. I will do a great service, and are not great services bought at great price?{else if self.get(:total) == 2}Very nice, but not enough!{else if self.get(:total) == 3}Ah, truly magnificent! Keep them coming.{else if self.get(:total) == 4}Almost halfway there, oh worthy one!{else if self.get(:total) == 5}Oh, such beauty! Your generosity almost overwhelms me!{else if self.get(:total) == 6}Truly I shall do thee a wonderful service when thou hast finished!{else if self.get(:total) == 7}Truly you are most generous! But still, this is yet not enough.{else if self.get(:total) == 8}A fine gift, mighty one, you have almost reached my fee.{else}Wondrous fine, master! But one treasure is yet to be given!{/if} }
   passage unpaid { "My fee is not paid! I perform no tasks for free! We demons have a strong union these days." }
-  without as target for greet from Creature
   as target for greet { do { say "The genie grins demonically, but says nothing." } }
-  without as target for talk from Creature
   as target for talk { do { say "The genie grins demonically, but says nothing. He is waiting to be told something, by name, and paid first." } }
-  without as target for ask from Thing
   as target for ask { do { say "\"I am not permitted to answer questions. The terms of my contract are explicit on this matter, learned one. Surely you would not wish to violate my contract?\" He licks his lips with a forked tongue like a snake's. \"The penalty clauses are ... hmm ... devilish.\"" } }
   as target for attack { do { say "The demon laughs uproariously." } }
-  without as target for mung from Thing
   as target for mung { do { say "The demon laughs uproariously." } }
-  without as target for kick from Thing
   as target for kick { do { say "The demon laughs uproariously." } }
-  without as target for rub from Thing
   as target for rub { do { say "The demon is hot to the touch, and laughs." } }
-  without as target for follow from Creature
   as target for follow { do { say "The demon is going nowhere until he is paid, and then nowhere you could follow." } }
   // His fee (GENIE-FCN's GIVE): the hand has put the gift in his
   // (adventurer.sprout). A treasure counts; a treasure in the Wizard's
   // case counts too; the brick ends the contract; anything else he eats.
-  without as recipient for give from Thing
   as recipient for give {
     do {
       if (item.is(IronBox) && item.count(Violin) > 0) {
@@ -773,25 +728,22 @@ kind Aquarium is Box {
   :shattered false
   passage short { aquarium }
   passage ldesc { {if self.get(:shattered)}A shattered aquarium fills the northern half of the room.{else}Filling the northern half of the room is a huge aquarium.{/if} }
-  passage examined { {if self.get(:shattered)}The aquarium is a frame of iron with no glass left in it to speak of, and sand and a great deal of wet on the floor around it, and nothing swimming.{else}The aquarium is huge, glass on an iron frame, and full of salt water and sand, lit from the east so that the light moves in it. Something long is swimming in it, and watching you. The glass is thick, as it would have to be, but it is glass.{/if} }
+  passage examined { {if self.get(:shattered)}The aquarium is a frame of iron with no glass left in it to speak of, and sand and a great deal of wet on the floor around it, and nothing swimming.{else}The aquarium is huge, glass on an iron frame, and full of salt water and sand, lit from the east so that the light moves in it. Something long is swimming in it, and watching you. The glass is thick, as it would have to be, but it is glass. Glass breaks; the question is what comes out when it does, and how near you are standing. A thing thrown at it, or a blade swung at it, keeps the length of an arm between you and him for the moment that matters. Stand close and break it like a window, and you are the nearest thing to him when he comes out, and he will hold you responsible.{/if} }
   describe { text examined }
   passage no_take { The aquarium is the size of a room and full of water. }
   without as target for look_in from Box
-  as target for look_in {
-    do {
-      if (self.get(:shattered)) { say "Sand, and broken glass, and water going down into the sand{if self.count(ClearSphere) > 0}, and a clear crystal sphere lying in the sand{/if}." }
-      else { say "In the aquarium is a baby sea-serpent who eyes you suspiciously. His scaly body writhes about in the huge tank." }
-    }
-  }
-  without as target for through from Thing
+  passage inside_now { {if self.get(:shattered)}Sand, and broken glass, and water going down into the sand, most of it on the floor now, and whatever lay in the sand with it.{else}In the aquarium is a baby sea-serpent who eyes you suspiciously. His scaly body writhes about in the huge tank.{/if} }
+  as target for look_in { do { say inside_now } }
   as target for through { do { send actor :travel with :murky_room  say "" } }
+  // "search aquarium" is the look inside (round 9's P2).
+  as target for search { do { say inside_now } }
   // Struck or thrown at (AQUARIUM-FCN): a weapon or a heavy thing breaks
   // the glass, the serpent spills out and dies, and the sphere is there in
   // the sand; a broken flask is the end of the breaker; anything else
   // bounces off. Breaking it with a blow (MUNG) is fatal; attacking it,
   // or throwing, is not.
   passage dead_line { He tries to slither across the stone floor towards you. Fortunately, he expires mere inches away from biting off your foot. A clear crystal sphere sits amid the sand and broken glass on the bottom of the aquarium. }
-  passage mung_line { He manages to rend you limb from limb before he drowns in the air. }
+  passage mung_line { He manages to rend you limb from limb before he drowns in the air. The last thing you see, past him, is a clear crystal sphere lying in the spilled sand. }
   :breaks false
   passage fists { You pound on the glass with your fists. The serpent watches with interest. The glass does not. }
   passage shatter_front { shatters the glass wall of the aquarium, spilling out an impressive amount of salt water and wet sand. It also spills out an extremely annoyed sea serpent who bites angrily at the }
@@ -814,7 +766,6 @@ kind Aquarium is Box {
       else { say fists }
     }
   }
-  without as target for mung from Thing
   as target for mung {
     do {
       if (self.get(:shattered)) { say "The aquarium is already broken!" }
@@ -852,7 +803,10 @@ kind Aquarium is Box {
   on :shatter {
     self.set(:shattered, true)
     broadcast :serpent_gone
-    each c: ClearSphere in self { send c :reveal_sphere }
+    // The sphere spills out with the sand onto the floor, where the room
+    // lists it (round 9's P2): a visitor who died breaking the glass and
+    // came back read a tank with nothing in it.
+    each c: ClearSphere in self { send c :reveal_sphere  move c to aquarium_room }
     each s: Serpent in self { send s :spill }
     if (aquarium_room.is(Room)) { spawn DeadSerpent in aquarium_room }
   }
@@ -869,17 +823,11 @@ kind Serpent is Scenery, Creature {
   describe { text "A sea serpent, and a baby one, which is to say the length of a boat, with flippers and a mouth full of dagger teeth and beady green eyes that follow you round the room. It writhes. It is hungry, in the way of the young." }
   passage no_take { He takes you instead. *Uurrp!* }
   as target for attack { do { say "He swims towards you with a powerful stroke of his flippers, dagger-like teeth dripping. Fortunately, he doesn't want to crash into the aquarium wall, and contents himself with splashing you with water." } }
-  without as target for mung from Thing
   as target for mung { do { say "He swims towards you with a powerful stroke of his flippers, dagger-like teeth dripping. Fortunately, he doesn't want to crash into the aquarium wall, and contents himself with splashing you with water." } }
-  without as target for greet from Creature
   as target for greet { do { say "The serpent only stares hungrily at you." } }
-  without as target for talk from Creature
   as target for talk { do { say "The serpent only stares hungrily at you." } }
-  without as target for ask from Thing
   as target for ask { do { say "The serpent only stares hungrily at you." } }
-  without as recipient for give from Thing
   as recipient for give { do { say "He takes you instead. *Uurrp!*"  if (actor.is(Adventurer)) { send actor :die } } }
-  without as aim for throw from Thing
   as aim for throw { do { if (target.is(Thing)) { say "The {target.short} splashes into the tank. The serpent examines it, and then you, and prefers you."  move target to here } } }
   on :spill { finally destroy self }
 }
@@ -891,7 +839,6 @@ kind DeadSerpent is Scenery {
   passage ldesc { There is a dead sea serpent in a heap here. }
   describe { text "A baby sea serpent, dead, in a heap on the floor among the sand and the glass, with its flippers spread and its mouth open and its green eyes gone dull. It was only a baby. It is as big as a small whale." }
   passage no_take { This may only be a baby sea serpent, but it's as big as a small whale. }
-  without as target for smell from Thing
   as target for smell { do { say "Fish, and salt, and more fish. It is not getting better." } }
 }
 
