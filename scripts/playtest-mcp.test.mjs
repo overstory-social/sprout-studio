@@ -21,6 +21,16 @@ execFileSync(join(REPO, 'node_modules', '.bin', 'sprout'), ['scaffold', 'world',
 });
 const ticket = (door, fields) =>
   writeFileSync(join(root, '.studio', 'doors', `${door}.json`), JSON.stringify({ world: 'worlds/shed/world', seed: 0, ...fields }));
+// A world that asks for an extension the installed Sprout provides, as the caverns ask for `media`.
+execFileSync(join(REPO, 'node_modules', '.bin', 'sprout'), ['scaffold', 'world', join(root, 'worlds', 'gallery', 'world'), '--author', 'spec'], {
+  stdio: 'ignore',
+});
+const galleryManifest = join(root, 'worlds', 'gallery', 'world', 'sprout.json');
+writeFileSync(
+  galleryManifest,
+  JSON.stringify({ ...JSON.parse(readFileSync(galleryManifest, 'utf8')), extensions: [{ name: 'media', major: 1 }] }, null, 2),
+);
+ticket('0galleryopens', { world: 'worlds/gallery/world', record: 'worlds/gallery/run.json' });
 // A door to a world that is not there, and one whose recording cannot be written.
 ticket('0badbadbadbad', { world: 'worlds/secret-place/world', record: 'worlds/secret-place/run.json' });
 ticket('0norecordhere', { record: 'worlds/shed/nowhere/at/all/run.json' });
@@ -72,6 +82,11 @@ describe('the door server', () => {
         refused: true,
       });
     }
+  });
+
+  it('opens a world that asks for an extension `sprout check` provides', async () => {
+    assert.equal((await call('arrive', { door: '0galleryopens', name: 'Ada' })).refused, false);
+    assert.equal((await call('say', { door: '0galleryopens', line: 'look' })).refused, false);
   });
 
   it('tells the player only the host’s sentence where the host fails, and the host why', async () => {

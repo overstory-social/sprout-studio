@@ -18,7 +18,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { compileBundle, DEFAULT_BLESSED } from '@overstory/sprout/lang';
 import { arrive, isPresent, leave, resumeSession, say } from '@overstory/sprout-mcp';
-import { readWorld } from '@overstory/sprout-player';
+import { INSTALLED_EXTENSIONS, readWorld } from '@overstory/sprout-player';
 import { z } from 'zod';
 
 import { DOORS, pinned, ROOT, SERVERS } from './round.mjs';
@@ -45,7 +45,8 @@ function sessionAt(door) {
   }
   const world = readWorld(join(ROOT, ticket.world));
   if (world.source === null) throw new Error(`${ticket.world}: its manifest does not read`);
-  const { bundle } = compileBundle(world.source, { mode: 'publish', blessed: DEFAULT_BLESSED });
+  // The extensions `sprout check` and `sprout play` provide, so a world they accept opens here too.
+  const { bundle } = compileBundle(world.source, { mode: 'publish', blessed: DEFAULT_BLESSED, extensions: INSTALLED_EXTENSIONS });
   if (bundle === null) throw new Error(`${ticket.world}: sprout check refuses it`);
   const session = resumeSession(
     bundle,
