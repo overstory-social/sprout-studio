@@ -1,0 +1,127 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "A real bug in the world: JIGS-UP never cleared :aboard, so whoever died in the boat heard the boat land on their next move, anywhere. It is cleared on every other way out of the boat, so it should be cleared on death too."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "This breaks the intent's rule that take means the one lying there, and it dropped a list item in silence. The world's take skipped a held thing in any list as its guess at `all`, so the reading with the sack was never refused. Part of this is the engine's, and that part is logged as friction 142."
+    },
+    {
+      "answers": "P3",
+      "decision": "reject",
+      "reason": "The bat and the garlic are Zork's. The eight drops are drawn evenly (random(8) over BAT-DROPS), and four of them are rooms Zork calls Coal Mine. The garlic is in the sack, and the replay that opened the sack walked past the bat. Whether the 300-move cap is what limits a goal run is the director's call, not the world's."
+    },
+    {
+      "answers": "P4",
+      "decision": "reject",
+      "reason": "Nothing to change. The chimney's rule reads clearly and every player solved it at once; the recommendation is to keep it."
+    },
+    {
+      "answers": "P5",
+      "decision": "reject",
+      "reason": "Nothing to change. The open trap door's line was read and used. The bar's line from below goes on round 18's watch list in intent.md."
+    },
+    {
+      "answers": "P6",
+      "decision": "reject",
+      "reason": "The opening and the troll's tables are Zork's, and the brief keeps Zork I whole. The trophy case's examine line already says it is plainly built to hold treasures and expects to be filled; the players who quit early never examined it."
+    },
+    {
+      "answers": "P7",
+      "decision": "reject",
+      "reason": "Nothing in the world is a remix to undo. The 'changed version' wording is in the player prompt, so it is the studio's and the director's call. This is noted in intent.md."
+    },
+    {
+      "answers": "P8",
+      "decision": "reject",
+      "reason": "The puncture and the one move before the Falls are Zork's. The gunk behind the tube's shut cap is out of sight, as Zork's is ('You can't see any gunk here!'), and the label and `open tube` are the way in. A bare LAUNCH on the shore gets the engine's not_here because a role-less launch would be offered everywhere. That is logged as friction under 137 instead of worked around."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The load limit is Zork's and stays. The synthesis suggested hinting at weight in the examine layer, the author's own voice, which costs nothing in fidelity, so I did that for the sword and the trunk. The coffin's examine line already says it is heavy."
+    },
+    {
+      "answers": "P10",
+      "decision": "reject",
+      "reason": "The mazes and the coal mine are Zork's and are mapped by dropping things. The recommendation is to keep them."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "This is a language gap: no phrase in the world can read a second clause. As recommended, the `then` form is logged against friction 132, with nothing changed in the world."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "The refine at Sprout 5380ce6 and 2c85fd7 was done in round 16's second revision: workarounds were dropped where features now do their job, and each friction entry those features answer is marked answered at 2c85fd7. This round keeps to refinement: no new scope, and Zork I stays whole."
+    }
+  ],
+  "changes": [
+    {
+      "what": "Clear :aboard in the visitor's :die handler (JIGS-UP), so a death in the magic boat leaves no boat landing for the body or the spirit. shore_launch.json now goes over the Falls, dies, and walks on with no boat line.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/tests/shore_launch.json"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "Added a :namesake flag on Thing, set on each portable that shares a name with another (sack, coin bag, both lanterns, both knives, guidebook, black book). In a typed take list, a held namesake gives way to the one on the floor; with no other reading, the refusal names the thing already in hand. A held non-namesake in a typed list is now answered, not skipped. Added the test take_list.json.",
+      "files": [
+        "worlds/underground_caverns/world/adventurer.sprout",
+        "worlds/underground_caverns/world/thing.sprout",
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/lamp.sprout",
+        "worlds/underground_caverns/world/remains.sprout",
+        "worlds/underground_caverns/world/dam.sprout",
+        "worlds/underground_caverns/world/temple.sprout",
+        "worlds/underground_caverns/world/tests/take_list.json"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "Examine-layer weight hints: the sword's description says it will be the heaviest thing you carry, and the trunk's examine and look-in lines say every jewel weighs something. dam_bolt.json is updated to match.",
+      "files": [
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/reservoir.sprout",
+        "worlds/underground_caverns/world/tests/dam_bolt.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "Friction log: 132 again for `then`, new 142 for a list item that fits both a held thing and a floor thing (the :namesake workaround), and 137 again for a bare LAUNCH on the shore.",
+      "files": [
+        "worlds/underground_caverns/friction.md"
+      ],
+      "for": [
+        "P2",
+        "P11"
+      ]
+    },
+    {
+      "what": "intent.md: the 'take means the one lying there' rule now covers lists, and there is an 'After round 17' section answering each point, plus round 18's watch list. sprout.json version bumped to 0.4.1.",
+      "files": [
+        "worlds/underground_caverns/intent.md",
+        "worlds/underground_caverns/world/sprout.json"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P9",
+        "P11",
+        "S1"
+      ]
+    }
+  ]
+}

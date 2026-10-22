@@ -68,11 +68,8 @@ object dam_room is Room, Tidal, Riverside, Illustrated in underground_caverns {
     passage short { dam }
     passage examined { Flood Control Dam #3 is a great curved wall of grey concrete, 256 feet tall at the center by the guidebook's count, holding back the reservoir to the west with the air of something that has been asked to do this for a very long time and has not been thanked. {if dam_room.get(:tide) == 1 || dam_room.get(:tide) == 2}Below, the sluice gates stand open, and the river pours through them in a white, roaring rush.{else if dam_room.get(:tide) == 3}The sluice gates at its foot are shut, and the water behind it is a long way below the top, climbing back up the stained concrete as you watch.{else}The sluice gates at its foot are shut, and water spills in a thin, glassy sheet over the top of it.{/if} }
     describe { text examined }
-    without as target for open from Thing
-    without as target for close from Thing
     as target for open  { do { say "Sounds reasonable, but this isn't how." } }
     as target for close { do { say "Sounds reasonable, but this isn't how." } }
-    without as target for plug from Pluggable
     as target for plug {
       do {
         if (bound tool) {
@@ -81,10 +78,8 @@ object dam_room is Room, Tidal, Riverside, Illustrated in underground_caverns {
         } else { say "Are you the little Dutch boy, then? Sorry, this is a big dam." }
       }
     }
-    without as target for climb_down from Thing
     as target for climb_down { do { send actor :travel with :dam_base  say "" } }
     as target for cross { do { say "You are standing on it. The paths go north, south and west, and a scramble down." } }
-    without as target for leap_at from Leapable
     as target for leap_at { do { say "The dam is 256 feet tall at the center, and the guidebook does not say what is at the bottom of it besides rocks. You decline." } }
   }
   object panel is Scenery {
@@ -101,9 +96,7 @@ object dam_room is Room, Tidal, Riverside, Illustrated in underground_caverns {
     on :gate_flag (from, value) { self.set(:free, value) }
     passage no_take { It is an integral part of the control panel. }
     describe { text "It is a large metal bolt, a good two inches across the head, mounted on the control panel and connected by unseen machinery to the sluice gates below. Its flats are worn bright, the way bolts get when the only way to turn them is with a wrench. {if self.get(:free)}The bubble above it glows a serene green.{else}The bubble above it is dark.{/if}" }
-    without as target for shift from Thing
     as target for shift { do { say "Your bare hands don't appear to be enough." } }
-    without as target for turn_with from Mechanism
     as target for turn_with {
       do {
         if (tool.is(Wrench)) {
@@ -140,7 +133,6 @@ object dam_room is Room, Tidal, Riverside, Illustrated in underground_caverns {
         broadcast :tide with 0
       }
     }
-    without as target for oil from Mechanism
     as target for oil { do { say "Hmm. It appears the tube contained glue, not oil. Turning the bolt won't get any easier...." } }
   }
   object bubble is Scenery {
@@ -150,14 +142,12 @@ object dam_room is Room, Tidal, Riverside, Illustrated in underground_caverns {
     on :gate_flag (from, value) { self.set(:glowing, value) }
     passage no_take { It is an integral part of the control panel. }
     describe { text "It is a small green plastic bubble, about the size of a hen's egg, set into the panel directly above the bolt. {if self.get(:glowing)}It is glowing serenely, the calm, untroubled green of a machine that is ready when you are.{else}It is dark, and has the patient look of something waiting to be told it may begin.{/if}" }
-    without as target for mung from Thing
     as target for mung { do { say "The bubble is tougher than it looks. It is an integral part of the control panel, and intends to stay one." } }
   }
   object paths is Scenery {
     grammar { name "paths"  nouns "path", "scramble", "walkway", "top"  adjectives "north", "south", "west" }
     passage short { paths }
     describe { text "Paths lead off the top of the dam to the north, toward a low building, to the south, toward the canyon, and to the west, along the shore of the reservoir. To the east a steep scramble goes down the face of the dam to its base, which is the kind of path that is only a path because people have used it as one." }
-    without as target for climb_down from Thing
     as target for climb_down { do { send actor :travel with :dam_base  say "" } }
   }
   object reservoir_view is Scenery {
@@ -189,6 +179,7 @@ object dam_lobby is Room in underground_caverns {
   }
   object guidebook is Readable {
     grammar { name "tour guidebook"  nouns "guidebook", "guide", "book", "books", "guidebooks", "guides"  adjectives "tour", "guide" }
+    :namesake true
     :has_fdesc true
     :burnable true
     passage short { tour guidebook }
@@ -216,7 +207,6 @@ object dam_lobby is Room in underground_caverns {
     grammar { name "doorways"  nouns "doorway", "doors", "door", "sign", "signs"  adjectives "open", "private", "north", "east" }
     passage short { doorways }
     describe { text "There are two open doorways, one to the north and one to the east, each with a small brass plate on the lintel that says \"Private\". The doors that once hung in them are gone, which rather spoils the effect." }
-    without as target for read from Thing
     as target for read { do { say "Each says \"Private\"." } }
   }
   object path is Scenery {
@@ -249,9 +239,7 @@ object maintenance_room is DarkRoom in underground_caverns {
     grammar { name "group of buttons"  nouns "buttons", "button", "group", "panel", "switches"  adjectives "colored", "four" }
     passage short { group of buttons }
     describe { text "Four buttons are set in a row in the wall in front of you: blue, yellow, brown and red, each the size of a thumb and each labelled underneath in a script you cannot read. The yellow one is the most worn." }
-    without as target for read from Thing
     as target for read { do { say "They're greek to you." } }
-    without as target for shift from Thing
     as target for shift { do { say "You'll have to say which: blue, yellow, brown, or red." } }
   }
   object yellow_button is Button {
@@ -336,7 +324,6 @@ object dam_base is Room, Riverside in underground_caverns {
     grammar { name "dam"  nouns "wall", "gates", "concrete", "structure"  adjectives "flood", "control", "great" }
     passage short { dam }
     describe { text "The dam looms above you to the north, a great grey wall of concrete streaked dark where the water has run down it for years. {if dam_base.get(:tide) == 1 || dam_base.get(:tide) == 2}Water thunders out of the open sluice gates at its foot and goes off down the river in a hurry.{else if dam_base.get(:tide) == 3}The sluice gates are shut, and nothing comes over the top: the face of the dam is drying in patches, and only the old dark streaks say where the water used to run.{else}A thin sheet of water spills over the top and patters down the face of it.{/if}" }
-    without as target for climb_up from Thing
     as target for climb_up { do { send actor :travel with :dam_room  say "" } }
   }
   :tide 0 min 0 max 3
@@ -378,7 +365,6 @@ kind Tube is Bag, Rejecting, Squeezable {
 
     {self.look_inside}
   }
-  without as target for read from Thing
   as target for read { do { say label_words } }
   as container for put { do { say "The tube refuses to accept anything." } }
   as target for squeeze {
@@ -424,7 +410,6 @@ kind ToolChests is Box, Rejecting {
 }
 
 kind Button is Scenery {
-  without as target for read from Thing
   as target for read { do { say "They're greek to you." } }
   without as target for shift from Thing
 }
@@ -466,7 +451,6 @@ kind Leak is Box, Rejecting, Pluggable {
       } else { wake in 1 minutes }
     }
   }
-  without as target for plug from Pluggable
   as target for plug {
     do {
       if (self.get(:level) <= 0) { say "This has no effect." }
@@ -523,7 +507,6 @@ kind Matchbook is Readable, Flame, Countable {
     GUE Tech can't promise these fantastic results to everyone. But when you earn your degree from GUE Tech, your future will be brighter.
   }
   passage tally_line {{if self.get(:count) <= 1}You have no matches.{else if self.get(:count) == 2}You have 1 match.{else if self.get(:count) == 3}You have 2 matches.{else if self.get(:count) == 4}You have 3 matches.{else if self.get(:count) == 5}You have 4 matches.{else}You have 5 matches.{/if}}
-  without as target for lamp_on from Switchable
   as target for lamp_on {
     permit { if (self.get(:lit)) { refuse "A match is already burning." } }
     do {
@@ -544,7 +527,6 @@ kind Matchbook is Readable, Flame, Countable {
       }
     }
   }
-  without as target for lamp_off from Switchable
   as target for lamp_off {
     do {
       if (self.get(:lit)) {
@@ -578,7 +560,6 @@ kind Matchbook is Readable, Flame, Countable {
       }
     }
   }
-  without as target for burn from Thing
   as target for burn { do { say "If you want to light a match, say so." } }
   on :woke (elapsed) {
     if (self.get(:lit)) {
@@ -588,6 +569,5 @@ kind Matchbook is Readable, Flame, Countable {
     }
   }
   as target for tally { do { say tally_line } }
-  without as target for open from Thing
   as target for open { do { say tally_line } }
 }

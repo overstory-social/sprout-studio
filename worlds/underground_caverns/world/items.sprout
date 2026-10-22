@@ -78,7 +78,6 @@ kind Food is Portable {
 // Something with words on it. Reading a thing you are not holding picks it
 // up first, as Zork's parser does, and says so.
 kind Readable is Portable {
-  without as target for read from Thing
   passage words default { {if false}.{/if} }
   as target for read {
     permit {

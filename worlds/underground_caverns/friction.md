@@ -252,6 +252,10 @@ entries' first text is kept as it was written against 61f02bb.
   Zork's is. A thing in the troll's fist or behind a shut glass lid is in
   reach of a name now (37, 40), so `take all` leaves those out by name, and
   `take axe` alone is refused by the troll's own guard.
+- **Answered** after round 16, at Sprout 2c85fd7 (`all` with empty hands,
+  sprout#825): `drop all` with nothing in hand is the world's
+  `empty_handed`, Zork's "You are empty-handed." (141: it first read the
+  chimney's line). `window_sides.json`.
 
 ### 11a. `and` between things, and between commands
 
@@ -349,6 +353,15 @@ entries' first text is kept as it was written against 61f02bb.
   passes (`:window_sync`, `:trap_sync`).
 - **Spec:** The world model; Range.
 - **Status: open.**
+- **Answered in part** after round 16, at Sprout 2c85fd7 (one thing in
+  several places, sprout#835): the kitchen window is one `kitchen_window`
+  standing in the Kitchen and Behind House; `:window_sync`, its pass rule
+  and both rooms' `:window_open` are gone, and the rooms' ways and words
+  read the window itself. `window_sides.json`. The trap door is still one
+  door a side, kept in step by `:trap_sync`: its sides answer differently
+  (TRAP-DOOR-FCN above, the bar below), and the bar's rule moved to the
+  Cellar's side in round 16 is what round 17 tests, so it is merged once
+  that rule has been read in play.
 
 ## Prose and its order
 
@@ -363,6 +376,9 @@ entries' first text is kept as it was written against 61f02bb.
   several things at once open with the thing's bare, lower-case name,
   "brown sack: Taken.", and here read "Brown sack: Taken." (after round 2;
   see 11).
+- **Answered** after round 16, at Sprout 2c85fd7 (prose keeps its shape,
+  sprout#847): the engine no longer changes the case of prose, so "brown
+  sack: Taken." and the Loud Room's "north north ..." are Zork's lower case.
 
 ### 18. Indentation is lost
 
@@ -371,6 +387,14 @@ entries' first text is kept as it was written against 61f02bb.
 - **Found:** each line is its own paragraph, leading spaces gone.
 - **Spec:** Prose › Passages (lines reflowed).
 - **Status: open.**
+- **Answered** after round 16, at Sprout 2c85fd7 (verbatim prose,
+  sprout#847): a `{verbatim}` block keeps every space, so a block of two
+  spaces written before a slot indents the line. The inventory nests as PRINT-CONT
+  does ("You are carrying:", "  A glass bottle", "  The glass bottle
+  contains:", "    A quantity of water"), by a `held_lines` passage on
+  `Box`, every thing in a held box listed as Zork's inventory lists it; a
+  box's contents in a room and under LOOK IN are indented two. Nothing
+  deeper than one box in hand is nested further.
 
 ### 19. A passage keeps its spaces when it is embedded
 
@@ -464,6 +488,8 @@ entries' first text is kept as it was written against 61f02bb.
   a parser's answer still run no `after command`, so what is not Zork's
   stays as it was. The move is counted after the command, so a clock read
   inside a command (DIAGNOSE's) sees the moves before it.
+- **Changed again** after round 16, at Sprout 2c85fd7: refused commands
+  count (sprout#833), the Loud Room's echoes not (140).
 
 ### 24. No turns, only time
 
@@ -571,6 +597,12 @@ entries' first text is kept as it was written against 61f02bb.
   again itself.
 - **Spec:** Kinds, composition and libraries › Suppressing a contribution.
 - **Status: open.**
+- **Answered** after round 16, at Sprout 2c85fd7 (a play may step aside for
+  a more specific one, sprout#836): `Thing`'s stock answers, and those of
+  the kinds that type a verb (`Creature`, `Lockable`, `Door` and the rest),
+  are `default` plays. `Bag`'s three `without`s are gone, as are about 300 more
+  across the world wherever the same body wrote its own play; a `without`
+  that only silences stays.
 
 ## Found in the port to fe916a5
 
@@ -839,6 +871,12 @@ entries' first text is kept as it was written against 61f02bb.
 - **Spec:** Exits › An exit may be conditional; Movement and consent › The
   three roles; Object identity.
 - **Status: open.**
+- **Answered** after round 16, at Sprout 2c85fd7 (`way` in `as actor for
+  go`, sprout#829): UP-CHIMNEY-FUNCTION is a permit on the adventurer's part
+  of `go`, `here.is(ChimneyFoot) && way == "up"`; `:at_chimney` is gone, and
+  the bar's TOUCHBIT reads `from` on `:moved`. The Altar's hole, the
+  crawlspace and the Narrows keep their `:at_*` notes in `depart`, which
+  stands guard over the gate's moves too; they can follow when next touched.
 
 ### 43. A declared object cannot be compared with `==`
 
@@ -1197,6 +1235,9 @@ area by area, including what it did not find hard.
 - **Spec:** Range ("what another visitor carries is out of range");
   Parsing › Choosing a reading; Verbs › Optional tools.
 - **Status: open.**
+- **Answered** after round 16, at Sprout 2c85fd7 (a role-player sees into
+  the acting visitor's hands, sprout#845): the grating's part of `unlock`
+  counts `actor.count(SkeletonKey)`; `:keys` is gone.
 
 ### 59. Two lanterns, and the parser cannot ask which
 
@@ -1411,6 +1452,9 @@ area by area, including what it did not find hard.
   except <one thing>` is what a player can type.
 - **Spec:** Parsing › Sequences, again and all.
 - **Status: open.**
+- **Changed** after round 16, at Sprout 2c85fd7: `except` takes a run now,
+  `drop everything except the lantern and the bottle`. `but` is still not
+  `except`: `take all but lantern` is `not_here`.
 
 ## Found before round 7: east of the Troll Room
 
@@ -1457,6 +1501,11 @@ contributing once, as the spec says. No NPC is new in v4.
 - **Spec:** Verbs › Value roles; Verbs › Roles compose; Parsing › When
   nothing matches; Prose › Passages (capitals).
 - **Status: open.**
+- **Changed** after round 16, at Sprout 2c85fd7: the echo is lower-case, as
+  Zork's (17), and no longer counts a move (140). `as actor for any` exists
+  now (sprout#827) but cannot say which verb it refuses, so it cannot echo
+  `look look ...`, and the per-verb permits stay. A line naming what is not
+  there still escapes the echo.
 
 ### 71. A room cannot throw its visitor out after a command
 
@@ -1507,6 +1556,10 @@ contributing once, as the spec says. No NPC is new in v4.
 - **Spec:** Exits (refusal words, `actor`); Range; Properties and values
   (`count`).
 - **Status: open.**
+- **Answered** after round 16, at Sprout 2c85fd7 (a refusal's words and a
+  reading's participants see into the acting visitor's hands, sprout#476 and
+  #845): the adventurer's `depart` and the hole's parts count `Coffin` in
+  hand themselves; `:coffins` is gone.
 
 ### 73. A held light cannot tell its holder it is going out
 
@@ -1972,6 +2025,11 @@ me say is below.
   now reads the canyon's own note of the dam. v6 leans on this entry's
   workaround everywhere: six rooms and the boat keep their own copy of the
   dam's state (96), three rooms their own copy of the rainbow's (99).
+- **Changed** after round 16, at Sprout 2c85fd7 (one place reads the next,
+  sprout#834): an exit's `when` may read the place it leads to, and a
+  `describe` may show that place whole with `{exit east}`. A description
+  still may not read a property of another room, so the rooms' own copies
+  stay.
 
 ### 90. A voice in another room
 
@@ -2049,6 +2107,9 @@ me say is below.
 - **Spec:** Time › Wakes; Expressions.
 - **Status: open,** and small: a readable `wakes` (the soonest pending) or
   a `*` would each remove half of it.
+- **Changed** after round 16, at Sprout 2c85fd7 (`*` and `/`, sprout#846):
+  the eight `if`s are `20 * (wounds - 1)`, and FIGHT-STRENGTH's five are
+  `score / 70`. A wake's time is still not readable, so `:cure_at` stays.
 
 ### 94. A trailing word turns a thing present into one not here
 
@@ -2066,6 +2127,11 @@ me say is below.
   Sprout, alongside sprout#464.
 - **Spec:** Parsing › Matching a line; When nothing matches.
 - **Status: open.**
+- **Answered** after round 16, at Sprout 2c85fd7 (leftover words dropped and
+  the reading restated, Sprout 5380ce6): `knock on the boarded door
+  politely` is "(knock on the boarded door)" and "Nobody's home."; `open the
+  window wider` opens it; `take lunch and bottle out of sack` is restated.
+  `push open the window` is still `not_here` (132).
 
 ### What sprout#456–458, #477 and #478 change for the thief
 
@@ -2559,6 +2625,11 @@ unseen) are named where they would have helped.
 - **Status: open.** Asked of Sprout: for `take`, let `all` leave out what
   the actor already holds, or walk the place before the actor, so the cap
   is spent on what can be taken.
+- **Not answered by sprout#838** after round 16, at Sprout 2c85fd7: `all`
+  leaves out what is carried only where the actor alone plays the verb, and
+  here `Portable` plays `take` so that `take all` reaches only what can be
+  carried. So the cap is still spent on held things first, and the world's
+  guess at `all` (36, again, round 14) stays.
 
 ### 108. `all` reaches into open boxes
 
@@ -2921,6 +2992,8 @@ sprout#477 (carried things speaking), #478 (weight), #481 (an NPC's place),
 - **Spec:** Verbs › phrases; The parser › When nothing matches.
 - **Status: open,** low: an adverb the parser could drop, as it drops
   articles, would carry the first.
+- **Changed** after round 16, at Sprout 2c85fd7: an adverb is a leftover
+  word now, dropped and restated (94). `go back` is still `unknown`.
 
 ## Found before round 15: Hades, the spirits and the end
 
@@ -3019,6 +3092,10 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Spec:** Verbs › Roles compose (wildcards).
 - **Status: open:** a wildcard that may name the verbs it does not cover,
   or that may read which verb it is in, would make this one line.
+- **Answered** after round 16, at Sprout 2c85fd7 (`except` in a wildcard,
+  sprout#827): `Ghosts` writes `as target for any except examine, attack,
+  mung, exorcise, talk, ask, greet { permit { refuse unable } }` and its own
+  plays for those; the 56 generated lines are gone. `exorcism.json`.
 
 ### 125. The dead, a routine run before every verb
 
@@ -3049,6 +3126,13 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Status: open:** a part that ran before every verb and could read
   the verb's name (or a wildcard that could) would make DEAD-FUNCTION one
   body again.
+- **Answered** after round 16, at Sprout 2c85fd7 (`as actor for any` with
+  `except`, sprout#827): DEAD-FUNCTION's "You can't even do that." is one
+  wildcard on the adventurer, leaving out the verbs with a line of their own
+  (take, attack, wait, score, open and the rest) and those the dead may do
+  (walking, looking, praying, the game's commands); seventy per-verb
+  refusals are gone, and a verb added later is covered without remembering.
+  `spirit.json`.
 
 ### 126. A description that cannot ask who is reading it
 
@@ -3197,6 +3281,8 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Spec:** Parsing › Sequences, again and all; The parser › When nothing
   matches.
 - **Status: open,** with 36 (all) and 94 (the not_here answer).
+- **Changed** after round 16, at Sprout 2c85fd7: `drop everything except
+  ...` reads (69). `push open` and `empty` still do not.
 
 ### 120, again: adverbs and "go back"
 
@@ -3260,6 +3346,7 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   brown sack contains:", "A lunch", then "A glass bottle" with nothing to
   show the sack's list had ended. Zork indents PRINT-CONT's contents.
 - **Status: open.**
+- **Answered** after round 16, at Sprout 2c85fd7, as 18.
 
 ### 134. A climb, said of a thing, competes with a climb said of a way
 
@@ -3335,6 +3422,9 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   kick, rub, smell, listen, climb up and down, burn, cut, turn, fill and
   the rest) are ones nearly everything answers in its own words, or ones a
   player tries on anything. The 30 verbs with no roles are 137.
+- **Changed** after round 16, at Sprout 2c85fd7: Zork's defaults are
+  `default` plays (29), so a thing with better words writes them and needs
+  no `without`.
 
 ## Found profiling the Playdate beta
 
@@ -3462,6 +3552,9 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
 - **Spec:** Parsing › Choosing a reading (rule 3); Parsing › When nothing
   matches.
 - **Status: open**, Sprout's.
+- **Status: resolved** by sprout#875 (Sprout 2c85fd7): a refusal's partial
+  reading names a thing in the place before the place, so "You can't dig in
+  the white house." every time; `verbs.json` passes.
 
 ### 140. A refused command counts a move, the echo and `score` among them
 
@@ -3478,6 +3571,92 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   ones. The hook's `refused` could tell the two apart (revision round).
 - **Spec:** After a command.
 - **Status: changed** (23 resolved for refusals; the two above open).
+- **Changed** after round 16, at Sprout 2c85fd7: `after command` reads
+  `refused`, and a refusal in a deafening room is not counted, as
+  LOUD-ROOM-FCN's loop is not; the move counts in `loud_room.json` and
+  `loud_noise.json` are back to what they were. The spirit's refused `score`
+  still counts.
+
+## Found in the revision after round 16, at Sprout 2c85fd7
+
+### 141. A new engine line takes a passage that already had the name
+
+- **Found:** `drop all` with nothing in hand answered "Going up
+  empty-handed is a bad idea.", the chimney's refusal. The adventurer had
+  a passage `empty_handed` for UP-CHIMNEY-FUNCTION long before Sprout
+  5380ce6 made `empty_handed` an engine line (sprout#825), and an engine
+  line is found on the actor first, so the chimney's words became the
+  answer to every `all` with empty hands. Nothing said so: the passage
+  takes no slots, so it checked against what the engine gives it, and the
+  compiler is silent where a passage's name becomes an engine line's. The
+  port to 5380ce6 did not catch it, since no test typed `drop all` empty
+  handed. A playtester would have.
+- **Wrote instead:** the chimney's passage is `chimney_bare`, and the world
+  writes `empty_handed` as Zork's "You are empty-handed."
+  `window_sides.json` pins it.
+- **Spec:** Prose › Engine lines (the actor's own first).
+- **Status: open,** small: a warning where a passage on a visitor's kind or
+  a place takes an engine line's name, or a note in a release that adds
+  one, would have found it.
+
+## Found in round 17
+
+### 132, again: `then`
+
+- **Round 17:** `go south, then west, then north` was "That sentence isn't
+  one I recognize." Zork's parser reads THEN as it reads a period; the
+  comma's second clause is the engine's to read, and `then` with it.
+- **Wrote instead:** nothing; no phrase of the world can read a clause.
+- **Status: open,** with 132.
+
+### 142. A run's item that fits a held thing and a thing on the floor
+
+- **Round 17:** in Maze 5, the brown sack in hand, `take key and bag` took
+  the key and said nothing at all of the bag. The item "bag" was settled at
+  the line, to the sack in hand, without a draw: the world's own `take`
+  passed over a held thing in silence in any list with something new in
+  it, since that is how it leaves held things out of `all` (36), and the
+  reading with the sack was therefore never refused, so the reading with
+  the coins never won. Alone, `take bag` takes the coins, since a reading
+  of one held thing is refused (`take_which.json`). This is the round-14
+  matchbook again ("A run's item that names things that tie"), from the
+  world's side.
+- **Wrote instead:** a thing whose name another portable thing shares (the
+  sack and the bag of coins, the brass and the burned-out lanterns, the
+  nasty and rusty knives, the guidebook and the black book) carries
+  `:namesake`. A line of several, fewer than eight, with something not in
+  hand in it, that names such a thing in hand while leaving out something
+  else in hand (so it is typed, not `all`), is refused, and the parser
+  takes the reading that is not: `take key and bag` takes both from the
+  floor. Where there is no other reading, as `take key and sack` with the
+  sack in hand, the whole line is refused, "You already have the brown
+  sack. Leave it out of the list, and the rest will come.", where Zork
+  would take the key and answer the sack. A held thing in a typed list that
+  is no namesake is now answered, "skeleton key: You already have that!",
+  rather than passed over. `take_list.json`.
+- **Still lost:** with the sack and the coins both on the floor, `take bag`
+  draws between them ("the line read 2 ways that tied"), where Zork asks
+  "Which bag do you mean, the brown sack or the leather bag of coins?"
+  (32: the parser cannot ask). And `all` and a typed list still arrive
+  alike (36), so the world guesses which it was from what is left out.
+- **Spec:** Parsing › Sequences, again and all ("An item that names nothing
+  in reach, or names things that tie, is read on its own turn"); Choosing a
+  reading.
+- **Status: open,** to raise with Sprout: let a run's item be read as `take
+  [item]` alone would be, its own consent pass choosing, or let a role know
+  it was filled by `all`; either would retire `:namesake`.
+
+### 137, again: a bare LAUNCH on the shore
+
+- **Round 17:** `launch`, typed beside the boat but not in it, was "You
+  can't see any such thing.": `launch` is a way out of the boat and, out of
+  it, the label of a way that does not apply here, so the engine answers
+  `not_here`. Zork's parser would find the vehicle (FIND VEHBIT) and its
+  V-LAUNCH would say you are not in it.
+- **Wrote instead:** nothing; a role-less `launch` would be offered
+  everywhere (137), and `launch boat` already answers "You're not in the
+  boat!".
+- **Status: open,** with 137.
 
 ## Differences chosen, not forced
 

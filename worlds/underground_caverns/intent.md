@@ -418,7 +418,9 @@ stay below.
   door's crash and all; the wrong way, "The stairs don't lead downward."
 - **Take means the one lying there.** Where a name fits a thing in hand and
   a thing on the floor (the sack and the bag of coins, the two lanterns),
-  `take` takes the one on the floor, as Zork's TAKE does.
+  `take` takes the one on the floor, as Zork's TAKE does, alone or in a
+  list (`take key and bag`, round 17). Where both lie on the floor, the
+  engine draws.
 - **The Loud Room listens for one word.** Until "echo" (or `say echo`) the
   room answers everything with its own echo, "Bar bar ...", "Look look
   ...", "North north ..."; west, east and up still lead out. Said once, the
@@ -2216,3 +2218,98 @@ it and went up, and got Zork's bare refusals.
   after the Altar; the bottle refilled; small things through the grating;
   the torch at the shaft and the machine; the egg given to the thief; the
   Grating Room from below; the grue; the lamp burning out.
+
+## After round 16, again: the refine at Sprout 2c85fd7
+
+Round 16 was synthesised a second time, with its metrics replayed against
+the revised world at a newer Sprout. The replays drifted from what was
+played (P1), so its deltas say nothing about the world; the points as
+played are the ones answered above, and every one of them was already made
+or kept. This revision is the director's steering (S1): the studio pin
+moved to Sprout 5380ce6 and then 2c85fd7, and wherever a new feature does
+the job a workaround did, the workaround goes. Zork I stays whole; no new
+scope. Version 0.4.0, since saves of 0.3.0 cannot be read.
+
+- **The Empire's stock answers step aside.** Zork's default answers on
+  `Thing` and the kinds that type a verb are `default` plays, so a thing
+  with better words just writes them; about 300 `without`s are gone.
+- **The spirits and the dead are one rule each.** GHOSTS-F is one wildcard
+  that leaves out the verbs the spirits answer in their own voice;
+  DEAD-FUNCTION's "You can't even do that." is one wildcard on the
+  adventurer, and a verb added later is covered without remembering.
+- **The kitchen window is one window,** standing in both rooms.
+- **The chimney is the Studio's way up again,** a permit on `go` that
+  reads the way taken, not a note kept on arrival.
+- **The inventory nests as Zork's does,** indented, a held box's contents
+  under it; a box's contents in a room are indented too. The round-16
+  player who read the bottle as inside the sack is the reason.
+- **`drop all` with empty hands** says "You are empty-handed.", where for a
+  day it said the chimney's line (friction 141).
+- **The Loud Room's echoes no longer count a move,** and the echo is
+  lower-case, as Zork's is.
+- Smaller: the grating and the Altar's hole count the key and the coffin
+  in hand themselves; DIAGNOSE multiplies.
+
+### What round 17 should watch, besides the list above
+
+- **The indented inventory:** whether a player now reads what is in the
+  sack and what is in hand correctly.
+- **Lines restated in brackets** ("(knock on the boarded door)"): whether
+  players read the restatement as the world understanding them.
+
+## After round 17: version 0.4.1
+
+Seven runs (six fable, one opus replaying the goal-seeker's seed); legible
+in part, as the round before. Nobody reached 350: the goal-seeker 104,
+soft-locked in the coal mine by a bat with no garlic in hand, because the
+sack it never opened was left in the Studio; the opus replay 220 at best,
+held back by the 300-move cap, a punctured boat and a death at the Falls.
+The chimney's rule and the open trap door's line were read and used. Six
+of seven took Zork's own map for a remix.
+
+- **P1, accepted: a world bug.** A visitor who died in the magic boat was
+  still `:aboard`, so their next step anywhere said the boat's landing.
+  JIGS-UP now clears it, as it is cleared on every other way out of the
+  boat. The boat stays on the last reach, as Zork leaves it.
+  `shore_launch.json` goes over the Falls and walks on.
+- **P2, accepted: a world bug, half the engine's.** `take key and bag`,
+  the sack in hand, took the key and said nothing of the bag. The world's
+  `take` passed over a held thing in silence in any list (its guess at
+  `all`), so the reading with the sack was never refused. Things that share
+  a name with another portable (`:namesake`) now give way, in a typed list,
+  to the one on the floor; a held thing named outright in a list is
+  answered. Both on the floor, the engine still draws (friction 142).
+  `take_list.json`.
+- **P3, kept.** The bat's eight drops are drawn evenly (`random(8)`, BAT-
+  DROPS' eight rooms), four of them rooms called Coal Mine; the garlic is
+  in the sack, and the replay that opened it walked past the bat. Whether
+  the cap, not the world, now limits a goal run is the director's call.
+- **P4, P5, P10: kept.** The chimney's line works; the open-door line in
+  the Cellar was read and used; the mazes are Zork's and are mapped by
+  dropping things.
+- **P6, kept.** The troll and the opening are Zork's. The trophy case's
+  examine line already says it is "plainly built to hold treasures" and
+  "expects to be filled"; the players who stopped early never examined it.
+- **P7: the director's.** Nothing in the world is a remix; the prompt's
+  "changed version" sends players hunting for changes.
+- **P8, kept, but for the friction.** The puncture and the one move before
+  the Falls are Zork's. The gunk behind the tube's shut cap is out of
+  sight, as Zork's is ("You can't see any gunk here!"), and the label and
+  `open tube` are the way in. A bare LAUNCH on the shore is the engine's
+  `not_here`, logged with 137.
+- **P9, accepted, in the examine layer.** The sword now says it will be the
+  heaviest thing you carry, and the trunk that every jewel weighs
+  something; the coffin already said it was enormously heavy.
+- **P11: logged** with 132 (`then`).
+
+### What round 18 should watch
+
+- **A list with a namesake in it:** `take key and bag`, `take knife and
+  lamp`, in the Maze and the Attic; and whether anybody meets the refusal
+  "You already have the brown sack. Leave it out of the list, and the rest
+  will come."
+- **The bar's line from below,** unread two rounds running.
+- Carried, still unmet: the endgame (map, path, barrow); the thief's lair,
+  the diamond, the rainbow and the canary in any run; the bottle refilled;
+  small things through the grating; the torch at the shaft; the egg given
+  to the thief; the grue; the lamp burning out.

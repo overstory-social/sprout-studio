@@ -87,14 +87,12 @@ kind Troll is Thing, sprout.Actor, Squeezable, Creature, Illustrated {
   passage not_yours { The troll's axe seems white-hot. You can't hold on to it. }
   passage held_fast { The troll spits in your face, grunting "Better luck next time" in a rather barbarous accent. }
 
-  without as target for listen from Thing
   as target for listen {
     do { say "Every so often the troll says something, probably uncomplimentary, in his guttural tongue." }
   }
 
   // MUNG, and moving him, as TROLL-FCN has them: either wakes him if he is
   // out cold (Zork's AWAKEN).
-  without as target for mung from Thing
   as target for mung {
     do {
       say "The troll laughs at your puny gesture."
@@ -104,7 +102,6 @@ kind Troll is Thing, sprout.Actor, Squeezable, Creature, Illustrated {
       }
     }
   }
-  without as target for shift from Thing
   as target for shift {
     do {
       say no_take
@@ -116,7 +113,6 @@ kind Troll is Thing, sprout.Actor, Squeezable, Creature, Illustrated {
   }
 
   // Zork's ALARM: he is rudely awakened, or was never asleep.
-  without as target for alarm from Creature
   as target for alarm {
     do {
       if (self.get(:strength) < 0) {
@@ -127,18 +123,14 @@ kind Troll is Thing, sprout.Actor, Squeezable, Creature, Illustrated {
     }
   }
 
-  without as target for talk from Creature
   as target for talk { do { say "The troll isn't much of a conversationalist." } }
-  without as target for ask from Thing
   as target for ask { do { say "The troll isn't much of a conversationalist." } }
-  without as target for greet from Creature
   as target for greet {
     do {
       if (self.get(:strength) < 0) { say "Unfortunately, the troll can't hear you." }
       else { say "The troll bows his head to you in greeting." }
     }
   }
-  without as target for shake from Thing
   as target for shake { do { say "This seems to have no effect." } }
   as target for squeeze { do { say "The troll does not understand this." } }
 
@@ -147,7 +139,6 @@ kind Troll is Thing, sprout.Actor, Squeezable, Creature, Illustrated {
   // eats one time in five, and dies of it, and otherwise throws back to the
   // floor; anything else he eats. The visitor's own part has already put it
   // in his hands, and what he does with it he does in `:gift`.
-  without as recipient for give from Thing
   as recipient for give {
     do {
       if (item.is(Thing)) {

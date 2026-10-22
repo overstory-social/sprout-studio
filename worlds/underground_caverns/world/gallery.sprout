@@ -93,7 +93,6 @@ kind Painting is Treasure, Illustrated {
     if (seen == :examine && !self.get(:ruined)) { media.show(self.get(:picture), self.get(:caption)) }
   }
 
-  without as target for mung from Thing
   as target for mung {
     do {
       if (self.get(:ruined)) { say "Nice try." }
@@ -147,8 +146,6 @@ object studio is DarkRoom, ChimneyFoot in underground_caverns {
     grammar { name "door"  nouns "doorway"  adjectives "open", "south", "painted" }
     passage short { door }
     describe { text "The door at the south end of the room stands open, held there by paint: so many coats of it that it has not closed in years, and would not thank you for trying." }
-    without as target for open from Thing
-    without as target for close from Thing
     as target for open  { do { say "It is already open." } }
     as target for close { do { say "The door is held open by a great many coats of paint, and stays where it is." } }
   }
@@ -160,8 +157,6 @@ kind StudioChimney is Scenery {
   grammar { name "chimney"  nouns "flue"  adjectives "dark", "narrow", "sooty" }
   passage short { chimney }
   describe { text "The chimney is dark and narrow and leads up out of the fireplace. You might just get up it, if you travelled light and had a light to travel by. Getting back down it is another matter." }
-  without as target for climb_up from Thing
-  without as target for climb_down from Thing
   as target for climb_up   { do { send actor :travel with :kitchen  say "" } }
   as target for climb_down { do { say "You can't do that!" } }
 }

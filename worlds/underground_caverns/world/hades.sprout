@@ -20,8 +20,8 @@ import {Treasure} from 'items'
 import {Stairs} from 'scenery'
 import {Adventurer} from 'adventurer'
 import {tiny_cave} from 'mirror'
-import {ask} from 'sprout'
-import {take, give, mung, alarm, burn, clear, climb_down, climb_over, climb_up, close, cross, cut, deflate, drink, eat, fill, greet, inflate, kick, kiss, knock, lamp_off, lamp_on, land, launch, leap_at, listen, lock, look_behind, look_in, look_under, lower, oil, open, plug, pour, raise, read, ring, rub, rub_with, search, shake, shift, smell, squeeze, talk, tally, through, tie, turn, turn_with, unlock, untie, walk_around, wave, wind, :travel, :rite, :rite_lit, :rite_read, :consume, :die, :reckon} from 'verbs'
+import {ask, examine} from 'sprout'
+import {take, give, attack, exorcise, mung, alarm, burn, clear, climb_down, climb_over, climb_up, close, cross, cut, deflate, drink, eat, fill, greet, inflate, kick, kiss, knock, lamp_off, lamp_on, land, launch, leap_at, listen, lock, look_behind, look_in, look_under, lower, oil, open, plug, pour, raise, read, ring, rub, rub_with, search, shake, shift, smell, squeeze, talk, tally, through, tie, turn, turn_with, unlock, untie, walk_around, wave, wind, :travel, :rite, :rite_lit, :rite_read, :consume, :die, :reckon} from 'verbs'
 import {Illustrated} from 'picture'
 extension media 1
 
@@ -106,7 +106,6 @@ object entrance_to_hades is HadesGate in underground_caverns {
     passage short { inscription }
     passage words { Abandon every hope all ye who enter here! }
     describe { text "The words are cut across the lintel of the gateway in letters as tall as your arm, deep and square and old, in a hand that did not expect to be argued with: \"Abandon every hope all ye who enter here!\"" }
-    without as target for read from Thing
     as target for read { do { say words } }
   }
   object bodies is Bodies {
@@ -166,57 +165,13 @@ kind Ghosts is Scenery, Creature {
   describe {
     text "The spirits crowd the gateway, pale and thin as smoke and in no way friendly, with faces that are mostly mouth. They drift back and forth across the way through, jeering, plucking at the air where you stand, and whenever you take a step toward the gate there are suddenly a great many more of them. They have been here a very long time, and they intend to stay."
   }
-  without as target for mung from Thing
+  // GHOSTS-F: every verb but a few answered alike. The wildcard steps aside
+  // for the verbs the spirits answer in their own words, and for examine,
+  // which the brief asks of every named thing.
+  as target for any except examine, attack, mung, exorcise, talk, ask, greet { permit { refuse unable } }
   as target for mung { do { say "How can you attack a spirit with material objects?" } }
-  without as target for open from Thing
-  as target for open { do { say unable } }
-  without as target for close from Thing
-  as target for close { do { say unable } }
-  without as target for read from Thing
-  as target for read { do { say unable } }
-  without as target for look_in from Thing
-  as target for look_in { do { say unable } }
-  without as target for look_under from Thing
-  as target for look_under { do { say unable } }
-  without as target for search from Thing
-  as target for search { do { say unable } }
-  without as target for shift from Thing
-  as target for shift { do { say unable } }
-  without as target for raise from Thing
-  as target for raise { do { say unable } }
-  without as target for smell from Thing
-  as target for smell { do { say unable } }
-  without as target for listen from Thing
-  as target for listen { do { say unable } }
-  without as target for climb_up from Thing
-  as target for climb_up { do { say unable } }
-  without as target for climb_down from Thing
-  as target for climb_down { do { say unable } }
-  without as target for kick from Thing
-  as target for kick { do { say unable } }
-  without as target for rub from Thing
-  as target for rub { do { say unable } }
-  without as target for rub_with from Thing
-  as target for rub_with { do { say unable } }
-  without as target for shake from Thing
-  as target for shake { do { say unable } }
-  without as target for fill from Thing
-  as target for fill { do { say unable } }
-  without as target for alarm from Creature
-  as target for alarm { do { say unable } }
-  without as target for turn from Thing
-  as target for turn { do { say unable } }
-  without as target for burn from Thing
-  as target for burn { do { say unable } }
-  without as target for cut from Thing
-  as target for cut { do { say unable } }
-  without as target for through from Thing
-  as target for through { do { say unable } }
-  without as target for talk from Creature
   as target for talk { do { say jeer } }
-  without as target for ask from Thing
   as target for ask { do { say jeer } }
-  without as target for greet from Creature
   as target for greet { do { say jeer } }
   as recipient for give { do { say unable } }
 }
@@ -229,7 +184,6 @@ kind HellGate is Scenery, Lockable, Barrier, Kissable, Door {
   passage ache { The gate is protected by an invisible force. It makes your teeth ache to touch it. }
   passage no_take { {self.ache} }
   describe { text "It is a gateway of black iron, very large, its two leaves standing wide open as if nobody had ever had any reason to close them. Over it the inscription is cut deep. Through it lies a grey desolation, and the way through is, for all that it is open, not at all inviting. The air in the gateway has a faint shimmer, like heat over a road." }
-  without as target for through from Thing
   as target for through {
     do {
       if (here.is(HadesGate)) {
@@ -238,27 +192,17 @@ kind HellGate is Scenery, Lockable, Barrier, Kissable, Door {
       }
     }
   }
-  without as target for open from Thing
   as target for open { do { say ache } }
-  without as target for close from Thing
   as target for close { do { say ache } }
-  without as target for rub from Thing
   as target for rub { do { say ache } }
-  without as target for shift from Thing
   as target for shift { do { say ache } }
-  without as target for kick from Thing
   as target for kick { do { say ache } }
   as target for kiss { do { say ache } }
-  without as target for knock from Door
   as target for knock { do { say ache } }
   as target for climb_over { do { say ache } }
-  without as target for lock from Lockable
   as target for lock { do { say ache } }
-  without as target for unlock from Lockable
   as target for unlock { do { say ache } }
-  without as target for mung from Thing
   as target for mung { do { say ache } }
-  without as target for look_in from Thing
   as target for look_in { do { say "Through the gate lies a desolation, with a pile of mangled bodies in one corner." } }
 }
 
@@ -271,9 +215,7 @@ kind Bodies is Scenery {
   passage no_take { A force keeps you from taking the bodies. }
   passage disrespect { The voice of the guardian of the dungeon booms out from the darkness, "Your disrespect costs you your life!" and places your head on a sharp pole. }
   describe { text view }
-  without as target for mung from Thing
   as target for mung { do { say disrespect  if (actor.is(Adventurer)) { send actor :die } } }
-  without as target for burn from Thing
   as target for burn {
     do {
       if (bound tool) {
@@ -293,7 +235,6 @@ kind Lament is Scenery {
   passage short { voices }
   passage view default { Thousands of voices are lamenting. }
   describe { text view }
-  without as target for listen from Thing
   as target for listen { do { say "Thousands of voices, lamenting some hideous fate. You listen for a while, and wish you had not; it is the kind of thing that stays with you." } }
 }
 

@@ -66,9 +66,6 @@ kind Box is Thing {
     }
   }
 
-  without as target for open from Thing
-  without as target for close from Thing
-  without as target for look_in from Thing
 
   as target for open {
     permit { if (self.get(:open)) { refuse "It is already open." } }
@@ -103,7 +100,7 @@ kind Box is Thing {
   passage look_inside default {
     {if !self.get(:open) && !self.get(:transparent)}The {self.short} is closed.{else if self.count(Thing) == 0}The {self.short} is empty.{else}{self.header}{for u: Thing in self}
 
-    A {u.short}{if u.is(Light)}{if u.get(:lit)} (providing light){/if}{/if}{/for}{/if}
+    {verbatim}  {/verbatim}A {u.short}{if u.is(Light)}{if u.get(:lit)} (providing light){/if}{/if}{/for}{/if}
   }
   passage inside_lines {
     {if self.get(:open) || self.get(:transparent)}{for u: Thing in self}{if u.get(:has_fdesc) && !u.get(:touched)}
@@ -112,18 +109,23 @@ kind Box is Thing {
 
     {self.header}{for u: Thing in self}{if u.get(:touched) || !u.get(:has_fdesc)}
 
-    A {u.short}{if u.is(Light)}{if u.get(:lit)} (providing light){/if}{/if}{/if}{/for}{/if}{/if}
+    {verbatim}  {/verbatim}A {u.short}{if u.is(Light)}{if u.get(:lit)} (providing light){/if}{/if}{/if}{/for}{/if}{/if}
+  }
+  // In an inventory, as Zork's PRINT-CONT nests it: the header under the
+  // thing that holds it, and what it holds under that, every one of them.
+  passage held_lines {
+    {if self.count(Thing) > 0}{if self.get(:open) || self.get(:transparent)}
+
+    {verbatim}  {/verbatim}{self.header}{for u: Thing in self}
+
+    {verbatim}    {/verbatim}A {u.short}{if u.is(Light)}{if u.get(:lit)} (providing light){/if}{/if}{/for}{/if}{/if}
   }
 }
 
-// A container that can be carried: the sack, the bottle, the nest. It
-// leaves out the thing's default answers to `open`, `close` and `look in`,
-// which would otherwise arrive again by way of `Portable`.
+// A container that can be carried: the sack, the bottle, the nest. The
+// thing's answers to `open`, `close` and `look in` arrive again by way of
+// `Portable`, and, being defaults, step aside for the box's own.
 kind Bag is Box, Portable {
-  without as target for open from Thing
-  without as target for close from Thing
-  without as target for look_in from Thing
-  without as target for shake from Thing
   without as target for shake from Portable
   // Zork's SHAKE: an open one spills what it holds (the visitor's own part
   // does that, and says so); a shut one rattles or does not.
