@@ -2275,11 +2275,12 @@ of seven took Zork's own map for a remix.
 - **P2, accepted: a world bug, half the engine's.** `take key and bag`,
   the sack in hand, took the key and said nothing of the bag. The world's
   `take` passed over a held thing in silence in any list (its guess at
-  `all`), so the reading with the sack was never refused. Things that share
-  a name with another portable (`:namesake`) now give way, in a typed list,
-  to the one on the floor; a held thing named outright in a list is
-  answered. Both on the floor, the engine still draws (friction 142).
-  `take_list.json`.
+  `all`), so the reading with the sack was never refused. A fix that
+  answered held things in a typed list misfired on `all except` (`take all
+  except lamp` was refused whole, or answered the sword as held) and is
+  undone: a world cannot tell a typed list from `all` or `all except`
+  (friction 143). `take` passes over held things in a list as before, and the bag
+  goes unanswered (friction 142). `take_list.json`.
 - **P3, kept.** The bat's eight drops are drawn evenly (`random(8)`, BAT-
   DROPS' eight rooms), four of them rooms called Coal Mine; the garlic is
   in the sack, and the replay that opened it walked past the bat. Whether
@@ -2304,10 +2305,9 @@ of seven took Zork's own map for a remix.
 
 ### What round 18 should watch
 
-- **A list with a namesake in it:** `take key and bag`, `take knife and
-  lamp`, in the Maze and the Attic; and whether anybody meets the refusal
-  "You already have the brown sack. Leave it out of the list, and the rest
-  will come."
+- **`all except` with things in hand:** `take all except lamp`, `drop all
+  except lantern and sword`; and `take key and bag` with the sack in hand,
+  which still says nothing of the bag (friction 142).
 - **The bar's line from below,** unread two rounds running.
 - Carried, still unmet: the endgame (map, path, barrow); the thief's lair,
   the diamond, the rainbow and the canary in any run; the bottle refilled;

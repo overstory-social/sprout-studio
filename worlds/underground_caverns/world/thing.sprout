@@ -33,10 +33,6 @@ kind Thing {
   :burnable false
   // Zork's SACREDBIT: the thief never lays a finger on it.
   :sacred false
-  // Its name is another portable thing's too (the sack and the bag of
-  // coins, the two lanterns, the two knives, the two books): in a list of
-  // things to take, the one in hand gives way to the one lying here.
-  :namesake false
 
   passage short default { thing }
   passage fdesc default { {self.ldesc} }

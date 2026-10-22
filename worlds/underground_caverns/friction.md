@@ -3621,19 +3621,12 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   of one held thing is refused (`take_which.json`). This is the round-14
   matchbook again ("A run's item that names things that tie"), from the
   world's side.
-- **Wrote instead:** a thing whose name another portable thing shares (the
-  sack and the bag of coins, the brass and the burned-out lanterns, the
-  nasty and rusty knives, the guidebook and the black book) carries
-  `:namesake`. A line of several, fewer than eight, with something not in
-  hand in it, that names such a thing in hand while leaving out something
-  else in hand (so it is typed, not `all`), is refused, and the parser
-  takes the reading that is not: `take key and bag` takes both from the
-  floor. Where there is no other reading, as `take key and sack` with the
-  sack in hand, the whole line is refused, "You already have the brown
-  sack. Leave it out of the list, and the rest will come.", where Zork
-  would take the key and answer the sack. A held thing in a typed list that
-  is no namesake is now answered, "skeleton key: You already have that!",
-  rather than passed over. `take_list.json`.
+- **Wrote instead:** for a while, a `:namesake` mark and a guess at which
+  lists were typed; it misfired on `all except` and is undone (143). The
+  world's `take` is as it was: a held thing in a list with something new
+  in it is passed over in silence, so `take key and bag` with the sack in
+  hand still takes the key alone. `take bag` alone takes the coins.
+  `take_list.json`.
 - **Still lost:** with the sack and the coins both on the floor, `take bag`
   draws between them ("the line read 2 ways that tied"), where Zork asks
   "Which bag do you mean, the brown sack or the leather bag of coins?"
@@ -3644,7 +3637,32 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   reading.
 - **Status: open,** to raise with Sprout: let a run's item be read as `take
   [item]` alone would be, its own consent pass choosing, or let a role know
-  it was filled by `all`; either would retire `:namesake`.
+  it was filled by `all` (143).
+
+### 143. A handler cannot tell a typed list from `all` or `all except`
+
+- **Round 17's revision:** to answer a held thing named in a typed list
+  (P2), `take` guessed that a line of fewer than eight leaving something
+  in hand out of it was typed, and refused a held namesake in it. `all
+  except` leaves something in hand out by construction, so in the Attic,
+  the sack, the lamp and the sword in hand and the rope and the knife on
+  the floor, `take all except lamp` was refused whole ("You already have
+  the brown sack. You already have the sword. Leave it out of the list,
+  and the rest will come.") and nothing was taken; with no namesake in
+  hand, it took the rest and answered "sword: You already have that!".
+  Zork's TAKE ALL EXCEPT passes over what is held without a word.
+- **Wrote instead:** the guess is undone: `:typed`, `:namesake` and the
+  `had_already` refusal are gone, and `take` is as before round 17, a held
+  thing in a list with something new in it passed over in silence. So P2's
+  "answer a held thing named in a typed list" is undone too: `take sword
+  and key`, the key in hand, says only "sword: Taken.", where Zork would
+  answer the key. `take_list.json` pins `take all except lamp` with things
+  in hand.
+- **Spec:** Parsing › Sequences, again and all: `all` and `all except`
+  arrive at a handler as the list they expand to, and nothing marks a role
+  as filled by them.
+- **Status: open,** to raise with Sprout: let a role know it was filled by
+  `all` or `all except`, as 36 and 142 ask.
 
 ### 137, again: a bare LAUNCH on the shore
 

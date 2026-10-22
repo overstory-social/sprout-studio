@@ -116,7 +116,6 @@ object kitchen is Room, Perilous, ChimneyTop, Illustrated in underground_caverns
     object sack is Bag {
       :burnable true
       grammar { name "brown sack"  nouns "bag", "sack"  adjectives "elongated", "smelly" }
-      :namesake true
       :has_fdesc true
       :size 9
       :capacity 9
@@ -187,7 +186,6 @@ object attic is DarkRoom in underground_caverns {
     object knife is Knife {
       describe { text "It is a nasty-looking knife, short and broad in the blade and none too clean. It was not made for buttering bread." }
       grammar { name "nasty knife"  nouns "knife", "knives", "blade"  adjectives "nasty", "unrusty" }
-      :namesake true
       :has_fdesc true
       passage short { nasty knife }
       passage fdesc { On a table is a nasty-looking knife. }
@@ -231,7 +229,6 @@ object living_room is Room, Illustrated in underground_caverns {
   object trophy_case is TrophyCase
   object lamp is Lamp {
     grammar { name "brass lantern"  nouns "lamp", "lantern", "light"  adjectives "brass" }
-    :namesake true
     :has_fdesc true
     :size 15
     passage short { brass lantern }

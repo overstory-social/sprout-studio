@@ -179,7 +179,6 @@ object dam_lobby is Room in underground_caverns {
   }
   object guidebook is Readable {
     grammar { name "tour guidebook"  nouns "guidebook", "guide", "book", "books", "guidebooks", "guides"  adjectives "tour", "guide" }
-    :namesake true
     :has_fdesc true
     :burnable true
     passage short { tour guidebook }
