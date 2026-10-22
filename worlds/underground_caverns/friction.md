@@ -3599,6 +3599,65 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   a place takes an engine line's name, or a note in a release that adds
   one, would have found it.
 
+## Found in round 17
+
+### 132, again: `then`
+
+- **Round 17:** `go south, then west, then north` was "That sentence isn't
+  one I recognize." Zork's parser reads THEN as it reads a period; the
+  comma's second clause is the engine's to read, and `then` with it.
+- **Wrote instead:** nothing; no phrase of the world can read a clause.
+- **Status: open,** with 132.
+
+### 142. A run's item that fits a held thing and a thing on the floor
+
+- **Round 17:** in Maze 5, the brown sack in hand, `take key and bag` took
+  the key and said nothing at all of the bag. The item "bag" was settled at
+  the line, to the sack in hand, without a draw: the world's own `take`
+  passed over a held thing in silence in any list with something new in
+  it, since that is how it leaves held things out of `all` (36), and the
+  reading with the sack was therefore never refused, so the reading with
+  the coins never won. Alone, `take bag` takes the coins, since a reading
+  of one held thing is refused (`take_which.json`). This is the round-14
+  matchbook again ("A run's item that names things that tie"), from the
+  world's side.
+- **Wrote instead:** a thing whose name another portable thing shares (the
+  sack and the bag of coins, the brass and the burned-out lanterns, the
+  nasty and rusty knives, the guidebook and the black book) carries
+  `:namesake`. A line of several, fewer than eight, with something not in
+  hand in it, that names such a thing in hand while leaving out something
+  else in hand (so it is typed, not `all`), is refused, and the parser
+  takes the reading that is not: `take key and bag` takes both from the
+  floor. Where there is no other reading, as `take key and sack` with the
+  sack in hand, the whole line is refused, "You already have the brown
+  sack. Leave it out of the list, and the rest will come.", where Zork
+  would take the key and answer the sack. A held thing in a typed list that
+  is no namesake is now answered, "skeleton key: You already have that!",
+  rather than passed over. `take_list.json`.
+- **Still lost:** with the sack and the coins both on the floor, `take bag`
+  draws between them ("the line read 2 ways that tied"), where Zork asks
+  "Which bag do you mean, the brown sack or the leather bag of coins?"
+  (32: the parser cannot ask). And `all` and a typed list still arrive
+  alike (36), so the world guesses which it was from what is left out.
+- **Spec:** Parsing › Sequences, again and all ("An item that names nothing
+  in reach, or names things that tie, is read on its own turn"); Choosing a
+  reading.
+- **Status: open,** to raise with Sprout: let a run's item be read as `take
+  [item]` alone would be, its own consent pass choosing, or let a role know
+  it was filled by `all`; either would retire `:namesake`.
+
+### 137, again: a bare LAUNCH on the shore
+
+- **Round 17:** `launch`, typed beside the boat but not in it, was "You
+  can't see any such thing.": `launch` is a way out of the boat and, out of
+  it, the label of a way that does not apply here, so the engine answers
+  `not_here`. Zork's parser would find the vehicle (FIND VEHBIT) and its
+  V-LAUNCH would say you are not in it.
+- **Wrote instead:** nothing; a role-less `launch` would be offered
+  everywhere (137), and `launch boat` already answers "You're not in the
+  boat!".
+- **Status: open,** with 137.
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the

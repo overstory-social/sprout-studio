@@ -44,6 +44,7 @@ kind Skeleton is Scenery, Kissable {
 // lamp` means the one that works.
 kind BurnedLantern is Portable, Switchable {
   grammar { name "burned-out lantern"  nouns "lantern", "lamp"  adjectives "rusty", "burned", "burned-out", "dead", "useless", "broken" }
+  :namesake true
   :has_fdesc true
   :size 20
   passage short { burned-out lantern }
@@ -58,6 +59,7 @@ kind BurnedLantern is Portable, Switchable {
 // is held, the sword pulses; turned on anything, it turns on its bearer.
 kind RustyKnife is Weapon {
   grammar { name "rusty knife"  nouns "knife", "knives", "blade"  adjectives "rusty" }
+  :namesake true
   :wcode 2
   :has_fdesc true
   :size 20
@@ -86,6 +88,7 @@ kind SkeletonKey is Portable {
 // trophy case. It is a bag, but not one to be opened or filled.
 kind CoinBag is Treasure {
   grammar { name "leather bag of coins"  nouns "bag", "coins", "treasure", "coin"  adjectives "old", "leather" }
+  :namesake true
   :size 15
   :value 10
   :tvalue 5

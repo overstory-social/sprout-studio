@@ -146,6 +146,7 @@ kind Lamp is Light, Illustrated {
 // What is left of the brass lantern, thrown (BROKEN-LAMP).
 kind BrokenLamp is Portable, Switchable {
   grammar { name "broken lantern"  nouns "lamp", "lantern"  adjectives "broken", "brass", "smashed" }
+  :namesake true
   :size 15
   passage short { broken lantern }
   describe { text "It is what is left of the brass lantern: a dented frame, a twisted handle and a good deal of broken glass, none of it inclined to give light ever again. It was a perfectly good lamp until somebody threw it." }

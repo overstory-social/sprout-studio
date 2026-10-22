@@ -113,6 +113,8 @@ kind Adventurer is sprout.Visitor {
   // In the magic boat, by boarding it: the boat's own way out (`get out`)
   // is a link, which says nothing, so going says it.
   :aboard false
+  // The line of things to take was typed, not `all` (take).
+  :typed false
   // Attacking with something sharp from the magic boat.
   :spiked false
   // How many cloves of garlic are in hand, for the bat, who cannot see into
@@ -704,6 +706,9 @@ kind Adventurer is sprout.Visitor {
   // JIGS-UP. Killed while already dead, it is the end (FINISH).
   on :die {
     self.set(:gassed, false)
+    // Whoever dies in the magic boat is not in it any more, wherever the
+    // body or the spirit goes: the boat's landing is not theirs to hear.
+    self.set(:aboard, false)
     if (self.get(:finished)) { }
     else if (self.get(:dead)) {
       tell self "It takes a talented person to be killed while already dead. YOU are such a talent. Unfortunately, it takes a talented person to deal with it. I am not such a talent. Sorry."
@@ -1014,6 +1019,7 @@ kind Adventurer is sprout.Visitor {
   // (the sack and the bag of coins, the brass lantern and the burned-out
   // one) means the one lying here. A reading of one thing already held is
   // refused, and the parser prefers the reading that is not.
+  passage had_already {{for x of target}{if x.is(Thing)}{if actor.holds(x)}You already have the {x.short}. {/if}{/if}{/for}Leave it out of the list, and the rest will come.}
   as actor for take {
     permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_take }
       if (target.count == 1) {
@@ -1021,11 +1027,31 @@ kind Adventurer is sprout.Visitor {
           if (t.is(Thing)) { if (self.holds(t)) { refuse "You already have that!" } }
         }
       }
+      // A list that names a held thing but leaves out something else held
+      // is a list typed, not `all` (which reaches everything in hand first).
+      // Where the held thing's name is another's too, `take key and bag`
+      // with the sack in hand and the coins on the floor means the coins,
+      // as TAKE alone does: the reading with the held one is refused, and
+      // the parser prefers the one that is not. Where there is none, the
+      // refusal says which thing is already in hand.
+      else if (target.count < 8) {
+        each u of target { if (u.is(Thing)) { if (!self.holds(u)) {
+          each t of target {
+            if (t.is(Thing)) { if (self.holds(t) && t.get(:namesake)) {
+              each h: Thing in self { if (!target.includes(h)) { refuse had_already } }
+            } }
+          }
+        } } }
+      }
     }
     do {
       self.set(:carry, self.get(:load))
       self.set(:fresh, 0)
       let several = target.count > 1
+      self.set(:typed, false)
+      if (several && target.count < 8) {
+        each h: Thing in self { if (!target.includes(h)) { self.set(:typed, true) } }
+      }
       each t of target {
         if (t.is(Thing)) {
           self.set(:nested, false)
@@ -1050,7 +1076,9 @@ kind Adventurer is sprout.Visitor {
           self.set(:nested, false)
           if (several) { each u of target { if (u != t && u.is(Box)) { if (u.holds(t)) { self.set(:nested, true) } } } }
           if (several && self.get(:nested)) { }
-          else if (several && self.holds(t) && self.get(:fresh) > 0) { }
+          // A held thing in `all` is left out; in a list typed, which leaves
+          // something else in hand out of it, it is answered.
+          else if (several && self.holds(t) && self.get(:fresh) > 0 && !self.get(:typed)) { }
           // In the troll's fist, or behind a shut glass lid, a thing is seen
           // and in reach of a name but not of a hand; `all` and a run leave
           // it out, and taken alone, the move says why.
@@ -1096,6 +1124,10 @@ kind Adventurer is sprout.Visitor {
   as actor for drop { permit { if (self.get(:finished)) { refuse over }  if (self.get(:dead)) { refuse dead_none } }
     do {
       let several = target.count > 1
+      self.set(:typed, false)
+      if (several && target.count < 8) {
+        each h: Thing in self { if (!target.includes(h)) { self.set(:typed, true) } }
+      }
       each t of target {
         // Dropped out of a box in hand, a treasure has been held.
         if (t.is(Treasure)) {

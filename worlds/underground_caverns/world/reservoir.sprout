@@ -274,12 +274,12 @@ kind Trunk is Treasure, Illustrated {
   passage short { trunk of jewels }
   passage ldesc {{if self.get(:lifted)}There is an old trunk here, bulging with assorted jewels.{else}Lying half buried in the mud is an old trunk, bulging with jewels.{/if}}
   describe {
-    text "It is an old sea-trunk, its leather rotted and its brass corners green, and it is bulging with jewels: rubies and sapphires and things you cannot name, glinting through every split in its sides. There are lots of jewels in there."
+    text "It is an old sea-trunk, its leather rotted and its brass corners green, and it is bulging with jewels: rubies and sapphires and things you cannot name, glinting through every split in its sides. There are lots of jewels in there, and every one of them weighs something."
     if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
   }
   as target for open { do { say "The jewels are safely inside; there's no need to do that." } }
   as target for close { do { say "The jewels are safely inside; there's no need to do that." } }
-  as target for look_in { do { say "There are lots of jewels in there." } }
+  as target for look_in { do { say "There are lots of jewels in there, and every one of them weighs something." } }
 }
 
 // The hand-held air pump from Reservoir North, for the boat.
