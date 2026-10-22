@@ -163,10 +163,12 @@
     { "as": "Marta", "type": "listen to water", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You can hear a loud roaring sound, like that of rushing water, from below." }
     ] },
+    { "seed": 29 },
     { "as": "Marta", "type": "d", "expect": [
       { "reader": "Marta", "kind": "told", "words": "It is unbearably loud here, with an ear-splitting roar seeming to come from all around you. There is a pounding in your head which won't stop. With a tremendous effort, you scramble out of the room." },
       { "reader": "Marta", "kind": "described", "words": "Deep Canyon" }
     ] },
+    { "seed": 29 },
     { "advance": "4 minutes", "expect": [
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
       { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
@@ -185,10 +187,10 @@
       { "reader": "Marta", "kind": "described", "words": "On the ground is a large platinum bar." }
     ] },
     { "as": "Marta", "type": "take bar", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "Bar bar ..." }
+      { "reader": "Marta", "kind": "refused", "words": "bar bar ..." }
     ] },
     { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "Look look ..." }
+      { "reader": "Marta", "kind": "refused", "words": "look look ..." }
     ] },
     { "as": "Marta", "type": "u", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Deep Canyon" }
@@ -219,7 +221,7 @@
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 50 (total of 350 points), in 45 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 50 (total of 350 points), in 47 moves." },
       { "reader": "Marta", "kind": "said", "words": "This gives you the rank of Amateur Adventurer." }
     ] },
     { "advance": "4 minutes", "expect": [

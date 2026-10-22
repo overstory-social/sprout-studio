@@ -3440,6 +3440,45 @@ NPC's place), #482 (a thing present but unseen) and #485 (vehicles).
   whose `when` could tell which way was taken, would let the Stream land as
   Zork's does.
 
+## Found porting to Sprout 5380ce6
+
+### 139. A refusal names the room for the house, by the draw
+
+- **Wanted:** `look behind house` and `dig in house` at West of House
+  answered "You can't look behind the white house." and "You can't dig in
+  the white house.", the house being the thing in the room called so.
+- **Found:** the room's name, "West of House", makes `house` one of its
+  nouns, so the room and the white house tie as partial readings, and the
+  tie is drawn from the turn's seed: about half the time the `cannot` line
+  says "You can't look behind West of House." It did before 5380ce6 too
+  (`parser.json` pinned "You can't dig in West of House."); with each step
+  drawing its own seed now, the two tests drew differently. Choosing a
+  reading says the visitor's own place "is named only where nothing in it
+  answers as well", but the partial readings of When nothing matches are
+  ranked by words matched and roles bound alone.
+- **Wrote instead:** nothing; the world has no way to take `house` off the
+  room. `parser.json` now expects the white house and passes by its draw;
+  `verbs.json` expects it and fails by its draw.
+- **Spec:** Parsing › Choosing a reading (rule 3); Parsing › When nothing
+  matches.
+- **Status: open**, Sprout's.
+
+### 140. A refused command counts a move, the echo and `score` among them
+
+- **Wanted:** Zork's CLOCKER: every command it parses counts a move but the
+  ones about the game itself.
+- **Found:** since 5380ce6 an `after command` follows a refused command, so
+  the adventurer now counts "You can't go that way."'s cousins, the
+  refusing exits and the refused readings, as Zork does (23). It also
+  counts the Loud Room's echoes, each a refusal, where Zork's LOUD-ROOM-FCN
+  reads them in a loop of its own and counts none, and a refused `score`
+  in the spirit's form ("You're dead! How can you think of your score?"),
+  which Zork leaves out as it leaves out every `score`.
+- **Wrote instead:** nothing yet; the move counts in the tests are the new
+  ones. The hook's `refused` could tell the two apart (revision round).
+- **Spec:** After a command.
+- **Status: changed** (23 resolved for refusals; the two above open).
+
 ## Differences chosen, not forced
 
 - **The troll can be given things, or thrown them.** After round 2 the
