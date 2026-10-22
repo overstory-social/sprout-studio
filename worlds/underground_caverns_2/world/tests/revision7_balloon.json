@@ -8,41 +8,51 @@
       { "reader": "Marta", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
       { "reader": "Marta", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "turn on lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Narrow Tunnel" },
       { "reader": "Marta", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Foot Bridge" },
       { "reader": "Marta", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Great Cavern" },
       { "reader": "Marta", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "sw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Shallow Ford" },
       { "reader": "Marta", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
       { "reader": "Marta", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
       { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
       { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "enter gazebo", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -51,63 +61,78 @@
       { "reader": "Marta", "kind": "described", "words": "A place mat" },
       { "reader": "Marta", "kind": "described", "words": "A china teapot" },
       { "reader": "Marta", "kind": "described", "words": "A letter opener" },
-      { "reader": "Marta", "kind": "described", "words": "A matchbook" }
-    ] },
-    { "as": "Marta", "type": "take teapot", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "described", "words": "A matchbook" },
       { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
+    { "seed": 5 },
+    { "as": "Marta", "type": "take teapot", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take newspaper", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "read newspaper", "expect": [
       { "reader": "Marta", "kind": "said", "words": "** U.S. News and Dungeon Report **" },
       { "reader": "Marta", "kind": "said", "words": "FAMED ADVENTURER TO EXPLORE GREAT UNDERGROUND EMPIRE" },
       { "reader": "Marta", "kind": "said", "words": "Our correspondents report that a world-famous and battle-hardened adventurer has been seen in the vicinity of the Great Underground Empire. Local grues have been reported sharpening their (slavering) fangs...." },
       { "reader": "Marta", "kind": "said", "words": "WIZARD STILL AT LARGE" },
       { "reader": "Marta", "kind": "said", "words": "The Wizard of Frobozz, dismissed from the court of Lord Dimwit Flathead for turning the royal mountain into a very large pile of gravel, is believed to have retired to the caverns south of the ravine, taking with him a quantity of the Empire's loose property (a pearl necklace, a Stradivarius and a crystal sphere are mentioned in the inventory, and the Bank of Zork has declined to comment on the rest). Visitors report a loud whirring from somewhere past the garden, as of a room that will not keep still, and nobody who has walked into it has come out the way they expected. He is described as doddering, petulant and armed with a wand, and the public is advised not to let him finish a word." },
-      { "reader": "Marta", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." }
-    ] },
-    { "as": "Marta", "type": "drop newspaper", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "\"Zork II: The Wizard of Frobozz\" was written by Dave Lebling and Marc Blank, and is (c) Copyright 1981, 1982, 1983 by Infocom, Inc." },
       { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
     ] },
+    { "seed": 5 },
+    { "as": "Marta", "type": "drop newspaper", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "out", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
       { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
       { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
       { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "ne", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Shallow Ford" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "fill teapot with water", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The teapot is now full of water." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Formal Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." }
+      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." },
+      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Topiary" },
       { "reader": "Marta", "kind": "described", "words": "This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
       { "reader": "Marta", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." },
       { "reader": "Marta", "kind": "described", "words": "The disorientation is not all in your head. The floor, if you stand still on it a moment, is turning, slowly, and the eight passages go round with it, so that the one you came in by is already somewhere else. They all lead somewhere, every one of them; it is only a question of which, and the only way to settle that is to pick one and walk into it. The one that climbs a little, when it comes round, has a draught down it that smells of old brick and older water, and once, faintly, from up that way, you hear the grinding of a very heavy stone door." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You're not sure which direction is which. This room is very disorienting." },
       { "reader": "Marta", "kind": "said", "words": "That was the floor's doing and not yours: it turned while you were choosing, and the passage you chose went round with it, and the whirring is whatever turns it. A thing that is turned can presumably be stopped, by somebody who finds the works; and the works are not in that room so much as under it and off to one side, by the sound, which is loudest low down and toward the passage that climbs, as though the machinery were somewhere past the well at the end of that way." },
@@ -115,27 +140,33 @@
       { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great closed door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
       { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "say well", "expect": [
       { "reader": "Marta", "kind": "said", "words": "There is a deafening clap of thunder and the stone door quietly swings open to reveal a passageway beyond." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Pearl Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a former broom closet. The exits are to the east and west." },
       { "reader": "Marta", "kind": "described", "words": "There is a pearl necklace here with hundreds of large pearls." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take necklace", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Circular Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." },
       { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "get in bucket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are now in the wooden bucket." },
       { "reader": "Marta", "kind": "described", "words": "Circular Room, in the wooden bucket" },
       { "reader": "Marta", "kind": "described", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "pour water into bucket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "There is now a puddle in the bottom of the wooden bucket." },
       { "reader": "Marta", "kind": "told", "words": "The bucket rises and comes to a stop." },
@@ -144,6 +175,7 @@
       { "reader": "Marta", "kind": "told", "words": "The wooden bucket contains:" },
       { "reader": "Marta", "kind": "told", "words": "A quantity of water" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "get out", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are on your own feet again." },
       { "reader": "Marta", "kind": "described", "words": "Top of Well" },
@@ -152,6 +184,7 @@
       { "reader": "Marta", "kind": "described", "words": "The wooden bucket contains:" },
       { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Tea Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small room containing a large oblong table, no doubt set for afternoon tea. It is clear from the objects on the table that the users were indeed mad. In the eastern corner of the room is a small hole (no more than four inches high). There are passageways leading away to the west and the northwest." },
@@ -161,50 +194,61 @@
       { "reader": "Marta", "kind": "described", "words": "A cake frosted with orange letters" },
       { "reader": "Marta", "kind": "described", "words": "A cake frosted with red letters" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take all cakes", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Cake frosted with green letters: Taken." },
-      { "reader": "Marta", "kind": "said", "words": "Cake frosted with blue letters: Taken." },
-      { "reader": "Marta", "kind": "said", "words": "Cake frosted with orange letters: Taken." },
-      { "reader": "Marta", "kind": "said", "words": "Cake frosted with red letters: Taken." }
+      { "reader": "Marta", "kind": "said", "words": "cake frosted with green letters: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "cake frosted with blue letters: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "cake frosted with orange letters: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "cake frosted with red letters: Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "eat green cake", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Suddenly, the room appears to have become very large (although everything you are carrying seems to be its normal size)." },
       { "reader": "Marta", "kind": "described", "words": "Posts Room" },
       { "reader": "Marta", "kind": "described", "words": "This is an enormous room, in the center of which are four wooden posts delineating a rectangular area, above which is what appears to be a wooden roof. In fact, all objects in this room appear to be abnormally large. To the east is a passageway. There are large gaping chasms to the west and northwest. Whatever was left on the roof up there is on it still, a long way over your head, and nothing up there is coming down to you." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Pool Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a large room, one half of which is depressed. Salty water flows from a large leak in the ceiling. The only exit is to the west." },
       { "reader": "Marta", "kind": "described", "words": "A stoppered glass flask with a skull-and-crossbones marking is here. The flask is filled with some clear liquid." },
       { "reader": "Marta", "kind": "described", "words": "The leak has submerged the depressed area in a pool of tears. There is a hazy something at the deepest part of the pool." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "read blue cake through flask", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The letters, now visible, say \"Enlarge\"." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "throw red cake into pool", "expect": [
       { "level": "info", "text": "step: underground_caverns_2.put" },
       { "reader": "Marta", "kind": "said", "words": "Most of the pool evaporates, revealing a (slightly damp but still valuable) package of rare candies. The red cake must be pretty strong stuff, since it remains intact!" },
       { "level": "warning", "text": "drawn: the line read 2 ways that tied, and one was drawn" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take candy", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Posts Room" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "eat blue cake", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The room around you seems to be getting smaller." },
       { "reader": "Marta", "kind": "described", "words": "Tea Room" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "nw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Low Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a circular room with a low ceiling. There are exits to the east and southeast." },
       { "reader": "Marta", "kind": "described", "words": "There is a robot here." },
       { "reader": "Marta", "kind": "described", "words": "There is a green piece of paper here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "robot, go east", "expect": [
       { "reader": "Marta", "kind": "said", "words": "\"Whirr, buzz, click!\"" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Machine Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a large room full of assorted heavy machinery, whirring noisily. The room smells of burned resistors. Along one wall are three buttons which are, respectively, round, triangular, and square. Naturally, above these buttons are instructions written in EBCDIC. A large sign in English above all the buttons says" },
@@ -212,13 +256,16 @@
       { "reader": "Marta", "kind": "described", "words": "There are exits to the west and the south." },
       { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "robot, push triangular button", "expect": [
       { "reader": "Marta", "kind": "said", "words": "\"Whirr, buzz, click!\"" },
       { "reader": "Marta", "kind": "told", "words": "A dull thump is heard in the distance." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "robot, go south", "expect": [
       { "reader": "Marta", "kind": "said", "words": "\"Whirr, buzz, click!\"" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
       { "reader": "Marta", "kind": "described", "words": "This is a dingy closet adjacent to a larger room to the north. Chiselled into a wall are these words:" },
@@ -230,39 +277,47 @@
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
       { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take sphere", "expect": [
       { "reader": "Marta", "kind": "said", "words": "As you reach for the sphere, a solid steel cage falls from the ceiling to entrap you. To make matters worse, poisonous gas starts coming into the room." },
       { "reader": "Marta", "kind": "described", "words": "Cage" },
-      { "reader": "Marta", "kind": "described", "words": "You are trapped inside a solid steel cage. The robot is in here with you, bent nearly double, and humming." }
+      { "reader": "Marta", "kind": "described", "words": "You are trapped inside a solid steel cage. The robot is in here with you, bent nearly double, and humming." },
+      { "reader": "Marta", "kind": "told", "words": "The gas is thicker than it was." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "robot, lift cage", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The cage shakes and is hurled across the room. It's hard to say, but the robot appears to be smiling." },
-      { "reader": "Marta", "kind": "told", "words": "The gas is thicker than it was." },
       { "reader": "Marta", "kind": "described", "words": "Dingy Closet" },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
       { "reader": "Marta", "kind": "described", "words": "There is a mangled steel cage here." },
       { "reader": "Marta", "kind": "described", "words": "There is a robot here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take sphere", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "score", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Your score is 65 (total of 400 points), in 49 moves." },
       { "reader": "Marta", "kind": "said", "words": "This score gives you the rank of Amateur Adventurer." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Machine Room" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "said", "words": "As you enter, your compass starts spinning wildly." },
       { "reader": "Marta", "kind": "said", "words": "What compass, you ask? The one which allows you to specify compass directions for movement." },
       { "reader": "Marta", "kind": "described", "words": "Low Room" },
       { "reader": "Marta", "kind": "described", "words": "There is a green piece of paper here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You cannot get your bearings..." },
       { "reader": "Marta", "kind": "described", "words": "Tea Room" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Top of Well" },
       { "reader": "Marta", "kind": "described", "words": "You are at the top of the well. Well done. There are etchings on the side of the well. There is a small crack across the floor at the entrance to a room on the east, but it can be crossed easily." },
@@ -270,6 +325,7 @@
       { "reader": "Marta", "kind": "described", "words": "The wooden bucket contains:" },
       { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "get in bucket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are now in the wooden bucket." },
       { "reader": "Marta", "kind": "described", "words": "Top of Well, in the wooden bucket" },
@@ -277,12 +333,14 @@
       { "reader": "Marta", "kind": "described", "words": "The wooden bucket contains:" },
       { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take water", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The teapot is now full of water." },
       { "reader": "Marta", "kind": "told", "words": "The bucket descends and comes to a stop." },
       { "reader": "Marta", "kind": "told", "words": "Circular Room, in the wooden bucket" },
       { "reader": "Marta", "kind": "told", "words": "This is a damp circular room, whose walls are made of brick and mortar. The roof of this room is not visible, but there appear to be some etchings on the walls. There is a passageway to the west. The whirring of the room that will not keep still is fainter here, and comes from above, down the shaft, from somewhere past the top of it." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "get out", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are on your own feet again." },
       { "reader": "Marta", "kind": "described", "words": "Circular Room" },
@@ -290,57 +348,71 @@
       { "reader": "Marta", "kind": "described", "words": "There is a wooden bucket here, 3 feet in diameter and 3 feet high." },
       { "reader": "Marta", "kind": "said", "words": "The cake frosted with orange letters has crumbled to dust. Whatever was baked into it does not keep this far from the table it was laid on." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Pearl Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a former broom closet. The exits are to the east and west." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Riddle Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great open door made of stone. Above the stone, the following words are written: \"No man shall pass this door without solving this riddle:" },
       { "reader": "Marta", "kind": "described", "words": "What is tall as a house, round as a cup, and all the king's horses can't draw it up?\"" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "nw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
       { "reader": "Marta", "kind": "described", "words": "There is a dented steel box here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Room 8" },
       { "reader": "Marta", "kind": "described", "words": "This is a small chamber carved out of the rock at the end of a short crawl. On the wall is crudely chiseled the number \"8\"." },
       { "reader": "Marta", "kind": "described", "words": "A spray can is in the corner. In large type is the legend \"Frobozz Magic Grue Repellent\"." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take can", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "read can", "expect": [
       { "reader": "Marta", "kind": "said", "words": "!!! FROBOZZ MAGIC GRUE REPELLENT !!!" },
       { "reader": "Marta", "kind": "said", "words": "Instructions for use: Apply liberally to creature to be protected. Duration of effect is unpredictable. Use only in place of death!" },
       { "reader": "Marta", "kind": "said", "words": "(No warranty expressed or implied)" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
       { "reader": "Marta", "kind": "described", "words": "There is a dented steel box here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "open box", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Opening the steel box reveals a fancy violin." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take violin", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take violin", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "You already have that!" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "play violin", "expect": [
       { "reader": "Marta", "kind": "said", "words": "An amazingly offensive noise issues from the violin." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 85 (total of 400 points), in 67 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 85 (total of 400 points), in 68 moves." },
       { "reader": "Marta", "kind": "said", "words": "This score gives you the rank of Novice Adventurer." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "i", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
       { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
@@ -353,55 +425,67 @@
       { "reader": "Marta", "kind": "said", "words": "A can of Frobozz Magic Grue Repellent" },
       { "reader": "Marta", "kind": "said", "words": "A fancy violin" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
       { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still." },
       { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Deep Ford" },
       { "reader": "Marta", "kind": "described", "words": "You are fording the stream at a deep but not impossible spot. The water is very cold. The walls of the ravine rise to east and west. There is a small ledge along the north wall of the ravine. To the south is the entrance to a well-constructed but somewhat ruined hall." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Ledge in Ravine" },
       { "reader": "Marta", "kind": "described", "words": "You are on a narrow ledge near the bottom of a deep ravine. The ledge continues to the west. A precarious climb up to another tiny ledge is possible. A short scramble down the rock face leads to a stream." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "End of Ledge" },
       { "reader": "Marta", "kind": "described", "words": "A ledge from the east ends here, and a tunnel leads north into the wall. There is a rather odd smokey odor in the warm air of the tunnel." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dragon Room" },
       { "reader": "Marta", "kind": "described", "words": "The room is a large cavern full of broken stone. The walls are scorched and there are deep scratches on the floor. A sooty dry smell is very strong here. A paved path winds from a large passage to the west, through the room, and across a huge stone bridge to the south. To the east a small crack is visible. A dark and smokey tunnel leads north." },
       { "reader": "Marta", "kind": "described", "words": "A huge red dragon is lying on the rocks here, watching." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "attack dragon with sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The dragon is surprised and interested (for the moment)." },
       { "reader": "Marta", "kind": "told", "words": "The dragon continues to watch you carefully." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Stone Bridge" },
       { "reader": "Marta", "kind": "described", "words": "This is the middle of a ruined but still impressive stone bridge spanning a deep chasm. Water flows far beneath. A paved path leads north into a large open space. To the south, the path leads into a misty tunnel." },
       { "reader": "Marta", "kind": "described", "words": "A huge red dragon is lying on the rocks here, watching." },
       { "reader": "Marta", "kind": "notice", "words": "The dragon follows you, out of mingled curiosity and anger." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "attack dragon with sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The dragon is surprised and interested (for the moment)." },
       { "reader": "Marta", "kind": "told", "words": "The dragon continues to watch you carefully." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cool Room" },
       { "reader": "Marta", "kind": "described", "words": "The room is cool and damp. The air is misty. A twisty path from the southeast splits here toward a wide northerly stone bridge, and a narrow westerly tunnel. It is from the latter that the mist and chill seem to originate." },
       { "reader": "Marta", "kind": "described", "words": "A huge red dragon is lying on the rocks here, watching." },
       { "reader": "Marta", "kind": "notice", "words": "The dragon follows you, out of mingled curiosity and anger." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "attack dragon with sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The dragon is surprised and interested (for the moment)." },
       { "reader": "Marta", "kind": "told", "words": "The dragon continues to watch you carefully." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Ice Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a large hall of ancient lava, since worn smooth by the movement of a glacier. A large passage exits to the east and an upward lava tube is at the top of a jumble of fallen rocks." },
@@ -409,57 +493,72 @@
       { "reader": "Marta", "kind": "told", "words": "As the dragon enters, he sees his reflection on the icy surface of the glacier at its western end. He becomes enraged: There is another dragon here, behind that glass, he thinks! Dragons are smart, but sometimes naive, and this one has never seen ice before. He rears up to his full height to challenge this intruder into his territory. He roars a challenge! The intruder responds! The dragon takes a deep breath, and out of his mouth pours a massive gout of flame. It washes over the ice, which melts rapidly, sending out torrents of water and a huge cloud of steam! You manage to clamber up to a small shelf, but the dragon is terrified! A huge splash goes down his throat! There is a muffled explosion and the dragon, a puzzled expression on his face, dies. He is carried away by the water." },
       { "reader": "Marta", "kind": "told", "words": "When the flood recedes you climb gingerly down. While no trace of the dragon can be found, the melting of the ice has revealed a passage leading west." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cool Room" },
       { "reader": "Marta", "kind": "described", "words": "The room is cool and damp. The air is misty. A twisty path from the southeast splits here toward a wide northerly stone bridge, and a narrow westerly tunnel. It is from the latter that the mist and chill seem to originate." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Stone Bridge" },
       { "reader": "Marta", "kind": "described", "words": "This is the middle of a ruined but still impressive stone bridge spanning a deep chasm. Water flows far beneath. A paved path leads north into a large open space. To the south, the path leads into a misty tunnel." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dragon Room" },
       { "reader": "Marta", "kind": "described", "words": "The room is a large cavern full of broken stone. The walls are scorched and there are deep scratches on the floor. A sooty dry smell is very strong here. A paved path winds from a large passage to the west, through the room, and across a huge stone bridge to the south. To the east a small crack is visible. A dark and smokey tunnel leads north." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop teapot", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop can", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop violin", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop necklace", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop sphere", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop candy", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dragon's Lair" },
       { "reader": "Marta", "kind": "described", "words": "You are in the dragon's lair, where the rock walls are scarred by flame. A blackened doorway leads to the south." },
       { "reader": "Marta", "kind": "described", "words": "A rotten old wooden chest is in one corner among the debris." },
       { "reader": "Marta", "kind": "described", "words": "A beautiful young woman, wearing a dirty and bedraggled gown, sits on a rock in the corner. Her hair is unkempt and she is oblivious to your presence, almost in a trance." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "open chest", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The hinges are very rusty, but they seem to be starting to give. You can probably open it if you try again. There is something bumping around inside." },
       { "reader": "Marta", "kind": "said", "words": "All this rummaging around has startled the young woman." },
-      { "reader": "Marta", "kind": "told", "words": "The princess (for she is obviously one) shakes herself awake, then notices you for the first time. She smiles. \"Thank you for rescuing me from that horrid worm,\" she says. \"I must depart. My parents will be worried about me.\" With that, she arises, looking purposefully out of the lair." }
-    ] },
-    { "as": "Marta", "type": "open chest", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Opening the rotten wooden chest reveals a golden dragon statuette." },
+      { "reader": "Marta", "kind": "told", "words": "The princess (for she is obviously one) shakes herself awake, then notices you for the first time. She smiles. \"Thank you for rescuing me from that horrid worm,\" she says. \"I must depart. My parents will be worried about me.\" With that, she arises, looking purposefully out of the lair." },
       { "reader": "Marta", "kind": "told", "words": "The princess walks south. She glances back at you as she goes." }
     ] },
+    { "seed": 5 },
+    { "as": "Marta", "type": "open chest", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Opening the rotten wooden chest reveals a golden dragon statuette." }
+    ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take statuette", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dragon Room" },
       { "reader": "Marta", "kind": "described", "words": "The room is a large cavern full of broken stone. The walls are scorched and there are deep scratches on the floor. A sooty dry smell is very strong here. A paved path winds from a large passage to the west, through the room, and across a huge stone bridge to the south. To the east a small crack is visible. A dark and smokey tunnel leads north." },
@@ -472,88 +571,101 @@
       { "reader": "Marta", "kind": "described", "words": "There is a Stradivarius here." },
       { "reader": "Marta", "kind": "described", "words": "There is a pearl necklace here with hundreds of large pearls." },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
-      { "reader": "Marta", "kind": "described", "words": "There is a package of candied goodies here." },
-      { "reader": "Marta", "kind": "told", "words": "The princess walks east. She glances back at you as she goes." }
+      { "reader": "Marta", "kind": "described", "words": "There is a package of candied goodies here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "follow princess", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "The princess went east from here, glancing back as she went. She walks a step at a time and does not wait; go the same way and you will catch her." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "End of Ledge" },
       { "reader": "Marta", "kind": "described", "words": "A ledge from the east ends here, and a tunnel leads north into the wall. There is a rather odd smokey odor in the warm air of the tunnel." },
-      { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
+      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead east from here; she passed this way not long ago, and she does not wait." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Ledge in Ravine" },
       { "reader": "Marta", "kind": "described", "words": "You are on a narrow ledge near the bottom of a deep ravine. The ledge continues to the west. A precarious climb up to another tiny ledge is possible. A short scramble down the rock face leads to a stream." },
-      { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." },
-      { "reader": "Marta", "kind": "told", "words": "The princess enters from the west. She seems surprised to see you." }
+      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead down the rock face from here; she passed this way not long ago, and she does not wait." },
+      { "reader": "Marta", "kind": "told", "words": "The princess climbs daintily down the rock face." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "d", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Deep Ford" },
       { "reader": "Marta", "kind": "described", "words": "You are fording the stream at a deep but not impossible spot. The water is very cold. The walls of the ravine rise to east and west. There is a small ledge along the north wall of the ravine. To the south is the entrance to a well-constructed but somewhat ruined hall." },
-      { "reader": "Marta", "kind": "described", "words": "A huge dead dragon is lying half blocking the stream." }
+      { "reader": "Marta", "kind": "described", "words": "A huge dead dragon is lying half blocking the stream." },
+      { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
       { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still." },
-      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
-    ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still." },
-      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
-    ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "The princess enters from the north. She seems surprised to see you." },
-      { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still." },
       { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." },
-      { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
+      { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." },
+      { "reader": "Marta", "kind": "told", "words": "The princess enters from the north. She seems surprised to see you." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
       { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still." },
       { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." },
       { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
     ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "The princess presses a loose piece of marble in the wall and a large section of the wall slides away, revealing a passage to the east. She enters it." },
-      { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
-      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still. A large section of the east wall has slid away, revealing a passage to the east." },
-      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead east from here; she passed this way not long ago, and she does not wait." },
-      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
-    ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
       { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still. A large section of the east wall has slid away, revealing a passage to the east." },
       { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead east from here; she passed this way not long ago, and she does not wait." },
-      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." },
+      { "reader": "Marta", "kind": "told", "words": "The princess presses a loose piece of marble in the wall and a large section of the wall slides away, revealing a passage to the east. She enters it." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
       { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still. A large section of the east wall has slid away, revealing a passage to the east." },
       { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead east from here; she passed this way not long ago, and she does not wait." },
       { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
+    { "seed": 5 },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still. A large section of the east wall has slid away, revealing a passage to the east." },
+      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead east from here; she passed this way not long ago, and she does not wait." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
+    ] },
+    { "seed": 5 },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still. A large section of the east wall has slid away, revealing a passage to the east." },
+      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead east from here; she passed this way not long ago, and she does not wait." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
+    ] },
+    { "seed": 5 },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
+      { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still. A large section of the east wall has slid away, revealing a passage to the east." },
+      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead east from here; she passed this way not long ago, and she does not wait." },
+      { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
+    ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Path Near Stream" },
       { "reader": "Marta", "kind": "described", "words": "The path follows the south edge of a deep ravine and heads northeast. A tunnel heads southwest, narrowing to a rather tight crawl. A faint whirring sound can be heard in that direction, as of something very large going round that will not keep still. On the east is a ruined archway choked with vegetation. Behind some rocks to the west, a section of wall stands slid aside, and a passage leads through it into a marble hall." },
       { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead east from here; she passed this way not long ago, and she does not wait." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Formal Garden" },
       { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." },
-      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead north from here; she passed this way not long ago, and she does not wait." },
-      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." },
-      { "reader": "Marta", "kind": "told", "words": "The princess walks north. She glances back at you as she goes." }
+      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead north from here; she passed this way not long ago, and she does not wait." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead into the gazebo from here; she passed this way not long ago, and she does not wait." },
-      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
-      { "reader": "Marta", "kind": "told", "words": "The princess enters the gazebo." }
+      { "reader": "Marta", "kind": "described", "words": "The princess's footprints, small and bare, lead into the gazebo from here; she passed this way not long ago, and she does not wait." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "enter gazebo", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -562,8 +674,10 @@
       { "reader": "Marta", "kind": "described", "words": "A letter opener" },
       { "reader": "Marta", "kind": "described", "words": "A matchbook" },
       { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." },
-      { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
+      { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." },
+      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -574,6 +688,7 @@
       { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." },
       { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -584,6 +699,7 @@
       { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." },
       { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -594,8 +710,8 @@
       { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." },
       { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." },
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
       { "reader": "Marta", "kind": "described", "words": "Sitting on the tea table is:" },
@@ -603,18 +719,9 @@
       { "reader": "Marta", "kind": "described", "words": "A letter opener" },
       { "reader": "Marta", "kind": "described", "words": "A matchbook" },
       { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." },
-      { "reader": "Marta", "kind": "described", "words": "There is a dishevelled and slightly unkempt princess here." }
+      { "reader": "Marta", "kind": "told", "words": "Shyly, a unicorn peeks out of the hedges. It notices the princess and seems captivated. It approaches her and bows its head as though curtseying to her. Around its neck is a red satin ribbon on which is strung a delicate gold key. The princess takes the ribbon and uses it to tie up her hair. She looks at you and then, smiling, hands you the key and a fresh rose which she plucks from the arbor. \"You may have use of such a thing,\" she says. \"It is the least I can do for one who rescued me from a fate I dare not contemplate.\" With that, she mounts the unicorn (side-saddle, of course) and rides off into the gloom." }
     ] },
-    { "as": "Marta", "type": "look", "expect": [
-      { "reader": "Marta", "kind": "told", "words": "Shyly, a unicorn peeks out of the hedges. It notices the princess and seems captivated. It approaches her and bows its head as though curtseying to her. Around its neck is a red satin ribbon on which is strung a delicate gold key. The princess takes the ribbon and uses it to tie up her hair. She looks at you and then, smiling, hands you the key and a fresh rose which she plucks from the arbor. \"You may have use of such a thing,\" she says. \"It is the least I can do for one who rescued me from a fate I dare not contemplate.\" With that, she mounts the unicorn (side-saddle, of course) and rides off into the gloom." },
-      { "reader": "Marta", "kind": "described", "words": "Gazebo" },
-      { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
-      { "reader": "Marta", "kind": "described", "words": "Sitting on the tea table is:" },
-      { "reader": "Marta", "kind": "described", "words": "A place mat" },
-      { "reader": "Marta", "kind": "described", "words": "A letter opener" },
-      { "reader": "Marta", "kind": "described", "words": "A matchbook" },
-      { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." }
-    ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -624,6 +731,7 @@
       { "reader": "Marta", "kind": "described", "words": "A matchbook" },
       { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -633,6 +741,7 @@
       { "reader": "Marta", "kind": "described", "words": "A matchbook" },
       { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -642,21 +751,37 @@
       { "reader": "Marta", "kind": "described", "words": "A matchbook" },
       { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." }
     ] },
+    { "seed": 5 },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Gazebo" },
+      { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
+      { "reader": "Marta", "kind": "described", "words": "Sitting on the tea table is:" },
+      { "reader": "Marta", "kind": "described", "words": "A place mat" },
+      { "reader": "Marta", "kind": "described", "words": "A letter opener" },
+      { "reader": "Marta", "kind": "described", "words": "A matchbook" },
+      { "reader": "Marta", "kind": "described", "words": "There is a newspaper here." }
+    ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take mat", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take opener", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take newspaper", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take matchbook", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop rose", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "i", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
       { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
@@ -667,30 +792,37 @@
       { "reader": "Marta", "kind": "said", "words": "A newspaper" },
       { "reader": "Marta", "kind": "said", "words": "A matchbook" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "out", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Formal Garden" },
       { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Topiary" },
       { "reader": "Marta", "kind": "described", "words": "This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
       { "reader": "Marta", "kind": "described", "words": "There is a dented steel box here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "nw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cool Room" },
       { "reader": "Marta", "kind": "described", "words": "The room is cool and damp. The air is misty. A twisty path from the southeast splits here toward a wide northerly stone bridge, and a narrow westerly tunnel. It is from the latter that the mist and chill seem to originate." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Stone Bridge" },
       { "reader": "Marta", "kind": "described", "words": "This is the middle of a ruined but still impressive stone bridge spanning a deep chasm. Water flows far beneath. A paved path leads north into a large open space. To the south, the path leads into a misty tunnel." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dragon Room" },
       { "reader": "Marta", "kind": "described", "words": "The room is a large cavern full of broken stone. The walls are scorched and there are deep scratches on the floor. A sooty dry smell is very strong here. A paved path winds from a large passage to the west, through the room, and across a huge stone bridge to the south. To the east a small crack is visible. A dark and smokey tunnel leads north." },
@@ -704,101 +836,124 @@
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
       { "reader": "Marta", "kind": "described", "words": "There is a package of candied goodies here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Fresco Room" },
       { "reader": "Marta", "kind": "described", "words": "A path leads east-west through a room decorated with beautiful frescoes of someone battling dragons and rescuing fair maidens. It is hard to tell who is doing this as those parts of the frescoes have been blackened and cracked by intense heat." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Bank Entrance" },
       { "reader": "Marta", "kind": "described", "words": "This is the entrance hall of the Bank of Zork, the largest banking institution of the Great Underground Empire. A partial account of its history is in \"The Lives of the Twelve Flatheads,\" in the chapter on J. Pierpont Flathead. A more detailed history (albeit less objective) may be found in Flathead's outrageous autobiography \"I'm Rich and You Aren't - So There!\". Most of the furniture has been ravaged by passing scavengers. All that remains are two signs at the northwest and northeast corners of the room, which say:" },
       { "reader": "Marta", "kind": "described", "words": "<-- VIEWING ROOMS -->" },
       { "reader": "Marta", "kind": "described", "words": "The way out (ornate but tasteful) is to the east." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop newspaper", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop matchbook", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop statuette", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop gold key", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "nw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West Teller's Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a small room, which was used by a bank officer who retrieved safety deposit boxes for the customer. On the north side of the room is a sign which reads \"Viewing Room\". On the west side of the room, above an open door, is a sign reading:" },
       { "reader": "Marta", "kind": "described", "words": "BANK PERSONNEL ONLY" },
       { "reader": "Marta", "kind": "described", "words": "The entrance hall is back to the south." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Safety Depository" },
       { "reader": "Marta", "kind": "described", "words": "This is a large rectangular room. The east and west walls were used for storing safety deposit boxes, but all have been carefully removed by evil persons. To the east, west, and south of the room are large doorways. The northern \"wall\" of the room is a shimmering curtain of light. In the center of the room is a large stone cube, about 10 feet on a side. Engraved on the side of the cube is some lettering." },
       { "reader": "Marta", "kind": "described", "words": "On the ground is a small, worn piece of paper." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Chairman's Office" },
       { "reader": "Marta", "kind": "described", "words": "This room was the office of the Chairman of the Bank of Zork. Like the other rooms here, it has been extensively vandalized. The lone exit is to the north." },
       { "reader": "Marta", "kind": "described", "words": "A portrait of J. Pierpont Flathead hangs on the wall." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take portrait", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Safety Depository" },
       { "reader": "Marta", "kind": "described", "words": "This is a large rectangular room. The east and west walls were used for storing safety deposit boxes, but all have been carefully removed by evil persons. To the east, west, and south of the room are large doorways. The northern \"wall\" of the room is a shimmering curtain of light. In the center of the room is a large stone cube, about 10 feet on a side. Engraved on the side of the cube is some lettering." },
       { "reader": "Marta", "kind": "described", "words": "On the ground is a small, worn piece of paper." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "walk through curtain", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You feel somewhat disoriented as you pass through..." },
       { "reader": "Marta", "kind": "described", "words": "Small Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small, bare room with no distinguishing features. There are no exits from this room. The south wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "walk through south wall", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You feel somewhat disoriented as you pass through..." },
       { "reader": "Marta", "kind": "described", "words": "Safety Depository" },
       { "reader": "Marta", "kind": "described", "words": "This is a large rectangular room. The east and west walls were used for storing safety deposit boxes, but all have been carefully removed by evil persons. To the east, west, and south of the room are large doorways. The northern \"wall\" of the room is a shimmering curtain of light. In the center of the room is a large stone cube, about 10 feet on a side. Engraved on the side of the cube is some lettering." },
       { "reader": "Marta", "kind": "described", "words": "On the ground is a small, worn piece of paper." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "walk through curtain", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You feel somewhat disoriented as you pass through..." },
       { "reader": "Marta", "kind": "described", "words": "Vault" },
       { "reader": "Marta", "kind": "described", "words": "This is the Vault of the Bank of Zork, in which there are no doors. The north wall shimmers, very faintly, the way the curtain in the Depository does." },
       { "reader": "Marta", "kind": "described", "words": "On the floor sit 200 neatly stacked zorkmid bills." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take bills", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "walk through north wall", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You feel somewhat disoriented as you pass through..." },
       { "reader": "Marta", "kind": "described", "words": "Safety Depository" },
       { "reader": "Marta", "kind": "described", "words": "On the ground is a small, worn piece of paper." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop bills", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop portrait", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "West Teller's Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a small room, which was used by a bank officer who retrieved safety deposit boxes for the customer. On the north side of the room is a sign which reads \"Viewing Room\". On the west side of the room, above an open door, is a sign reading:" },
       { "reader": "Marta", "kind": "described", "words": "BANK PERSONNEL ONLY" },
       { "reader": "Marta", "kind": "described", "words": "The entrance hall is back to the south." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Safety Depository" },
       { "reader": "Marta", "kind": "described", "words": "On the ground is a small, worn piece of paper." },
       { "reader": "Marta", "kind": "described", "words": "200 neatly stacked zorkmid bills are here." },
       { "reader": "Marta", "kind": "described", "words": "The portrait of J. Pierpont Flathead is here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take bills", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take portrait", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "walk through curtain", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You feel somewhat disoriented as you pass through..." },
       { "reader": "Marta", "kind": "described", "words": "East Viewing Room" },
@@ -807,6 +962,7 @@
       { "reader": "Marta", "kind": "described", "words": "Thank You for Banking at the Zork!\"" },
       { "reader": "Marta", "kind": "described", "words": "The west wall shimmers, very faintly, the way the curtain in the Depository does." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Bank Entrance" },
       { "reader": "Marta", "kind": "described", "words": "This is the entrance hall of the Bank of Zork, the largest banking institution of the Great Underground Empire. A partial account of its history is in \"The Lives of the Twelve Flatheads,\" in the chapter on J. Pierpont Flathead. A more detailed history (albeit less objective) may be found in Flathead's outrageous autobiography \"I'm Rich and You Aren't - So There!\". Most of the furniture has been ravaged by passing scavengers. All that remains are two signs at the northwest and northeast corners of the room, which say:" },
@@ -816,28 +972,36 @@
       { "reader": "Marta", "kind": "described", "words": "There is a matchbook saying \"Visit ZORK I\" here." },
       { "reader": "Marta", "kind": "described", "words": "There is a golden dragon statuette here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop bills", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop portrait", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take newspaper", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take matchbook", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take statuette", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take gold key", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Fresco Room" },
       { "reader": "Marta", "kind": "described", "words": "A path leads east-west through a room decorated with beautiful frescoes of someone battling dragons and rescuing fair maidens. It is hard to tell who is doing this as those parts of the frescoes have been blackened and cracked by intense heat." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dragon Room" },
       { "reader": "Marta", "kind": "described", "words": "The room is a large cavern full of broken stone. The walls are scorched and there are deep scratches on the floor. A sooty dry smell is very strong here. A paved path winds from a large passage to the west, through the room, and across a huge stone bridge to the south. To the east a small crack is visible. A dark and smokey tunnel leads north." },
@@ -851,66 +1015,84 @@
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful red crystal sphere here." },
       { "reader": "Marta", "kind": "described", "words": "There is a package of candied goodies here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "End of Ledge" },
       { "reader": "Marta", "kind": "described", "words": "A ledge from the east ends here, and a tunnel leads north into the wall. There is a rather odd smokey odor in the warm air of the tunnel." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "e", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Ledge in Ravine" },
       { "reader": "Marta", "kind": "described", "words": "You are on a narrow ledge near the bottom of a deep ravine. The ledge continues to the west. A precarious climb up to another tiny ledge is possible. A short scramble down the rock face leads to a stream." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "u", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Tiny Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a tiny room carved out of the wall of the ravine. There is an exit down a precarious climb. On the north side of the room is a massive wooden door, which has a small window barred with iron. A formidable bolt lock is set within the door frame. A keyhole covered by a thin metal lid lies within the lock." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "open lid", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The lid is now open." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "put mat under door", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The place mat fits easily under the door." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "put opener in keyhole", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Done." },
       { "reader": "Marta", "kind": "told", "words": "There is a faint noise from behind the door and a small cloud of dust rises from beneath it." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Tiny Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a tiny room carved out of the wall of the ravine. There is an exit down a precarious climb. On the north side of the room is a massive wooden door, which has a small window barred with iron. A formidable bolt lock is set within the door frame. A keyhole lies within the lock. A letter opener is in place within the keyhole. The edge of a place mat is visible under the door. Lying on the place mat is a rusty iron key." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "pull mat", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You draw the place mat out from under the door." },
       { "reader": "Marta", "kind": "told", "words": "As the place mat is moved, a rusty iron key falls from it and onto the floor." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take mat", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take key", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "unlock door with iron key", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The door is now unlocked." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "open door", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The door is now open." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dreary Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small and rather dreary room, eerily illuminated by a red glow emanating from a crack in one wall. The light falls upon a dusty wooden table in the center of the room. On the south side of the room is a massive wooden door, which has a small window barred with iron. A formidable bolt lock is set within the door frame. A keyhole lies within the lock." },
       { "reader": "Marta", "kind": "described", "words": "In the center of the table sits a blue crystal sphere." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop mat", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop iron key", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take sphere", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "score", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Your score is 190 (total of 400 points), in 178 moves." },
+      { "reader": "Marta", "kind": "said", "words": "Your score is 190 (total of 400 points), in 180 moves." },
       { "reader": "Marta", "kind": "said", "words": "This score gives you the rank of Junior Adventurer." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "i", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
       { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
@@ -920,89 +1102,112 @@
       { "reader": "Marta", "kind": "said", "words": "A delicate gold key" },
       { "reader": "Marta", "kind": "said", "words": "A blue crystal sphere" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop statuette", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop gold key", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "drop sphere", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Dropped." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Tiny Room" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "d", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Ledge in Ravine" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Deep Ford" },
       { "reader": "Marta", "kind": "described", "words": "You are fording the stream at a deep but not impossible spot. The water is very cold. The walls of the ravine rise to east and west. There is a small ledge along the north wall of the ravine. To the south is the entrance to a well-constructed but somewhat ruined hall." },
       { "reader": "Marta", "kind": "described", "words": "A huge dead dragon is lying half blocking the stream." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Marble Hall" },
       { "reader": "Marta", "kind": "described", "words": "This is an arched hall of fine marble. The hall stops abruptly to the north at a ford across a stream, where the marble is cracked and broken. Perhaps a flood or collapse of the cave was responsible. To the south the hall opens into a large room. There is rather annoying whirring sound coming from that room, as of something very large that will not keep still. A large section of the east wall has slid away, revealing a passage to the east." },
       { "reader": "Marta", "kind": "described", "words": "There is a square brick here which feels like clay." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take brick", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
       { "reader": "Marta", "kind": "described", "words": "There is a dented steel box here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "sw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Cobwebby Corridor" },
       { "reader": "Marta", "kind": "described", "words": "A winding corridor is filled with cobwebs. Some are broken and the dust on the floor is disturbed. The trend of the twists and turns is northeast to southwest. On the north side of one twist, high up, is a narrow crack." },
       { "reader": "Marta", "kind": "described", "words": "There is a coil of black, braided string here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take fuse", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Lava Tube" },
       { "reader": "Marta", "kind": "described", "words": "You are in a tight chimney of solidified lava. It extends up at least another hundred feet and down to a large room far below. A large crack opens to the south, probably the result of a shift in the rock strata." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "d", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Ice Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a large hall of ancient lava, since worn smooth by the movement of a glacier. A large passage exits to the east and an upward lava tube is at the top of a jumble of fallen rocks." },
       { "reader": "Marta", "kind": "described", "words": "A damp and scorched passage leads west, where the glacier was." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Lava Room" },
       { "reader": "Marta", "kind": "described", "words": "This is a small room, whose walls are formed by an old lava flow. There are exits here to the east and the south." },
       { "reader": "Marta", "kind": "described", "words": "On the floor lies a moby ruby." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take ruby", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Volcano Bottom" },
       { "reader": "Marta", "kind": "described", "words": "You are at the bottom of a large dormant volcano. High above you light enters from the cone of the volcano. The only exit is to the north." },
       { "reader": "Marta", "kind": "described", "words": "There is a large and extremely heavy wicker basket here. An enormous cloth bag is draped over the side and is firmly attached to the basket. A metal receptacle is fastened to the center of the basket. Dangling from the basket is a piece of braided wire." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "get in basket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are now in the basket." },
       { "reader": "Marta", "kind": "described", "words": "Volcano Bottom, in the basket" },
       { "reader": "Marta", "kind": "described", "words": "You are at the bottom of a large dormant volcano. High above you light enters from the cone of the volcano. The only exit is to the north." },
       { "reader": "Marta", "kind": "described", "words": "The cloth bag is draped over the side of the basket. Directly in the middle of the basket is a metal receptacle which is closed. A braided wire is dangling over the side of the basket." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "open receptacle", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Opened." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "put newspaper in receptacle", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Done." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "light match", "expect": [
       { "reader": "Marta", "kind": "said", "words": "One of the matches starts to burn." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "burn newspaper with match", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The newspaper burns inside the receptacle." },
-      { "reader": "Marta", "kind": "said", "words": "The match has gone out." },
       { "reader": "Marta", "kind": "told", "words": "The cloth bag inflates as it fills with hot air." },
-      { "reader": "Marta", "kind": "told", "words": "A small label drops from the bag into the basket." }
+      { "reader": "Marta", "kind": "told", "words": "A small label drops from the bag into the basket." },
+      { "reader": "Marta", "kind": "said", "words": "The lamp appears a bit dimmer." },
+      { "reader": "Marta", "kind": "said", "words": "The match has gone out." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "wait", "expect": [
       { "reader": "Marta", "kind": "told", "words": "The balloon rises slowly from the ground." },
       { "reader": "Marta", "kind": "told", "words": "Volcano Core, in the basket" },
@@ -1012,8 +1217,8 @@
       { "reader": "Marta", "kind": "said", "words": "Time passes..." },
       { "level": "info", "text": "passes: 90 seconds" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "wait", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "The lamp appears a bit dimmer." },
       { "reader": "Marta", "kind": "told", "words": "The balloon ascends." },
       { "reader": "Marta", "kind": "told", "words": "Volcano Near Small Ledge, in the basket" },
       { "reader": "Marta", "kind": "told", "words": "You are about two hundred feet above the volcano floor. Looming above is the rim of the volcano. There is a small ledge on the west side." },
@@ -1027,6 +1232,7 @@
       { "reader": "Marta", "kind": "told", "words": "His eye goes to your hands, which hold nothing he values, and he relaxes a little: whatever you have come for, you have not found it yet. It is all south of the ravine, his look says, every treasure the Empire mislaid, and much good may it do you; the pearls nearest, behind a stone door that asks a question, and the rest further in, past a room that will not keep still, which you will hear before you see it." },
       { "reader": "Marta", "kind": "told", "words": "The Wizard, in a deep and resonant voice, speaks the word \"Fantasize!\" He then vanishes, cackling gleefully." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "land", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The balloon comes down onto the ledge, and you step out of the basket." },
       { "reader": "Marta", "kind": "described", "words": "Narrow Ledge" },
@@ -1037,12 +1243,15 @@
       { "reader": "Marta", "kind": "described", "words": "There is a large and extremely heavy wicker basket here. An enormous cloth bag attached to the basket is inflated. A metal receptacle is fastened to the center of the basket. In it is a burning newspaper. Dangling from the basket is a piece of braided wire." },
       { "reader": "Marta", "kind": "described", "words": "In the basket there is a blue label." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "tie wire to hook", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The balloon is fastened to the hook." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take zorkmid", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Library" },
       { "reader": "Marta", "kind": "described", "words": "This must have been a large library, probably for the royal family. All of the shelves have been gnawed to pieces by unfriendly gnomes. To the north is an exit." },
@@ -1052,19 +1261,23 @@
       { "reader": "Marta", "kind": "described", "words": "There is a basilisk here." },
       { "reader": "Marta", "kind": "described", "words": "Lying in the dust, and covered with mold, is a purple book." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "read purple book", "expect": [
       { "reader": "Marta", "kind": "said", "words": "This book is written in a tongue with which I am unfamiliar. Assuming that one can indeed tell a book by its cover, it is likely filled with purple prose, the like of which is rarely seen outside the Great Underground Empire." },
       { "reader": "Marta", "kind": "said", "words": "Opening the purple book reveals a Flathead stamp." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take stamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Narrow Ledge" },
       { "reader": "Marta", "kind": "described", "words": "There is a convention of wizards here." },
       { "reader": "Marta", "kind": "described", "words": "There is a large and extremely heavy wicker basket here. An enormous cloth bag attached to the basket is inflated. A metal receptacle is fastened to the center of the basket. In it is a burning newspaper. A piece of wire tied to a hook holds the balloon in place." },
       { "reader": "Marta", "kind": "described", "words": "In the basket there is a blue label." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "get in basket", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are now in the basket." },
       { "reader": "Marta", "kind": "described", "words": "Narrow Ledge, in the basket" },
@@ -1073,9 +1286,11 @@
       { "reader": "Marta", "kind": "described", "words": "In the basket there is a blue label." },
       { "reader": "Marta", "kind": "described", "words": "The cloth bag is inflated and there is a newspaper burning in the receptacle. The balloon is tied to a hook by the braided wire." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "untie wire", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The wire falls off of the hook." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "wait", "expect": [
       { "reader": "Marta", "kind": "told", "words": "The balloon leaves the ledge." },
       { "reader": "Marta", "kind": "told", "words": "Volcano Near Small Ledge, in the basket" },
@@ -1087,6 +1302,7 @@
       { "level": "info", "text": "passes: 90 seconds" },
       { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "wait", "expect": [
       { "reader": "Marta", "kind": "told", "words": "The balloon ascends." },
       { "reader": "Marta", "kind": "told", "words": "Volcano by Viewing Ledge, in the basket" },
@@ -1097,6 +1313,7 @@
       { "level": "info", "text": "passes: 90 seconds" },
       { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "wait", "expect": [
       { "reader": "Marta", "kind": "told", "words": "The balloon ascends." },
       { "reader": "Marta", "kind": "told", "words": "Volcano Near Wide Ledge, in the basket" },
@@ -1107,6 +1324,7 @@
       { "reader": "Marta", "kind": "said", "words": "Time passes..." },
       { "level": "info", "text": "passes: 90 seconds" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "wait", "expect": [
       { "reader": "Marta", "kind": "told", "words": "The balloon floats majestically out of the volcano, revealing a breathtaking view of a wooded river valley surrounded by impassable mountains. In a clearing stands a white house. You drift into high winds, which carry you towards the snow-capped peaks. Oh, no! You crash into the jagged cliffs of the Flathead Mountains!" },
       { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
@@ -1116,24 +1334,29 @@
       { "reader": "Marta", "kind": "described", "words": "You are inside a huge crystalline sphere filled with thin red mist. The mist becomes blue to the west." },
       { "reader": "Marta", "kind": "described", "words": "You strain to look out through the mist... As you peer through the mist, a strangely colored vision of a huge room takes shape... You see a room you half know, which the mist thickens over before it comes clear." },
       { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "level": "warning", "text": "a send reached nothing: inside_barrow.lamp sent :light to from, which reaches nothing in its range now" },
       { "level": "info", "text": "passes: 90 seconds" },
       { "level": "info", "text": "elsewhere.wizard woke, 120 seconds after it asked" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "look", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Room of Red Mist" },
       { "reader": "Marta", "kind": "described", "words": "You are inside a huge crystalline sphere filled with thin red mist. The mist becomes blue to the west." },
       { "reader": "Marta", "kind": "described", "words": "You strain to look out through the mist... As you peer through the mist, a strangely colored vision of a huge room takes shape... You see a room you half know, which the mist thickens over before it comes clear." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Room of Blue Mist" },
       { "reader": "Marta", "kind": "described", "words": "You are inside a huge crystalline sphere filled with thin blue mist. The mist becomes white to the west." },
       { "reader": "Marta", "kind": "described", "words": "You strain to look out through the mist... As you peer through the mist, a strangely colored vision of a huge room takes shape... You see a small and rather dreary room, lit red from a crack in one wall, with a dusty wooden table in the middle of it and a massive wooden door." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Room of White Mist" },
       { "reader": "Marta", "kind": "described", "words": "You are inside a huge crystalline sphere filled with thin white mist. The mist becomes black to the west." },
       { "reader": "Marta", "kind": "described", "words": "You strain to look out through the mist... A strange blurry room is barely visible. An odd sinuous shadow crosses the mist as you look." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "told", "words": "As you enter, a huge and horrible face materializes out of the mist." },
       { "reader": "Marta", "kind": "told", "words": "\"What brings you here to trouble my imprisonment, wanderer?\" it asks. Hearing no immediate answer, it studies you for a moment." },
@@ -1141,9 +1364,11 @@
       { "reader": "Marta", "kind": "described", "words": "Inside the Barrow" },
       { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here (providing light)." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Narrow Tunnel" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Inside the Barrow" },
       { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here (providing light)." }

@@ -125,8 +125,9 @@ kind Adventurer is sprout.Visitor {
   :bank_loot 0 min 0 max 10
   // The curtain of light (I-CURTAIN): twelve moves after a pass, it
   // closes, and in the Small Room the Gnome of Zurich comes three moves
-  // later and goes twelve after that.
-  :curtain_left 0 min 0 max 12
+  // later and goes twelve after that. A pass sets thirteen, since the
+  // clock that follows the passing command counts one off at once.
+  :curtain_left 0 min 0 max 13
   :gnome_in 0 min 0 max 3
   :gnome_left 0 min 0 max 12
   :gnome_shown false
@@ -490,7 +491,7 @@ kind Adventurer is sprout.Visitor {
   on :princess_walking (from, value) { self.set(:princess_walking, value) }
   // Through the curtain, and back through a wall of light.
   on :curtain_pass (from, value) {
-    self.set(:curtain_left, 12)
+    self.set(:curtain_left, 13)
     broadcast :curtain_active with value
     send self :travel with value
   }

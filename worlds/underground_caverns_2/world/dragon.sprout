@@ -66,22 +66,14 @@ kind Dragon is Creature, sprout.Actor {
   on :dragon_blow { self.set(:blow_at, self.get(:anger))  self.set(:warn_shown, self.get(:warned))  if (self.get(:anger) >= 2) { self.set(:warned, true) } }
 
   // Provoked: so much anger, and his turn runs from now on (I-DRAGON).
-  // The first provocation runs his turn at once, as DRAGON-FCN's QUEUE
-  // does, since the visitor's clock hears of him only next move.
+  // The visitor's clock, which follows the command once its queue has
+  // drained, hears of him this same move and runs his first turn, as
+  // DRAGON-FCN's QUEUE does.
   on :provoke (from, value) {
     self.adjust(:anger, value)
     if (!self.get(:watching)) {
       self.set(:watching, true)
       broadcast :dragon_watch with true
-      if (self.get(:anger) > 6) {
-        each a: Adventurer in here {
-          if (a.get(:spell) == :fireproof) { tell a "The dragon tires of this game. With an almost bored yawn, he opens his mouth and blasts you with a great gout of fire, but it washes over you harmlessly." }
-          else { tell a "The dragon tires of this game. With an almost bored yawn, he opens his mouth and incinerates you in a blast of white-hot dragon fire."  send a :die  send self :go_home }
-        }
-      } else {
-        tell "The dragon continues to watch you carefully."
-        if (self.get(:anger) >= 2) { self.adjust(:anger, -2) } else { self.set(:anger, 0) }
-      }
     }
   }
   without as target for greet from Creature
