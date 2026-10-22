@@ -1227,3 +1227,25 @@ caverns' numbers are written "caverns N"._
   the compiler suggests. Not a complaint; noted so the next long
   close-up starts as a passage.
 - **Spec:** Limits › Static caps (`literalCharacters`).
+
+### 89. A clock that moved shifts every countdown by a move
+
+- **Wanted:** the port to 5380ce6 to keep the world's timings, since
+  nothing it says changed.
+- **Got:** `after command` now runs once the command's queue has drained,
+  so a countdown or a first turn that a message handler of the command
+  sets is counted by the visitor's clock in the same move, where it
+  started on the next before: the curtain of light closed after eleven
+  moves, the bucket poured into from outside went at once without its
+  move of straining, and the dragon, first provoked, had his turn twice
+  and said "The dragon continues to watch you carefully." twice. Nothing
+  in `sprout check` points at them; only the tests that counted found
+  them. Fixed one by one (thirteen for the curtain, a flag on the bucket,
+  the dragon's inline first turn dropped); the princess and the unicorn
+  now move a move sooner, which reads as well.
+- **Also:** a `look` on the move a clock brings something in lists it
+  before the line that brings it ("There is a Gnome of Zurich here."
+  then "An epicene gnome of Zurich ... materializes in the room."),
+  since the room is rendered against the state the turn commits.
+- **Spec:** Verbs › After a command; Prose (lines rendered once the
+  turn's work is done).

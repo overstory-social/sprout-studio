@@ -34,6 +34,9 @@ kind Bucket is sprout.Place, Box, Vessel, Awaited, CakeSafe {
   :at Dest default well_bottom
   :riders 0 min 0 max 20
   :errand Errand default idle
+  // Poured into from outside this very move: the Circular Room's clock,
+  // which follows the move's command, lets it strain until the next.
+  :poured_now false
   :daylight false
   :seeing false
   grammar {
@@ -98,6 +101,7 @@ kind Bucket is sprout.Place, Box, Vessel, Awaited, CakeSafe {
           // one strains at its rope for a move first, and says so, so that
           // whoever poured has one move to get in.
           self.set(:errand, :straining)
+          self.set(:poured_now, true)
           tell outside "The rope above the bucket goes taut, and the bucket shifts on the floor and lifts a little at one side, as though it had somewhere to be and meant to go there with or without you. It has not gone yet."
         } else {
           self.set(:errand, :rise)
@@ -131,7 +135,8 @@ kind Bucket is sprout.Place, Box, Vessel, Awaited, CakeSafe {
   // The move after it was poured into from outside, the Circular Room
   // tells it to go: with whoever got in, or without anyone.
   on :bucket_lift {
-    if (self.get(:errand) == :straining && self.get(:at) == :well_bottom && self.count(Water) > 0) {
+    if (self.get(:poured_now)) { self.set(:poured_now, false) }
+    else if (self.get(:errand) == :straining && self.get(:at) == :well_bottom && self.count(Water) > 0) {
       if (self.get(:riders) == 0) { tell outside "The bucket swiftly rises up, and is gone." }
       self.set(:errand, :rise)
       send underground_caverns_2 :open_gate
