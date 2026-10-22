@@ -3,218 +3,164 @@
     {
       "answers": "P1",
       "decision": "accept",
-      "reason": "I agree. The replayed metrics drifted away from what was played, so their deltas say nothing about the world, and I judged round 16 by the run as it was played. This belongs to the studio's metrics tooling, not the world, so the world has no change for it. The echo's case did change, from 'North north ...' to 'north north ...'. That is intended: Sprout no longer recapitalises prose, and Zork's echo is lower case (friction 17 and 70 are marked)."
+      "reason": "The round-15 rule sat where nobody looked. Moving it to where players actually meet the bar keeps TOUCHBIT and Zork's refusals unchanged and still names none of the other roads home. The brief's hauling puzzle should cost turns, not end the run in silence."
     },
     {
       "answers": "P2",
       "decision": "accept",
-      "reason": "The round-16 revision already moved the bar's rule onto the refusals players actually meet in the Cellar, and TOUCHBIT is unchanged. Nothing more to make until round 17 shows whether a player who reads the rule looks for another road home. This is also why the trap door stays one object per side this round (see S1)."
+      "reason": "This is the other half of P1. When the open state goes unsaid, the earned short way home is invisible. It is a one-clause change to fixed Zork room text, made and logged as a chosen difference."
     },
     {
       "answers": "P3",
       "decision": "accept",
-      "reason": "Already made in the round-16 revision: the Cellar now says when the trap door above it stands open, in both BRIEF and full descriptions. It stays on the round-17 watch list."
+      "reason": "I agree no world change is needed: the shaft and the torch already point at each other. A run aimed at the mine, or one that starts mid-game, is the director's call. It is noted in intent for round 17."
     },
     {
       "answers": "P4",
       "decision": "accept",
-      "reason": "I agree no world change is needed: the shaft and the torch already point at each other. A run aimed at the mine, or one that starts mid-game, is the director's call."
+      "reason": "I agree to keep the maze and the coal mine as Zork built them. Marking rooms by dropping things is the classic answer. The unread and repetition counts from 'no_way' lines in the maze are mapping, not world failure."
     },
     {
       "answers": "P5",
       "decision": "accept",
-      "reason": "The maze and the coal mine stay as Zork built them; dropping things to mark rooms is the classic answer. Maze no_way lines are a player mapping, not the world failing."
+      "reason": "Players read the thief as the intent hopes, an unseen someone. Kept as is."
     },
     {
       "answers": "P6",
       "decision": "accept",
-      "reason": "The thief is read as the intent hopes: an unseen someone. Kept as is."
+      "reason": "Accepted, but the cause was not a missing noun: the name already parses. 'climb' is the world's synonym for go, so 'climb mountains' matched the exit label, and the adjective broke that. The fix is a climb synonym for CLIMB UP on the mountains, with Zork's MOUNTAIN-RANGE-F answer, and the same on the Cellar stairs. A global 'climb [x]' was tried and broke 'climb rope' and 'climb chimney', so it is logged as friction 134."
     },
     {
       "answers": "P7",
       "decision": "accept",
-      "reason": "All three phrasings were fixed in the round-16 revision, and mountains.json and the trap-door tests still pass at 2c85fd7. Round 17's metrics, played at this world, should confirm it."
+      "reason": "The world already has answers for both phrasings. The trap door now works by name the way the stairs do, and SWIM IN or SWIM ACROSS water gives that water's own refusal (plain SWIM anywhere else), as Zork's LAKE-PSEUDO and RIVER-FUNCTION do."
     },
     {
       "answers": "P8",
       "decision": "accept",
-      "reason": "Already fixed in the revision: each item is answered in turn, and take_from_box.json pins it. The inventory nesting it uncovered (friction 18) is now answered by verbatim prose; see S1."
+      "reason": "There is no world change to make: the parser's fallback answer belongs to the engine. I added this round's evidence to friction (94/120, 'the word nobody knows'; 132, everything except)."
     },
     {
       "answers": "P9",
       "decision": "accept",
-      "reason": "Checked at the pin. 'knock on the boarded door politely' and 'open the window wider' now drop the leftover word and restate the reading in brackets. 'drop everything except X and Y' now works. Friction 94, 120, 132 and 69 are marked answered or changed. Still failing: 'go back' (unknown), 'push open the window' and 'take all but X' (both not_here), and 'empty sack' (unknown). These stay logged."
+      "reason": "Nothing in the world can echo a line that never parses. I added the evidence to friction 70."
     },
     {
       "answers": "P10",
       "decision": "accept",
-      "reason": "I agree, and it remains friction 70. A line naming something that is not there never reaches the room, so the room cannot echo it. The new `as actor for any` cannot say which verb it refuses, so it cannot echo 'look look ...' either."
+      "reason": "I replayed it as recommended. The bug was the world's, not the engine's: the adventurer's own take permit refused the whole list when one item was not in the box. It now answers each item in turn, as Zork does. The lost inventory nesting is friction 18 again."
     },
     {
       "answers": "P11",
       "decision": "accept",
-      "reason": "The room text stays Zork's, and the 'changed version' framing is the director's to weigh. No world change."
+      "reason": "I agree the room text stays Zork's. The 'changed version' framing is the director's concern, and no world change follows."
     },
     {
       "answers": "P12",
       "decision": "accept",
-      "reason": "Everything reached and praised is kept. The list of things still unmet stays on intent's round-17 watch list."
+      "reason": "Keep everything that was reached and praised. The list of things still unmet goes into intent's round-17 watch list."
     },
     {
       "answers": "P13",
       "decision": "accept",
-      "reason": "No change of its own. P2 and P3, both already made, are the levers on the goal-seeker's score. The 350 ending still needs a longer cap or a mid-game start, which is the director's call."
-    },
-    {
-      "answers": "S1",
-      "decision": "accept",
-      "reason": "This is a refine round at the new pin, with no new scope and Zork I whole. I checked friction.md against every feature in the list, dropped the workarounds where the feature now does the job, and marked 23 entries answered, answered in part, changed or not answered. Several workarounds stay, each for a stated reason: the trap door stays one door per side until round 17 has tested the bar's rule on the Cellar's side; the Loud Room's per-verb echoes stay because the actor wildcard cannot name its verb; `take all` keeps its guess, because sprout#838 does not apply where Portable plays `take`; the rooms' state copies stay, because a describe still cannot read another room's property. Two features had no workaround in this world to drop: drawn exits and NPC acts that fill a value role. The port also uncovered a live bug: the new `empty_handed` engine line had taken over the chimney's passage. It is fixed and logged as friction 141."
+      "reason": "No change of its own. P1 and P2, both made, are the levers on the goal-seeker's ceiling. The 350 ending still needs a longer cap or a mid-game start, which is the director's call."
     }
   ],
   "changes": [
     {
-      "what": "Fixed 'drop all' with empty hands, which answered with the chimney's line. The new engine line `empty_handed` was being found on the adventurer's existing passage of the same name. The chimney's passage is now `chimney_bare`, and the world writes `empty_handed` as Zork's 'You are empty-handed.' Logged as friction 141.",
+      "what": "While the trap door is shut, the Cellar now gives the bar's rule after Zork's own refusal. It follows 'up', open, push/pull open, push, lift, smash/break (with or without a tool), knock, go through, and climb (up) the stairs or the door. The rule reads: 'Whoever keeps the bar up there drops it behind anyone new to the house. Come home by some other road and open the door yourself, and it will be let alone.' The up exit refuses with a passage that carries the rule.",
       "files": [
-        "worlds/underground_caverns/world/adventurer.sprout",
-        "worlds/underground_caverns/world/underground_caverns.sprout",
-        "worlds/underground_caverns/friction.md"
+        "worlds/underground_caverns/world/cellar.sprout"
       ],
       "for": [
-        "S1"
+        "P1"
       ]
     },
     {
-      "what": "Zork's stock answers on Thing, and on the kinds that type a verb (Creature, Lockable, Door, Inflatable and the rest), are now `default` plays. 301 `without` lines were removed wherever the same body writes its own play, including Bag's three (friction 29). A `without` that only silences stays. Portable's own plays stay non-default.",
+      "what": "The Cellar says when the trap door above it is open. In BRIEF it adds 'The trap door above you stands open.' through a Cellar-only brief passage; Room's brief is now a default so the Cellar can override it. The full description ends 'Overhead, at the top of the stairs, the trap door stands open.'",
       "files": [
-        "worlds/underground_caverns/world/thing.sprout",
-        "worlds/underground_caverns/world/box.sprout",
-        "worlds/underground_caverns/world/above_ground.sprout",
-        "worlds/underground_caverns/world/barrow.sprout",
-        "worlds/underground_caverns/world/boat.sprout",
         "worlds/underground_caverns/world/cellar.sprout",
-        "worlds/underground_caverns/world/cyclops.sprout",
-        "worlds/underground_caverns/world/dam.sprout",
-        "worlds/underground_caverns/world/east.sprout",
-        "worlds/underground_caverns/world/gallery.sprout",
-        "worlds/underground_caverns/world/grating.sprout",
-        "worlds/underground_caverns/world/hades.sprout",
-        "worlds/underground_caverns/world/house.sprout",
-        "worlds/underground_caverns/world/items.sprout",
-        "worlds/underground_caverns/world/lamp.sprout",
-        "worlds/underground_caverns/world/mine.sprout",
-        "worlds/underground_caverns/world/mirror.sprout",
-        "worlds/underground_caverns/world/remains.sprout",
-        "worlds/underground_caverns/world/reservoir.sprout",
-        "worlds/underground_caverns/world/river.sprout",
-        "worlds/underground_caverns/world/room.sprout",
-        "worlds/underground_caverns/world/scenery.sprout",
-        "worlds/underground_caverns/world/temple.sprout",
-        "worlds/underground_caverns/world/thief.sprout",
-        "worlds/underground_caverns/world/tree.sprout",
-        "worlds/underground_caverns/world/troll.sprout"
+        "worlds/underground_caverns/world/room.sprout"
       ],
       "for": [
-        "S1"
+        "P2"
       ]
     },
     {
-      "what": "GHOSTS-F is now one `as target for any except examine, attack, mung, exorcise, talk, ask, greet` wildcard, replacing about 25 generated without-and-play pairs (friction 124). exorcism.json: 'take spirits' is now a refusal, and kick and greet steps were added.",
+      "what": "The mountains east of the forest now take 'climb' as CLIMB UP, so any phrasing ('climb the impassable mountains', 'climb mountains', 'climb up the mountains') gets MOUNTAIN-RANGE-F's 'Don't you believe me? The mountains are impassable!'. 'mountains', 'grey' and 'gray' were added to their words. The Cellar stairs also take 'climb' as CLIMB UP.",
       "files": [
-        "worlds/underground_caverns/world/hades.sprout",
-        "worlds/underground_caverns/world/tests/exorcism.json"
-      ],
-      "for": [
-        "S1"
-      ]
-    },
-    {
-      "what": "DEAD-FUNCTION's 'You can't even do that.' is now one `as actor for any except ...` wildcard on the adventurer, replacing 70 per-verb refusals. Verbs with their own dead line, and those the dead may do, are left out of it (friction 125). spirit.json gained 'kick gate' and 'listen' steps.",
-      "files": [
-        "worlds/underground_caverns/world/adventurer.sprout",
-        "worlds/underground_caverns/world/tests/spirit.json"
-      ],
-      "for": [
-        "S1"
-      ]
-    },
-    {
-      "what": "The kitchen window is one `kitchen_window` standing in both the Kitchen and Behind House. `:window_sync`, its pass rule and both rooms' `:window_open` are gone, and the exits and descriptions read the window itself (friction 16, answered in part). New test window_sides.json, which also pins 'drop all' with empty hands.",
-      "files": [
-        "worlds/underground_caverns/world/house.sprout",
         "worlds/underground_caverns/world/above_ground.sprout",
-        "worlds/underground_caverns/world/verbs.sprout",
-        "worlds/underground_caverns/world/underground_caverns.sprout",
-        "worlds/underground_caverns/world/tests/window_sides.json"
+        "worlds/underground_caverns/world/cellar.sprout"
       ],
       "for": [
-        "S1"
+        "P6"
       ]
     },
     {
-      "what": "UP-CHIMNEY-FUNCTION is now a permit on the adventurer's part of `go`, using `here.is(ChimneyFoot) && way == \"up\"`. `:at_chimney` is gone, and the trap door's re-barring (TOUCHBIT) now reads `from` on `:moved` (friction 42).",
+      "what": "When open, the Living Room's trap door can be gone down and through by name ('go down the trap door', 'climb down the trap door', 'go through the trap door'); when shut, it answers 'The trap door is closed.'. A new swim_in intent ('swim in/across/through/into/over/to [x]', 'bathe in', 'wade into') reaches the lake's, river's, stream's or water's own refusal, and plain SWIM for anything that is not water.",
+      "files": [
+        "worlds/underground_caverns/world/house.sprout",
+        "worlds/underground_caverns/world/verbs.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Taking several things out of a box now answers each in turn. The take permit refuses only a single item that is not in the box; with several, each stray item is named and refused ('Glass bottle: That isn't in the brown sack.') and the rest are taken.",
       "files": [
         "worlds/underground_caverns/world/adventurer.sprout"
       ],
       "for": [
-        "S1"
-      ]
-    },
-    {
-      "what": "The inventory nests and indents as Zork's PRINT-CONT does: a `held_lines` passage on Box, with indentation written as `{verbatim}` spaces. A box's contents in a room and under LOOK IN are indented two spaces (friction 18). Test lines changed only in leading spaces, except egg.json, where the canary inside the held egg is now listed by name as Zork lists it rather than by its first description.",
-      "files": [
-        "worlds/underground_caverns/world/box.sprout",
-        "worlds/underground_caverns/world/thing.sprout",
-        "worlds/underground_caverns/world/adventurer.sprout",
-        "worlds/underground_caverns/world/tests"
-      ],
-      "for": [
-        "S1",
-        "P8"
-      ]
-    },
-    {
-      "what": "The move count skips refusals in the deafening Loud Room, as LOUD-ROOM-FCN's own loop does (friction 140). loud_room.json and loud_noise.json are back to their earlier counts.",
-      "files": [
-        "worlds/underground_caverns/world/adventurer.sprout",
-        "worlds/underground_caverns/world/tests/loud_room.json",
-        "worlds/underground_caverns/world/tests/loud_noise.json"
-      ],
-      "for": [
-        "S1",
         "P10"
       ]
     },
     {
-      "what": "The grating and the Altar's hole count the skeleton key and the coffin in the actor's hand directly; `:keys` and `:coffins` are gone (friction 58, 72). DIAGNOSE uses `20 * (wounds - 1)` and `score / 70` in place of its ladders of ifs (friction 93).",
+      "what": "Tests: a new trap_door_bar.json tries the barred door every way from the Cellar and swims at the Reservoir. A new mountains.json climbs the mountains. A new take_from_box.json is the P10 replay. prayer.json is extended with the open door in BRIEF and in full and the door gone through by name both ways. The expected lines in climbing, route_home, slide and trap_door are updated to the new refusals. All 104 tests pass and check is clean.",
       "files": [
-        "worlds/underground_caverns/world/adventurer.sprout",
-        "worlds/underground_caverns/world/grating.sprout",
-        "worlds/underground_caverns/world/temple.sprout"
+        "worlds/underground_caverns/world/tests/trap_door_bar.json",
+        "worlds/underground_caverns/world/tests/mountains.json",
+        "worlds/underground_caverns/world/tests/take_from_box.json",
+        "worlds/underground_caverns/world/tests/prayer.json",
+        "worlds/underground_caverns/world/tests/climbing.json",
+        "worlds/underground_caverns/world/tests/route_home.json",
+        "worlds/underground_caverns/world/tests/slide.json",
+        "worlds/underground_caverns/world/tests/trap_door.json"
       ],
       "for": [
-        "S1"
+        "P1",
+        "P2",
+        "P6",
+        "P7",
+        "P10"
       ]
     },
     {
-      "what": "Version bumped to 0.4.0, because `sprout compat` reports the removed properties and paths break saves of 0.3.0.",
+      "what": "friction.md has a new 'Found in round 16' section. It adds this round's evidence to the unknown-word entry (94/120: 'politely'), to 132 (everything except), to 70 (the Loud Room's echo exceptions) and to 18 (inventory nesting), and opens a new entry 134 (a climb said of a thing competes with an exit label). The v8 'chosen differences' list gains the Cellar's open-door line, the bar's rule wherever the bar is met, swimming in water, and climbing the mountains.",
       "files": [
-        "worlds/underground_caverns/world/sprout.json"
+        "worlds/underground_caverns/friction.md"
       ],
       "for": [
-        "S1"
+        "P6",
+        "P8",
+        "P9",
+        "P10"
       ]
     },
     {
-      "what": "Friction updated: 23 entries marked answered, answered in part, changed or not answered by the new features (11, 16, 17, 18, 18 again, 23, 29, 36 again, 42, 58, 69, 70, 72, 89, 93, 94, 120, 124, 125, 132, 135, 139, 140), and new entry 141. Intent gained a section on this revision and two round-17 watch items: the indented inventory and the bracketed restatements.",
+      "what": "intent.md has a new 'After round 16' section recording each decision, and 'What round 17 should watch': whether the bar's rule, read where the bar is met, sends players looking for another road home; whether the Cellar's open-door line gets them onto the stairs; and the items still unmet, carried over.",
       "files": [
-        "worlds/underground_caverns/friction.md",
         "worlds/underground_caverns/intent.md"
       ],
       "for": [
-        "S1",
         "P1",
-        "P9",
-        "P10"
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P11",
+        "P12",
+        "P13"
       ]
     }
   ]
