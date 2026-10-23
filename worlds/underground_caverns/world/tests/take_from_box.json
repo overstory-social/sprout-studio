@@ -1,5 +1,5 @@
 {
-  "about": "The take is the plain one: `take X out of Y` is no longer a sentence, and what is in an open sack in hand is taken by name. Several taken at once are answered each in turn, as Zork's TAKE answers them, and one already held is passed over.",
+  "about": "The take is the plain one: `take X out of Y` is not a sentence of its own, read as `take X` with the rest dropped and what was read restated, and what is in an open sack in hand is taken by name. Several taken at once are answered each in turn, as Zork's TAKE answers them, and one already held is passed over.",
   "steps": [
     { "seed": 0 },
     { "arrive": "Marta", "expect": [
@@ -24,7 +24,7 @@
       { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
       { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
       { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
-      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+      { "reader": "Marta", "kind": "described", "words": "  A quantity of water" }
     ] },
     { "as": "Marta", "type": "take sack", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
@@ -37,31 +37,33 @@
     ] },
     { "as": "Marta", "type": "inventory", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
-      { "reader": "Marta", "kind": "said", "words": "A brown sack" },
-      { "reader": "Marta", "kind": "said", "words": "The brown sack contains:" },
-      { "reader": "Marta", "kind": "said", "words": "A lunch" },
-      { "reader": "Marta", "kind": "said", "words": "A clove of garlic" },
-      { "reader": "Marta", "kind": "said", "words": "A glass bottle" },
-      { "reader": "Marta", "kind": "said", "words": "The glass bottle contains:" },
-      { "reader": "Marta", "kind": "said", "words": "A quantity of water" }
+      { "reader": "Marta", "kind": "said", "words": "  A brown sack" },
+      { "reader": "Marta", "kind": "said", "words": "  The brown sack contains:" },
+      { "reader": "Marta", "kind": "said", "words": "    A lunch" },
+      { "reader": "Marta", "kind": "said", "words": "    A clove of garlic" },
+      { "reader": "Marta", "kind": "said", "words": "  A glass bottle" },
+      { "reader": "Marta", "kind": "said", "words": "  The glass bottle contains:" },
+      { "reader": "Marta", "kind": "said", "words": "    A quantity of water" }
     ] },
     { "as": "Marta", "type": "take lunch out of sack", "expect": [
-      { "reader": "Marta", "kind": "notice", "words": "You can't see any such thing." }
+      { "reader": "Marta", "kind": "notice", "words": "(take lunch)" },
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Marta", "type": "take lunch and bottle", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Lunch: Taken." }
+      { "reader": "Marta", "kind": "said", "words": "lunch: You already have that!" },
+      { "reader": "Marta", "kind": "said", "words": "glass bottle: You already have that!" }
     ] },
     { "as": "Marta", "type": "take lunch and garlic", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Clove of garlic: Taken." }
+      { "reader": "Marta", "kind": "said", "words": "clove of garlic: Taken." }
     ] },
     { "as": "Marta", "type": "inventory", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
-      { "reader": "Marta", "kind": "said", "words": "A brown sack" },
-      { "reader": "Marta", "kind": "said", "words": "A glass bottle" },
-      { "reader": "Marta", "kind": "said", "words": "The glass bottle contains:" },
-      { "reader": "Marta", "kind": "said", "words": "A quantity of water" },
-      { "reader": "Marta", "kind": "said", "words": "A lunch" },
-      { "reader": "Marta", "kind": "said", "words": "A clove of garlic" }
+      { "reader": "Marta", "kind": "said", "words": "  A brown sack" },
+      { "reader": "Marta", "kind": "said", "words": "  A glass bottle" },
+      { "reader": "Marta", "kind": "said", "words": "  The glass bottle contains:" },
+      { "reader": "Marta", "kind": "said", "words": "    A quantity of water" },
+      { "reader": "Marta", "kind": "said", "words": "  A lunch" },
+      { "reader": "Marta", "kind": "said", "words": "  A clove of garlic" }
     ] }
   ]
 }

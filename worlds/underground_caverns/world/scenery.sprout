@@ -10,7 +10,6 @@ kind WhiteHouse is Scenery {
   describe {
     text "The house is a beautiful colonial house which is painted white. It is clear that the owners must have been extremely wealthy."
   }
-  without as target for open from Thing
   as target for open { do { say "I can't see how to get in from here." } }
 
   // Zork's HOUSE-AROUND: walking around the house takes the visitor to the
@@ -37,16 +36,12 @@ kind BoardedWindow is Scenery {
   grammar { name "boarded window"  nouns "window", "windows" }
   passage short { boarded window }
   describe { text "The windows are boarded over with planks, nailed on by someone who did not want to be bothered. Through the cracks there is only darkness, and possibly a smell of dust." }
-  without as target for open from Thing
   as target for open { do { say "The windows are boarded and can't be opened." } }
 }
 
 kind FrontDoor is Scenery, Door {
   grammar { name "door"  adjectives "front", "boarded" }
   passage short { door }
-  without as target for open from Thing
-  without as target for read from Thing
-  without as target for look_in from Thing
   as target for open    { do { say "The door cannot be opened." } }
   as target for read    { do { say "There is no writing on this side." } }
   as target for look_in { do { say "The door is closed." } }
@@ -66,15 +61,11 @@ kind Tree is Scenery {
 // The tree by the Forest Path, from below and from among its branches.
 kind TreeBelow is Tree {
   describe { text "It is a particularly large tree, older than the house and in no hurry, with some low branches that all but invite climbing." }
-  without as target for climb_up from Thing
-  without as target for climb_down from Thing
   as target for climb_up   { do { send actor :travel with :up_a_tree  say "" } }
   as target for climb_down { do { say "You can't go that way." } }
 }
 kind TreeAbove is Tree {
   describe { text "The branches around you are thick and sturdy enough to sit in. The nearest one above is just out of reach, which is the tree's way of saying that this is far enough." }
-  without as target for climb_up from Thing
-  without as target for climb_down from Thing
   as target for climb_up   { do { say "You cannot climb any higher." } }
   as target for climb_down { do { send actor :travel with :path  say "" } }
 }

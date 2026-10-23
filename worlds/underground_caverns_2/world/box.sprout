@@ -47,12 +47,8 @@ kind Box is Thing {
     }
   }
 
-  without as target for open from Thing
-  without as target for close from Thing
-  without as target for look_in from Thing
   // Thing's answer to `burn`, written here so that a carried box (a Bag)
   // can leave it out once and take Portable's (friction 54).
-  without as target for burn from Thing
   as target for burn {
     do {
       if (bound tool) { if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" } }
@@ -106,9 +102,8 @@ kind Bag is Box, Portable {
   without as target for open from Thing
   without as target for close from Thing
   without as target for look_in from Thing
-  without as target for shake from Thing
-  without as target for shake from Portable
   without as target for burn from Box
+  without as target for shake from Portable
   as target for shake {
     do {
       if (!self.get(:open)) {

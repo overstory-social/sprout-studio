@@ -69,13 +69,10 @@ kind Pile is Portable, Inflatable, Concealing {
   describe { text "It is a pile of heavy plastic, folded small and tight, with a small valve attached at one corner. Printed on one fold, upside down, are the words \"FROBOZZ MAGIC BOAT COMPANY\" and the beginning of some instructions that go on round the back." }
   // The instructions the fold promises, round the back of it.
   passage back_words { Round the back, in type that gets smaller as it goes, the instructions go on: "...INFLATE AT VALVE WITH ANY STANDARD AIR PUMP. DO NOT INFLATE BY MOUTH, BELLOWS OR VOLCANIC VENT. FULL INSTRUCTIONS ON TAN LABEL INSIDE. THE FROBOZZ MAGIC BOAT COMPANY ACCEPTS NO RESPONSIBILITY FOR..." The rest is folded in too tight to read. }
-  without as target for read from Thing
   as target for read { do { say back_words } }
-  without as target for turn from Thing
   as target for turn { do { say "You turn the pile over, which takes some doing. {self.back_words}" } }
   as target for look_behind { do { say back_words } }
   passage seaworthy { The boat inflates and appears seaworthy. }
-  without as target for inflate from Inflatable
   as target for inflate {
     do {
       if (!here.holds(self)) { say "The boat must be on the ground to be inflated." }
@@ -99,7 +96,6 @@ kind Pile is Portable, Inflatable, Concealing {
       }
     }
   }
-  without as target for fill from Thing
   as target for fill { do { say "You'll want to inflate it, and something to do it with." } }
 }
 
@@ -182,9 +178,7 @@ kind MagicBoat is sprout.Place, Bag, Vessel, Inflatable {
   as target for close { do { say "You must tell me how to do that to a magic boat." } }
   without as target for open from Box
   as target for open { do { say "It is already open, as boats go." } }
-  without as target for inflate from Inflatable
   as target for inflate { do { say "Inflating it further would probably burst it." } }
-  without as target for fill from Thing
   as target for fill { do { say "Inflating it further would probably burst it." } }
   as target for deflate {
     permit {
@@ -204,7 +198,6 @@ kind MagicBoat is sprout.Place, Bag, Vessel, Inflatable {
   as target for land { do { } }
   as target for board { do { } }
   without as target for through from Portable
-  without as target for through from Thing
   as target for through { do { } }
 
   // Who is in it: while anyone is, it is not listed in the room around them.
@@ -387,12 +380,9 @@ kind Wreck is Box, Portable, Rejecting, Inflatable, Pluggable {
   as target for close { do { say "You must tell me how to do that to a punctured boat." } }
   without as target for look_in from Box
   as target for look_in { do { say "There is nothing in it but a little air, and that is on its way out." } }
-  without as target for inflate from Inflatable
   as target for inflate { do { say "No chance. Some moron punctured it." } }
-  without as target for fill from Thing
   as target for fill { do { say "No chance. Some moron punctured it." } }
   passage mended { Well done. The boat is repaired. }
-  without as target for plug from Pluggable
   as target for plug {
     do {
       if (bound tool) {

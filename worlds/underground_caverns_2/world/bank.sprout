@@ -65,11 +65,8 @@ kind Curtain is Box, Scenery {
   :sending false
   describe { text "The northern wall of the room is a curtain of light, shimmering, floor to ceiling and wall to wall, the pale gold of a lamp seen through water. It is not warm. Nothing can be seen through it, and your hand, when you hold it near, is lit on one side and goes on being a hand." }
   passage no_take { As you try, your hand seems to go through it. }
-  without as target for shift from Thing
   as target for shift { do { say "As you try, your hand seems to go through it." } }
-  without as target for rub from Thing
   as target for rub { do { say "As you try, your hand seems to go through it. It is not warm, and not cold, and not there, quite." } }
-  without as target for through from Thing
   as target for through {
     do {
       if (here.is(Depository)) {
@@ -130,14 +127,11 @@ kind CurtainWall is Box, Scenery {
   on :curtain_active (from, value) { self.set(:active, value == self.get(:room)) }
   describe { text "{if self.get(:passes) && self.get(:active)}The {self.get(:side)} wall shimmers, very faintly, like the curtain of light in the Depository, and seems a little less there than the others.{else}The {self.get(:side)} wall is plain stone, and solid, as far as looking can tell.{/if}" }
   passage no_take { {if self.get(:passes) && self.get(:active)}As you try, your hand seems to go through it.{else}The wall is attached to the rest of the building.{/if} }
-  without as target for shift from Thing
   as target for shift { do { if (self.get(:passes) && self.get(:active)) { say "As you try, your hand seems to go through it." } else { say "The wall does not move. It is a wall." } } }
-  without as target for rub from Thing
   as target for rub { do { if (self.get(:passes) && self.get(:active)) { say "As you try, your hand seems to go through it." } else { say "Cold stone, and solid." } } }
   // A bare "wall" names all four; the three that are only walls refuse
   // here, so the reading that consents is the one that leads (round 5's
   // P2, by the spec's Choosing a reading).
-  without as target for through from Thing
   as target for through {
     permit { if (!(self.get(:passes) && self.get(:active))) { refuse "You hit your head against the {self.get(:side)} wall as you attempt this feat." } }
     do {
@@ -178,18 +172,14 @@ kind Shimmer is Scenery {
   on :curtain_active (from, value) { self.set(:active, value == self.get(:room))  self.set(:unseen, value != self.get(:room)) }
   describe { text "The {self.get(:side)} wall shimmers, very faintly, like the curtain of light in the Depository, and seems a little less there than the others. It is the way back, while it lasts, and it does not last." }
   passage no_take { As you try, your hand seems to go through it. }
-  without as target for through from Thing
   as target for through {
     do {
       say "You feel somewhat disoriented as you pass through..."
       send actor :curtain_back
     }
   }
-  without as target for rub from Thing
   as target for rub { do { say "As you try, your hand seems to go through it. It is not warm, and not cold, and not there, quite." } }
-  without as target for shift from Thing
   as target for shift { do { say "As you try, your hand seems to go through it." } }
-  without as target for look_in from Thing
   as target for look_in { do { say "Light, and more light, and nothing behind it that you can make out." } }
 }
 kind EastWall is CurtainWall { grammar { name "east wall"  nouns "wall"  adjectives "east", "eastern" }  :side east  passage short { east wall } }
@@ -211,21 +201,15 @@ kind Gnome is Creature, sprout.Actor {
   passage not_yours { The gnome clutches it possessively. }
   passage held_fast { The gnome is not a thing one picks up, and says so with a look. }
   describe { text "He is a gnome, small and neat and of no particular sex, in a three-piece suit of banker's grey with a watch-chain across the waistcoat, and wire-rimmed bifocals he looks over rather than through. He carries a safety deposit box under one arm and taps its lid. He has the air of a man whose time is money, and whose money is somebody else's." }
-  without as target for greet from Creature
   as target for greet { do { say "The gnome appears increasingly impatient." } }
-  without as target for talk from Creature
   as target for talk { do { say "The gnome appears increasingly impatient." } }
-  without as target for ask from Thing
   as target for ask { do { say "The gnome appears increasingly impatient." } }
   as target for attack { do { say "The gnome says \"Well, I never...\" and disappears with a snap of his fingers, leaving you alone."  send self :gnome_vanish } }
-  without as target for mung from Thing
   as target for mung { do { say "The gnome says \"Well, I never...\" and disappears with a snap of his fingers, leaving you alone."  send self :gnome_vanish } }
-  without as target for kick from Thing
   as target for kick { do { say "The gnome says \"Well, I never...\" and disappears with a snap of his fingers, leaving you alone."  send self :gnome_vanish } }
   // A gift (ZGNOME-FCN): the adventurer's own part has put it in his
   // hands. A treasure goes in the box and the customer is shown out;
   // anything else goes over his shoulder.
-  without as recipient for give from Thing
   as recipient for give {
     do {
       if (item.is(Treasure)) {
@@ -276,7 +260,6 @@ kind BankSign is Scenery {
   passage short { sign }
   passage words default { {if false}.{/if} }
   describe { text words }
-  without as target for read from Thing
   as target for read { do { say words } }
 }
 
@@ -501,7 +484,6 @@ object depository is Depository in underground_caverns_2 {
       Frobozz Magic Vault Company
     }
     describe { text "A cube of stone, ten feet on a side, in the middle of the room, with no door, no seam and no keyhole, and lettering engraved on one face. It is, the lettering says, the Vault. How one gets into it is not engraved. {self.words}" }
-    without as target for read from Thing
     as target for read { do { say words } }
   }
   object doorways is Scenery {

@@ -41,11 +41,13 @@ kind DiamondRoom is DarkRoom {
 // told from the rest by a bag on the floor (round 7's P1), so that a
 // runner knows a base when they stand on one.
 kind DiamondBase is DiamondRoom {
-  passage body { This is a room with oddly angled walls and passages in all directions. The walls are made of some glassy substance. In one corner of the floor a square canvas bag is nailed down, scuffed, the size of a cushion, of the kind a runner touches on the way round. }
+  // The diagonal is on the room line (round 9's P5): runners ran the
+  // compass points from the corners and lost the count every time.
+  passage body { This is a room with oddly angled walls and passages in all directions. The walls are made of some glassy substance. In one corner of the floor a square canvas bag is nailed down, scuffed, the size of a cushion, of the kind a runner touches on the way round. It is nailed at a point of the diamond, and a diamond has no straight sides: the next base from here is off the square, a corner away, which is to say on a diagonal. }
   object bag is Scenery {
     grammar { name "canvas bag"  nouns "bag", "base", "canvas", "cushion"  adjectives "square", "canvas", "scuffed" }
     passage short { canvas bag }
-    describe { text "A square bag of canvas, stuffed, nailed to the floor in the corner, and scuffed by feet that came at it in a hurry. It is a base. There are, if this is a diamond, three more like it, and a runner touches them in order, the next one on round from this, and comes home." }
+    describe { text "A square bag of canvas, stuffed, nailed to the floor in the corner, and scuffed by feet that came at it in a hurry. It is a base. There are, if this is a diamond, three more like it, and a runner touches them in order, the next one on round from this, and comes home. A diamond stands on its point, so the way from one base to the next is never along a side; it is across a corner, northeast, southeast, southwest or northwest, whichever the count asks for next." }
     passage no_take { The bag is nailed down. Bases generally are. }
   }
 }
@@ -59,13 +61,14 @@ kind DiamondWindow is Scenery {
   on :diamond_count (from, value) { self.set(:glow, value) }
   passage short { diamond shaped window }
   passage state { {if self.get(:glow) >= 5}glowing serenely{else if self.get(:glow) == 4}glowing brightly{else if self.get(:glow) == 3}glowing{else if self.get(:glow) == 2}dimly glowing{else if self.get(:glow) == 1}flickering dimly{else}dark{/if} }
-  passage ldesc { On the floor is a very small diamond shaped window which is {self.state}. }
-  passage close_up { On the floor is a very small diamond shaped window which is {self.state}. It is set flush with the floor, and whatever is under it is a long way down, or a long way off. It glows, when it glows, by some count that is being kept, the way a scoreboard keeps one: a flicker for first, a dim glow for second, a glow for third, and brightest of all for home, which is where whatever is being counted began; and it goes dark when the count is lost, which it is by any step but the right one. }
+  passage ldesc { On the floor is a very small diamond shaped window which is {self.state}.{if self.get(:glow) == 4} It has one grade left in it.{/if} }
+  // The scale is the world's own, five grades of it (round 9's P1): a
+  // runner three bases round read "brightest of all for home" and stopped.
+  passage close_up { On the floor is a very small diamond shaped window which is {self.state}. It is set flush with the floor, and whatever is under it is a long way down, or a long way off. It glows, when it glows, by some count that is being kept, the way a scoreboard keeps one, in five grades: a flicker for the plate, where whatever is being counted begins; a dim glow for first; a glow for second; a bright glow for third; and a serene, settled glow for home, which is the plate again, come round to. It goes dark when the count is lost, which it is by any step but the right one. {self.reading} }
+  passage reading { {if self.get(:glow) == 0}Just now it is dark: nothing is being counted.{else if self.get(:glow) == 1}Just now it flickers: the count has begun, whoever began it is standing on the plate, and first base is a corner away.{else if self.get(:glow) == 2}Just now it glows dimly: first base, with three to go, each the next corner round.{else if self.get(:glow) == 3}Just now it glows: second base, with two to go, each the next corner round.{else if self.get(:glow) == 4}Just now it glows brightly: third base, with one to go, the corner on round from here, which is home.{else}Just now it glows serenely: home, and the count is complete.{/if} }
   describe { text close_up }
-  without as target for look_in from Thing
   as target for look_in { do { say close_up } }
   passage no_take { The window is an integral part of the floor. }
-  without as target for mung from Thing
   as target for mung { do { say "The window is diamond-hard and cannot be broken." } }
 }
 
@@ -153,15 +156,10 @@ kind Menhir is Scenery {
       if (self.get(:position) == 3) { self.set(:position, 0)  broadcast :menhir_at with 0  tell "The menhir sinks to the ground." }
     }
   }
-  without as target for read from Thing
   as target for read { do { say "\"F\"" } }
-  without as target for shift from Thing
   as target for shift { do { say "The menhir weighs many tons and is eight feet wide. You can't even get a grip on it, much less move it." } }
-  without as target for turn from Thing
   as target for turn { do { say "The menhir weighs many tons and is eight feet wide. You can't even get a grip on it, much less move it." } }
-  without as target for raise from Thing
   as target for raise { do { say "The menhir weighs many tons and is eight feet wide. You can't even get a grip on it, much less move it. If anything in this domain lifts it, it is not hands." } }
-  without as target for look_under from Thing
   as target for look_under { do { if (self.get(:position) == 0) { say "The gap between the menhir and the wall is very narrow, but it is clear that there is a sizeable room in there. Your light only reveals a part of the far wall." } else { say "Behind the menhir is some air and then a wall." } } }
 }
 // The rooms either side of the menhir keep its position, told by it.
@@ -253,25 +251,19 @@ object stairway is DarkRoom in underground_caverns_2 {
     grammar { name "stairs"  nouns "stairway", "steps", "staircase", "stair"  adjectives "marble", "stone", "dark", "steep" }
     passage short { stairs }
     describe { text "A stairway of marble, broad, going down into the gloom in a long straight flight, and worn in the middle of each step by feet that used it often, a long time ago." }
-    without as target for climb_down from Thing
     as target for climb_down { do { send actor :travel with :diamond_5  say "" } }
-    without as target for climb_up from Thing
     as target for climb_up { do { say "You are at the top of it." } }
   }
 }
 
-// The nine Oddly-angled Rooms. A visitor's own part cannot read which way
-// they walked, and a place may have eight ways out (friction 58), so each
-// room's eight compass ways lead to the eight other rooms in one fixed
-// order, north to northwest round the compass and the rooms in their
-// numbers, and the visitor's part reads the way off where it led and
-// sends them where Zork would (adventurer.sprout): until the bases are
-// run, a draw, or the next corner; after, Zork's own ways, and "You
-// can't go that way." for the rest. The room at the foot of the stair has
-// nine ways in Zork and ten with the secret passage down, so two are left
-// out: its southwest, to a room with nothing in it, and, since round 7,
-// its west, which once the bases are run led to a corner the next corner
-// also leads to (friction 69).
+// The nine Oddly-angled Rooms, a three-by-three of them with the stair's
+// room in the middle. Every way out of every one is an exit, DIAMOND-5's
+// ten among them, so that the visitor's own part of `go`, which reads the
+// way walked, can answer every direction as DIAMOND-MOTION does
+// (adventurer.sprout): until the bases are run, a draw, or the next
+// corner; after, Zork's own ways, and "You can't go that way." for the
+// rest. Where the exits lead is immaterial until then, and after, they
+// lead where Zork's do.
 
 object diamond_5 is DiamondRoom in underground_caverns_2 {
   grammar {
@@ -283,6 +275,8 @@ object diamond_5 is DiamondRoom in underground_caverns_2 {
     exit east "east" -> diamond_3
     exit southeast "southeast" -> diamond_4
     exit south "south" -> diamond_6
+    exit southwest "southwest" -> diamond_7
+    exit west "west" -> diamond_4
     exit northwest "northwest" -> diamond_9
   }
   :id diamond_5
@@ -301,7 +295,6 @@ object diamond_5 is DiamondRoom in underground_caverns_2 {
     grammar { name "stairs"  nouns "stairway", "steps", "staircase", "stair"  adjectives "marble", "stone", "upward" }
     passage short { stairs }
     describe { text "The marble stairway goes up from here, broad and worn, to the passage at the top.{if diamond_5.is(DiamondRoom)}{if diamond_5.get(:solved)} At its foot the floor has swung down on a hinge nobody suspected, and a passage goes down into the dark.{/if}{/if}" }
-    without as target for climb_up from Thing
     as target for climb_up { do { send actor :travel with :stairway  say "" } }
   }
   object secret_passage is Scenery {
@@ -310,7 +303,6 @@ object diamond_5 is DiamondRoom in underground_caverns_2 {
     on :diamond_count (from, value) { if (value >= 5) { self.set(:unseen, false) } }
     passage short { secret passage }
     describe { text "Where the floor has swung down at the foot of the stairway, a passage leads down into unrelieved darkness, by a stair of marble narrower and steeper than the one that comes up." }
-    without as target for climb_down from Thing
     as target for climb_down { do { send actor :travel with :cerberus_room  say "" } }
   }
 }
@@ -318,6 +310,8 @@ object diamond_5 is DiamondRoom in underground_caverns_2 {
 object diamond_1 is DiamondRoom in underground_caverns_2 {
   grammar {
     name "Oddly-angled Room"
+    exit up "up" -> diamond_5
+    exit down "down" -> diamond_5
     exit north "north" -> diamond_2
     exit northeast "northeast" -> diamond_3
     exit east "east" -> diamond_4
@@ -334,6 +328,8 @@ object diamond_1 is DiamondRoom in underground_caverns_2 {
 object diamond_2 is DiamondBase in underground_caverns_2 {
   grammar {
     name "Oddly-angled Room"
+    exit up "up" -> diamond_5
+    exit down "down" -> diamond_5
     exit north "north" -> diamond_1
     exit northeast "northeast" -> diamond_3
     exit east "east" -> diamond_4
@@ -350,6 +346,8 @@ object diamond_2 is DiamondBase in underground_caverns_2 {
 object diamond_3 is DiamondRoom in underground_caverns_2 {
   grammar {
     name "Oddly-angled Room"
+    exit up "up" -> diamond_5
+    exit down "down" -> diamond_5
     exit north "north" -> diamond_1
     exit northeast "northeast" -> diamond_2
     exit east "east" -> diamond_4
@@ -366,6 +364,8 @@ object diamond_3 is DiamondRoom in underground_caverns_2 {
 object diamond_4 is DiamondBase in underground_caverns_2 {
   grammar {
     name "Oddly-angled Room"
+    exit up "up" -> diamond_5
+    exit down "down" -> diamond_5
     exit north "north" -> diamond_1
     exit northeast "northeast" -> diamond_2
     exit east "east" -> diamond_3
@@ -382,6 +382,8 @@ object diamond_4 is DiamondBase in underground_caverns_2 {
 object diamond_6 is DiamondBase in underground_caverns_2 {
   grammar {
     name "Oddly-angled Room"
+    exit up "up" -> diamond_5
+    exit down "down" -> diamond_5
     exit north "north" -> diamond_1
     exit northeast "northeast" -> diamond_2
     exit east "east" -> diamond_3
@@ -398,6 +400,8 @@ object diamond_6 is DiamondBase in underground_caverns_2 {
 object diamond_7 is DiamondRoom in underground_caverns_2 {
   grammar {
     name "Oddly-angled Room"
+    exit up "up" -> diamond_5
+    exit down "down" -> diamond_5
     exit north "north" -> diamond_1
     exit northeast "northeast" -> diamond_2
     exit east "east" -> diamond_3
@@ -414,6 +418,8 @@ object diamond_7 is DiamondRoom in underground_caverns_2 {
 object diamond_8 is DiamondBase in underground_caverns_2 {
   grammar {
     name "Oddly-angled Room"
+    exit up "up" -> diamond_5
+    exit down "down" -> diamond_5
     exit north "north" -> diamond_1
     exit northeast "northeast" -> diamond_2
     exit east "east" -> diamond_3
@@ -430,6 +436,8 @@ object diamond_8 is DiamondBase in underground_caverns_2 {
 object diamond_9 is DiamondRoom in underground_caverns_2 {
   grammar {
     name "Oddly-angled Room"
+    exit up "up" -> diamond_5
+    exit down "down" -> diamond_5
     exit north "north" -> diamond_1
     exit northeast "northeast" -> diamond_2
     exit east "east" -> diamond_3

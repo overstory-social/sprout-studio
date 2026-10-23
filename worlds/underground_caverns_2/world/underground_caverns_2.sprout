@@ -11,7 +11,7 @@ import {Person} from 'person'
 import {Adventurer} from 'adventurer'
 import {go} from 'sprout'
 import {inside_barrow} from 'way_in'
-import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :unicorn_rides, :unicorn_gone, :princess_step, :princess_gone, :dragon_bored, :flip, :zoom, :room_sealed, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :robot_at, :dragon_turn, :dragon_watch, :ice_melted, :princess_turn, :secret_door, :curtain_active, :gnome_come, :gnome_go, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :mat_moved, :key_far, :balloon_tick, :balloon_land, :gnome_due, :gnome_fidget, :vgnome_come, :vgnome_late, :gnome_door, :fuse_out, :explosion_at, :collapse, :diamond_count, :bat_to, :wiz_fed, :wiz_locked, :wiz_open, :genie_summoned, :genie_departs, :case_worth, :case_smashed, :wizard_gone, :wizard_dejected, :surrender_wand, :menhir_at, :menhir_order, :leashed, :crypt_door, :red_at, :blue_at, :clear_at, :serpent_gone} from 'verbs'
+import {:open_gate, :gate_open, :close_gate, :wizard_start, :where_are_you, :wizard_turn, :unicorn_at, :bound_away, :come_back, :unicorn_rides, :unicorn_gone, :princess_step, :princess_gone, :dragon_bored, :flip, :zoom, :poisoned, :bucket_up, :bucket_down, :bucket_dry, :fantasize, :robot_at, :dragon_turn, :dragon_watch, :ice_melted, :princess_turn, :secret_door, :curtain_active, :gnome_come, :gnome_go, :pdoor_locked, :pdoor_open, :mat_under, :push_key, :mat_moved, :key_far, :balloon_tick, :balloon_land, :gnome_due, :gnome_fidget, :vgnome_come, :vgnome_late, :gnome_door, :fuse_out, :explosion_at, :collapse, :diamond_count, :bat_to, :wiz_fed, :genie_summoned, :genie_departs, :case_worth, :case_smashed, :wizard_gone, :wizard_dejected, :surrender_wand, :menhir_at, :menhir_order, :leashed, :red_at, :blue_at, :clear_at, :serpent_gone} from 'verbs'
 import {:unseal, :seal} from 'workshop'
 import {:princess_walking} from 'dragon'
 
@@ -35,7 +35,6 @@ world underground_caverns_2 is sprout.World {
   pass :unicorn_gone (true)
   pass :flip (true)
   pass :zoom (true)
-  pass :room_sealed (true)
   pass :poisoned (true)
   // The bucket's comings and goings, counted by every visitor wherever
   // they are; and the Fantasize spell, heard by every room's illusion.
@@ -89,8 +88,6 @@ world underground_caverns_2 is sprout.World {
   // leashed; the crypt door, one door in two rooms; and where each sphere
   // lies, for the others' visions and the Rooms of Mist.
   pass :wiz_fed (true)
-  pass :wiz_locked (true)
-  pass :wiz_open (true)
   pass :genie_summoned (true)
   pass :genie_departs (true)
   pass :case_worth (true)
@@ -101,7 +98,6 @@ world underground_caverns_2 is sprout.World {
   pass :menhir_at (true)
   pass :menhir_order (true)
   pass :leashed (true)
-  pass :crypt_door (true)
   pass :red_at (true)
   pass :blue_at (true)
   pass :clear_at (true)

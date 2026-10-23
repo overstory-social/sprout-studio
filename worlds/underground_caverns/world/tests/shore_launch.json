@@ -24,7 +24,7 @@
       { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
       { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
       { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
-      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+      { "reader": "Marta", "kind": "described", "words": "  A quantity of water" }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Living Room" },
@@ -43,7 +43,7 @@
       { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
       { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
       { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
-      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+      { "reader": "Marta", "kind": "described", "words": "  A quantity of water" }
     ] },
     { "as": "Marta", "type": "u", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You have moved into a dark place." },
@@ -64,7 +64,7 @@
       { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
       { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
       { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
-      { "reader": "Marta", "kind": "described", "words": "A quantity of water" }
+      { "reader": "Marta", "kind": "described", "words": "  A quantity of water" }
     ] },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Living Room" }
@@ -217,7 +217,7 @@
     { "as": "Marta", "type": "x boat", "expect": [
       { "reader": "Marta", "kind": "described", "words": "It is a magic boat, inflated, bright yellow, round-sided and unreasonably cheerful, with a pair of seats, a valve, and a good deal of fine print. It looks seaworthy. It also looks as though it would not care for anything sharp." },
       { "reader": "Marta", "kind": "described", "words": "The magic boat contains:" },
-      { "reader": "Marta", "kind": "described", "words": "A tan label" }
+      { "reader": "Marta", "kind": "described", "words": "  A tan label" }
     ] },
     { "as": "Marta", "type": "board boat", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Oops! Something sharp seems to have slipped and punctured the boat. The boat deflates to the sounds of hissing, sputtering, and cursing." }
@@ -367,6 +367,30 @@
       { "reader": "Marta", "kind": "said", "words": "The magic boat comes to a rest on the shore." },
       { "reader": "Marta", "kind": "described", "words": "Shore, in the magic boat" },
       { "reader": "Marta", "kind": "described", "words": "You are on the east shore of the river. The water here seems somewhat treacherous. A path travels from north to south here, the south end quickly turning around a sharp corner." }
+    ] },
+    { "comment": "Put out again, and over the Falls: dead, and back in the Forest, the visitor is not in the boat any more, and the next move hears nothing of a landing." },
+    { "as": "Marta", "type": "launch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The current takes the boat the moment it leaves the shore, and the shore is already slipping away behind you. The roar ahead is very close." },
+      { "reader": "Marta", "kind": "described", "words": "Frigid River, in the magic boat" },
+      { "reader": "Marta", "kind": "described", "words": "The sound of rushing water is nearly unbearable here. On the east shore is a large landing area." }
+    ] },
+    { "as": "Marta", "type": "west", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "The west bank is sheer rock straight down into the water, and the current will not let you near it. The only landing left is the one on the east shore." }
+    ] },
+    { "advance": "1 minute", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" },
+      { "level": "info", "text": "dam_base.pile.boat woke, 60 seconds after it asked" },
+      { "reader": "Marta", "kind": "told", "words": "Unfortunately, the magic boat doesn't provide protection from the rocks and boulders one meets at the bottom of waterfalls. Including this one." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "Now, let's take a look here... Well, you probably deserve another chance. I can't quite fix you up completely, but you can't have everything." },
+      { "reader": "Marta", "kind": "told", "words": "Your belongings, such as they were, have not come with you. The plain things are strewn about the forest and the fields around the house, anything of value has rolled into some dark corner in or under it, and somebody tidy has put the lamp back in the living room." },
+      { "reader": "Marta", "kind": "described", "words": "Forest" },
+      { "reader": "Marta", "kind": "described", "words": "This is a forest, with trees in all directions. To the east, there appears to be sunlight." },
+      { "reader": "Marta", "kind": "described", "words": "There is a red buoy here." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Forest Path" },
+      { "reader": "Marta", "kind": "described", "words": "This is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path." }
     ] }
   ]
 }

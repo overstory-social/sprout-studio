@@ -1,0 +1,187 @@
+{
+  "steps": [
+    { "comment": "A thing already in hand is passed over in silence in a list with something new in it, as Zork's `all` leaves it out: `take all except lamp` in the Attic takes the rope and the knife and says nothing of the sack and the sword. A world cannot tell `all` or `all except` from a typed list (friction 143), so a held thing named in a typed list is passed over too, and `take key and bag` with the sack in hand says nothing of the bag (friction 142). Alone, a name that fits a held thing and a thing on the floor means the one on the floor: `take bag` takes the coins, `take lamp` the burned-out lantern." },
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "West of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small mailbox here." },
+      { "reader": "Marta", "kind": "extension", "words": "the white house" }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North of House" },
+      { "reader": "Marta", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Behind House" },
+      { "reader": "Marta", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "as": "Marta", "type": "open window", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Marta", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "  A quantity of water" },
+      { "reader": "Marta", "kind": "extension", "words": "the kitchen" }
+    ] },
+    { "as": "Marta", "type": "take sack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Marta", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Marta", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." },
+      { "reader": "Marta", "kind": "extension", "words": "the trophy case" }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "  A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Attic" },
+      { "reader": "Marta", "kind": "described", "words": "This is the attic. The only exit is a stairway leading down." },
+      { "reader": "Marta", "kind": "described", "words": "A large coil of rope is lying in the corner." },
+      { "reader": "Marta", "kind": "described", "words": "On a table is a nasty-looking knife." }
+    ] },
+    { "as": "Marta", "type": "take all except lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "rope: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "nasty knife: Taken." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "  A brown sack" },
+      { "reader": "Marta", "kind": "said", "words": "  A brass lantern (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "  A sword" },
+      { "reader": "Marta", "kind": "said", "words": "  A rope" },
+      { "reader": "Marta", "kind": "said", "words": "  A nasty knife" }
+    ] },
+    { "as": "Marta", "type": "drop knife", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "take all except lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "nasty knife: Taken." }
+    ] },
+    { "as": "Marta", "type": "drop rope and knife", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "rope: Dropped." },
+      { "reader": "Marta", "kind": "said", "words": "nasty knife: Dropped." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Kitchen" },
+      { "reader": "Marta", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Marta", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Marta", "kind": "described", "words": "  A quantity of water" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Living Room" }
+    ] },
+    { "as": "Marta", "type": "move rug", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "as": "Marta", "type": "open trap door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Marta", "kind": "described", "words": "Cellar" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Marta", "kind": "extension", "words": "the cellar" },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Marta", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Marta", "kind": "extension", "words": "the troll room" },
+      { "reader": "Marta", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "as": "Marta", "type": "ask troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll isn't much of a conversationalist." }
+    ] },
+    { "as": "Marta", "type": "talk to troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The troll isn't much of a conversationalist." }
+    ] },
+    { "seed": 1 },
+    { "as": "Marta", "type": "kill troll", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "It's curtains for the troll as your sword removes his head." },
+      { "reader": "Marta", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." },
+      { "reader": "Marta", "kind": "extension", "words": "the maze" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike." }
+    ] },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Maze" },
+      { "reader": "Marta", "kind": "described", "words": "This is part of a maze of twisty little passages, all alike. A skeleton, probably the remains of a luckless adventurer, lies here." },
+      { "reader": "Marta", "kind": "described", "words": "The deceased adventurer's useless lantern is here." },
+      { "reader": "Marta", "kind": "described", "words": "Beside the skeleton is a rusty knife." },
+      { "reader": "Marta", "kind": "described", "words": "There is a skeleton key here." },
+      { "reader": "Marta", "kind": "described", "words": "An old leather bag, bulging with coins, is here." }
+    ] },
+    { "as": "Marta", "type": "take key and bag", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "skeleton key: Taken." }
+    ] },
+    { "as": "Marta", "type": "take bag", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "  A brown sack" },
+      { "reader": "Marta", "kind": "said", "words": "  A brass lantern (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "  A sword" },
+      { "reader": "Marta", "kind": "said", "words": "  A skeleton key" },
+      { "reader": "Marta", "kind": "said", "words": "  A leather bag of coins" }
+    ] },
+    { "as": "Marta", "type": "drop key", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "take key and sack", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "skeleton key: Taken." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "  A brown sack" },
+      { "reader": "Marta", "kind": "said", "words": "  A brass lantern (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "  A sword" },
+      { "reader": "Marta", "kind": "said", "words": "  A leather bag of coins" },
+      { "reader": "Marta", "kind": "said", "words": "  A skeleton key" },
+      { "reader": "Marta", "kind": "said", "words": "  A burned-out lantern" }
+    ] },
+    { "as": "Marta", "type": "drop sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "take sword and key", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "sword: Taken." }
+    ] }
+  ]
+}

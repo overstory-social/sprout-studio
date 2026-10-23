@@ -26,8 +26,6 @@ kind Lamp is Light {
   :life 650 min 0 max 650
   :age 0 min 0 max 4
   :burned_out false
-  without as target for lamp_on from Switchable
-  without as target for lamp_off from Switchable
   grammar { name "lamp"  nouns "lantern", "light"  adjectives "brass", "familiar", "strangely" }
   :size 15
   :has_fdesc true

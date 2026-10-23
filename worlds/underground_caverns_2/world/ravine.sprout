@@ -53,10 +53,9 @@ kind PDoor is Scenery, Door {
         else if (tool.is(GoldKey)) { say "It doesn't fit the lock." }
         else { say "It can't be unlocked with that." }
       } else {
-        // No key named: the rusty one in hand is implied (round 6's P13),
-        // read off the visitor as their own part of `unlock` left it.
+        // No key named: the rusty one in hand is implied (round 6's P13).
         self.set(:implied, false)
-        if (actor.is(Adventurer)) { if (actor.get(:has_rusty)) { self.set(:implied, true) } }
+        if (actor.count(RustyKey) > 0) { self.set(:implied, true) }
         if (self.get(:implied)) {
           if (!self.get(:locked)) { say "(with the rusty iron key) The door is already unlocked." }
           else {
@@ -86,7 +85,7 @@ kind PDoor is Scenery, Door {
         else { say "It can't be locked with that." }
       } else {
         self.set(:implied, false)
-        if (actor.is(Adventurer)) { if (actor.get(:has_rusty)) { self.set(:implied, true) } }
+        if (actor.count(RustyKey) > 0) { self.set(:implied, true) }
         if (self.get(:implied)) {
           if (self.get(:open)) { say "You'll have to close the door first." }
           else if (self.get(:locked)) { say "The door is already locked." }
@@ -100,7 +99,6 @@ kind PDoor is Scenery, Door {
       }
     }
   }
-  without as target for open from Thing
   as target for open {
     do {
       if (self.get(:open)) { say "I think you've already done that." }
@@ -112,7 +110,6 @@ kind PDoor is Scenery, Door {
       }
     }
   }
-  without as target for close from Thing
   as target for close {
     do {
       if (!self.get(:open)) { say "I think you've already done that." }
@@ -123,7 +120,6 @@ kind PDoor is Scenery, Door {
       }
     }
   }
-  without as target for look_under from Thing
   as target for look_under {
     do {
       if (self.get(:mat_under)) { say "The place mat is under the door.{if self.get(:key_on_mat)} Lying on it is a rusty iron key.{/if}" }
@@ -148,7 +144,6 @@ kind PDoor is Scenery, Door {
       else { say "That won't fit under the door." }
     }
   }
-  without as target for through from Thing
   as target for through {
     do {
       if (self.get(:open)) { say "The door is open; the way through it is {self.get(:side)}." }
@@ -166,14 +161,12 @@ kind DoorWindow is Scenery, Door {
   on :pdoor_open (from, value) { self.set(:open, value) }
   passage view default { {if false}.{/if} }
   describe { text "A small window in the door, barred with iron, at about the height of a face. One can see through it, between the bars." }
-  without as target for look_in from Thing
   as target for look_in {
     do {
       if (self.get(:open)) { say "The door is open, dummy." }
       else { say view }
     }
   }
-  without as target for through from Thing
   as target for through { do { say "Perhaps if you were diced...." } }
 }
 kind TinyWindow is DoorWindow {
@@ -189,7 +182,6 @@ kind KeyholeLid is Scenery {
   passage short { metal lid }
   :open false
   describe { text "A thin metal lid on a pin, over the keyhole, of the kind that keeps the dust out and the curious busy. It is {if self.get(:open)}swung open{else}closed over the keyhole{/if}." }
-  without as target for open from Thing
   as target for open {
     do {
       if (self.get(:open)) { say "I think you've already done that." }
@@ -197,11 +189,8 @@ kind KeyholeLid is Scenery {
     }
   }
   passage lifted { {if self.get(:open)}I think you've already done that.{else}The lid is now open.{/if} }
-  without as target for raise from Thing
   as target for raise { do { say lifted  if (!self.get(:open)) { self.set(:open, true)  each k: Keyhole in here { send k :lid with true } } } }
-  without as target for shift from Thing
   as target for shift { do { say lifted  if (!self.get(:open)) { self.set(:open, true)  each k: Keyhole in here { send k :lid with true } } } }
-  without as target for close from Thing
   as target for close {
     do {
       if (!self.get(:open)) { say "I think you've already done that." }
@@ -214,7 +203,6 @@ kind KeyholeLid is Scenery {
     }
   }
   :closing false
-  without as target for lower from Thing
   as target for lower {
     do {
       if (!self.get(:open)) { say "I think you've already done that." }
@@ -226,7 +214,6 @@ kind KeyholeLid is Scenery {
       }
     }
   }
-  without as target for look_under from Thing
   as target for look_under { do { say "There's a keyhole behind the lid." } }
 }
 message :lid with boolean
@@ -311,7 +298,6 @@ kind PushedKey is RustyKey {
       tell "As the place mat is moved, a rusty iron key falls from it and onto the floor."
     }
   }
-  without as target for turn from Thing
   as target for turn {
     do {
       self.set(:turned, false)
@@ -350,16 +336,13 @@ object ravine_ledge is DarkRoom, ChasmEdge in underground_caverns_2 {
     grammar { name "tiny ledge"  nouns "ledge", "shelf", "climb"  adjectives "tiny", "precarious", "another" }
     passage short { tiny ledge }
     describe { text "Above you, a tiny ledge, hardly more than a lip of rock, with the dark of an opening behind it. The climb up to it is precarious, which is to say possible, and the sort of thing one does once and then thinks about." }
-    without as target for climb_up from Thing
     as target for climb_up { do { send actor :travel with :tiny_room  say "" } }
   }
   object rock_face is Scenery {
     grammar { name "rock face"  nouns "face", "rock", "scramble"  adjectives "rock", "steep" }
     passage short { rock face }
     describe { text "The rock face goes down from the ledge to the stream, a short scramble, and up from it to the tiny ledge, a longer and less pleasant one. It is wet, and crumbly, and has opinions about your boots." }
-    without as target for climb_down from Thing
     as target for climb_down { do { send actor :travel with :deep_ford  say "" } }
-    without as target for climb_up from Thing
     as target for climb_up { do { send actor :travel with :tiny_room  say "" } }
   }
 }
@@ -380,7 +363,6 @@ object ledge_end is DarkRoom in underground_caverns_2 {
     grammar { name "smokey odor"  nouns "odor", "smell", "smoke", "air"  adjectives "odd", "smokey", "smoky", "warm" }
     passage short { smokey odor }
     describe { text "The air coming out of the tunnel is warm, which no air in this place has been, and it smells of smoke: not wood smoke, and not coal, but something with a sulphur edge to it, as though whatever is burning in there had been burning for a very long time and did not need fuel." }
-    without as target for smell from Thing
     as target for smell { do { say "Smoke, warm and sulphurous, from the tunnel to the north, and under it something like a very large animal that has not been washed." } }
   }
   object sharp_rocks is Scenery {
@@ -444,7 +426,6 @@ object dreary_room is DrearyRoom in underground_caverns_2 {
     grammar { name "narrow crack"  nouns "crack", "glow", "light"  adjectives "narrow", "red" }
     passage short { narrow crack }
     describe { text "A narrow crack in the wall, no wider than a finger, and out of it a red glow, steady, as of something very hot a long way back in the rock. It is warm to stand near. Whatever is on the other side of it is not a room." }
-    without as target for look_in from Thing
     as target for look_in { do { say "Red, and more red, and heat on your face. The crack goes back further than the light does." } }
   }
 }

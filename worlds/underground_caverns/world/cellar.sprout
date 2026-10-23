@@ -118,14 +118,6 @@ object cellar is DarkRoom, Illustrated in underground_caverns {
 
     passage locked { The door is locked from above. {cellar.bar_rule} }
 
-    without as target for open from Thing
-    without as target for close from Thing
-    without as target for shift from Thing
-    without as target for raise from Thing
-    without as target for mung from Thing
-    without as target for knock from Door
-    without as target for through from Thing
-    without as target for climb_up from Thing
     as target for open {
       do {
         if (!self.get(:open)) { say locked }
@@ -173,7 +165,6 @@ object cellar is DarkRoom, Illustrated in underground_caverns {
     passage short { metal ramp }
     describe { text "The bottom of a steep metal ramp comes down out of the dark on the west side of the cellar. It is polished smooth by everything that has ever slid down it, and it is unclimbable." }
     // SLIDE-FUNCTION in the Cellar: climbing it is going west, which fails.
-    without as target for climb_up from Thing
     as target for climb_up { do { say "You try to ascend the ramp, but it is impossible, and you slide back down." } }
   }
   object passageway is Scenery {

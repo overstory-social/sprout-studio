@@ -191,7 +191,6 @@ object loud_room is DarkRoom, Tidal in underground_caverns {
       if (loud_room.get(:deafening)) { text "It is a vast, featureless, rushing roar, like water or wind or both, coming from everywhere at once. It goes into your ears and does not come out again." }
       else { text "There is no sound at all, now: only the quiet, which has a texture of its own in a room this size, like a held breath." }
     }
-    without as target for listen from Thing
     as target for listen { do { say "The room is eerie in its quietness. Somewhere far off, the last of an echo is still going round." } }
   }
 }
@@ -217,9 +216,7 @@ object deep_canyon is DarkRoom, CanyonEdge, Tidal in underground_caverns {
     grammar { name "canyon"  nouns "edge", "gorge", "ravine", "drop"  adjectives "deep", "south" }
     passage short { canyon }
     describe { text "The canyon falls away to the north, sheer and black, too deep for your light to find the bottom.{if deep_canyon.get(:tide) == 3} From far below there is no sound at all.{else} From somewhere far below comes the sound of water, going about its business.{/if}" }
-    without as target for climb_down from Thing
     as target for climb_down { do { say "The canyon walls are sheer, and the bottom is a very long way down. You decide against it." } }
-    without as target for look_in from Thing
     as target for look_in { do { say "Far below, too far to see, water is flowing. It sounds busy." } }
   }
   object passages is Scenery {
@@ -240,7 +237,6 @@ object deep_canyon is DarkRoom, CanyonEdge, Tidal in underground_caverns {
     passage short { flowing water }
     passage no_take { It is a long way below you, and in no mood to be taken anywhere. }
     describe { text "You cannot see the water from here. You can only hear it, far below, {if deep_canyon.get(:tide) == 1}roaring{else}flowing steadily and with great conviction{/if} toward somewhere else." }
-    without as target for listen from Thing
     as target for listen { do { if (deep_canyon.get(:tide) == 1) { say "You can hear a loud roaring sound, like that of rushing water, from below." } else if (deep_canyon.get(:tide) == 3) { say "You hear nothing out of the ordinary." } else { say "You can hear the sound of flowing water from below." } } }
   }
 }
@@ -338,7 +334,6 @@ object engravings_cave is DarkRoom in underground_caverns {
       The engravings were incised in the living rock of the cave wall by an unknown hand. They depict, in symbolic form, the beliefs of the ancient Zorkers. Skillfully interwoven with the bas reliefs are excerpts illustrating the major religious tenets of that time. Unfortunately, a later age seems to have considered them blasphemous and just as skillfully excised them.
     }
     describe { text words }
-    without as target for read from Thing
     as target for read { do { say words } }
   }
   object cave is Scenery {
@@ -353,25 +348,17 @@ object engravings_cave is DarkRoom in underground_caverns {
 // on them, the one reason, a roof that is still coming down.
 kind Rubble is Scenery, Diggable, Barrier, Concealing {
   passage no_take { You lay a hand on the nearest rock, and the roof overhead answers with a trickle of grit and a long, considering creak. The cave-in has not finished falling in, and it would rather finish on you than not. You leave the heaps as you found them. }
-  without as target for shift from Thing
   as target for shift { do { say no_take } }
-  without as target for raise from Thing
   as target for raise { do { say no_take } }
   as target for clear { do { say no_take } }
-  without as target for kick from Thing
   as target for kick { do { say no_take } }
-  without as target for mung from Thing
   as target for mung { do { say no_take } }
-  without as target for rub from Thing
   as target for rub { do { say no_take } }
-  without as target for search from Thing
   as target for search { do { say "You find nothing among the heaps but rock, sorted by size." } }
   as target for look_behind { do { say "Behind the heaps the roof has come down all the way to the floor, and grit is still trickling from it." } }
-  without as target for look_under from Thing
   as target for look_under { do { say no_take } }
   as target for climb_over { do { say "The heaps are easy enough to climb; it is the cave-in behind them that goes all the way up to the roof, and the roof is still coming down." } }
   as target for dig { do { say no_take } }
-  without as target for through from Thing
   as target for through { do { say "There is no way through. The roof came down all the way to the floor, and it is still coming." } }
 }
 
@@ -380,9 +367,7 @@ kind Crack is Scenery {
   passage short { crack }
   passage view default { The crack is a dark slit in the rock a few inches wide, narrowing as it goes. A draught comes out of it, and so, now and then, does an ant. }
   describe { text view }
-  without as target for through from Thing
   as target for through { do { say "You can't fit through the crack." } }
-  without as target for look_in from Thing
   as target for look_in { do { say "The crack goes back into the rock, narrowing, until it is too dark to say where it goes." } }
 }
 
@@ -404,8 +389,6 @@ kind Abyss is Box, Crossable, Leapable {
   without as target for open from Box
   as target for open { do { say "You must tell me how to do that to a chasm." } }
   as target for cross { do { say "It's too far to jump, and there's no bridge." } }
-  without as target for leap_at from Leapable
   as target for leap_at { do { say "You look before leaping, and realize that you would never survive." } }
-  without as target for climb_down from Thing
   as target for climb_down { do { say "Are you out of your mind?" } }
 }

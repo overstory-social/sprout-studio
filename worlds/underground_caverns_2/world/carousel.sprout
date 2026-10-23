@@ -1,11 +1,12 @@
 // The Carousel Room, which spins the visitor's sense of direction until
 // the robot stops it (CAROUSEL-ROOM-FCN), and Room 8 to its west, with
-// the grue repellent. The room's random turn is the visitor's own doing
-// (adventurer.sprout): every way out of it leads where it says, and the
-// visitor, arriving, turns four times in five to a random one of seven.
-// West, while it spins, is always random.
+// the grue repellent. West, while it spins, is a way drawn as it is
+// taken, one of the seven; every other way out leads where it says, and
+// the visitor, arriving, turns four times in five to a random one of the
+// seven (adventurer.sprout), since a drawn way draws evenly and Zork's
+// four in five cannot be written on it.
 import * as sprout from 'sprout'
-import {Thing, Scenery} from 'thing'
+import {Thing, Scenery, Awaited} from 'thing'
 import {Room, DarkRoom} from 'room'
 import {IronBox, Violin, Repellent} from 'items'
 import {listen, read, through, :flip, :zoom} from 'verbs'
@@ -27,7 +28,7 @@ kind CarouselRoom is DarkRoom {
   on :left (item, to) { if (item.is(Adventurer) && self.get(:spinning)) { self.adjust(:spins, 1) } }
 }
 
-kind EightPassages is Scenery {
+kind EightPassages is Scenery, Awaited {
   grammar { name "passages"  nouns "passage", "exits", "exit", "eight", "one"  adjectives "identical", "eight", "climbing", "southeast", "northwest", "southwest", "misty", "cobwebbed" }
   passage short { passages }
   describe { text "Eight passages, one at each point of the compass, and every one of them very nearly like the others: the same height, the same rough arch, the same dark beyond it. Very nearly. The one on the southeast side, if you can keep track of which that is, climbs a little, and a draught comes down it that smells of old brick and older water; the one on the northwest side breathes out a cold, wet mist; the one on the southwest side has cobwebs across it, broken in the middle. Whoever cut them wanted you to have to think." }
@@ -36,7 +37,6 @@ kind EightPassages is Scenery {
   // back the same way.
   passage walk_in { The passages are the eight ways out of here, and the room hands them to you by compass point, north round to northwest, and takes them back the same way. Pick a point and walk; which passage you get is the floor's business, while it turns. }
   passage no_take { {self.walk_in} }
-  without as target for through from Thing
   as target for through { do { say walk_in } }
 }
 
@@ -49,6 +49,7 @@ object carousel_room is CarouselRoom in underground_caverns_2 {
     exit southeast "southeast" -> riddle_room
     exit south "south" -> menhir_room
     exit southwest "southwest" -> cobwebby_corridor
+    exit west "west" -> one of (marble_hall, stream_path, topiary, riddle_room, menhir_room, cobwebby_corridor, cool_room) say "You're not sure which direction is which. This room is very disorienting." when (self.get(:spinning))
     exit west "west" -> room_8
     exit northwest "northwest" -> cool_room
   }
@@ -65,7 +66,6 @@ object carousel_room is CarouselRoom in underground_caverns_2 {
     grammar { name "whirring sound"  nouns "whirring", "sound", "noise", "whirr"  adjectives "loud" }
     passage short { whirring sound }
     describe { text "{if carousel_room.is(CarouselRoom)}{if carousel_room.get(:spinning)}The whirring comes from all around you, from under the floor, from the walls, from the dark overhead, steady and mechanical, and your sense of which way you came in has gone with it.{else}The whirring has stopped. The silence is almost worse.{/if}{/if}" }
-    without as target for listen from Thing
     as target for listen { do { say "{if carousel_room.is(CarouselRoom)}{if carousel_room.get(:spinning)}A loud whirring, from all around, as of a great deal of machinery going round. It makes it hard to think about directions.{else}Nothing. The whirring has stopped, and the room is still.{/if}{/if}" } }
   }
   object box is IronBox {
@@ -74,10 +74,7 @@ object carousel_room is CarouselRoom in underground_caverns_2 {
   }
 }
 
-// Room 8: a place may have eight ways out, and the Carousel's are its
-// eight passages, so west leads here spinning or not, and a visitor
-// arriving here while it spins is thrown somewhere else, always, as Zork's
-// west is (adventurer.sprout).
+// Room 8: reached by the Carousel's west once the floor has stopped.
 kind RoomEight is DarkRoom { }
 object room_8 is RoomEight in underground_caverns_2 {
   grammar {
@@ -92,7 +89,6 @@ object room_8 is RoomEight in underground_caverns_2 {
     grammar { name "number"  nouns "8", "eight", "numeral", "chiseling"  adjectives "chiseled", "crude" }
     passage short { number }
     describe { text "The number \"8\" is chiseled into the wall, crudely, by somebody who was either counting rooms or had run out of other ideas. There is no 7 and no 9." }
-    without as target for read from Thing
     as target for read { do { say "It says \"8\". It is hard to misread." } }
   }
 }

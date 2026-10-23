@@ -8,41 +8,51 @@
       { "reader": "Marta", "kind": "described", "words": "A strangely familiar brass lantern is lying on the ground." },
       { "reader": "Marta", "kind": "described", "words": "A sword of Elvish workmanship is on the ground." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take sword", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Taken." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "turn on lamp", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Narrow Tunnel" },
       { "reader": "Marta", "kind": "described", "words": "You are standing at the southern end of a narrow tunnel where it opens into a wide cavern. The cavern is dimly illuminated by phosphorescent mosses clinging to its high ceiling. A deep ravine winds through the cavern, with a small stream at the bottom. The walls of the ravine are steep and crumbly. A foot bridge crosses the ravine to the south." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Foot Bridge" },
       { "reader": "Marta", "kind": "described", "words": "You are standing on a crude but sturdy wooden foot bridge crossing a deep ravine. The path runs north and south from here." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Great Cavern" },
       { "reader": "Marta", "kind": "described", "words": "This is the center of the great cavern, carved out of the limestone. Stalactites and stalagmites of many sizes are everywhere. The room glows with dim light provided by phosphorescent moss, and weird shadows move all around you. A narrow path winds southwest among the stalagmites, and another leads northeast." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "sw", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Shallow Ford" },
       { "reader": "Marta", "kind": "described", "words": "You are at the southern edge of a great cavern. To the south across a shallow ford is a dark tunnel which looks like it was once enlarged and smoothed. To the north a narrow path winds among stalagmites. Dim light illuminates the cavern." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
       { "reader": "Marta", "kind": "described", "words": "This is a dark tunnel with dim light to the northeast. The tunnel is smooth but dusty and filled with twigs and leaves, debris which becomes deeper as the tunnel branches into a wide corridor leading southwest and a narrower one leading southeast." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses." },
+      { "reader": "Marta", "kind": "described", "words": "This is the northern end of a formal garden. Hedges hide the cavern walls, and if you don't look up, the illusion is of a cloudy day outside. The light comes from a large growth of glowing mosses on the roof of the cave. A break in the hedge is almost overgrown to the north; the dark tunnel you came by is through it. A carefully manicured path leads south. In the center of a rosebed is a small open structure, painted white. It appears to be a gazebo, and a few flagstones lead in to it between the roses; through its railing you can make out a tea table, laid, with things on it." },
       { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
       { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "enter gazebo", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Gazebo" },
       { "reader": "Marta", "kind": "described", "words": "This is a gazebo in the midst of a formal garden. It is cool and restful here. A tea table adorns the center of the gazebo." },
@@ -51,72 +61,97 @@
       { "reader": "Marta", "kind": "described", "words": "A place mat" },
       { "reader": "Marta", "kind": "described", "words": "A china teapot" },
       { "reader": "Marta", "kind": "described", "words": "A letter opener" },
-      { "reader": "Marta", "kind": "described", "words": "A matchbook" }
-    ] },
-    { "as": "Marta", "type": "take teapot", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "Taken." },
+      { "reader": "Marta", "kind": "described", "words": "A matchbook" },
       { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
+    { "seed": 5 },
+    { "as": "Marta", "type": "take teapot", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "fill teapot with water", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "The teapot is empty: there is no water in it, and none here to put in it. The water is at the fords, where the stream comes up to meet you, and the teapot is what carries it from there." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take water", "expect": [
-      { "reader": "Marta", "kind": "refused", "words": "The teapot is empty: there is no water in it, and none here to put in it. The water is at the fords, where the stream comes up to meet you, and the teapot is what carries it from there." }
+      { "reader": "Marta", "kind": "refused", "words": "The teapot is empty: there is no water in it, and none here to put in it. The water is at the fords, where the stream comes up to meet you, and the teapot is what carries it from there." },
+      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "pour water into teapot", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "The teapot is empty: there is no water in it, and none here to put in it. The water is at the fords, where the stream comes up to meet you, and the teapot is what carries it from there." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "examine water", "expect": [
       { "reader": "Marta", "kind": "refused", "words": "The teapot is empty: there is no water in it, and none here to put in it. The water is at the fords, where the stream comes up to meet you, and the teapot is what carries it from there." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "out", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" },
-      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+      { "reader": "Marta", "kind": "described", "words": "There is a beautiful unicorn here cropping grass." },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "n", "expect": [
-      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
+      { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "ne", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Shallow Ford" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "fill teapot with water", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The teapot is now full of water." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "examine water", "expect": [
       { "reader": "Marta", "kind": "described", "words": "It is water, clear and cold and wet, as water is." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Dark Tunnel" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "se", "expect": [
       { "reader": "Marta", "kind": "described", "words": "North End of Garden" }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Formal Garden" },
-      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." }
+      { "reader": "Marta", "kind": "described", "words": "This is the middle part of a formal garden. Hedges hide the cavern walls and a dim illumination comes from mosses far above. The path is of small crushed white stones. It winds among bushes and flower beds from south to north. To the north a small structure can be seen. To the south are peculiarly shaped bushes. There is a small gap in the hedges to the west." },
+      { "reader": "Marta", "kind": "told", "words": "A unicorn is peacefully cropping grass at the north end of the garden. There is something hanging around its neck." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "s", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Topiary" },
       { "reader": "Marta", "kind": "described", "words": "This is the southern end of a formal garden. Hedges hide the cavern walls and mosses provide dim illumination. Fantastically shaped hedges and bushes are arrayed with geometric precision. They have not recently been clipped, but you can discern creatures in the shapes of the bushes: There is a dragon, a unicorn, a great serpent, a huge misshapen dog, and several human figures. On the west side of the garden the path leads through a rose arbor into a tunnel." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "w", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Carousel Room" },
       { "reader": "Marta", "kind": "described", "words": "You are in a large circular room whose high ceiling is lost in gloom. Eight identical passages leave the room." },
       { "reader": "Marta", "kind": "described", "words": "A loud whirring sound comes from all around, and you feel sort of disoriented in here." },
       { "reader": "Marta", "kind": "described", "words": "The disorientation is not all in your head. The floor, if you stand still on it a moment, is turning, slowly, and the eight passages go round with it, so that the one you came in by is already somewhere else. They all lead somewhere, every one of them; it is only a question of which, and the only way to settle that is to pick one and walk into it. The one that climbs a little, when it comes round, has a draught down it that smells of old brick and older water, and once, faintly, from up that way, you hear the grinding of a very heavy stone door." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "up", "expect": [
       { "reader": "Marta", "kind": "notice", "words": "There is no up to it: the passage that climbs is one of the eight, and it goes round with the floor like the rest, so the only way into it is to pick a passage and walk. If the floor obliges, it climbs." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "down", "expect": [
       { "reader": "Marta", "kind": "notice", "words": "There is no down to it: the passage that climbs is one of the eight, and it goes round with the floor like the rest, so the only way into it is to pick a passage and walk. If the floor obliges, it climbs." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "take passage", "expect": [
       { "reader": "Marta", "kind": "said", "words": "A passage is not a thing to be picked up; it is a way, and the way to take it is to walk into it. Say which." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "enter climbing passage", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The passages are the eight ways out of here, and the room hands them to you by compass point, north round to northwest, and takes them back the same way. Pick a point and walk; which passage you get is the floor's business, while it turns." }
     ] },
+    { "seed": 5 },
     { "as": "Marta", "type": "examine climbing passage", "expect": [
       { "reader": "Marta", "kind": "described", "words": "Eight passages, one at each point of the compass, and every one of them very nearly like the others: the same height, the same rough arch, the same dark beyond it. Very nearly. The one on the southeast side, if you can keep track of which that is, climbs a little, and a draught comes down it that smells of old brick and older water; the one on the northwest side breathes out a cold, wet mist; the one on the southwest side has cobwebs across it, broken in the middle. Whoever cut them wanted you to have to think." }
     ] }

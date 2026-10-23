@@ -98,7 +98,13 @@
       { "reader": "Marta", "kind": "said", "words": "How can you attack a spirit with material objects?" }
     ] },
     { "as": "Marta", "type": "take spirits", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You seem unable to interact with these spirits." }
+      { "reader": "Marta", "kind": "refused", "words": "You seem unable to interact with these spirits." }
+    ] },
+    { "as": "Marta", "type": "kick spirits", "expect": [
+      { "reader": "Marta", "kind": "refused", "words": "You seem unable to interact with these spirits." }
+    ] },
+    { "as": "Marta", "type": "greet spirits", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The spirits jeer loudly and ignore you." }
     ] },
     { "as": "Marta", "type": "exorcise spirits", "expect": [
       { "reader": "Marta", "kind": "said", "words": "You must perform the ceremony." }

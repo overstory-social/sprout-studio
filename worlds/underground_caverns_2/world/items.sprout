@@ -6,7 +6,7 @@ import {Adventurer} from 'adventurer'
 import {Bag, Box} from 'box'
 import {Light} from 'lamp'
 import {Room, CakeSafe, Watery, Wonderland, TeaRoomLike, PostsLike, ChasmEdge} from 'room'
-import {eat, drink, read, pour, pour_in, pour_on, give, throw, open, close, look_in, fill, take, shake, spray, play, mung, smell, burn, lamp_on, lamp_off, count_things, turn, shift, raise, aim_wand, Dest, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt, :light, :mat_under, :mat_moved, :red_at, :blue_at, :clear_at, :freed_wand, :open_gate, :gate_open, :close_gate} from 'verbs'
+import {eat, drink, read, pour, pour_in, pour_on, give, throw, attack, open, close, look_in, fill, take, shake, spray, play, mung, smell, burn, lamp_on, lamp_off, count_things, turn, shift, raise, aim_wand, Dest, :glow, :claimed, :consume, :die, :pool_gone, :poisoned, :flip, :grow, :ungrow, :shatter_lamp, :enlarge, :shrink, :munge, :boom, :salt, :light, :mat_under, :mat_moved, :red_at, :blue_at, :clear_at, :freed_wand, :open_gate, :gate_open, :close_gate} from 'verbs'
 import {Elsewhere} from 'garden'
 import {Bucket} from 'well'
 import {Pool} from 'posts'
@@ -22,7 +22,7 @@ kind Weapon is Portable { }
 
 // The elvish sword, which glows near the Wizard's creatures (I-SWORD).
 kind Sword is Weapon {
-  grammar { name "elvish sword"  nouns "sword", "orcrist", "glamdring", "blade"  adjectives "elvish", "old", "antique" }
+  grammar { name "elvish sword"  nouns "sword", "orcrist", "glamdring", "blade", "runes", "rune"  adjectives "elvish", "old", "antique" }
   :size 30
   :has_fdesc true
   :glow 0 min 0 max 2
@@ -32,6 +32,7 @@ kind Sword is Weapon {
   passage fdesc { A sword of Elvish workmanship is on the ground. }
   passage ldesc { An Elvish sword of great antiquity is here. }
   on :glow (from, value) { self.set(:glow, value) }
+  as target for read { do { say "The runes run the length of the blade, cut fine and worn finer, in an Elvish hand that was never meant for you, and you cannot read them. They have the look of a name, and of a promise; the sword glows, when it glows, instead of explaining itself." } }
   describe { text "It is an Elvish sword of great antiquity, long and light, with runes down the blade that you cannot read and a hilt worn to the shape of somebody else's hand. It has the look of a sword that has been places.{if self.get(:glow) == 2} It is glowing very brightly.{else if self.get(:glow) == 1} It is glowing with a faint blue glow.{/if}" }
 }
 
@@ -45,15 +46,11 @@ kind Treasure is Portable, Valuable {
 
 // Something to eat. Eaten, it is gone for good.
 kind Food is Portable {
-  without as target for eat from Thing
+  // Eaten from a table, it is taken first, as Zork's parser takes it
+  // (round 9's P12).
   as target for eat {
-    permit {
-      if (!actor.holds(self)) {
-        each b: Box in actor { if (b.holds(self)) { allow } }
-        refuse "You're not holding that."
-      }
-    }
     do {
+      if (!actor.holds(self)) { move self to actor  say "(Taken)" }
       say "Thank you very much. It really hit the spot."
       destroy self
     }
@@ -62,7 +59,6 @@ kind Food is Portable {
 
 // Something with words on it.
 kind Readable is Portable {
-  without as target for read from Thing
   passage words default { {if false}.{/if} }
   as target for read {
     do {
@@ -128,11 +124,11 @@ kind Water is Portable, Drinkable, Pourable {
   }
   as target for throw {
     do {
-      say "The water splashes on the walls and evaporates."
+      if (bound aim) { if (aim.is(Thing)) { say "The water splashes over the {aim.short}, runs off, and evaporates." } else { say "The water splashes and evaporates." } }
+      else { say "The water splashes on the walls and evaporates." }
       destroy self
     }
   }
-  without as target for smell from Thing
   as target for smell { do { if (self.get(:salty)) { say "It smells of salt, and faintly of grief." } else { say "It smells of nothing at all, which is how water should smell." } } }
 }
 
@@ -151,7 +147,6 @@ kind StreamWater is Scenery, Drinkable, Fillable {
       else { say "Thank you very much. I was rather thirsty (from all this talking, probably)." }
     }
   }
-  without as target for fill from Fillable
   as target for fill {
     do {
       if (bound tool) {
@@ -226,9 +221,7 @@ kind Teapot is Bag, Fillable, Pourable {
   without as target for close from Box
   as target for close { do { say "The teapot has no lid." } }
   without as target for open from Box
-  without as target for open from Thing
   as target for open { do { say "It has no lid, which saves time." } }
-  without as target for fill from Fillable
   as target for fill {
     do {
       // Water named as the tool (the bucket's): the adventurer's own part
@@ -277,7 +270,6 @@ kind PlaceMat is Bag {
   // Pulled or pushed where it lies: drawn out from under the door, and
   // whatever fell on it falls off (round 4's P9). Thing's answer reaches
   // this one twice, by way of Box and of Portable, so both are left out.
-  without as target for shift from Thing
   without as target for shift from Portable
   as target for shift {
     do {
@@ -360,7 +352,6 @@ kind Repellent is Readable, Sprayable {
     (No warranty expressed or implied)
   }
   without as target for read from Thing
-  without as target for shake from Thing
   without as target for shake from Portable
   as target for shake {
     do {
@@ -410,9 +401,7 @@ kind Candy is Treasure, Readable {
     (By Appointment to His Majesty, Dimwit I)
   }
   describe { text words }
-  without as target for eat from Thing
   as target for eat { do { say "Such rich food would probably not be good for you." } }
-  without as target for open from Thing
   as target for open { do { say "Such rich food would probably not be good for you." } }
   without as target for read from Thing
 }
@@ -431,9 +420,7 @@ kind Flask is Bag, Readable {
   describe { text examined }
   passage vapors { As you pass out, you realize that the vapors from the flask's contents are fatal. }
   without as target for look_in from Box
-  without as target for look_in from Thing
   as target for look_in { do { say "You notice that objects behind the flask appear to be magnified. You might try looking at something through the flask." } }
-  without as target for read from Thing
   without as target for read from Readable
   as target for read { do { say words } }
   without as target for open from Box
@@ -443,7 +430,6 @@ kind Flask is Bag, Readable {
       if (actor.is(Adventurer)) { send actor :die }
     }
   }
-  without as target for mung from Thing
   as target for mung {
     do {
       say "The flask breaks into pieces."
@@ -474,8 +460,6 @@ kind Flask is Bag, Readable {
 kind Cake is Food, Readable {
   :size 4
   passage colour default { frosted }
-  without as target for read from Thing
-  without as target for eat from Thing
   without as target for read from Readable
   as target for read {
     do {
@@ -496,13 +480,8 @@ kind Cake is Food, Readable {
   // Pool Room each does what its icing says; anywhere else it is cake.
   without as target for eat from Food
   as target for eat {
-    permit {
-      if (!actor.holds(self)) {
-        each b: Box in actor { if (b.holds(self)) { allow } }
-        refuse "You're not holding that."
-      }
-    }
     do {
+      if (!actor.holds(self)) { move self to actor  say "(Taken)" }
       if (self.is(EatMeCake) && here.is(TeaRoomLike)) {
         say "Suddenly, the room appears to have become very large (although everything you are carrying seems to be its normal size)."
         send actor :enlarge
@@ -579,7 +558,6 @@ kind Violin is Treasure {
   passage short { fancy violin }
   passage ldesc { There is a Stradivarius here. }
   describe { text "It is a violin of great age and greater value, varnished the color of honey and signed inside, where you can just make it out, by a Mr. Stradivari of Cremona. It has four strings and no bow, which does not stop anybody." }
-  without as target for play from Thing
   as target for play { do { say "An amazingly offensive noise issues from the violin." } }
 }
 
@@ -628,7 +606,6 @@ kind Palantir is Treasure {
   on :blue_at (from, value) { self.set(:blue, value)  self.set(:blue_moved, true) }
   on :clear_at (from, value) { self.set(:clear, value)  self.set(:clear_moved, true) }
   describe { text "There is something misty in the sphere. Perhaps if you were to look into it..." }
-  without as target for mung from Thing
   as target for mung { do { say "The sphere is unbreakable." } }
   // The vision of a room, by which room: the few a sphere comes to rest
   // in, and a word for the rest.
@@ -757,7 +734,6 @@ kind Wand is Treasure {
   passage ldesc { There is a magic wand here. }
   describe { text "{if self.get(:free)}The wand is a foot of some dark wood, worn pale where the Wizard gripped it, and warm, and it hums very faintly against the hand, as though it had been told something and were waiting to be told to whom. The book in the Library, if you read it, said how these are used: pointed at a thing, and then a word said over them.{else}The wand is a foot of some dark wood, worn pale where the Wizard grips it, and glowing, when it glows, a faint blue at the tip. He has not let go of it.{/if}" }
   on :freed_wand { self.set(:free, true)  self.set(:ndesc, false) }
-  without as target for raise from Thing
   as target for raise { do { say "The wand grows warm and seems to vibrate." } }
   // Pointed at itself or waved at nothing: the wand's part says nothing;
   // the hand that holds it says what came of it (adventurer.sprout).
@@ -782,9 +758,6 @@ kind Matchbook is Readable, Light {
   :burnable true
   :matches 6 min 0 max 6
   :burning_for 0 min 0 max 2
-  without as target for lamp_on from Switchable
-  without as target for lamp_off from Switchable
-  without as target for count_things from Thing
   :fuel 40
   passage short { matchbook }
   passage ldesc { There is a matchbook saying "Visit ZORK I" here. }
@@ -794,6 +767,10 @@ kind Matchbook is Readable, Light {
 
     Consult the Frobozz Magic Travel Agency, or visit your local computer store for more details."
   }
+  // "strike a match" is `lamp_on`'s "strike [target]"; `attack`'s synonym
+  // reads it too, and this refusal is what lets the match's reading win
+  // (round 9's P12).
+  as target for attack { permit { refuse "I've known strange people, but fighting a matchbook? Striking one is another matter." } }
   as target for lamp_on {
     do {
       if (self.get(:lit)) { say "A match is already burning." }
@@ -862,9 +839,7 @@ kind Bills is Treasure, Readable {
   passage words { Each bill is worth 100 zorkmids, and bears the legend "In Frobs We Trust". }
   describe { text "Two hundred zorkmid bills, stacked with a neatness that suggests nobody has touched them since the day the Bank closed, each one printed with the face of Lord Dimwit Flathead looking excessive. They can be read, if you like reading money." }
   without as target for read from Thing
-  without as target for eat from Thing
   as target for eat { do { say "Talk about eating rich foods!" } }
-  without as target for burn from Thing
   without as target for burn from Portable
   as target for burn { do { say "Nothing like having money to burn!" } }
 }
@@ -902,6 +877,5 @@ kind Rose is Portable {
   passage short { fresh rose }
   passage ldesc { There is a fresh rose here. }
   describe { text "It is a rose, red and fresh and very thorny, plucked from the arbor by a princess, which is not a thing that happens to most roses." }
-  without as target for smell from Thing
   as target for smell { do { say "It smells as a rose should, and a little of the princess, which is to say of dragon smoke and old gowns." } }
 }

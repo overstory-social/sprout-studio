@@ -1,7 +1,8 @@
 // The white house: the Kitchen, the Attic and the Living Room, and the
-// things in them. The kitchen window is one window seen from two rooms, and
-// the trap door one door; each side keeps the other in step by a message
-// the world lets pass between rooms.
+// things in them. The kitchen window is one window standing in two rooms,
+// the Kitchen and Behind House, as Zork's LOCAL-GLOBALS has it. The trap
+// door is still one door a side, each keeping the other in step by a
+// message the world lets pass between rooms.
 import * as sprout from 'sprout'
 import {Thing, Portable, Scenery, Door} from 'thing'
 import {Box, Bag} from 'box'
@@ -11,7 +12,7 @@ import {Room, DarkRoom, Perilous, ChimneyTop} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'scenery'
 import {Rope} from 'temple'
-import {fill, mung, open, close, look_in, read, shift, raise, look_under, smell, eat, through, climb_up, climb_down, :travel, :window_sync, :trap, :trap_sync, :rug_moved, :scored, :magic, :won, :consume, :smash} from 'verbs'
+import {fill, mung, open, close, look_in, read, shift, raise, look_under, smell, eat, through, climb_up, climb_down, :travel, :trap, :trap_sync, :rug_moved, :scored, :magic, :won, :consume, :smash} from 'verbs'
 import {strange_passage} from 'cyclops'
 import {AncientMap} from 'barrow'
 import {behind_house} from 'above_ground'
@@ -36,16 +37,12 @@ kind KitchenWindow is Scenery, Door {
     else { text "The kitchen window is closed." }
   }
 
-  without as target for open from Thing
-  without as target for close from Thing
-  without as target for look_in from Thing
   as target for open {
     permit { if (self.get(:open)) { refuse "It is already open." } }
     do {
       self.set(:open, true)
       self.set(:opened_once, true)
       say "With great effort, you open the window far enough to allow entry."
-      broadcast :window_sync with true
     }
   }
   as target for close {
@@ -54,7 +51,6 @@ kind KitchenWindow is Scenery, Door {
       self.set(:open, false)
       self.set(:opened_once, true)
       say "The window closes (more easily than it opened)."
-      broadcast :window_sync with false
     }
   }
   as target for look_in {
@@ -65,17 +61,12 @@ kind KitchenWindow is Scenery, Door {
   }
   // Through the window, as Zork's WALK and THROUGH take it: to the other
   // side, if it is open.
-  without as target for through from Thing
   as target for through {
     do {
       if (!self.get(:open)) { say "The kitchen window is closed." }
       else if (here.is(Outdoors)) { send actor :travel with :kitchen  say "" }
       else { send actor :travel with :behind  say "" }
     }
-  }
-  on :window_sync (from, value) {
-    self.set(:open, value)
-    self.set(:opened_once, true)
   }
 }
 
@@ -84,20 +75,18 @@ object kitchen is Room, Perilous, ChimneyTop, Illustrated in underground_caverns
   :caption "the kitchen"
   grammar {
     name "Kitchen"
-    exit east "window"  -> behind_house when (self.get(:window_open))
+    exit east "window"  -> behind_house when (kitchen_window.get(:open))
     exit east "window"  refuse "The kitchen window is closed."
-    exit out  "outside" -> behind_house when (self.get(:window_open))
+    exit out  "outside" -> behind_house when (kitchen_window.get(:open))
     exit out  "outside" refuse "The kitchen window is closed."
     exit west "west"    -> living_room
     exit up   "stairs"  -> attic
     exit down "chimney" refuse "Only Santa Claus climbs down chimneys."
   }
   :value 10
-  :window_open false
   passage body {
-    You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is {if self.get(:window_open)}open.{else}slightly ajar.{/if}
+    You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is {if kitchen_window.get(:open)}open.{else}slightly ajar.{/if}
   }
-  on :window_sync (from, value) { self.set(:window_open, value) }
 
   // The lunch, the garlic and the water are made the first time anyone
   // comes in, so that eating and drinking may unmake them.
@@ -138,7 +127,6 @@ object kitchen is Room, Perilous, ChimneyTop, Illustrated in underground_caverns
         {self.look_inside}
       }
 
-      without as target for smell from Thing
       as target for smell {
         do {
           if (self.count(Food) > 0) { say "It smells of hot peppers." } else { say "It smells like a brown sack." }
@@ -149,7 +137,6 @@ object kitchen is Room, Perilous, ChimneyTop, Illustrated in underground_caverns
     object bottle is Bottle
   }
 
-  object window is KitchenWindow
   object stairs is Stairs {
     passage view { The staircase is dark and narrow, and leads upward to somewhere darker still. }
     as target for climb_up   { do { send actor :travel with :attic  say "" } }
@@ -164,12 +151,14 @@ object kitchen is Room, Perilous, ChimneyTop, Illustrated in underground_caverns
     grammar { name "chimney"  adjectives "dark", "narrow" }
     passage short { chimney }
     describe { text "The chimney leads downward, and looks climbable." }
-    without as target for climb_down from Thing
-    without as target for climb_up from Thing
     as target for climb_down { do { say "Only Santa Claus climbs down chimneys." } }
     as target for climb_up   { do { say "The chimney doesn't lead upward." } }
   }
 }
+
+// The kitchen window, one window seen from the Kitchen and from Behind
+// House: opened from either side, it stands open in both.
+object kitchen_window is KitchenWindow in kitchen, behind_house
 
 object attic is DarkRoom in underground_caverns {
   grammar {
@@ -257,7 +246,7 @@ object living_room is Room, Illustrated in underground_caverns {
     describe {
       if (self.get(:glow) == 2) { text "Your sword is glowing very brightly." }
       else if (self.get(:glow) == 1) { text "Your sword is glowing with a faint blue glow." }
-      else { text "The blade is long, keen and elvish, its hilt worked with vines and runes. It is very old, and has plainly been in worse places than a living room." }
+      else { text "The blade is long, keen and elvish, its hilt worked with vines and runes. It is very old, has plainly been in worse places than a living room, and is a good deal heavier than it looks: it will be the heaviest thing you carry, until it is not." }
       if (seen == :examine) { media.show(self.get(:picture), self.get(:caption)) }
     }
   }
@@ -267,15 +256,12 @@ object living_room is Room, Illustrated in underground_caverns {
   object wooden_door is Scenery, Door {
     grammar { name "wooden door"  nouns "door", "lettering", "writing", "engravings", "opening"  adjectives "wooden", "gothic", "strange", "west", "cyclops-shaped" }
     passage short { wooden door }
-    without as target for open from Thing
-    without as target for read from Thing
     as target for open { do { say "The door cannot be opened." } }
     as target for read { do { say "The engravings translate to \"This space intentionally left blank.\"" } }
     describe {
       if (living_room.get(:magic)) { text "The engravings translate to \"This space intentionally left blank.\" Below them, somebody very large has gone through the door without opening it, and left a cyclops-shaped hole in the middle of it, with the nails still in the frame." }
       else { text "The engravings translate to \"This space intentionally left blank.\"" }
     }
-    without as target for through from Thing
     as target for through {
       do {
         if (living_room.get(:magic)) { send actor :travel with :strange  say "" }
@@ -357,7 +343,6 @@ kind Rug is Scenery {
     else { text "It is a large oriental rug, very fine and very heavy, laid squarely in the center of the room. It lies a little unevenly, as if something beneath it were not quite flat." }
   }
 
-  without as target for shift from Thing
   as target for shift {
     do {
       if (self.get(:moved)) {
@@ -369,14 +354,12 @@ kind Rug is Scenery {
       }
     }
   }
-  without as target for raise from Thing
   as target for raise {
     do {
       if (self.get(:moved)) { say "The rug is too heavy to lift." }
       else { say "The rug is too heavy to lift, but in trying to take it you have noticed an irregularity beneath it." }
     }
   }
-  without as target for look_under from Thing
   as target for look_under {
     do {
       if (self.get(:moved)) { say "There is nothing but dust there." }
@@ -407,10 +390,6 @@ kind TrapDoor is Scenery, Door {
     else { text shut_view }
   }
 
-  without as target for open from Thing
-  without as target for close from Thing
-  without as target for raise from Thing
-  without as target for look_under from Thing
   as target for open {
     permit { if (self.get(:open)) { refuse "It is already open." } }
     do {
@@ -439,8 +418,6 @@ kind TrapDoor is Scenery, Door {
   }
   // Down the trap door, said of the door: the stairs under it, as Zork's
   // stairs are climbed; shut, it is shut.
-  without as target for climb_down from Thing
-  without as target for through from Thing
   as target for climb_down {
     do {
       if (self.get(:open)) { send actor :travel with :cellar  say "" }
@@ -480,7 +457,6 @@ kind Bottle is Bag {
 
     {self.look_inside}
   }
-  without as target for fill from Thing
   as target for fill {
     do {
       if (here.is(Riverside) || here.is(OnTheRiver) || here.is(MagicBoat)) {
@@ -494,7 +470,6 @@ kind Bottle is Bag {
       else { say "There's nothing to fill it with." }
     }
   }
-  without as target for mung from Thing
   as target for mung {
     do {
       if (self.count(Water) > 0) { say "A brilliant maneuver destroys the bottle. The water spills to the floor and evaporates." }

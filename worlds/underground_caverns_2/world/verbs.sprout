@@ -8,7 +8,7 @@
 import * as sprout from 'sprout'
 import {inventory} from 'sprout'
 import {Box} from 'box'
-import {Portable, Switchable, Creature, Door, Crossable, Leapable, Drinkable, Fillable, Sprayable, Vessel, Orderable, Button, Pourable, Wishing, Awaited, Demonic} from 'thing'
+import {Portable, Switchable, Creature, Door, Crossable, Leapable, Drinkable, Fillable, Sprayable, Vessel, Orderable, Button, Pourable, Wishing, Awaited, Demonic, Abyss, Leavable} from 'thing'
 import {Wand} from 'items'
 
 verb take {
@@ -61,7 +61,7 @@ verb look_under { role target  "look under [target]"  "look beneath [target]"  "
 verb lamp_on {
   role target: Switchable
   "turn on [target]"  "turn [target] on"  "light [target]"  "switch on [target]"
-  "switch [target] on"  "activate [target]"
+  "switch [target] on"  "activate [target]"  "strike [target]"
 }
 verb lamp_off {
   role target: Switchable
@@ -106,7 +106,30 @@ verb give {
   role recipient
   "give [item] to [recipient]"  "give [recipient] [item]"
   "offer [item] to [recipient]"  "hand [item] to [recipient]"  "feed [item] to [recipient]"
-  "feed [recipient] [item]"  "donate [item] to [recipient]"  "show [item] to [recipient]"
+  "feed [recipient] [item]"  "donate [item] to [recipient]"
+}
+// Shown, not given (round 9's P9): the dragon has an opinion about the
+// lamp; everyone else is not interested.
+verb show {
+  role item carried
+  role recipient: Creature
+  "show [item] to [recipient]"  "show [recipient] [item]"  "hold [item] up to [recipient]"  "hold up [item] to [recipient]"
+  "display [item] to [recipient]"  "present [item] to [recipient]"
+}
+// Thrown or dropped into what has no bottom, or no room (round 9's P11):
+// the chasm and the mouse hole answer in voice, where the parser drew
+// between two readings and refused flat.
+verb throw_into {
+  role target carried
+  role aim: Abyss
+  "throw [target] into [aim]"  "throw [target] in [aim]"  "drop [target] into [aim]"  "drop [target] in [aim]"
+  "throw [target] down [aim]"  "drop [target] down [aim]"  "put [target] in [aim]"  "put [target] into [aim]"
+}
+// Leaving a place one is standing in that is not a vessel (round 9's P12):
+// the gazebo.
+verb leave_it {
+  role target: Leavable
+  "leave [target]"  "exit [target]"  "get out of [target]"  "go out of [target]"  "step out of [target]"
 }
 verb throw {
   role target carried
@@ -533,7 +556,6 @@ message :munge
 message :boom
 // A room sealed (blown up, or full of gas), told to the rooms whose ways
 // lead into it, since a way cannot read the room it leads to.
-message :room_sealed with Dest
 // What lies on the Tea Room's floor, grown huge and shrunk again.
 message :grow
 message :ungrow
@@ -664,8 +686,6 @@ message :cast_word with Answer
 message :wand_fades
 message :disenchant
 message :wiz_fed
-message :wiz_locked with boolean
-message :wiz_open with boolean
 message :check_stands
 message :genie_summoned
 message :genie_departs
@@ -678,7 +698,6 @@ message :freed_wand
 message :menhir_at with integer
 message :menhir_order with integer
 message :leashed
-message :crypt_door with boolean
 message :red_at with Dest
 message :blue_at with Dest
 message :clear_at with Dest

@@ -18,23 +18,19 @@ kind StoneDoor is Scenery, Door {
   :open false
   passage short { stone door }
   describe { text "It is a great door of a single stone, taller than a man and as thick as you are wide, and it is {if self.get(:open)}open, swung back on hinges that nothing you can see is holding up, with a passage beyond it to the east{else}closed, and fits its frame so well that you could not get a hair into the crack{/if}. Above it, words are written in the rock." }
-  without as target for open from Thing
   as target for open {
     do {
       if (self.get(:open)) { say "It is open!" }
       else { say "The door can only be opened by answering the riddle." }
     }
   }
-  without as target for close from Thing
   as target for close {
     do {
       if (self.get(:open)) { say "Not a chance. The door weighs many tons." }
       else { say "It is closed!" }
     }
   }
-  without as target for knock from Door
   as target for knock { do { say "You knock on the stone door. A hollow laugh seems to come from it." } }
-  without as target for through from Thing
   as target for through {
     do {
       if (self.get(:open)) { say "The door is open; the way through it is east." }
@@ -50,10 +46,14 @@ kind Riddle is Scenery {
   passage words {
     Above the stone door, the following words are written: "No man shall pass this door without solving this riddle:
 
-    What is tall as a house, round as a cup, and all the king's horses can't draw it up?"
+    {verbatim}
+    What is tall as a house,
+      round as a cup,
+    and all the king's horses
+      can't draw it up?"
+    {/verbatim}
   }
   describe { text words }
-  without as target for read from Thing
   as target for read { do { say words } }
 }
 
@@ -70,7 +70,12 @@ object riddle_room is RiddleRoom in underground_caverns_2 {
   passage body {
     This is a room which is bare on all sides. There is an exit down in the northwest corner of the room. To the east is a great {if self.get(:open)}open{else}closed{/if} door made of stone. Above the stone, the following words are written: "No man shall pass this door without solving this riddle:
 
-    What is tall as a house, round as a cup, and all the king's horses can't draw it up?"
+    {verbatim}
+    What is tall as a house,
+      round as a cup,
+    and all the king's horses
+      can't draw it up?"
+    {/verbatim}
   }
   object door is StoneDoor
   object riddle is Riddle

@@ -16,8 +16,8 @@ import {Thing, Scenery} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
-import {examine} from 'sprout'
-import {read, listen, search, smell, look_in, look_under, shift, climb_up, climb_down, take, through, attack, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :room_sealed, :brief_hint, :fantasize, :conjured, :explosion, :explosion_at, :collapse, :bury, :die} from 'verbs'
+import {examine, ask} from 'sprout'
+import {read, listen, search, smell, look_in, look_under, shift, climb_up, climb_down, take, through, attack, mung, kick, throw, give, aim_wand, Dest, Spell, :scored, :relight, :room_lit, :wall_look, :snuffed, :munge, :brief_hint, :fantasize, :conjured, :explosion, :explosion_at, :collapse, :bury, :die} from 'verbs'
 import {Portable} from 'thing'
 
 kind Room is sprout.Place {
@@ -89,9 +89,9 @@ kind Room is sprout.Place {
   as target for any { permit { refuse "You can't see any such thing." } }
   as tool for any { permit { refuse "You can't see any such thing." } }
 
-  // Blown up by a cake (ICEBOOM's MUNG-ROOM): no way back in, and the
-  // rooms whose ways lead here are told.
-  on :munge { self.set(:munged, true)  broadcast :room_sealed with self.get(:id) }
+  // Blown up by a cake (ICEBOOM's MUNG-ROOM): no way back in; the ways
+  // that lead here read it.
+  on :munge { self.set(:munged, true) }
   // Munged (RMUNGBIT), by whatever means: nobody comes in. The rooms the
   // cakes and the gas seal say why at their own doors first; this is the
   // brick's, whose explosion may be anywhere (I-FUSE, I-SAFE, I-LEDGE).
@@ -273,7 +273,6 @@ kind Tunnel is Scenery {
   describe { text "The passage is cut through the rock, and goes where it goes. The ways out of here are described above, and you may take any of them." }
   // "take passage" (round 8's P3): a way is taken by walking into it.
   passage no_take { A passage is not a thing to be picked up; it is a way, and the way to take it is to walk into it. Say which. }
-  without as target for through from Thing
   as target for through { do { say "Use compass directions for movement, and say which way." } }
 }
 
@@ -281,9 +280,7 @@ kind Floor is Scenery {
   grammar { name "floor"  nouns "ground"  adjectives "stone", "rock" }
   passage short { floor }
   describe { text "The floor is the sort of thing you stand on. You are standing on it." }
-  without as target for search from Thing
   as target for search { do { say "Everything that is on the floor is listed, in the room's description, and the rest is floor." } }
-  without as target for look_under from Thing
   as target for look_under { do { say "There is nothing under the floor but more floor, and then, eventually, lava." } }
 }
 kind Ceiling is Scenery {
@@ -357,10 +354,18 @@ kind Illusion is Scenery {
   passage gone_speak {
     {if actor.is(Adventurer) && actor.get(:spell) == :fantasize}It does not answer, having no mouth, nor anything else. {self.never_there}{else}{self.worn_off}{/if}
   }
-  // The wildcard runs before any play for a verb, so the verb's clause is
-  // the actor's to choose (adventurer.sprout), from these.
-  as target for any { permit { refuse gone } }
-  as tool for any { permit { refuse gone } }
+  // The wildcard leaves out the verbs whose clause differs, and each of
+  // those has a permit of its own.
+  as target for any except examine, attack, mung, kick, ask { permit { refuse gone } }
+  as target for examine { permit { refuse gone_look } }
+  as target for attack { permit { refuse gone_strike } }
+  as target for mung { permit { refuse gone_strike } }
+  as target for kick { permit { refuse gone_strike } }
+  as target for ask { permit { refuse gone_speak } }
+  as tool for any except throw, give, aim_wand { permit { refuse gone } }
+  as aim for throw { permit { refuse gone_strike } }
+  as recipient for give { permit { refuse gone_speak } }
+  as aim for aim_wand { permit { refuse gone_look } }
 }
 
 // What an explosion leaves in a room (EXPLOSION).
@@ -374,11 +379,8 @@ kind Surroundings is Scenery {
   passage short { room }
   describe { text "{if here.is(Room)}{here.full}{/if}" }
   passage no_take { {one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of} }
-  without as target for search from Thing
   as target for search { do { say "{if here.is(Room)}{here.full}{/if}" } }
-  without as target for smell from Thing
   as target for smell { do { say "It smells like a room." } }
-  without as target for listen from Thing
   as target for listen { do { say "You hear nothing a room does not usually make." } }
 }
 
@@ -403,12 +405,8 @@ kind Grue is Scenery {
   passage struck_through { Your blow goes through the grue, which is not how grues work; the dark would have had you by now. It was never there: the Wizard's word put it in the room, and the room, having no say in the matter, let it, and has the grace to look embarrassed about it now. }
   describe { if (self.get(:conjured)) { text plain_sight } else { text "The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale." } }
   as target for any { permit { if (self.get(:conjured)) { refuse plain_sight } } }
-  without as target for listen from Thing
   as target for listen { do { say "It makes no sound but is always lurking in the darkness nearby." } }
-  without as target for search from Thing
   as target for search { do { say absent } }
-  without as target for look_in from Thing
   as target for look_in { do { say absent } }
-  without as target for look_under from Thing
   as target for look_under { do { say absent } }
 }

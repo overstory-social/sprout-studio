@@ -10,13 +10,12 @@ import {Room, DarkRoom, Wonderland, CakeSafe, ChasmEdge, Watery, PostsLike} from
 import {Flask, Candy, StreamWater} from 'items'
 import {Chasm} from 'way_in'
 import {Adventurer} from 'adventurer'
-import {drink, look_under, through, take, climb_up, climb_down, look_in, leap_at, :pool_gone, :die, :room_sealed} from 'verbs'
+import {drink, look_under, through, take, climb_up, climb_down, look_in, leap_at, :pool_gone, :die} from 'verbs'
 
 kind Posts is Scenery {
   grammar { name "group of wooden posts"  nouns "posts", "post", "legs", "leg"  adjectives "wooden", "four" }
   passage short { group of wooden posts }
   describe { text "Four wooden posts, each as thick as a tree and as tall as a house, set at the corners of a rectangle and holding up a wooden roof far overhead. They are turned and polished, and look, now that you think of it, exactly like the legs of a table." }
-  without as target for climb_up from Thing
   as target for climb_up { do { say "The posts are polished smooth, and you get about a foot up one before sliding back down." } }
 }
 kind Roof is Scenery {
@@ -36,14 +35,12 @@ kind Pool is Box, Drinkable, Leapable, Watery {
   passage ldesc { The leak has submerged the depressed area in a pool of tears. There is a hazy something at the deepest part of the pool. }
   // The depth is said before it costs (round 6's P5): both runs that
   // reached it went in.
-  describe { text "The pool fills the depressed half of the room, salt water from the leak overhead, and it is deeper than it looks: deeper than you are tall, at your present size, several times over, and a visitor who goes into it does not come out of it. Something hazy lies at the deepest part of it, the shape of a package, if a package could lie under water and keep its shape." }
+  describe { text "The pool fills the depressed half of the room, salt water from the leak overhead, and it is deeper than it looks: deeper than you are tall, at your present size, several times over, and a visitor who goes into it does not come out of it. Something hazy lies at the deepest part of it, the shape of a package, if a package could lie under water and keep its shape. It is salt water, and thin, and there is less of it than there looks: the kind of water a dry thing dropped into it would drink up." }
   as target for any { permit { if (self.get(:gone)) { refuse "You can't see any such thing." } } }
   as target for drink { do { say "The water is extremely salty." } }
-  without as target for look_under from Thing
   as target for look_under { do { say "You'd probably have to enter the pool to see what's below the surface, and you would not come up again; it is a great deal deeper than you are tall." } }
   // Thing's "You can't look inside" arrives by way of Drinkable as well
   // (friction 54; round 6's P9).
-  without as target for look_in from Thing
   without as target for look_in from Box
   as target for look_in { do { say "Through the water, which is not clear, you can make out something hazy at the deepest part, the size and shape of a package. It is not coming to you." } }
   as target for leap_at {
@@ -52,7 +49,6 @@ kind Pool is Box, Drinkable, Leapable, Watery {
       if (actor.is(Adventurer)) { send actor :die }
     }
   }
-  without as target for through from Thing
   as target for through {
     do {
       say "You enter the pool, thrash around for a good while, and then drown. Sad, but true."
@@ -78,15 +74,13 @@ kind Leak is Scenery {
 object posts_room is Room, Wonderland, CakeSafe, ChasmEdge, PostsLike in underground_caverns_2 {
   grammar {
     name "Posts Room"
-    exit east "east" -> pool_room when (!self.get(:pool_sealed))
+    exit east "east" -> pool_room when (!pool_room.get(:munged))
     exit east "east" refuse "The entrance is blocked by sticky orange rubble. Probably some careless adventurer was playing with blasting cakes."
     exit northwest "northwest" refuse "A great chasm blocks your way."
     exit west "west" refuse "A great chasm blocks your way."
     exit down "down" refuse "A great chasm blocks your way."
   }
   :id posts
-  :pool_sealed false
-  on :room_sealed (from, value) { if (value == :pool) { self.set(:pool_sealed, true) } }
   passage body { This is an enormous room, in the center of which are four wooden posts delineating a rectangular area, above which is what appears to be a wooden roof. In fact, all objects in this room appear to be abnormally large. To the east is a passageway. There are large gaping chasms to the west and northwest. Whatever was left on the roof up there is on it still, a long way over your head, and nothing up there is coming down to you. }
   object posts is Posts
   object roof is Roof
@@ -101,14 +95,12 @@ kind PoolRoom is DarkRoom, Wonderland, CakeSafe { }
 object pool_room is PoolRoom in underground_caverns_2 {
   grammar {
     name "Pool Room"
-    exit west "west" -> posts_room when (!self.get(:posts_sealed))
+    exit west "west" -> posts_room when (!posts_room.get(:munged))
     exit west "west" refuse "The entrance is blocked by sticky orange rubble. Probably some careless adventurer was playing with blasting cakes."
-    exit out "out" -> posts_room when (!self.get(:posts_sealed))
+    exit out "out" -> posts_room when (!posts_room.get(:munged))
     exit out "out" refuse "The entrance is blocked by sticky orange rubble. Probably some careless adventurer was playing with blasting cakes."
   }
   :id pool
-  :posts_sealed false
-  on :room_sealed (from, value) { if (value == :posts) { self.set(:posts_sealed, true) } }
   passage body { This is a large room, one half of which is depressed. Salty water flows from a large leak in the ceiling. The only exit is to the west. }
   object flask is Flask
   object leak is Leak

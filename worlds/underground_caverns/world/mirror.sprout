@@ -57,18 +57,14 @@ kind Mirror is Scenery, Kissable, Concealing {
   describe {
     if (self.get(:mung)) { text broken } else { text whole }
   }
-  without as target for look_in from Thing
   as target for look_in {
     do { if (self.get(:mung)) { say broken } else { say whole } }
   }
   as target for look_behind { do { say "The mirror fills the wall. There is nothing behind it but more wall, which is the usual arrangement." } }
-  without as target for search from Thing
   as target for search { do { if (self.get(:mung)) { say broken } else { say whole } } }
   as target for kiss { do { if (self.get(:mung)) { say "You would cut your lip." } else { say "The ugly person in the mirror kisses you back, without enthusiasm." } } }
-  without as target for through from Thing
   as target for through { do { say "You hit your head against the mirror as you attempt this feat. The ugly person on the other side does the same." } }
   // Rubbed with the hands: the rooms change over, and so does the visitor.
-  without as target for rub from Thing
   as target for rub {
     do {
       if (self.get(:mung)) { say "Fiddling with the mirror {self.hacked}" }
@@ -78,7 +74,6 @@ kind Mirror is Scenery, Kissable, Concealing {
       }
     }
   }
-  without as target for rub_with from Thing
   as target for rub_with {
     do {
       if (self.get(:mung)) { say "Fiddling with the mirror {self.hacked}" }
@@ -91,7 +86,6 @@ kind Mirror is Scenery, Kissable, Concealing {
   }
   // Broken, by a blow or by anything thrown at it (the adventurer's THROW
   // asks it the same way), as Zork breaks it: both mirrors at once.
-  without as target for mung from Thing
   as target for mung {
     do {
       if (self.get(:mung)) { say again }
@@ -193,14 +187,12 @@ object tiny_cave is DarkRoom, Murmuring, BelowAltar in underground_caverns {
     grammar { name "draught"  nouns "draft", "wind", "gust", "breeze", "voices", "voice", "murmur", "murmuring"  adjectives "cold", "steady" }
     passage short { draught }
     describe { text "A cold draught comes up the staircase and does not stop. It smells of stone that has never been warm, and every so often it carries a murmur of voices, too faint to make out and too many to be anything good." }
-    without as target for listen from Thing
     as target for listen { do { say "Voices, a great many of them, far below, murmuring. You cannot make out the words, which is probably a kindness." } }
   }
   object hole is Scenery {
     grammar { name "hole"  nouns "ceiling", "shaft"  adjectives "small", "round" }
     passage short { hole }
     describe { text "High in the ceiling is a small round hole, the bottom of the one in the Altar's floor. Whatever comes down it comes down to stay: it is well out of reach, and the walls below it are smooth." }
-    without as target for climb_up from Thing
     as target for climb_up { do { say "The hole is well out of reach, and the walls below it are smooth." } }
   }
 }

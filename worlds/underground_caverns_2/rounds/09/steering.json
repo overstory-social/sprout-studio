@@ -1,0 +1,12 @@
+{
+  "reached": true,
+  "doc": "https://claude.ai/artifact/F4iaf8jzSXatVs3HCtyFG4",
+  "comments": [
+    {
+      "id": "0b3971e5-97f0",
+      "tab": "Round 08",
+      "on": "Synthesis",
+      "words": "Steering for round 09, relayed by Claude from Eric (2026-10-22): \"Let's update the studio sprout pin and then do a revision round.\"\n\nThis is a refine round: no new scope. Sprout is now at 5380ce6. It answers many entries in friction.md, so drop a workaround wherever a feature below now does its job. Each entry is: the feature (Sprout issue; friction entries).\n- `drop all` with empty hands has its own answer (825).\n- An NPC's act can fill a value role (826; 1).\n- `as actor for any`, and `except` to leave verbs out of a wildcard (827; 3, 51, 67).\n- Quotation marks in a typed line are dropped (828; 33, 38, 57, 83).\n- `way` is bound in `as actor for go` (829; 58).\n- A drawn exit, `-> one of (...)`, for the turning rooms (830; 12, 42, 53, 58, 65, 101).\n- The exits cap counts guarded exits once per direction (831; 58, 69, 86).\n- `after command` runs after the queue drains (832; 4, 27, 74, 78, 84).\n- A hook can follow a refused `go` (833; 2, 42).\n- A read-only look into the next place (834; 13, 47, 81).\n- One fixed thing declared in several places, e.g. a door or a shared wall (835; 48, 70, 82).\n- A base kind's default steps aside for a more specific one (836; 22, 29, 39, 54).\n- Each scripted step takes its own seed (837; 43, 56, 59).\n- `all` in a set role reaches every held thing (838; 73).\n- Leftover words are dropped, and the reading is restated as \"(push the menhir)\" (839; 66, 86, 87).\n- Lost moves and sends now warn the author (840; 44, 53, 60).\n- A visitor is sent `:arrived` and `:departed` (841; 40).\n- A tell reaches a visitor riding an open vessel (842; 75, 85).\n- A passage can ask whether `actor` is bound (843; 71).\n- Two things shut in one container reach each other (844; 14).\n- A role-player sees what the actor carries (845; 16, 46, 61).\n- `*` and `/` in integer expressions (846; 24, 93).\n- Verbatim prose blocks; the engine never recapitalises prose (847; 17, 18, 20).\n- `after command` written in an object's or the world's own body now runs (859).\nThe spec's Decisions dated 2026-10-21 say exactly how each works. Mark each friction entry these answer as answered."
+    }
+  ]
+}

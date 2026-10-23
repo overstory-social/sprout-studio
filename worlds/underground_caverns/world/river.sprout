@@ -374,7 +374,6 @@ object cliff_middle is Room in underground_caverns {
     grammar { name "main flow"  nouns "flow", "passage", "river", "water"  adjectives "main", "twisting" }
     passage short { main flow }
     describe { text "Below and to the north the main flow from Aragain Falls twists away into a passage in the rock, black and fast and much too narrow for anything that wants to come out the other end." }
-    without as target for through from Thing
     as target for through { do { say "It is impossible for you to enter." } }
   }
 }
@@ -447,9 +446,7 @@ kind River is Box, Crossable, Leapable, Drinkable {
   without as target for open from Box
   as target for open { do { say "You must tell me how to do that to a river." } }
   as target for cross { do { say "You'd need a boat for that." } }
-  without as target for through from Thing
   as target for through { do { say swim_no } }
-  without as target for leap_at from Leapable
   as target for leap_at { do { say swim_no } }
   passage no_take { The water slips through your fingers. }
   as target for drink { do { say "Thank you very much. I was rather thirsty (from all this talking, probably)." } }
@@ -463,7 +460,6 @@ kind WaterAbout is Scenery, Drinkable {
   describe { text "The water is cold and clear and moving, as water down here mostly is." }
   passage no_take { The water slips through your fingers. }
   as target for drink { do { say "Thank you very much. I was rather thirsty (from all this talking, probably)." } }
-  without as target for through from Thing
   as target for through { do { say "You can't swim in the dungeon." } }
 }
 
@@ -472,9 +468,7 @@ kind Cliffs is Scenery {
   grammar { name "white cliffs"  nouns "cliffs", "cliff", "walls"  adjectives "white" }
   passage short { white cliffs }
   describe { text "The White Cliffs rise sheer from the river in giant pale walls, chalk-white and streaked with grey, stretching away north and south as far as the light goes." }
-  without as target for climb_up from Thing
   as target for climb_up { do { say "The cliff is too steep for climbing." } }
-  without as target for climb_down from Thing
   as target for climb_down { do { say "The cliff is too steep for climbing." } }
 }
 
@@ -486,7 +480,6 @@ kind ClimbableCliff is Scenery, Leapable {
   describe { text "The wall of the river canyon is rough and broken and seamed with ledges, the kind of cliff that is climbable if you are careful and not if you are not." }
   without as target for climb_up from Thing
   without as target for climb_down from Thing
-  without as target for leap_at from Leapable
   as target for leap_at { do { say "That would be very unwise. Perhaps even fatal." } }
 }
 
@@ -495,9 +488,7 @@ kind Falls is Scenery, Leapable {
   grammar { name "falls"  nouns "waterfall", "aragain", "cataract", "spray"  adjectives "aragain", "enormous" }
   passage short { falls }
   describe { text "Aragain Falls are enormous: the whole of the Frigid River going over the edge at once, in a white thundering curtain, about 450 feet straight down into a boil of spray. The noise is like being inside a drum." }
-  without as target for leap_at from Leapable
   as target for leap_at { do { say "It's a long way..." } }
-  without as target for climb_down from Thing
   as target for climb_down { do { say "It's a long way..." } }
 }
 
@@ -524,7 +515,6 @@ kind Rainbow is Scenery, Crossable {
       else { say "From here?!?" }
     }
   }
-  without as target for through from Thing
   as target for through {
     do {
       if (here.is(RainbowFoot)) {
@@ -535,7 +525,6 @@ kind Rainbow is Scenery, Crossable {
       else { say "From here?!?" }
     }
   }
-  without as target for climb_up from Thing
   as target for climb_up {
     do {
       if (here.is(RainbowFoot)) {
@@ -545,7 +534,6 @@ kind Rainbow is Scenery, Crossable {
       else { say "From here?!?" }
     }
   }
-  without as target for look_under from Thing
   as target for look_under { do { say "The Frigid River flows under the rainbow." } }
   passage no_take { You reach for it, and there is nothing there but color. }
 }
@@ -564,7 +552,6 @@ kind Rumble is Scenery {
   // What it sounds like, listened to: each reach that names it says how
   // near it has come.
   passage sound default { Somewhere downstream something is making a long, low, rumbling roar, the sound of a great deal of water doing something sudden. }
-  without as target for listen from Thing
   as target for listen { do { say sound } }
 }
 

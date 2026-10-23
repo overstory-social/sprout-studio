@@ -1,0 +1,561 @@
+{
+  "steps": [
+    { "seed": 9 },
+    { "seed": 853534204 },
+    { "arrive": "Dell", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "West of House" },
+      { "reader": "Dell", "kind": "described", "words": "You are standing in an open field west of a white house, with a boarded front door." },
+      { "reader": "Dell", "kind": "described", "words": "There is a small mailbox here." },
+      { "reader": "Dell", "kind": "extension", "words": "the white house" }
+    ] },
+    { "seed": 3655922532 },
+    { "as": "Dell", "type": "examine mailbox", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The small mailbox stands on a post at the edge of the field, painted to match the house and a good deal less weathered. Its little flag is down." },
+      { "reader": "Dell", "kind": "described", "words": "The small mailbox is closed." }
+    ] },
+    { "seed": 608880792 },
+    { "tick": true, "expect": [] },
+    { "seed": 3529053154 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3108716229 },
+    { "as": "Dell", "type": "open mailbox", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Opening the small mailbox reveals a leaflet." }
+    ] },
+    { "seed": 2958638087 },
+    { "tick": true, "expect": [] },
+    { "seed": 1128367080 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3949025947 },
+    { "as": "Dell", "type": "read leaflet", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "(Taken)" },
+      { "reader": "Dell", "kind": "said", "words": "\"WELCOME TO ZORK!" },
+      { "reader": "Dell", "kind": "said", "words": "ZORK is a game of adventure, danger, and low cunning. In it you will explore some of the most amazing territory ever seen by mortals. No computer should be without one!\"" }
+    ] },
+    { "seed": 562046525 },
+    { "tick": true, "expect": [] },
+    { "seed": 2715667106 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2997954918 },
+    { "as": "Dell", "type": "examine house", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The house is a beautiful colonial house which is painted white. It is clear that the owners must have been extremely wealthy." }
+    ] },
+    { "seed": 2522371549 },
+    { "tick": true, "expect": [] },
+    { "seed": 1217321642 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 4027892162 },
+    { "as": "Dell", "type": "go north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "North of House" },
+      { "reader": "Dell", "kind": "described", "words": "You are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees." }
+    ] },
+    { "seed": 1232752176 },
+    { "tick": true, "expect": [] },
+    { "seed": 3136491386 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2757257720 },
+    { "as": "Dell", "type": "go east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Behind House" },
+      { "reader": "Dell", "kind": "described", "words": "You are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar." }
+    ] },
+    { "seed": 1575981240 },
+    { "tick": true, "expect": [] },
+    { "seed": 2300153573 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3854468244 },
+    { "as": "Dell", "type": "open window", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "With great effort, you open the window far enough to allow entry." }
+    ] },
+    { "seed": 3717546984 },
+    { "tick": true, "expect": [] },
+    { "seed": 1955618786 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3752460204 },
+    { "as": "Dell", "type": "enter window", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Kitchen" },
+      { "reader": "Dell", "kind": "described", "words": "You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open." },
+      { "reader": "Dell", "kind": "described", "words": "On the table is an elongated brown sack, smelling of hot peppers." },
+      { "reader": "Dell", "kind": "described", "words": "A bottle is sitting on the table." },
+      { "reader": "Dell", "kind": "described", "words": "The glass bottle contains:" },
+      { "reader": "Dell", "kind": "described", "words": "  A quantity of water" },
+      { "reader": "Dell", "kind": "extension", "words": "the kitchen" }
+    ] },
+    { "seed": 815253435 },
+    { "tick": true, "expect": [] },
+    { "seed": 2908904160 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1432631155 },
+    { "as": "Dell", "type": "take sack and bottle", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "brown sack: Taken." },
+      { "reader": "Dell", "kind": "said", "words": "glass bottle: Taken." }
+    ] },
+    { "seed": 206566038 },
+    { "tick": true, "expect": [] },
+    { "seed": 3763730880 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 878477069 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Living Room" },
+      { "reader": "Dell", "kind": "described", "words": "You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room." },
+      { "reader": "Dell", "kind": "described", "words": "A battery-powered brass lantern is on the trophy case." },
+      { "reader": "Dell", "kind": "described", "words": "Above the trophy case hangs an elvish sword of great antiquity." },
+      { "reader": "Dell", "kind": "extension", "words": "the trophy case" }
+    ] },
+    { "seed": 2260682765 },
+    { "tick": true, "expect": [] },
+    { "seed": 2122104082 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 320989984 },
+    { "as": "Dell", "type": "take lantern and sword", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "brass lantern: Taken." },
+      { "reader": "Dell", "kind": "said", "words": "sword: Taken." }
+    ] },
+    { "seed": 3582974239 },
+    { "tick": true, "expect": [] },
+    { "seed": 3022475510 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 845240649 },
+    { "as": "Dell", "type": "read door", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The engravings translate to \"This space intentionally left blank.\"" }
+    ] },
+    { "seed": 293481143 },
+    { "tick": true, "expect": [] },
+    { "seed": 2099378430 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1330153052 },
+    { "as": "Dell", "type": "move rug", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "With a great effort, the rug is moved to one side of the room, revealing the dusty cover of a closed trap door." }
+    ] },
+    { "seed": 2829222530 },
+    { "tick": true, "expect": [] },
+    { "seed": 1254782621 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2376621794 },
+    { "as": "Dell", "type": "open trap door", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The door reluctantly opens to reveal a rickety staircase descending into darkness." }
+    ] },
+    { "seed": 4110580879 },
+    { "tick": true, "expect": [] },
+    { "seed": 2439051183 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 687732792 },
+    { "as": "Dell", "type": "turn on lantern", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The brass lantern is now on." }
+    ] },
+    { "seed": 2222814462 },
+    { "tick": true, "expect": [] },
+    { "seed": 1397288032 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2305369943 },
+    { "as": "Dell", "type": "down", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The trap door crashes shut, and you hear someone barring it." },
+      { "reader": "Dell", "kind": "described", "words": "Cellar" },
+      { "reader": "Dell", "kind": "described", "words": "You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable." },
+      { "reader": "Dell", "kind": "extension", "words": "the cellar" },
+      { "reader": "Dell", "kind": "told", "words": "Your sword is glowing with a faint blue glow." }
+    ] },
+    { "seed": 3434887872 },
+    { "tick": true, "expect": [] },
+    { "seed": 2478482009 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2635793589 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The Troll Room" },
+      { "reader": "Dell", "kind": "described", "words": "This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls." },
+      { "reader": "Dell", "kind": "described", "words": "A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room." },
+      { "reader": "Dell", "kind": "extension", "words": "the troll room" },
+      { "reader": "Dell", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "seed": 2291499079 },
+    { "tick": true, "expect": [] },
+    { "seed": 2820067325 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 2133890592 },
+    { "as": "Dell", "type": "attack troll with sword", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Your sword crashes down, knocking the troll into dreamland." }
+    ] },
+    { "seed": 772026408 },
+    { "tick": true, "expect": [] },
+    { "seed": 3992972143 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2563721938 },
+    { "as": "Dell", "type": "attack troll with sword", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The unconscious troll cannot defend himself: He dies." },
+      { "reader": "Dell", "kind": "told", "words": "Almost as soon as the troll breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared." },
+      { "reader": "Dell", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 2753754049 },
+    { "tick": true, "expect": [] },
+    { "seed": 2375136294 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 2820862748 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "East-West Passage" },
+      { "reader": "Dell", "kind": "described", "words": "This is a narrow east-west passageway. There is a narrow stairway leading down at the north end of the room." }
+    ] },
+    { "seed": 4219930371 },
+    { "tick": true, "expect": [] },
+    { "seed": 3940526617 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 92055293 },
+    { "as": "Dell", "type": "down", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Chasm" },
+      { "reader": "Dell", "kind": "described", "words": "A chasm runs southwest to northeast and the path follows it. You are on the south side of the chasm, where a crack opens into a passage." }
+    ] },
+    { "seed": 3142849586 },
+    { "tick": true, "expect": [] },
+    { "seed": 408201491 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 2859814346 },
+    { "as": "Dell", "type": "northeast", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Reservoir South" },
+      { "reader": "Dell", "kind": "described", "words": "You are in a long room on the south shore of a large lake, far too deep and wide for crossing." },
+      { "reader": "Dell", "kind": "described", "words": "There is a path along the stream to the east or west, a steep pathway climbing southwest along the edge of a chasm, and a path leading into a canyon to the southeast." }
+    ] },
+    { "seed": 2749205992 },
+    { "tick": true, "expect": [] },
+    { "seed": 4186898886 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3154722689 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Stream View" },
+      { "reader": "Dell", "kind": "described", "words": "You are standing on a path beside a gently flowing stream. The path follows the stream, which flows from west to east." }
+    ] },
+    { "seed": 3886306324 },
+    { "tick": true, "expect": [] },
+    { "seed": 3412448164 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 997578151 },
+    { "as": "Dell", "type": "examine stream", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The stream is clear and cold and in no particular hurry, flowing from west to east over a bed of grey pebbles." }
+    ] },
+    { "seed": 2946867681 },
+    { "tick": true, "expect": [] },
+    { "seed": 4111005930 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 527044306 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "The stream emerges from a spot too small for you to enter." }
+    ] },
+    { "seed": 4044099063 },
+    { "tick": true, "expect": [] },
+    { "seed": 2943773866 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 3406659592 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Reservoir South" }
+    ] },
+    { "seed": 1485792438 },
+    { "tick": true, "expect": [] },
+    { "seed": 3303337259 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1386285352 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Dam" },
+      { "reader": "Dell", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
+      { "reader": "Dell", "kind": "described", "words": "The sluice gates on the dam are closed. Behind the dam, there can be seen a wide reservoir. Water is pouring over the top of the now abandoned dam." },
+      { "reader": "Dell", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble." },
+      { "reader": "Dell", "kind": "extension", "words": "Flood Control Dam #3" }
+    ] },
+    { "seed": 3071040421 },
+    { "tick": true, "expect": [] },
+    { "seed": 3682425726 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 298136845 },
+    { "as": "Dell", "type": "examine bolt", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "It is a large metal bolt, a good two inches across the head, mounted on the control panel and connected by unseen machinery to the sluice gates below. Its flats are worn bright, the way bolts get when the only way to turn them is with a wrench. The bubble above it is dark." }
+    ] },
+    { "seed": 2506340357 },
+    { "tick": true, "expect": [] },
+    { "seed": 2391713203 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1375149799 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Dam Lobby" },
+      { "reader": "Dell", "kind": "described", "words": "This room appears to have been the waiting room for groups touring the dam. There are open doorways here to the north and east marked \"Private\", and there is a path leading south over the top of the dam." },
+      { "reader": "Dell", "kind": "described", "words": "Some guidebooks entitled \"Flood Control Dam #3\" are on the reception desk." },
+      { "reader": "Dell", "kind": "described", "words": "There is a matchbook whose cover says \"Visit Beautiful FCD#3\" here." }
+    ] },
+    { "seed": 2295431511 },
+    { "tick": true, "expect": [] },
+    { "seed": 1218546844 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 2095788818 },
+    { "as": "Dell", "type": "take matchbook and guidebook", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "matchbook: Taken." },
+      { "reader": "Dell", "kind": "said", "words": "tour guidebook: Taken." }
+    ] },
+    { "seed": 799416718 },
+    { "tick": true, "expect": [] },
+    { "seed": 3519315287 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2974557701 },
+    { "as": "Dell", "type": "read guidebook", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "\" Flood Control Dam #3" },
+      { "reader": "Dell", "kind": "said", "words": "FCD#3 was constructed in year 783 of the Great Underground Empire to harness the mighty Frigid River. This work was supported by a grant of 37 million zorkmids from your omnipotent local tyrant Lord Dimwit Flathead the Excessive. This impressive structure is composed of 370,000 cubic feet of concrete, is 256 feet tall at the center, and 193 feet wide at the top. The lake created behind the dam has a volume of 1.7 billion cubic feet, an area of 12 million square feet, and a shore line of 36 thousand feet." },
+      { "reader": "Dell", "kind": "said", "words": "The construction of FCD#3 took 112 days from ground breaking to the dedication. It required a work force of 384 slaves, 34 slave drivers, 12 engineers, 2 turtle doves, and a partridge in a pear tree. The work was managed by a command team composed of 2345 bureaucrats, 2347 secretaries (at least two of whom could type), 12,256 paper shufflers, 52,469 rubber stampers, 245,193 red tape processors, and nearly one million dead trees." },
+      { "reader": "Dell", "kind": "said", "words": "We will now point out some of the more interesting features of FCD#3 as we conduct you on a guided tour of the facilities:" },
+      { "reader": "Dell", "kind": "said", "words": "1) You start your tour here in the Dam Lobby. You will notice on your right that...." }
+    ] },
+    { "seed": 2454018355 },
+    { "tick": true, "expect": [] },
+    { "seed": 4051806114 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 3613194416 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Maintenance Room" },
+      { "reader": "Dell", "kind": "described", "words": "This is what appears to have been the maintenance room for Flood Control Dam #3. Apparently, this room has been ransacked recently, for most of the valuable equipment is gone. On the wall in front of you is a group of buttons colored blue, yellow, brown, and red. There are doorways to the west and south." },
+      { "reader": "Dell", "kind": "described", "words": "There is a group of tool chests here." },
+      { "reader": "Dell", "kind": "described", "words": "There is a wrench here." },
+      { "reader": "Dell", "kind": "described", "words": "There is an object which looks like a tube of toothpaste here." },
+      { "reader": "Dell", "kind": "described", "words": "There is a screwdriver here." }
+    ] },
+    { "seed": 149337255 },
+    { "tick": true, "expect": [] },
+    { "seed": 923560984 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2558801108 },
+    { "as": "Dell", "type": "take all", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "group of tool chests: The chests are so rusty and corroded that they crumble when you touch them." }
+    ] },
+    { "seed": 2943375072 },
+    { "tick": true, "expect": [] },
+    { "seed": 849393008 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 1128356435 },
+    { "as": "Dell", "type": "push yellow button", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Click." }
+    ] },
+    { "seed": 3840888257 },
+    { "tick": true, "expect": [] },
+    { "seed": 2759515330 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 11394456 },
+    { "as": "Dell", "type": "take wrench", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 1979783609 },
+    { "tick": true, "expect": [] },
+    { "seed": 390665836 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 823648061 },
+    { "as": "Dell", "type": "take screwdriver", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 480018732 },
+    { "tick": true, "expect": [] },
+    { "seed": 758479799 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 823136287 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Dam Lobby" }
+    ] },
+    { "seed": 1239687560 },
+    { "tick": true, "expect": [] },
+    { "seed": 3548460048 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 629884487 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Dam" }
+    ] },
+    { "seed": 3673527970 },
+    { "tick": true, "expect": [] },
+    { "seed": 2962276909 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3575544863 },
+    { "as": "Dell", "type": "turn bolt with wrench", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The sluice gates open and water pours through the dam." }
+    ] },
+    { "seed": 1627035345 },
+    { "tick": true, "expect": [] },
+    { "seed": 4071709155 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 2281731343 },
+    { "as": "Dell", "type": "look", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Dam" },
+      { "reader": "Dell", "kind": "described", "words": "You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down." },
+      { "reader": "Dell", "kind": "described", "words": "The sluice gates are open, and water rushes through the dam. The water level behind the dam is still high." },
+      { "reader": "Dell", "kind": "described", "words": "There is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small green plastic bubble which is glowing serenely." },
+      { "reader": "Dell", "kind": "extension", "words": "Flood Control Dam #3" }
+    ] },
+    { "seed": 4093510865 },
+    { "tick": true, "expect": [] },
+    { "seed": 3556721980 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2072413072 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Deep Canyon" },
+      { "reader": "Dell", "kind": "described", "words": "You are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. A stairway leads down. You can hear a loud roaring sound, like that of rushing water, from below." }
+    ] },
+    { "seed": 1085754038 },
+    { "tick": true, "expect": [] },
+    { "seed": 3954407625 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 4044546520 },
+    { "as": "Dell", "type": "down", "expect": [
+      { "reader": "Dell", "kind": "told", "words": "It is unbearably loud here, with an ear-splitting roar seeming to come from all around you. There is a pounding in your head which won't stop. With a tremendous effort, you scramble out of the room." },
+      { "reader": "Dell", "kind": "described", "words": "Damp Cave" },
+      { "reader": "Dell", "kind": "described", "words": "This cave has exits to the west and east, and narrows to a crack toward the south. The earth is particularly damp here." }
+    ] },
+    { "seed": 356314148 },
+    { "tick": true, "expect": [] },
+    { "seed": 1542732721 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1484707556 },
+    { "as": "Dell", "type": "east", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "White Cliffs Beach" },
+      { "reader": "Dell", "kind": "described", "words": "You are on a narrow strip of beach which runs along the base of the White Cliffs. There is a narrow path heading south along the Cliffs and a tight passage leading west into the cliffs themselves." }
+    ] },
+    { "seed": 3873683704 },
+    { "tick": true, "expect": [] },
+    { "seed": 1871119685 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 1797969533 },
+    { "as": "Dell", "type": "south", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "White Cliffs Beach" },
+      { "reader": "Dell", "kind": "described", "words": "You are on a rocky, narrow strip of beach beside the Cliffs. A narrow path leads north along the shore." }
+    ] },
+    { "seed": 3514713850 },
+    { "tick": true, "expect": [] },
+    { "seed": 3169762778 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2372204001 },
+    { "as": "Dell", "type": "examine cliffs", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "The White Cliffs rise sheer from the river in giant pale walls, chalk-white and streaked with grey, stretching away north and south as far as the light goes." }
+    ] },
+    { "seed": 3550560222 },
+    { "tick": true, "expect": [] },
+    { "seed": 301759416 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 25997731 },
+    { "as": "Dell", "type": "search sand", "expect": [
+      { "reader": "Dell", "kind": "notice", "words": "You can't see any such thing." }
+    ] },
+    { "seed": 4050928183 },
+    { "tick": true, "expect": [] },
+    { "seed": 3764803084 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "dam_room.bolt woke, 240 seconds after it asked" }
+    ] },
+    { "seed": 3931851648 },
+    { "as": "Dell", "type": "north", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "White Cliffs Beach" }
+    ] },
+    { "seed": 3556770637 },
+    { "tick": true, "expect": [] },
+    { "seed": 3794698685 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 3345289193 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Damp Cave" }
+    ] },
+    { "seed": 3733520702 },
+    { "tick": true, "expect": [] },
+    { "seed": 1532529602 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 1995675054 },
+    { "as": "Dell", "type": "west", "expect": [
+      { "reader": "Dell", "kind": "described", "words": "Loud Room" },
+      { "reader": "Dell", "kind": "described", "words": "On the ground is a large platinum bar." }
+    ] },
+    { "seed": 3494120539 },
+    { "tick": true, "expect": [] },
+    { "seed": 701844740 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 1710643772 },
+    { "as": "Dell", "type": "take bar", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "bar bar ..." }
+    ] },
+    { "seed": 2412340701 },
+    { "tick": true, "expect": [] },
+    { "seed": 2241592837 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3822833455 },
+    { "as": "Dell", "type": "take platinum bar", "expect": [
+      { "reader": "Dell", "kind": "refused", "words": "bar bar ..." }
+    ] },
+    { "seed": 165572015 },
+    { "tick": true, "expect": [] },
+    { "seed": 2190769072 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 493973156 },
+    { "as": "Dell", "type": "echo", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "The acoustics of the room change subtly." }
+    ] },
+    { "seed": 3098319894 },
+    { "tick": true, "expect": [] },
+    { "seed": 1730891868 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 2852831993 },
+    { "as": "Dell", "type": "take bar", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Your load is too heavy, the sword not least of it." }
+    ] },
+    { "seed": 2702882192 },
+    { "tick": true, "expect": [] },
+    { "seed": 812084293 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 1226733624 },
+    { "as": "Dell", "type": "drop wrench, screwdriver, guidebook, sack, bottle", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "wrench: Dropped." },
+      { "reader": "Dell", "kind": "said", "words": "screwdriver: Dropped." },
+      { "reader": "Dell", "kind": "said", "words": "tour guidebook: Dropped." },
+      { "reader": "Dell", "kind": "said", "words": "brown sack: Dropped." },
+      { "reader": "Dell", "kind": "said", "words": "glass bottle: Dropped." }
+    ] },
+    { "seed": 2845303443 },
+    { "tick": true, "expect": [] },
+    { "seed": 1355437110 },
+    { "advance": "30 seconds", "expect": [] },
+    { "seed": 3836922092 },
+    { "as": "Dell", "type": "take bar", "expect": [
+      { "reader": "Dell", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 465514434 },
+    { "tick": true, "expect": [] },
+    { "seed": 2369326311 },
+    { "advance": "30 seconds", "expect": [
+      { "level": "info", "text": "round_room.thief woke, 60 seconds after it asked" }
+    ] },
+    { "seed": 2986340053 },
+    { "leave": "Dell", "expect": [
+      { "reader": "Dell", "kind": "notice", "words": "You leave, and take what you carry with you." }
+    ] }
+  ]
+}

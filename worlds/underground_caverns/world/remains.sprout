@@ -22,10 +22,6 @@ kind Skeleton is Scenery, Kissable {
     text "The skeleton lies where its owner fell, slumped against the wall of the passage as though he had sat down for a moment's rest and found the moment longer than expected. It is picked quite clean, and has been for some time. Whatever he came into the maze looking for, the maze found him first."
   }
 
-  without as target for rub from Thing
-  without as target for shift from Thing
-  without as target for raise from Thing
-  without as target for kick from Thing
   as target for rub   { do { say curse  send actor :banish } }
   as target for shift { do { say curse  send actor :banish } }
   as target for raise { do { say curse  send actor :banish } }
@@ -40,7 +36,6 @@ kind Skeleton is Scenery, Kissable {
       } else { say curse  send actor :banish }
     }
   }
-  without as target for smell from Thing
   as target for smell { do { say "It smells of nothing at all, which after this long is the most that can be said for it." } }
 }
 
@@ -56,7 +51,6 @@ kind BurnedLantern is Portable, Switchable {
   describe {
     text "It is a lantern of the old kind, rusted at every seam, its glass smoked black from the inside. Its batteries gave out some time before its owner did, which, down here, is the usual order of things."
   }
-  without as target for lamp_on from Switchable
   as target for lamp_on { permit { refuse "You can't turn that on." } }
 }
 
@@ -100,12 +94,8 @@ kind CoinBag is Treasure {
   describe {
     text "It is an old leather bag, cracked with age and drawn tight at the neck with a knotted thong, and it bulges in the way that only coins make a bag bulge. There are lots of coins in there."
   }
-  without as target for open from Thing
-  without as target for close from Thing
-  without as target for look_in from Thing
   as target for open    { do { say "The coins are safely inside; there's no need to do that." } }
   as target for close   { do { say "The coins are safely inside; there's no need to do that." } }
   as target for look_in { do { say "There are lots of coins in there." } }
-  without as target for listen from Thing
   as target for listen { do { say "The coins clink against one another, faintly and expensively." } }
 }
