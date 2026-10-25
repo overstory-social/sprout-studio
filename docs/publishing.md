@@ -46,7 +46,10 @@ the Sprout pin or the publishing code, and by hand from the Actions tab
    `sprout pack`. A world whose tests fail stops the run.
 3. **Signs the index** with `sprout index`, at the base address above. A
    world unchanged since the last run packs to the build already live and
-   is listed once; a changed one is a new build beside the old.
+   is listed once; a changed one is a new build beside the old. The live
+   index is passed as `--previous`, so a build already out is never held
+   to another again, and each new build is held, as `sprout compat` holds
+   it, to the newest live build of its world at or below its version.
 4. **Checks the index as the player reads it**: the signature by
    `publisher.pub` over the canonical text, and each cartridge's name, size
    and SHA-256. Then it writes `index.html`.
