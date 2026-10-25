@@ -20,8 +20,9 @@ export const meta = {
 // schemas in: edit the template, never this file. A workflow touches no
 // file itself, so everything on disk is the clerk's, through
 // scripts/round.mjs, and every agent's output is validated there and
-// re-asked once. Resumable: each round starts from what `status` says is
-// already on disk, and a stop always says why.
+// re-asked once. Resumable: each round starts from what `status --brief`
+// says is already on disk, once git agrees whether its last round is
+// committed, and a stop always says why.
 
 const SCHEMAS = /*SCHEMAS*/ {}
 
@@ -145,7 +146,26 @@ async function kept(kind, name, round, ask) {
 const again = (problems) =>
   problems === null ? '' : `\n\nYour last answer was refused. Fix exactly these, and change nothing else:\n- ${problems.join('\n- ')}`
 
-let status = await clerk(`status ${WORLD}`, undefined, 'status')
+/**
+ * Where the world's rounds stand, as `status --brief` prints it: only what the workflow reads. A
+ * field the clerk dropped stops the workflow, never read as false.
+ */
+async function standing() {
+  const s = await clerk(`status ${WORLD} --brief`, undefined, 'status')
+  const lacking = ['brief', 'playable'].filter((key) => typeof s[key] !== 'boolean')
+  if (!Number.isInteger(s.count) || s.count < 0) lacking.push('count')
+  if (!('lastCommitted' in s)) lacking.push('lastCommitted')
+  if (s.count > 0) {
+    const last = s.last ?? {}
+    if (typeof last.round !== 'string') lacking.push('last.round')
+    for (const key of ['committed', 'synthesis', 'steering', 'revision']) if (typeof last[key] !== 'boolean') lacking.push(`last.${key}`)
+    for (const key of ['runs', 'reports']) if (!Array.isArray(last[key])) lacking.push(`last.${key}`)
+  }
+  if (lacking.length > 0) throw new Error(`the clerk's status of ${WORLD} lacks ${lacking.join(', ')}: nothing is played on a status the workflow cannot read whole`)
+  return s
+}
+
+let status = await standing()
 if (!status.brief) throw new Error(`${W}/brief.md is missing: a world starts from its brief (templates/brief.md)`)
 
 if (A.new === true || !status.playable) {
@@ -160,7 +180,7 @@ if (A.new === true || !status.playable) {
   if (wrote === null) throw new Error('the author did not write the world')
   const verified = await clerk(`verify ${WORLD}`)
   if (!verified.ok) throw new Error(`world v1 does not pass: ${verified.problems.join(' | ')}`)
-  status = await clerk(`status ${WORLD}`, undefined, 'status')
+  status = await standing()
 }
 
 const flat = (a, b) => a !== null && b !== null && JSON.stringify(a) === JSON.stringify(b)
@@ -173,12 +193,25 @@ while (played < ROUNDS) {
     log(`stopping: ${Math.round(budget.remaining() / 1000)}k of the budget left, and a round takes about ${PER_ROUND / 1000}k`)
     break
   }
-  const last = status.rounds[status.rounds.length - 1]
-  const resuming = last !== undefined && !last.committed
-  const round = resuming ? last.round : String(status.rounds.length + 1).padStart(2, '0')
+  const last = status.count > 0 ? status.last : null
+  // A committed round is never resumed or redone: whether the last one is committed is asked of git
+  // too, in a second call whose answer is too short to retype wrong, and the two must agree.
+  if (last !== null) {
+    const git = await clerk(`committed ${WORLD} ${last.round}`, undefined, `committed ${last.round}`)
+    if (git.committed !== last.committed) {
+      const said = (value) => (value === true ? 'committed' : value === false ? 'not committed' : 'nothing')
+      log(
+        `stopping: status says round ${last.round} is ${said(last.committed)}, and git says ${said(git.committed)}; ` +
+          `no round is resumed or redone until they agree`,
+      )
+      break
+    }
+  }
+  const resuming = last !== null && !last.committed
+  const round = resuming ? last.round : String(status.count + 1).padStart(2, '0')
   const at = resuming ? last : { runs: [], reports: [], metrics: false, synthesis: false, steering: false, revision: false }
   const R = `${W}/rounds/${round}`
-  const previous = status.rounds.filter((one) => one.committed).pop() ?? null
+  const previous = status.lastCommitted
   log(`${WORLD}, round ${round}${resuming ? ', resumed from disk' : ''}`)
 
   // 1. Brief-check, where the world has been revised since it was checked.
@@ -329,19 +362,26 @@ while (played < ROUNDS) {
   // 5. Steer, without waiting: what is there now steers this revision, and a late comment the next.
   phase('Steer')
   if (!at.steering) {
+    // Whether the steward's first answer found the round's tab already in the doc, which it then left as it was.
+    let found = false
     const steering = await kept('steering', null, round, (problems, refused) =>
       problems === null
         ? agent(
             `Round ${round} of the world ${WORLD}: publish ${R}/synthesis.md as tab "Round ${round}" of the world's steering doc ` +
-              `(its url, where there is one yet, is in ${W}/steering.json), and hand back every comment on the doc.`,
+              `(its url, where there is one yet, is in ${W}/steering.json), and hand back every comment on the doc. ` +
+              `If the doc already has a tab "Round ${round}", leave it exactly as it is, add no other, and say so.`,
             { agentType: 'steward', phase: 'Steer', label: 'steer', schema: SCHEMAS.steering },
-          )
+          ).then((value) => {
+            found = value !== null && value.reached === true && value.added === false
+            return value
+          })
         : // Asked again of the steward, which reads the doc, never mended: a mender could drop or reword the director's words.
           agent(
             `Round ${round} of the world ${WORLD}: the tab "Round ${round}" is already published; read the doc again and hand back every comment on it.${again(problems)}`,
             { agentType: 'steward', phase: 'Steer', label: 'steer, again', schema: SCHEMAS.steering },
           ),
     )
+    if (found) log(`steering: the doc already had a tab "Round ${round}", and it was left as it was`)
     if (steering === null) log('steering: nothing valid was read of the doc; the author revises without it')
     else if (!steering.reached) log('steering: the doc could not be reached; the author revises without it')
   }
@@ -377,8 +417,12 @@ while (played < ROUNDS) {
     break
   }
   played += 1
-  status = await clerk(`status ${WORLD}`, undefined, 'status')
-  const now = status.rounds.find((one) => one.round === round)
+  status = await standing()
+  const now = status.last
+  if (now?.round !== round || now.committed !== true) {
+    log(`stopping: round ${round} was committed, but status does not say so`)
+    break
+  }
   summary.push({ round, runs: reported, points: synthesis.points.length, acceptedDesign: now.acceptedDesign, figures: now.figures })
 
   // Two rounds with no accepted design point and flat metrics: the loop has converged.

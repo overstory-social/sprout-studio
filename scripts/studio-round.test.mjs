@@ -75,8 +75,27 @@ function stage(options = {}) {
   const clerk = (command, stdin) => {
     const [verb, , round, kind, name] = command.split(' ');
     switch (verb) {
-      case 'status':
-        return world;
+      case 'status': {
+        // As `status --brief` prints it; `dropCommitted` is a clerk that loses the last round's mark in retyping.
+        const last = current() === undefined ? null : { ...current() };
+        if (last !== null && options.dropCommitted) delete last.committed;
+        const done = world.rounds.filter((one) => one.committed).at(-1);
+        return {
+          world: 'shed',
+          brief: world.brief,
+          intent: world.intent,
+          playable: world.playable,
+          count: world.rounds.length,
+          last,
+          lastCommitted: done === undefined ? null : { round: done.round, figures: done.figures, acceptedDesign: done.acceptedDesign },
+        };
+      }
+      case 'committed': {
+        // What git holds: the round's own mark, unless `gitSays` gives git another answer.
+        const one = world.rounds.find((r) => r.round === round);
+        const inGit = options.gitSays?.[round] ?? one?.committed ?? false;
+        return { round, committed: inGit, marker: one?.committed ?? false };
+      }
       case 'open': {
         const [, , nn, persona, seed] = command.split(' ');
         const by = / --by (\w+)/.exec(command)?.[1];
@@ -161,7 +180,7 @@ function stage(options = {}) {
       case 'synthesizer':
         return SYNTHESIS;
       case 'steward':
-        return { reached: true, doc: 'https://claude.ai/doc/shed', comments: [] };
+        return { reached: true, doc: 'https://claude.ai/doc/shed', added: !options.tabThere, comments: [] };
       case 'author':
         if (opts.schema === undefined) {
           world.playable = true;
@@ -289,7 +308,7 @@ describe('the studio-round workflow', () => {
     const s = stage({ rounds: [revised] });
     await s.run({ world: 'shed', personas: ['explorer'] });
     assert.equal(s.calls.filter((one) => one.type === 'author').length, 0);
-    assert.match(s.calls.find((one) => /round\.mjs commit/.test(one.prompt)).prompt, /commit shed 01 0 runs, 2 points, 2 accepted/);
+    assert.match(s.calls.find((one) => /round\.mjs commit /.test(one.prompt)).prompt, /commit shed 01 0 runs, 2 points, 2 accepted/);
   });
 
   it('stops, saying so, where the runs cannot be measured', async () => {
@@ -436,5 +455,54 @@ describe('the studio-round workflow', () => {
     const s = stage();
     s.world.brief = false;
     await assert.rejects(s.run({ world: 'shed' }), /worlds\/shed\/brief\.md is missing/);
+  });
+
+  it('reads status in its brief form, and refuses one that lacks a field it reads', async () => {
+    const s = stage();
+    await s.run({ world: 'shed', personas: ['explorer'] });
+    const asked = s.calls.filter((one) => one.label === 'status').map((one) => /round\.mjs (.*?)$/m.exec(one.prompt)[1]);
+    assert.ok(asked.length > 0);
+    assert.ok(asked.every((one) => one === 'status shed --brief'));
+    const committed = { round: '01', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, steering: true, revision: true, committed: true, figures: { faults: 0 }, acceptedDesign: 1 };
+    const dropped = stage({ rounds: [committed], dropCommitted: true });
+    await assert.rejects(dropped.run({ world: 'shed', personas: ['explorer'] }), /the clerk's status of shed lacks last\.committed/);
+    assert.deepEqual(dropped.calls.filter((one) => one.type !== 'clerk'), []);
+  });
+
+  it('asks git whether the last round is committed, and starts the next only where it is', async () => {
+    const committed = { round: '01', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, steering: true, revision: true, committed: true, figures: { faults: 0 }, acceptedDesign: 1 };
+    const s = stage({ rounds: [committed] });
+    const out = await s.run({ world: 'shed', personas: ['explorer'] });
+    assert.deepEqual(out.rounds.map((one) => one.round), ['02']);
+    assert.ok(s.calls.some((one) => one.type === 'clerk' && /round\.mjs committed shed 01$/m.test(one.prompt)));
+  });
+
+  it('never resumes or redoes a round git holds as committed, where status says it is not', async () => {
+    const lost = { round: '16', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, steering: true, revision: true, committed: false, figures: { faults: 0 }, acceptedDesign: 1 };
+    const s = stage({ rounds: [lost], gitSays: { 16: true } });
+    const out = await s.run({ world: 'shed', personas: ['explorer'] });
+    assert.deepEqual(out.rounds, []);
+    assert.equal(s.logs.at(-1), 'stopping: status says round 16 is not committed, and git says committed; no round is resumed or redone until they agree');
+    assert.deepEqual(s.calls.filter((one) => one.type !== 'clerk'), []);
+    assert.deepEqual(s.calls.filter((one) => /round\.mjs (save|measure|commit|open) /.test(one.prompt)), []);
+  });
+
+  it('starts no round where status says the last is committed and git does not', async () => {
+    const marked = { round: '01', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, steering: true, revision: true, committed: true, figures: { faults: 0 }, acceptedDesign: 1 };
+    const s = stage({ rounds: [marked], gitSays: { '01': false } });
+    const out = await s.run({ world: 'shed', personas: ['explorer'] });
+    assert.deepEqual(out.rounds, []);
+    assert.equal(s.logs.at(-1), 'stopping: status says round 01 is committed, and git says not committed; no round is resumed or redone until they agree');
+    assert.deepEqual(s.calls.filter((one) => one.type !== 'clerk'), []);
+  });
+
+  it('tells the steward to leave a round’s tab already in the doc as it is, and says where it was', async () => {
+    const s = stage();
+    await s.run({ world: 'shed', personas: ['explorer'] });
+    assert.match(s.calls.find((one) => one.type === 'steward').prompt, /If the doc already has a tab "Round 01", leave it exactly as it is, add no other, and say so\./);
+    assert.ok(!s.logs.some((line) => /already had a tab/.test(line)));
+    const there = stage({ tabThere: true });
+    await there.run({ world: 'shed', personas: ['explorer'] });
+    assert.ok(there.logs.includes('steering: the doc already had a tab "Round 01", and it was left as it was'));
   });
 });

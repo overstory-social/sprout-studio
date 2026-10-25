@@ -274,11 +274,14 @@ export const BriefCheck = z
     }
   });
 
-/** What the steward read of the steering doc: whether it reached it, its url, and every comment on it. */
+/** What the steward read of the steering doc: whether it reached it, its url, whether it added the round's tab, and every comment on it. */
 export const Steering = z
   .object({
     reached: z.boolean().describe('Whether the doc could be reached at all.'),
     doc: z.string().trim().min(1).nullable().describe('The doc’s url; null where it could not be reached.'),
+    added: z
+      .boolean()
+      .describe('Whether you added the round’s tab now: false where the doc already had a tab of that name, which you left as it was, or where the doc could not be reached.'),
     comments: z.array(
       z
         .object({
@@ -292,8 +295,8 @@ export const Steering = z
   })
   .strict()
   .superRefine((steering, ctx) => {
-    if (!steering.reached && (steering.doc !== null || steering.comments.length > 0)) {
-      ctx.addIssue({ code: 'custom', path: ['reached'], message: 'a doc that could not be reached has no url and no comments' });
+    if (!steering.reached && (steering.doc !== null || steering.comments.length > 0 || steering.added)) {
+      ctx.addIssue({ code: 'custom', path: ['reached'], message: 'a doc that could not be reached has no url, no tab added and no comments' });
     }
     if (steering.reached && steering.doc === null) {
       ctx.addIssue({ code: 'custom', path: ['doc'], message: 'give the url of the doc that was reached' });
