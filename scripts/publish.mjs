@@ -147,10 +147,11 @@ export function indexProblems(worldsDir, publicKey, baseUrl) {
 
 /**
  * Fetches the live index and every cartridge it lists into `into`, each
- * checked against the size and SHA-256 listed, and returns their names. A
- * site not there yet (404) carries nothing; any other failure refuses.
+ * checked against the size and SHA-256 listed, and returns their names. The
+ * index itself is written to `indexFile`, where one is named. A site not there
+ * yet (404) carries nothing; any other failure refuses.
  */
-export async function carryForward(baseUrl, publicKey, into) {
+export async function carryForward(baseUrl, publicKey, into, indexFile) {
   const indexUrl = `${baseUrl}index.json`;
   const answer = await fetch(indexUrl, { cache: 'no-store' });
   if (answer.status === 404) return [];
@@ -158,6 +159,7 @@ export async function carryForward(baseUrl, publicKey, into) {
   const index = await answer.json();
   if (!isSigned(index, publicKey))
     throw new Error(`${indexUrl} is not signed by publisher.pub, so the builds it lists are not carried and nothing is published. A new publisher key needs a decision about the builds already out (docs/publishing.md).`);
+  if (indexFile !== undefined) writeFileSync(indexFile, JSON.stringify(index));
   const names = [];
   for (const world of index.worlds) {
     const name = cartridgeName(world.url, baseUrl);
@@ -254,7 +256,8 @@ export async function publish({ site, publicKeyFile = join(ROOT, 'publisher.pub'
   try {
     const cartridges = join(work, 'cartridges');
     mkdirSync(cartridges);
-    carried = await carryForward(baseUrl, publicKey, cartridges);
+    const previous = join(work, 'previous.json');
+    carried = await carryForward(baseUrl, publicKey, cartridges, previous);
     log(carried.length === 0 ? `publish: no live index at ${baseUrl}, so no earlier builds to carry` : `publish: carried ${builds(carried.length)} already published: ${carried.join(', ')}`);
     for (const { world, dir } of worlds) {
       try {
@@ -271,7 +274,9 @@ export async function publish({ site, publicKeyFile = join(ROOT, 'publisher.pub'
     writeFileSync(join(keys, 'publisher.key'), `${privateKey}\n`, { mode: 0o600 });
     copyFileSync(publicKeyFile, join(keys, 'publisher.pub'));
     try {
-      log(sprout(['index', cartridges, '--base-url', baseUrl, '--key', join(keys, 'publisher.key'), '-o', join(worldsDir, 'index.json')]).trim());
+      // A carried build is already out, so it is never held to another again: only the new builds are.
+      const since = existsSync(previous) ? ['--previous', previous] : [];
+      log(sprout(['index', cartridges, '--base-url', baseUrl, '--key', join(keys, 'publisher.key'), '-o', join(worldsDir, 'index.json'), ...since]).trim());
     } finally {
       rmSync(keys, { recursive: true, force: true });
     }

@@ -1,7 +1,7 @@
 import { strict as assert } from 'node:assert';
 import { execFileSync } from 'node:child_process';
 import { createPrivateKey, generateKeyPairSync, sign } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -225,6 +225,31 @@ describe('publish', () => {
       await assert.rejects(publishTo(`paths-${what.length}`), /is not a cartridge under/);
     });
   }
+
+  it('publishes a new build beside live builds of one version that break each other\'s saves', async () => {
+    // Two 0.1.0 builds, each with a place the other lacks, signed one at a time as early publishes were.
+    const live = join(root, 'early');
+    mkdirSync(live, { recursive: true });
+    const worlds = ['cellar', 'attic'].flatMap((place) => {
+      const dir = join(root, 'variants', place);
+      cpSync(shed, join(dir, 'world'), { recursive: true });
+      const source = join(dir, 'world', 'world.sprout');
+      writeFileSync(source, readFileSync(source, 'utf8').replace(/\n}\s*$/, `\n  object ${place} is sprout.Place\n}\n`));
+      mkdirSync(join(dir, 'packed'));
+      execFileSync(SPROUT, ['pack', join(dir, 'world'), '-o', join(dir, 'packed', 'world.sproutworld')], { stdio: 'ignore' });
+      execFileSync(SPROUT, ['index', join(dir, 'packed'), '--base-url', baseUrl, '--key', join(root, 'publisher.key'), '-o', join(dir, 'signed', 'index.json')], { stdio: 'ignore' });
+      for (const name of readdirSync(join(dir, 'signed')).filter((f) => f.endsWith('.sproutworld'))) cpSync(join(dir, 'signed', name), join(live, name));
+      return JSON.parse(readFileSync(join(dir, 'signed', 'index.json'), 'utf8')).worlds;
+    });
+    serving = liveSite(live, worlds);
+    setVersion('0.2.0');
+    try {
+      const index = await publishTo('beside-early');
+      assert.deepEqual(index.worlds.map((world) => world.version).sort(), ['0.1.0', '0.1.0', '0.2.0']);
+    } finally {
+      setVersion('0.1.0');
+    }
+  });
 
   it('refuses a site folder that already holds something', async () => {
     serving = null;
