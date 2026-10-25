@@ -1,0 +1,99 @@
+{
+  "about": "The lake takes what is carried, and the cold takes the swimmer: the lamp goes into the lake and is fried, the warnings come at the fourth and sixth move, the drowning at the eighth, and the old man visits the cell; back at the stair, the lamp has come home and will not light.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. \"You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!\" The dream dissolves around you as his last words echo through the void...." },
+      { "reader": "Marta", "kind": "described", "words": "Endless Stair" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail." },
+      { "reader": "Marta", "kind": "described", "words": "Your old friend, the brass lantern, is at your feet." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Junction" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the junction of a north-south passage and an east-west passage. To the north, you can make out the bottom of a stairway. The ways to the east and south are relatively cramped, but a wider trail leads to the west." },
+      { "reader": "Marta", "kind": "described", "words": "Standing before you is a great rock. Imbedded within it is an Elvish sword." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Creepy Crawl" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and quite creepy crawlway with passages leaving to the north, east, south, and southwest." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foggy Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dank passage filled with a wispy fog. A spooky passageway leads north and a wider path heads off to the south. To the west, the path leaves the rock and enters an eerie, shadowy land." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Lake Shore" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a wide cavern on the north shore of a small lake. Some polished stone steps lead to the southeast and a sheer rock face prevents any movement around the lake to the southwest. The cavern is dimly lit from above. The water has the look of a cold that would open your hands for you." }
+    ] },
+    { "as": "Marta", "type": "enter lake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The shock of entering the frigid water has made you drop all your possessions into the lake!" },
+      { "reader": "Marta", "kind": "said", "words": "Your lamp goes under with the rest. There is a hiss, a brief glow in the water below you, and then not." },
+      { "reader": "Marta", "kind": "described", "words": "On the Lake" },
+      { "reader": "Marta", "kind": "described", "words": "You are floating on the surface of the lake. The water is ice cold and your ability to survive here for long is very questionable. A swim north puts you at your starting point. Conditions to the east are poor where the lake turns into swamp. The west and south shores are suitable for walking, however." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are empty-handed." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "The icy waters are taking their toll. You will not be able to hold out much longer." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "You are becoming very weak. You had better leave the water before you drown!" }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "Your strength gives out, and you drown in the frigid waters." },
+      { "reader": "Marta", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Marta", "kind": "told", "words": "You find yourself deep within the earth in a barren prison cell. Outside the iron-barred window, you can see a great, fiery pit. Flames leap up and very nearly sear your flesh. After a while, footfalls can be heard in the distance, then closer and closer.... The door swings open, and in walks an old man." },
+      { "reader": "Marta", "kind": "told", "words": "He is dressed simply in a hood and cloak, wearing an amulet and ring, carrying an old book under one arm, and leaning on a wooden staff. A single key, as if to a massive prison cell, hangs from his belt." },
+      { "reader": "Marta", "kind": "told", "words": "He raises the staff toward you and you hear him speak, as if in a dream: \"I await you, though your journey be long and full of peril. Go then, and let me not wait long!\" You feel some great power well up inside you and you fall to the floor. The next moment, you are awakening, as if from a deep slumber." },
+      { "reader": "Marta", "kind": "described", "words": "Endless Stair" },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here." },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Endless Stair" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail." },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp isn't functioning (probably from having gotten wet)." }
+    ] },
+    { "as": "Marta", "type": "examine lamp", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "It is the brass lantern you have carried through two adventures already: battery-powered, dented in the places you remember, with a stout handle and a glass somebody has kept clean. It has the look of an old friend who has followed you somewhere it would rather not have come." },
+      { "reader": "Marta", "kind": "described", "words": "It has been in the lake, and it is the worse for it: there is water behind the glass and a smell of wet metal, and it will not light again." }
+    ] },
+    { "as": "Marta", "type": "diagnose", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are in perfect health." },
+      { "reader": "Marta", "kind": "said", "words": "You have been killed once." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 1 of a possible 7, in 18 moves." }
+    ] }
+  ]
+}

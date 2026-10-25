@@ -1,0 +1,39 @@
+// Zork III: The Dungeon Master, the first of its four quarters: the
+// Endless Stair, the Land of Shadow and the lake. The world keeps Zork's
+// narrator for the lines the engine speaks for itself, and a gate: a room
+// cannot reach another, so where Zork moves a body or a thing across the
+// map at a stroke (dying, the lake taking what is carried, the sword
+// called to a hand), whoever needs to asks the world to open the gate,
+// does it, and asks it shut again, in the one turn. While the world
+// passes, every place is in range of every other.
+import * as sprout from 'sprout'
+import {Person} from 'person'
+import {Adventurer} from 'adventurer'
+import {endless_stair} from 'way_in'
+import {go} from 'sprout'
+import {:open_gate, :gate_open, :close_gate} from 'verbs'
+
+world underground_caverns_3 is sprout.World {
+  visitors are Person
+  visitors arrive at endless_stair
+  synonyms go: "climb", "proceed", "head"
+
+  :gate false
+  pass any (self.get(:gate))
+
+  on :open_gate (from) {
+    self.set(:gate, true)
+    send from :gate_open
+  }
+  on :close_gate { self.set(:gate, false) }
+
+  passage unknown         { That sentence isn't one I recognize. }
+  passage not_here        { You can't see any such thing. }
+  passage no_way          { You can't go that way. }
+  passage dark            { It is pitch black. You are likely to be eaten by a grue. }
+  passage unremarkable    { There's nothing special about {thing}. }
+  passage nothing_happens { Nothing happens. }
+  passage waited          { Time passes... }
+  passage not_carrying    { You don't have {thing}. }
+  passage too_heavy       { {if to.is(Adventurer)}{to.too_heavy}{else}{to} cannot hold {item}.{/if} }
+}

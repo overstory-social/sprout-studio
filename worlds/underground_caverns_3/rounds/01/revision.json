@@ -1,0 +1,240 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "A real bug against the original: Zork's parser fills an orphaned instrument from the hands and says \"(with the sword)\". Sprout leaves the role unbound, so the adventurer's own attack now reads its hands when no weapon is named; the gap is logged as friction 12."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Accepted as the point asks: keep the mechanic, make the shore tell the player. The lake's shore description, the room's body and the plunge now say what the cold does to a hand, that the shore is lit and keeps what is left on it, and that the lamp has gone under for good. The suggestion of a second light in Q1 is not taken: the original has none before Q2's torch, the brief's yardstick is faithfulness, and the way that is left (three returns and the void) is now said honestly by restart (P3); the gap is noted in intent.md."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The refusal stays in character, as the brief's voice wants, but it was lying once the lamp was fried. It now says what is lost stays lost, that the old man returns a visitor three times and keeps them the fourth, and at three deaths and in the Void says so plainly."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The trap stays a trap, as the brief's showcase goal names it, but the defenceless state now pulls toward the hood in the hint book's spirit: the stroke that brings the figure to its last point says it lowers its sword and waits, examine figure says the hood hangs within reach, and the death line carries the hood and cloak away with a note that something has stopped. No score hint, since the original gives none."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "The odds were checked against SHADOW-F and I-SHADOW-REPLY (10 + 10 x strength on both sides) and match, so they stay; the repetition was in the words. The disarm-and-return line and the block at the figure's last point now have variants, the original's first among them."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "The spec answers a move through a way that says nothing with nothing_happens; dive, enter lake from the surface and dive into lake now say a line before going under. Logged with the handler corollary as friction 17."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "Accepted, and it went deeper than the fish: a set role binds eight things in walk order and every room's seven shared presences filled it before anything on the floor, so take all could never reach the lamp anywhere. The set is now typed by what can be carried, what stays is reached by a second verb that refuses in Zork's words, and take all underwater rolls the slip for the shiny thing and each sunk item. Friction 14."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Reproduced: the ship's line read a flag the visitor's clock had already cleared, because a slot is rendered after the turn's after command. The ship and the sailor now branch in code; the sailor is a creature who can be talked to, and in the ship's one command answers with a nudge toward the greeting, the ship sailing at the end of that same command after what was said. Friction 13."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Choice made and stated in intent.md: the figure is a thing of the light it appears in, and when the room goes dark around it it withdraws with a line, the fight is off and the sword's glow goes; it can be met again by lamplight. The original's striking from the dark at a visitor who cannot name it is taken for an accident of its engine."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "Both named ties fixed, and the sweep found the cause and more of them: an object's identifier and each word of its name are nouns, so light, sand, floor, shadow, path, trail, way, land, area, ground, rocks, roof and slope all drew. Each word now has one owner where it matters; wall cannot be parted by words alone, so the shared wall's text in the stone-wall rooms describes the stone wall and the draw is between answers that agree. Friction 16."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Sprout reads no possessive, logged as friction 15. The hood can now be had by the figure's name through a verb of its own with the eight phrases a verb may have (unhood, unmask, remove hood from, take hood from, pull hood off, pull back hood of, and two more)."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "No change to scope, as the point recommends and the brief schedules: Q2 opens after round 3. The refusals stay as written; intent.md notes that most of the round's unread rate is those in-world refusals rather than misreads."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "Answered through P1 and P2, the two places real players fell off the walkthrough's path, with P3, P4 and P9 widening the way back; the walkthrough and four new tests play the duel, the dark, the shore and the ship through the fixed behaviours."
+    }
+  ],
+  "changes": [
+    {
+      "what": "A bare attack, kill, hit or fight on the figure is made with the sword where the sword is in hand, and says \"(with the sword)\" first; the feeble line is kept only for a visitor with no sword.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P1",
+        "P13"
+      ]
+    },
+    {
+      "what": "The shore tells the player: the lake's shore description says the cold opens a hand and that the lit shore keeps what is left on it, the Lake Shore body gains one sentence on the cold, and the plunge names the lamp going under with a hiss. No second light in Q1; the gap is stated in intent.md.",
+      "files": [
+        "worlds/underground_caverns_3/world/lake.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/intent.md"
+      ],
+      "for": [
+        "P2",
+        "P13"
+      ]
+    },
+    {
+      "what": "Restart is still refused in character but honestly: what is lost stays lost, the old man returns a visitor three times and keeps them the fourth; a different line at three deaths and in the Void.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "The defenceless state pulls toward the hood: the stroke that brings the figure to its last point says it lowers its sword and waits, examine figure then says the hood hangs within reach, and the killing line carries the hood and cloak away with a note of loss.",
+      "files": [
+        "worlds/underground_caverns_3/world/shadow.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "The disarm-and-return line and the block at the figure's last point have variants (the original's first); the odds, which match SHADOW-F and I-SHADOW-REPLY, are unchanged.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "dive, enter lake from the surface and dive into lake say \"You take a breath and go under.\" before the move, so nothing_happens no longer precedes the Underwater description; the plunge is written out in both verbs rather than in a handler.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "take all works: take's set role is typed by Portable; a new Fixed kind (composed by Scenery and the figure) is reached by a second verb take_fixed of the same words, which it refuses in a permit with its own no_take so that take all is read by take; the shiny object is Portable and unlisted so take all rolls the slip for it; the fish no longer refuses take in its permit; Thing's default no_take no longer varies since a permit may not draw; the adventurer plays take_fixed so the line is never silent.",
+      "files": [
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/thing.sprout",
+        "worlds/underground_caverns_3/world/lake.sprout",
+        "worlds/underground_caverns_3/world/shadow.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "The ship's board answer branches in code instead of a slot, so it reads the window as the body runs; the sailor composes Creature and answers talk, give, follow, kiss and wake in voice, with a nudge toward the greeting while the ship is in sight and \"There is no sailor to be seen.\" otherwise; the departure prints at the end of the command that used the window, after what was said.",
+      "files": [
+        "worlds/underground_caverns_3/world/ocean.sprout",
+        "worlds/underground_caverns_3/world/room.sprout",
+        "worlds/underground_caverns_3/world/thing.sprout"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "When a shadow room goes dark around the figure, the room's after command says the glow of its sword dwindles and goes out, the figure vanishes, the way unblocks, and a new :fight_off message ends the fight and settles the visitor's sword; the choice is stated in intent.md.",
+      "files": [
+        "worlds/underground_caverns_3/world/shadow.sprout",
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/intent.md"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "Noun ties removed by giving each word one owner per room: the stair's eerie light renamed (identifier and name) so \"light\" is the lamp's; the lake shore's dim light likewise; the ocean's quicksand loses \"sand\" to the beach (a SandyQuicksand keeps it in the land of shadow); the lake's sand loses \"floor\"; the shadows lose \"shadow\" to the figure; the shared passage loses \"path\", \"trail\" and \"way\"; the room loses \"land\" and \"area\"; the hills lose \"slope\"; shadow_3's cavern loses \"roof\"; shadow_4's soft ground becomes soft earth; the barren terrain and land shed \"rocks\", \"area\" and \"ground\"; the shared wall gets stone-wall texts for shadow_2 and shadow_8.",
+      "files": [
+        "worlds/underground_caverns_3/world/way_in.sprout",
+        "worlds/underground_caverns_3/world/lake.sprout",
+        "worlds/underground_caverns_3/world/shadow.sprout",
+        "worlds/underground_caverns_3/world/room.sprout",
+        "worlds/underground_caverns_3/world/ocean.sprout"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "A new verb unmask, typed by a new Hooded kind the figure composes, with eight phrases (unhood, unmask, remove hood from, take hood from, pull hood off, pull back hood of, remove [figure] hood, take [figure] hood); the adventurer plays it with the same reach as take hood, through shared reveal, forced_back and not_close passages.",
+      "files": [
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/thing.sprout",
+        "worlds/underground_caverns_3/world/shadow.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "Tests: the four existing goldens regenerated for the changed prose (diffs checked line by line), and four new tests added that play the duel with bare attacks and the hood by the figure's name, the figure withdrawing in the dark, the shore with the plunge, the dive, take all and take of fixed things, and the ship's one command.",
+      "files": [
+        "worlds/underground_caverns_3/world/tests/walkthrough.json",
+        "worlds/underground_caverns_3/world/tests/death.json",
+        "worlds/underground_caverns_3/world/tests/slain.json",
+        "worlds/underground_caverns_3/world/tests/void.json",
+        "worlds/underground_caverns_3/world/tests/duel.json",
+        "worlds/underground_caverns_3/world/tests/dark.json",
+        "worlds/underground_caverns_3/world/tests/shore.json",
+        "worlds/underground_caverns_3/world/tests/ship.json"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P11",
+        "P13"
+      ]
+    },
+    {
+      "what": "intent.md gains a round-2 section stating each change and the stances taken (the lake soft-lock kept until Q2's torch, the figure withdrawing in the dark, the unvarying YUKS line, the unbuilt-exit refusals read as refusals not misreads), two new findable secrets, and two new departures from the original.",
+      "files": [
+        "worlds/underground_caverns_3/intent.md"
+      ],
+      "for": [
+        "P2",
+        "P9",
+        "P12",
+        "P13"
+      ]
+    },
+    {
+      "what": "friction.md gains entries 12 to 18: an unsaid instrument is not filled from the hands; a slot is rendered after after command has run; a set role binds eight in walk order with the room's presences first (and every phrase must name the first role, and a permit may not draw); the parser reads no possessive; two things answering one word draw with no preference, identifiers and name words being nouns; a move with nothing said is nothing_happens and a handler cannot answer for it; the caps on nouns, phrases and tell length.",
+      "files": [
+        "worlds/underground_caverns_3/friction.md"
+      ],
+      "for": [
+        "P1",
+        "P6",
+        "P7",
+        "P8",
+        "P10",
+        "P11"
+      ]
+    }
+  ]
+}

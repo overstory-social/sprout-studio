@@ -1,0 +1,101 @@
+{
+  "persona": "parser-breaker",
+  "seed": 1,
+  "turns": 31,
+  "about": "A Zork-style underground adventure, a final test set by a silver-haired old man. You explore caverns and a shadowy land by a cliff and sea, and a hooded swordsman duels you.",
+  "done": {
+    "reason": "bored",
+    "why": "I had escaped the duel and seen a handful of rooms. The combat felt opaque and I had smashed my own lamp, so I stopped."
+  },
+  "ending": {
+    "reached": "no",
+    "what": null
+  },
+  "moments": [
+    {
+      "turn": 9,
+      "kind": "surprise",
+      "note": "Shouting summoned a hooded swordsman and a glowing sword appeared in my hand."
+    },
+    {
+      "turn": 12,
+      "kind": "confusion",
+      "note": "Attacking repeatedly gave 'ignores your feeble attack' and I could not tell how to win."
+    },
+    {
+      "turn": 17,
+      "kind": "frustration",
+      "note": "Throwing the lamp smashed it and left me in the dark, still being dueled."
+    },
+    {
+      "turn": 24,
+      "kind": "delight",
+      "note": "Going down the cliff path ended the duel; the sword stopped glowing."
+    }
+  ],
+  "wished": [
+    "Know how to actually win or end the duel",
+    "Parse natural phrasing like 'ask the lantern' or 'parry'",
+    "A warning before destroying my only light"
+  ],
+  "lines": [
+    {
+      "turn": 6,
+      "line": "Who do you think you are? Arthur?",
+      "why": "A playful reply to my pulling the sword from the rock."
+    },
+    {
+      "turn": 9,
+      "line": "From nowhere, the sword from the junction appears in your hand, wildly glowing!",
+      "why": "A surprising trigger from just shouting."
+    },
+    {
+      "turn": 12,
+      "line": "Although you are defenseless, the figure reaches for your sword and hands it back to you, nodding grimly.",
+      "why": "It shows the fight is a test, not a killing."
+    }
+  ],
+  "ratings": {
+    "fun": {
+      "score": 3,
+      "why": "Charming surprises, but the duel was opaque.",
+      "turns": [
+        9,
+        12
+      ]
+    },
+    "engagement": {
+      "score": 3,
+      "why": "The mystery of the duel held me for a while.",
+      "turns": [
+        9,
+        17
+      ]
+    },
+    "difficulty": {
+      "score": 4,
+      "why": "I never found how to progress in the fight.",
+      "turns": [
+        12,
+        17
+      ],
+      "felt": "too hard"
+    },
+    "interestingness": {
+      "score": 4,
+      "why": "A sparring test with a gentle tone is an interesting idea.",
+      "turns": [
+        9,
+        12
+      ]
+    },
+    "prose": {
+      "score": 4,
+      "why": "Evocative room descriptions and a good dream opening.",
+      "turns": [
+        1,
+        5
+      ]
+    }
+  }
+}

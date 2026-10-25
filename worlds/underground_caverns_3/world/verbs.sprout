@@ -1,0 +1,288 @@
+// Zork III's verbs, as Sprout verbs, with the enums and the messages the
+// rest of the world shares (gsyntax.zil, gverbs.zil). Where the standard
+// library has a verb of the same name (take, drop, put, open, close,
+// look_in, unlock), this one replaces it, so that the words and the
+// refusals are Zork's own. A verb for a few things types its role by a
+// kind those things compose, so it is offered only where one of them is
+// in range; a verb with no role is kept for what works everywhere.
+import * as sprout from 'sprout'
+import {inventory} from 'sprout'
+import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel} from 'thing'
+
+// Zork III wears a thing by taking it (V-WEAR performs TAKE), so "wear"
+// and "put on" are phrases of `take`, and a worn thing is a held one.
+//
+// The set role is typed by what can be carried, so that `all` binds only
+// that: a set binds eight things at most, in the order the range walk
+// reaches them, and every room's seven shared presences (the wall, the
+// grue, the passage, the ground, the ceiling, the room, the sailor) came
+// before anything lying on its floor. What cannot be carried is reached
+// by `take_fixed`, the same words for a thing that stays, so that it
+// answers in Zork's words (thing.sprout's Fixed).
+verb take {
+  role target: Portable many
+  "take [target]"  "get [target]"  "pick up [target]"  "pick [target] up"
+  "wear [target]"  "put on [target]"  "don [target]"
+  synonyms "hold", "carry", "grab", "catch", "remove", "seize"
+}
+verb take_fixed {
+  role target: Fixed
+  "take [target]"  "get [target]"  "pick up [target]"  "pick [target] up"
+  synonyms "hold", "carry", "grab", "catch", "remove", "seize"
+}
+verb drop {
+  role target: Portable carried many
+  "drop [target]"  "put down [target]"  "put [target] down"  "release [target]"
+  "discard [target]"  "drop [target] here"  "put down [target] here"  "leave [target]"
+}
+verb put {
+  role item
+  role container: Receptacle
+  "put [item] in [container]"  "put [item] into [container]"  "place [item] in [container]"
+  "insert [item] in [container]"  "insert [item] into [container]"  "stuff [item] in [container]"
+  "throw [item] in [container]"  "throw [item] into [container]"
+}
+intent drop_in {
+  "drop [x] in [y]"  "drop [x] into [y]"  "drop [x] down [y]"  "throw [x] down [y]"
+  do put (item: x, container: y)
+}
+verb put_on {
+  role item carried
+  role surface
+  "put [item] on [surface]"  "put [item] onto [surface]"  "set [item] on [surface]"  "drop [item] on [surface]"
+}
+verb open { role target  role tool carried  "open [target]"  "open up [target]"  "open [target] with [tool]" }
+verb close { role target  "close [target]"  "shut [target]" }
+verb read { role target  "read [target]"  "read from [target]"  "skim [target]" }
+verb look_in {
+  role target
+  "look in [target]"  "look inside [target]"  "look into [target]"  "examine in [target]"
+  "look on [target]"  "peer into [target]"  "search in [target]"  "look through [target]"
+}
+verb search { role target  "search [target]"  "rummage in [target]" }
+verb look_under { role target  "look under [target]"  "look beneath [target]"  "look below [target]" }
+verb look_behind { role target  "look behind [target]" }
+verb find { role target  "find [target]"  "where is [target]"  "look for [target]"  "search for [target]"  "seek [target]" }
+verb lamp_on {
+  role target: Switchable
+  "turn on [target]"  "turn [target] on"  "light [target]"  "switch on [target]"
+  "switch [target] on"  "activate [target]"  "strike [target]"
+}
+verb lamp_off {
+  role target: Switchable
+  "turn off [target]"  "turn [target] off"  "extinguish [target]"  "put out [target]"
+  "switch off [target]"  "switch [target] off"  "douse [target]"  "blow out [target]"
+}
+verb attack {
+  role target
+  role weapon carried
+  "attack [target] with [weapon]"  "attack [target]"  "swing [weapon] at [target]"  "knock down [target]"
+  synonyms "kill", "fight", "hurt", "injure", "hit", "murder", "slay", "stab"
+}
+// The hood taken from the one wearing it, named by the wearer rather than
+// the hood (HOOD-F reached through the figure): the parser reads no
+// possessive, so "remove figure's hood" is not a line it can read, and
+// these are the ways of saying it that it can.
+verb unmask {
+  role target: Hooded
+  "unmask [target]"  "unhood [target]"  "remove hood from [target]"  "take hood from [target]"
+  "pull hood off [target]"  "pull back hood of [target]"  "remove [target] hood"  "take [target] hood"
+}
+verb shift {
+  role target
+  "move [target]"  "push [target]"  "pull [target]"  "slide [target]"
+  "press [target]"  "shove [target]"  "push on [target]"  "roll [target]"
+}
+verb raise { role target  "raise [target]"  "lift [target]"  "raise up [target]"  "lift up [target]"  "pull up [target]" }
+verb lower { role target  "lower [target]"  "let down [target]" }
+verb eat { role target  "eat [target]"  "consume [target]"  "taste [target]"  "bite [target]" }
+verb drink { role target: Drinkable  "drink [target]"  "imbibe [target]"  "swallow [target]"  "sip [target]"  "quaff [target]" }
+verb drink_from { role target: Vessel  "drink from [target]" }
+verb smell { role target  "smell [target]"  "sniff [target]" }
+verb smell_here { "smell"  "sniff"  "smell the air"  "sniff the air" }
+verb listen { role target  "listen to [target]"  "listen for [target]" }
+verb listen_here { "listen"  "listen carefully" }
+verb climb_up { role target  "climb up [target]"  "climb [target]"  "walk up [target]"  "scale [target]"  "climb onto [target]" }
+verb climb_down { role target  "climb down [target]"  "walk down [target]"  "descend [target]"  "climb into [target]" }
+verb mung {
+  role target
+  role tool carried
+  "break [target]"  "break [target] with [tool]"  "destroy [target]"  "destroy [target] with [tool]"
+  "smash [target]"  "smash [target] with [tool]"  "damage [target]"  "poke [target] with [tool]"
+}
+verb through {
+  role target
+  "enter [target]"  "go into [target]"  "go through [target]"  "walk into [target]"
+  "get in [target]"  "get into [target]"  "board [target]"  "climb in [target]"
+}
+intent swim_into {
+  "swim in [x]"  "swim across [x]"  "swim through [x]"  "wade in [x]"
+  "wade into [x]"  "swim to [x]"  "bathe in [x]"  "swim into [x]"
+  do through (target: x)
+}
+verb give {
+  role item carried
+  role recipient: Creature
+  "give [item] to [recipient]"  "give [recipient] [item]"  "offer [item] to [recipient]"
+  "feed [item] to [recipient]"  "donate [item] to [recipient]"  "hand [item] to [recipient]"
+}
+verb throw {
+  role target carried
+  role aim
+  "throw [target] at [aim]"  "throw [target] to [aim]"  "throw [target]"  "throw [target] over [aim]"
+  "throw [target] off [aim]"  "throw [target] with [aim]"
+  synonyms "hurl", "toss", "chuck"
+}
+verb kick { role target  "kick [target]"  "taunt [target]" }
+verb rub { role target  "rub [target]"  "touch [target]"  "feel [target]"  "pat [target]"  "pet [target]"  "stroke [target]" }
+verb wave { role target: Portable carried  "wave [target]"  "brandish [target]"  "wave [target] around" }
+verb shake { role target  "shake [target]" }
+verb squeeze { role target  "squeeze [target]"  "hug [target]" }
+verb fill { role target: Fillable  role tool  "fill [target]"  "fill [target] with [tool]"  "fill up [target]" }
+verb pour { role target: Pourable  "pour [target]"  "pour out [target]"  "spill [target]"  "empty [target]" }
+verb pour_on {
+  role item: Pourable
+  role target
+  "pour [item] on [target]"  "pour [item] onto [target]"  "pour [item] over [target]"  "spill [item] on [target]"
+}
+verb alarm { role target: Creature  "wake [target]"  "wake up [target]"  "awaken [target]"  "startle [target]"  "surprise [target]" }
+verb talk {
+  role target: Creature
+  "talk to [target]"  "tell [target]"  "ask [target]"  "speak to [target]"  "address [target]"  "say something to [target]"
+}
+verb greet {
+  role target
+  "hello [target]"  "hi [target]"  "hello, [target]"  "hi, [target]"
+  "say hello to [target]"  "greet [target]"  "[target], hello"  "say hi to [target]"
+}
+verb follow { role target: Creature  "follow [target]"  "chase [target]"  "pursue [target]"  "go after [target]" }
+verb kiss { role target: Creature  "kiss [target]" }
+verb cross { role target  "cross [target]"  "ford [target]"  "walk across [target]" }
+verb leap_at {
+  role target
+  "jump over [target]"  "jump in [target]"  "jump into [target]"  "jump across [target]"
+  "leap into [target]"  "dive into [target]"  "dive in [target]"  "leap over [target]"
+}
+verb jump { "jump"  "leap"  "dive"  "skip"  "hop" }
+verb swim { "swim"  "bathe"  "wade" }
+verb turn { role target  "turn [target]"  "flip [target]"  "set [target]"  "turn [target] over" }
+verb tie { role target  role tool  "tie [target] to [tool]"  "tie [target]"  "fasten [target] to [tool]"  "attach [target] to [tool]" }
+verb burn {
+  role target
+  role tool
+  "burn [target]"  "burn [target] with [tool]"  "ignite [target]"  "incinerate [target]"
+  "light [target] with [tool]"  "set fire to [target]"
+}
+verb cut { role target  role tool carried  "cut [target] with [tool]"  "cut [target]"  "slice [target]"  "pierce [target]"  "slice [target] with [tool]" }
+verb play { role target  "play [target]"  "play with [target]" }
+verb count_things { role target  "count [target]" }
+verb dig { role target: Diggable  role tool  "dig [target]"  "dig in [target]"  "dig [target] with [tool]"  "dig in [target] with [tool]" }
+intent take_off { "take off [x]"  "take [x] off"  do drop (target: x) }
+verb unlock { role target  role tool carried  "unlock [target] with [tool]"  "unlock [target]"  "lock [target] with [tool]"  "lock [target]" }
+
+verb score { "score" }
+verb diagnose { "diagnose" }
+verb xyzzy { "xyzzy"  "plugh" }
+verb hello { "hello"  "hi" }
+verb yell { "yell"  "scream"  "shout" }
+verb zork { "zork" }
+verb verbose { "verbose" }
+verb brief { "brief" }
+verb superbrief { "superbrief"  "super" }
+verb quit { "quit"  "q" }
+verb restart { "restart" }
+verb save { "save" }
+verb restore { "restore" }
+verb version { "version" }
+verb curse { "damn"  "curse"  "shit"  "fuck" }
+verb pray { "pray" }
+verb walk_about { "walk"  "walk around"  "step" }
+verb back { "back"  "go back"  "return" }
+verb stay { "stay" }
+verb win { "win" }
+verb wish { "wish"  "make a wish" }
+verb bug { "bug" }
+verb echo { "echo" }
+verb repent { "repent" }
+verb frobozz { "frobozz" }
+verb answer_bare { "answer"  "reply" }
+verb say_bare { "say"  "speak"  "talk" }
+verb stand { "stand"  "stand up"  "sit"  "sit down" }
+verb chomp { "lose"  "barf"  "chomp" }
+verb odysseus { "odysseus"  "ulysses" }
+verb treasure { "treasure"  "temple" }
+verb mumble { "mumble"  "sigh" }
+verb look_up { "look up"  "look at ceiling"  "look at the ceiling"  "look overhead" }
+verb look_down { "look down"  "look below"  "peer down"  "look at ground"  "look at the ground" }
+
+intent what_carried {
+  "what am i carrying"  "what do i have"  "what have i got"  "what am i holding"
+  do inventory
+}
+intent how_doing {
+  "how am i doing"  "what is my score"  "whats my score"  "what's my score"
+  do score
+}
+
+// Where somebody or something may be sent by the world's gate, and which
+// room a room is: every place keeps its own, so that what stands in it
+// can name it to something that cannot see it.
+enum Dest { nowhere, stair, junction, barren, creepy, foggy, shadow_1, shadow_2, shadow_3, shadow_4, shadow_5, shadow_6, shadow_7, shadow_8, ocean, lake_shore, aq_view, on_lake, in_lake, oblivion, scatter, sword, splash }
+
+// How much of a room a visitor is told on coming back to it: Zork's BRIEF
+// (the default), VERBOSE and SUPERBRIEF.
+enum Mode { brief, verbose, superbrief }
+
+// A compass direction the hooded figure may block (PICK-DIRECTION), and
+// none.
+enum Direction { none, north, south, east, west, northeast, northwest, southeast, southwest }
+
+// Light: how many lit lamps a visitor carries, a dark room recounting
+// its lights, whether a room is lit without the visitor's own light, and
+// a light put out.
+message :light with integer
+message :relight
+message :room_lit with boolean
+message :snuffed
+// The world's gate: opened by whoever needs the whole map in range, who
+// is told it is open, does their errand, and asks it shut.
+message :open_gate
+message :gate_open
+message :close_gate
+// Death (JIGS-UP), and the grue.
+message :die
+message :grue
+// The sword's glow (I-SWORD), told to the sword by its bearer.
+message :glow with integer
+// The sword called to a hand (SHADOW-ARRIVAL, I-SHADOW-REPLY), heard with
+// the gate open wherever it lies.
+message :sword_come
+// The hooded figure (SHADOW-ROOMS, SHADOW-ATTACK, I-SHADOW-REPLY): the
+// fight begun; the figure appeared beside a visitor; its reply each move;
+// which way it blocks; the way unblocked; its hood taken; it slain; and
+// it gone.
+message :fight_on
+// The fight broken off by the figure's going: the room went dark around it.
+message :fight_off
+message :shadow_here
+message :reply
+message :block with Direction
+message :unblock
+message :unhood
+message :slain
+message :vanish
+// The lamp dropped into the lake (GO-ON-LAKE's FRIED-LAMP), and thrown
+// (LANTERN's THROW).
+message :fry
+message :smash
+// The lamp sent home to the stair by a death (JIGS-UP's CURRENT-LAMP),
+// heard with the gate open wherever it lies.
+message :lamp_home
+// A thing gone for good.
+message :consume
+// Which walls a room has, for the wall to describe.
+message :wall_look with integer
+// A room seen again in BRIEF: the one-time word about VERBOSE.
+message :brief_hint
+// The sword's glow settled by its bearer, as the figure comes and goes.
+message :settle with integer

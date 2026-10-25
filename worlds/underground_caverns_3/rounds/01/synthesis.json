@@ -1,0 +1,520 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "world-bug",
+      "severity": "high",
+      "consensus": {
+        "n": 4,
+        "of": 8
+      },
+      "claim": "\"attack figure\" and \"kill figure\" without \"with sword\" get \"The hooded figure ignores your feeble attack.\", even when the sword is glowing in the visitor's hand. The cause is in adventurer.sprout around lines 674-680: an unbound weapon goes straight to the feeble branch. The original's ATTACK fills in the held weapon for you. The figure keeps fighting while every one of these lines does nothing, so players read the duel as opaque. The prose-reader typed bare \"attack figure\" nine times in a row and was killed by it.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 18,
+          "quote": "The hooded figure ignores your feeble attack."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 31,
+          "quote": "In your wounded state, you cannot defend yourself... you fall to the ground, dead."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 14,
+          "quote": "The hooded figure ignores your feeble attack."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 78,
+          "quote": "kill figure -> The hooded figure ignores your feeble attack."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 16,
+          "quote": "The hooded figure ignores your feeble attack."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 22,
+          "quote": "kill figure -> feeble attack"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 35,
+          "quote": "attack figure -> The hooded figure ignores your feeble attack."
+        }
+      ],
+      "recommendation": "When `weapon` is unbound and the visitor holds a Sword, use it, and print the original's \"(with the sword)\". Do the same for kill, hit and fight. If Sprout cannot default an instrument role from what is held, log that in friction.md as a language gap, and meanwhile make the feeble line point at the sword."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 3,
+        "of": 8
+      },
+      "claim": "Walking into the lake with the lamp fries it for good. In Q1 that is a soft-lock the player cannot see coming: the Junction and the Foggy Room are dark, Q2's other light is not built, and death brings the dead lamp back to the stair. From then on every route is a grue death. Both opus runs hit this, and it is what ended them. The sonnet goal-seeker also carried its lamp and sword in. The shore gives nothing beforehand that would make leaving the lamp behind an obvious choice.",
+      "evidence": [
+        {
+          "run": "explorer-1-opus",
+          "turn": 90,
+          "quote": "The shock of entering the frigid water has made you drop all your possessions into the lake!"
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 104,
+          "quote": "The lamp isn't functioning (probably from having gotten wet)."
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 131,
+          "quote": "fourth death -> the Void"
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 46
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 66,
+          "quote": "it will not light again."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 75,
+          "quote": "Oh, no! A lurking grue slithered into the room and devoured you!"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 121
+        }
+      ],
+      "recommendation": "Keep the mechanic, since it is the original's, but make the shore tell the player. The Lake Shore's description or `examine lake` could note the cold and that the shore is lit (intent's own secret). The first \"drop all your possessions\" could also name the lamp going under. Until Q2 gives a second light, consider whether Q1 should leave a fried-lamp visitor some way on, and log the gap in intent.md."
+    },
+    {
+      "id": "P3",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 8
+      },
+      "claim": "RESTART is refused in character, and the refusal itself is wrong once the lamp is gone. \"The stair is to the north of wherever you are, more or less, and the lamp is where you left it\" is no help to a visitor whose lamp is fried. Both soft-locked opus players typed restart, were refused, and walked into grues until they left or reached the Void.",
+      "evidence": [
+        {
+          "run": "explorer-1-opus",
+          "turn": 126,
+          "quote": "This world does not start over on request. The stair is to the north of wherever you are, more or less, and the lamp is where you left it."
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 73
+        }
+      ],
+      "recommendation": "Either allow a restart for a visitor alone, or make the refusal honest about what is lost and point at the way that is left: the fourth death and the Void. The current text implies the lamp is still useful."
+    },
+    {
+      "id": "P4",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 8
+      },
+      "claim": "Killing the hooded figure, the game's trap, reads to players as winning. Two of the four sonnet runs that fought it killed it, and nothing told them they had lost anything. The goal-seeker spent turns 61 to 92 with the figure at \"badly hurt and defenseless\", when the hood could have been taken, and swung on until it died at turn 93. Explorer-1 summed the world up as \"a fight you win with the sword\". Both opus runs took the hood the first time they could. The hint is thin in Q1 because the cost only lands in Q4.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 40,
+          "quote": "The hooded figure, fatally wounded, slumps to the ground... deep and sorrowful eyes."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 61,
+          "quote": "The figure appears to be badly hurt and defenseless."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 93,
+          "quote": "The hooded figure, fatally wounded, slumps to the ground."
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 65,
+          "quote": "You slowly remove the hood from your badly wounded opponent and recoil in horror at the sight of your own face"
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 17
+        }
+      ],
+      "recommendation": "Keep the trap, but give the defenseless state more pull. `examine figure` and `diagnose` at that stage could draw the eye to the hood, in the hint book's spirit (\"it fights the way you fight\"). The death prose could also carry a note of loss beyond the eyes. No player typed `score` (the score verb was never reached), so the 3-of-7 line taught nobody anything either."
+    },
+    {
+      "id": "P5",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 3,
+        "of": 8
+      },
+      "claim": "The duel is long and repetitive. In one sonnet run it took about 50 strokes. Once the figure is down to its last point, most strokes are answered \"Your opponent blocks your attack with its sword.\", and the disarm-and-return line repeats almost every other turn. This drives the round's repetition figure of 33.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 45
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 81,
+          "quote": "Your opponent blocks your attack with its sword."
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 25,
+          "quote": "the figure reaches for your sword and hands it back to you, nodding grimly."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 21,
+          "quote": "the figure reaches for your sword and hands it back to you, nodding grimly."
+        }
+      ],
+      "recommendation": "Check the stroke odds against SHADOW-F: a wounded visitor's hit chance (strength*10+10) may be lower than the original's. Vary the disarm text, or make it less frequent."
+    },
+    {
+      "id": "P6",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 8
+      },
+      "claim": "`dive` on the lake prints \"Nothing happens.\" and then moves the visitor Underwater, contradicting itself in the same answer. It did this every time it was typed.",
+      "evidence": [
+        {
+          "run": "explorer-1-opus",
+          "turn": 94,
+          "quote": "Nothing happens. / Underwater"
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 99
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 106
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 47,
+          "quote": "Nothing happens. / Underwater"
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 55
+        }
+      ],
+      "recommendation": "Find which handler says \"Nothing happens.\" for dive (probably the jump/leap fallback) and stop it from firing when the dive succeeds."
+    },
+    {
+      "id": "P7",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 8
+      },
+      "claim": "`take all` underwater answers with the fish's refusal, \"There is no fish visible now.\", and takes nothing, though the lamp, sword and vial are lying there. This is one of the round's two refused lines.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 48,
+          "quote": "There is no fish visible now."
+        }
+      ],
+      "recommendation": "Leave absent or no-take scenery (fish, sand, algae) out of `all`, so that take all lists each item and runs the slip roll for each."
+    },
+    {
+      "id": "P8",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 8
+      },
+      "claim": "The ship's departure is announced one command late. The newcomer typed \"board the boat\" and got \"There is no ship here to board.\" followed by \"The boat sails silently through the mist and out of sight.\": the ship was already gone before the line that tells you it is leaving. The one command the ship allows went on \"talk to the sailor\", which got a flat \"You can't talk to the sailor.\"",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 15,
+          "quote": "Passing alongside the shore now is an old boat"
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 16,
+          "quote": "You can't talk to the sailor."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 17,
+          "quote": "There is no ship here to board. / The boat sails silently through the mist and out of sight."
+        }
+      ],
+      "recommendation": "Print the departure at the end of the command that uses up the ship's window. While the ship is in sight, give talk-to and board the sailor an in-voice answer, and leave the trick itself to \"hello sailor\"."
+    },
+    {
+      "id": "P9",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 8
+      },
+      "claim": "If the light goes out mid-fight, the figure keeps blocking and striking from the dark, but the visitor cannot see it to fight back: every attack answers \"You can't see any such thing.\" Intent has it appear only in a lit room, but says nothing about what happens after.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 25,
+          "quote": "The lamp smashes. The light is now out."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 28,
+          "quote": "attack figure -> You can't see any such thing."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 31,
+          "quote": "Your way is blocked by the hooded figure. You dodge as the hooded figure comes in low."
+        }
+      ],
+      "recommendation": "Decide what darkness does to the shadow: have it vanish when the room goes dark, or let it still be fought blind, as the original's SHADOW-F would. State the choice in intent.md."
+    },
+    {
+      "id": "P10",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 8
+      },
+      "claim": "Two nouns are ambiguous, and the engine settles them by a random draw (\"drawn: the line read 2 ways that tied\"). They are \"light\" at the stair and \"sand\" at the Flathead Ocean, where it means both the beach and the quicksand.",
+      "evidence": [
+        {
+          "run": "prose-reader-1",
+          "turn": 1,
+          "quote": "drawn: the line read 2 ways that tied, and one was drawn"
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 79,
+          "quote": "(the beach) ... drawn: the line read 2 ways that tied"
+        }
+      ],
+      "recommendation": "Give each noun one clear owner in each room, or a stated preference, so the answer does not depend on the seed."
+    },
+    {
+      "id": "P11",
+      "category": "language-gap",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 8
+      },
+      "claim": "\"remove figure's hood\" answered \"You can't see any such thing.\" with the figure defenseless in the room. The possessive noun phrase does not resolve, though \"take hood\" worked on the very next turn.",
+      "evidence": [
+        {
+          "run": "explorer-1-opus",
+          "turn": 64,
+          "quote": "You can't see any such thing."
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 65
+        }
+      ],
+      "recommendation": "Check whether Sprout's parser reads \"X's Y\". If it cannot, log it in friction.md. Either way, add \"remove hood\" and \"unhood figure\" phrasings to the take-hood path."
+    },
+    {
+      "id": "P12",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 6,
+        "of": 8
+      },
+      "claim": "The unbuilt-quarter exits shape how the map feels. Six runs named the \"not today\" refusals as the wall they hit, though most praised how they were written. These refusals make up most of the round's 0.15 unread rate, so that figure overstates real parser failures. Q1 is behaving as the brief intends.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 56,
+          "quote": "climb over the rubble... you come back over the wall"
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 41,
+          "quote": "It will take a thinner day than this one."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 21
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 26
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 14
+        },
+        {
+          "run": "casual-1",
+          "turn": 11,
+          "quote": "The quicksand prevents movement here."
+        }
+      ],
+      "recommendation": "No change of scope: Q2 opens in round 3. When reading this metric, take the in-world refusals out of the unread count; they are not misreads."
+    },
+    {
+      "id": "P13",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 4,
+        "of": 4
+      },
+      "claim": "Goal (\"get as far into the place as you can\"): no goal-seeker run reached an ending, and neither opus run did better than a losing one. goal-seeker-1 (sonnet) killed the figure at turn 93, which makes the game unwinnable, never saw the ship, and lost its lamp and sword in the lake at turn 121. goal-seeker-1-opus got further than anyone: hood and cloak (17-18), the ship and vial (21-24), the amulet (56), every Q1 item and all three Q1 points. Its carried lamp drowned at turn 46, and three grue deaths later it left. explorer-1 (sonnet) killed the figure at turn 40 and stopped, stuck behind the unbuilt exits. explorer-1-opus got further than the sonnet run (hood, cloak, amulet) but missed the ship in seven turns on the shore. It fried its lamp at turn 90 and reached the Void, the losing ending, on its fourth death at turn 131. What stood in the way: for sonnet, the killing blow (P4) and the instrument bug (P1); for opus, the lamp in the lake (P2) and the refused restart (P3).",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 93
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 121
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 22,
+          "quote": "I have waited three ages for someone to say those words"
+        },
+        {
+          "run": "goal-seeker-1-opus",
+          "turn": 56,
+          "quote": "You reach the shiny object. It is a simple golden amulet!"
+        },
+        {
+          "run": "explorer-1",
+          "turn": 40
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 77,
+          "quote": "Nothing happens yet."
+        },
+        {
+          "run": "explorer-1-opus",
+          "turn": 131
+        }
+      ],
+      "recommendation": "Fix P1 and P2 first. The walkthrough proves that Q1 can be completed; these two are the points where real players fell off it."
+    }
+  ],
+  "legibility": {
+    "verdict": "partly",
+    "why": "The two opus runs read the intended arc: a duel won by mercy whose face is your own, the regalia earned piece by piece, and a lake that costs what you carry. The sonnet runs mostly caught the premise (an old man's final test, a mirror duelist) and missed the turn at its centre. Two of them took killing the figure for victory, and none saw the ship and the lake as part of the arc. The casual and newcomer runs saw a generic Zork dungeon with a vague hook. Nobody read the Dungeon Master as one man in several guises beyond the old man seen at death.",
+    "runs": [
+      {
+        "run": "explorer-1",
+        "understood": "A small Zork-like area under an endless stair; a hooded figure in the Land of Shadow is a fight you win with the sword.",
+        "matches": "no"
+      },
+      {
+        "run": "explorer-1-opus",
+        "understood": "An old man's last test: you fight a hooded figure who wears your own face and take its hood and cloak rather than kill it, then dive for an amulet, gathering the old man's regalia; about earning your worth, and how one careless step costs you the light.",
+        "matches": "yes"
+      },
+      {
+        "run": "goal-seeker-1",
+        "understood": "A cave region at the end of a longer adventure, with a duel against a hooded figure who mirrors you.",
+        "matches": "partly"
+      },
+      {
+        "run": "goal-seeker-1-opus",
+        "understood": "An ageless old man's test of worth: spare your hooded double, greet the sailor for a gift, dive for the amulet; about judgment, mercy, and what you are willing to give up.",
+        "matches": "yes"
+      },
+      {
+        "run": "casual-1",
+        "understood": "A dungeon crawl: seek a silver-haired old man when worthy, among a stuck sword, misty land and an underground sea.",
+        "matches": "no"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "An underground adventure after a dream telling you to seek a wise man when worthy.",
+        "matches": "no"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A final test set by an old man, with a hooded swordsman who duels you; a sparring test with a gentle tone.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "A dream-test to prove yourself to an old wizard; a hooded duelist who mirrors you, and death framed as part of the test.",
+        "matches": "partly"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": null,
+      "after": 0.15
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": null,
+      "after": 0
+    },
+    {
+      "metric": "faults",
+      "before": null,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": null,
+      "after": 33
+    },
+    {
+      "metric": "reach.places.never",
+      "before": null,
+      "after": 0
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": null,
+      "after": 181
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": null,
+      "after": 72
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": null,
+      "after": 4
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": null,
+      "after": 515
+    }
+  ]
+}

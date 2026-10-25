@@ -1,0 +1,271 @@
+// Rooms. A room reads as Zork's do: its name, its description, then what
+// is in it, each in its own paragraph. Every room keeps which room it is
+// (`:id`), so that what stands in it can say so to something that cannot
+// see it.
+//
+// A dark room is lit only while it sees a lit lamp, on its floor or in
+// somebody's hands; until then a visitor in it can name only what they
+// carry, and reads the world's `dark` line, the grue's warning, for its
+// description. What it keeps besides, `:alight`, is for the grue and the
+// hooded figure: a handler cannot ask a place whether it is lit, so the
+// room counts its own lamps and tells each visitor in it whether it would
+// be lit without them.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Diggable} from 'thing'
+import {Light} from 'lamp'
+import {Box} from 'box'
+import {Adventurer} from 'adventurer'
+import {examine} from 'sprout'
+import {search, look_under, look_in, find, listen, smell, shift, climb_up, climb_down, through, talk, give, follow, kiss, alarm, dig, put_on, Dest, :relight, :room_lit, :wall_look, :snuffed, :brief_hint} from 'verbs'
+
+kind Room is sprout.Place {
+  grammar { article none }
+
+  :id Dest default nowhere
+  // Which walls these are, for the wall to describe.
+  :walls 0 min 0 max 30
+
+  object wall is Wall
+  object grue is Grue
+  object tunnel is Tunnel
+  object floor is Floor
+  object ceiling is Ceiling
+  object surroundings is Surroundings
+  object sailor is Sailor
+
+  remembers { :visits 0 min 0 max 2 }
+  :visited false
+
+  passage title default { {self} }
+  passage body default { {if false}.{/if} }
+  // Zork's PRINT-CONT: first what has a first description and has not been
+  // moved, then everything else.
+  passage objects {
+    {for t: Thing in self}{if !t.get(:ndesc) && t.get(:has_fdesc) && !t.get(:touched)}
+
+    {t.fdesc}{t.inside_lines}{/if}{/for}{for t: Thing in self}{if t.get(:ndesc) || !t.get(:has_fdesc) || t.get(:touched)}{if !t.get(:ndesc)}
+
+    {t.ldesc}{/if}{t.inside_lines}{/if}{/for}
+  }
+  passage full {
+    {self.title}
+
+    {self.body}
+
+    {self.objects}
+  }
+  passage brief default {
+    {self.title}
+
+    {self.objects}
+  }
+
+  // Zork's DESCRIBE-ROOM: the room's name always; its long description on
+  // `look`, in VERBOSE, or the first time in; what is in it unless
+  // SUPERBRIEF. Arriving is the only time a visitor's mode is asked.
+  describe { text described }
+  passage described {
+    {if seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :superbrief}{self.title}{else if seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :brief && actor.recall(:visits) > 1}{self.brief}{else}{self.full}{/if}
+  }
+
+  // A room answers to the words of its name ("Lake Shore" to `lake`), but
+  // only where nothing in it does; then it is as if nothing were there.
+  as target for any { permit { refuse "You can't see any such thing." } }
+  as tool for any { permit { refuse "You can't see any such thing." } }
+
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      send wall :wall_look with self.get(:walls)
+      self.set(:visited, true)
+      let seen_by = !self.is(DarkRoom) || item.get(:light) > 0
+      // The first room seen again by its name alone: one word, once,
+      // about LOOK and VERBOSE.
+      if (item.recall(:visits) == 1 && seen_by && item.get(:mode) == :brief) { send item :brief_hint }
+      if (item.recall(:visits) < 2 && seen_by) { item.adjust(:visits, 1) }
+      if (self.is(DarkRoom) && item.recall(:visits) < 2 && !seen_by) {
+        if (self.get(:alight)) { item.adjust(:visits, 1) }
+      }
+    }
+  }
+}
+
+kind DarkRoom is Room {
+  grammar { lit (self.sees(sprout.LightSource, :lit)) }
+
+  :floor_lit false
+  :bearers 0 min 0 max 50
+  :alight false
+
+  on :entered (item, from) { send self :relight }
+  on :left (item, to)      { send self :relight }
+  on :snuffed              { send self :relight }
+
+  on :relight {
+    self.set(:floor_lit, false)
+    self.set(:bearers, 0)
+    each l: Light in self { if (l.get(:lit)) { self.set(:floor_lit, true) } }
+    each b: Box in self {
+      if (b.get(:open) || b.get(:transparent)) { each l: Light in b { if (l.get(:lit)) { self.set(:floor_lit, true) } } }
+    }
+    each a: Adventurer in self { if (a.get(:light) > 0) { self.adjust(:bearers, 1) } }
+    self.set(:alight, self.get(:floor_lit) || self.get(:bearers) > 0)
+    each a: Adventurer in self {
+      if (a.get(:light) > 0) { send a :room_lit with self.get(:floor_lit) || self.get(:bearers) > 1 }
+      else { send a :room_lit with self.get(:alight) }
+    }
+  }
+}
+
+// Zork's EAST-WALL, WEST-WALL and the rest, GLOBAL-OBJECTS: the
+// surrounding wall, in every room. Sprout has no object that is everywhere
+// at once, so every room holds its own, and tells it which walls these
+// are as a visitor comes in (RANDOM-WALL).
+kind Wall is Scenery {
+  grammar { name "wall"  nouns "walls"  adjectives "east", "west", "north", "south", "eastern", "western", "northern", "southern" }
+  passage short { wall }
+  :look 0 min 0 max 30
+  on :wall_look (from, value) { self.set(:look, value) }
+  passage plain { The walls are solid rock, plain and entirely uninterested in you. }
+  passage stair_wall { The walls go up with the stair, and the eerie light that comes from everywhere throws your shadow on them in several directions at once, none of them the right one. }
+  passage cramped { The walls press in here, rough and close; the passage was cut, or wore itself, through rock that did not want to be gone through. }
+  passage barren_wall { To the south the wall of stone, ancient and crumbling; everywhere else the cavern's own walls, far off and lost in the gloom, so that the flat barren land between seems wider than it is. }
+  passage none_here { There are no walls here to speak of. The land of shadow goes on, low hill after low hill, until the dark takes it, and whatever walls this cavern has are somewhere past that. }
+  passage towering { To the north, towering walls of rock bar the way; otherwise the land of shadow goes on until the dark takes it. }
+  passage lake_wall { The cavern's walls rise sheer around the lake, polished a little by old water where they meet it, and go up to where the dim light comes from. }
+  passage balcony_wall { The cliff goes up behind you and down in front of you, and the balcony is a shelf cut into it by somebody who wanted to stand here and look at the aqueduct. You see why. }
+  passage foggy_wall { The walls are there, somewhere, behind the fog; you touch one and it is cold and wet, and your hand comes away not quite clean. }
+  passage ocean_wall { The land rises steeply to the east, into the hills of the land of shadow; there are no walls here, only the cliff and the sea and the mist between. }
+  passage north_wall { The only wall here is the stone one to the north, massive and ancient, built by people who meant it to stand for ever and were nearly right; it has crumbled at one point to a heap of rubble low enough to climb. Everywhere else the land of shadow goes on until the dark takes it. }
+  passage cliff_wall { The only wall here is the stone one to the north, tall and old and ending at the cliff edge, with the rubble of its decay heaped where you could climb over. The rest is hills, and the drop to the west, and the mist. }
+  describe {
+    if (self.get(:look) == 1) { text stair_wall }
+    else if (self.get(:look) == 2) { text cramped }
+    else if (self.get(:look) == 3) { text barren_wall }
+    else if (self.get(:look) == 4) { text none_here }
+    else if (self.get(:look) == 5) { text towering }
+    else if (self.get(:look) == 6) { text lake_wall }
+    else if (self.get(:look) == 7) { text balcony_wall }
+    else if (self.get(:look) == 8) { text foggy_wall }
+    else if (self.get(:look) == 9) { text ocean_wall }
+    else if (self.get(:look) == 10) { text north_wall }
+    else if (self.get(:look) == 11) { text cliff_wall }
+    else { text plain }
+  }
+  as target for shift { do { say "You can't budge it; at least from here." } }
+  as target for climb_up { do { say "Climbing the walls is to no avail." } }
+  as target for climb_down { do { say "Climbing the walls is to no avail." } }
+}
+
+// Zork's TUNNEL, another GLOBAL-OBJECT: the passage, the tunnel, the
+// crawlway, in every room. A room's own path, trail or way is its own
+// scenery, which these words are left to, since two things answering one
+// word in one room are drawn between.
+kind Tunnel is Scenery {
+  grammar { name "passage"  nouns "tunnel", "crawlway", "passages"  adjectives "dark", "smoky", "narrow", "wide", "winding", "cramped" }
+  passage short { passage }
+  describe { text "The passage is cut through the rock, and goes where it goes. The ways out of here are described above, and you may take any of them." }
+  passage no_take { You must specify a direction to go. }
+  as target for through { do { say "Use compass directions for movement, and say which way." } }
+  as target for find { do { say "I can't help you there...." } }
+  as target for dig { do { say "Not a chance." } }
+}
+
+kind Floor is Scenery, Diggable {
+  grammar { name "ground"  nouns "floor", "dirt"  adjectives "stone", "rock", "hard" }
+  passage short { ground }
+  describe { text "The ground is the sort of thing you stand on. You are standing on it." }
+  as target for search { do { say "Everything that is on the ground is listed, in the room's description, and the rest is ground." } }
+  as target for look_under { do { say "There is nothing under the ground but more ground, and then, eventually, lava." } }
+  // Set on the ground is dropped (V-PUT-ON's GROUND): the one dropping
+  // does it (adventurer.sprout).
+  as surface for put_on { do { } }
+}
+kind Ceiling is Scenery {
+  grammar { name "ceiling"  nouns "roof"  adjectives "high", "low", "cavern" }
+  passage short { ceiling }
+  describe { text "The ceiling is some way above you, where ceilings generally are. It is not the most interesting thing in the room." }
+}
+
+// The room as a thing to examine: "examine room" is answered with the
+// room's own description. A room's own name words are refused where
+// anything in it answers better (Room, above), so this is a thing in every
+// room, answering to "room" and the like, and reading the room it is in.
+kind Surroundings is Scenery {
+  grammar { name "room"  nouns "chamber", "place", "surroundings", "everything", "here"  adjectives "this", "whole", "entire" }
+  passage short { room }
+  describe { text "{if here.is(Room)}{here.full}{/if}" }
+  as target for search { do { say "{if here.is(Room)}{here.full}{/if}" } }
+  as target for smell { do { say "It smells like a room." } }
+  as target for listen { do { say "You hear nothing a room does not usually make." } }
+}
+
+// Zork's GRUE: never here, always nearby.
+kind Grue is Scenery {
+  grammar { name "lurking grue"  nouns "grue", "grues"  adjectives "lurking", "sinister", "hungry", "silent" }
+  passage short { lurking grue }
+  passage absent { There is no grue here, but I'm sure there is at least one lurking in the darkness nearby. I wouldn't let my light go out if I were you! }
+  describe { text "The grue is a sinister, lurking presence in the dark places of the earth. Its favorite diet is adventurers, but its insatiable appetite is tempered by its fear of light. No grue has ever been seen by the light of day, and few have survived its fearsome jaws to tell the tale." }
+  as target for listen { do { say "It makes no sound but is always lurking in the darkness nearby." } }
+  as target for search { do { say absent } }
+  as target for find { do { say absent } }
+  as target for look_in { do { say absent } }
+  as target for look_under { do { say absent } }
+}
+
+// Zork's SAILOR, a GLOBAL-OBJECT: in every room, so that "hello sailor"
+// is answered wherever it is said; only at the Flathead Ocean, with the
+// ship passing, does it do anything (SAILOR-FCN). Whoever greets him
+// answers for it (adventurer.sprout), since the count and the ship are
+// theirs.
+// He is a Creature so that he may be talked to, and what he answers while
+// the ship is in sight is in the trick's own direction.
+kind Sailor is Scenery, Creature {
+  grammar { name "sailor"  nouns "seaman", "footpad", "aviator", "helmsman"  adjectives "old", "crusty", "viking" }
+  :in_sight false
+  passage short { sailor }
+  passage seaman { He looks like a sailor: old, crusty, salt in his beard and the sea in his eyes, standing at the prow of a ship that was old when the Flatheads were young, and looking out over the mist as though he had been doing it for three ages and expected to do it for three more. }
+  passage unseen_sailor { There is no sailor to be seen. }
+  passage far_out { He is a long way out, and the surf is loud between you. Anything you mean him to hear had better be short, and loud, and friendly; a sailor's greeting, say. }
+  describe {
+    text "{if here.is(Room)}{if here.get(:id) == :ocean}{if actor.is(Adventurer)}{if actor.get(:ship_visible)}{self.seaman}{else}{self.unseen_sailor}{/if}{else}{self.unseen_sailor}{/if}{else}{self.unseen_sailor}{/if}{else}{self.unseen_sailor}{/if}" }
+  passage no_take { There is no sailor to be seen. }
+  // Whether he is there to be answered is read as the body runs, by an
+  // `if` and not by a slot in the line, since the ship may sail at the end
+  // of the same command and a slot is rendered after that.
+  as target for talk {
+    do {
+      self.set(:in_sight, false)
+      if (here.is(Room)) { if (here.get(:id) == :ocean) { if (actor.is(Adventurer)) { if (actor.get(:ship_visible)) { self.set(:in_sight, true) } } } }
+      if (self.get(:in_sight)) { say far_out } else { say unseen_sailor }
+    }
+  }
+  as recipient for give {
+    do {
+      self.set(:in_sight, false)
+      if (here.is(Room)) { if (here.get(:id) == :ocean) { if (actor.is(Adventurer)) { if (actor.get(:ship_visible)) { self.set(:in_sight, true) } } } }
+      if (self.get(:in_sight)) { say "He is too far out to take anything from your hand, and by the look of him he has nothing to put in it but what he chooses to throw." } else { say unseen_sailor }
+    }
+  }
+  as target for follow {
+    do {
+      self.set(:in_sight, false)
+      if (here.is(Room)) { if (here.get(:id) == :ocean) { if (actor.is(Adventurer)) { if (actor.get(:ship_visible)) { self.set(:in_sight, true) } } } }
+      if (self.get(:in_sight)) { say "Between the rocks, wind, and waves, you wouldn't last a minute." } else { say unseen_sailor }
+    }
+  }
+  as target for kiss {
+    do {
+      self.set(:in_sight, false)
+      if (here.is(Room)) { if (here.get(:id) == :ocean) { if (actor.is(Adventurer)) { if (actor.get(:ship_visible)) { self.set(:in_sight, true) } } } }
+      if (self.get(:in_sight)) { say "He is out of reach, which is probably for the best; he has not been kissed in three ages, and it shows." } else { say unseen_sailor }
+    }
+  }
+  as target for alarm {
+    do {
+      self.set(:in_sight, false)
+      if (here.is(Room)) { if (here.get(:id) == :ocean) { if (actor.is(Adventurer)) { if (actor.get(:ship_visible)) { self.set(:in_sight, true) } } } }
+      if (self.get(:in_sight)) { say "He's wide awake, or haven't you noticed..." } else { say unseen_sailor }
+    }
+  }
+  as target for find { do { say "There is no sailor to be seen." } }
+}

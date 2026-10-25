@@ -1,0 +1,158 @@
+// The things of the first quarter that can be carried: the Elvish sword
+// (SWORD, SWORD-FCN, I-SWORD), the hood and the cloak (HOOD-F, CLOAK-F),
+// the golden amulet (AMULET), and the sailor's vial and what it holds
+// (VIAL-F, POTION-F).
+import * as sprout from 'sprout'
+import {Thing, Portable, Weapon, Wearable, Drinkable, Pourable, Vessel, Fillable} from 'thing'
+import {Box, Bag} from 'box'
+import {Adventurer} from 'adventurer'
+import {Shadow} from 'shadow'
+import {read, look_under, shift, smell, drink, drink_from, pour, pour_on, fill, shake, :glow, :sword_come, :consume} from 'verbs'
+
+kind Sword is Weapon {
+  grammar { name "sword"  nouns "orcrist", "glamdring", "blade", "runes", "rune"  adjectives "elvish", "old", "antique", "glowing" }
+  :size 25
+  :glow 0 min 0 max 2
+  // Imbedded in the great rock at the Junction (SWORD-IN-STONE?), until
+  // the hooded figure calls it out.
+  :in_stone true
+  passage short { sword }
+  passage indef { An Elvish sword }
+  passage a_short { an Elvish sword }
+  passage ldesc { There is an Elvish sword here{if self.get(:glow) == 2}, glowing brightly{else if self.get(:glow) == 1}, glowing faintly{/if}. }
+  on :glow (from, value) { self.set(:glow, value) }
+  as target for read { do { say "The runes run the length of the blade, cut fine and worn finer, in an Elvish hand that was never meant for you, and you cannot read them. They have the look of a name, and of a promise; the sword glows, when it glows, instead of explaining itself." } }
+  describe { text "It is an Elvish sword of great antiquity, long and light, with runes down the blade that you cannot read and a hilt worn to the shape of a hand, which, when you close yours on it, turns out to be yours.{if self.get(:in_stone)} It is imbedded to half its length in the great rock, and looks as though it has been there since the rock was.{/if}{if self.get(:glow) == 2} It is glowing very brightly.{else if self.get(:glow) == 1} It is glowing with a faint blue glow.{/if}" }
+  passage stuck { {one of}Who do you think you are? Arthur?{or}The sword is deeply imbedded in the rock. You can't budge it.{or}The sword is deeply imbedded in the rock. You can't budge it.{or}The sword is deeply imbedded in the rock. You can't budge it.{or}The sword is deeply imbedded in the rock. You can't budge it.{or}The sword is deeply imbedded in the rock. You can't budge it.{or}The sword is deeply imbedded in the rock. You can't budge it.{or}The sword is deeply imbedded in the rock. You can't budge it.{or}The sword is deeply imbedded in the rock. You can't budge it.{or}The sword is deeply imbedded in the rock. You can't budge it.{/one of} }
+  without as target for shift from Portable
+  as target for shift { do { if (self.get(:in_stone)) { say stuck } else { say "Moving the sword reveals nothing." } } }
+  // Called to a hand (SHADOW-ARRIVAL, I-SHADOW-REPLY): with the world's
+  // gate open it hears this wherever it lies, and goes. The first time it
+  // comes out of the stone.
+  on :sword_come (from) {
+    if (from.is(Adventurer)) {
+      if (!from.holds(self)) {
+        if (self.get(:in_stone)) {
+          self.set(:in_stone, false)
+          move self to from
+          tell from "From nowhere, the sword from the junction appears in your hand, wildly glowing!"
+        } else if (from.get(:sword_leaps)) {
+          move self to from
+          tell from "Your sword, glowing wildly, leaps into your hand!"
+        } else {
+          move self to from
+          tell from "Your sword, glowing wildly, appears in your hand!"
+        }
+        self.set(:glow, 2)
+      }
+    }
+  }
+}
+
+// The figure's hood: worn when held, and had only when the figure is
+// nearly beaten (HOOD-F).
+kind Hood is Wearable {
+  grammar { name "hood"  nouns "cowl"  adjectives "dark", "plain" }
+  passage short { hood }
+  describe { text "A hood of some dark, plain stuff, deep enough to hide a face in. {if actor.holds(self)}It is on your head, and it is warm, and it smells faintly of somebody else's hair.{else}It casts a shadow where a face should be.{/if}" }
+  as target for look_under {
+    do {
+      if (actor.holds(self)) { say "Under the hood is your own face, which you cannot see from here, and which you have been assured looks pretty much as usual." }
+      else if (here.count(Shadow) > 0) { say "The figure's hood casts a dark shadow over its face. There is no way from where you stand to look beneath it." }
+      else { say "There is nothing under the hood but the ground." }
+    }
+  }
+}
+
+// The figure's cloak: fastened at its neck while it stands, left on the
+// ground when it goes (CLOAK-F).
+kind Cloak is Wearable {
+  grammar { name "cloak"  nouns "cape", "mantle"  adjectives "dark", "plain" }
+  passage short { cloak }
+  describe { text "A cloak of the same dark, plain stuff as the hood, long enough to reach the ground and worn thin at the hem by a great deal of walking. {if actor.holds(self)}It hangs from your shoulders as though it had always hung there.{else}It is fastened at the neck with a plain clasp.{/if}" }
+  as target for look_under {
+    do {
+      if (actor.holds(self)) { say "Under the cloak is you, which is no surprise." }
+      else if (here.count(Shadow) > 0) { say "You cannot get close enough to look underneath the cloak." }
+      else { say "There is nothing under the cloak but the ground, and some dust." }
+    }
+  }
+}
+
+// The golden amulet, the shiny object in the lake's sand, once had
+// (SHINY-OBJECT-F).
+kind Amulet is Wearable {
+  grammar { name "golden amulet"  nouns "amulet", "object", "chain"  adjectives "gold", "golden", "shiny", "simple" }
+  passage short { golden amulet }
+  passage indef { A golden amulet }
+  passage a_short { a golden amulet }
+  describe { text "It is a simple golden amulet on a fine chain: a disc no bigger than a coin, worn smooth, with a design on it that might once have been a face or a sun or a door, and is now only the memory of one. It is warm, as gold that has been worn is warm, though nobody has worn it for a very long time." }
+}
+
+// The sailor's gift: a small transparent vial, strangely heavy (VIAL).
+kind Vial is Bag, Vessel, Fillable {
+  grammar { name "vial"  nouns "bottle", "gift", "flask"  adjectives "small", "transparent", "glass" }
+  :size 3
+  :capacity 3
+  passage short { vial }
+  describe { text "It is a small, transparent vial {if self.count(Potion) > 0}which looks empty but is strangely heavy.{else}which is light and empty.{/if}" }
+  object potion is Potion
+  passage opened_line { The vial is open.{if self.count(Potion) > 0} There is a sweet odor from within the vial, apparently coming from a heavy but invisible liquid.{/if} }
+  as target for fill { do { say "You can't seem to put anything in it." } }
+  as target for smell {
+    do {
+      if (self.count(Potion) > 0) { say "The vial (or something in it) smells sweet." }
+      else { say "It smells of glass, and faintly, still, of something sweet that is not there any more." }
+    }
+  }
+  as target for drink_from {
+    do {
+      if (self.count(Potion) > 0) {
+        if (!self.get(:open)) { say "You'll have to open the vial first." }
+        else {
+          each p: Potion in self { send p :consume }
+          if (actor.is(Adventurer)) { send actor :quaff }
+          say "You \"drink\" the contents in one gulp, but nothing unusual seems to have happened as a result."
+        }
+      } else { say "The vial is empty." }
+    }
+  }
+  without as target for shake from Bag
+  as target for shake {
+    do {
+      if (self.get(:open) && self.count(Potion) > 0) {
+        say "Nothing seems to come out, although the vial is lighter now."
+        each p: Potion in self { send p :consume }
+      }
+      else if (!self.get(:open) && self.count(Potion) > 0) { say "It sounds like there is something inside the vial, or feels like it; it is too heavy to be empty." }
+      else { say "Shaken." }
+    }
+  }
+}
+
+// The heavy but invisible liquid in the vial (POTION): the invisibility
+// potion, three moves of it. Taken or dropped, it is lost to the air.
+kind Potion is Portable, Drinkable, Pourable {
+  grammar { name "heavy but invisible liquid"  nouns "liquid", "potion", "contents", "fluid"  adjectives "heavy", "sweet", "invisible", "smelling" }
+  :size 2
+  passage short { heavy but invisible liquid }
+  passage indef { A heavy but invisible liquid }
+  passage a_short { a heavy but invisible liquid }
+  passage no_take { Nothing seems to come out, although the sweet smell disappears from the vial, seeming to permeate the air briefly before fading entirely. }
+  describe { text "It feels like there's something inside, but you can't see anything even though the vial is transparent." }
+  // Spilled, drunk, dropped or poured: gone to the air. Only the potion is
+  // ever consumed, and it is only ever spawned, with the vial.
+  on :consume { finally destroy self }
+  as target for smell { do { say "The vial (or something in it) smells sweet." } }
+  as target for drink {
+    do {
+      if (actor.is(Adventurer)) { send actor :quaff }
+      say "You \"drink\" the contents in one gulp, but nothing unusual seems to have happened as a result."
+      finally destroy self
+    }
+  }
+  as target for pour { do { say "It spills onto the ground and vanishes."  finally destroy self } }
+  as item for pour_on { do { } }
+}
+
+message :quaff

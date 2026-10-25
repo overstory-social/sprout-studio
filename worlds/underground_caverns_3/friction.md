@@ -1,0 +1,301 @@
+# underground_caverns_3: friction
+
+_The author's log of what Sprout would not let the port say, and what was
+written instead. Each entry names the spec section it touches. An entry
+may cite the caverns' logs by number where nothing has changed: "caverns
+N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
+`worlds/underground_caverns_2/friction.md`. Entries are numbered from 1._
+
+## Round 1: the stair, the Land of Shadow and the lake
+
+### 1. A wall walked into in the dark does not feed the grue
+
+- **Wanted:** Zork's V-WALK: in a dark room, a direction with no exit at
+  all is, four times in five, "Oh, no! You have walked into the slavering
+  fangs of a lurking grue!", and the fifth time "You can't go that way."
+- **Found:** a direction no exit answers is the world's `no_way`, and an
+  `after command` "does not follow a line the parser answered with one of
+  the world's lines, `unknown`, `not_here`, `no_way`", so nothing of the
+  world runs on that turn. Only an exit that refuses reaches `after
+  command`, and a dark room would need a refusing exit in every direction
+  it does not lead, which Zork's rooms do not have (and which `no_way`
+  exists to spare the author).
+- **Wrote instead:** the grue takes a visitor who walks from a dark room
+  into another, four times in five, as Zork's GOTO does (the adventurer's
+  `as actor for go`); a wall in the dark is "You can't go that way." every
+  time. Caverns 2 made the same choice without logging it.
+- **Spec:** Verbs › After a command; Verbs › Exits.
+
+### 2. The figure's hood is in its hands, and only it can hand the hood over
+
+- **Wanted:** Zork's HOOD and CLOAK are inside the SHADOW, a transparent
+  open container, so `take hood` names them while the figure stands, and
+  HOOD-F moves the hood to the visitor when the figure is nearly beaten.
+- **Found:** the figure is a `sprout.Actor`, whose `release` guard refuses
+  any mover but itself, and guards are conjunctive, so no guard the figure
+  adds can let a visitor's `take` move the hood out of it. Its `pass any
+  (true)` makes the hood nameable, but not takeable.
+- **Wrote instead:** the visitor's own `take` reads the figure's wounds and
+  says the reveal, and sends the figure `:unhood`; the figure moves the
+  hood into the sender's hands and the cloak to the ground itself (mover
+  is self, so its own guard allows), and destroys itself. The hood and
+  cloak are objects in the figure's kind body, so each spawned figure has
+  its own, and a figure killed with the sword takes them with it, which
+  is the original's unwinnable state.
+- **Spec:** Movement and consent › The three roles; Kinds › Consent under
+  composition; Verbs › Playing a role.
+
+### 3. The sword comes from wherever it lies, by broadcast, not by path
+
+- **Wanted:** SHADOW-ARRIVAL and I-SHADOW-REPLY `MOVE ,SWORD ,WINNER` from
+  wherever the sword is: the great rock, a room's floor, the bottom of
+  the lake.
+- **Found:** caverns 2 53 still holds: a declared object's path names where
+  it was declared (`junction.rock.sword`), and does not follow it. And a
+  sword in another room is out of the visitor's range until the world's
+  gate opens (caverns 6).
+- **Wrote instead:** the visitor opens the gate and broadcasts
+  `:sword_come`; the sword, wherever it lies, hears it and moves itself to
+  the sender, saying Zork's line for how it came (from the stone, leaping
+  back, or appearing). The same gate carries the lake's plunge (everything
+  not worn into Underwater) and the death's scattering, as caverns 2's
+  carried its own; the gate is now the third world to copy it.
+- **Spec:** Names › Identifiers and scope; The world model › Range.
+
+### 4. A thing inside a person reaches nothing past them, even with the gate open
+
+- **Wanted:** the lamp sent home to the stair by a death (JIGS-UP's
+  CURRENT-LAMP) by one broadcast, wherever it is: in the hands, on a
+  floor, in the lake.
+- **Found:** a lamp in the dying visitor's hands heard the broadcast and
+  faulted the whole turn moving itself: "`endless_stair` is out of range
+  of `endless_stair.lamp`". `sprout.Actor` passes nothing, so what a
+  person holds reaches its holder as a surface and no further, and the
+  world's gate opens nothing to it. The fault abandoned the death.
+- **Wrote instead:** the visitor moves a lamp in their own hands to the
+  stair themselves, and the broadcast brings home a lamp lying in a room.
+  A lamp thrown into the ocean, which holds what it is given behind a
+  `pass any (false)` so it is "lost forever", is past the broadcast too,
+  where Zork's would come back; logged in `intent.md` as a departure.
+- **Spec:** The world model › Range (a person's hands); Events › Sending
+  (a broadcast through a container that refuses).
+
+### 5. A light moved behind a wall cannot tell its old holder
+
+- **Wanted:** a lit lamp thrown into the ocean counted off the thrower's
+  light, as any light moved out of a hand is (the Light kind's `:moved`
+  sends its old holder `:light with -1`).
+- **Found:** by the time `:moved` runs the lamp is inside the ocean, which
+  passes nothing, and the send reached nothing: the log's warning, and a
+  visitor who still counted one light in the dark. Caverns 73 is the same
+  shape from the other side.
+- **Wrote instead:** the thrower counts the light off before the move, and
+  the lamp's `:moved` only puts itself out when its destination is the
+  ocean.
+- **Spec:** The world model › Range; Events › Sending.
+
+### 6. A passage rendered in a slot loses the space it begins with
+
+- **Wanted:** Zork's SHADOW-DIAG strings, which begin with a space so that
+  "The hooded figure" and " has a great deal of strength" join; one
+  passage, said after "The figure" in the fight and after "The hooded
+  figure" in the room.
+- **Found:** "the spaces at either end of what it renders are trimmed
+  before it is put in the slot", so `The figure{self.diag}` read "The
+  figurehas". The same bit Zork's HO-HUM table (" doesn't seem to work.")
+  in `{self.short}{self.hacked}`.
+- **Wrote instead:** the passages begin at their first letter and the
+  slot's caller writes the space. A note, not a gap: the rule is sound,
+  and the fix is one character; logged because the Zork tables are built
+  the other way and the next port will hit it again.
+- **Spec:** Prose › Slots.
+
+### 7. A clock that must outlive the visitor's stay in a room lives on the visitor
+
+- **Wanted:** FLATHEAD-OCEAN-F's ship: seen once, one time in five per move
+  on the shore, and gone two clock ticks later whether or not the visitor
+  is still there to see it go (I-BOAT-DISAPPEAR is an interrupt, not the
+  room's).
+- **Found:** a room's `after command` runs only "while it holds them", so
+  a ship timed by the room would stay in view for a visitor who walked
+  away in the one move it allows and came back later. The same is true of
+  the lake's cold, air and roc, and the potion's three moves.
+- **Wrote instead:** every clock of the quarter is the visitor's, in the
+  adventurer's one `after command`, as caverns 2 kept the Wizard's and the
+  bucket's (caverns 2 37, 41). The ocean room and the ship read the
+  visitor's `:ship_visible` with `{if bound actor}`; a world with several
+  visitors has a ship for each, which is the nearest thing to one per
+  game.
+- **Spec:** Verbs › After a command.
+
+### 8. Zork's three-tick WAIT is one move
+
+- Caverns 2 37 and 106: `wait` is one command and one move here, where
+  Zork's V-WAIT runs the clock three times and stops early at the first
+  interrupt that speaks. Kept as one move; a visitor who waits on the lake
+  loses one move of cold.
+- **Spec:** Verbs › Engine verbs (`wait`).
+
+### 9. The sailor is in every room
+
+- Caverns 16: a thing that is everywhere is many things. Zork's SAILOR is a
+  GLOBAL-OBJECT so that "hello sailor" is answered anywhere; here the
+  sailor is an object in the `Room` kind's body, so every room has one,
+  and the visitor's `greet` answers for him (the count and the ship are
+  the visitor's). `examine sailor` anywhere but the ocean with the ship in
+  view reads "There is no sailor to be seen."
+- **Spec:** Objects (a kind's body gives every instance its own copy).
+
+### 10. `take all` is filtered by the world, not the parser
+
+- Caverns 11: Zork's ALL under TAKE skips what has no TAKEBIT; Sprout's
+  `all` for the actor's own `take` binds everything in reach that is not a
+  person. The adventurer's `take` passes over what it could not take when
+  several are named, and says "There's nothing here you can take." where
+  nothing could be, as Zork does.
+- **Spec:** Parsing › Sequences, again and all.
+
+### 11. Darkness, the score's moves, and the rest already logged
+
+- A handler cannot ask whether a place is lit (caverns 30), so the dark
+  rooms keep `:alight`, and the hooded figure appears only where the room
+  says it is lit.
+- The move count is the world's (caverns 23): every command counts one
+  but those about the game itself, marked `:aside`.
+- An NPC's lines are reported speech (caverns 2 5): the figure never
+  speaks, which is the original's own choice, so nothing was lost; its
+  strokes are told to the one struck by the target's own part.
+- The lake is one object in three places, and the fish one in two, which
+  the spec's One thing in several places carries without a workaround
+  (caverns 2 48 and 93 wanted this).
+- `act` with a value role (caverns 2 1) was not needed: the figure's
+  `strike` carries no value, since the wound is rolled by the one struck.
+
+## Round 2: the first revision of Q1
+
+### 12. An instrument left unsaid is not filled from the hands
+
+- **Wanted:** Zork's parser, which fills an orphaned instrument from what
+  is held, so that `attack figure` with the sword in hand is a stroke with
+  the sword, and prints "(with the sword)" to say so (gparser's ORPHAN
+  and the SHADOW-F check of ,SWORD as PRSI).
+- **Found:** a role not named in the line stays unbound, and nothing fills
+  it; `bound weapon` is false, whatever the hands hold, and the world's
+  `understood` line names only the words that were read. Four of eight
+  playtesters typed the bare verb and read the feeble line while the
+  figure fought on.
+- **Wrote instead:** the adventurer's own `attack` reads its hands when
+  `weapon` is unbound, treats a held sword as the weapon, and says "(with
+  the sword)" itself.
+- **Spec:** Verbs › Roles (`bound`); Parsing › When nothing matches.
+
+### 13. A slot in a line is rendered after `after command` has run
+
+- **Wanted:** the ship's `through`, "It is too far out to board…" while the
+  ship is in sight, from `{if actor.get(:ship_visible)}` in its `say`.
+- **Found:** "what a body says is rendered after the bodies have run", and
+  that is after the visitor's `after command` too: in the one command the
+  ship allows, the adventurer's clock cleared `:ship_visible` at the end
+  of the turn, and the line, rendered then, read "There is no ship here to
+  board." to a visitor looking straight at it, followed by the ship
+  sailing. The room's `body` and the ship's `describe` read the same flag
+  harmlessly, since a `look` and a departure in one turn agree.
+- **Wrote instead:** the ship and the sailor branch in code, `if (…) { say
+  too_far } else { say not_here }`, which reads the flag as the body runs.
+  A `{if}` over state a clock changes is now something to avoid in any
+  `say` whose turn may tick that clock.
+- **Spec:** Prose › Chance in prose ("What a body says is rendered after
+  the bodies have run"); Verbs › After a command.
+
+### 14. A set role binds eight things in walk order, the room's own presences first
+
+- **Wanted:** Zork's `take all` (ITAKE under ALL): every takeable thing in
+  the room tried in turn, what lacks TAKEBIT skipped before anything is
+  counted.
+- **Found:** a set role "takes them all at once, in the order the range
+  walk reaches them, up to as many as a set role may bind objects", and
+  that is eight. Every room here holds seven shared presences (the wall,
+  the grue, the passage, the ground, the ceiling, the room, the sailor),
+  the lake and the fish stand in three rooms, and the walk reached all of
+  them before anything lying on the floor: underwater `take all` bound the
+  lake, the fish and six presences, never the lamp, and was answered by
+  the fish's refusal, since one refusing participant refuses a set whole.
+  With the fish out of the way it was "There's nothing here you can
+  take." over a lamp and a sword. Caverns 2's rooms carry the same seven
+  and the same `role target many`, so its `take all` has the same bound.
+- **Wrote instead:** `take`'s set role is typed, `role target: Portable
+  many`, so `all` binds only what can be carried. What stays where it is
+  is reached by a second verb of the same words, `take_fixed`, typed by a
+  kind `Fixed` that scenery and the figure compose, since every phrase of
+  one verb must name its first role and a verb cannot offer `[target]`
+  and `[scenery]` as alternatives. `Fixed` refuses `take_fixed` in a
+  `permit` with the thing's own `no_take`, so that `take all`, which both
+  verbs read, is read by `take`: a reading its consent allows beats one it
+  refuses. The cost: a `permit` may not draw, so Zork's YUKS table ("A
+  valiant attempt." / "You can't be serious." / …) is one line now.
+- **Spec:** Limits › objects bound by one set role; Parsing › Sequences,
+  again and all; Verbs › Phrases ("Every phrase names the first role");
+  Chance › Where chance is forbidden; Parsing › Choosing a reading.
+
+### 15. The parser reads no possessive
+
+- **Wanted:** "remove figure's hood", typed by a playtester with the figure
+  defenceless before them, to reach HOOD-F as "take hood" does.
+- **Found:** no reading of "X's Y" or "the Y of X" as containment; the line
+  is `not_here`. Nouns resolve by a thing's own words, and "figure's" is
+  none of the hood's.
+- **Wrote instead:** a verb `unmask` whose target is the hooded one, with
+  the eight phrases a verb may have: `unhood`, `unmask`, `remove hood
+  from`, `take hood from`, `pull hood off`, `pull back hood of`, `remove
+  [figure] hood` and `take [figure] hood`. The possessive itself stays
+  unread. (The verb is `unmask` and not `unhood` because a verb and a
+  message may not share a name in one import list.)
+- **Spec:** Parsing › Nouns; Limits › phrases per verb (8).
+
+### 16. Two things answering one word in one place are drawn between
+
+- **Wanted:** "light" at the stair to be the lamp, "sand" at the ocean the
+  beach, "floor" underwater the ground, "shadow" the figure, "wall" the
+  stone wall where one stands: Zork's parser takes the first object in the
+  room's list, so its global objects lose to the room's own.
+- **Found:** readings are ranked by consent, by words matched, then by
+  nearness, and two things in one room with one word are a draw from the
+  seed, logged as a warning; there is no `prefer`, and a global presence
+  (the wall in every room) is as near as the room's own stone wall. An
+  object's identifier is one of its nouns, and so is each word of its
+  `name`, which is how `object light` and `object glow` collided with the
+  lamp's "light" without either grammar saying so.
+- **Wrote instead:** identifiers and names chosen so that one thing owns
+  each word where it matters (`eerie_light` named "eerie glow", `dim_glow`,
+  the lake's sand without "floor", the ocean's quicksand without "sand",
+  the shared passage without "path", "trail" and "way", the room without
+  "land" and "area", the shadows without "shadow"). "wall" cannot be
+  parted this way, since both things are walls by name; the shared wall's
+  text in the three rooms with a stone wall now describes the stone wall,
+  so the draw is between two answers that agree.
+- **Spec:** Parsing › Choosing a reading; Names › Identifiers and scope;
+  Objects › grammar (`name`).
+
+### 17. A move through a way with nothing said is "Nothing happens.", and a handler cannot say it
+
+- **Wanted:** `dive` on the lake to go under and say the new room, as Zork's
+  V-LEAP does with a bare GOTO.
+- **Found:** "a reading whose `do` moves self through a way and has then
+  said nothing to its person is answered with `nothing_happens`", and the
+  room's description follows it, so `dive` read "Nothing happens." over
+  "Underwater". And the fix cannot be moved into a handler the `do` sends
+  to: "a line from a handler the queue runs afterward is not the reading's
+  answer", so a plunge said from `on :plunge` would also have followed a
+  "Nothing happens.".
+- **Wrote instead:** a line said before each such move, and the plunge's
+  words written out in both verbs that make it (`through` and `leap_at`)
+  rather than once in a handler.
+- **Spec:** Verbs › Moving something (`move self <direction>`); Verbs ›
+  The actor's own part (what answers a reading).
+
+### 18. A thing has eight nouns, a verb eight phrases, a `tell` six hundred characters
+
+- Three caps met in one revision, each sound and each logged once: the
+  figure's nouns, the `unmask` phrases, and the disarm line's variants,
+  which went into a passage, which has no cap of its own.
+- **Spec:** Limits.

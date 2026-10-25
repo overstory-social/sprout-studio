@@ -1,0 +1,228 @@
+// The way in: the Endless Stair, the Junction with its great rock and
+// the sword in it, the Barren Area, the Creepy Crawl and the Foggy Room
+// (ZORK2-STAIR, JUNCTION, CLEARING, CREEPY-CRAWL, FOGGY-ROOM; STONE,
+// STONE-F, SWORD-FCN; STAIRS-F, MIST-PSEUDO, RUBBLE, STONE-WALL), with
+// the scenery the three of them share.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Receptacle, Diggable} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {Lamp} from 'lamp'
+import {Sword} from 'items'
+import {Adventurer} from 'adventurer'
+import {shadow_1, shadow_2} from 'shadow'
+import {lake_shore} from 'lake'
+import {open, close, put, shift, look_under, look_in, through, climb_up, climb_down, smell, listen, search, rub, take, dig, cross} from 'verbs'
+
+// Zork's STAIRS, a LOCAL-GLOBAL: the stair, and the steps at the lake.
+kind Stairs is Scenery {
+  grammar { name "stairs"  nouns "steps", "staircase", "stairway", "stair"  adjectives "stone", "dark", "endless", "polished", "winding", "steep" }
+  passage short { stairs }
+  describe { text "They are stairs, cut from the rock, and they go the way stairs go. Which way you want is for you to say." }
+  as target for through { do { say "You should say whether you want to go up or down." } }
+  as target for climb_up { do { say "You should say whether you want to go up or down." } }
+  as target for climb_down { do { say "You should say whether you want to go up or down." } }
+}
+// The endless stair itself, seen from its foot.
+kind EndlessStairs is Stairs {
+  describe { text "The stair winds upward beyond your vision, step after step, in the eerie light that comes from everywhere and nowhere. You have a feeling you came down it, a long way down it, and that going back up would take longer than you have. The stairs are endless; that is rather the point of them." }
+  as target for climb_up { do { say "The stairs are endless." } }
+  as target for through { do { say "The stairs are endless." } }
+}
+// The mist that seeps through the wall, hangs over the land of shadow and
+// covers the ocean (MIST-PSEUDO).
+kind Mist is Scenery {
+  grammar { name "mist"  nouns "fog", "haze", "vapor"  adjectives "thin", "thick", "wispy" }
+  passage short { mist }
+  describe { text "A thin mist, cold and faintly salt, that comes from somewhere to the west and never quite lifts. Things seen through it are further off than they are." }
+  as target for look_in { do { say "You can't make anything out through the mist." } }
+  as target for smell { do { say "It smells vaguely salty." } }
+  passage no_take { The mist goes through your fingers, as mist does. }
+}
+// The rubble of the decaying wall (RUBBLE).
+kind Rubble is Scenery {
+  grammar { name "rubble"  nouns "rock", "rocks", "boulder", "boulders", "stones"  adjectives "fallen", "crumbled", "loose" }
+  passage short { rubble }
+  describe { text "Blocks of the old wall, fallen and broken and gone green at the edges, heaped where they fell. Some of them were cut square by somebody once; none of them will be again." }
+  passage no_take { You could carry off a piece of it, and a piece of it would be no use to you at all. }
+  as target for climb_up { do { say "You scramble up the rubble a little way, and down again. Where it lets you through, it lets you through; say which way." } }
+  as target for search { do { say "Rubble, under the rubble, and under that more rubble. Whatever the wall kept out, it keeps out nothing now." } }
+}
+// The mighty wall of stone, ancient and crumbling (STONE-WALL).
+kind StoneWall is Scenery {
+  grammar { name "stone wall"  nouns "wall", "stonework"  adjectives "stone", "massive", "mighty", "ancient", "crumbling", "tall", "decaying" }
+  passage short { stone wall }
+  describe { text "A wall of stone, massive and ancient, built by people who meant it to stand for ever and were nearly right. It has crumbled in places to a heap of rubble you could climb, and elsewhere stands as tall as it ever did, keeping out whatever it was built to keep out, which has long since gone." }
+  as target for climb_up { do { say "The wall is too tall and too smooth where it stands, and where it has fallen you do not need to climb it." } }
+  as target for shift { do { say "You can't budge it; at least from here." } }
+}
+
+object endless_stair is Room in underground_caverns_3 {
+  grammar {
+    name "Endless Stair"
+    exit south "south" -> junction
+    exit up "up" refuse "The stairs are endless."
+    exit north "north" refuse "The stairs are endless."
+  }
+  :id stair
+  :walls 1
+  passage body { You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail. }
+  // The dream, before anything else (GO).
+  passage dream { As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. "You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!" The dream dissolves around you as his last words echo through the void.... }
+  passage described {
+    {if seen == :arrival && actor.is(Adventurer) && actor.recall(:visits) <= 1}{self.dream}
+
+    {self.full}{else if seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :superbrief}{self.title}{else if seen == :arrival && actor.is(Adventurer) && actor.get(:mode) == :brief && actor.recall(:visits) > 1}{self.brief}{else}{self.full}{/if}
+  }
+  object lamp is Lamp
+  object stairs is EndlessStairs
+  object eerie_light is Scenery {
+    grammar { name "eerie glow"  nouns "glow", "eeriness"  adjectives "eerie", "strange", "light" }
+    passage short { eerie light }
+    describe { text "The light comes from all around you and from nowhere in particular, the way light does in dreams, and it throws your shadow several ways at once. It does not reach far up the stair, or far down the trail." }
+    passage no_take { It is not that sort of light. }
+  }
+  object shadows is Scenery {
+    grammar { name "shadows"  nouns "shadow"  adjectives "strange" }
+    passage short { shadows }
+    describe { text "Your own, mostly, thrown on the walls in several directions by a light that cannot make up its mind where it is. One of them, when you move, is a little slow to follow." }
+  }
+  object trail is Scenery {
+    grammar { name "trail"  nouns "path"  adjectives "dark", "winding" }
+    passage short { trail }
+    describe { text "A dark and winding trail leads off to the south, into a dark that the eerie light does not reach. It is the only way that is not up." }
+    as target for through { do { say "Use compass directions for movement, and say which way." } }
+  }
+}
+
+// The great rock at the Junction, with the Elvish sword in it (STONE).
+kind Rock is Scenery, Receptacle {
+  contains
+  pass any (true)
+  grammar { name "great rock"  nouns "rock", "stone", "boulder"  adjectives "great", "massive" }
+  :ndesc false
+  passage short { great rock }
+  passage ldesc { Standing before you is a great rock.{if self.count(Sword) > 0} Imbedded within it is an Elvish sword.{/if} }
+  describe { text "A great rock, grey and rounded and older than the passage it stands in, which was cut round it rather than through it; whoever did the cutting had tried the other way first and given up.{if self.count(Sword) > 0} Imbedded in it, to half its length, is an Elvish sword, the hilt standing out at a height that invites a hand. The rock has the look of a thing that has been invited many times.{else} There is a slot in it, the shape of a blade, and nothing in the slot.{/if}" }
+  release (item, to) { if (item.is(Sword)) { if (item.get(:in_stone)) { refuse "The sword is deeply imbedded in the rock. You can't budge it." } } }
+  as target for open { do { say "You can't be serious." } }
+  as target for close { do { say "You can't be serious." } }
+  as container for put { do { say "You can't force anything into the stone." } }
+  as target for shift { do { say "The stone is far too massive to be moved." } }
+  as target for look_under { do { say "Since it can't be moved, it's hard to know what's there." } }
+  as target for look_in { do { say "{if self.count(Sword) > 0}The sword is in it, to half its length; the rest of the rock is rock.{else}There is a slot in it the shape of a blade, and the slot is empty.{/if}" } }
+  as target for climb_up { do { say "You get up onto the rock, which gives you a better view of the sword's hilt and nothing else, and down again." } }
+  passage no_take { The stone is far too massive to be moved. }
+}
+
+object junction is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Junction"
+    exit west "west" -> barren_area
+    exit north "north" -> endless_stair
+    exit south "south" -> creepy_crawl
+    exit east "east" refuse "The cramped way east runs a few yards and is choked with rock that came down from the roof some time ago; you get your light into the gap, and your arm, and no further. It will not be cleared today."
+  }
+  :id junction
+  :walls 2
+  passage body { You are at the junction of a north-south passage and an east-west passage. To the north, you can make out the bottom of a stairway. The ways to the east and south are relatively cramped, but a wider trail leads to the west. }
+  object rock is Rock {
+    object sword is Sword
+  }
+  object stairway is Stairs {
+    describe { text "To the north, the bottom of the stairway you woke at the foot of, with its eerie light spilling a little way down the passage toward you." }
+  }
+  object ways is Scenery {
+    grammar { name "cramped ways"  nouns "way", "ways", "trail"  adjectives "cramped", "wider", "east", "south", "west" }
+    passage short { cramped ways }
+    describe { text "The ways east and south are cramped, the rock close on either side and the roof lower than you like; the trail west is wider, and worn, as though more feet had gone that way." }
+    as target for through { do { say "Use compass directions for movement, and say which way." } }
+  }
+}
+
+object barren_area is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Barren Area"
+    exit southwest "southwest" -> shadow_2
+    exit northwest "northwest" refuse "The trail dips sharply to the northwest into rocky terrain, and a little way down it the rocks have come across it in a slide too steep and too loose to cross. Not today."
+    exit south "south" refuse "A stone wall blocks your way."
+    exit southeast "southeast" refuse "A stone wall blocks your way."
+    exit west "west" refuse "You walk west toward the vegetation, and the mist comes down over it thicker with every step, until you cannot see the ground you are walking on and have to turn back to find it."
+    exit east "east" -> junction
+  }
+  :id barren
+  :walls 3
+  passage body { You are west of the junction, where the rock-bound passage widens out into a large, flat area. Although the land here is barren, you can see vegetation to the west. South of here is a mighty wall of stone, ancient and crumbling. To the southwest the wall has decayed enough to form an opening, through which seeps a thin mist. A trail dips sharply into rocky terrain to the northwest. }
+  object stone_wall is StoneWall
+  object rubble is Rubble
+  object mist is Mist
+  object vegetation is Scenery {
+    grammar { name "vegetation"  nouns "plants", "green", "trees", "growth"  adjectives "distant" }
+    passage short { vegetation }
+    describe { text "To the west, at the edge of the barren ground, something grows: low and grey-green in this light, and further off, taller shapes that might be trees. It is the first green you have seen since the stair, and it is a long way off." }
+    passage no_take { It is too far off to pick, and probably too tough. }
+  }
+  object opening is Scenery {
+    grammar { name "opening"  nouns "gap", "breach", "hole"  adjectives "southwest" }
+    passage short { opening }
+    describe { text "To the southwest the wall has decayed to a heap of rubble low enough to climb, and a thin mist seeps through the gap from whatever lies beyond." }
+    as target for through { do { say "The opening is to the southwest; say so." } }
+  }
+  object terrain is Scenery {
+    grammar { name "rocky terrain"  nouns "terrain", "slope", "trail"  adjectives "rocky", "northwest" }
+    passage short { rocky terrain }
+    describe { text "To the northwest the trail dips sharply into broken, rocky ground, boulders of every size strewn down a slope that looks as though it went somewhere once." }
+  }
+  object land is Scenery {
+    grammar { name "barren land"  nouns "flat", "field", "expanse"  adjectives "barren", "flat", "large" }
+    passage short { barren land }
+    describe { text "Flat, bare, stony ground, wide enough that the walls are lost in the gloom on either side: a field that nothing has ever grown in, in a cavern big enough to have weather." }
+  }
+}
+
+object creepy_crawl is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Creepy Crawl"
+    exit north "north" -> junction
+    exit south "south" -> foggy_room
+    exit southwest "southwest" -> shadow_1
+    exit east "east" refuse "The passage east narrows to a squeeze, and then to less than a squeeze: you get an arm in, and a shoulder, and stick, and come out again backwards with grit in your hair. It will take a thinner day than this one."
+  }
+  :id creepy
+  :walls 2
+  passage body { You are in a dark and quite creepy crawlway with passages leaving to the north, east, south, and southwest. }
+  object creep is Scenery {
+    grammar { name "creepiness"  nouns "creep", "crawl", "feeling"  adjectives "creepy" }
+    passage short { creepiness }
+    describe { text "It is hard to say what is creepy about it. The roof is low, the dark is close, there is a draught from the southwest that smells of nothing you can name, and something, somewhere, is dripping with great patience. That will do." }
+    passage no_take { You have it already, between the shoulder blades. }
+  }
+}
+
+object foggy_room is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Foggy Room"
+    exit north "north" -> creepy_crawl
+    exit south "south" -> lake_shore
+    exit west "west" -> shadow_1
+  }
+  :id foggy
+  :walls 8
+  passage body { You are in a dank passage filled with a wispy fog. A spooky passageway leads north and a wider path heads off to the south. To the west, the path leaves the rock and enters an eerie, shadowy land. }
+  object fog is Mist {
+    grammar { name "fog"  nouns "mist"  adjectives "wispy", "dank" }
+    passage short { fog }
+    describe { text "A wispy fog, hanging in the passage at about the height of your face, which it finds its way into. It is wet and cold and comes, by the taste of it, off the lake to the south." }
+  }
+  object passageway is Scenery {
+    grammar { name "spooky passageway"  nouns "passageway", "path"  adjectives "spooky", "wider", "north", "south" }
+    passage short { spooky passageway }
+    describe { text "A spooky passageway to the north, and a wider path to the south; the fog drifts a little way into each and thinks better of it." }
+    as target for through { do { say "Use compass directions for movement, and say which way." } }
+  }
+  object shadowland is Scenery {
+    grammar { name "shadowy land"  nouns "land", "shadows"  adjectives "eerie", "shadowy", "west" }
+    passage short { shadowy land }
+    describe { text "To the west the rock simply stops, and beyond it is a land of low hills under no sky, grey on grey, where the shadows are not all thrown by things." }
+    as target for through { do { say "The shadowy land is to the west; say so." } }
+  }
+}
