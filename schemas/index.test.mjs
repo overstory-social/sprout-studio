@@ -203,13 +203,22 @@ describe('a brief check', () => {
 describe('what the steward read', () => {
   it('is the doc and its comments where it was reached, and nothing where it was not', () => {
     const comment = { id: 'c1', words: 'Quieter ending.', tab: 'Round 01', on: '' };
-    assert.deepEqual(problemsIn('steering', { reached: true, doc: 'https://claude.ai/doc/x', comments: [comment] }), []);
-    assert.deepEqual(problemsIn('steering', { reached: false, doc: null, comments: [] }), []);
-    assert.deepEqual(problemsIn('steering', { reached: false, doc: null, comments: [comment] }), [
-      'reached: a doc that could not be reached has no url and no comments',
+    assert.deepEqual(problemsIn('steering', { reached: true, doc: 'https://claude.ai/doc/x', added: true, comments: [comment] }), []);
+    assert.deepEqual(problemsIn('steering', { reached: false, doc: null, added: false, comments: [] }), []);
+    assert.deepEqual(problemsIn('steering', { reached: false, doc: null, added: false, comments: [comment] }), [
+      'reached: a doc that could not be reached has no url, no tab added and no comments',
     ]);
-    assert.deepEqual(problemsIn('steering', { reached: true, doc: null, comments: [] }), [
+    assert.deepEqual(problemsIn('steering', { reached: true, doc: null, added: true, comments: [] }), [
       'doc: give the url of the doc that was reached',
+    ]);
+  });
+
+  it('says whether it added the round’s tab, and added none to a doc it did not reach', () => {
+    // A tab already in the doc is left as it was: reached, and nothing added.
+    assert.deepEqual(problemsIn('steering', { reached: true, doc: 'https://claude.ai/doc/x', added: false, comments: [] }), []);
+    assert.equal(problemsIn('steering', { reached: true, doc: 'https://claude.ai/doc/x', comments: [] }).length, 1);
+    assert.deepEqual(problemsIn('steering', { reached: false, doc: null, added: true, comments: [] }), [
+      'reached: a doc that could not be reached has no url, no tab added and no comments',
     ]);
   });
 });

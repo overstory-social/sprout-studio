@@ -21,7 +21,7 @@ execFileSync('git', ['config', 'user.name', 'spec'], { cwd: root });
 mkdirSync(join(root, 'worlds', 'shed'), { recursive: true });
 execFileSync(SPROUT, ['scaffold', 'world', join(root, 'worlds', 'shed', 'world'), '--author', 'spec'], { stdio: 'ignore' });
 
-const { DOORS, measure, open, pinned, save, status, commit, renderSynthesis, verify } = await import('./round.mjs');
+const { DOORS, brief, committed: inGit, measure, open, pinned, save, status, commit, renderSynthesis, verify } = await import('./round.mjs');
 
 /**
  * A recording of the run `name` in round 01 with `typed` lines typed, as a door
@@ -200,7 +200,7 @@ describe('a round on disk', () => {
   });
 
   it('keeps the steering the steward read, each comment once, and why there is none', () => {
-    const steering = (comments) => ({ reached: true, doc: 'https://claude.ai/doc/shed', comments });
+    const steering = (comments) => ({ reached: true, doc: 'https://claude.ai/doc/shed', added: true, comments });
     const first = { id: 'c1', words: 'A quieter ending.', tab: 'Round 01', on: '' };
     assert.deepEqual(save('shed', '01', 'steering', undefined, steering([first])), {
       ok: true,
@@ -227,7 +227,7 @@ describe('a round on disk', () => {
       readFileSync(join(root, 'worlds', 'shed', 'rounds', '02', 'steering.md'), 'utf8'),
       '# Steering\n\n## S1 (on Round 01, at "the shed")\n\nMore cats.\n',
     );
-    assert.equal(save('shed', '03', 'steering', undefined, { reached: false, doc: null, comments: [] }).reached, false);
+    assert.equal(save('shed', '03', 'steering', undefined, { reached: false, doc: null, added: false, comments: [] }).reached, false);
     assert.equal(
       readFileSync(join(root, 'worlds', 'shed', 'rounds', '03', 'steering.md'), 'utf8'),
       '# Steering\n\nThe steering doc could not be reached this round.\n',
@@ -319,8 +319,28 @@ describe('a round on disk', () => {
         committed: false,
       },
     ]);
+    // Uncommitted, git and the marker on disk agree; the brief form has the last round whole, and no committed one.
+    assert.deepEqual(inGit('shed', '01'), { round: '01', committed: false, marker: false });
+    assert.deepEqual(brief('shed'), {
+      world: 'shed',
+      brief: false,
+      intent: false,
+      playable: true,
+      count: 1,
+      last: status('shed').rounds[0],
+      lastCommitted: null,
+    });
     const { ok, committed } = commit('shed', '01', 'played');
     assert.equal(ok, true);
+    assert.deepEqual(inGit('shed', '01'), { round: '01', committed: true, marker: true });
+    assert.deepEqual(brief('shed').lastCommitted, { round: '01', figures: status('shed').rounds[0].figures, acceptedDesign: 1 });
+    assert.equal(brief('shed').last.committed, true);
+    // From the command line, as the clerk runs it.
+    const run = (...argv) =>
+      JSON.parse(execFileSync('node', [join(REPO, 'scripts', 'round.mjs'), ...argv], { env: { ...process.env, STUDIO_ROOT: root }, encoding: 'utf8' }));
+    assert.deepEqual(run('status', 'shed', '--brief'), brief('shed'));
+    assert.deepEqual(run('status', 'shed'), status('shed'));
+    assert.deepEqual(run('committed', 'shed', '01'), { round: '01', committed: true, marker: true });
     assert.match(committed, /^[0-9a-f]{7,}$/);
     assert.equal(status('shed').rounds[0].committed, true);
     assert.equal(
@@ -330,5 +350,15 @@ describe('a round on disk', () => {
     // Run again with nothing since, it answers as the commit did and commits nothing more.
     assert.deepEqual(commit('shed', '01', 'played'), { ok: true, committed });
     assert.equal(execFileSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(), committed);
+  });
+
+  it('says a round is committed only where git holds its marker, not where the marker is only on disk', () => {
+    const marker = join(root, 'worlds', 'shed', 'rounds', '02', '.committed');
+    mkdirSync(dirname(marker), { recursive: true });
+    writeFileSync(marker, '');
+    assert.equal(status('shed').rounds[1].committed, true);
+    assert.deepEqual(inGit('shed', '02'), { round: '02', committed: false, marker: true });
+    rmSync(dirname(marker), { recursive: true });
+    assert.deepEqual(inGit('shed', '02'), { round: '02', committed: false, marker: false });
   });
 });
