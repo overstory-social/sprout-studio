@@ -1,0 +1,81 @@
+// The cell a death wakes in (JIGS-UP), and the old man who visits it: the
+// Dungeon Master in another of his guises, an NPC who lives in the cell
+// and, when a visitor is brought to it, raises his staff and sends them
+// back to the stair by acting. The visitor is carried here by the world's
+// gate and carried out again in the same turn, so the cell is never a
+// place anyone types in; it is where the old man stands so that what he
+// does to the visitor, he does himself.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Fixed} from 'thing'
+import {Guise} from 'shadow'
+import {Adventurer} from 'adventurer'
+import {talk, greet, rub, smell, listen} from 'verbs'
+
+// The old man's dismissal: a verb only he performs, whose target's own
+// part takes the power that wells up and the waking at the stair.
+verb send_back { role target: Adventurer }
+
+kind OldMan is Creature, sprout.Actor, Guise, Fixed {
+  pass any (true)
+  :capacity 4
+  grammar { name "old man"  nouns "man", "master", "visitor", "figure"  adjectives "old", "wizened", "silver-haired" }
+  passage short { old man }
+  passage enters { The door swings open, and in walks an old man. }
+  passage ldesc { He is dressed simply in a hood and cloak, wearing an amulet and ring, carrying an old book under one arm, and leaning on a wooden staff. A single key, as if to a massive prison cell, hangs from his belt. }
+  describe { text "An old man, oddly youthful about the eyes, which are {self.eyes}, and which have looked at you before. He is dressed simply in a hood and cloak, wearing an amulet and ring, carrying an old book under one arm, and leaning on a wooden staff. A single key, as if to a massive prison cell, hangs from his belt. He has the patience of somebody who has waited a long age and expects to wait a little longer." }
+  passage no_take { The old man is not a thing to be picked up, and would not care to be tried. }
+
+  // A visitor brought to the cell: he raises his staff and sends them back
+  // (JIGS-UP), the moment they arrive.
+  on :arrived (actor, from) {
+    if (actor.is(Adventurer)) { act send_back (target: actor) }
+  }
+  passage raises { He raises the staff toward you and you hear him speak, as if in a dream: "I await you, though your journey be long and full of peril. Go then, and let me not wait long!" }
+  as actor for send_back {
+    do {
+      tell target enters
+      tell target ldesc
+      tell target raises
+    }
+  }
+
+  as target for talk { do { say "The old man hears you out, and his answer is the staff." } }
+  as target for greet { do { say "The old man bows his head to you in greeting, and does not stop looking at you." } }
+  as target for rub { do { say "Your hand goes through the hood's shadow and finds a face there, warm, and older than it looks." } }
+  as target for smell { do { say "He smells of candle smoke and old paper, and, faintly, of a fresh breeze." } }
+  as target for listen { do { say "He breathes slowly, the way somebody does who has all the time there is." } }
+}
+
+// The cell: deep within the earth, with a window on the pit of fire. A
+// visitor brought here leaves again in the same turn, so the description
+// they would read on arriving is never rendered; the cell tells them its
+// words itself as they enter, and the old man does the rest.
+object prison_cell is sprout.Place in underground_caverns_3 {
+  grammar { name "Prison Cell"  article none }
+  describe { text described }
+  passage cell { You find yourself deep within the earth in a barren prison cell. Outside the iron-barred window, you can see a great, fiery pit. Flames leap up and very nearly sear your flesh. After a while, footfalls can be heard in the distance, then closer and closer.... }
+  passage described {
+    {self.cell}
+
+    {for o: OldMan in self}{o.enters} {o.ldesc}{/for}
+  }
+  on :entered (item, from) {
+    if (item.is(Adventurer)) { tell item cell }
+  }
+  object old_man is OldMan
+  object window is Scenery {
+    grammar { name "iron-barred window"  nouns "window", "bars"  adjectives "iron-barred", "barred", "iron" }
+    passage short { window }
+    describe { text "A small window, barred with iron, and the bars warm to the touch. Through it is the pit, and nothing else; the cell was built to look at it." }
+  }
+  object pit is Scenery {
+    grammar { name "fiery pit"  nouns "pit", "fire", "flames", "flame"  adjectives "great", "fiery" }
+    passage short { fiery pit }
+    describe { text "A great pit of fire, going down further than the light of it reaches, and the flames leaping up to the window as though they knew you were there." }
+  }
+  object door is Scenery {
+    grammar { name "cell door"  nouns "door"  adjectives "cell", "massive", "iron" }
+    passage short { door }
+    describe { text "A massive door, which stands open, since the old man has just come through it. It has a lock that would take a single key." }
+  }
+}

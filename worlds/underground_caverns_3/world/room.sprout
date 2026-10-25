@@ -16,7 +16,7 @@ import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
 import {examine} from 'sprout'
-import {search, look_under, look_in, find, listen, smell, shift, climb_up, climb_down, through, talk, give, follow, kiss, alarm, dig, put_on, Dest, :relight, :room_lit, :wall_look, :snuffed, :brief_hint} from 'verbs'
+import {search, look_under, look_in, find, listen, smell, shift, climb_up, climb_down, through, talk, give, follow, kiss, alarm, dig, put_on, Dest, :relight, :room_lit, :wall_look, :snuffed, :brief_hint, :near_greet} from 'verbs'
 
 kind Room is sprout.Place {
   grammar { article none }
@@ -225,18 +225,23 @@ kind Sailor is Scenery, Creature {
   passage short { sailor }
   passage seaman { He looks like a sailor: old, crusty, salt in his beard and the sea in his eyes, standing at the prow of a ship that was old when the Flatheads were young, and looking out over the mist as though he had been doing it for three ages and expected to do it for three more. }
   passage unseen_sailor { There is no sailor to be seen. }
-  passage far_out { He is a long way out, and the surf is loud between you. Anything you mean him to hear had better be short, and loud, and friendly; a sailor's greeting, say. }
+  passage far_out { He is a long way out, and the surf is loud between you. Anything you mean him to hear had better be short, and loud, and friendly. }
   describe {
     text "{if here.is(Room)}{if here.get(:id) == :ocean}{if actor.is(Adventurer)}{if actor.get(:ship_visible)}{self.seaman}{else}{self.unseen_sailor}{/if}{else}{self.unseen_sailor}{/if}{else}{self.unseen_sailor}{/if}{else}{self.unseen_sailor}{/if}" }
   passage no_take { There is no sailor to be seen. }
   // Whether he is there to be answered is read as the body runs, by an
   // `if` and not by a slot in the line, since the ship may sail at the end
-  // of the same command and a slot is rendered after that.
+  // of the same command and a slot is rendered after that. Talking to him
+  // with the ship in sight is nearly the words, and the one talking is
+  // told the nudge, and the ship holds a command, once (adventurer.sprout).
   as target for talk {
     do {
       self.set(:in_sight, false)
       if (here.is(Room)) { if (here.get(:id) == :ocean) { if (actor.is(Adventurer)) { if (actor.get(:ship_visible)) { self.set(:in_sight, true) } } } }
-      if (self.get(:in_sight)) { say far_out } else { say unseen_sailor }
+      if (self.get(:in_sight)) {
+        say far_out
+        if (actor.is(Adventurer)) { send actor :near_greet }
+      } else { say unseen_sailor }
     }
   }
   as recipient for give {

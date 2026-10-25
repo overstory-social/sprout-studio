@@ -74,6 +74,45 @@ and what it did not:
   them until round 3; most of the round's unread rate is those refusals,
   not misreads.
 
+**Round 3: Q1 refined a second time, nothing widened; Q2 comes with the
+revision after round 3.** What the second playtest changed:
+
+- The ship's one command is the original's (QUEUE I-BOAT-DISAPPEAR 2 is
+  one command after the one it appears in), and stays. What changed is
+  that the nudge now lands before the window closes: the arrival text has
+  the sailor with a hand cupped to his ear, turned to the shore. A call
+  that is nearly the words and is not them (`hail`, `ahoy`, `wave`,
+  `shout ahoy`, `say hello`, `talk to sailor`) is answered with the nudge,
+  and holds the ship one command longer, once; a second such call is
+  answered with the sailor turning back to the prow, and the ship sails.
+  The two words are still the only thing that brings it in. The ship that
+  sails ungreeted says it will not be back, `examine ship` after says the
+  same, and at the empty shore `wait`, every greeting and every call are
+  answered in the "Nothing happens anymore" voice.
+- The figure's wounds after a stroke are chosen in code and said as
+  literals, since the figure's reply in the same turn may kill the
+  visitor and reset its strength before a slot is rendered; `examine
+  figure` is chosen the same way.
+- The early refusal of the hood points at the figure's guard, and the
+  miss that sends the figure to the ground says it is up again at once.
+- The footsteps are a thing in every shadow room: `examine`, `listen to`,
+  `follow`, `find`, `hug` and `hello` reach them, and `who is there` is
+  read; they keep the visitor's pace, and say that standing in the light,
+  or walking the hills in it, is how the one walking is met. The odds of
+  the figure are the original's, untouched.
+- The Lake Shore's own description now says, plainly, to leave on the
+  lit shore whatever cannot be lost to the bottom, the light first of all.
+  Bare `swim` there is still "Go jump in a lake!", which is V-SWIM's own
+  answer at the shore (only ON-LAKE, IN-LAKE and the ocean say otherwise).
+- The sword thrown into the ocean comes back when the figure next calls
+  it, as the original's does (OCEAN-F REMOVEs it; SHADOW-ARRIVAL and
+  I-SHADOW-REPLY MOVE it by name from wherever it is). Nothing inside the
+  ocean can hear the call, so the ocean itself answers it and gives the
+  sword up, the one thing it ever gives back.
+- Walking out past the figure is told: "Behind you, the hooded figure
+  steps back into the shadows." The visitor says it to themselves on
+  arriving, since the room they left cannot reach them.
+
 ## The arc
 
 Zork III is the melancholy one. The visitor wakes with a dream of an old
@@ -114,7 +153,9 @@ games for, and a lake that takes everything they are holding.
    over 25 is too much underwater.
 5. **Death** is the old man's visit: a prison cell over a pit of fire, an
    old man in hood and cloak with amulet, ring, book, staff and key, who
-   sends the visitor back to the Endless Stair. The lamp (fried, broken
+   walks in and sends the visitor back to the Endless Stair by his own
+   act, the visitor being in the cell with him for the length of the
+   turn. The lamp (fried, broken
    or whole) goes back to the stair; everything else carried is scattered
    among Junction, Barren Area, Creepy Crawl and Foggy Room (the original
    also uses the Damp Passage, Tight Squeeze and Dead End, which Q2 and
@@ -130,7 +171,13 @@ description. The hooded figure is a `Guise` and a `sprout.Actor`, spawned
 into a shadow room when it appears and destroyed when it goes, so there
 is never more than one and it is never anywhere a visitor is not; its
 face, unhooded, is the visitor's and then an old man's. The old man in
-the cell is prose the visitor's own death tells. Q2 brings the sleeping
+the cell is a `Guise` and a `sprout.Actor` too, with a body of his own:
+he stands in the Prison Cell, a place the world's gate carries a dead
+visitor to, and when one arrives he performs a verb only he can (no
+phrase reads it) whose target is the visitor; his part tells them his
+entrance, his look and his staff raised, and the visitor's own part takes
+the power that wells up, scatters what they carried and wakes them at the
+stair, all in the one turn. Q2 brings the sleeping
 old man and the man at the cliff as `Guise`s with bodies of their own; Q4
 brings the Dungeon Master himself, and at his door the visitor sees all of
 them in his face. What `Guise` holds grows as the guises arrive; in Q1 it
@@ -145,6 +192,13 @@ is the eyes and the word "worthy".
   original's own shortcut.
 - Turning the lamp off mid-fight sends the figure away, which is a way
   out of a losing duel the original does not offer.
+- A hail, an ahoy or a wave at the passing ship holds it one command
+  longer, once, which the original does not do; the two words are still
+  the only thing that brings it in.
+- The footsteps can be asked, and they answer that waiting in the light
+  is how the one walking is met.
+- The sword thrown into the ocean is not lost: it comes back, wet and
+  glowing, the next time the figure appears.
 - Dropping the lamp on the Lake Shore before going in saves it; the
   Aqueduct View is lit, and so is the shore, so the lamp is safe there.
 - The vial can be opened and smelled before anyone knows what it is; the
@@ -190,6 +244,14 @@ is the eyes and the word "worthy".
   to the stair from there, since it moves the lamp by name, and this one
   cannot reach it (friction 4). The visitor has thrown their only light
   into the sea, and the world lets that stand.
+- **A sword thrown into the ocean comes back,** which is the original's
+  own behaviour (OCEAN-F REMOVEs it, and the figure's arrival MOVEs it by
+  name from nowhere). The broadcast that calls the sword cannot reach
+  inside the ocean, so the ocean answers it itself and gives the sword up
+  (friction 25); the lamp is not called by anything and stays.
+- **The ship holds once** for a call that is nearly the words, which the
+  original's ship does not; the window is otherwise the original's one
+  command, and the two words are still the only greeting that counts.
 - **The figure withdraws in the dark** (round 2, above). The original's
   I-SHADOW-REPLY goes on striking a visitor who cannot see to strike back.
 - **Zork's YUKS do not vary.** "A valiant attempt." is the one answer to

@@ -8,14 +8,14 @@
 // as an NPC: its stroke is `strike`, a verb only it performs, whose
 // target's own part takes the wound.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Creature, Hooded, Fixed} from 'thing'
+import {Thing, Scenery, Creature, Hooded, Fixed, Trace} from 'thing'
 import {Room, DarkRoom} from 'room'
 import {Hood, Cloak} from 'items'
 import {Adventurer} from 'adventurer'
 import {Mist, Rubble, StoneWall} from 'way_in'
 import {creepy_crawl, foggy_room, barren_area} from 'way_in'
 import {flathead_ocean} from 'ocean'
-import {give, talk, play, through, leap_at, rub, look_in, climb_up, climb_down, search, smell, listen, Direction, :fight_on, :fight_off, :shadow_here, :reply, :block, :unblock, :unhood, :slain, :vanish, :die} from 'verbs'
+import {give, talk, play, through, leap_at, rub, look_in, climb_up, climb_down, search, smell, listen, find, follow_sound, squeeze, Direction, :fight_on, :fight_off, :shadow_here, :reply, :block, :unblock, :unhood, :slain, :vanish, :die} from 'verbs'
 
 verb strike { role target: Adventurer }
 
@@ -38,14 +38,25 @@ kind Shadow is Creature, sprout.Actor, Guise, Hooded, Fixed {
   passage diag {
     {if bound actor}{if actor.is(Adventurer)}{if actor.get(:s_strength) >= 5}has a great deal of strength, perhaps matching your own.{else if actor.get(:s_strength) == 4}has a light wound which hasn't affected its seemingly great strength.{else if actor.get(:s_strength) == 3}has some wounds and is probably not capable of hindering your movement.{else if actor.get(:s_strength) == 2}is hurt, and its strength appears to be fading.{else}appears to be badly hurt and defenseless.{/if}{/if}{/if}
   }
-  passage looked {
-    A figure in a hood and a cloak, both dark, both plain, standing the way you stand and holding its sword the way you hold yours, which you had not noticed you did until now. The hood casts a shadow where a face should be, and the sword glows with the same cold blue light as your own. It is watching you; you can feel it watching you, as you can feel yourself watching it.
-
-    The hooded figure {self.diag}{if bound actor}{if actor.is(Adventurer)}{if actor.get(:s_strength) <= 1}
-
-    It has stopped fighting the way you fight; it has stopped fighting at all. It stands with the point of its sword in the ground and its head bowed, and the hood, which has kept its face from you all this while, hangs within reach of your hand.{/if}{/if}{/if}
+  // Chosen in code and said as literals: a slot would be rendered after the
+  // turn's later handlers, and the figure's reply this same turn may kill
+  // the one looking, which resets its strength to whole.
+  passage looked_open { A figure in a hood and a cloak, both dark, both plain, standing the way you stand and holding its sword the way you hold yours, which you had not noticed you did until now. The hood casts a shadow where a face should be, and the sword glows with the same cold blue light as your own. It is watching you; you can feel it watching you, as you can feel yourself watching it. }
+  passage stopped { It has stopped fighting the way you fight; it has stopped fighting at all. It stands with the point of its sword in the ground and its head bowed, and the hood, which has kept its face from you all this while, hangs within reach of your hand. }
+  describe {
+    text looked_open
+    if (actor.is(Adventurer)) {
+      let s = actor.get(:s_strength)
+      if (s >= 5) { text "The hooded figure has a great deal of strength, perhaps matching your own." }
+      else if (s == 4) { text "The hooded figure has a light wound which hasn't affected its seemingly great strength." }
+      else if (s == 3) { text "The hooded figure has some wounds and is probably not capable of hindering your movement." }
+      else if (s == 2) { text "The hooded figure is hurt, and its strength appears to be fading." }
+      else {
+        text "The hooded figure appears to be badly hurt and defenseless."
+        text stopped
+      }
+    }
   }
-  describe { text looked }
   object hood is Hood
   object cloak is Cloak
 
@@ -124,11 +135,56 @@ kind Shadows is Scenery {
   as target for look_in { do { say "You look into the shadows and the shadows, as far as you can tell, look back." } }
 }
 
+// The footsteps (SHADOW-ROOMS' "You can hear quiet footsteps nearby."), a
+// thing heard and not seen in every room of the land: they keep the
+// visitor's pace, and they tell a visitor who asks that lingering here, in
+// the light, is how the one walking is met.
+kind Footsteps is Scenery, Trace {
+  grammar { name "footsteps"  nouns "footstep", "footfalls", "footfall", "sound", "sounds", "walker", "someone", "somebody"  adjectives "quiet", "soft", "nearby", "distant" }
+  passage short { footsteps }
+  passage no_take { They are not a thing to be picked up; they are a thing to be waited for. }
+  passage walking { You cannot see anybody. The footsteps are somewhere off in the hills, in the shadows, and they are keeping your pace exactly: when you stand still, they stop; when you walk, they walk, a little behind you and a little to one side. Whoever it is does not seem to be in any hurry, and does not seem to be going away. Standing a while in the light, or walking the hills in it, is how such a one is met. }
+  passage stood { The footsteps have stopped. The one who was making them is standing in front of you, in a hood and a cloak, with a sword. }
+  passage over { There are no footsteps now. Whatever was walking the land of shadow has stopped walking it. }
+  describe {
+    if (here.count(Shadow) > 0) { text stood }
+    else if (actor.is(Adventurer)) {
+      if (actor.get(:shadow_gone)) { text over } else { text walking }
+    }
+    else { text walking }
+  }
+  as target for listen {
+    do {
+      if (here.count(Shadow) > 0) { say stood }
+      else if (actor.is(Adventurer) && actor.get(:shadow_gone)) { say over }
+      else { say "Quiet. Then, perhaps, footsteps; then quiet again. They are keeping your pace, and when you hold your breath to hear them better, they wait too." }
+    }
+  }
+  as target for follow_sound {
+    do {
+      if (here.count(Shadow) > 0) { say "There is nothing to follow; the one who was walking is here, and has stopped." }
+      else if (actor.is(Adventurer) && actor.get(:shadow_gone)) { say over }
+      else { say "You go after the footsteps, and they go after you: they are behind you whichever way you turn, and no nearer for turning. Wherever they are going, it is where you are, and they will get there when they are ready. Wait here in the light, or walk the hills in it; it comes to the same thing." }
+    }
+  }
+  as target for find {
+    do {
+      if (here.count(Shadow) > 0) { say stood }
+      else if (actor.is(Adventurer) && actor.get(:shadow_gone)) { say over }
+      else { say "Nearby, and no nearer when you look. They are always nearby." }
+    }
+  }
+  as target for search { do { say "You search the shadows for the one walking in them, and find shadows. They are good at it." } }
+  as target for squeeze { do { say "You cannot hug a sound, though it is a kind thought, and the footsteps, for a moment, stop as if they had heard it." } }
+  as target for smell { do { say "They smell of nothing, or of the hills, or, faintly, of you." } }
+}
+
 // A room of the Land of Shadow: the figure comes and goes here, and
 // blocks one way out while it stands (SHADOW-ROOMS, BLOCKED-DIR).
 kind ShadowRoom is DarkRoom {
   :blocked Direction default none
   passage blocked_way { Your way is blocked by the hooded figure. }
+  object footsteps is Footsteps
 
   after command {
     if (actor.is(Adventurer)) {
@@ -169,6 +225,8 @@ kind ShadowRoom is DarkRoom {
     }
   }
   on :unblock { self.set(:blocked, :none) }
+  // The visitor gone: the figure goes too; the visitor, who is out of the
+  // room's voice by now, says so to themselves (adventurer.sprout).
   on :left (item, to) {
     if (item.is(Adventurer)) {
       if (self.count(Adventurer) == 0) {

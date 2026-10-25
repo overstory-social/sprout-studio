@@ -9,16 +9,32 @@ import {Adventurer} from 'adventurer'
 import {Mist} from 'way_in'
 import {Quicksand} from 'shadow'
 import {shadow_6, shadow_7, shadow_8} from 'shadow'
-import {put, through, leap_at, swim, dig, listen, smell, look_in, cross, search, climb_up} from 'verbs'
+import {Sword} from 'items'
+import {put, through, leap_at, swim, dig, listen, smell, look_in, cross, search, climb_up, :sword_come, :glow} from 'verbs'
 
 // The sea itself (OCEAN): nothing goes in it and comes back. What is
 // thrown in is held by it, out of everyone's reach, which is Zork's
 // "lost forever" without destroying what the world declared; whoever
-// throws does the throwing (adventurer.sprout).
+// throws does the throwing (adventurer.sprout). One thing excepted: the
+// sword, which comes to the hand when it is needed (SHADOW-ARRIVAL and
+// I-SHADOW-REPLY move it by name from wherever it is, the original's
+// REMOVE included), and which the ocean gives up itself when the call
+// comes, since nothing inside it can hear the call.
 kind Ocean is Scenery, Receptacle {
   contains
   pass any (false)
-  release (item, to) { refuse "It is lost forever; the ocean does not give back." }
+  release (item, to) { if (mover != self) { refuse "It is lost forever; the ocean does not give back." } }
+  on :sword_come (from) {
+    if (from.is(Adventurer)) {
+      each s: Sword in self {
+        if (!from.holds(s)) {
+          move s to from
+          send s :glow with 2
+          tell from "Something breaks the surface out in the mist, glowing, and comes to you over the water faster than anything thrown; it is your sword, wet and wildly glowing, and it is in your hand. The ocean, it seems, keeps everything but what is needed."
+        }
+      }
+    }
+  }
   grammar { name "Flathead Ocean"  nouns "ocean", "sea", "water", "waves", "deep"  adjectives "flathead", "underground", "amazing" }
   passage short { ocean }
   describe { text "An underground sea, the topic of many a legend among adventurers: grey water under a grey mist, with no far shore and no horizon, and a heavy surf coming in out of the mist as though it had been coming in since the Empire fell and meant to go on after. The Flatheads named it for themselves. It is big enough to carry the name." }
@@ -37,11 +53,13 @@ kind Ship is Scenery {
   passage short { ship }
   passage passing { An old boat, reminiscent of an ancient Viking ship: a long low hull, a high carved prow, a single square sail the colour of the mist, and at the prow an old and crusty sailor, peering out over the water as though he had lost something in it three ages ago. It is passing along the shore, close in, and it is not stopping for anybody who does not say the right thing. }
   passage sailed { The ship has gone, west, into the mist, and the sailor's song went with it. The sea is as it was. }
+  passage sailed_mute { The ship has gone, west, into the mist, ungreeted, and it will not be back; this shore sees it once. The sea is as it was, and will stay so. }
   passage no_ship { There is no ship to be seen; only the mist, and the surf, and a feeling that this is a shore things pass. }
   describe {
     if (actor.is(Adventurer)) {
       if (actor.get(:ship_visible)) { text passing }
-      else if (actor.get(:ship_gone)) { text sailed }
+      else if (actor.get(:ship_greeted)) { text sailed }
+      else if (actor.get(:ship_gone)) { text sailed_mute }
       else { text no_ship }
     } else { text no_ship }
   }

@@ -299,3 +299,121 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   figure's nouns, the `unmask` phrases, and the disarm line's variants,
   which went into a passage, which has no cap of its own.
 - **Spec:** Limits.
+
+### 19. A place passed through in one turn is never read
+
+- **Wanted:** JIGS-UP's cell as a place: the dead visitor carried to it,
+  where the old man stands, reads it on arriving ("You find yourself deep
+  within the earth in a barren prison cell..."), the old man sends them
+  back by his own act, and they wake at the stair, all in the one turn.
+- **Found:** "the one arriving reads the place's description", but a
+  turn's lines are rendered once its work is done, and a visitor who was
+  moved on to the stair before the turn ended read the stair alone: the
+  cell's description was dropped without a word, though the old man's
+  `tell target` lines from the same stay all arrived.
+- **Wrote instead:** the cell tells its words to whoever enters it, from
+  `on :entered`, and keeps a `describe` nobody will read; the old man's
+  entrance, his look and his staff are his own `tell target` lines in the
+  actor's part of a verb only he performs. The transcript is the
+  original's, in the original's order.
+- **Spec:** The world model › Places (what the one arriving reads); The
+  runtime › Effects (lines rendered against the state the turn commits).
+
+## Round 3: the second revision of Q1
+
+### 20. A passage cannot say what was true when it was said
+
+- **Wanted:** SHADOW-DIAG as a table read once, in the stroke, so that
+  "The figure is hurt, and its strength appears to be fading." is what
+  the stroke found, whatever happens later in the turn.
+- **Found:** the stroke left the figure's strength at 2, the figure's
+  reply in the same turn killed the visitor, `on :die` reset the strength
+  to 5, and `say "The figure {self.s_diag}"`, rendered after the bodies
+  had run, read "has a great deal of strength". Friction 13 is the same
+  rule seen from a clock; this is it seen from a death.
+- **Wrote instead:** the line is chosen in code by the strength just
+  computed and said as a literal, in both strokes, and the figure's
+  `describe` branches in code the same way. A passage with a slot over
+  state a later handler may change is now something this world avoids in
+  any line said in a turn that fights.
+- **Spec:** Prose › Chance in prose ("What a body says is rendered after
+  the bodies have run"); Events (the queue drains after the body).
+
+### 21. A room cannot tell a visitor who has just left it
+
+- **Wanted:** the figure's withdrawal told as the visitor walks out of
+  the room it stood in, from the room's own `on :left`, in the voice of
+  the room's dark-withdrawal.
+- **Found:** `tell item` from the room's `:left` handler reached nobody:
+  the visitor was in the next room by then, out of the room's voice,
+  since speech carries as range does. The `send f :vanish` beside it
+  worked, the figure being still in the room.
+- **Wrote instead:** the visitor keeps `:figure_near`, set when the figure
+  appears and cleared when it goes by any road, and their own `on :moved`
+  from a shadow room tells them "Behind you, the hooded figure steps back
+  into the shadows." The line is the figure's act, said by the one who
+  saw it, which is tolerable; what is lost is the room's own voice.
+- **Spec:** Prose › Speech ("Pass rules govern speech as they govern
+  range"); Containment › `:left`.
+
+### 22. An engine line given nothing reads only the one who owns it
+
+- **Wanted:** Zork's "Time passes..." everywhere but the empty shore,
+  where waiting is for a ship that has passed and the line should say so.
+- **Found:** `wait` has no `do`; the actor's own part may `say`, but the
+  `waited` line is said as well, so the shore read both. `waited` is
+  "given nothing", so a `passage waited` on the place cannot ask who is
+  waiting or whether their ship is gone; on the visitor it can read
+  `self` and not `here`. And it is rendered after the clock, so a flag the
+  clock sets this turn is read as already set: on the turn the ship
+  sailed, the line said the shore was empty before the ship had gone.
+- **Wrote instead:** `passage waited` on the Adventurer, reading
+  `:shore_empty`, which the visitor's `after command` sets as it begins
+  from where they stand and whether the ship had already gone; so the
+  sailing turn reads "Time passes..." and the next reads the surf.
+- **Spec:** Verbs › Engine verbs (`wait`); Prose › Engine lines (how a
+  line is found, and what `waited` is given).
+
+### 23. A `do` that only sends is answered "Nothing happens."
+
+- **Wanted:** one piece of logic for a call to the sailor that is nearly
+  the words (`hail`, `ahoy`, `wave`, `talk to sailor`), reached from four
+  verbs by one message, saying its answer once.
+- **Found:** "a `do` that only sends a message is answered with
+  `nothing_happens`, and what the handler then tells the actor follows
+  it", and the checker warns of it. The handler's `tell` is not the
+  reading's answer.
+- **Wrote instead:** the block is written out in the three verbs' own
+  `do`s, with `say`; the sailor's `talk` says its own line and sends the
+  message, whose handler tells the rest. There is no way to share a body
+  between verbs but a message, and a message cannot answer.
+- **Spec:** Verbs › Readings (what answers a reading); Compiler warnings.
+
+### 24. The reach metric misses a place passed through in one turn
+
+- A note for the reporter, not a gap in the language: the round's metrics
+  count `prison_cell` as never reached though three deaths passed through
+  it, while its `on :entered` and its passages are counted as reached.
+  `reach.places` seems to sample where a visitor ends the turn. The world
+  cannot change this and should not try; the studio's steward may file it
+  with Sprout's test reporter. Read `prison_cell` in `reach.places.never`
+  as an artifact until then.
+- **Spec:** Tooling › `sprout test` reports (reach).
+
+### 25. What the ocean holds cannot hear the call, so the ocean answers it
+
+- **Wanted:** OCEAN-F's `REMOVE` and SHADOW-ARRIVAL's `MOVE ,SWORD
+  ,WINNER`: a sword thrown into the sea is "lost forever" until the figure
+  needs it, and then it is in the hand.
+- **Found:** friction 3's broadcast reaches the ocean, which is in the
+  room, and not the sword inside it, since the ocean passes nothing; the
+  sword's own `:sword_come` never ran, and the fight was unwinnable
+  without a word. The ocean's `release` refused every mover, the ocean
+  included.
+- **Wrote instead:** the ocean handles `:sword_come` itself, walks its
+  own contents for a sword (`each` from inside a container that passes
+  nothing does see its contents), moves it to the caller as its own mover
+  (`release` now refuses every mover but `self`), sets the glow and tells
+  the caller. The lamp stays lost, as intent.md says; nothing calls it.
+- **Spec:** Events › Sending (a broadcast through a container that
+  refuses); Movement and consent › `mover`.

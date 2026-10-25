@@ -7,7 +7,7 @@
 // in range; a verb with no role is kept for what works everywhere.
 import * as sprout from 'sprout'
 import {inventory} from 'sprout'
-import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel} from 'thing'
+import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace} from 'thing'
 
 // Zork III wears a thing by taking it (V-WEAR performs TAKE), so "wear"
 // and "put on" are phrases of `take`, and a worn thing is a held one.
@@ -155,7 +155,21 @@ verb greet {
   "hello [target]"  "hi [target]"  "hello, [target]"  "hi, [target]"
   "say hello to [target]"  "greet [target]"  "[target], hello"  "say hi to [target]"
 }
+// A call across water that is not the two words: a hail, an ahoy, a wave,
+// a shout. At the ocean with the ship passing it is answered with the
+// nudge, and holds the ship one command longer, once; it is never the
+// greeting itself, which is "hello sailor" and nothing else (SAILOR-FCN).
+verb hail {
+  role target
+  "hail [target]"  "ahoy [target]"  "wave to [target]"  "wave at [target]"
+  "call [target]"  "call to [target]"  "shout to [target]"  "shout at [target]"
+}
+verb hail_bare { "hail"  "ahoy"  "say ahoy"  "shout ahoy"  "yell ahoy"  "say hello"  "shout hello"  "yell hello" }
+verb wave_bare { "wave"  "wave hand"  "wave hands"  "wave arms"  "wave back" }
 verb follow { role target: Creature  "follow [target]"  "chase [target]"  "pursue [target]"  "go after [target]" }
+verb follow_sound { role target: Trace  "follow [target]"  "chase [target]"  "pursue [target]"  "go after [target]"  "go toward [target]"  "walk toward [target]" }
+// Asked of the dark, or of the footsteps.
+verb who_there { "who is there"  "who's there"  "whos there"  "who goes there"  "is anyone there"  "is someone there"  "who is it"  "anyone there" }
 verb kiss { role target: Creature  "kiss [target]" }
 verb cross { role target  "cross [target]"  "ford [target]"  "walk across [target]" }
 verb leap_at {
@@ -227,7 +241,7 @@ intent how_doing {
 // Where somebody or something may be sent by the world's gate, and which
 // room a room is: every place keeps its own, so that what stands in it
 // can name it to something that cannot see it.
-enum Dest { nowhere, stair, junction, barren, creepy, foggy, shadow_1, shadow_2, shadow_3, shadow_4, shadow_5, shadow_6, shadow_7, shadow_8, ocean, lake_shore, aq_view, on_lake, in_lake, oblivion, scatter, sword, splash }
+enum Dest { nowhere, stair, junction, barren, creepy, foggy, shadow_1, shadow_2, shadow_3, shadow_4, shadow_5, shadow_6, shadow_7, shadow_8, ocean, lake_shore, aq_view, on_lake, in_lake, oblivion, cell, scatter, sword, splash }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.
@@ -286,3 +300,6 @@ message :wall_look with integer
 message :brief_hint
 // The sword's glow settled by its bearer, as the figure comes and goes.
 message :settle with integer
+// A call to the sailor that is not the two words, while the ship passes:
+// the one hailing is told the nudge, and the ship holds one command, once.
+message :near_greet

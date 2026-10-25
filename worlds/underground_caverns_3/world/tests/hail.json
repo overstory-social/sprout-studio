@@ -1,0 +1,253 @@
+{
+  "steps": [
+    {
+      "comment": "The ship's window, widened once by a call that is nearly the words: the footsteps answer, 'who is there?' is read, the nudge is in the ship's arrival, 'shout ahoy' holds the ship a command, 'hail ship' does not hold it twice, the ungreeted ship says it will not be back, and waiting and calling at the empty shore are answered in the 'anymore' voice."
+    },
+    {
+      "arrive": "Finch",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "described",
+          "words": "As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. \"You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!\" The dream dissolves around you as his last words echo through the void...."
+        },
+        {
+          "reader": "Finch",
+          "kind": "described",
+          "words": "Endless Stair"
+        },
+        {
+          "reader": "Finch",
+          "kind": "described",
+          "words": "You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail."
+        },
+        {
+          "reader": "Finch",
+          "kind": "described",
+          "words": "Your old friend, the brass lantern, is at your feet."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "take lamp"
+    },
+    {
+      "as": "Finch",
+      "type": "turn on lamp"
+    },
+    {
+      "as": "Finch",
+      "type": "s"
+    },
+    {
+      "as": "Finch",
+      "type": "w"
+    },
+    {
+      "as": "Finch",
+      "type": "sw"
+    },
+    {
+      "as": "Finch",
+      "type": "who is there?",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "Nobody answers. The footsteps, if they were footsteps, stop, and after a moment start again, no nearer and no further off, keeping whatever pace you keep."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "who is there"
+    },
+    {
+      "as": "Finch",
+      "type": "examine footsteps",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "described",
+          "words": "The footsteps have stopped. The one who was making them is standing in front of you, in a hood and a cloak, with a sword."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "listen to footsteps",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "The footsteps have stopped. The one who was making them is standing in front of you, in a hood and a cloak, with a sword."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "follow footsteps",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "There is nothing to follow; the one who was walking is here, and has stopped."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "hug the footsteps",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "You cannot hug a sound, though it is a kind thought, and the footsteps, for a moment, stop as if they had heard it."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "hello footsteps",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "You say hello to the hills. The footsteps stop, as if somebody were listening, and after a moment go on, no nearer."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "w"
+    },
+    {
+      "as": "Finch",
+      "type": "down"
+    },
+    {
+      "as": "Finch",
+      "type": "wave",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "Nothing happens yet. The surf answers you, and nothing else does."
+        },
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "Passing alongside the shore now is an old boat, reminiscent of an ancient Viking ship. Standing on the prow of the ship is an old and crusty sailor, peering out over the misty ocean. He has a hand cupped to one ear, turned toward the shore, as though he were waiting for somebody on it to say something to him; and the ship is not slowing down."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "shout ahoy",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "He cups a hand to his ear, and the ship, for a moment, holds alongside, as though he were waiting for something in particular and this was not quite it. Whatever he is waiting to hear is short, and friendly, and is the greeting every adventurer in the Empire has been told to try on a sailor, and has tried, these three games, on everything but one."
+        }
+      ]
+    },
+    {
+      "seed": 4
+    },
+    {
+      "as": "Finch",
+      "type": "hail ship",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "He shakes his head, slowly, and turns back to the prow. He has waited three ages for two words, and he is not going to wait for any others."
+        },
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "The boat sails silently through the mist and out of sight. It will not be back; this shore sees it once, and has seen it."
+        }
+      ]
+    },
+    {
+      "seed": 0
+    },
+    {
+      "as": "Finch",
+      "type": "ahoy sailor",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "Nothing happens anymore. The mist is empty, and it will stay empty; the ship that passes this shore has passed it."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "look"
+    },
+    {
+      "as": "Finch",
+      "type": "talk to sailor",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "There is no sailor to be seen."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "look"
+    },
+    {
+      "as": "Finch",
+      "type": "wait",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "Time passes, and the surf with it, in and out. Nothing else passes; the ship that passes this shore has passed it, and the mist will stay empty however long you give it."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "say ahoy",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "Nothing happens anymore. The mist is empty, and it will stay empty; the ship that passes this shore has passed it."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "examine ship",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "described",
+          "words": "The ship has gone, west, into the mist, ungreeted, and it will not be back; this shore sees it once. The sea is as it was, and will stay so."
+        }
+      ]
+    },
+    {
+      "as": "Finch",
+      "type": "hello sailor",
+      "expect": [
+        {
+          "reader": "Finch",
+          "kind": "said",
+          "words": "Nothing happens anymore. The mist is empty, and it will stay empty; the ship that passes this shore has passed it."
+        }
+      ]
+    }
+  ]
+}
