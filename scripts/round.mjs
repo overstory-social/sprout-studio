@@ -4,7 +4,9 @@
 // workflow touches no files itself (docs/loop.md › One round). Every
 // command prints one JSON object on stdout, and exits 1 where it refused.
 //
-//   status  <world>                          where the world's rounds stand
+//   status  <world> [--brief]                where the world's rounds stand; --brief, only
+//                                            what the workflow reads, the same size every round
+//   committed <world> <NN>                   whether git holds the round's .committed marker
 //   open    <world> <NN> <persona> <seed> [--turn-cap T] [--advance 30] [--by <model>]
 //                                            a playtest run: its id and its door; a run played
 //                                            again by another model is <persona>-<seed>-<model>
@@ -144,6 +146,42 @@ export function status(world) {
       };
     }),
   };
+}
+
+/**
+ * Where `world`'s rounds stand, as little as the workflow reads: how many rounds there are, the
+ * last round whole, and the last committed round's figures. It stays one size however many rounds
+ * the world has, so the clerk who carries it back does not have a long answer to retype.
+ */
+export function brief(world) {
+  const { rounds, ...has } = status(world);
+  const last = rounds.at(-1) ?? null;
+  const done = rounds.filter((one) => one.committed).at(-1) ?? null;
+  return {
+    ...has,
+    count: rounds.length,
+    last,
+    lastCommitted: done === null ? null : { round: done.round, figures: done.figures, acceptedDesign: done.acceptedDesign },
+  };
+}
+
+/**
+ * Whether round `round` is committed as git has it: its `.committed` marker is in HEAD's tree.
+ * `marker` says whether the marker is on disk, which is what `status` reads.
+ */
+export function committed(world, round) {
+  const marker = join(roundDir(world, round), '.committed');
+  const git = (...argv) => execFileSync('git', argv, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+  // A repository with no commit yet holds no round; any other failure of git is thrown, never taken for "not committed".
+  git('rev-parse', '--git-dir');
+  let born = true;
+  try {
+    git('rev-parse', '--verify', '-q', 'HEAD');
+  } catch {
+    born = false;
+  }
+  const inHead = born && git('ls-tree', '--name-only', 'HEAD', '--', marker) !== '';
+  return { round, committed: inHead, marker: existsSync(join(ROOT, marker)) };
 }
 
 /** The models a run may be played again by. */
@@ -381,7 +419,8 @@ function argsOf(argv) {
   const words = [];
   const flags = {};
   for (let i = 0; i < argv.length; i++) {
-    if (argv[i].startsWith('--')) flags[argv[i].slice(2)] = argv[++i];
+    // A flag with no value after it, as `--brief`, is a switch.
+    if (argv[i].startsWith('--')) flags[argv[i].slice(2)] = i + 1 < argv.length && !argv[i + 1].startsWith('--') ? argv[++i] : true;
     else words.push(argv[i]);
   }
   return { words, flags };
@@ -392,7 +431,9 @@ function main(argv) {
   const [command, world, round, ...rest] = words;
   switch (command) {
     case 'status':
-      return status(world);
+      return 'brief' in flags ? brief(world) : status(world);
+    case 'committed':
+      return committed(world, round);
     case 'open':
       return open(world, round, rest[0], rest[1], { turnCap: flags['turn-cap'], advance: flags.advance, by: flags.by });
     case 'save':
@@ -404,7 +445,7 @@ function main(argv) {
     case 'commit':
       return commit(world, round, rest.join(' ') || 'played');
     default:
-      throw new Error('usage: round.mjs status|open|save|measure|verify|commit <world> [NN] …');
+      throw new Error('usage: round.mjs status|committed|open|save|measure|verify|commit <world> [NN] …');
   }
 }
 

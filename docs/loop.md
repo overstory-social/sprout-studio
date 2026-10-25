@@ -80,7 +80,9 @@ done by the `clerk` agent running `scripts/round.mjs`.
 4. **Synthesize** (`synthesizer`) into `synthesis.json`, and
    `synthesis.md` for people.
 5. **Steer** (`steward`): publish `synthesis.md` to the world's doc as a
-   new tab, and hand back every comment on it; `steering.json` keeps those
+   new tab, and hand back every comment on it. A tab already there for the
+   round is never replaced: the steward leaves it as it is and says so, and
+   the workflow logs it; `steering.json` keeps those
    no earlier round read, and `steering.md` numbers them S1, S2… for the
    author. The steward writes nothing itself. The loop does not wait; a
    late comment steers the round after, and an unreachable doc is logged
@@ -129,6 +131,15 @@ round not yet committed is picked up where it stands, playing only the
 runs not yet reported and skipping a synthesis, steering or revision whose
 file is there. A round is marked committed only by the commit that holds
 it.
+
+The workflow reads where a world stands from `round.mjs status --brief`,
+which prints only what it reads (how many rounds, the last round, and the
+last committed round's figures) and so stays the same size however many
+rounds a world has; the clerk retypes it, and a field it dropped stops
+the workflow. A committed round is never resumed or redone: before each
+round, `round.mjs committed <world> <NN>` asks git whether the last
+round's `.committed` marker is in `HEAD`, and where that disagrees with
+`status`, the workflow stops and says so.
 
 A door server records its process and the Sprout pin it loaded in
 `.studio/servers/`, and `round.mjs open` stops any still holding an older
