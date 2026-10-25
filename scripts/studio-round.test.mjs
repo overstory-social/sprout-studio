@@ -77,7 +77,7 @@ function stage(options = {}) {
     switch (verb) {
       case 'status': {
         // As `status --brief` prints it; `dropCommitted` is a clerk that loses the last round's mark in retyping.
-        const last = current() === undefined ? null : { ...current() };
+        const last = current() === undefined ? null : { points: null, outcomes: {}, ...current() };
         if (last !== null && options.dropCommitted) delete last.committed;
         const done = world.rounds.filter((one) => one.committed).at(-1);
         return {
@@ -85,7 +85,7 @@ function stage(options = {}) {
           brief: world.brief,
           intent: world.intent,
           playable: world.playable,
-          count: world.rounds.length,
+          count: world.rounds.length + (options.countOff ?? 0),
           last,
           lastCommitted: done === undefined ? null : { round: done.round, figures: done.figures, acceptedDesign: done.acceptedDesign },
         };
@@ -94,7 +94,7 @@ function stage(options = {}) {
         // What git holds: the round's own mark, unless `gitSays` gives git another answer.
         const one = world.rounds.find((r) => r.round === round);
         const inGit = options.gitSays?.[round] ?? one?.committed ?? false;
-        return { round, committed: inGit, marker: one?.committed ?? false };
+        return { round, committed: inGit, marker: options.markerSays?.[round] ?? one?.committed ?? false };
       }
       case 'open': {
         const [, , nn, persona, seed] = command.split(' ');
@@ -479,7 +479,7 @@ describe('the studio-round workflow', () => {
 
   it('never resumes or redoes a round git holds as committed, where status says it is not', async () => {
     const lost = { round: '16', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, steering: true, revision: true, committed: false, figures: { faults: 0 }, acceptedDesign: 1 };
-    const s = stage({ rounds: [lost], gitSays: { 16: true } });
+    const s = stage({ rounds: [lost], countOff: 15, gitSays: { 16: true } });
     const out = await s.run({ world: 'shed', personas: ['explorer'] });
     assert.deepEqual(out.rounds, []);
     assert.equal(s.logs.at(-1), 'stopping: status says round 16 is not committed, and git says committed; no round is resumed or redone until they agree');
@@ -504,5 +504,25 @@ describe('the studio-round workflow', () => {
     const there = stage({ tabThere: true });
     await there.run({ world: 'shed', personas: ['explorer'] });
     assert.ok(there.logs.includes('steering: the doc already had a tab "Round 01", and it was left as it was'));
+  });
+
+  it('refuses a status whose count is not its last round, or whose figures or outcomes were dropped', async () => {
+    const committed = { round: '01', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, steering: true, revision: true, committed: true, figures: { faults: 0 }, acceptedDesign: 1 };
+    const off = stage({ rounds: [committed, { ...committed, round: '02' }], countOff: -1 });
+    await assert.rejects(off.run({ world: 'shed', personas: ['explorer'] }), /lacks last\.round, as the count/);
+    assert.deepEqual(off.calls.filter((one) => one.type !== 'clerk'), []);
+    const { figures: _, ...noFigures } = committed;
+    await assert.rejects(stage({ rounds: [noFigures] }).run({ world: 'shed', personas: ['explorer'] }), /lacks last\.figures, lastCommitted/);
+  });
+
+  it('starts no new round where git or a marker on disk says it is already committed', async () => {
+    const committed = { round: '01', runs: ['explorer-1'], reports: ['explorer-1'], metrics: true, pairwise: [], synthesis: true, steering: true, revision: true, committed: true, figures: { faults: 0 }, acceptedDesign: 1 };
+    for (const bent of [{ gitSays: { '02': true } }, { markerSays: { '02': true } }]) {
+      const s = stage({ rounds: [committed], ...bent });
+      const out = await s.run({ world: 'shed', personas: ['explorer'] });
+      assert.deepEqual(out.rounds, []);
+      assert.equal(s.logs.at(-1), 'stopping: round 02 would be started, but git or its marker says it is already committed; no round is redone');
+      assert.deepEqual(s.calls.filter((one) => one.type !== 'clerk'), []);
+    }
   });
 });

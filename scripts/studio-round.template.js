@@ -154,12 +154,21 @@ async function standing() {
   const s = await clerk(`status ${WORLD} --brief`, undefined, 'status')
   const lacking = ['brief', 'playable'].filter((key) => typeof s[key] !== 'boolean')
   if (!Number.isInteger(s.count) || s.count < 0) lacking.push('count')
-  if (!('lastCommitted' in s)) lacking.push('lastCommitted')
+  const object = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
+  const countOrNull = (value) => value === null || Number.isInteger(value)
   if (s.count > 0) {
-    const last = s.last ?? {}
-    if (typeof last.round !== 'string') lacking.push('last.round')
+    const last = object(s.last) ? s.last : {}
+    // The rounds are numbered 01 on, so the last is the count: a count retyped wrong would start a round already played.
+    if (typeof last.round !== 'string' || Number(last.round) !== s.count) lacking.push('last.round, as the count')
     for (const key of ['committed', 'synthesis', 'steering', 'revision']) if (typeof last[key] !== 'boolean') lacking.push(`last.${key}`)
     for (const key of ['runs', 'reports']) if (!Array.isArray(last[key])) lacking.push(`last.${key}`)
+    for (const key of ['points', 'acceptedDesign']) if (!countOrNull(last[key])) lacking.push(`last.${key}`)
+    if (!object(last.outcomes)) lacking.push('last.outcomes')
+    if (last.figures !== null && !object(last.figures)) lacking.push('last.figures')
+  }
+  const done = s.lastCommitted
+  if (done !== null && !(object(done) && typeof done.round === 'string' && countOrNull(done.acceptedDesign) && (done.figures === null || object(done.figures)))) {
+    lacking.push('lastCommitted')
   }
   if (lacking.length > 0) throw new Error(`the clerk's status of ${WORLD} lacks ${lacking.join(', ')}: nothing is played on a status the workflow cannot read whole`)
   return s
@@ -209,6 +218,14 @@ while (played < ROUNDS) {
   }
   const resuming = last !== null && !last.committed
   const round = resuming ? last.round : String(status.count + 1).padStart(2, '0')
+  // A new round starts only in a folder git holds nothing committed of, and with no marker on disk.
+  if (!resuming) {
+    const fresh = await clerk(`committed ${WORLD} ${round}`, undefined, `committed ${round}`)
+    if (fresh.committed !== false || fresh.marker !== false) {
+      log(`stopping: round ${round} would be started, but git or its marker says it is already committed; no round is redone`)
+      break
+    }
+  }
   const at = resuming ? last : { runs: [], reports: [], metrics: false, synthesis: false, steering: false, revision: false }
   const R = `${W}/rounds/${round}`
   const previous = status.lastCommitted
