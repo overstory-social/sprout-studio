@@ -181,7 +181,7 @@ kind Torch is Light, Flame {
   passage ldesc { {if self.get(:fried)}There is a burned-out torch here.{else}There is a torch here{if self.get(:lit)}, burning{/if}.{/if} }
   describe {
     if (self.get(:fried)) { text "A torch of pitch and rag on a wooden shaft, black and wet and finished. It has been in the lake, and no fire down here will take to it again." }
-    else if (self.get(:lit)) { text "A torch of pitch and rag on a wooden shaft, burning with a steady, smoky flame that does not seem to use the torch up. Somebody lit it a long time ago for somebody to find." }
+    else if (self.get(:lit)) { text "A torch of pitch and rag on a wooden shaft, burning with a steady, smoky flame that does not seem to use the torch up. Somebody lit it a long time ago for somebody to find. It is a flame for dry land: it will go wherever you carry it on foot, and the lake would put it out for good, and there is nothing down here that would light it again." }
     else { text "A torch of pitch and rag on a wooden shaft, out. There is nothing down here to light it with." }
   }
   as target for lamp_on {

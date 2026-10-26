@@ -184,6 +184,18 @@ kind Footsteps is Scenery, Trace, Searchable, Squeezable, Greetable {
 // blocks one way out while it stands (SHADOW-ROOMS, BLOCKED-DIR).
 kind ShadowRoom is DarkRoom {
   :blocked Direction default none
+  // The room's real ways out, for the figure to block one of: a list
+  // cannot be drawn from, so they are counted and named one by one.
+  :nways 0 min 0 max 8
+  :pick 0 min 0 max 7
+  :w0 Direction default none
+  :w1 Direction default none
+  :w2 Direction default none
+  :w3 Direction default none
+  :w4 Direction default none
+  :w5 Direction default none
+  :w6 Direction default none
+  :w7 Direction default none
   passage blocked_way { Your way is blocked by the hooded figure. }
   object footsteps is Footsteps
 
@@ -207,15 +219,24 @@ kind ShadowRoom is DarkRoom {
         else if (!actor.get(:shadow_gone)) {
           if (random(10) < 3) { say "You can hear quiet footsteps nearby." }
           else if (random(10) < 3 && self.get(:alight) && actor.get(:s_strength) > 3) {
-            let d = random(8)
-            if (d == 0) { self.set(:blocked, :north) }
-            else if (d == 1) { self.set(:blocked, :south) }
-            else if (d == 2) { self.set(:blocked, :east) }
-            else if (d == 3) { self.set(:blocked, :west) }
-            else if (d == 4) { self.set(:blocked, :northeast) }
-            else if (d == 5) { self.set(:blocked, :northwest) }
-            else if (d == 6) { self.set(:blocked, :southeast) }
-            else { self.set(:blocked, :southwest) }
+            // One of the room's real ways out (SHADOW-ARRIVAL), never a
+            // direction whose only answer is a wall.
+            // The bound of a draw is a literal, so the count is branched on
+            // and the draw carried out in a property (friction 40).
+            let n = self.get(:nways)
+            if (n == 3) { self.set(:pick, random(3)) }
+            else if (n == 6) { self.set(:pick, random(6)) }
+            else if (n == 7) { self.set(:pick, random(7)) }
+            else { self.set(:pick, random(8)) }
+            let d = self.get(:pick)
+            if (d == 0) { self.set(:blocked, self.get(:w0)) }
+            else if (d == 1) { self.set(:blocked, self.get(:w1)) }
+            else if (d == 2) { self.set(:blocked, self.get(:w2)) }
+            else if (d == 3) { self.set(:blocked, self.get(:w3)) }
+            else if (d == 4) { self.set(:blocked, self.get(:w4)) }
+            else if (d == 5) { self.set(:blocked, self.get(:w5)) }
+            else if (d == 6) { self.set(:blocked, self.get(:w6)) }
+            else { self.set(:blocked, self.get(:w7)) }
             say "Through the shadows, a cloaked and hooded figure appears before you, blocking the {self.get(:blocked)}ern exit from the room and carrying a brightly glowing sword."
             let f = spawn Shadow in self
             send f :block with self.get(:blocked)
@@ -258,6 +279,13 @@ object shadow_1 is ShadowRoom in underground_caverns_3 {
     exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
     exit southeast "southeast" -> foggy_room
   }
+  :nways 6
+  :w0 south
+  :w1 east
+  :w2 northwest
+  :w3 west
+  :w4 southwest
+  :w5 southeast
   :id shadow_1
   :walls 5
   passage body { You are at the eastern end of a dark, featureless landscape of shallow hills. Paths to the east and southeast reenter the rock. }
@@ -291,6 +319,13 @@ object shadow_2 is ShadowRoom in underground_caverns_3 {
     exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
     exit east "east" -> shadow_1
   }
+  :nways 6
+  :w0 north
+  :w1 southeast
+  :w2 southwest
+  :w3 south
+  :w4 west
+  :w5 east
   :id shadow_2
   :walls 10
   passage body { You are in a shadowy land of low, rolling hills stretching out to the west and south. The land is bordered to the north by a massive stone wall. Ancient and weathered, the wall has crumbled enough at one point to permit passage. }
@@ -320,6 +355,15 @@ object shadow_3 is ShadowRoom in underground_caverns_3 {
     exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
     exit east "east" -> shadow_1
   }
+  :nways 8
+  :w0 northwest
+  :w1 northeast
+  :w2 southeast
+  :w3 southwest
+  :w4 north
+  :w5 south
+  :w6 west
+  :w7 east
   :id shadow_3
   :walls 4
   passage body { You are in a dark and shadowy land. All around you are gentle hills and eerie shadows. Far above, shrouded in mist, you can barely make out the ceiling of the enormous cavern that spans this entire land. }
@@ -353,6 +397,14 @@ object shadow_4 is ShadowRoom in underground_caverns_3 {
     exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
     exit northwest "northwest" -> shadow_7
   }
+  :nways 7
+  :w0 north
+  :w1 east
+  :w2 northeast
+  :w3 southeast
+  :w4 south
+  :w5 west
+  :w6 northwest
   :id shadow_4
   :walls 4
   passage body { You are in an ominously dark land of rolling hills. The ground becomes softer to the south. }
@@ -385,6 +437,10 @@ object shadow_5 is ShadowRoom in underground_caverns_3 {
     exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
     exit east "east" refuse "The quicksand prevents movement in that direction."
   }
+  :nways 3
+  :w0 north
+  :w1 northwest
+  :w2 northeast
   :id shadow_5
   :walls 4
   passage body { You are at the southern end of a shadowy land. The ground here is quite soft, and the area is surrounded by quicksand on most sides. North of here is a terrain of shallow hills. }
@@ -414,6 +470,13 @@ object shadow_6 is ShadowRoom in underground_caverns_3 {
     exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
     exit southwest "southwest" refuse "The quicksand prevents movement in that direction."
   }
+  :nways 6
+  :w0 north
+  :w1 northwest
+  :w2 west
+  :w3 southeast
+  :w4 east
+  :w5 northeast
   :id shadow_6
   :walls 4
   passage body { You are near the southern end of the land of shadow. The ground here is soft and spongy, and it becomes quicksand to the south. North and east of here are gentle, rolling hills. A gentle sea breeze wafts over a steeply sloping path to the west. }
@@ -458,6 +521,15 @@ object shadow_7 is ShadowRoom in underground_caverns_3 {
     exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
     exit southwest "southwest" -> flathead_ocean
   }
+  :nways 8
+  :w0 northeast
+  :w1 east
+  :w2 southeast
+  :w3 south
+  :w4 north
+  :w5 northwest
+  :w6 west
+  :w7 southwest
   :id shadow_7
   :walls 4
   passage body { You are in a land of dark shadows and shallow hills, which stretch out in all directions. To the west, the land dips sharply. }
@@ -492,6 +564,13 @@ object shadow_8 is ShadowRoom in underground_caverns_3 {
     exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
     exit north "north" -> cliff
   }
+  :nways 6
+  :w0 south
+  :w1 east
+  :w2 southeast
+  :w3 southwest
+  :w4 west
+  :w5 north
   :id shadow_8
   :walls 11
   passage body { You are standing atop a steep cliff, looking west over a vast ocean. Far below, the surf pounds at a sandy beach. To the south and east are rolling hills filled with eerie shadows. A path cut into the face of the cliff descends toward the beach. To the north is a tall stone wall, which ends at the cliff edge. It was obviously built long ago, and directly north is a spot where you could climb over the rubble of the decaying wall. }

@@ -177,6 +177,7 @@ kind Chest is Box, Portable {
     do {
       if (self.get(:opened)) { say "It is already open." }
       else if (underground_caverns_3.get(:man_stage) == :waiting) { say "The man calls down to you. \"Is this what you're looking for?\" he cackles, waving a small key over his head. You try to open the chest, but it is locked." }
+      else if (underground_caverns_3.get(:man_stage) == :unmet && here.is(CliffLedge)) { say "The chest is locked and cannot be opened. From somewhere above you, at the top of the cliff, somebody finds this funny, briefly, and stops." }
       else { say "The chest is locked and cannot be opened." }
     }
   }
@@ -219,7 +220,9 @@ kind Chest is Box, Portable {
 kind LedgeRope is Scenery {
   grammar { name "rope"  nouns "line", "end", "cord"  adjectives "dangling", "long", "hanging" }
   passage short { rope }
-  passage absent { You can't see any rope here. }
+  // Gone up with the chest, the rope is missed in the world's words, and
+  // the man's promise is said again, since nothing else repeats it.
+  passage absent { {if underground_caverns_3.get(:man_stage) == :away}The rope is not within reach; it went up the cliff with the chest. The man said he would be back in a short while, and a short while, for a man with a chest to go through, has not been long enough yet.{else}You can't see any rope here.{/if} }
   describe {
     if (underground_caverns_3.get(:rope_down)) { text "A long piece of rope, dangling down the face of the cliff from somewhere above, and ending within your reach. It is tied to something up there, by somebody who knew how, and it is a good deal stouter than it needs to be for the use you can think of for it." }
     else { text absent }
@@ -259,6 +262,7 @@ kind LedgeRope is Scenery {
         say "You grab securely on to the rope."
         if (actor.is(Adventurer)) { send actor :holding }
       }
+      else if (st == :unmet) { say "You try to climb the rope, but you cannot reach the top even with your best effort. As you slide back, the rope twitches in your hands, once, from above, and from somewhere among the trees up there comes a short sound that might be a chuckle. Somebody is at the top of this rope, and is in no hurry to say so." }
       else { say "You try to climb the rope, but you cannot reach the top even with your best effort." }
     }
   }
@@ -600,7 +604,9 @@ object cliff_ledge is CliffLedge in underground_caverns_3 {
   passage body {
     This is a rock-strewn ledge near the base of a tall cliff. The bottom of the cliff is another fifteen feet below. You have little hope of climbing up the cliff face, but you might be able to scramble down from here (though it's doubtful you could return).{if underground_caverns_3.get(:rope_down)}
 
-    A long piece of rope is dangling down from the top of the cliff and is within your reach.{/if}
+    A long piece of rope is dangling down from the top of the cliff and is within your reach.{else if underground_caverns_3.get(:man_stage) == :away}
+
+    The rope has gone up the cliff with the chest. The man said he would be back in a short while; he did not say how short.{/if}
   }
   object chest is Chest
   object rope is LedgeRope

@@ -232,6 +232,66 @@ Choices that depart from the original, in Q2:
 - **Waybread in the lake is mush**, as the original removes it; a lamp
   and a torch are fried.
 
+**Round 5 (the revision after round 4): Q1 and Q2 refined, nothing
+widened, by the brief's schedule.** Two quarters are built, 42 rooms;
+five of the seven points are in reach. What round 4's playtest changed:
+
+- **The table asks for a hand.** Nobody touched it in six runs, so the
+  repellent chain never started and eight of the round's thirteen
+  unreached places were the table's. `examine`, `look in` and `search`
+  now end with the surface leaning nearer, "the way a thing does that
+  would rather be touched than looked at"; `push` and `press` on it are
+  a hand on it and send the visitor as `touch` does; `put hand on the
+  table` is an intent over `touch`. The dark slope above the Southern
+  Shore, entered without a light, says the dark is thicker than the
+  usual kind and breathing, in the hint book's spirit; the grue lair
+  itself is unchanged.
+- **The torch says what it is for,** a flame for dry land that the lake
+  puts out for good, and the Western Shore's description says the water
+  is the north shore's water and will open the hands as readily. Both
+  runs that reached the vista carried the torch straight into the lake.
+- **The ledge is a scene before the man speaks.** Three of six runs
+  quit on the ledge before he appeared. Arriving there while he is unmet
+  now reads that something not a tree moves at the brink and the rope
+  twitches; the failed climb twitches the rope and chuckles; and the
+  chest tried is found funny from above. His timing is the original's
+  five moves, untouched, since the cues give a visitor a reason to stay
+  them.
+- **While he is away, the ledge says so:** the description, `examine
+  rope`, a climb at the missing rope, and `wait` all say the rope went
+  up with the chest and that he said he would be back. Leaving still
+  loses him, as MAN-SEEN does; the visitor who leaves now does it told.
+- **The figure blocks a real way out,** drawn from the room's own
+  exits, as SHADOW-ARRIVAL does, never a direction whose only answer is
+  a wall (friction 40).
+- **"Runes" is the wall's word.** The sword no longer answers to it, so
+  `read runes` in the Engravings Room reads the carved wall and not the
+  blade; the sword's runes are `read sword`, and `read runes on sword`
+  is a phrase of `read`.
+- **A throw with a direction in it is read whole** and answered without
+  the throw: the lake is too wide to throw across, and a lamp thrown
+  anywhere is a lamp in pieces, so say what it is thrown at. The bare
+  `throw lamp` still smashes it, as LANTERN-F does; what is gone is the
+  parser's silent drop of "south" (friction 37). `throw X at the lake`
+  and `across the lake` are refused the same way, the thing kept.
+- **`scramble down`** is the ledge's own word, and takes the way down;
+  bare `climb down` and `scramble` are the same verb, which at the cliff
+  top is the rope and anywhere else asks for a direction. **Bare `dig`**
+  works everywhere: the quicksand digs back, sand and shore are slow and
+  tedious, and rock is rock.
+- **The secret door's refusal** says plainly that what is lacking is not
+  anything left undone in that room, but to be gathered in places not
+  yet been, so the stairs stop reading as a puzzle; this stands until
+  Q4 arrives with round 7.
+- The duel's turn toward the hood is kept as it is (round 4's P11): two
+  of three runs took the hood on the first try after the waiting line,
+  and the one that struck on named the hood afterwards as the choice it
+  had missed, which is the trap working.
+- Logged, not changed: the parser's false answers to compound lines
+  (friction 38), the greeting-plus-sentence that spent the ship's one
+  command (friction 39), and the reach metric that misses the Prison
+  Cell (friction 24, status).
+
 ## The arc
 
 Zork III is the melancholy one. The visitor wakes with a dream of an old
@@ -320,6 +380,12 @@ is the eyes and the word "worthy".
 - The Sacrificial Altar is a death the table offers one time in four; the
   table shows it first.
 - Jumping at the Cliff, the High Arch and the Aqueduct View is fatal.
+- The ledge can be left by its own word, `scramble down`, and the
+  Western Shore and the Southern Shore both say which light the lake
+  takes; a torch left in the Damp Passage through the table is the only
+  light that crosses the aqueduct.
+- `throw lamp south` at the lake keeps the lamp; the lake is too wide,
+  and the world says so before anything is lost.
 
 - Looking under the figure's hood, or at the figure, is the hint the hint
   book gives: it fights the way you fight; and at its last point of

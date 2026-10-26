@@ -1,0 +1,455 @@
+{
+  "points": [
+    {
+      "id": "P1",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "No run touched the Scenic Vista's table, so the repellent chain never started. Room 8, the Timber Room and its mine rooms, and the altar were never reached. Both runs that crossed the lake did what the Lake Shore tells them: they left the light on the shore, landed on the Southern Shore in the dark, and were killed by the grue lair two moves later. Both examined the table, and the goal-seeker saw Room 8 in it at turn 56, but nothing in the reply suggests putting a hand on it. The table's point (one of the five in reach) was missed by every run. 8 of the round's 13 never-reached places are the table's.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 56,
+          "quote": "You see a tiny room with rough walls. Chiseled crudely on one wall is the number \"8\"."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 43,
+          "quote": "Oh, no! Dozens of lurking grues attack and devour you!"
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 114
+        },
+        {
+          "run": "explorer-1",
+          "turn": 64,
+          "quote": "You see the interior of a huge temple rudely constructed of basalt blocks."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 66
+        },
+        {
+          "run": "explorer-1",
+          "turn": 132,
+          "quote": "Oh, no! Dozens of lurking grues attack and devour you!"
+        }
+      ],
+      "recommendation": "Make the table ask to be touched. Have `examine table` end with the surface's pull on a hand (it is \"angled toward you\"), or have the image waver as if it wants to come closer. Let `touch`, `put hand on` and `press` the table read. The dark slope above the Southern Shore could also give one line, in the hint book's spirit, that this dark is thicker than the usual kind."
+    },
+    {
+      "id": "P2",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "Both runs that reached the Scenic Vista took its torch and went straight into the lake from the Western Shore, and lost it. The warning is in the Lake Shore's description, but the Western Shore says nothing about the water, and these players were not holding the warning in mind when the torch was new in hand. Both reports list it as a frustration.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 55,
+          "quote": "Taken."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 58,
+          "quote": "The torch goes under with the rest, and goes out with a hiss, and will not be lit again by anything down here."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 63
+        },
+        {
+          "run": "explorer-1",
+          "turn": 68
+        }
+      ],
+      "recommendation": "Echo the lake's warning on the Western Shore, briefly: the water that took the north shore's light will take this one too. Or put it in `examine torch`. The intended use, carrying the torch to the Damp Passage through the table, is easier to find if the torch says what it is for: a flame that keeps only on dry land."
+    },
+    {
+      "id": "P3",
+      "category": "design",
+      "severity": "high",
+      "consensus": {
+        "n": 4,
+        "of": 6
+      },
+      "claim": "The Cliff Ledge reads as a trap, not a scene. Five of six runs climbed down the rope. The man appears only after several moves there, and in three short runs he never appeared: casual, newcomer and prose-reader each tried `open chest` and `climb up rope`, then quit or scrambled down feeling stranded. The prose-reader's last reply was \"you cannot reach the top even with your best effort\". The man appeared in the explorer's run only on its fifth move on the ledge, when it dropped the chest.",
+      "evidence": [
+        {
+          "run": "casual-1",
+          "turn": 15
+        },
+        {
+          "run": "casual-1",
+          "turn": 17,
+          "quote": "I've known strange people, but fighting a chest?"
+        },
+        {
+          "run": "prose-reader-1",
+          "turn": 14,
+          "quote": "You try to climb the rope, but you cannot reach the top even with your best effort."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 11
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 14
+        },
+        {
+          "run": "explorer-1",
+          "turn": 20,
+          "quote": "At the edge of the cliff above you, a man appears."
+        }
+      ],
+      "recommendation": "Give the ledge a cue on arrival, or on the first failed climb: a shadow at the cliff edge, the rope twitching, a chuckle from above. Then a visitor who stays one or two moves has a reason to. The man's timing can stay the original's if the failed climb itself says someone is up there."
+    },
+    {
+      "id": "P4",
+      "category": "design",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "After the chest was hauled up, `climb up rope` got the engine's default refusal (\"You can't see any rope here.\"). Nothing on the ledge said to wait, so the explorer waited one move, scrambled down, and lost the man and the staff for good. It read the man as a trickster who had stranded it. This is faithful to MAN-SEEN, but the only sign that the man is coming back is his parting \"I'll be back in a short while!\", and nothing repeats it.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 22,
+          "quote": "\"I'll be back in a short while!\" are his last words."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 23
+        },
+        {
+          "run": "explorer-1",
+          "turn": 24,
+          "quote": "You can't see any rope here."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 25
+        }
+      ],
+      "recommendation": "Answer the missing rope in the world's voice, saying it went up with the chest. While he is away, have the ledge's description or `wait` remind the visitor that he said he would be back. Leaving can still lose him, as the original does."
+    },
+    {
+      "id": "P5",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "In the Engravings Room, with the sword carried, `read runes` was answered with the sword blade's runes instead of the carved north wall's. The wall's runes are what the room describes and what the puzzle points at.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 73,
+          "quote": "The runes run the length of the blade, cut fine and worn finer, in an Elvish hand that was never meant for you"
+        }
+      ],
+      "recommendation": "Where the engraved wall stands, give it the word \"runes\" ahead of the sword's, or answer the tie with the room's runes. The sword's runes can still be had with `read sword` or `read runes on sword`."
+    },
+    {
+      "id": "P6",
+      "category": "world-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "In the eastern-end Land of Shadow room, whose only ways out are east and southeast, the figure was said to be blocking the way to the northeast. Northeast is a wall there, and after the fight the explorer tried it and got \"Towering walls of rock bar your way.\" The explorer then probed north and northeast four more times in a similar room, adding to the round's repetition.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 72,
+          "quote": "A cloaked and hooded person ... is standing blocking the way to the northeast."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 83,
+          "quote": "Towering walls of rock bar your way."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 98
+        }
+      ],
+      "recommendation": "Choose the blocked direction only from the room's real ways out, never from a direction whose exit is only a refusal."
+    },
+    {
+      "id": "P7",
+      "category": "engine-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The engine read `throw lamp south` as \"(throw lamp)\" and dropped the direction without a word, and the lamp smashed: an irreversible loss of the only light, from a line meant to throw it across the lake. For the rest of the run the broken lantern went back to the stair after each death, and the run ended in the Void after two more deaths in the dark.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 102,
+          "quote": "(throw lamp) The lamp smashes. The light is now out."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 118,
+          "quote": "You can't turn that on."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 124
+        }
+      ],
+      "recommendation": "Raise with Sprout: a reading that discards trailing words should not go ahead with a destructive action. Ask what it meant, or refuse. In the world, read `throw <thing> <direction>` and answer it, for example that the lake is too wide to throw across, before the lamp is lost."
+    },
+    {
+      "id": "P8",
+      "category": "engine-bug",
+      "severity": "medium",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "Compound lines got false answers. `take the lantern and politely ask the stair where it goes` was answered \"You can't take the lamp.\", although `get lamp` two lines later worked. `push the rock, then pull the sword` was answered \"You can't see any such thing.\" at the Junction, where both the rock and the sword are in view. Neither reply says the sentence was not understood; each says something untrue about the world.",
+      "evidence": [
+        {
+          "run": "parser-breaker-1",
+          "turn": 1,
+          "quote": "You can't take the lamp."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 4,
+          "quote": "Taken."
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 9,
+          "quote": "You can't see any such thing."
+        }
+      ],
+      "recommendation": "File in overstory-social/sprout: a line that splits on \"and\"/\"then\" into a clause it cannot read should report the clause as unread, not answer as if an object was missing or untakeable."
+    },
+    {
+      "id": "P9",
+      "category": "world-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "Words the world's own prose offers are not read. The Cliff Ledge says \"you might be able to scramble down from here\", and `scramble down` got \"That sentence isn't one I recognize.\" `dig` in the quicksand room was not recognized either.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 13,
+          "quote": "That sentence isn't one I recognize."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 23,
+          "quote": "That sentence isn't one I recognize."
+        }
+      ],
+      "recommendation": "Read `scramble down` (and `scramble`, `climb down` with no object) on the ledge as `down`. Give `dig` a Zork-voiced refusal where there is sand or soft ground."
+    },
+    {
+      "id": "P10",
+      "category": "language-gap",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "With the ship passing, `hello, can you stop the ship?` was read as an order addressed to something called \"hello\" and answered \"You can't see any such thing.\" It is a call across the water, which the intent says any `say <anything>` at the shore should be. The next line, `say hello to the sailor`, brought the ship in.",
+      "evidence": [
+        {
+          "run": "newcomer-1",
+          "turn": 16,
+          "quote": "You can't see any such thing."
+        },
+        {
+          "run": "newcomer-1",
+          "turn": 17
+        }
+      ],
+      "recommendation": "Log this against Sprout's addressee reading (caverns 2 friction 7). Where the world can, read a leading \"hello,\" or \"ahoy,\" at the shore as a call."
+    },
+    {
+      "id": "P11",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 3,
+        "of": 6
+      },
+      "claim": "The duel's turn toward the hood now works. Two of the three runs that fought took the hood on the first try after the waiting line. The explorer saw the line twice, struck on, and killed the figure. Afterwards it named the hood as the choice it had missed, which is the trap working and being understood. The kill run is the one that typed `attack figure` 10 times, the round's largest repetition.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 17,
+          "quote": "recoil in horror at the sight of your own face"
+        },
+        {
+          "run": "parser-breaker-1",
+          "turn": 19
+        },
+        {
+          "run": "explorer-1",
+          "turn": 80,
+          "quote": "It lowers its sword, and its head with it, and waits; the hood hangs within reach of your hand."
+        },
+        {
+          "run": "explorer-1",
+          "turn": 82,
+          "quote": "Its hood and its cloak go with it"
+        }
+      ],
+      "recommendation": "Keep it. No change needed: the trap is legible and still a trap."
+    },
+    {
+      "id": "P12",
+      "category": "design",
+      "severity": "low",
+      "consensus": {
+        "n": 1,
+        "of": 6
+      },
+      "claim": "The Q4 refusal at the secret door (\"you are not yet what he asked for; the door is open, but the way down is not yours today\") reads to a player as a condition they could meet now. The explorer ended the run stuck, wishing to know what would make it worthy.",
+      "evidence": [
+        {
+          "run": "explorer-1",
+          "turn": 36,
+          "quote": "the door is open, but the way down is not yours today."
+        }
+      ],
+      "recommendation": "This resolves itself when Q4 is built in round 7. Until then, consider making the line say plainly that it is not a matter of anything still to be done here, so the stairs stop looking like a puzzle."
+    },
+    {
+      "id": "P13",
+      "category": "engine-bug",
+      "severity": "low",
+      "consensus": {
+        "n": 2,
+        "of": 6
+      },
+      "claim": "Reach lists the Prison Cell as never reached, yet five deaths across two runs passed through it with the old man's full visit. The cell is entered and left within one turn, and the reach count misses it, so the metric understates what was played.",
+      "evidence": [
+        {
+          "run": "goal-seeker-1",
+          "turn": 43,
+          "quote": "You find yourself deep within the earth in a barren prison cell."
+        },
+        {
+          "run": "goal-seeker-1",
+          "turn": 114
+        },
+        {
+          "run": "explorer-1",
+          "turn": 121
+        },
+        {
+          "run": "explorer-1",
+          "turn": 132
+        }
+      ],
+      "recommendation": "Raise with Sprout: reach should count a place a visitor was carried into within a turn. Until then, the author can read prison_cell in places.never as a measurement gap."
+    }
+  ],
+  "legibility": {
+    "verdict": "partly",
+    "why": "Every run got the frame: a dream mentor, a final test, seek him when worthy. The three runs that went deep (goal-seeker, explorer, parser-breaker) understood the duel against yourself. The goal-seeker and explorer also understood the lake that takes what you carry. Q2's meaning did not land: the man at the cliff read as a trickster (explorer) or not at all, and the table, the repellent, the key and the aqueduct went unread. The three short runs (casual, newcomer, prose-reader) quit on the Cliff Ledge or near it and saw only setting. The goal-seeker, given the goal \"Get as far into the place as you can.\", did not reach it: it got to the Key Room (turn 110) and opened the manhole, but never entered the aqueduct. What stopped it: no light past the lake, because the table was never touched (so no repellent); the torch lost to the lake (turn 58); the lamp smashed by a misread throw (turn 102); and four deaths, the last to the Void at turn 124. The earthquake at turn 123 closed the arch anyway.",
+    "runs": [
+      {
+        "run": "goal-seeker-1",
+        "understood": "A Zork-style final test: a hooded double of yourself to beat and unmask, a freezing lake that takes your things, and grues in the dark beyond it. It reached the Key Room but did not get past the light problem, and ended in the Void.",
+        "matches": "yes"
+      },
+      {
+        "run": "explorer-1",
+        "understood": "A test of worthiness set by an old man: a trickster at the cliff, a sleeping old man fed for a secret door, a double it killed while sensing it should have spared it. It took the worthiness refusal at the stairs as a puzzle it could solve now.",
+        "matches": "partly"
+      },
+      {
+        "run": "casual-1",
+        "understood": "An atmospheric cave world with a dream mentor, a sword in a stone, a cloaked figure, a sea and a locked chest, with no pull forward.",
+        "matches": "partly"
+      },
+      {
+        "run": "newcomer-1",
+        "understood": "Wandering caves, a cliff and a shore after a dream wizard's call; the sailor's gift as a small solved puzzle; no goal emerged.",
+        "matches": "partly"
+      },
+      {
+        "run": "parser-breaker-1",
+        "understood": "A cave test of worthiness whose centre is fighting and unmasking a shadow double of yourself.",
+        "matches": "partly"
+      },
+      {
+        "run": "prose-reader-1",
+        "understood": "A sequel with history: an old lantern friend, a sword whose hilt fits your hand, a sunlit oasis, a chest someone wants. It sensed the story but was stranded on the ledge before it unfolded.",
+        "matches": "partly"
+      }
+    ]
+  },
+  "metrics": [
+    {
+      "metric": "reading.unreadRate",
+      "before": 0.13,
+      "after": 0.1
+    },
+    {
+      "metric": "reading.refusedRate",
+      "before": 0.01,
+      "after": 0.01
+    },
+    {
+      "metric": "faults",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "metric": "repetition",
+      "before": 36,
+      "after": 15
+    },
+    {
+      "metric": "reach.places.never",
+      "before": 2,
+      "after": 13
+    },
+    {
+      "metric": "reach.objects.never",
+      "before": 174,
+      "after": 413
+    },
+    {
+      "metric": "reach.verbs.never",
+      "before": 66,
+      "after": 81
+    },
+    {
+      "metric": "reach.handlers.never",
+      "before": 9,
+      "after": 22
+    },
+    {
+      "metric": "reach.passages.never",
+      "before": 557,
+      "after": 1175
+    }
+  ]
+}

@@ -639,3 +639,98 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   consumables and will do this.
 - **Spec:** The world model › Destroying; The compiler › What it warns
   about.
+
+## Round 5: the second revision after Q2, nothing widened
+
+### 37. A direction after a thrown thing is dropped without a word, and the throw goes ahead
+
+- **Wanted:** `throw lamp south`, typed at the Lake Shore to get the lamp
+  across the water, answered as what it is: a throw in a direction, which
+  Zork's parser would have asked about ("What do you want to throw the
+  lamp at?") and never performed.
+- **Found:** the parser read the line as `throw [target]` with "south"
+  left over, said so only as "(throw lamp)", and ran the bare throw's
+  `do`, which smashes a lamp. A reading that discards trailing words
+  went ahead with an irreversible act; the visitor lost their only light
+  to a line that did not say the thing they typed. Round 4's P7.
+- **Wrote instead:** two verbs whose phrases read the whole line,
+  `throw_dir` (the eight compass directions) and `throw_far` (up, down,
+  across, away, over, far, ahead, overboard), answered by the visitor's
+  own part without a throw: at the lake, that it is too wide to throw
+  across; elsewhere, that the thing would land that way, in pieces if it
+  is the lamp, and to say what it is thrown at. Sixteen phrases to say
+  "this line has a direction in it" is a cost; the gap is Sprout's: a
+  reading that leaves words unread should not win over nothing, or
+  should at least be refused where the verb is destructive. For
+  overstory-social/sprout.
+- **Spec:** Parsing › Matching a line; Parsing › Choosing a reading;
+  Parsing › When nothing matches.
+
+### 38. A compound line answers falsely for the clause it could not read
+
+- **Wanted:** `take the lantern and politely ask the stair where it goes`
+  and `push the rock, then pull the sword` answered as Zork would, with
+  the first clause done and the second said to be unread.
+- **Found:** the first was answered "You can't take the lamp." at the
+  stair with the lamp at the visitor's feet, and `get lamp` two lines
+  later took it; the second "You can't see any such thing." at the
+  Junction with the rock and the sword in plain view. The split on "and"
+  and "then" seems to have bound the whole remainder as a noun phrase
+  and reported the failure as the world's `cannot` or `not_here`, which
+  are untrue of the world. Round 4's P8. Nothing in the world can
+  intercept a line before the parser splits it. For
+  overstory-social/sprout: a clause that cannot be read should be
+  reported as unread, not as a missing or untakeable thing.
+- **Spec:** Parsing › Sequences, again and all; Parsing › When nothing
+  matches.
+
+### 39. A greeting followed by a sentence is read as a greeting of the sentence
+
+- **Wanted:** `hello, can you stop the ship?`, typed at the Flathead Ocean
+  with the ship passing, heard as a call across the water, which any
+  `say <anything>` there is.
+- **Found:** `greet`'s phrase `"hello, [target]"` bound "can you stop the
+  ship" as the target, found nothing by that name, and answered
+  `not_here`; the bare `hello` verb could not read it either, since its
+  phrase is the one word. The ship's one command was spent on it. Round
+  4's P10, and caverns 2's 7 (no addressee reading) from the other end:
+  there is no way to say that a leading vocative or greeting may be
+  followed by free text the world does not need to parse. Not worked
+  around: a phrase cannot end in a slot that swallows the rest of the
+  line, and `say [anything]` is already as wide as a phrase goes.
+- **Spec:** Parsing › Matching a line; Verbs › Phrases.
+
+### 40. A draw's bound is a literal, and a list cannot be drawn from
+
+- **Wanted:** SHADOW-ARRIVAL's pick of a way for the figure to block: one
+  of the room's real exits, drawn at random, so that the figure never
+  blocks a direction whose only answer is a wall (round 4's P6, where it
+  blocked the northeast of a room with no northeast, and the visitor
+  walked into the wall five times after the fight).
+- **Found:** "the bound of `random` ... [is a] positive integer literal",
+  so `random(self.get(:nways))` is refused; and a list property can be
+  walked and asked `includes`, but not indexed or drawn from, so a
+  `:ways [Direction]` on each room could not give up one member.
+- **Wrote instead:** each shadow room declares its count of real exits
+  and names them in eight `Direction` properties, `:w0` to `:w7`; the
+  pick branches on the count (3, 6, 7 or 8, the counts the eight rooms
+  have) to a `random` with that literal, carries the draw out of the
+  branch in a property, and chains eight `if`s to the direction. Correct
+  and uniform, and three times the text the idea needs.
+- **Spec:** Chance (the bound of `random`); Properties and values (lists).
+
+### 41. Friction 22, again: the wait on the ledge
+
+- The ledge while the man is away needed `wait` to say where the rope
+  went and that he said he would be back (round 4's P4), and `waited` is
+  given nothing, so the visitor sets `:ledge_waiting` at the top of
+  their `after command`, as `:shore_empty` is set, and the passage reads
+  it. The same shape as 22, for the same reason; noted, not re-argued.
+- **Spec:** Prose › Engine lines (`waited`).
+
+### 24, status after round 4
+
+- Still open: round 4's metrics list `prison_cell` as never reached
+  through five deaths across two runs (P13). Read it as a measurement
+  gap until Sprout's reporter counts a place a visitor was carried
+  through within a turn.

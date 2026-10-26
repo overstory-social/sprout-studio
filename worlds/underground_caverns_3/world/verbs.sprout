@@ -55,7 +55,7 @@ verb put_on {
 }
 verb open { role target: Openable  role tool carried  "open [target]"  "open up [target]"  "open [target] with [tool]" }
 verb close { role target: Openable  "close [target]"  "shut [target]" }
-verb read { role target: Readable  "read [target]"  "read from [target]"  "skim [target]" }
+verb read { role target: Readable  "read [target]"  "read from [target]"  "skim [target]"  "read runes on [target]"  "read writing on [target]" }
 verb look_in {
   role target
   "look in [target]"  "look inside [target]"  "look into [target]"  "examine in [target]"
@@ -132,8 +132,23 @@ verb throw {
   role target carried
   role aim
   "throw [target] at [aim]"  "throw [target] to [aim]"  "throw [target]"  "throw [target] over [aim]"
-  "throw [target] off [aim]"  "throw [target] with [aim]"
+  "throw [target] off [aim]"  "throw [target] with [aim]"  "throw [target] across [aim]"
   synonyms "hurl", "toss", "chuck"
+}
+// A thing thrown in a direction and at nothing ("throw lamp south"): the
+// parser would otherwise read it as a bare throw, drop the direction
+// without a word, and smash the lamp. These read the whole line and
+// answer it without throwing (adventurer.sprout). Their phrases write
+// `throw`, so a synonym would give them nothing (friction 30).
+verb throw_dir {
+  role target carried
+  "throw [target] north"  "throw [target] south"  "throw [target] east"  "throw [target] west"
+  "throw [target] northeast"  "throw [target] northwest"  "throw [target] southeast"  "throw [target] southwest"
+}
+verb throw_far {
+  role target carried
+  "throw [target] up"  "throw [target] down"  "throw [target] across"  "throw [target] away"
+  "throw [target] over"  "throw [target] far"  "throw [target] ahead"  "throw [target] overboard"
 }
 verb kick { role target: Creature  "kick [target]"  "taunt [target]" }
 verb rub { role target: Touchable  "rub [target]"  "touch [target]"  "feel [target]"  "pat [target]"  "pet [target]"  "stroke [target]" }
@@ -194,6 +209,22 @@ verb cut { role target  role tool carried  "cut [target] with [tool]"  "cut [tar
 verb play { role target  "play [target]"  "play with [target]" }
 verb count_things { role target  "count [target]" }
 verb dig { role target: Diggable  role tool  "dig [target]"  "dig in [target]"  "dig [target] with [tool]"  "dig in [target] with [tool]" }
+// A dig with nothing named (V-DIG): works everywhere, since the ground is
+// everywhere, and is answered by what the ground here is.
+verb dig_here { "dig"  "dig here"  "dig down"  "dig a hole"  "dig in the ground"  "dig the ground" }
+// The ledge's own word for its way down ("you might be able to scramble
+// down from here"), and a bare climb down: on the ledge, the way down;
+// at the top of the cliff, the rope; anywhere else, a direction wanted.
+verb scramble {
+  "scramble down"  "scramble"  "climb down"  "clamber down"
+  "scramble down cliff"  "scramble down the cliff"  "scramble down ledge"  "climb down carefully"
+}
+// A hand put on a thing is a touch (VIEWING-TABLE-F's RUB).
+intent hand_on {
+  "put hand on [x]"  "put your hand on [x]"  "place hand on [x]"  "lay hand on [x]"
+  "lay hands on [x]"  "press hand to [x]"  "put palm on [x]"  "rest hand on [x]"
+  do rub (target: x)
+}
 intent take_off { "take off [x]"  "take [x] off"  do drop (target: x) }
 intent call_out_to { "call out to [x]"  "call out [x]"  "shout for [x]"  "yell at [x]"  "yell to [x]"  do hail (target: x) }
 verb untie { role target  role tool  "untie [target]"  "untie [target] from [tool]"  "unfasten [target]"  "detach [target]"  "disconnect [target]" }

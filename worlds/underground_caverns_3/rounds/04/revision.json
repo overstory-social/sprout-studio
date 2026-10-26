@@ -1,0 +1,223 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The table is one of the five points in reach and the gate to Room 8, the repellent and the whole far side of the aqueduct; six runs and no hand on it means the original's one-word hint (RUB) is not enough once the image itself is the thing players look at. Making the surface ask for a hand, letting push/press/put-hand-on count as a touch, and one hint-book line on the lair's dark keep the puzzle and its odds the original's."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Both vista runs lost the torch to the lake the move after picking it up. The warning belongs where the torch is new in hand: the torch's own description and the Western Shore's. The lake still fries it; nothing of the mechanic changes."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "Four of six runs, three quitting on the ledge before the man spoke. The man's five-move clock is the original's and stays; what was missing was any sign that staying would be answered. Cues on arrival, on the failed climb and on the chest tried give that without moving him."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "MAN-SEEN's loss of the man for leaving is faithful and stays; but the engine's 'You can't see any rope here' for a rope the player just watched go up is the world failing to speak. The ledge, the rope, a climb and a wait now say where it went and that he said he would be back."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "A world bug: the sword's 'runes' noun tied with the carved wall in the one room where the wall's runes are the puzzle. 'Runes' is now the wall's word; the sword's are 'read sword' and 'read runes on sword'."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "A world bug and a departure from SHADOW-ARRIVAL, which picks among the room's real exits. Fixed to draw only from each room's real ways out; the language cost (no drawn bound, no list indexing) is logged as friction 40."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The world side is accepted: 'throw lamp south' and its kin are now read whole and answered without the throw, so the direction is never dropped silently into a smash. The engine side, a reading that discards trailing words going ahead with a destructive act, is Sprout's and is logged as friction 37 for filing."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "An engine bug the world cannot intercept: the split on and/then answers a clause it could not read with untrue world lines. Accepted as a friction entry (38) for filing with Sprout; no world change is possible or made."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Words the world's own prose offers should read. 'scramble down' and bare 'climb down' are a verb that takes the ledge's way down, and bare 'dig' works everywhere in Zork's voice, the quicksand digging back."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "Accepted for the log (friction 39) against Sprout's addressee reading, as recommended. The second half is not expressible: no phrase can end in a slot that swallows free text, and the world already reads every near call the shore can name, so no world change is made."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Agreed and kept unchanged: the hood trap is legible and still a trap, which is what the brief's showcase asks of the duel."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "Until Q4 arrives in round 7 the stairs should not read as a puzzle in that room. The refusal now says plainly that nothing left undone there is wanted, only what is still to be gathered elsewhere; the in-world line stays in-world."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "A measurement gap already logged as friction 24; its status is updated with this round's evidence for the steward to file. No world change."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The viewing table asks to be touched: examine, look in and search end with the surface leaning nearer; push/press on it transports as touch does; a `hand_on` intent reads 'put hand on the table' as a touch. The grue lair entered without a light says the dark is thicker than the usual kind and breathing.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/vista.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The torch's description says it is a flame for dry land the lake puts out for good; the Western Shore's description says the water is the north shore's water and will open the hands as readily.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/lamp.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/vista.sprout"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "Ledge cues before the man appears: arriving reads that something not a tree moves at the brink and the rope twitches; the failed climb twitches and chuckles; the chest tried is found funny from above. The man's five-move clock is untouched.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/cliff.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "While the man is away the ledge's description, `examine rope`, a climb at the missing rope and `wait` (a `:ledge_waiting` flag read by the `waited` passage) all say the rope went up with the chest and that he said he would be back.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/cliff.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "'runes' and 'rune' removed from the sword's nouns so the carved wall owns the word; `read runes on [target]` and `read writing on [target]` added as phrases of `read`.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/items.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "Each shadow room declares its real exits (`:nways`, `:w0`..`:w7`) and the figure's blocked direction is drawn only from them, with the draw's bound branched on the count since `random` takes a literal.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/shadow.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "New verbs `throw_dir` (eight compass directions) and `throw_far` (up/down/across/away/over/far/ahead/overboard) read a thrown line whole and answer without the throw; `throw [target] across [aim]` added to `throw`, and a Lake aim is refused as too wide to throw across with the thing kept.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "New no-role verb `scramble` ('scramble down', 'scramble', 'climb down', …) takes the ledge's way down, the rope at the cliff top, and asks for a direction elsewhere; new no-role verb `dig_here` (bare 'dig') answers by the ground: quicksand digs back, sand and shore are slow and tedious, rock is rock.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "The secret door's north/down refusal reworded to say plainly that nothing left undone in that room is wanted, only what is still to be gathered in places not yet been.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/engravings.sprout"
+      ],
+      "for": [
+        "P12"
+      ]
+    },
+    {
+      "what": "Tests: ten existing tests re-goldened for the lines above (the blocked direction now a real exit, the ledge wait line, the Western Shore, the lair line, the table's pull, the door's refusal); `slain` repointed to walk into the figure's new blocked direction; three new tests `ledge_cues`, `throw_direction` and `dig_bare` pin the new behaviour. `npx sprout check` and `npx sprout test` pass (20 tests).",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/ledge_cues.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/throw_direction.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/dig_bare.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/slain.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/walkthrough.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/cliff_man.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/vista.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/old_man.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/dark.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/duel.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/fight.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/hood_pull.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/sword_sea.json"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P6",
+        "P7",
+        "P9",
+        "P12"
+      ]
+    },
+    {
+      "what": "friction.md: entries 37 (a direction after a thrown thing dropped silently, the throw going ahead), 38 (compound lines answered falsely), 39 (a greeting followed by a sentence read as a greeting of the sentence), 40 (a draw's bound is a literal and a list cannot be drawn from), 41 (friction 22 again, for the ledge's wait), and a status note on 24 (reach misses the Prison Cell).",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/friction.md"
+      ],
+      "for": [
+        "P4",
+        "P6",
+        "P7",
+        "P8",
+        "P10",
+        "P13"
+      ]
+    },
+    {
+      "what": "intent.md: a 'Round 5 (the revision after round 4)' section saying which quarters are built (Q1 and Q2, nothing widened) and what this playtest changed, including P11 kept as is and the logged-not-changed points; two new lines under secrets a player can find.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12",
+        "P13"
+      ]
+    }
+  ]
+}

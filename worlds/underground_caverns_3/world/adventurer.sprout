@@ -14,23 +14,23 @@
 // time the void. Getting anywhere at a stroke takes the world's gate,
 // since no room can otherwise reach another.
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery, Creature, Wearable, Weapon, Flame} from 'thing'
+import {Thing, Portable, Scenery, Creature, Wearable, Weapon, Flame, Diggable} from 'thing'
 import {Box} from 'box'
 import {Lamp, Light, Torch} from 'lamp'
 import {Sword, Hood, Cloak, Amulet, Vial, Potion, Waybread, Staff, BrokenStaff, StrangeKey, Repellent, :quaff} from 'items'
 import {Room, DarkRoom, Sailor, Floor} from 'room'
 import {go, look, examine, inventory, help} from 'sprout'
 import {endless_stair, junction, barren_area, creepy_crawl, foggy_room} from 'way_in'
-import {ShadowRoom, Shadow, Footsteps, strike} from 'shadow'
+import {ShadowRoom, Shadow, Footsteps, Quicksand, strike} from 'shadow'
 import {FlatheadOcean, Ocean, Ship} from 'ocean'
 import {on_lake, in_lake, OnLake, Underwater, LakeShore, AqueductView, Lake, ShinyObject, :taken} from 'lake'
 import {oblivion} from 'oblivion'
 import {prison_cell, send_back} from 'cell'
-import {cliff, cliff_ledge, cliff_base, CliffTop, CliffLedge, CliffMan, LedgeMan, CliffRope, LedgeRope, CliffEdge, Ledge, Chest, haul} from 'cliff'
+import {cliff, cliff_ledge, cliff_base, CliffTop, CliffLedge, CliffBase, CliffMan, LedgeMan, CliffRope, LedgeRope, CliffEdge, Ledge, Chest, haul} from 'cliff'
 import {damp_passage, dead_end, Sleeper} from 'engravings'
 import {scenic_vista, timber_room, room_8, altar_room, TimberRoom, MineRoom, Altar, FarShore} from 'vista'
 import {key_room, SouthShore, GrueLair, DarkTwo, KeyRoom, AqueductRoom, HighArch, WaterSlide} from 'aqueduct'
-import {take, take_fixed, drop, put, put_on, give, throw, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, Dest, Mode, Direction, ManStage, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep} from 'verbs'
+import {take, take_fixed, drop, put, put_on, give, throw, throw_dir, throw_far, scramble, dig_here, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, Dest, Mode, Direction, ManStage, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep} from 'verbs'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -81,6 +81,7 @@ kind Adventurer is sprout.Visitor {
   // the turn's clock began: for the waited line, which is given nothing,
   // reads the one waiting, and is rendered after the clock has run.
   :shore_empty false
+  :ledge_waiting false
   // Scratch for a stroke: whether it is made with the sword, named or not.
   :armed false
   // The lake (LAKE-TIME, I-ROC, I-IN-LAKE).
@@ -160,7 +161,7 @@ kind Adventurer is sprout.Visitor {
   passage steps_back { Behind you, the hooded figure steps back into the shadows, and they close over it like water. }
   // Zork's "Time passes..." everywhere but the shore after the ship, where
   // waiting is for nothing, and the line says so.
-  passage waited { {if self.get(:shore_empty)}Time passes, and the surf with it, in and out. Nothing else passes; the ship that passes this shore has passed it, and the mist will stay empty however long you give it.{else}Time passes...{/if} }
+  passage waited { {if self.get(:shore_empty)}Time passes, and the surf with it, in and out. Nothing else passes; the ship that passes this shore has passed it, and the mist will stay empty however long you give it.{else if self.get(:ledge_waiting)}Time passes... Nothing comes down the cliff yet. He said a short while, and a man with a chest to go through has his own idea of short; the ledge is where he left you, and where he will look.{else}Time passes...{/if} }
   // Disarmed at the last point of strength (I-SHADOW-REPLY), and the sword
   // handed back: the original's line first, and others of its kind, since
   // it is said often. The sword never leaves the hand in any of them.
@@ -196,6 +197,7 @@ kind Adventurer is sprout.Visitor {
   // fight's cure, the potion, the ship, the lake, the man, the table.
   after command {
     self.set(:shore_empty, here.is(FlatheadOcean) && self.get(:ship_gone))
+    self.set(:ledge_waiting, here.is(CliffLedge) && underground_caverns_3.get(:man_stage) == :away)
     self.set(:load, 0)
     self.set(:bulky, false)
     each t: Thing in self {
@@ -487,7 +489,12 @@ kind Adventurer is sprout.Visitor {
       self.set(:pt_ledge, true)
       self.adjust(:score, 1)
     }
-    if (underground_caverns_3.get(:man_stage) == :unmet) { self.set(:man_timer, 5) }
+    // Somebody is up there, and the ledge says so before he does, so that
+    // a visitor has a reason to stay the few moves he takes to appear.
+    if (underground_caverns_3.get(:man_stage) == :unmet) {
+      self.set(:man_timer, 5)
+      tell self "Far above you, at the brink of the cliff, something that is not a tree moves against the light, and the rope twitches once, as though somebody up there had a hand on it and had just taken it off."
+    }
   }
   // The chest gone up with the man (GLOBAL-ROPE-F's TIE): ten moves.
   on :man_away { self.set(:man_timer, 10) }
@@ -814,6 +821,8 @@ kind Adventurer is sprout.Visitor {
               self.set(:devoured, true)
               send self :grue
             }
+          } else if (here.is(GrueLair)) {
+            say "You have moved into a dark place, and a thicker dark than the usual kind: it has a smell, and a sound in it of breathing, and more than one of each. Whatever is said of grues elsewhere, here they are not a likelihood."
           } else {
             say "You have moved into a dark place."
           }
@@ -1040,6 +1049,11 @@ kind Adventurer is sprout.Visitor {
             self.set(:dest, :fall_base)
             send underground_caverns_3 :open_gate
           }
+          // At the lake (LAKE-F has no word for it): too wide to throw
+          // across, and the throw is not made.
+          else if (aim.is(Lake)) {
+            say "The lake is too wide to throw anything across, the {target.short} included; it would go in with a small sound and be on the bottom, which is where the lake keeps things. You keep hold of it. If you want it on the far side, the far side is a swim, and the bottom is on the way."
+          }
           else if (target.is(Lamp)) {
             move target to here
             send target :smash
@@ -1065,6 +1079,57 @@ kind Adventurer is sprout.Visitor {
           say "Thrown."
         }
       }
+    }
+  }
+
+  // A thing thrown in a direction, at nothing ("throw lamp south"): the
+  // whole line is read, and answered without the throw, since a throw
+  // with nothing aimed at is a smash, and a smashed lamp is the end of
+  // the light.
+  as actor for throw_dir {
+    do {
+      if (target.is(Thing)) {
+        if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore) || here.is(OnLake)) { say "The lake is too wide to throw anything across, the {target.short} included; it would go in with a small sound and be on the bottom, which is where the lake keeps things. You keep hold of it. If you want it on the far side, the far side is a swim, and the bottom is on the way." }
+        else if (target.is(Lamp)) { say "You could throw the lamp that way, and it would land that way, in pieces, and the light would go out with it. You keep hold of it. If you mean to throw it at something, say what." }
+        else { say "You could throw the {target.short} that way, and then it would be that way, and you would be walking after it. You keep hold of it. If you mean to throw it at something, say what." }
+      }
+    }
+  }
+  as actor for throw_far {
+    do {
+      if (target.is(Thing)) {
+        if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore) || here.is(OnLake)) { say "The lake is too wide to throw anything across, the {target.short} included; it would go in with a small sound and be on the bottom, which is where the lake keeps things. You keep hold of it. If you want it on the far side, the far side is a swim, and the bottom is on the way." }
+        else if (here.is(CliffTop) || here.is(CliffLedge) || here.is(AqueductView) || here.is(HighArch)) { say "There is a drop here, and a thing thrown toward it goes over it; if that is what you want, say so: throw it over the edge, or off the ledge." }
+        else if (target.is(Lamp)) { say "You could throw the lamp, and it would land, in pieces, and the light would go out with it. You keep hold of it. If you mean to throw it at something, say what." }
+        else { say "You could throw the {target.short}, and then you would be walking after it. You keep hold of it. If you mean to throw it at something, say what." }
+      }
+    }
+  }
+  // The ledge's own way down, in the ledge's own word (CLIFF-LEDGE's
+  // DOWN); at the top of the cliff, the rope; anywhere else, a direction.
+  as actor for scramble {
+    do {
+      if (here.is(CliffLedge)) {
+        say "You scramble down from the ledge, boulder to boulder and then rock face, with the shelf going up out of reach behind you; it is not a climb you could make the other way."
+        move self down
+      }
+      else if (here.is(CliffTop)) {
+        if (underground_caverns_3.get(:rope_down)) {
+          say "You take the rope in both hands and go down it, hand over hand, with the cliff face going by in front of your nose, to the shelf below."
+          move self down
+        } else { say "The drop would kill you, and there is no rope over the side to make it anything else." }
+      }
+      else if (here.is(CliffBase)) { say "You are at the bottom of the cliff already; there is nothing here to scramble down." }
+      else { say "Scrambling is for cliffs. Where the ground goes down from here, down is a direction, and you can say so." }
+    }
+  }
+  // A dig with nothing named (V-DIG): the quicksand digs back, the sand
+  // and the shore give nothing, and the rock is rock.
+  as actor for dig_here {
+    do {
+      if (here.count(Quicksand) > 0) { say "You dig at the quicksand with your hands, and the quicksand digs back, and you take them out of it while they are still yours. There is nothing under it but more of it, and then the dark." }
+      else if (here.count(Diggable) > 0) { say "Digging with your bare hands is slow and tedious, and turns up nothing but what you were digging in." }
+      else { say "The ground is too hard for digging here." }
     }
   }
 

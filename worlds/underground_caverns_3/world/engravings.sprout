@@ -249,9 +249,9 @@ object dead_end is DarkRoom in underground_caverns_3 {
 object engravings_room is EngravingsRoom in underground_caverns_3 {
   grammar {
     name "Engravings Room"
-    exit north "north" refuse "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for; the door is open, but the way down is not yours today. You come back up." when (secret_door.get(:door_open))
+    exit north "north" refuse "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for: not for anything left undone up here, no word or key or deed this room is waiting on, but for what is still to be gathered in places you have not yet been. The door is open, and will stay open. The way down is not yours today. You come back up." when (secret_door.get(:door_open))
     exit north "north" refuse "You can't go that way."
-    exit down "down" refuse "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for; the door is open, but the way down is not yours today. You come back up." when (secret_door.get(:door_open))
+    exit down "down" refuse "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for: not for anything left undone up here, no word or key or deed this room is waiting on, but for what is still to be gathered in places you have not yet been. The door is open, and will stay open. The way down is not yours today. You come back up." when (secret_door.get(:door_open))
     exit down "down" refuse "You can't go that way."
     exit southwest "southwest" -> damp_passage
     exit southeast "southeast" -> dead_end

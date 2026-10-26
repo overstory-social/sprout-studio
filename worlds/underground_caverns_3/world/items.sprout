@@ -11,7 +11,9 @@ import {Shadow} from 'shadow'
 import {read, look_under, shift, raise, lower, smell, drink, drink_from, pour, pour_on, fill, shake, cut, burn, eat, put, unlock, spray, put_on, :glow, :sword_come, :consume, :hood_taken, :sprayed, :snap, :die} from 'verbs'
 
 kind Sword is Weapon, Readable {
-  grammar { name "sword"  nouns "orcrist", "glamdring", "blade", "runes", "rune"  adjectives "elvish", "old", "antique", "glowing" }
+  // "runes" is not among its nouns: where the carved north wall stands,
+  // that word is the wall's, and the sword's are read with "read sword".
+  grammar { name "sword"  nouns "orcrist", "glamdring", "blade", "hilt"  adjectives "elvish", "old", "antique", "glowing" }
   :size 25
   :glow 0 min 0 max 2
   // Imbedded in the great rock at the Junction (SWORD-IN-STONE?), until
