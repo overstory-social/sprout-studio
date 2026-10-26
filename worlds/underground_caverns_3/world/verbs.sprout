@@ -7,7 +7,7 @@
 // in range; a verb with no role is kept for what works everywhere.
 import * as sprout from 'sprout'
 import {inventory, wait} from 'sprout'
-import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace, Openable, Readable, Searchable, Concealing, Food, Touchable, Shakeable, Squeezable, Greetable, Sprayable, Pushable, Dial, Knockable} from 'thing'
+import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace, Openable, Readable, Searchable, Concealing, Food, Touchable, Shakeable, Squeezable, Greetable, Sprayable, Pushable, Dial, Knockable, Seatable} from 'thing'
 
 // Zork III wears a thing by taking it (V-WEAR performs TAKE), so "wear"
 // and "put on" are phrases of `take`, and a worn thing is a held one.
@@ -52,6 +52,7 @@ verb put_on {
   role item carried
   role surface
   "put [item] on [surface]"  "put [item] onto [surface]"  "set [item] on [surface]"  "drop [item] on [surface]"
+  "put [item] back on [surface]"  "hang [item] on [surface]"  "mount [item] on [surface]"  "replace [item] on [surface]"
 }
 verb open { role target: Openable  role tool carried  "open [target]"  "open up [target]"  "open [target] with [tool]" }
 verb close { role target: Openable  "close [target]"  "shut [target]" }
@@ -132,10 +133,13 @@ verb exit_thing {
   "get out of [target]"  "exit [target]"  "climb out of [target]"  "get off [target]"
   "disembark [target]"  "get off of [target]"  "leave [target] behind"  "step out of [target]"
 }
-intent sit_in {
-  "sit in [x]"  "sit on [x]"  "sit down on [x]"  "sit down in [x]"
-  "get on [x]"  "climb on [x]"  "take a seat on [x]"  "seat yourself on [x]"
-  do through (target: x)
+// Sitting in a thing with a seat (V-BOARD): the role is typed by the seat,
+// so that a bare "machine" in the Technology Museum is the gold one and
+// never a draw among three (round 6's P10).
+verb board {
+  role target: Seatable
+  "sit in [target]"  "sit on [target]"  "sit down on [target]"  "sit down in [target]"
+  "get on [target]"  "climb into [target]"  "take a seat in [target]"  "sit at [target]"
 }
 verb knock { role target: Knockable  "knock on [target]"  "knock [target]"  "rap on [target]"  "bang on [target]"  "tap on [target]"  "pound on [target]" }
 // A search with nothing named: the room, as "examine room" reads it.
@@ -299,6 +303,19 @@ intent shout_more {
   "shout for help"  "call for help"  "cry for help"  "yell for help"
   "shout hello"  "shout up"  "call out hello"  "shout help"
   do yell
+}
+// A call up, with nobody named (round 6's P7): at the ledge, a shout up
+// the cliff, and answered as one.
+intent call_up {
+  "call up"  "call upward"  "yell up"  "call up the cliff"
+  "shout up the cliff"  "call up to the top"  "shout hello up"  "yell hello"
+  do yell
+}
+// A call up to somebody: the man at the brink, mostly (round 6's P7).
+intent call_up_to {
+  "call up to [x]"  "shout up to [x]"  "shout up at [x]"  "yell up to [x]"
+  "call out to [x] above"  "call up to [x] above"  "shout to [x] above"  "call [x] above"
+  do hail (target: x)
 }
 intent say_hello_comma {
   "say hello, [x]"  "say hello [x]"  "say hi, [x]"  "say hi [x]"

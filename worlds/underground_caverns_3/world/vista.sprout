@@ -17,7 +17,7 @@ import {Lake} from 'lake'
 import {Stairs} from 'way_in'
 import {Torch} from 'lamp'
 import {Repellent} from 'items'
-import {rub, read, look_in, look_under, search, shift, climb_up, climb_down, through, smell, listen, dig, cross, :table_touched, :altar_death, :view_changed} from 'verbs'
+import {rub, read, look_in, look_under, search, shift, climb_up, climb_down, through, smell, listen, dig, cross, put_on, :table_touched, :altar_death, :view_changed} from 'verbs'
 
 // The viewing table (VIEWING-TABLE, VIEWING-TABLE-F): touched, it sends
 // you where it is showing.
@@ -30,23 +30,38 @@ kind ViewingTable is Scenery, Touchable, Concealing, Searchable {
   // The image fades, and the surface asks for a hand: eyes are not what
   // the table was made for.
   passage pull { {if underground_caverns_3.get(:active_view) == 4}The image slowly fades. The surface, for once, seems content to be looked at.{else}The image slowly fades, and the pale surface, angled toward you, seems to lean a little nearer as it goes, the way a thing does that would rather be touched than looked at.{/if} }
+  // On the move the indicator changes (the world's clock ticks after the
+  // command, and the tick before the change is 3), the table shows no
+  // image, so that the image and the indicator are never read disagreeing
+  // in one turn (round 6's P13); the flicker is told at the end of the
+  // move as always, and the next look has the new view.
+  passage flickering { The surface is pale and featureless, and stays so. Above it the indicator is flickering, the way it does when it is about to change, and the table shows nothing until the indicator has settled on what it is to show. Look again in a moment. }
   describe {
-    text "The surface is pale and featureless, but slowly, an image takes shape!"
-    text image
-    text pull
+    if (underground_caverns_3.get(:view_tick) == 3) { text flickering }
+    else {
+      text "The surface is pale and featureless, but slowly, an image takes shape!"
+      text image
+      text pull
+    }
   }
   as target for look_in {
     do {
-      say "The surface is pale and featureless, but slowly, an image takes shape!"
-      say image
-      say pull
+      if (underground_caverns_3.get(:view_tick) == 3) { say flickering }
+      else {
+        say "The surface is pale and featureless, but slowly, an image takes shape!"
+        say image
+        say pull
+      }
     }
   }
   as target for search {
     do {
-      say "The surface is pale and featureless, but slowly, an image takes shape!"
-      say image
-      say pull
+      if (underground_caverns_3.get(:view_tick) == 3) { say flickering }
+      else {
+        say "The surface is pale and featureless, but slowly, an image takes shape!"
+        say image
+        say pull
+      }
     }
   }
   as target for rub {
@@ -76,6 +91,22 @@ kind Indicator is Scenery, Readable {
   as target for read { do { say "The indicator reads \"{self.roman}\"." } }
   as target for shift { do { say "The indicator changes when it changes, and not when it is pushed; it has a clock of its own, and the clock is not yours." } }
   passage no_take { It is part of the table, and the table is part of the wall. }
+}
+
+// The iron bracket the torch hangs in (round 6's P11). The one holding
+// the torch lets it go onto the wall (adventurer.sprout); the bracket
+// says so, and refuses everything else.
+kind TorchBracket is Scenery {
+  grammar { name "bracket"  nouns "sconce", "mount", "holder"  adjectives "iron", "empty", "wall" }
+  passage short { bracket }
+  describe { text "An iron bracket on the wall, at about the height of a hand, {if here.count(Torch) > 0}with the torch in it{else}empty, where the torch was{/if}." }
+  as surface for put_on {
+    do {
+      if (item.is(Torch)) { say "You set the torch back in its bracket on the wall, where it burns as it did, if it burns, and lights the chamber as it did. It does not seem to mind having been handled." }
+      else { say "The bracket is the torch's; there is no room in it for {if item.is(Thing)}the {item.short}{else}that{/if}." }
+    }
+  }
+  passage no_take { The bracket is set into the rock, and it is the rock's. }
 }
 
 kind FarShore is Room {
@@ -122,7 +153,7 @@ object scenic_vista is VistaRoom in underground_caverns_3 {
     name "Scenic Vista"
     exit north "north" -> far_shore
   }
-  :walls 15
+  :walls 25
   passage body { You are in a small chamber carved in the rock, with the sole exit to the north. Mounted on one wall is a table labelled "Scenic Vista," whose featureless surface is angled toward you. One might believe that the table was used to indicate points of interest in the view from this spot, like those found in many parks. On the other hand, your surroundings are far from spacious and by no stretch of the imagination could this spot be considered scenic. An indicator above the table reads "{indicator.roman}". }
   object table is ViewingTable
   object indicator is Indicator
@@ -133,8 +164,12 @@ object scenic_vista is VistaRoom in underground_caverns_3 {
     describe { text "A label on the table, in the Empire's best municipal lettering: \"Scenic Vista.\" Whoever put it there had a sense of humour, or had never stood here." }
     as target for read { do { say "\"Scenic Vista.\"" } }
   }
+  // The bracket the torch was mounted in (round 6's P11): the torch may be
+  // put back in it, and nothing else may. "Put torch on wall" reaches the
+  // room's own wall, which knows about the bracket (room.sprout).
+  object bracket is TorchBracket
   object chamber is Scenery {
-    grammar { name "chamber"  nouns "rock", "walls"  adjectives "small", "carved" }
+    grammar { name "chamber"  nouns "rock", "room"  adjectives "small", "carved" }
     passage short { chamber }
     describe { text "A small chamber, carved square out of the rock and lit by the torch, with the table on one wall and nothing on the others. It is not a place anybody would come to for the view; it is a place somebody came to for a view of somewhere else." }
   }

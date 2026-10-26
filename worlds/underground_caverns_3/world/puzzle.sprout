@@ -261,7 +261,7 @@ kind PuzzleHole is Scenery, Concealing {
   describe {
     if (here.is(PuzzleAnte)) {
       if (here.get(:era) != :present || underground_caverns_3.get(:cp_blocked)) { text "A round hole in the middle of the floor, a yard across, blocked a little way down by smooth sandstone: a wall, by the look of it, standing where the floor of the room below ought to be." }
-      else { text "A round hole in the middle of the floor, a yard across, through which you can see the floor some ten feet below, dark and enclosed in rock. It is the only way in that you can see, and from the look of the drop, no way out." }
+      else { text "A round hole in the middle of the floor, a yard across, through which you can see the floor some ten feet below, dark and enclosed in rock. It is the only way in that you can see, and from the look of the drop, not a way back up it. The room below is not the whole of what is down there, though: the dark goes off to one side, square-cut, the way a room does that has others beyond it, and the note was written by somebody who expected visitors to come out again, by another way than they went in. There is a way out of a puzzle, or it is not a puzzle." }
     }
     else { text "A hole." }
   }
@@ -269,7 +269,7 @@ kind PuzzleHole is Scenery, Concealing {
     do {
       if (here.is(PuzzleAnte)) {
         if (here.get(:era) != :present || underground_caverns_3.get(:cp_blocked)) { say "Sandstone, smooth and close, a few feet down." }
-        else { say "Some ten feet below, a floor, dark, and rock on every side of it that you can see." }
+        else { say "Some ten feet below, a floor, dark, and rock on every side of it that you can see; and to one side, where your light does not quite reach, the dark goes on, square-cut, into more of the same. Whatever is down there is bigger than the hole, and was built to be got out of some other way." }
       } else { say "A hole." }
     }
   }

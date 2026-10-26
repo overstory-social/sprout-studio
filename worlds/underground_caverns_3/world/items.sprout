@@ -341,7 +341,7 @@ kind Repellent is Portable, Readable, Sprayable {
   passage a_short { a can of grue repellent }
   passage fdesc { A spray can is in the corner. In large type is the legend "Frobozz Magic Grue Repellent." }
   passage ldesc { There is a can of Frobozz Magic Grue Repellent here. }
-  describe { text "A spray can, dented, of the kind the Frobozz Magic Company sold to adventurers who were going to need it and to everyone else who was not. The legend on it is in large type, with instructions under it in small, and there is {if self.get(:used)}nothing left in it to slosh.{else}a slosh in it when it is moved.{/if}" }
+  describe { text "A spray can, dented, of the kind the Frobozz Magic Company sold to adventurers who were going to need it and to everyone else who was not. The legend on it is in large type, with instructions under it in small, and the small print is the Company's one moment of candour: the can holds a single application, and an application is good for a few minutes of a grue's good manners, which the label calls unpredictable and you would do well to call short. There is {if self.get(:used)}nothing left in it to slosh.{else}a slosh in it when it is moved: one slosh, one spraying.{/if}" }
   passage label {
     {verbatim}
     !!! FROBOZZ MAGIC GRUE REPELLENT !!!
@@ -352,6 +352,10 @@ kind Repellent is Portable, Readable, Sprayable {
     in place of death!
 
     (No warranty expressed or implied)
+
+    Contents: one (1) application. Effect
+    lasts a few minutes at most; do not
+    stop to admire the scenery.
     {/verbatim}
   }
   as target for read { do { say label } }

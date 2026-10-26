@@ -934,3 +934,75 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   counted before it.
 - **Spec:** Parsing › Sequences, again and all (`all` and what is
   carried); Limits (objects bound by one set role).
+
+## Round 7: the revision after round 6, nothing widened
+
+### 53. A thing cannot move what it does not hold
+
+- **Wanted:** the Scenic Vista's wall (and the torch's bracket), as the
+  `surface` of `put torch on wall`, to take the torch out of the
+  visitor's hand and set it back in its bracket: `move item to here` in
+  the surface's `do`.
+- **Found:** a MoveFault, "`scenic_vista.torch` is out of range of
+  `scenic_vista.wall`, so it could not be moved": a thing's body reaches
+  only what is in its own range, and the torch in a visitor's hand is
+  not in a wall's. The adventurer's own `as actor for put_on` moves the
+  torch, as it already moved a jewel onto the pedestal of 776 and as the
+  old man took the waybread from a hand by the visitor's own `give`
+  (round 4), and the wall's part says the line.
+- **Status:** the same shape as caverns 2's finding that only the hand
+  lets go of what it holds; not a gap, but every surface that takes a
+  thing needs a branch in the visitor's own part.
+- **Spec:** Objects › Moving something (range); Verbs › Readings and
+  parts (the actor's part and the target's).
+
+### 54. A `describe` cannot send, so a flicker cannot be hushed
+
+- **Wanted:** round 6's P13: when the viewing table is examined on the
+  move the indicator is about to change, to tell the flicker first and
+  then the new image, and to hush the end-of-turn flicker line for that
+  visitor, so the two never disagree in one turn. The hush wanted a
+  per-visitor flag set by the examine; a `describe` is run on every poll
+  and may not `send` or `set`, so it cannot mark anything.
+- **Wrote instead:** on that move the table shows no image and says the
+  indicator is flickering and will settle; the flicker line comes at the
+  end of the move as always, and the next look has the new view. One
+  move's image is lost; nothing disagrees.
+- **Spec:** Chance › Where chance is forbidden (a description re-runs on
+  every poll); Prose › describe.
+
+### 55. Eight phrases, eight nouns
+
+- **Wanted:** `yell` to read "call up", "call upward", "yell up", "call
+  up the cliff", "shout up the cliff" and "call up to the top" beside
+  its eight; the man as the ledge hears him to answer "person",
+  "somebody", "someone", "anyone", "anybody" and "whoever" beside his
+  five nouns; `board` to take twelve ways of sitting in a thing.
+- **Found:** a verb or an intent may have eight phrases and a thing
+  eight nouns, and the compiler refuses the ninth. The extra shouts are
+  an intent `call_up` of their own over `yell`, `board` keeps the eight
+  most likely, and the man keeps "person", "somebody" and "someone" and
+  loses "anyone", "anybody" and "whoever", which "call to whoever is
+  there" would not have reached in any case (38).
+- **Status:** the caps are the spec's and are reasonable; a second
+  intent over the same verb is the way round, at the cost of a name.
+- **Spec:** Limits (phrases of a verb, nouns of a thing).
+
+### 38, status after round 6
+
+- Still open, and seen again (round 6's P7): "call up to the person
+  above" and "call up to whoever is there" were `not_here`, and "shout
+  hello, can you help with the chest?" `unknown`. The first is now read
+  ("person" is the man's word and `call up to [x]` an intent over
+  `hail`); the other two are a relative clause and a sentence after a
+  comma, which no phrase reads. For overstory-social/sprout, as before:
+  a remainder should be refused or read, not silently dropped, and a
+  greeting with a comma should reach the greeted.
+
+### 49, status after round 6
+
+- `sit in machine` no longer draws (round 6's P10): the sitting verb's
+  role is typed by `Seatable`, which the gold machine and its seat alone
+  compose, so there is one machine for it to mean. Bare `examine
+  machine` and bare `open door` in the museum still draw among three,
+  with the engine's warning, where the original asks which.

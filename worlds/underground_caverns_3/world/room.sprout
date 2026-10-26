@@ -12,7 +12,7 @@
 // be lit without them.
 import * as sprout from 'sprout'
 import {Thing, Scenery, Creature, Diggable, Searchable, Concealing} from 'thing'
-import {Light} from 'lamp'
+import {Light, Torch} from 'lamp'
 import {SouthShore} from 'aqueduct'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
@@ -174,7 +174,22 @@ kind Wall is Scenery {
     else if (self.get(:look) == 22) { text hall_wall }
     else if (self.get(:look) == 23) { text museum_wall }
     else if (self.get(:look) == 24) { text puzzle_wall }
+    else if (self.get(:look) == 25) { text vista_wall }
     else { text plain }
+  }
+  passage vista_wall { The walls are rock, cut square, and lit by the torch when the torch is here; one of them has the table on it, angled toward you, and another an iron bracket at the height of a hand, {if here.count(Torch) > 0}with the torch in it{else}empty, where the torch was{/if}. }
+  // The torch put back on the wall at the Scenic Vista (round 6's P11):
+  // the wall has a bracket, and the bracket takes it; the one holding the
+  // torch lets it go (adventurer.sprout), since a wall reaches nothing.
+  // Anywhere else, a wall is not a shelf.
+  as surface for put_on {
+    do {
+      if (self.get(:look) == 25 && item.is(Torch)) {
+        say "You set the torch back in its bracket on the wall, where it burns as it did, if it burns, and lights the chamber as it did. It does not seem to mind having been handled."
+      }
+      else if (self.get(:look) == 25) { say "The wall has one bracket, and the bracket is the torch's; there is nowhere on the wall for {if item.is(Thing)}the {item.short}{else}that{/if} to go." }
+      else { say "A wall is not a shelf. {if item.is(Thing)}The {item.short}{else}It{/if} would be on the floor, and you may as well put it there yourself." }
+    }
   }
   as target for shift { do { say "You can't budge it; at least from here." } }
   as target for climb_up { do { say "Climbing the walls is to no avail." } }

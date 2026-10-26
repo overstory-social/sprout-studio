@@ -12,16 +12,16 @@
 // the one in the present is the one that moves. The dial's year is set
 // on every dial at once by a trip, as the original's one dial is.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Fixed, Pushable, Dial, Touchable, Concealing, Openable, Receptacle} from 'thing'
+import {Thing, Scenery, Fixed, Pushable, Dial, Touchable, Concealing, Openable, Receptacle, Seatable} from 'thing'
 import {Room} from 'room'
 import {Adventurer} from 'adventurer'
 import {Ring} from 'items'
 import {tech_museum, museum_entrance, jewel_room, great_door, mid_tech_museum, old_tech_museum} from 'museum'
 import {cp_ante, cp_out} from 'puzzle'
 import {examine} from 'sprout'
-import {shift, raise, open, close, put, put_on, put_under, look_under, look_in, rub, turn, set_dial, push_to, through, climb_up, smell, listen, take_fixed, Dest, Era, Direction, :push_machine, :machine_follow, :dial_set, :tm_point, :time_trip, :ring_hidden, :ring_taken, :machine_gone, :die, :consume} from 'verbs'
+import {shift, raise, open, close, put, put_on, put_under, look_under, look_in, rub, turn, set_dial, push_to, through, board, climb_up, smell, listen, take_fixed, Dest, Era, Direction, :push_machine, :machine_follow, :dial_set, :tm_point, :time_trip, :ring_hidden, :ring_taken, :machine_gone, :die, :consume} from 'verbs'
 
-kind TimeMachine is sprout.Place, Fixed, Pushable, Touchable, Openable, Receptacle {
+kind TimeMachine is sprout.Place, Fixed, Pushable, Touchable, Openable, Receptacle, Seatable {
   pass any (true)
   grammar {
     name "gold machine"  article the
@@ -50,7 +50,7 @@ kind TimeMachine is sprout.Place, Fixed, Pushable, Touchable, Openable, Receptac
       text "You are sitting in the gold machine, in the seat before its console. On the console is a single button and a dial connected to a three-digit display which reads {dial.get(:year)}.{if self.get(:damaged)} The machine has a lean to it, since its trip over the stairs, that it did not have before.{/if}"
       text where
     }
-    else { text "The machine consists of a seat and a console containing one small button and a dial connected to a display which reads {dial.get(:year)}.{if self.get(:damaged)} It leans a little, as though something underneath had given; it did not lean when you found it.{/if}" }
+    else { text "The machine consists of a seat and a console containing one small button and a dial connected to a display which reads {dial.get(:year)}.{if self.get(:damaged)} It leans a little, as though something underneath had given; it did not lean when you found it.{/if}{if self.get(:era) == :present} It stands on the floor and not on a plinth, and the floor round it is scuffed in long arcs toward the door, as though it had been moved before and could be again; a hand on it rocks it a little. It would go where it was pushed.{/if}" }
   }
   object seat is TmSeat
   object dial is TmDial
@@ -107,8 +107,9 @@ kind TimeMachine is sprout.Place, Fixed, Pushable, Touchable, Openable, Receptac
   as surface for put_on { do { say "You can't put anything on or inside the machine itself." } }
   // Boarded (V-BOARD): the one boarding does it (adventurer.sprout).
   as target for through { do { } }
+  as target for board { do { } }
   as target for climb_up { do { } }
-  as target for rub { do { say "Cold, and smooth, and shinier under your hand than two hundred years in a museum should have left it." } }
+  as target for rub { do { say "Cold, and smooth, and shinier under your hand than two hundred years in a museum should have left it.{if self.get(:era) == :present} It rocks a little under your hand, the way a thing does that is on the floor and not of it.{/if}" } }
   as target for smell { do { say "Metal, and oil, and faintly of ozone, as though it had been struck by lightning once and liked it." } }
   as target for listen { do { say "It hums, very faintly, the way a thing does that is waiting to be used." } }
   passage no_take { The machine must weigh hundreds of pounds and cannot be carried. }
@@ -116,7 +117,7 @@ kind TimeMachine is sprout.Place, Fixed, Pushable, Touchable, Openable, Receptac
 
 // The seat (TM-SEAT, TM-SEAT-F), and the hollow under it where a small
 // thing might be hidden for two hundred years.
-kind TmSeat is Scenery, Concealing, Touchable {
+kind TmSeat is Scenery, Concealing, Touchable, Seatable {
   grammar { name "seat"  nouns "chair", "hollow", "area"  adjectives "small", "hollow" }
   passage short { seat }
   describe { text "A seat moulded to somebody about your size, before the console, with a small hollow area under it. It is the seat of a machine that goes somewhere, and it is turned to face the dial." }
@@ -173,6 +174,7 @@ kind TmSeat is Scenery, Concealing, Touchable {
   }
   // Sat on (V-BOARD through the seat): the one sitting does it.
   as target for through { do { } }
+  as target for board { do { } }
   as target for climb_up { do { } }
   passage no_take { The seat is part of the machine, and the machine is not for carrying. }
 }

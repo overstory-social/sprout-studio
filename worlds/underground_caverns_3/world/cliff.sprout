@@ -115,28 +115,60 @@ kind ValuablesPile is Scenery {
 // a face at the brink, far above, and out of reach of everything but a
 // shout and a thrown thing.
 kind LedgeMan is Scenery, Creature {
-  grammar { name "man"  nouns "friend", "fellow", "voice", "face", "stranger"  adjectives "stocky", "cliff", "above" }
+  grammar { name "man"  nouns "friend", "fellow", "voice", "face", "stranger", "person", "somebody", "someone"  adjectives "stocky", "cliff", "above", "up", "top" }
   passage short { man }
   passage absent { You can't see any man here. }
+  // Called up to before he has shown himself (round 6's P7): the shout is
+  // answered by stage, as a bare shout is, and before he appears the
+  // chuckle says what he is waiting for.
+  passage unmet_call { Nothing answers, at first; then, from among the trees at the top of the cliff, a chuckle, brief and not unfriendly, and a voice remarking to nobody in particular that it's a heavy-looking chest you've got down there, and a pity there's no way of sending it up. Somebody has heard you, and is in no hurry; he will come to the brink when it suits him, and it may suit him soon. }
+  passage away_call { From the top of the cliff, between the sounds of a chest being gone through, a voice calls down: "Still there? Good. I said a short while, and a short while is what I meant; keep your shirt on." }
+  passage returned_call { "I can hear you fine," the man bellows down. "Grab onto the rope!" }
+  passage gone_call { Nothing answers from the top of the cliff. Whoever was up there has gone, and the chest with him. }
   describe {
     let st = underground_caverns_3.get(:man_stage)
     if (st == :waiting || st == :returned) { text "Far above you, at the brink of the cliff, a stocky man with several days' growth of stubble looks down, and chuckles, and does not stop looking at the chest. From here you can see the shape of him against the sunlight and not much more; what you can see of his face is pleased with itself." }
     else if (st == :gone || st == :at_cliff) { text "You've lost him among the trees." }
     else { text absent }
   }
-  as target for any except examine {
+  as target for any except examine, greet, hail, talk {
     permit {
       let st = underground_caverns_3.get(:man_stage)
       if (st != :waiting && st != :returned) { refuse absent }
     }
   }
   passage no_take { You aren't even close to him! }
-  as target for greet { do { say "The man waves back in a friendly way." } }
-  as target for hail { do { say "The man waves back in a friendly way, and cups a hand to his ear, and shrugs." } }
+  as target for greet {
+    do {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) { say "The man waves back in a friendly way. \"Now, about that chest....\"" }
+      else if (st == :returned) { say returned_call }
+      else if (st == :unmet) { say unmet_call }
+      else if (st == :away) { say away_call }
+      else { say gone_call }
+    }
+  }
+  as target for hail {
+    do {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) { say "The man waves back in a friendly way, and cups a hand to his ear, and shrugs, and points at the chest." }
+      else if (st == :returned) { say returned_call }
+      else if (st == :unmet) { say unmet_call }
+      else if (st == :away) { say away_call }
+      else { say gone_call }
+    }
+  }
   as target for talk {
     do {
-      if (underground_caverns_3.get(:chest_lifted)) { say "He yells back, \"What's that you say? I can't hear you very well.\"" }
-      else { say "He yells back, \"What's that you say? I can't hear you very well. Just tie the rope to the chest and we can chat afterwards!\" He smiles broadly." }
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) {
+        if (underground_caverns_3.get(:chest_lifted)) { say "He yells back, \"What's that you say? I can't hear you very well.\"" }
+        else { say "He yells back, \"What's that you say? I can't hear you very well. Just tie the rope to the chest and we can chat afterwards!\" He smiles broadly." }
+      }
+      else if (st == :returned) { say returned_call }
+      else if (st == :unmet) { say unmet_call }
+      else if (st == :away) { say away_call }
+      else { say gone_call }
     }
   }
   as recipient for give { do { say "You aren't even close to him!" } }
@@ -373,7 +405,7 @@ kind CliffRope is Scenery {
 
 // The giant trees at the top (TREE, TREE-F), and what may be among them.
 kind Trees is Scenery, Searchable, Concealing {
-  grammar { name "trees"  nouns "tree", "trunk", "trunks", "branches", "seedlings"  adjectives "giant", "large", "tall", "great" }
+  grammar { name "trees"  nouns "tree", "trunk", "trunks", "branches", "seedlings", "vegetation", "plants"  adjectives "giant", "large", "tall", "great" }
   passage short { trees }
   describe {
     text "A few seedlings from the world above, nurtured by the sunlight and the occasional rain that comes down the hole with it, have grown into giant trees, their trunks too wide to get your arms round and their tops lost in the light. They are the only things of their kind in the Empire, and they do not seem to know it."
@@ -548,7 +580,7 @@ object cliff is CliffTop in underground_caverns_3 {
   passage body {
     This is a remarkable spot in the dungeon. Perhaps two hundred feet above you is a gaping hole in the earth's surface through which pours bright sunshine! A few seedlings from the world above, nurtured by the sunlight and occasional rains, have grown into giant trees, making this a virtual oasis in the desert of the Underground Empire. To the west is a sheer precipice, dropping nearly fifty feet to jagged rocks below. The way south is barred by a forbidding stone wall, crumbling from age. There is a jagged opening in the wall to the southwest, through which leaks a fine mist. The land to the east looks lifeless and barren.{if underground_caverns_3.get(:rope_down)}
 
-    A rope is tied to one of the large trees here and is dangling over the side of the cliff, reaching down to the shelf below.{/if}
+    A rope is tied to one of the large trees here and is dangling over the side of the cliff, reaching down to the shelf below.{if underground_caverns_3.get(:man_stage) == :unmet} Among the trees, unless you are mistaken, something that is not a tree is keeping very still.{/if}{/if}
   }
   object trees is Trees
   object rope is CliffRope

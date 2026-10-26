@@ -68,13 +68,27 @@ kind AqueductStructure is Scenery {
 
 // The arches (ARCH-PSEUDO), one of which the earthquake takes.
 kind Arches is Scenery {
-  grammar { name "arch"  nouns "arches", "pillar", "pillars"  adjectives "high", "tall", "broken", "supporting" }
+  grammar { name "arch"  nouns "arches", "pillar", "pillars", "gap", "break", "breach"  adjectives "high", "tall", "broken", "supporting", "fallen" }
   passage short { arch }
   describe {
-    if (underground_caverns_3.get(:quaked)) { text "The arch before you is broken. The others show signs of decay." }
+    if (underground_caverns_3.get(:quaked)) {
+      if (here.is(HighArch)) { text "The arch before you is broken: the channel runs out to the north and stops against the air, and across the gap, too far to jump and too far to think about, the far side of it stands by itself. The others show signs of decay." }
+      else if (here.is(WaterSlide)) { text "The arch to the south is broken; the gap where it stood is a long one, and the channel on this side of it goes nowhere but down. The others show signs of decay." }
+      else { text "Some way to the north, where the channel goes out over the chasm, an arch has fallen: the channel stops against the air and starts again on the far side of a gap the width of a street. The others show signs of decay." }
+    }
     else { text "The arches all show some signs of decay." }
   }
   passage no_take { The arch holds you up; it is not for holding. }
+}
+
+// The balcony far below the High Arch (round 6's P11): the Aqueduct View
+// seen from the other side, and too far for a throw, which is refused
+// (adventurer.sprout).
+kind FarBalcony is Scenery {
+  grammar { name "balcony"  nouns "ledge", "shelf"  adjectives "small", "carved", "west", "far", "distant" }
+  passage short { balcony }
+  describe { text "To the west and far below, a small balcony carved into the cliff, where somebody might stand and look at the aqueduct and feel what one feels. You stood there, not long ago. It is strange to be the view." }
+  passage no_take { It is across the gorge and far below, and not in reach of anything but your eye. }
 }
 
 // The chasm under the arches (CHASM, CHASM-FCN).
@@ -96,8 +110,8 @@ kind Cover is Scenery, Openable, Concealing {
   grammar { name "manhole cover"  nouns "cover", "manhole", "lid", "disc"  adjectives "large", "heavy", "iron" }
   passage short { manhole cover }
   describe {
-    if (self.get(:moved)) { text "A heavy iron cover, moved a little to one side, with a small hole under it leading into darkness; a draught comes up the hole that smells of moss{if underground_caverns_3.get(:quaked)}, and, since the earth shook, of open air and a long drop, as though the channel below had lost a piece of itself to the chasm. The way down is a way down, and what is at the bottom of it now has a gap in it{/if}." }
-    else { text "A large, heavy manhole cover, iron, set into the floor to one side of the room, with the kind of rust on it that has had time. Something is under it, presumably; that is what manhole covers are for.{if underground_caverns_3.get(:quaked)} A thin draught comes up round its edges that was not there before the earthquake, smelling of moss and open air; whatever is under it has changed shape.{/if}" }
+    if (self.get(:moved)) { text "A heavy iron cover, moved a little to one side, with a small hole under it leading into darkness; a draught comes up the hole that smells of moss{if underground_caverns_3.get(:quaked)}, and, since the earth shook, of open air and a long drop: the channel below has lost a piece of itself to the chasm. Be plain with yourself about it: the channel down there goes nowhere now, it stops against the air a little way along, and the drop from this hole into it is one that nobody climbs back up. Whoever goes down it stays down it{/if}." }
+    else { text "A large, heavy manhole cover, iron, set into the floor to one side of the room, with the kind of rust on it that has had time. Something is under it, presumably; that is what manhole covers are for.{if underground_caverns_3.get(:quaked)} A thin draught comes up round its edges that was not there before the earthquake, smelling of moss and open air; whatever is under it has changed shape, and by the sound that came up this hole when the earth shook, not for the better. What is under here leads nowhere now.{/if}" }
   }
   as target for shift {
     do {
@@ -134,13 +148,13 @@ kind Cover is Scenery, Openable, Concealing {
   }
   as target for look_under {
     do {
-      if (self.get(:moved)) { say "Under the cover is a small hole leading into darkness, and under that, by the sound of the draught, a good deal of space." }
+      if (self.get(:moved)) { say "Under the cover is a small hole leading into darkness, and under that, by the sound of the draught, a good deal of space.{if underground_caverns_3.get(:quaked)} Too much space, since the earth shook: the channel below has a piece missing, and a drop into it now is a drop into a dead end that cannot be climbed out of.{/if}" }
       else { say "You would have to move it first; it is a manhole cover, and it is heavy." }
     }
   }
   as target for look_in {
     do {
-      if (self.get(:moved)) { say "A small hole leading into darkness, with a draught coming up it." }
+      if (self.get(:moved)) { say "A small hole leading into darkness, with a draught coming up it.{if underground_caverns_3.get(:quaked)} The draught smells of open air, which it should not: the channel below has lost a piece to the chasm, goes nowhere now, and is not climbed back out of.{/if}" }
       else { say "It is a cover; it covers." }
     }
   }
@@ -243,7 +257,7 @@ object key_room is KeyRoom in underground_caverns_3 {
   passage body {
     You are between some rock and a dark place. The room is lit dimly from above, revealing a lone, dark path sloping down to the west.{if cover.get(:moved)}
 
-    A heavy manhole cover has been moved to reveal a dark passage below.{if underground_caverns_3.get(:quaked)} A draught comes up through the hole that smells of moss and of a great deal of open air, as though the channel below it no longer went all the way to anywhere; whatever fell in the earthquake, the sound of it came up this hole.{/if}{else}
+    A heavy manhole cover has been moved to reveal a dark passage below.{if underground_caverns_3.get(:quaked)} A draught comes up through the hole that smells of moss and of a great deal of open air: the channel below it no longer goes all the way to anywhere. Whatever fell in the earthquake, the sound of it came up this hole, and what is down there now is a dead end with a drop into it that nobody climbs back up.{/if}{else}
 
     To one side of the room is a large manhole cover.{if underground_caverns_3.get(:quaked)} A thin draught comes up round its edges that was not there before the earth shook, and with it, faintly, the smell of moss and of open air.{/if}{/if}
   }
@@ -253,7 +267,7 @@ object key_room is KeyRoom in underground_caverns_3 {
     grammar { name "hole"  nouns "opening", "passage", "darkness"  adjectives "small", "dark", "below" }
     passage short { hole }
     describe {
-      if (cover.get(:moved)) { text "A small hole under the manhole cover, leading down into darkness, with a draught of moss coming up it." }
+      if (cover.get(:moved)) { text "A small hole under the manhole cover, leading down into darkness, with a draught of moss coming up it.{if underground_caverns_3.get(:quaked)} Since the earth shook, the draught has open air in it, and a long drop: the channel below goes nowhere now, and the way down this hole is not a way back.{/if}" }
       else { text "If there is a hole, it is under the manhole cover." }
     }
     as target for through {
@@ -295,6 +309,7 @@ object aqueduct_1 is AqueductRoom in underground_caverns_3 {
   object aqueduct is AqueductStructure
   object channel is WaterChannel
   object moss is Moss
+  object arch is Arches
   object waterfall is Scenery {
     grammar { name "waterfall"  nouns "fall", "falls", "source", "cliff"  adjectives "dried-up", "dry", "south" }
     passage short { waterfall }
@@ -335,11 +350,7 @@ object high_arch is HighArch in underground_caverns_3 {
   object moss is Moss
   object arch is Arches
   object chasm is Chasm
-  object balcony is Scenery {
-    grammar { name "balcony"  nouns "ledge", "shelf"  adjectives "small", "carved", "west", "far" }
-    passage short { balcony }
-    describe { text "To the west and far below, a small balcony carved into the cliff, where somebody might stand and look at the aqueduct and feel what one feels. You stood there, not long ago. It is strange to be the view." }
-  }
+  object balcony is FarBalcony
 }
 
 object water_slide is WaterSlide in underground_caverns_3 {

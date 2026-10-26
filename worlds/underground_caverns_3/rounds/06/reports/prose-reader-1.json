@@ -1,0 +1,97 @@
+{
+  "persona": "prose-reader",
+  "seed": 1,
+  "turns": 13,
+  "done": {
+    "reason": "bored",
+    "why": "I read the prose and sampled the opening area, then stopped early. I had no clear goal beyond a locked chest and an unseen watcher."
+  },
+  "about": "A Zork-like underground empire. You arrive as a returning adventurer at the foot of an endless stair for a final test. A sword is stuck in a rock, a sunlit cliff oasis lies to the west, and an unseen figure toys with you from above.",
+  "ending": {
+    "reached": "no",
+    "what": null
+  },
+  "moments": [
+    {
+      "turn": 3,
+      "kind": "surprise",
+      "note": "Moving south put me in the dark with the classic grue warning, and the lantern was needed."
+    },
+    {
+      "turn": 6,
+      "kind": "delight",
+      "note": "The rock description says it 'has the look of a thing that has been invited many times'."
+    },
+    {
+      "turn": 10,
+      "kind": "delight",
+      "note": "On the ledge, the rope twitches and a chuckle comes from above, so something unseen is toying with me."
+    },
+    {
+      "turn": 12,
+      "kind": "frustration",
+      "note": "'call up to whoever is there' gave 'You can't see any such thing', so the parser rejected a natural phrase."
+    }
+  ],
+  "wished": [
+    "Talk to the unseen watcher at the top of the rope.",
+    "Find out what the final test is."
+  ],
+  "lines": [
+    {
+      "turn": 6,
+      "line": "The rock has the look of a thing that has been invited many times.",
+      "why": "A dry, characterful line that makes the sword puzzle feel worn and human."
+    },
+    {
+      "turn": 9,
+      "line": "Somebody is at the top of this rope, and is in no hurry to say so.",
+      "why": "It builds menace and patience out of very little."
+    }
+  ],
+  "ratings": {
+    "fun": {
+      "score": 4,
+      "why": "Short but pleasing, with small reactive details such as the rope twitching and the chuckle.",
+      "turns": [
+        6,
+        9,
+        13
+      ]
+    },
+    "engagement": {
+      "score": 4,
+      "why": "The unseen watcher is a good hook.",
+      "turns": [
+        9,
+        13
+      ]
+    },
+    "difficulty": {
+      "score": 3,
+      "why": "I saw too little to judge. Nothing was blocking me early, apart from a parser miss.",
+      "turns": [
+        12
+      ],
+      "felt": "right"
+    },
+    "interestingness": {
+      "score": 4,
+      "why": "It builds on a familiar Zork setting and adds a mystery figure and a dream frame.",
+      "turns": [
+        1,
+        9
+      ]
+    },
+    "prose": {
+      "score": 5,
+      "why": "The examine text is wry and precise, and it adds to the original room descriptions rather than repeating them.",
+      "turns": [
+        6,
+        8,
+        9,
+        13
+      ]
+    }
+  }
+}

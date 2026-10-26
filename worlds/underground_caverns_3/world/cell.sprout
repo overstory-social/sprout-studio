@@ -31,11 +31,15 @@ kind OldMan is Creature, sprout.Actor, Guise, Fixed, Touchable {
     if (actor.is(Adventurer)) { act send_back (target: actor) }
   }
   passage raises { He raises the staff toward you and you hear him speak, as if in a dream: "I await you, though your journey be long and full of peril. Go then, and let me not wait long!" }
+  // The third visit (round 6's P15): his patience is nearly spent, and he
+  // says so, since the fourth death is the last and nothing else warns.
+  passage raises_last { He raises the staff toward you, more slowly than before, and you hear him speak, as if in a dream: "I await you, though your journey be long and full of peril. Three times now I have sent you back, my friend, and the power I spend on you is not in endless store; I do not think there is a fourth in me. Go then, and let me not wait long, and be careful of yourself, since I cannot be careful of you much longer!" }
   as actor for send_back {
     do {
       tell target enters
       tell target ldesc
-      tell target raises
+      if (target.get(:deaths) >= 3) { tell target raises_last }
+      else { tell target raises }
     }
   }
 

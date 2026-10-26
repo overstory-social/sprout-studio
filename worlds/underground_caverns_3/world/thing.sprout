@@ -195,6 +195,10 @@ kind Flame is Thing { }
 kind Pushable is Thing { }
 // Something set to a number (TM-DIAL-F): the time machine's dial.
 kind Dial is Thing { }
+// Something with a seat in it that a visitor may sit in (V-BOARD): the
+// gold machine and its seat, and nothing else, so that "sit in machine"
+// has one machine to mean.
+kind Seatable is Thing { }
 // Something that answers a knock: a door.
 kind Knockable is Thing {
   as target for knock default { do { say "Knocking on the {self.short} is not notably helpful." } }

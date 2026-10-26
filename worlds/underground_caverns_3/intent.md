@@ -440,6 +440,88 @@ Choices that depart from the original, in Q3:
 - **Bare `machine` and bare `door` are draws** among three; the original
   asks which (friction 49).
 
+**Round 7 (the revision after round 6): Q1, Q2 and Q3 refined, nothing
+widened, by the brief's schedule.** Three quarters are built, 60 rooms
+and the puzzle's 36 squares; all seven points are in reach, and the
+walkthrough plays to 7 of 7 in 208 moves. What round 6's playtest
+changed:
+
+- **Q3's gates have a voice** (P1). Before the quake the Great Door's
+  description and the iron door examined name the rock beside the door,
+  cracked and strained, and the cracked rock is a thing of the room
+  (`examine`, `look in`, `listen`, `push`) that the quake takes away;
+  the debris there is its own thing, so "rock" is the cracked rock's
+  word. In 776 the stone door tried from the entrance says it has no
+  keyhole and no handle on that side and is opened from inside the
+  Jewel Room by somebody already there, and the way east says the same;
+  the present's gold machine examined, or touched, says it stands on the
+  floor and not a plinth, that the floor is scuffed in arcs toward the
+  door, and that it rocks under a hand; and the puzzle's hole says the
+  dark below goes on square-cut into more rooms, and that the note was
+  written by somebody who expected visitors to come out by another way.
+- **The odds are untouched** (P2, P14): the figure's, the grues', the
+  roc's, the fish's and the man's. What moved are the lessons that were
+  learned only by losing things.
+- **The shore says everything** (P3): the Lake Shore's description and
+  the lake examined say everything in the hands goes to the bottom, not
+  the light and the sword only; the dive's plunge names the waybread as
+  the walk-in's does. **The returning light's warning** (P4) says a lamp
+  goes under lit or dark and comes up dead. **The plunge reads the lamp**
+  (P5): lit, the hiss and the glow; dark but whole, a hiss and no glow;
+  already ruined, it goes under and the lake does nothing further to it.
+- **The ledge's wait is nine beats, one a move** (P6): the lock tried,
+  the lid, the whistle, the coins, the recount, the gathering up, the
+  pacing, the brink, the rope shifting; none is said twice. The ten
+  moves are the original's.
+- **The man at the brink is called up to** (P7): `call up`, `call up to
+  the man`, `shout up to the person above`, `talk to man`, `hail man`
+  and `hello` at the ledge are the shout, answered by stage, and before
+  he has shown himself the chuckle carries a remark about how heavy that
+  chest looks and what a pity there is no way of sending it up. His
+  five moves are untouched. The man as the ledge hears him answers
+  `greet`, `hail` and `talk` in every stage, "person", "somebody" and
+  "someone" are his words, and "above", "up" and "top" his adjectives.
+  "call to whoever is there" and "shout hello, can you help with the
+  chest?" are still the parser's (friction 38).
+- **The can's small print** (P8): `examine can` and `read can` say one
+  application and a few minutes, and not to stop to admire the scenery.
+  The five moves are exactly as they were.
+- **The manhole after the quake is plain** (P9): the Key Room, the cover
+  examined, looked in and under, and the hole all say the channel below
+  goes nowhere now and the drop is not one that is climbed back. The
+  trap stays, as the hint book has it; it is told at the brink.
+- **`sit in machine` is the gold machine's** (P10): `board` is a verb
+  typed by `Seatable`, which the gold machine and its seat compose and
+  nothing else does, so a bare "machine" in it is never a draw;
+  `examine machine` is still the draw of friction 49.
+- **Small gaps** (P11): "gap", "break" and "breach" are the arch's words
+  in every aqueduct room, and the Aqueduct has the arch too, told from
+  the bottom; a throw at the balcony far below the High Arch, or at the
+  chasm, is refused in round 5's voice and the thing kept; "vegetation"
+  and "plants" are the trees' words at the Cliff; and `put torch back on
+  wall` (or on the bracket) at the Vista sets the torch back in its
+  bracket, by the hand that holds it (friction 53). `examine wall` at
+  the Vista no longer reads the Engravings Room's carved wall; it has a
+  wall of its own.
+- **The feint reads its wound** (P12): the stroke that takes two points
+  says "hurt very badly" only when the state line agrees; at three
+  points left it slips the sword in and out instead.
+- **The table shows nothing while the indicator changes** (P13): on the
+  move the indicator is about to change, `examine`, `look in` and
+  `search` on the table say the surface stays featureless and the
+  indicator is flickering, and the next look has the new view; so the
+  image and the indicator are never read disagreeing in one turn
+  (friction 54 says why it is done this way).
+- **The old man's third visit** (P15): his line says three times now he
+  has sent the visitor back, that the power is not in endless store, and
+  that he does not think there is a fourth in him. The lamp stays at the
+  visitor's feet, as the original leaves it.
+- **The cliff top says somebody is there** (P16): while he is unmet, the
+  rope's line at the top ends with something among the trees that is not
+  a tree, keeping very still.
+- The cap of eight phrases on a verb and eight nouns on a thing shaped
+  the ledge's new words (friction 55).
+
 ## The arc
 
 Zork III is the melancholy one. The visitor wakes with a dream of an old
@@ -545,6 +627,15 @@ is the eyes and the word "worthy".
 - A trip from the Side Room, the puzzle's entrance or the Great Door goes
   nowhere, and says so; the museum was built round the machine.
 
+- Before he has shown himself, the man at the cliff can be called up to,
+  and his chuckle says what he wants: a remark about the heavy chest and
+  a pity there is no way of sending it up. The rope is the way.
+- The torch can be put back in its bracket on the Vista's wall, and the
+  chamber is lit again by it.
+- The viewing table shows nothing on the move the indicator is about to
+  change; the image a move later is the new one.
+- The cracked rock beside the Great Door, before the quake, listened to,
+  ticks; looked into, it has a draught from a room beyond.
 - Looking under the figure's hood, or at the figure, is the hint the hint
   book gives: it fights the way you fight; and at its last point of
   strength, that it has stopped fighting at all.

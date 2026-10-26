@@ -22,7 +22,7 @@ import {MuseumRoom, MuseumEntrance, JewelRoom, TechMuseum, GreatDoor, Cleft, Old
 import {tight_squeeze, museum_entrance, jewel_room, tech_museum, mid_museum_entrance, mid_jewel_room, mid_tech_museum, old_museum_entrance, old_jewel_room, old_tech_museum, great_door} from 'museum'
 import {TimeMachine, TmSeat, TmDial} from 'time_machine'
 import {PuzzleSquare, PuzzleAnte, SideRoom, PuzzleLadder, PuzzleSlot, SteelDoor, PuzzleHole, cp_ante, cp_out} from 'puzzle'
-import {Room, DarkRoom, Sailor, Floor} from 'room'
+import {Room, DarkRoom, Sailor, Floor, Wall} from 'room'
 import {go, look, examine, inventory, help} from 'sprout'
 import {endless_stair, junction, barren_area, creepy_crawl, foggy_room} from 'way_in'
 import {ShadowRoom, Shadow, Footsteps, Quicksand, strike} from 'shadow'
@@ -32,9 +32,9 @@ import {oblivion} from 'oblivion'
 import {prison_cell, send_back} from 'cell'
 import {cliff, cliff_ledge, cliff_base, CliffTop, CliffLedge, CliffBase, CliffMan, LedgeMan, CliffRope, LedgeRope, CliffEdge, Ledge, Chest, haul} from 'cliff'
 import {damp_passage, dead_end, Sleeper} from 'engravings'
-import {scenic_vista, timber_room, room_8, altar_room, TimberRoom, MineRoom, Altar, FarShore, VistaRoom} from 'vista'
-import {key_room, SouthShore, GrueLair, DarkTwo, KeyRoom, AqueductRoom, HighArch, WaterSlide} from 'aqueduct'
-import {take, take_fixed, drop, put, put_on, put_under, give, throw, throw_dir, throw_far, scramble, dig_here, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, get_out, exit_thing, search_here, feel_around, wait_long, Dest, Mode, Direction, ManStage, Era, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep, :cp_push, :cp_from, :cp_to, :cp_done, :cp_open_door, :tm_point, :time_trip, :push_machine, :machine_follow, :dial_set, :stone_door, :wooden_door, :old_entered, :jewels_home, :history} from 'verbs'
+import {scenic_vista, timber_room, room_8, altar_room, TimberRoom, MineRoom, Altar, FarShore, VistaRoom, TorchBracket} from 'vista'
+import {key_room, SouthShore, GrueLair, DarkTwo, KeyRoom, AqueductRoom, HighArch, WaterSlide, FarBalcony, Chasm} from 'aqueduct'
+import {take, take_fixed, drop, put, put_on, put_under, give, throw, throw_dir, throw_far, scramble, dig_here, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, get_out, exit_thing, board, search_here, feel_around, wait_long, Dest, Mode, Direction, ManStage, Era, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep, :cp_push, :cp_from, :cp_to, :cp_done, :cp_open_door, :tm_point, :time_trip, :push_machine, :machine_follow, :dial_set, :stone_door, :wooden_door, :old_entered, :jewels_home, :history} from 'verbs'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -215,11 +215,12 @@ kind Adventurer is sprout.Visitor {
   // Zork's "Time passes..." everywhere but the shore after the ship, where
   // waiting is for nothing, and the line says so.
   // At the ledge while he is away, the wait is a sequence (the clock has
-  // run by the time this is rendered, so it reads the moves he has left):
-  // the chest gone through above, the coins counted, a pause, and the
-  // footsteps coming back to the brink. At the Vista, the image under the
+  // run by the time this is rendered, so it reads the moves he has left),
+  // one beat a move and no beat said twice: the lock, the lid, the
+  // whistle, the coins, the recount, the gathering up, the pacing, the
+  // brink, and the rope shifting. At the Vista, the image under the
   // table's surface stirs as the indicator nears its change.
-  passage waited { {if self.get(:shore_empty)}Time passes, and the surf with it, in and out. Nothing else passes; the ship that passes this shore has passed it, and the mist will stay empty however long you give it.{else if self.get(:ledge_waiting) && self.get(:man_timer) > 6}Time passes... From the top of the cliff, faintly, the sound of a lock being tried, and tried again, and then a lid going back; and then a silence that is somebody looking. Nothing comes down the cliff yet. He said a short while, and the ledge is where he left you, and where he will look.{else if self.get(:ledge_waiting) && self.get(:man_timer) > 4}Time passes... Above you, coins: counted, by the sound, one at a time, by somebody who does not trust his own arithmetic and starts again. Nothing comes down the cliff yet.{else if self.get(:ledge_waiting) && self.get(:man_timer) > 2}Time passes... A pause above. Then footsteps, up there, going away from the brink and coming back to it, the way a man paces who is deciding something, and deciding it in his own favour. Nothing comes down the cliff yet.{else if self.get(:ledge_waiting) && self.get(:man_timer) > 0}Time passes... The footsteps come back to the brink and stop there. Something scrapes on the rock at the top, where the rope is tied; he is not long now.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 1}Time passes... On the table, under the pale surface, the image lies quiet, the way a thing does that has just arrived.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 2}Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 3}Time passes... The image under the surface is stirring now, going thin at the edges; the indicator will not be long.{else}Time passes...{/if} }
+  passage waited { {if self.get(:shore_empty)}Time passes, and the surf with it, in and out. Nothing else passes; the ship that passes this shore has passed it, and the mist will stay empty however long you give it.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 9}Time passes... From the top of the cliff, faintly, the sound of a lock being tried, and tried again. He said a short while, and the ledge is where he left you, and where he will look.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 8}Time passes... Above you, the lock gives, and a lid goes back on a hinge that has not moved in a long time; and then a silence that is somebody looking. Nothing comes down the cliff yet.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 7}Time passes... From the top of the cliff, a low whistle, of the kind a man gives at the sight of more than he was expecting. Nothing comes down the cliff.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 6}Time passes... Above you, coins: counted, by the sound, one at a time, onto rock. The chest, it seems, had a good deal in it.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 5}Time passes... The counting stops, and starts again from the beginning, by somebody who does not trust his own arithmetic. Nothing comes down the cliff yet.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 4}Time passes... A pause above. Then footsteps, up there, going away from the brink, and the sound of things being gathered up. He is not gone; you can still hear him.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 3}Time passes... Footsteps, going away from the brink and coming back to it, the way a man paces who is deciding something, and deciding it in his own favour.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 2}Time passes... The footsteps come back to the brink and stop there. Nothing is said; somebody is looking down at you, and taking his time about it.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 1}Time passes... Something scrapes on the rock at the top, where the rope is tied, and a coil of it shifts against the edge; he is not long now.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 1}Time passes... On the table, under the pale surface, the image lies quiet, the way a thing does that has just arrived.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 2}Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 3}Time passes... The image under the surface is stirring now, going thin at the edges; the indicator will not be long.{else}Time passes...{/if} }
   // Disarmed at the last point of strength (I-SHADOW-REPLY), and the sword
   // handed back: the original's line first, and others of its kind, since
   // it is said often. The sword never leaves the hand in any of them.
@@ -911,8 +912,9 @@ kind Adventurer is sprout.Visitor {
               send self :die
             } else {
               self.adjust(:strength, -2)
-              tell self "A brilliant feint puts you off guard, and the hooded figure slips its sword between your ribs. You are hurt very badly."
               let p = self.get(:strength)
+              if (p == 3) { tell self "A brilliant feint puts you off guard, and the hooded figure slips its sword between your ribs and out again before you can close with it." }
+              else { tell self "A brilliant feint puts you off guard, and the hooded figure slips its sword between your ribs. You are hurt very badly." }
               if (p == 3) { tell self "You have a few wounds, which do not seriously impair your strength." }
               else if (p == 2) { tell self "You are hurt quite badly. One major wound would probably kill you." }
               else { tell self "You are very seriously wounded. One more wound would very likely do you in." }
@@ -1451,6 +1453,11 @@ kind Adventurer is sprout.Visitor {
           say "The {item.short} is now resting on the pedestal."
         }
       }
+      // The torch back on the wall of the Scenic Vista, or in its bracket
+      // (round 6's P11): the hand lets it go, and the wall says so.
+      else if (surface.is(Wall) || surface.is(TorchBracket)) {
+        if (item.is(Torch) && here.is(VistaRoom)) { move item to here }
+      }
       else if (surface.is(Floor)) {
         if (item.is(Potion)) {
           say "Nothing seems to come out, although the sweet smell disappears from the vial, seeming to permeate the air briefly before fading entirely."
@@ -1497,6 +1504,15 @@ kind Adventurer is sprout.Visitor {
             if (target.is(Light)) { if (target.get(:lit)) { self.adjust(:light, -1)  broadcast :relight } }
             move target to aim
             say "The {target.short} falls into the ocean and is lost forever."
+          }
+          // Thrown at the balcony far below the High Arch, or into the
+          // chasm: the throw is not made, as the lake's is not, since what
+          // goes over the edge here is not seen again.
+          else if (aim.is(FarBalcony)) {
+            say "The balcony is far below and a long way across, and the throw would fall short, into the chasm, which keeps what it is given. You keep hold of the {target.short}."
+          }
+          else if (aim.is(Chasm)) {
+            say "You weigh the {target.short} in your hand and the chasm with your eye, and keep the one. Nothing that has gone into that chasm has been seen again, and the {target.short} would not be the first exception."
           }
           // Thrown at the man at the brink (GLOBAL-MAN-F): not nearly far
           // enough.
@@ -1759,7 +1775,7 @@ kind Adventurer is sprout.Visitor {
     do {
       if (here.is(CliffLedge)) {
         let st = underground_caverns_3.get(:man_stage)
-        if (st == :unmet) { say "\"Hello,\" you call up the cliff. Nothing answers; then, from among the trees at the top, a chuckle, brief and not unfriendly, and silence. Somebody up there has heard you and is taking his time." }
+        if (st == :unmet) { say "\"Hello,\" you call up the cliff. Nothing answers; then, from among the trees at the top, a chuckle, brief and not unfriendly. \"Hello yourself,\" says a voice, not to you exactly. \"Heavy-looking chest, that. Shame there's no way to get it up here.\" Somebody up there has heard you and is taking his time." }
         else if (st == :waiting) { say "\"Hello yourself,\" calls the man at the brink. \"Now, about that chest....\"" }
         else if (st == :away) { say "\"Hello,\" you call. \"Hello, hello,\" comes back from above, over the sound of a chest being gone through. \"A short while, I said.\"" }
         else if (st == :returned) { say "\"Hello,\" the man bellows down. \"Grab onto the rope!\"" }
@@ -1816,7 +1832,7 @@ kind Adventurer is sprout.Visitor {
       // depends on where he is (GLOBAL-MAN-F, I-MAN-APPEARS).
       else if (here.is(CliffLedge)) {
         let st = underground_caverns_3.get(:man_stage)
-        if (st == :unmet) { say "Aaaarrrrgggghhhh! Your shout goes up the cliff and does not come down again. Then, from somewhere among the trees at the top, somebody chuckles, briefly, and is quiet. Whoever it is has heard you, and is in no hurry; he will come to the brink when it suits him, and it may suit him soon." }
+        if (st == :unmet) { say "Aaaarrrrgggghhhh! Your shout goes up the cliff and does not come down again. Then, from somewhere among the trees at the top, somebody chuckles, briefly. \"That's a heavy-looking chest you've got down there,\" a voice remarks, to nobody in particular. \"Pity there's no way of sending it up.\" Whoever it is has heard you, and is in no hurry; he will come to the brink when it suits him, and it may suit him soon." }
         else if (st == :waiting) { say "Aaaarrrrgggghhhh! The man at the top of the cliff winces, and waves, and points at the chest." }
         else if (st == :away) { say "Aaaarrrrgggghhhh! From the top of the cliff, between the sounds of a chest being gone through, a voice calls down: \"Still there? Good. I said a short while, and a short while is what I meant; keep your shirt on.\"" }
         else if (st == :returned) { say "\"I can hear you fine,\" the man bellows down. \"Grab onto the rope!\"" }
@@ -1848,7 +1864,7 @@ kind Adventurer is sprout.Visitor {
       }
       else if (here.is(CliffLedge)) {
         let st = underground_caverns_3.get(:man_stage)
-        if (st == :unmet) { say "Nobody answers; but from the top of the cliff, after a moment, comes a short sound that might be a chuckle, and then silence. Somebody is up there, and would rather you waited to find out who." }
+        if (st == :unmet) { say "Nobody answers; but from the top of the cliff, after a moment, comes a short sound that might be a chuckle, and a voice, musing: \"Heavy chest, that one. Wonder if there's a way of getting it up.\" Somebody is up there, and would rather you waited to find out who." }
         else if (st == :waiting) { say "\"Me!\" calls the man at the top of the cliff. \"Your friend! Now, about that chest....\"" }
         else if (st == :away) { say "\"Me again,\" calls a voice from above, over the sound of a lid going back. \"Patience, sport. A short while, I said.\"" }
         else if (st == :returned) { say "\"Your friend with the rope,\" the man bellows. \"Grab onto it!\"" }
@@ -1864,6 +1880,8 @@ kind Adventurer is sprout.Visitor {
   // under is named as it goes, since it will not light again.
   passage plunge { The shock of entering the frigid water has made you drop all your possessions into the lake! Everything you were carrying, that is: what you wear stays with you, and the rest is on the bottom. }
   passage lamp_under { Your lamp goes under with the rest. There is a hiss, a brief glow in the water below you, and then not. }
+  passage lamp_dark_under { Your lamp goes under with the rest, dark; there is a hiss where the water finds its way in, and no glow, since there was none to put out. It will not light again. }
+  passage lamp_gone_under { Your lamp goes under with the rest, and the lake does nothing further to it; it had already done everything a lake can do to a lamp. }
   passage torch_under { The torch goes under with the rest, and goes out with a hiss, and will not be lit again by anything down here. }
   passage bread_under { The waybread goes to mush in the water, and is gone. }
   passage paralyzed { You are nearly paralyzed by the icy waters as you swim into the center of the lake. }
@@ -1924,7 +1942,7 @@ kind Adventurer is sprout.Visitor {
         if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore)) {
           if (self.count(Thing) - self.count(Wearable) > 0) {
             say plunge
-            each l: Lamp in self { say lamp_under }
+            each l: Lamp in self { if (l.get(:fried) || l.get(:broken)) { say lamp_gone_under } else if (l.get(:lit)) { say lamp_under } else { say lamp_dark_under } }
             each l: Torch in self { say torch_under }
             each l: Waybread in self { say bread_under }
           }
@@ -1946,7 +1964,7 @@ kind Adventurer is sprout.Visitor {
         if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore)) {
           if (self.count(Thing) - self.count(Wearable) > 0) {
             say plunge
-            each l: Lamp in self { say lamp_under }
+            each l: Lamp in self { if (l.get(:fried) || l.get(:broken)) { say lamp_gone_under } else if (l.get(:lit)) { say lamp_under } else { say lamp_dark_under } }
             each l: Torch in self { say torch_under }
             each l: Waybread in self { say bread_under }
           }
@@ -1975,8 +1993,9 @@ kind Adventurer is sprout.Visitor {
       if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore)) {
         if (self.count(Thing) - self.count(Wearable) > 0) {
           say plunge
-          each l: Lamp in self { say lamp_under }
+          each l: Lamp in self { if (l.get(:fried) || l.get(:broken)) { say lamp_gone_under } else if (l.get(:lit)) { say lamp_under } else { say lamp_dark_under } }
           each l: Torch in self { say torch_under }
+          each l: Waybread in self { say bread_under }
         }
         else { say paralyzed }
         self.set(:dest, :splash)
@@ -2124,6 +2143,28 @@ kind Adventurer is sprout.Visitor {
         else { say "You say it to the sea, and the sea says nothing back. Nothing happens yet." }
       }
       else { say "Talking to yourself is a sign of impending mental collapse." }
+    }
+  }
+  // Into the seat (V-BOARD, by `sit in`, `get in` and their kin): the
+  // gold machine is the one thing here with a seat, so a bare "machine"
+  // resolves to it and not to the grey or the black.
+  as actor for board {
+    do {
+      if (target.is(TimeMachine)) {
+        if (here == target) { say "You are in it already, in the seat, before the console." }
+        else {
+          say "You climb into the gold machine and settle on the seat before the console."
+          move self to target
+        }
+      }
+      else if (target.is(TmSeat)) {
+        if (here.is(TimeMachine)) { say "You are in the seat already." }
+        else {
+          say "You climb into the gold machine and settle on the seat before the console."
+          each m: TimeMachine in here { move self to m }
+        }
+      }
+      else { say "There is nothing to sit in there." }
     }
   }
   as actor for stand { do { say "{if here.is(TimeMachine)}You are sitting, in the seat of the gold machine; to be standing, get out.{else}You are already standing, I think.{/if}" } }

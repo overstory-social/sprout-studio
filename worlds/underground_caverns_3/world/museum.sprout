@@ -49,7 +49,7 @@ kind IronDoor is Scenery, Openable, Knockable, Touchable {
     if (here.is(MuseumRoom)) {
       if (here.get(:era) == :present) { text "A tremendous door of iron, taller than three of you, rusted the colour of old blood and rusted shut: the hinges have become one piece with the frame, and the frame with the rock. The Flatheads built it to keep the museum safe, and it has, from everyone, for a very long time." }
       else { text "A tremendous door of iron, taller than three of you, new enough that the rust is only a bloom on it. It is closed, and locked from the other side, by somebody who did not expect anyone to be on this one." }
-    } else { text "A tremendous door of iron, taller than three of you, rusted the colour of old blood and rusted shut: the hinges have become one piece with the frame, and the frame with the rock. Whatever is behind it, the Flatheads meant it to stay there." }
+    } else { text "A tremendous door of iron, taller than three of you, rusted the colour of old blood and rusted shut: the hinges have become one piece with the frame, and the frame with the rock. Whatever is behind it, the Flatheads meant it to stay there.{if !underground_caverns_3.get(:quaked)} The rock beside it, to the right, has not kept as well as the door: it is cracked from floor to vault, and the cracks have the look of a thing under strain, waiting for an excuse. The door will never open. The rock might.{else} Beside it, the rock has given, and the cleft is the way in.{/if}" }
   }
   as target for open { do { say shut } }
   as target for close { do { say "It is as closed as a door gets." } }
@@ -70,7 +70,7 @@ kind StoneDoor is Scenery, Openable, Knockable, Touchable {
   as target for open {
     do {
       if (underground_caverns_3.get(:jewel_door_open)) { say "It is already open." }
-      else if (here.is(MuseumEntrance) && here.get(:era) == :old) { say "The door is locked, probably by the guards on their way out." }
+      else if (here.is(MuseumEntrance) && here.get(:era) == :old) { say "The door is locked, probably by the guards on their way out. There is no keyhole on this side, and no handle: it is a door made to be opened from inside the Jewel Room, by somebody already in there, and the only way to be in there is to arrive in there." }
       else if (here.is(MuseumRoom) && here.get(:era) == :old && actor.is(Adventurer) && actor.get(:guards)) { say "You open the door ever so slightly and see dozens of armed officials. You shut the door quickly, realizing that you would be killed in an instant if you left the room." }
       else {
         say "The door is now open."
@@ -435,12 +435,30 @@ object great_door is GreatDoor in underground_caverns_3 {
   :id great_door
   :walls 22
   passage body {
-    {if underground_caverns_3.get(:quaked)}This is the south end of a monumental hall, full of debris from a recent earthquake. To the east is a great iron door, rusted shut. To its right, however, is a gaping cleft in the rock and behind, a cleared area.{else}You are in the southern half of a monumental hall. To the east lies a tremendous iron door which appears to be rusted shut.{/if}
+    {if underground_caverns_3.get(:quaked)}This is the south end of a monumental hall, full of debris from a recent earthquake. To the east is a great iron door, rusted shut. To its right, however, is a gaping cleft in the rock and behind, a cleared area.{else}You are in the southern half of a monumental hall. To the east lies a tremendous iron door which appears to be rusted shut. The rock beside the door is cracked and strained, as though it had been holding something back for a long time and was tiring of it.{/if}
   }
   object cleft is Cleft
-  object debris is Rubble {
-    grammar { nouns "debris" }
+  // The strained rock beside the door, before the quake (round 6's P1):
+  // the cleft's promise, said so that a visitor turned back by the rust
+  // knows to come back. The quake takes it, and the cleft answers after.
+  object cracked_rock is Scenery {
+    grammar { name "cracked rock"  nouns "rock", "crack", "cracks", "wall"  adjectives "cracked", "strained", "right" }
+    passage short { cracked rock }
+    describe { text "To the right of the iron door the rock of the wall is cracked from the floor to the vault, the cracks dark and wide enough to put a finger in, and running the way cracks run in a thing that is being pushed from behind. Dust sifts out of them now and then, without any reason you can see. The door is for ever; the rock, by the look of it, is not, and a good shake would settle the matter." }
+    as target for shift { do { say "You push on the rock, and the rock does not notice you; it is waiting for something a good deal bigger than a push." } }
+    as target for look_in { do { say "Dark, and dust, and a draught that smells faintly of a room beyond: there is something behind this rock, and the rock knows it." } }
+    as target for listen { do { say "Now and then, from inside the rock, a tick, like a thing settling that has not finished settling." } }
+    on :quake { self.set(:unseen, true) }
+    passage no_take { It is the wall of a hall, and it is cracked, not loose. }
+  }
+  // The debris is its own thing here, not the way's Rubble, so that "rock"
+  // is the cracked rock's word before the quake and nothing else's.
+  object debris is Scenery, Searchable {
+    grammar { name "debris"  nouns "blocks", "dust", "rubble"  adjectives "fallen", "loose" }
+    passage short { debris }
     describe { text "{if underground_caverns_3.get(:quaked)}Debris from the earthquake: blocks shaken out of the vault and the walls, lying where they fell, and dust still settling on them. The hall was built to stand for ever and has stood for nearly that; the earth, this once, had other ideas.{else}The hall is in good repair, for a ruin; what has fallen is dust, and not much of that.{/if}" }
+    as target for search { do { say "{if underground_caverns_3.get(:quaked)}Blocks, and dust, and under them the floor of the hall; nothing fell here that was not wall or vault to begin with.{else}Dust, and the floor under it.{/if}" } }
+    passage no_take { You could carry off a piece of it, and a piece of it would be no use to you at all. }
   }
   object hall is Scenery {
     grammar { name "monumental hall"  nouns "hall", "end"  adjectives "monumental", "southern", "south" }
@@ -598,7 +616,7 @@ object old_museum_entrance is MuseumEntrance in underground_caverns_3 {
   grammar {
     name "Museum Entrance"
     exit east "east" -> old_jewel_room when (underground_caverns_3.get(:jewel_door_open))
-    exit east "east" refuse "The stone door is closed."
+    exit east "east" refuse "The stone door is closed, and locked from the Jewel Room's side; whoever opens it is meant to be in there already."
     exit west "west" refuse "The guards locked the iron door behind them."
     exit north "north" -> old_tech_museum when (underground_caverns_3.get(:wooden_door_open))
     exit north "north" refuse "The wooden door is closed."
