@@ -4,11 +4,12 @@
 // (VIAL-F, POTION-F).
 import * as sprout from 'sprout'
 import {examine} from 'sprout'
-import {Thing, Portable, Weapon, Wearable, Drinkable, Pourable, Vessel, Fillable, Readable, Concealing, Food, Sprayable, Flame} from 'thing'
+import {Thing, Portable, Weapon, Wearable, Drinkable, Pourable, Vessel, Fillable, Readable, Concealing, Food, Sprayable, Flame, Openable} from 'thing'
 import {Box, Bag} from 'box'
 import {Adventurer} from 'adventurer'
 import {Shadow} from 'shadow'
-import {read, look_under, shift, raise, lower, smell, drink, drink_from, pour, pour_on, fill, shake, cut, burn, eat, put, unlock, spray, put_on, :glow, :sword_come, :consume, :hood_taken, :sprayed, :snap, :die} from 'verbs'
+import {read, look_under, shift, raise, lower, smell, drink, drink_from, pour, pour_on, fill, shake, cut, burn, eat, put, unlock, spray, put_on, open, close, listen, :glow, :sword_come, :consume, :hood_taken, :sprayed, :snap, :die, :jewels_home, :history} from 'verbs'
+import {old_jewel_room} from 'museum'
 
 kind Sword is Weapon, Readable {
   // "runes" is not among its nouns: where the carved north wall stands,
@@ -389,4 +390,116 @@ kind Repellent is Portable, Readable, Sprayable {
   // "put repellent on me" is a spraying (V-PUT-ON's REPELLENT): the one
   // putting does the spraying (adventurer.sprout).
   as item for put_on { do { } }
+}
+
+// The very ancient book from the niche in the Royal Puzzle (LORE-BOOK,
+// LORE-BOOK-F): one of the seven things the Dungeon Master asks for, and
+// the one the puzzle's slot will take as an exit fee.
+kind LoreBook is Portable, Readable, Openable {
+  grammar { name "ancient book"  nouns "book", "lore", "text", "tome", "pages"  adjectives "very", "ancient", "old", "dusty", "strange", "lore" }
+  :size 4
+  :has_fdesc true
+  passage short { ancient book }
+  passage indef { A very ancient book }
+  passage a_short { a very ancient book }
+  passage fdesc { Nestled inside the niche is an old and dusty book. }
+  passage ldesc { There is an old book here. }
+  passage pages { The book is written in a strong and elegant hand and is full of strange, wondrous pictures. The text, penned in many colours, is in a tongue unknown to you. The words seem to change colour as you read them. The book itself is very old and the pages dry and brittle. }
+  describe { text pages }
+  as target for read { do { say pages } }
+  as target for open { do { say "The book can be perused but not left open." } }
+  as target for close { do { say "It is closed already; it closes itself, the way a book does that would rather not be read by just anyone." } }
+  as target for smell { do { say "Dust, and old paper, and under those something like a fresh breeze, which is not a smell a book should have." } }
+  on :consume { finally destroy self }
+  as target for burn {
+    do {
+      if (bound tool) {
+        if (tool.is(Flame)) {
+          if (actor.holds(self)) { say "The book is consumed in a dazzling display of color, and your fingers with the edges of it; you let go too late to keep the book and just in time to keep the hand." }
+          else { say "The book is consumed in a dazzling display of color." }
+          finally destroy self
+        } else if (tool.is(Thing)) { say "With {tool.a_short}??!?" }
+        else { say "With that??!?" }
+      } else { say "You didn't say with what!" }
+    }
+  }
+}
+
+// The Crown Jewels of the Great Underground Empire (SCEPTRE,
+// JEWELLED-KNIFE, RING, CROWN-JEWELS-F): on the pedestal in the Jewel Room
+// of 776, before the cage; behind steel in every year after. Called home
+// to the pedestal when anyone arrives in 776 (MOVE-JEWELS), and gone for
+// good, the sceptre and the knife, once the ring is stolen.
+kind Jewel is Portable {
+  on :jewels_home (from) {
+    if (!self.get(:unseen)) { move self to old_jewel_room.pedestal }
+  }
+  // The ring stolen (TGOTO): the sceptre and the knife were moved to a
+  // safer place, and are seen no more. The original removes them; these
+  // are declared, so they go unseen, which is the same to everyone.
+  on :history (from, value) {
+    if (value == 1 && !self.is(Ring)) { self.set(:unseen, true) }
+  }
+  // Hidden under the seat (TM-SEAT-F): gone from sight until it is found
+  // again, and what is found is a ring spawned by the seat.
+  on :consume { self.set(:unseen, true) }
+}
+kind Sceptre is Jewel {
+  grammar { name "sceptre"  nouns "scepter", "jewels", "rod"  adjectives "royal", "crown", "golden" }
+  :size 30
+  passage short { sceptre }
+  passage indef { A sceptre }
+  passage a_short { a sceptre }
+  describe { text "The royal sceptre: a rod of gold as long as your arm, topped with a stone the size of a hen's egg and set round with smaller ones wherever a smaller one would fit, in the Flathead taste, which is to say more of everything. It is heavy, and it was made to be seen rather than carried." }
+}
+kind JewelledKnife is Jewel, Weapon {
+  grammar { name "jewelled knife"  nouns "knife", "jewels", "dagger", "blade"  adjectives "jewelled", "jeweled", "crown" }
+  :size 20
+  passage short { jewelled knife }
+  passage indef { A jewelled knife }
+  passage a_short { a jewelled knife }
+  describe { text "A knife with a hilt of jewels and a blade that has never cut anything but ceremony. It would not be much use in a fight, and it was never meant to be in one." }
+}
+kind Ring is Jewel, Wearable {
+  grammar { name "golden ring"  nouns "ring", "jewels", "band"  adjectives "golden", "gold", "crown", "plain" }
+  passage short { golden ring }
+  passage indef { A golden ring }
+  passage a_short { a golden ring }
+  describe { text "A golden ring, plain by Flathead standards, which is to say it has only the one stone. It is small; it is the only thing on the pedestal that is. Worn, it is warm, and it fits, as though it had been measured for you a long time ago." }
+}
+
+// The warning note at the Royal Puzzle's entrance (WARNING-NOTE).
+kind WarningNote is Portable, Readable {
+  grammar { name "warning note"  nouns "note", "warning", "text", "paper"  adjectives "small", "warning" }
+  :size 2
+  :has_fdesc true
+  passage short { warning note }
+  passage indef { A warning note }
+  passage a_short { a warning note }
+  passage fdesc { Lying on the ground is a small note of some kind. }
+  passage ldesc { There is a small note here. }
+  passage words {
+    {verbatim}
+    Warning:
+        The Royal Puzzle is dangerous and
+    it is possible to become trapped within
+    its confines. Please do not enter the
+    puzzle after hours when museum
+    personnel are not present.
+                  The Management
+    {/verbatim}
+  }
+  describe { text words }
+  as target for read { do { say words } }
+  as target for burn {
+    do {
+      if (bound tool) {
+        if (tool.is(Flame)) {
+          say "The note burns, briefly and completely, which is one way of not taking its advice."
+          finally destroy self
+        } else if (tool.is(Thing)) { say "With {tool.a_short}??!?" }
+        else { say "With that??!?" }
+      } else { say "You didn't say with what!" }
+    }
+  }
 }

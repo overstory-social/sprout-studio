@@ -734,3 +734,203 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   through five deaths across two runs (P13). Read it as a measurement
   gap until Sprout's reporter counts a place a visitor was carried
   through within a turn.
+
+## Round 6: the revision after round 5, and the third quarter
+
+### 42. A verbatim block holds no slots, so the Royal Puzzle's map is rows of prose
+
+- **Wanted:** CPWHERE: the three-by-three map of the squares round the
+  visitor, set in a fixed-width face, redrawn every move from the grid.
+- **Found:** `{verbatim}` keeps every space and line break and "holds
+  only words: a slot or a block inside one is refused", and a passage
+  outside it reflows every run of spaces to one. A map whose cells are
+  read from state cannot be set in a block that keeps its columns.
+- **Wrote instead:** three one-line passages, one a row, each a paragraph
+  of its own, with two-letter cells (`MM`, `SS`, `..`, `??`) as the
+  original's and `__` for open floor where the original has two spaces,
+  since two spaces reflow to one and vanish. In a proportional face the
+  columns drift; the glyphs are two characters each so they drift
+  together. The brief foresaw this one.
+- **Spec:** Prose › Verbatim; Prose (reflow).
+
+### 43. A dial set to a number: the integer role does it
+
+- A finding the other way. The brief expected "turn dial to 776" to find
+  no way to read a number from a line; the spec's Value roles read one:
+  `role year: integer`, `"turn [target] to [year]"`, and the dial plays
+  `year from 0 to 999`, so 776 binds and 1200 arrives unbound and is
+  answered "You can't set it beyond 999." A whole-line reading beats
+  `turn`'s partial one, so "set dial to 776" is never "set dial" with the
+  rest dropped. Nothing was lost. The push of the gold machine is the same
+  shape with a `symbol` role over the compass directions, so "push machine
+  east" is one reading and never a bare push with "east" dropped
+  (friction 37's gap, closed by typing the role).
+- **Spec:** Verbs › Value roles; Parsing › Choosing a reading.
+
+### 44. A vehicle that is pushed cannot follow its pusher by itself
+
+- **Wanted:** V-PUSH-TO: the gold machine walked from room to room with
+  whoever pushes it, and ridden as a vehicle.
+- **Found:** the machine is a place inside a room (Places inside places),
+  which is the vehicle the spec means; but only an actor may `move self
+  <direction>`, and an actor passes nothing and releases only to its own
+  hand, so a machine made an actor would hold its rider in. It cannot be
+  an actor, so it cannot take the exit its pusher takes; and its pusher,
+  once through the exit, cannot name it, since a declared object's path
+  names where it was declared and does not follow it (caverns 2 53), and
+  a handler cannot store the binding `:moved` gives it.
+- **Wrote instead:** the pusher walks through the way as `go` would, and
+  their own `:moved`, which binds the new place, reads its `:id` and, with
+  the gate open, broadcasts `:machine_follow` with that `Dest`; the
+  machine hears it wherever it stands and moves itself by an `if` chain
+  over the enum. The same broadcast carries it home when the robot takes
+  it and when a trip ends. A visitor landing in the present's Technology
+  Museum is moved to the room and then, by a message queued after the
+  machine's, into the machine, since the machine's path cannot be trusted
+  to resolve once it has moved.
+- **Spec:** Verbs › Moving something; Names › Identifiers and scope;
+  Events › Receiving (a sender binding cannot be stored).
+
+### 45. The one who pushes a wall must be the one who asks the world to move it
+
+- **Wanted:** CPWALL-OBJECT: the wall's own action slides it and moves
+  the visitor after it.
+- **Found:** the grid is the world's, since it is one puzzle for everyone,
+  and the squares' ways out read copies of it; so the wall must ask the
+  world, the world must tell the squares, and the visitor must move only
+  after the squares have heard. A handler's `from` is the sender, so a
+  world told by the wall could tell only the wall when it was done, and
+  the wall cannot keep the visitor's binding to pass the word on.
+- **Wrote instead:** the wall decides and says, and sends the visitor
+  `:cp_push` with the direction; the visitor sends the world the cell the
+  wall leaves and the cell it enters; the world moves the wall, carries
+  what lay in its path to the Side Room, broadcasts `:cp_changed` to every
+  square, and sends `:cp_done` to its sender, the visitor, who then walks
+  through the way that has just opened. Breadth-first delivery puts the
+  squares' refresh before the visitor's step, which the test pins.
+- **Spec:** Events › Sending (order); The runtime › Turns (the queue).
+
+### 46. One grid, thirty-six squares, and a square cannot read its neighbour
+
+- A description cannot read another place's properties, and an exit's
+  `when` reads only the place it leads to, so a square that drew itself
+  from its neighbours would have to be the world. Each square instead
+  keeps twelve copies of the cells round it, set by the generator from the
+  original's table and refreshed on `:cp_changed`; the kind draws itself
+  and decides its diagonals from the copies, and only the exits and the
+  refresh are written per square, by a script, since a property cannot be
+  named by a computed index. The world's own handlers are the same shape:
+  thirty-six-way `if` chains to read and write a cell by number.
+- **Spec:** The world model › Range; Verbs › An exit may be conditional;
+  Properties and values (no indexing).
+
+### 47. A composer's own play does not replace a composed one
+
+- **Wanted:** `climb stair` at the Endless Stair answered once, "The
+  stairs are endless."
+- **Found:** `EndlessStairs is Stairs` wrote its own `as target for
+  climb_up`, and both ran: the spec's table has every `do` of a role run
+  (How members combine), so the stair said "You should say whether you
+  want to go up or down." and then its own line. Round 5's P11.
+- **Wrote instead:** `without as target for climb_up from Stairs` and the
+  same for `through`, on the endless stair and on the Ladder Top's
+  staircase. A kind that means to replace a composed play writes the
+  `without`; a `default` play on the base would have done it by every
+  path, and the Stairs kind now ought to be written that way.
+- **Spec:** Kinds › How members combine; Suppressing a contribution.
+
+### 48. `wait 20` is eight phrases, and a number nowhere
+
+- `wait` is an engine verb with no `do` and no roles, so a number after
+  it cannot be read as a value role; the remainder is dropped and the
+  visitor waits one move, told "(wait)". A no-role verb `wait_long` with
+  eight literal phrases (`wait 2` … `wait 100`) answers in character that
+  this world waits one move at a time. A `sleep`, `rest` or `wait a while`
+  is an intent over `wait`. Round 5's P9 and P10.
+- **Spec:** Verbs › Engine verbs; Parsing › When nothing matches.
+
+### 49. Three machines and three doors answer one noun
+
+- Zork's parser asks "Which machine do you mean?"; Sprout's draws among
+  equally near things and says which it took. The grey, black and gold
+  machines all answer to "machine", and the iron, stone and wooden doors to
+  "door", so `examine machine` is a draw. The gold machine is the one that
+  is boarded and pushed, so the grey and black ones refuse `through` and
+  `climb_up` in a `permit`, which lets the gold one's reading win (a
+  reading whose consent allows beats one refused), and `push_to` is typed
+  by `Pushable`, which only the gold one composes. `examine machine` and
+  `open door` stay draws, told by the `meant` line; the original's question
+  has no equivalent.
+- **Spec:** Parsing › Choosing a reading; Spawning (nearness).
+
+### 50. A declared thing that history removes goes unseen
+
+- Friction 36 again, for the Crown Jewels: TGOTO REMOVEs the sceptre and
+  the knife once the ring is stolen, and the ring itself when it is hidden
+  under the seat. They are declared on the pedestal of 776, since a
+  robbery is judged by counting what stands there, so they cannot be
+  spawned on first sight, and a declared thing destroyed never comes back
+  and warns. They set `:unseen` instead, which `count`, `holds`, the
+  listing and the nouns all pass over; the ring found under the seat is a
+  spawned one. The same to everyone, and no warning.
+- **Spec:** The world model › Unseen; Destroying.
+
+### 51. `{one of}` may not stand in a description
+
+- The guards' voices wanted to vary the topic of their debate when looked
+  at; a `describe` may not draw, since it is run on every poll. The draw
+  is in `listen`'s `do`, and the description says they are debating and
+  that listening would tell what about.
+- **Spec:** Chance › Where chance is forbidden.
+
+### 38 and 39, status after round 5
+
+- Still open, and seen again (round 5's P9): `shout hello`, `shout up`
+  and `shout "who is up there?"` were read as a bare shout with the rest
+  dropped and only "(shout)" to say so; `wait 20` as one move; `say
+  hello, who is up there?` split at the comma into three answers; `say
+  hello, sailor` was `unknown`. The common forms are now phrases of their
+  own (an intent `shout_more` over `yell`, `say_hello_comma` over `greet`,
+  `wait_long`), which is coverage, not a fix: for overstory-social/sprout,
+  a remainder dropped should be refused or read, not silently dropped,
+  and a greeting with a comma should reach the greeted.
+- `man, who are you?` is the no-addressee decision (caverns 2 7), met
+  again at the top of the cliff; the man answers `talk to man` and
+  `hello man`, and the line with the comma is `unknown`.
+
+### 24, status after round 5
+
+- Still open, and a second place: the Sacrificial Altar joins the Prison
+  Cell among places a visitor is carried into and out of in one turn and
+  never counted as reached (round 5's P13); `reach.places.never`
+  overstates by two. For Sprout's test reporter.
+
+### 3, a note after round 5
+
+- Round 5's P3 took the amulet's vanishing for a bug in `spawn … in
+  self`; it was the death the same turn: the inventory line is rendered
+  after the turn's work, so it read the hands the old man had already
+  emptied. Not a gap; the death's own line now says what became of what
+  was carried, and the sand's line about the glint reads whether the
+  shiny thing is still there.
+
+### 52. `take all` with full hands binds the hands
+
+- **Wanted:** the spec's `all` for a role only the actor plays and takes,
+  which "first leaves out what the visitor already carries", so that
+  `take all` in a room with eleven things on its floor and eight in hand
+  reaches for the floor.
+- **Found:** in the Jewel Room, after a trip through time had left eleven
+  things on the floor, the first `take all` bound the one thing worn and
+  seven of the floor's eleven, and the second bound the eight in hand and
+  nothing on the floor, answered by this world's own "There's nothing here
+  you can take." The walk takes the hands first and the cap of eight
+  closes before the floor is reached; what is carried is not left out.
+  The adventurer's `take` moves `t` to `self` inside `each t of target`,
+  which is the shape the spec names.
+- **Wrote instead:** nothing in the world can change the binding; the
+  walkthrough takes the last four by name. For overstory-social/sprout:
+  either the exclusion the spec describes is not applied, or the cap is
+  counted before it.
+- **Spec:** Parsing › Sequences, again and all (`all` and what is
+  carried); Limits (objects bound by one set role).

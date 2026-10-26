@@ -13,6 +13,7 @@ import {shadow_1, shadow_2} from 'shadow'
 import {lake_shore} from 'lake'
 import {damp_passage} from 'engravings'
 import {cliff, hairpin_loop} from 'cliff'
+import {tight_squeeze} from 'museum'
 import {open, close, put, shift, look_under, look_in, through, climb_up, climb_down, smell, listen, search, rub, take, dig, cross} from 'verbs'
 
 // Zork's STAIRS, a LOCAL-GLOBAL: the stair, and the steps at the lake.
@@ -26,6 +27,8 @@ kind Stairs is Scenery {
 }
 // The endless stair itself, seen from its foot.
 kind EndlessStairs is Stairs {
+  without as target for climb_up from Stairs
+  without as target for through from Stairs
   describe { text "The stair winds upward beyond your vision, step after step, in the eerie light that comes from everywhere and nowhere. You have a feeling you came down it, a long way down it, and that going back up would take longer than you have. The stairs are endless; that is rather the point of them." }
   as target for climb_up { do { say "The stairs are endless." } }
   as target for through { do { say "The stairs are endless." } }
@@ -187,7 +190,7 @@ object creepy_crawl is DarkRoom in underground_caverns_3 {
     exit north "north" -> junction
     exit south "south" -> foggy_room
     exit southwest "southwest" -> shadow_1
-    exit east "east" refuse "The passage east narrows to a squeeze, and then to less than a squeeze: you get an arm in, and a shoulder, and stick, and come out again backwards with grit in your hair. It will take a thinner day than this one."
+    exit east "east" -> tight_squeeze
   }
   :id creepy
   :walls 2

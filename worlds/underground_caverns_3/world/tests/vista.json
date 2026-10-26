@@ -28,7 +28,8 @@
     ] },
     { "as": "Ann", "type": "s", "expect": [
       { "reader": "Ann", "kind": "described", "words": "Lake Shore" },
-      { "reader": "Ann", "kind": "described", "words": "You are in a wide cavern on the north shore of a small lake. Some polished stone steps lead to the southeast and a sheer rock face prevents any movement around the lake to the southwest. The cavern is dimly lit from above. The water has the look of a cold that would open your hands for you, and would not give back what fell out of them; whatever you cannot afford to lose to the bottom, your light first of all and your sword with it, had better be left on the shore, which is lit, after its fashion, and will keep it. What you wear, it leaves you." }
+      { "reader": "Ann", "kind": "described", "words": "You are in a wide cavern on the north shore of a small lake. Some polished stone steps lead to the southeast and a sheer rock face prevents any movement around the lake to the southwest. The cavern is dimly lit from above. The water has the look of a cold that would open your hands for you, and would not give back what fell out of them; whatever you cannot afford to lose to the bottom, your light first of all and your sword with it, had better be left on the shore, which is lit, after its fashion, and will keep it. What you wear, it leaves you." },
+      { "reader": "Ann", "kind": "told", "words": "The light you carry throws your shadow on the water, which does not want it: a lit thing goes under here and comes up a dead one, and the shore is where it should be left." }
     ] },
     { "as": "Ann", "type": "drop lamp", "expect": [
       { "reader": "Ann", "kind": "said", "words": "Dropped." }
@@ -42,7 +43,7 @@
     { "seed": 0 },
     { "as": "Ann", "type": "w", "expect": [
       { "reader": "Ann", "kind": "described", "words": "Western Shore" },
-      { "reader": "Ann", "kind": "described", "words": "You are on the western shore of the lake. The ground here is quite hard, but a few sickly reeds manage to grow near the water's edge. The only path leads into the rock to the south. The water is the same water as on the north shore, as cold and as still, and it will open your hands as readily from this side; a flame least of all comes out of it burning. What you cannot lose to the bottom had better be left on the hard ground here, which is lit, after its fashion, from the south." }
+      { "reader": "Ann", "kind": "described", "words": "You are on the western shore of the lake. The ground here is quite hard, but a few sickly reeds manage to grow near the water's edge. The only path leads into the rock to the south. The water is the same water as on the north shore, as cold and as still, and it will open your hands as readily from this side; a flame least of all comes out of it burning. No light crosses this lake alight, from either shore; whatever is to be had on the far side in the dark will have to be got some other way than by carrying a light to it. What you cannot lose to the bottom had better be left on the hard ground here, which is lit, after its fashion, from the south." }
     ] },
     { "as": "Ann", "type": "s", "expect": [
       { "reader": "Ann", "kind": "described", "words": "Scenic Vista" },
@@ -55,30 +56,30 @@
     { "as": "Ann", "type": "examine table", "expect": [
       { "reader": "Ann", "kind": "described", "words": "The surface is pale and featureless, but slowly, an image takes shape!" },
       { "reader": "Ann", "kind": "described", "words": "You see the interior of a huge temple rudely constructed of basalt blocks. Flickering torches cast a sallow illumination over an altar still wet with the blood of human sacrifice, its velvet covers stained and encrusted with gore." },
-      { "reader": "Ann", "kind": "described", "words": "The image slowly fades, and the pale surface, angled toward you, seems to lean a little nearer as it goes, the way a thing does that would rather be touched than looked at." },
+      { "reader": "Ann", "kind": "described", "words": "The image slowly fades. The surface, for once, seems content to be looked at." },
       { "reader": "Ann", "kind": "told", "words": "The indicator above the table flickers briefly, then changes to \"IV\"." }
     ] },
     { "as": "Ann", "type": "take torch", "expect": [
       { "reader": "Ann", "kind": "said", "words": "Taken." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... The image under the surface is stirring now, going thin at the edges; the indicator will not be long." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
       { "reader": "Ann", "kind": "said", "words": "Time passes..." },
       { "reader": "Ann", "kind": "told", "words": "The indicator above the table flickers briefly, then changes to \"I\"." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... On the table, under the pale surface, the image lies quiet, the way a thing does that has just arrived." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... The image under the surface is stirring now, going thin at the edges; the indicator will not be long." }
     ] },
     { "as": "Ann", "type": "touch table", "expect": [
       { "reader": "Ann", "kind": "said", "words": "You touch the table and are instantly transported to another place!" },
@@ -87,7 +88,7 @@
       { "reader": "Ann", "kind": "described", "words": "There is a pile of broken timbers here." }
     ] },
     { "as": "Ann", "type": "w", "expect": [
-      { "reader": "Ann", "kind": "refused", "words": "You cannot fit through this passage with that load." }
+      { "reader": "Ann", "kind": "refused", "words": "You cannot fit through this passage with that load. The passageway takes nothing through it bigger than your hand: not the lamp, not the torch, not the sword; a person, and what a person can close a fist on, and no more." }
     ] },
     { "as": "Ann", "type": "drop torch", "expect": [
       { "reader": "Ann", "kind": "said", "words": "Dropped." },
@@ -116,23 +117,23 @@
       { "reader": "Ann", "kind": "told", "words": "The indicator above the table flickers briefly, then changes to \"III\"." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... On the table, under the pale surface, the image lies quiet, the way a thing does that has just arrived." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... The image under the surface is stirring now, going thin at the edges; the indicator will not be long." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
       { "reader": "Ann", "kind": "said", "words": "Time passes..." },
       { "reader": "Ann", "kind": "told", "words": "The indicator above the table flickers briefly, then changes to \"IV\"." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... On the table, under the pale surface, the image lies quiet, the way a thing does that has just arrived." }
     ] },
     { "as": "Ann", "type": "wait", "expect": [
-      { "reader": "Ann", "kind": "said", "words": "Time passes..." }
+      { "reader": "Ann", "kind": "said", "words": "Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over." }
     ] },
     { "as": "Ann", "type": "touch table", "expect": [
       { "reader": "Ann", "kind": "said", "words": "You touch the table and are instantly transported to another place!" },
@@ -143,7 +144,7 @@
       { "reader": "Ann", "kind": "told", "words": "The door swings open, and in walks an old man." },
       { "reader": "Ann", "kind": "told", "words": "He is dressed simply in a hood and cloak, wearing an amulet and ring, carrying an old book under one arm, and leaning on a wooden staff. A single key, as if to a massive prison cell, hangs from his belt." },
       { "reader": "Ann", "kind": "told", "words": "He raises the staff toward you and you hear him speak, as if in a dream: \"I await you, though your journey be long and full of peril. Go then, and let me not wait long!\"" },
-      { "reader": "Ann", "kind": "told", "words": "You feel some great power well up inside you and you fall to the floor. The next moment, you are awakening, as if from a deep slumber." },
+      { "reader": "Ann", "kind": "told", "words": "You feel some great power well up inside you and you fall to the floor. The next moment, you are awakening, as if from a deep slumber. What you were carrying is not with you: the old man scatters what a visitor brings him, and it is lying where he left it, somewhere along the way in, between the stair and the lake, with the lamp alone brought back to your feet." },
       { "reader": "Ann", "kind": "described", "words": "Endless Stair" },
       { "reader": "Ann", "kind": "described", "words": "There is a brass lantern here (providing light)." }
     ] },

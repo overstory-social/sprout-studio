@@ -1,7 +1,7 @@
 # Underground Caverns 3: The Dungeon Master
 
 A Sprout microworld: Zork III: The Dungeon Master, ported a quarter at a
-time. Two quarters are built.
+time. Three quarters are built.
 
 The first: the Endless Stair and the way in (the Junction and the sword
 in its great rock, the Barren Area, the Creepy Crawl, the Foggy Room); the
@@ -25,22 +25,40 @@ Passage, and the Sacrificial Altar); and the key and the aqueduct (the
 Southern Shore, the two Dark Places that are a grue lair, the Key Room
 with its key and its manhole cover, and the Aqueduct, the High Arch and
 the Water Slide down to the Damp Passage), with the earthquake, once,
-somewhere between the 70th and the 140th move, that breaks the arch. The
-ways into the later quarters are there, and turn the visitor back. Death
-is the old man's visit in the cell, and the fourth is the last.
+somewhere between the 70th and the 140th move, that breaks the arch.
 
-The score is a potential, out of 7, as the original counts it; five of
-the seven are in these two quarters.
+The third: the way to the Royal Museum (the Tight Squeeze, the Crystal
+Grotto, the Royal Hall with its seal, and the Great Door, with the cleft
+the earthquake opens beside it); the museum (the Museum Entrance, the
+Jewel Room with its cage, its pedestal, the Crown Jewels and the plaque,
+and the Technology Museum with its grey, black and gold machines); the
+Royal Puzzle (the Royal Puzzle Entrance and its warning note, the Side
+Room with the steel door and its slot, and the Room in a Puzzle: a
+six-by-six grid of marble and sandstone, the sandstone pushed a square
+at a time and the map of the squares round you drawn as you go, the two
+ladders, and the ancient book in its niche); and the time machine (the
+gold machine's dial, seat and button, and the museum in other years: the
+same rooms between the dedication and now, and unfinished in 776, with
+the guards outside the door, Lord Flathead's voice through it, the robot
+that tidies, and the ring that can be hidden under the seat for two
+hundred years). What the visitor does in 776 changes the present. The
+way down beyond the secret door is the fourth quarter's, and turns the
+visitor back. Death is the old man's visit in the cell, and the fourth is
+the last.
+
+The score is a potential, out of 7, as the original counts it; all seven
+are in these three quarters.
 
 `sprout check .` checks it, and `sprout test .` runs its tests, the
 scripts in `tests/`: `walkthrough.json` plays from the Endless Stair to
-the end of the second quarter with 5 of 7, `arrival.json` what a visitor
+the end of the third quarter with 7 of 7, `arrival.json` what a visitor
 first reads and the stair's refusals, `duel.json`, `slain.json`,
 `hood_pull.json` and `fight.json` the hooded figure, `ship.json`,
 `hail.json` and `sword_sea.json` the ocean, `shore.json` and `death.json`
-the lake, `cliff_man.json` the man at the cliff, `old_man.json` the
-Engravings Room, `vista.json` the viewing table, `quake.json` the
-earthquake, and `void.json` four deaths.
+the lake, `cliff_man.json` and `ledge_cues.json` the man at the cliff,
+`old_man.json` the Engravings Room, `vista.json` the viewing table,
+`quake.json` the earthquake, `throw_direction.json` and `dig_bare.json`
+the parser, `dark.json` the grue, and `void.json` four deaths.
 
 ## Credits
 

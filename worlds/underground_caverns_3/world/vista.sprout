@@ -25,11 +25,11 @@ kind ViewingTable is Scenery, Touchable, Concealing, Searchable {
   grammar { name "viewing table"  nouns "table", "surface", "image", "picture"  adjectives "viewing", "pale", "featureless", "angled" }
   passage short { viewing table }
   passage image {
-    {if underground_caverns_3.get(:active_view) == 1}You see a passage cluttered with broken timbers. An extremely narrow opening can be seen at the end of the room.{else if underground_caverns_3.get(:active_view) == 2}You see a tiny room with rough walls. Chiseled crudely on one wall is the number "8". The only apparent exit seems to be a blur.{else if underground_caverns_3.get(:active_view) == 3}You see a wide room with two nearly identical passages leading east and northeast. A wide channel descends steeply into the room and seems to be blocked by rubble.{else}You see the interior of a huge temple rudely constructed of basalt blocks. Flickering torches cast a sallow illumination over an altar still wet with the blood of human sacrifice, its velvet covers stained and encrusted with gore.{/if}
+    {if underground_caverns_3.get(:active_view) == 1}You see a passage cluttered with broken timbers. An extremely narrow opening can be seen at the end of the room.{else if underground_caverns_3.get(:active_view) == 2}You see a tiny room with rough walls. Chiseled crudely on one wall is the number "8". In one corner is a spray can, its label too small to read from here. The only apparent exit seems to be a blur.{else if underground_caverns_3.get(:active_view) == 3}You see a wide room with two nearly identical passages leading east and northeast. A wide channel descends steeply into the room and seems to be blocked by rubble.{else}You see the interior of a huge temple rudely constructed of basalt blocks. Flickering torches cast a sallow illumination over an altar still wet with the blood of human sacrifice, its velvet covers stained and encrusted with gore.{/if}
   }
   // The image fades, and the surface asks for a hand: eyes are not what
   // the table was made for.
-  passage pull { The image slowly fades, and the pale surface, angled toward you, seems to lean a little nearer as it goes, the way a thing does that would rather be touched than looked at. }
+  passage pull { {if underground_caverns_3.get(:active_view) == 4}The image slowly fades. The surface, for once, seems content to be looked at.{else}The image slowly fades, and the pale surface, angled toward you, seems to lean a little nearer as it goes, the way a thing does that would rather be touched than looked at.{/if} }
   describe {
     text "The surface is pale and featureless, but slowly, an image takes shape!"
     text image
@@ -78,7 +78,11 @@ kind Indicator is Scenery, Readable {
   passage no_take { It is part of the table, and the table is part of the wall. }
 }
 
-kind FarShore is Room { }
+kind FarShore is Room {
+  on :entered (item, from) {
+    if (item.is(Adventurer) && item.get(:light) > 0 && item.recall(:visits) > 0 && item.get(:mode) != :verbose) { tell item "The light you carry lies on the water, and the water would take it as readily from this side as from the other; no flame or lamp crosses this lake alight. What has to be carried across it is carried another way." }
+  }
+}
 kind VistaRoom is Room { }
 kind MineRoom is DarkRoom { }
 kind TimberRoom is MineRoom { }
@@ -91,7 +95,7 @@ object far_shore is FarShore in underground_caverns_3 {
     exit south "south" -> scenic_vista
   }
   :walls 6
-  passage body { You are on the western shore of the lake. The ground here is quite hard, but a few sickly reeds manage to grow near the water's edge. The only path leads into the rock to the south. The water is the same water as on the north shore, as cold and as still, and it will open your hands as readily from this side; a flame least of all comes out of it burning. What you cannot lose to the bottom had better be left on the hard ground here, which is lit, after its fashion, from the south. }
+  passage body { You are on the western shore of the lake. The ground here is quite hard, but a few sickly reeds manage to grow near the water's edge. The only path leads into the rock to the south. The water is the same water as on the north shore, as cold and as still, and it will open your hands as readily from this side; a flame least of all comes out of it burning. No light crosses this lake alight, from either shore; whatever is to be had on the far side in the dark will have to be got some other way than by carrying a light to it. What you cannot lose to the bottom had better be left on the hard ground here, which is lit, after its fashion, from the south. }
   object reeds is Scenery {
     grammar { name "reeds"  nouns "reed", "rushes", "plants"  adjectives "sickly", "few", "thin" }
     passage short { reeds }
@@ -204,6 +208,7 @@ object ladder_top is MineRoom in underground_caverns_3 {
     as target for climb_up { do { say "You are at the top of it." } }
   }
   object staircase is Stairs {
+    without as target for climb_up from Stairs
     describe { text "A staircase leading upward, into a part of the Empire you have been through already, a long time ago, in another game. It does not go anywhere you need to go now." }
     as target for climb_up { do { say "The staircase goes up; say so, though it will not take you far." } }
   }

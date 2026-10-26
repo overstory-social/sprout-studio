@@ -292,6 +292,154 @@ five of the seven points are in reach. What round 4's playtest changed:
   command (friction 39), and the reach metric that misses the Prison
   Cell (friction 24, status).
 
+**Round 6 (the revision after round 5): Q1 and Q2 refined, and Q3 built
+whole, by the brief's schedule.** Three quarters are built: 60 rooms and
+the puzzle's 36 squares; all seven points are in reach, and the
+walkthrough plays to 7 of 7 in 208 moves. The Creepy Crawl's way east
+now leads on to the Tight Squeeze; the way down beyond the secret door
+is still Q4's and turns the visitor back.
+
+What round 5's playtest changed in Q1 and Q2:
+
+- **The repellent chain is told** (P1): the Southern Shore and its dark
+  passage say that no light crosses the lake and that what keeps a grue
+  off a person is sold in a can, in a tiny room with an eight on its
+  wall that the table shows; and the table's image of Room 8 names the
+  spray can in its corner.
+- **The fallen arch is told before the manhole** (P2, P8): after the
+  quake the Key Room's cover and its description carry a draught and
+  the smell of open air, the cover examined says the channel below has
+  lost a piece to the chasm, and the Aqueduct's own description, from
+  the bottom, says the channel stops against the air to the north.
+- **The amulet was not a bug** (P3): the drowning scattered it in the
+  same turn, and the inventory line, rendered after, read empty hands.
+  The old man's waking line now says that what was carried is lying
+  along the way in with the lamp alone brought back, and the sand's
+  glint depends on the shiny thing still being there.
+- **The shores warn a returning light** (P4): each of the three shores
+  tells a visitor who comes back carrying a lit light that the water
+  takes it, in brief mode too; the Western Shore says no light crosses
+  from either side and the far side's dark is got through another way.
+- **The man at the cliff hears a shout** (P5): `shout`, `shout for help`,
+  `hello` and `who is there` at the ledge are answered in his voice by
+  stage: a chuckle from the trees before he shows himself, "keep your
+  shirt on" while he is away with the chest, "grab the rope" when he is
+  back, and silence once he is gone; at the top, with him there, a wince.
+  "man, who are you?" is the no-addressee decision, logged.
+- **The ledge's wait is a sequence** (P6): the lock tried, the lid, the
+  coins counted, the pacing, the footsteps back to the brink, keyed on
+  the moves he has left; the timing is the original's.
+- **The altar does not ask for a hand** (P7): the table's lean toward
+  the hand is said for views I to III; for the altar the surface "seems
+  content to be looked at", and the trap rests on the image.
+- **The parser's dropped remainders** (P9): `shout hello`, `shout up`,
+  `shout for help`, `call out hello` are an intent over the shout; `say
+  hello, sailor` and `say hello to the sailor` over the greeting; `wait
+  20` and its kin a verb that waits one move and says so; `sleep`,
+  `rest`, `nap`, `wait a while` are waits. Logged in friction 38/39 and
+  48.
+- **Diagnose names the cure** (P10): "You will be cured after N moves."
+  while wounded, as the original's does.
+- **Small gaps** (P11): `pull back hood` and its kin reach the hood;
+  every shadow room has the mist; bare `search` reads the room; `feel
+  around` is answered, in the dark and out of it; `dry lamp` says the
+  lake got in where drying does not reach; `climb stair` has one answer
+  (friction 47).
+- **The narrow way's refusal says the load is anything bigger than a
+  hand** (P12), the light included.
+- **The ship's sailing says he was listening for something** (P14), after
+  the fact, as the recommendation asked; the window is unchanged.
+- **Waiting at the Vista has texture** (P15): the image under the surface
+  lies quiet, stirs, and goes thin as the indicator nears its change.
+- Logged, not changed: the reach metric's miss of the altar (P13,
+  friction 24).
+
+What Q3 holds, and how it is built:
+
+- **The way in:** the Tight Squeeze (dark), the Crystal Grotto (lit by
+  its moss), the Royal Hall (dark, with the Royal Seal), and the Great
+  Door (dark), where the earthquake opens a cleft beside the iron door;
+  the cleft is unseen until the quake's broadcast reaches it, and the
+  museum's west door reads the world's `:quaked`.
+- **The museum in three years** is three sets of rooms, each with an
+  `:era`: the present (948), the years between (883 to 947, the mid
+  rooms: entrance, jewel room, technology museum, puzzle entrance and
+  side room, with the puzzle's hole blocked), and 776 (the old rooms:
+  entrance, jewel room and technology museum, unfinished, with the
+  guards outside). The three doors are one thing each in every year, as
+  the original's local-globals are, and their open state is the world's,
+  shut by every trip. The history a trip out of 776 settles (the ring
+  stolen; a clumsy robbery, which takes the machine off exhibit; a
+  mystery and a different plaque) is the world's, read by the present's
+  descriptions, cage, jewels and plaque.
+- **The gold machine** is a `Place` inside a room that passes everything,
+  so whoever sits in it sees the room; it is `Pushable`, and its push is
+  a value role over the compass, so "push machine east" is one reading.
+  The pusher walks first and the machine follows by a broadcast carrying
+  the room's `Dest` (friction 44); into the puzzle's entrance or through
+  the cleft damages it, as the original's does. There is one machine in
+  each year, since each year is its own rooms; the present's is the one
+  that moves, and the dial's year is set on every dial by a trip, as the
+  original's one dial is. The robot carries the present's machine home
+  from the Jewel Room one move in twenty-five and shuts the doors.
+- **The trip** (TGOTO) is the visitor's: the button says the first
+  sentence, the visitor's `:time_trip` decides the landing by room and
+  year and tells the rest, and the gate carries it out: what is held and
+  what lies in the machine is left in the room, in that year; the doors
+  shut; leaving 776 judges the robbery by counting the pedestal; the
+  jewels go home to the pedestal on every arrival in 776; the present's
+  machine goes home to its hall on every return; forty moves in another
+  year and the present takes you back to the room you left (the snap).
+  Years before 776 are the stone death; 777 is the dedication and Lord
+  Flathead's sentence; 778 to 882 the guards; 883 on, the same room in
+  that year; past 948, the present with the cleft filled in, which the
+  visitor's `go` refuses by their year.
+- **776:** the guards' clock starts on entering any old room with them
+  present, three to fourteen moves; one command in thirty-three while
+  they are there brings a guard in, and Lord Flathead is heard through
+  the door once, six times in a hundred; the stone door opens only from
+  the jewel room's side, the doors peeked through are shut again while
+  the guards are there, and the voices answer `listen`. The ring hidden
+  under a seat is concealed in every machine at once, and found under
+  any; a found ring is a spawned one, and the sceptre and the knife go
+  unseen once the ring is stolen (friction 50).
+- **The Royal Puzzle** is 36 places of one kind, generated from the
+  original's table, with the grid itself the world's; each square keeps
+  copies of the twelve cells it needs and reads them again on every push
+  (friction 45, 46); the four walls and the ladder are one thing each in
+  every square. The map is three rows of prose with two-letter cells
+  (friction 42), the legend is told once per visitor, and the first push
+  is the sixth point. A wall pushed into the square under the hole
+  blocks the way in; a wall pushed onto what lies in a square snaps it to
+  the Side Room; the good ladder, pushed under the hole, is the way out;
+  the book in the slot opens the steel door and is confiscated.
+- **The seven things:** the book joins the hood, the cloak, the amulet,
+  the staff and the key; the ring is the sixth; only the asking is Q4's.
+
+Choices that depart from the original, in Q3:
+
+- **A death in another year is a death like any other.** The original's
+  REALLY-DEAD (the stone, the guards, Lord Flathead's sentence) ends the
+  game; this world has no restore, so these are the old man's visit, the
+  year reset to the present, and the possessions already left behind in
+  the room the trip began in.
+- **The machine is pushed within the museum and the Great Door only.** The
+  original walks it anywhere; here a push out of the hall is refused in
+  character, since the machine's ways are a table the world keeps.
+- **The machine in 776 and in the years between does not move**, since
+  the original moves one machine and this world has one in each year; a
+  push there is refused in character. The clumsy robbery, which the
+  original can reach by pushing the machine out of the old museum, is
+  reached here only by hiding the ring with the other jewels off the
+  pedestal.
+- **The present's machine goes home to its hall on every return**, as the
+  original's does, and the visitor is put in it by a second move after it
+  arrives, so the hall is described and then the seat.
+- **The sceptre and the knife go unseen** rather than being removed, and
+  the hidden ring too (friction 50).
+- **Bare `machine` and bare `door` are draws** among three; the original
+  asks which (friction 49).
+
 ## The arc
 
 Zork III is the melancholy one. The visitor wakes with a dream of an old
@@ -386,6 +534,16 @@ is the eyes and the word "worthy".
   light that crosses the aqueduct.
 - `throw lamp south` at the lake keeps the lamp; the lake is too wide,
   and the world says so before anything is lost.
+- The puzzle can be left by the slot, at the price of the book, or by the
+  good ladder pushed under the hole, which keeps it; a wall pushed under
+  the hole from inside blocks the way in for everyone after.
+- The dial set past 948 lands in a present whose cleft has filled in, for
+  forty moves.
+- The ring can be hidden under the present's seat too, and found again;
+  only a ring hidden in 776, with the other jewels left on the pedestal,
+  changes the plaque.
+- A trip from the Side Room, the puzzle's entrance or the Great Door goes
+  nowhere, and says so; the museum was built round the machine.
 
 - Looking under the figure's hood, or at the figure, is the hint the hint
   book gives: it fights the way you fight; and at its last point of
@@ -410,7 +568,18 @@ is the eyes and the word "worthy".
 - A worn thing weighs one, as in the original, so the hood, cloak and
   amulet never sink.
 
-## What "done" looks like for round 4
+## What "done" looks like for round 6
+
+- `tests/walkthrough.json` plays from the Endless Stair through all three
+  quarters to 7 of 7: the Royal Puzzle's first push, the book from its
+  niche and the ladder out, the machine pushed to the Jewel Room, the
+  trip to 776, the ring hidden under the seat, the ride home and the ring
+  found, and the plaque rewritten.
+- Every room of the three quarters has the original's name and ways out;
+  every thing a description names answers `examine`.
+- No fault in any run; `check` and `test` pass without a warning.
+
+## What "done" looked like for round 4
 
 - `tests/walkthrough.json` plays from the Endless Stair through Q1 and
   then the cliff, the man and the staff, the old man and the secret

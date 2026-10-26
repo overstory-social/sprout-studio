@@ -63,7 +63,7 @@ kind Sand is Scenery, Diggable, Searchable {
   describe { text "There is nothing notable on the floor of the lake, except some plants and algae." }
   passage no_take { It slips through your fingers. }
   as target for dig { do { say "You don't come across anything unusual." } }
-  as target for search { do { say "You don't come across anything unusual, although something in it, now and then, catches the light." } }
+  as target for search { do { say "You don't come across anything unusual{if here.count(ShinyObject) > 0}, although something in it, now and then, catches the light{/if}." } }
 }
 kind Algae is Scenery, Food {
   grammar { name "plants and algae"  nouns "plants", "plant", "algae", "weed", "weeds"  adjectives "hearty", "few" }
@@ -104,7 +104,14 @@ kind Swamp is Scenery {
 }
 
 // The four rooms, as kinds, so that whoever stands in one can ask which.
-kind LakeShore is Room { }
+// A shore tells a visitor who comes back to it carrying a lit light what
+// the water does to a light, since a room seen again is given by its name
+// alone and the warning is in its description.
+kind LakeShore is Room {
+  on :entered (item, from) {
+    if (item.is(Adventurer) && item.get(:light) > 0 && item.recall(:visits) > 0 && item.get(:mode) != :verbose) { tell item "The light you carry throws your shadow on the water, which does not want it: a lit thing goes under here and comes up a dead one, and the shore is where it should be left." }
+  }
+}
 kind AqueductView is Room { }
 kind OnLake is Room { }
 kind Underwater is Room { }

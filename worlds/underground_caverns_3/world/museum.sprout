@@ -1,0 +1,671 @@
+// The way to the Royal Museum and the museum itself, in three years
+// (TIGHT-SQUEEZE, ROCKY-ROOM, WIDE-HALL, MUSEUM-ANTE; MUSEUM-ENTRANCE,
+// JEWEL-ROOM, TECH-MUSEUM; MID-MUSEUM-ENTRANCE, MID-JEWEL-ROOM,
+// MID-TECH-MUSEUM; OLD-MUSEUM-ENTRANCE, OLD-JEWEL-ROOM, OLD-TECH-MUSEUM):
+// the Tight Squeeze east of the Creepy Crawl, the Crystal Grotto, the
+// Royal Hall with its seal, the Great Door and the cleft the earthquake
+// opens beside it; and the museum, which is the same three rooms in 948,
+// in the years between, and in 776, the year it was built, with the
+// guards outside the door and Lord Flathead's voice through it.
+//
+// The doors are one door each in every year, as the original's are, and
+// their state is the world's, since a trip through time shuts them. The
+// history the time machine can change (RING-STOLEN, CLUMSY-ROBBERY,
+// MYSTERY) is the world's too, and the present reads it.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Portable, Fixed, Openable, Readable, Searchable, Concealing, Touchable, Knockable, Creature} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {Box} from 'box'
+import {Adventurer} from 'adventurer'
+import {Rubble, Stairs} from 'way_in'
+import {creepy_crawl} from 'way_in'
+import {Jewel, Sceptre, JewelledKnife, Ring} from 'items'
+import {TimeMachine} from 'time_machine'
+import {cp_ante, mid_cp_ante} from 'puzzle'
+import {examine} from 'sprout'
+import {open, close, read, look_in, look_under, search, shift, raise, through, climb_up, climb_down, smell, listen, follow, knock, mung, put, put_on, rub, take_fixed, unlock, cross, Dest, Era, :quake, :stone_door, :wooden_door, :history, :old_entered} from 'verbs'
+
+// A room of the museum, in whichever year.
+kind MuseumRoom is Room {
+  :era Era default present
+  // A visitor arriving in a room of 776 while the guards are outside
+  // starts their clock (OLD-TECH-MUSEUM-F's M-ENTER).
+  on :entered (item, from) {
+    if (item.is(Adventurer) && self.get(:era) == :old) { send item :old_entered }
+  }
+}
+kind MuseumEntrance is MuseumRoom { }
+kind JewelRoom is MuseumRoom { }
+kind TechMuseum is MuseumRoom { }
+kind GreatDoor is DarkRoom { }
+
+// The great iron door (IRON-DOOR, IRON-DOOR-F): rusted shut in the
+// present, locked from outside in the past.
+kind IronDoor is Scenery, Openable, Knockable, Touchable {
+  grammar { name "iron door"  nouns "door"  adjectives "iron", "great", "tremendous", "grand", "heavy", "rusted" }
+  passage short { iron door }
+  passage shut { {if here.is(MuseumRoom)}{if here.get(:era) == :present}The iron door is rusted shut and cannot be opened.{else}The iron door is locked from the outside.{/if}{else}The iron door is rusted shut and cannot be opened.{/if} }
+  describe {
+    if (here.is(MuseumRoom)) {
+      if (here.get(:era) == :present) { text "A tremendous door of iron, taller than three of you, rusted the colour of old blood and rusted shut: the hinges have become one piece with the frame, and the frame with the rock. The Flatheads built it to keep the museum safe, and it has, from everyone, for a very long time." }
+      else { text "A tremendous door of iron, taller than three of you, new enough that the rust is only a bloom on it. It is closed, and locked from the other side, by somebody who did not expect anyone to be on this one." }
+    } else { text "A tremendous door of iron, taller than three of you, rusted the colour of old blood and rusted shut: the hinges have become one piece with the frame, and the frame with the rock. Whatever is behind it, the Flatheads meant it to stay there." }
+  }
+  as target for open { do { say shut } }
+  as target for close { do { say "It is as closed as a door gets." } }
+  as target for unlock { do { say shut } }
+  as target for through { do { say shut } }
+  as target for knock { do { say "You knock on the iron door. It makes the sound a mountain would make if you knocked on it, which is not much of one." } }
+  as target for shift { do { say shut } }
+  as target for listen { do { say "Nothing comes through the iron door. It is a door for keeping things from coming through." } }
+  passage no_take { It is a door, and it weighs more than the room. }
+}
+
+// The stone door between the entrance and the Jewel Room (JEWEL-DOOR,
+// JEWEL-DOOR-F): open or shut in every year at once.
+kind StoneDoor is Scenery, Openable, Knockable, Touchable {
+  grammar { name "stone door"  nouns "door"  adjectives "stone", "east", "ornate", "carved" }
+  passage short { stone door }
+  describe { text "A stone door, ornately carved in the Flathead manner, which is to say with everything on it that would fit. It is {if underground_caverns_3.get(:jewel_door_open)}open{else}closed{/if}." }
+  as target for open {
+    do {
+      if (underground_caverns_3.get(:jewel_door_open)) { say "It is already open." }
+      else if (here.is(MuseumEntrance) && here.get(:era) == :old) { say "The door is locked, probably by the guards on their way out." }
+      else if (here.is(MuseumRoom) && here.get(:era) == :old && actor.is(Adventurer) && actor.get(:guards)) { say "You open the door ever so slightly and see dozens of armed officials. You shut the door quickly, realizing that you would be killed in an instant if you left the room." }
+      else {
+        say "The door is now open."
+        send underground_caverns_3 :stone_door with true
+      }
+    }
+  }
+  as target for close {
+    do {
+      if (!underground_caverns_3.get(:jewel_door_open)) { say "It is already closed." }
+      else {
+        say "The stone door is now closed."
+        send underground_caverns_3 :stone_door with false
+      }
+    }
+  }
+  as target for knock {
+    do {
+      if (here.is(MuseumRoom) && here.get(:era) == :old && actor.is(Adventurer) && actor.get(:guards)) { say "You realize that calling attention to yourself would be fatal." }
+      else { say "You knock on the stone door. Nobody answers; nobody has for a long time." }
+    }
+  }
+  as target for through { do { say "{if underground_caverns_3.get(:jewel_door_open)}The door is open; say which way.{else}The stone door is closed.{/if}" } }
+  as target for unlock { do { say "There is no lock on it to unlock; it opens, if it opens, when it is asked." } }
+  passage no_take { It is a door, and a stone one. }
+}
+
+// The wooden door between the entrance and the Technology Museum
+// (WOODEN-DOOR, WOODEN-DOOR-F): open to begin with.
+kind WoodenDoor is Scenery, Openable, Knockable, Touchable {
+  grammar { name "wooden door"  nouns "door"  adjectives "wooden", "wood", "north", "south" }
+  passage short { wooden door }
+  describe { text "A wooden door, heavy and plain, which is the plainest thing the Flatheads ever built and probably an oversight. It is {if underground_caverns_3.get(:wooden_door_open)}open{else}closed{/if}." }
+  as target for open {
+    do {
+      if (underground_caverns_3.get(:wooden_door_open)) { say "It is already open." }
+      else if (here.is(MuseumRoom) && here.get(:era) == :old && actor.is(Adventurer) && actor.get(:guards)) { say "You open the door ever so slightly and see dozens of armed officials. You shut the door quickly, realizing that you would be killed in an instant if you left the room." }
+      else {
+        say "The wooden door is now open."
+        send underground_caverns_3 :wooden_door with true
+      }
+    }
+  }
+  as target for close {
+    do {
+      if (!underground_caverns_3.get(:wooden_door_open)) { say "It is already closed." }
+      else {
+        say "The wooden door is now closed."
+        send underground_caverns_3 :wooden_door with false
+      }
+    }
+  }
+  as target for knock {
+    do {
+      if (here.is(MuseumRoom) && here.get(:era) == :old && actor.is(Adventurer) && actor.get(:guards)) { say "You realize that calling attention to yourself would be fatal." }
+      else { say "You knock on the wooden door, and the sound goes through the museum and comes back to you, and that is all that comes." }
+    }
+  }
+  as target for listen {
+    do {
+      if (here.is(MuseumRoom) && here.get(:era) == :old && actor.is(Adventurer) && actor.get(:guards)) { say "The voices are muffled by the door which (fortunately for you) separates you. They seem to be in heated debate on the topic of {one of}wage scales for guards{or}the excessive nature of the Royal Government{or}the soon to be constructed Royal Puzzle{or}the proper way to execute trespassers{or}torturing thieves{or}the banishment of the Wizard of Frobozz{/one of}." }
+      else { say "You hear nothing through the door." }
+    }
+  }
+  as target for through { do { say "{if underground_caverns_3.get(:wooden_door_open)}The door is open; say which way.{else}The wooden door is closed.{/if}" } }
+  passage no_take { It is a door, and it is on its hinges, and it means to stay there. }
+}
+
+// The cleft the earthquake opens beside the iron door (CLEFT, CLEFT-F):
+// unseen until the ground moves.
+kind Cleft is Scenery {
+  :unseen true
+  grammar { name "cleft"  nouns "crack", "gap", "rift"  adjectives "gaping", "new" }
+  passage short { cleft }
+  describe { text "A gaping cleft in the rock beside the iron door, opened by the earthquake, and behind it a cleared area: a way into the museum that the Flatheads never meant and the earth did. It is wide enough for a person, and, with some effort, for a person pushing something." }
+  on :quake { self.set(:unseen, false) }
+  // Going through it is going east or west, and the one going does it
+  // (adventurer.sprout).
+  as target for through { do { } }
+  as target for look_in { do { say "Through the cleft, a cleared area, and beyond it {if here.is(GreatDoor)}the lit floor of the museum{else}the dark of the hall outside{/if}." } }
+  passage no_take { It is a hole in the rock; there is nothing of it to take. }
+}
+
+// The voices of the guards outside the door, in 776 (VOICES, VOICES-F).
+kind Voices is Scenery {
+  grammar { name "voices"  nouns "voice", "guards", "officials", "guard"  adjectives "armed", "muffled" }
+  passage short { voices }
+  passage debate { The voices are muffled by the door which (fortunately for you) separates you. They seem to be in heated debate on the topic of {one of}wage scales for guards{or}the excessive nature of the Royal Government{or}the soon to be constructed Royal Puzzle{or}the proper way to execute trespassers{or}torturing thieves{or}the banishment of the Wizard of Frobozz{/one of}. }
+  describe {
+    if (actor.is(Adventurer)) {
+      if (actor.get(:guards)) { text "The voices are muffled by the door which (fortunately for you) separates you. They seem to be in heated debate; listening would tell you what about." } else { text "Are you hearing things now?" }
+    } else { text "Are you hearing things now?" }
+  }
+  as target for listen {
+    do {
+      if (actor.is(Adventurer) && actor.get(:guards)) { say debate } else { say "Are you hearing things now?" }
+    }
+  }
+  passage no_take { You can't take a voice; you can only be taken by one. }
+}
+
+// The robot that tidies the museum (ROBOT, ROBOT-F): never seen except
+// in the act.
+kind Robot is Scenery {
+  grammar { name "robot"  nouns "device", "machine-thing", "automaton"  adjectives "odd", "robot-like" }
+  passage short { robot }
+  describe { text "There is no robot here." }
+  as target for follow { do { say "It moved quickly and left the door closed." } }
+  passage no_take { There is no robot here. }
+}
+
+// The steel cage round the Crown Jewels (CAGE, CAGE-F), from 777 until
+// the end of time, or until the ring is stolen from under it.
+kind Cage is Scenery, Openable, Touchable {
+  grammar { name "steel cage"  nouns "cage", "bars"  adjectives "steel", "tall", "round", "locked" }
+  passage short { steel cage }
+  describe { text "A tall, round cage of steel bars, securely locked, with the pedestal and the jewels inside it and a small bronze plaque on it. The bars are as thick as your wrist, and the lock is the kind that was made once, for this, and then the maker was paid off and the mould broken." }
+  as target for open { do { say "The cage is locked." } }
+  as target for close { do { say "The cage is already closed." } }
+  as target for unlock { do { say "The cage is locked, and whatever key it takes is not the one you have; the lock seems to want one that was never made twice." } }
+  as target for mung { do { say "The bars ring, and your hands ring with them, and the cage goes on being a cage." } }
+  as target for shift { do { say "The cage is bolted to the floor, and the floor to the Empire." } }
+  as target for look_in { do { say "{if underground_caverns_3.get(:ring_stolen)}The cage is empty.{else}Inside the cage, on the pedestal, the Crown Jewels: a sceptre, a jewelled knife, and a golden ring.{/if}" } }
+  on :history (from, value) { if (value == 1) { self.set(:unseen, true) } }
+  passage no_take { It is bolted to the floor, and it is a cage, which is a thing that holds rather than a thing that is held. }
+}
+
+// The pedestal, in the present and the years between (PEDESTAL,
+// PEDESTAL-F): behind the bars, or bare.
+kind CagedPedestal is Scenery, Touchable {
+  grammar { name "pedestal"  nouns "plinth", "stand"  adjectives "marble", "bare" }
+  passage short { pedestal }
+  describe {
+    if (underground_caverns_3.get(:ring_stolen)) { text "A bare pedestal of marble, with a slight hollow in its top where something stood for a while and then did not. Whatever it was for, it was never used for it." }
+    else { text "The Royal Jewels are on the pedestal." }
+  }
+  as target for rub { do { say "{if underground_caverns_3.get(:ring_stolen)}Cold marble, with a hollow in the top of it the shape of absence.{else}You can't reach it through the cage.{/if}" } }
+  as target for shift { do { say "{if underground_caverns_3.get(:ring_stolen)}The pedestal is marble, and is going nowhere.{else}You can't reach it through the cage.{/if}" } }
+  as surface for put_on { do { say "{if underground_caverns_3.get(:ring_stolen)}You could, and then it would be a thing on a pedestal in an unfinished room, which it does not deserve.{else}You can't reach it through the cage.{/if}" } }
+  passage no_take { {if underground_caverns_3.get(:ring_stolen)}The pedestal is marble, and is going nowhere.{else}You can't reach it through the cage.{/if} }
+}
+
+// The Crown Jewels as they are seen through the bars (CROWN-JEWELS-F's
+// TAKE): one thing, three names, out of reach.
+kind CagedJewels is Scenery, Touchable {
+  grammar { name "crown jewels"  nouns "jewels", "sceptre", "knife", "ring", "scepter", "collection"  adjectives "crown", "royal", "jewelled", "golden" }
+  passage short { crown jewels }
+  describe { text "The Crown Jewels of the Great Underground Empire, behind steel: a sceptre, a jewelled knife and a golden ring, each with more gold on it than it needs, in the Flathead taste. They are a foot from your hand and two hundred years from it." }
+  as target for rub { do { say "You can't reach them through the cage." } }
+  on :history (from, value) { if (value == 1) { self.set(:unseen, true) } }
+  passage no_take { The jewels are inside a locked cage. }
+}
+
+// The bronze plaque on the cage (PLAQUE, PLAQUE-F), and the small plaque
+// on the wall that takes its place once there is no cage to put it on.
+kind BronzePlaque is Scenery, Readable {
+  grammar { name "bronze plaque"  nouns "plaque", "text", "lettering", "inscription"  adjectives "bronze", "small", "tarnished" }
+  passage short { bronze plaque }
+  passage dedication {
+    {verbatim}
+             Crown Jewels
+
+      Presented To The Royal Museum
+          By His Gracious Lord
+
+            DIMWIT FLATHEAD
+
+              Dedicated
+             * 777 GUE *
+    {/verbatim}
+  }
+  passage stolen_text { The plaque explains that this room was to be the home of the Crown Jewels of the Empire. However, following the unexplained disappearance of a priceless ring during the final stages of construction, Lord Flathead decided to place the remaining jewels in a safer location. Interestingly, he placed his most prized possession, an incredibly gaudy crown, in a locked safe in a volcano specifically hollowed out for that purpose. }
+  passage clumsy_text { Underneath the plaque, in small lettering, is a description of a clumsy attempt to steal the jewels using a time machine from the Technological Museum which the curators were surprised to discover was not a nonworking model. After the attempt, the machine was removed from the exhibit. }
+  passage mystery_text { Underneath the plaque, in small lettering, is a description of a mysterious happening during the final stages of construction of the Museum, in which some of the crown jewels were found displaced from their proper positions. Fortunately, nothing was missing. The mystery was never solved and the museum was opened despite the objections of Lord Flathead that security was too lax. }
+  describe {
+    if (underground_caverns_3.get(:ring_stolen)) { text stolen_text }
+    else {
+      text dedication
+      if (underground_caverns_3.get(:clumsy_robbery)) { text clumsy_text }
+      else if (underground_caverns_3.get(:mystery)) { text mystery_text }
+    }
+  }
+  as target for read {
+    do {
+      if (underground_caverns_3.get(:ring_stolen)) { say stolen_text }
+      else {
+        say dedication
+        if (underground_caverns_3.get(:clumsy_robbery)) { say clumsy_text }
+        else if (underground_caverns_3.get(:mystery)) { say mystery_text }
+      }
+    }
+  }
+  passage no_take { {if underground_caverns_3.get(:ring_stolen)}It is fastened to the wall.{else}It is fastened to the cage, and the cage to the floor.{/if} }
+}
+
+// The plaque by the door of the Technology Museum (TECH-PLAQUE,
+// TECH-PLAQUE-F): legible before the museum closed, and not after.
+kind TechPlaque is Scenery, Readable {
+  grammar { name "plaque"  nouns "text", "lettering", "sign"  adjectives "faded", "mounted" }
+  passage short { plaque }
+  describe {
+    if (here.is(MuseumRoom)) {
+      if (here.get(:era) == :present) { text "A plaque mounted near the door, with writing on it that has faded past reading: a word here and there, \"Frobozz\" more than once, and the rest a brown blur." }
+      else { text "The plaque merely identifies the machines and names their donor. They are nonworking models of existing state-of-the-art machinery." }
+    } else { text "The words cannot be made out." }
+  }
+  as target for read {
+    do {
+      if (here.is(MuseumRoom)) {
+        if (here.get(:era) == :present) { say "The words cannot be made out." }
+        else { say "The plaque merely identifies the machines and names their donor. They are nonworking models of existing state-of-the-art machinery." }
+      } else { say "The words cannot be made out." }
+    }
+  }
+  passage no_take { It's bolted to the wall. }
+}
+
+// The grey machine and the black machine (PRESSURIZER, SPINNER,
+// MUSEUM-PIECES): nonworking models, and heavy.
+kind Pressurizer is Scenery, Touchable {
+  grammar { name "grey machine"  nouns "machine", "dryer", "pressurizer"  adjectives "grey", "gray", "strange", "washing" }
+  passage short { grey machine }
+  describe { text "A strange grey machine, shaped somewhat like a clothes dryer, with a lid and a switch and the look of a thing you have seen before, in a mine, in another adventure, where it turned coal into something better. This one turns nothing into anything; {if here.is(MuseumRoom)}{if here.get(:era) == :present}it is rusting in many spots, and has not been asked to in a long time{else}it is a model, and a nonworking one, and new{/if}{else}it is a model{/if}." }
+  as target for shift { do { say "It's massive and cannot even be moved." } }
+  as target for mung { do { say "It seems quite indestructible." } }
+  as target for open { do { say "The lid is a model of a lid, and does not open." } }
+  // Refused rather than answered, so that "board machine" and "climb into
+  // machine" are read of the gold one (the spec's Choosing a reading).
+  as target for through { permit { refuse "The grey machine is a model, and a solid one; there is no getting into it." } }
+  as target for climb_up { permit { refuse "The grey machine is a model, and a solid one; there is no getting onto it that would improve anything." } }
+  as surface for put_on { do { say "There's no good place to put anything there." } }
+  passage no_take { It's massive and cannot even be moved. }
+}
+kind Spinner is Scenery, Touchable {
+  grammar { name "black machine"  nouns "machine", "pipes", "wires", "motors", "spinner"  adjectives "black", "powerful-looking", "powerful" }
+  passage short { black machine }
+  describe { text "A powerful-looking black machine, a tight tangle of wires, pipes and motors, of the kind that once turned a round room underground so that nobody in it knew which way was out. This is a model of it, and a nonworking one, which is fortunate{if here.is(MuseumRoom)}{if here.get(:era) == :present}; it is rusting in many spots{/if}{/if}." }
+  as target for shift { do { say "It's too heavy to be pushed." } }
+  as target for mung { do { say "It seems quite indestructible." } }
+  as surface for put_on { do { say "There's no good place to put anything there." } }
+  as target for through { permit { refuse "The black machine is a tangle of pipes and wires with no inside to it that a person would fit." } }
+  as target for climb_up { permit { refuse "The black machine is a tangle of pipes and wires, and climbing it would improve nothing but your acquaintance with pipes and wires." } }
+  passage no_take { It's massive and cannot even be moved. }
+}
+
+// The pedestal of 776 (PEDESTAL, before the cage): the jewels stand on
+// it, and may be taken from it, and put back.
+kind OldPedestal is Box, Fixed, Touchable {
+  :open true
+  :transparent true
+  :capacity 60
+  grammar { name "pedestal"  nouns "plinth", "stand"  adjectives "marble", "bare" }
+  passage short { pedestal }
+  without as target for open from Box
+  without as target for close from Box
+  as target for open { do { say "There is nothing to open about a pedestal." } }
+  as target for close { do { say "There is nothing to close about a pedestal." } }
+  passage examined { {if self.count(Jewel) > 0}The Royal Jewels are on the pedestal:{for u: Jewel in self} {u.a_short}{if !$last},{/if}{/for}.{else}A marble pedestal, bare, with a slight hollow in its top where things were meant to stand.{/if} }
+  passage look_inside { {self.examined} }
+  passage inside_lines { {if false}.{/if} }
+  as target for shift { do { say "The pedestal is marble, and is going nowhere." } }
+  passage no_take { The pedestal is marble, and is going nowhere. }
+}
+
+// The Royal Seal in the Royal Hall (ROYAL-SEAL).
+kind RoyalSeal is Scenery, Readable {
+  grammar { name "Royal Seal"  nouns "seal", "carving", "rendering", "figure", "crown"  adjectives "royal", "large", "flathead" }
+  passage short { Royal Seal }
+  describe { text "The Seal is vintage Flathead, with signs of excess nearly everywhere. It shows a curiously flat-headed figure wearing a gaudy crown, surrounded by the Crown Jewels of the Empire." }
+  as target for read { do { say "Round the rim of the seal, in letters each the size of your hand: LORD DIMWIT FLATHEAD THE EXCESSIVE, and then, smaller, since the carver ran out of rim, several more titles, and then, smaller still, the carver's name, which somebody has since chiselled out." } }
+  as target for rub { do { say "The carving is deep and sharp still; the Flatheads built to last, whatever else they built to." } }
+  passage no_take { It is carved into the wall, and the wall into the hall. }
+}
+
+object tight_squeeze is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Tight Squeeze"
+    exit west "west" -> creepy_crawl
+    exit east "east" -> crystal_grotto
+  }
+  :id tight_squeeze
+  :walls 19
+  passage body { This is a very low and narrow passage leading east to west. }
+  object squeeze is Scenery {
+    grammar { name "squeeze"  nouns "tightness", "narrowness"  adjectives "tight", "low", "narrow" }
+    passage short { squeeze }
+    describe { text "The passage is low enough to make you stoop and narrow enough to make you turn your shoulders, and it does both for some way before it relents. Whatever came through here before you was not large." }
+    passage no_take { You have it; it has you, rather. }
+  }
+}
+
+object crystal_grotto is Room in underground_caverns_3 {
+  grammar {
+    name "Crystal Grotto"
+    exit south "south" -> royal_hall
+    exit west "west" -> tight_squeeze
+  }
+  :id grotto
+  :walls 20
+  passage body { This is a chamber of breathtaking beauty. Mighty stalagmites form crystalline-encrusted rock formations. Phosphorescent mosses, fed by a trickle of water from above, make the crystals glow and sparkle with every color of the rainbow. There is an opening to the west, and a man-made passage heads south. }
+  object crystals is Scenery, Touchable {
+    grammar { name "rock structure"  nouns "crystals", "crystal", "stalagmites", "stalagmite", "formations", "formation", "structure"  adjectives "crystalline", "crystalline-encrusted", "mighty", "glowing" }
+    passage short { rock structure }
+    describe { text "Stalagmites, each the work of ten thousand years of dripping, grown together into formations the size of houses and crusted over with crystal, and the crystal lit from inside by the moss so that every facet of it is a different colour. It is the most beautiful thing underground, and nobody built it, which may be the point." }
+    as target for rub { do { say "Cold, and faceted, and faintly damp; the light inside it does not come off on your hand." } }
+    passage no_take { You could break a piece off, and a piece of it, in your hand and away from the moss, would be a piece of wet glass. }
+    as target for mung { do { say "You would be breaking something ten thousand years old for the sake of a piece of wet glass. You decide against it, and the grotto, which was not worried, goes on glowing." } }
+  }
+  object grotto_moss is Scenery, Touchable {
+    grammar { name "phosphorescent moss"  nouns "moss", "mosses", "glow", "light"  adjectives "phosphorescent", "glowing", "green" }
+    passage short { phosphorescent moss }
+    describe { text "Phosphorescent moss, growing wherever the trickle of water reaches, which is nearly everywhere, and glowing with a soft green light of its own that the crystals take and break into every colour there is. It is the only lamp down here that nobody has to carry." }
+    as target for rub { do { say "Soft, and wet, and the glow dims under your fingers and comes back when you take them away." } }
+    as target for smell { do { say "Green, and wet, and faintly of a cellar in which something remarkable is happening." } }
+    passage no_take { It comes off on your fingers and goes dark there. It is the grotto's, and it stays. }
+  }
+  object trickle is Scenery {
+    grammar { name "trickle of water"  nouns "trickle", "water", "drip"  adjectives "thin", "steady" }
+    passage short { trickle of water }
+    describe { text "A trickle of water from somewhere far above, falling down the face of the tallest formation and feeding the moss on the way. It has been doing it for as long as the stalagmites have been growing, which is to say longer than the Empire." }
+    as target for listen { do { say "The trickle, falling, and the small sounds of water finding its way down crystal." } }
+    passage no_take { It runs through your fingers, and the moss has the rest. }
+  }
+  object man_made is Scenery {
+    grammar { name "man-made passage"  nouns "passage", "opening", "way"  adjectives "man-made", "south", "west", "square" }
+    passage short { man-made passage }
+    describe { text "To the south a passage leaves the grotto with square sides and a flat floor, cut by people rather than water; to the west, the natural opening you came in by, low and rough. The two do not look as though they belong to the same world, and they do." }
+    as target for through { do { say "Use compass directions for movement, and say which way." } }
+  }
+}
+
+object royal_hall is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Royal Hall"
+    exit north "north" -> crystal_grotto
+    exit south "south" -> great_door
+  }
+  :id royal_hall
+  :walls 21
+  passage body { This is the north end of a large hall with a vaulted ceiling. A long, tiled hallway leads north through a tall arch. Although the purpose of this room is unclear, there is a large rendering of the Royal Seal of Lord Dimwit Flathead carved on the wall. }
+  object seal is RoyalSeal
+  object hallway is Scenery {
+    grammar { name "tiled hallway"  nouns "hallway", "hall", "tiles", "arch", "tile"  adjectives "long", "tiled", "tall", "vaulted" }
+    passage short { tiled hallway }
+    describe { text "The hallway is tiled in a pattern that was expensive once and is mostly dust now, and goes north through an arch as tall as the hall is, which is very tall. To the south the hall goes on, into the dark, toward whatever the hall is for." }
+    as target for through { do { say "Use compass directions for movement, and say which way." } }
+  }
+  object vault is Scenery {
+    grammar { name "vaulted ceiling"  nouns "vault", "vaulting"  adjectives "vaulted", "high" }
+    passage short { vaulted ceiling }
+    describe { text "The ceiling goes up in a vault, rib after rib of cut stone meeting somewhere above the reach of your light. It was built to make whoever stood under it feel small, and it still works." }
+  }
+}
+
+object great_door is GreatDoor in underground_caverns_3 {
+  grammar {
+    name "Great Door"
+    exit north "north" -> royal_hall
+    exit east "east" -> museum_entrance when (underground_caverns_3.get(:quaked))
+    exit east "east" refuse "The great iron door is rusted shut."
+  }
+  :id great_door
+  :walls 22
+  passage body {
+    {if underground_caverns_3.get(:quaked)}This is the south end of a monumental hall, full of debris from a recent earthquake. To the east is a great iron door, rusted shut. To its right, however, is a gaping cleft in the rock and behind, a cleared area.{else}You are in the southern half of a monumental hall. To the east lies a tremendous iron door which appears to be rusted shut.{/if}
+  }
+  object cleft is Cleft
+  object debris is Rubble {
+    grammar { nouns "debris" }
+    describe { text "{if underground_caverns_3.get(:quaked)}Debris from the earthquake: blocks shaken out of the vault and the walls, lying where they fell, and dust still settling on them. The hall was built to stand for ever and has stood for nearly that; the earth, this once, had other ideas.{else}The hall is in good repair, for a ruin; what has fallen is dust, and not much of that.{/if}" }
+  }
+  object hall is Scenery {
+    grammar { name "monumental hall"  nouns "hall", "end"  adjectives "monumental", "southern", "south" }
+    passage short { monumental hall }
+    describe { text "The south end of the hall, where it stops against the iron door as though it had been built for no other reason than to arrive at it, which it had." }
+  }
+}
+
+object museum_entrance is MuseumEntrance in underground_caverns_3 {
+  grammar {
+    name "Museum Entrance"
+    exit east "east" -> jewel_room when (underground_caverns_3.get(:jewel_door_open))
+    exit east "east" refuse "The stone door is closed."
+    exit west "west" -> great_door when (underground_caverns_3.get(:quaked))
+    exit west "west" refuse "The iron door is rusted shut."
+    exit south "south" -> cp_ante
+    exit down "down" -> cp_ante
+    exit north "north" -> tech_museum when (underground_caverns_3.get(:wooden_door_open))
+    exit north "north" refuse "The wooden door is closed."
+  }
+  :id museum_entrance
+  :era present
+  :walls 23
+  passage body {
+    {if underground_caverns_3.get(:ring_stolen)}This is an entrance hall of some sort, judging by the grand iron door to the west, and the ornate stone and wooden doors which lead to the east and north, respectively. A few wide steps lead south.{else}This is the entrance to the Royal Museum, the finest and grandest in the Great Underground Empire. To the south, down a few steps, is the entrance to the Royal Puzzle and to the east, through a stone door, is the Royal Jewel Collection. A wooden door to the north is {if underground_caverns_3.get(:wooden_door_open)}open{else}closed{/if} and leads to the Museum of Technology. {if bound actor}{if actor.is(Adventurer)}{if actor.get(:year) > 948}To the west is a great iron door, rusted shut. The cleft in the rock, present when you started, has filled in with rubble.{else}To the west is a great iron door, rusted shut. To its left, however, is a cleft in the rock providing an exit from the museum.{/if}{else}To the west is a great iron door, rusted shut. To its left, however, is a cleft in the rock providing an exit from the museum.{/if}{else}To the west is a great iron door, rusted shut. To its left, however, is a cleft in the rock providing an exit from the museum.{/if}{/if}
+  }
+  object cleft is Cleft
+  object steps is Stairs {
+    grammar { nouns "steps" }
+    describe { text "A few wide steps, going down to the south toward the entrance to the Royal Puzzle, worn in the middle by visitors who went down them and, it is to be hoped, came back up." }
+    as target for climb_down { do { say "The steps go down to the south; say so." } }
+  }
+  object robot is Robot
+}
+
+object jewel_room is JewelRoom in underground_caverns_3 {
+  grammar {
+    name "Jewel Room"
+    exit west "west" -> museum_entrance when (underground_caverns_3.get(:jewel_door_open))
+    exit west "west" refuse "The stone door is closed."
+    exit out "out" -> museum_entrance when (underground_caverns_3.get(:jewel_door_open))
+    exit out "out" refuse "The stone door is closed."
+  }
+  :id jewel_room
+  :era present
+  :walls 23
+  passage body {
+    {if underground_caverns_3.get(:ring_stolen)}You are in a high-ceilinged chamber in the middle of which is a bare pedestal. The room is unfinished with no indication of its purpose. A small plaque is fastened to a wall.{else}You are in a high-ceilinged chamber in the middle of which sits a tall, round steel cage, which is securely locked. In the middle of the cage is a pedestal on which sit the Crown Jewels of the Great Underground Empire: a sceptre, a jewelled knife, and a golden ring. A small bronze plaque, now tarnished, is on the cage.{/if}
+  }
+  object cage is Cage
+  object pedestal is CagedPedestal
+  object jewels is CagedJewels
+  object plaque is BronzePlaque
+  object robot is Robot
+}
+
+object tech_museum is TechMuseum in underground_caverns_3 {
+  grammar {
+    name "Technology Museum"
+    exit south "south" -> museum_entrance when (underground_caverns_3.get(:wooden_door_open))
+    exit south "south" refuse "The wooden door is closed."
+    exit out "out" -> museum_entrance when (underground_caverns_3.get(:wooden_door_open))
+    exit out "out" refuse "The wooden door is closed."
+  }
+  :id tech_museum
+  :era present
+  :walls 23
+  passage body {
+    {if underground_caverns_3.get(:ring_stolen)}This is an exhibit of Empire technology. A wooden door to the south is {if underground_caverns_3.get(:wooden_door_open)}open{else}closed{/if}.{else}This is a large hall which hosted the technological exhibits of the Great Underground Empire. A door to the south is {if underground_caverns_3.get(:wooden_door_open)}open{else}closed{/if}.{/if}
+
+    A strange grey machine, shaped somewhat like a clothes dryer, is on one side of the room. On the other side of the hall is a powerful-looking black machine, a tight tangle of wires, pipes, and motors. A plaque is mounted near the door. The writing is faded, however, and cannot be made out clearly. The two machines seem to be in bad shape, rusting in many spots.
+  }
+  object grey_machine is Pressurizer
+  object black_machine is Spinner
+  object tech_plaque is TechPlaque
+  object machine is TimeMachine {
+    :room tech_museum
+    :era present
+  }
+  object robot is Robot
+}
+
+// The years between the dedication and now (MID-*): the museum as it was
+// kept, with the plaque still legible.
+object mid_museum_entrance is MuseumEntrance in underground_caverns_3 {
+  grammar {
+    name "Museum Entrance"
+    exit east "east" -> mid_jewel_room when (underground_caverns_3.get(:jewel_door_open))
+    exit east "east" refuse "The stone door is closed."
+    exit west "west" refuse "The iron door is rusted shut."
+    exit south "south" -> mid_cp_ante
+    exit down "down" -> mid_cp_ante
+    exit north "north" -> mid_tech_museum when (underground_caverns_3.get(:wooden_door_open))
+    exit north "north" refuse "The wooden door is closed."
+  }
+  :id mid_entrance
+  :era mid
+  :walls 23
+  passage body { This is the entrance to the Royal Museum, the finest and grandest in the Great Underground Empire. To the south, down a few steps, is the entrance to the Royal Puzzle and to the east, through a stone door, is the Royal Jewel Collection. A wooden door to the north is {if underground_caverns_3.get(:wooden_door_open)}open{else}closed{/if} and leads to the Museum of Technology. To the west is a great iron door, rusted shut. }
+  object steps is Stairs {
+    grammar { nouns "steps" }
+    describe { text "A few wide steps, going down to the south toward the entrance to the Royal Puzzle, newer than you have seen them and not yet worn." }
+    as target for climb_down { do { say "The steps go down to the south; say so." } }
+  }
+}
+
+object mid_jewel_room is JewelRoom in underground_caverns_3 {
+  grammar {
+    name "Jewel Room"
+    exit west "west" -> mid_museum_entrance when (underground_caverns_3.get(:jewel_door_open))
+    exit west "west" refuse "The stone door is closed."
+    exit out "out" -> mid_museum_entrance when (underground_caverns_3.get(:jewel_door_open))
+    exit out "out" refuse "The stone door is closed."
+  }
+  :id mid_jewel
+  :era mid
+  :walls 23
+  passage body {
+    {if underground_caverns_3.get(:ring_stolen)}You are in a high-ceilinged chamber in the middle of which is a bare pedestal. The room is unfinished with no indication of its purpose. A small plaque is fastened to a wall.{else}You are in a high-ceilinged chamber in the middle of which sits a tall, round steel cage, which is securely locked. In the middle of the cage is a pedestal on which sit the Crown Jewels of the Great Underground Empire: a sceptre, a jewelled knife, and a golden ring. A small bronze plaque, not yet tarnished, is on the cage.{/if}
+  }
+  object cage is Cage
+  object pedestal is CagedPedestal
+  object jewels is CagedJewels
+  object plaque is BronzePlaque
+}
+
+object mid_tech_museum is TechMuseum in underground_caverns_3 {
+  grammar {
+    name "Technology Museum"
+    exit south "south" -> mid_museum_entrance when (underground_caverns_3.get(:wooden_door_open))
+    exit south "south" refuse "The wooden door is closed."
+    exit out "out" -> mid_museum_entrance when (underground_caverns_3.get(:wooden_door_open))
+    exit out "out" refuse "The wooden door is closed."
+  }
+  :id mid_tech
+  :era mid
+  :walls 23
+  passage body {
+    This is a large hall which hosts the technological exhibits of the Great Underground Empire. A door to the south is {if underground_caverns_3.get(:wooden_door_open)}open{else}closed{/if}.
+
+    A strange grey machine, shaped somewhat like a clothes dryer, is on one side of the room. On the other side of the hall is a powerful-looking black machine, a tight tangle of wires, pipes, and motors. A plaque is mounted near the door. The grey machine, it turns out, is a Frobozz Magic Pressurizer, used in the coal mines of the Empire. The black machine is a Frobozz Magic Room Spinner. The golden machine is referred to as a Temporizer. All are nonworking models donated by Frobozzco president John D. Flathead.
+  }
+  object grey_machine is Pressurizer
+  object black_machine is Spinner
+  object tech_plaque is TechPlaque
+  object machine is TimeMachine {
+    :room mid_tech
+    :era mid
+  }
+}
+
+// The year 776 (OLD-*): the museum unfinished, the jewels on a bare
+// pedestal, and the guards outside the door.
+object old_museum_entrance is MuseumEntrance in underground_caverns_3 {
+  grammar {
+    name "Museum Entrance"
+    exit east "east" -> old_jewel_room when (underground_caverns_3.get(:jewel_door_open))
+    exit east "east" refuse "The stone door is closed."
+    exit west "west" refuse "The guards locked the iron door behind them."
+    exit north "north" -> old_tech_museum when (underground_caverns_3.get(:wooden_door_open))
+    exit north "north" refuse "The wooden door is closed."
+    exit south "south" refuse "The stairs end blindly to the south."
+    exit down "down" refuse "The stairs end blindly to the south."
+  }
+  :id old_entrance
+  :era old
+  :walls 23
+  passage body { This appears to be an unfinished entranceway to the Royal Museum. There are doors to the east and north, and a blind stairway to the south. A heavy iron door to the west is closed and locked.{if bound actor}{if actor.is(Adventurer)}{if actor.get(:guards)} Through the door you can hear voices which, from their sound, belong to military or police personnel.{/if}{/if}{/if} }
+  object steps is Stairs {
+    grammar { nouns "steps", "stairway" }
+    describe { text "A stairway going down to the south a few steps and ending blind against rock, as though whoever cut it had been told to stop and had. Whatever is to be at the bottom of it has not been built yet." }
+    as target for climb_down { do { say "The stairs end blindly to the south." } }
+  }
+  object voices is Voices
+  object robot is Robot
+}
+
+object old_jewel_room is JewelRoom in underground_caverns_3 {
+  grammar {
+    name "Jewel Room"
+    exit west "west" -> old_museum_entrance when (underground_caverns_3.get(:jewel_door_open))
+    exit west "west" refuse "The stone door is closed."
+    exit out "out" -> old_museum_entrance when (underground_caverns_3.get(:jewel_door_open))
+    exit out "out" refuse "The stone door is closed."
+  }
+  :id old_jewel
+  :era old
+  :walls 23
+  passage body { You are in a high-ceilinged chamber, in the center of which is a pedestal which {if underground_caverns_3.get(:ring_stolen)}is bare.{else}is the intended home of the Crown Jewels of the Great Underground Empire: a jewelled knife, a golden ring, and the royal sceptre.{if pedestal.count(Jewel) < 3} Not all of the jewels are in place, however.{/if}{/if} The room is, by appearances, unfinished.{if bound actor}{if actor.is(Adventurer)}{if actor.get(:guards)} Through the door you can hear voices which, from their sound, belong to military or police personnel.{/if}{/if}{/if} }
+  object pedestal is OldPedestal {
+    object sceptre is Sceptre
+    object knife is JewelledKnife
+    object ring is Ring
+  }
+  object voices is Voices
+  object robot is Robot
+}
+
+object old_tech_museum is TechMuseum in underground_caverns_3 {
+  grammar {
+    name "Technology Museum"
+    exit south "south" -> old_museum_entrance when (underground_caverns_3.get(:wooden_door_open))
+    exit south "south" refuse "The wooden door is closed."
+    exit out "out" -> old_museum_entrance when (underground_caverns_3.get(:wooden_door_open))
+    exit out "out" refuse "The wooden door is closed."
+  }
+  :id old_tech
+  :era old
+  :walls 23
+  passage body {
+    You are in a large, unfinished room, probably intended to be a part of the Royal Museum.{if bound actor}{if actor.is(Adventurer)}{if actor.get(:guards)} Through the door you can hear voices which, from their sound, belong to military or police personnel.{/if}{/if}{/if}
+
+    A strange grey machine, shaped somewhat like a clothes dryer, is on one side of the room. On the other side of the hall is a powerful-looking black machine, a tight tangle of wires, pipes, and motors. A plaque is mounted near the door. The grey machine, it turns out, is a Frobozz Magic Pressurizer, used in the coal mines of the Empire. The black machine is a Frobozz Magic Room Spinner. The golden machine is referred to as a Temporizer. All are nonworking models donated by Frobozzco president John D. Flathead.
+  }
+  object grey_machine is Pressurizer
+  object black_machine is Spinner
+  object tech_plaque is TechPlaque
+  object machine is TimeMachine {
+    :room old_tech
+    :era old
+  }
+  object voices is Voices
+  object robot is Robot
+}
+
+object museum_iron_door is IronDoor in great_door, museum_entrance, mid_museum_entrance, old_museum_entrance
+object museum_stone_door is StoneDoor in museum_entrance, jewel_room, mid_museum_entrance, mid_jewel_room, old_museum_entrance, old_jewel_room
+object museum_wooden_door is WoodenDoor in museum_entrance, tech_museum, mid_museum_entrance, mid_tech_museum, old_museum_entrance, old_tech_museum

@@ -13,7 +13,7 @@ import {DarkRoom, Room} from 'room'
 import {Box} from 'box'
 import {endless_stair} from 'way_in'
 import {Ocean} from 'ocean'
-import {lamp_on, lamp_off, smell, listen, :light, :relight, :snuffed, :fry, :smash, :lamp_home} from 'verbs'
+import {lamp_on, lamp_off, smell, listen, dry, :light, :relight, :snuffed, :fry, :smash, :lamp_home} from 'verbs'
 
 kind Light is Portable, sprout.LightSource, Switchable {
   on :moved (from, to) {
@@ -144,6 +144,13 @@ kind Lamp is Light {
       }
     }
   }
+  as target for dry {
+    do {
+      if (self.get(:fried)) { say "You dry the lamp, with your sleeve and then with patience, and it is dry, and it is still not working: the lake got into it where drying does not reach, and what it did there it did for good." }
+      else if (self.get(:broken)) { say "You could dry it, and it would be a dry broken lantern." }
+      else { say "The lamp is dry already." }
+    }
+  }
   // Dropped into the lake (GO-ON-LAKE): out, and out for good. It is
   // moved first, so its going out is counted off its bearer's light.
   on :fry {
@@ -209,6 +216,12 @@ kind Torch is Light, Flame {
     }
   }
   as target for smell { do { say "Pitch, and smoke, and hot rag." } }
+  as target for dry {
+    do {
+      if (self.get(:fried)) { say "You wring the torch out, and it drips, and goes on being a black wet stick; the lake put it out for good, and dry is not the same as lit." }
+      else { say "The torch is dry, and burning, and best left so." }
+    }
+  }
   as target for listen { do { say "{if self.get(:lit)}It hisses and spits a little, as pitch does.{else}The torch makes no sound.{/if}" } }
   on :fry {
     self.set(:lit, false)

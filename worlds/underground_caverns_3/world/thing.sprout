@@ -9,7 +9,7 @@
 // it has been moved, and by its long one (LDESC) after, or by "There is a
 // ... here." when it has none; `here_line` is that rule. A thing marked
 // `:ndesc` (Zork's NDESCBIT) is never listed.
-import {open, close, read, look_in, look_under, look_behind, search, find, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, turn, tie, untie, burn, cut, play, count_things, through, cross, leap_at, unlock, put_on, put, give, talk, alarm, follow, kiss, wave, dig, lamp_on, lamp_off, fill, drink, drink_from, pour, pour_on, spray, take_fixed, :consume, :falling} from 'verbs'
+import {open, close, read, look_in, look_under, look_behind, search, find, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, turn, tie, untie, burn, cut, play, count_things, through, cross, leap_at, unlock, put_on, put, give, talk, alarm, follow, kiss, wave, dig, lamp_on, lamp_off, fill, drink, drink_from, pour, pour_on, spray, take_fixed, dry, knock, put_under, exit_thing, push_to, set_dial, :consume, :falling} from 'verbs'
 
 kind Thing {
   grammar { article the }
@@ -101,6 +101,9 @@ kind Thing {
   as target for unlock default { do { say "It doesn't seem to work." } }
   as surface for put_on default { do { say "There's no good surface on the {self.short}." } }
   as target for pour_on default { do { say "It spills onto the {self.short} and vanishes."  send item :consume } }
+  as target for dry default { do { say "The {self.short} is as dry as it is going to get, which is to say as dry as it was." } }
+  as target for put_under default { do { say "There is no under to the {self.short} that anything could be put in." } }
+  as target for exit_thing default { do { say "You are not in the {self.short}, so far as either of you can tell." } }
 }
 
 // A thing that can be carried off. Only these answer `take all`.
@@ -186,6 +189,16 @@ kind Sprayable is Thing {
 }
 // Something burning, that other things may be burned with: the torch.
 kind Flame is Thing { }
+
+// Something that can be pushed in a direction (V-PUSH-TO): the gold
+// machine. The direction is a value the thing reads from its own list.
+kind Pushable is Thing { }
+// Something set to a number (TM-DIAL-F): the time machine's dial.
+kind Dial is Thing { }
+// Something that answers a knock: a door.
+kind Knockable is Thing {
+  as target for knock default { do { say "Knocking on the {self.short} is not notably helpful." } }
+}
 
 // Something heard and not seen, that might be followed: the footsteps in
 // the land of shadow.

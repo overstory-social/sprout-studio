@@ -96,8 +96,8 @@ kind Cover is Scenery, Openable, Concealing {
   grammar { name "manhole cover"  nouns "cover", "manhole", "lid", "disc"  adjectives "large", "heavy", "iron" }
   passage short { manhole cover }
   describe {
-    if (self.get(:moved)) { text "A heavy iron cover, moved a little to one side, with a small hole under it leading into darkness; a draught comes up the hole that smells of moss." }
-    else { text "A large, heavy manhole cover, iron, set into the floor to one side of the room, with the kind of rust on it that has had time. Something is under it, presumably; that is what manhole covers are for." }
+    if (self.get(:moved)) { text "A heavy iron cover, moved a little to one side, with a small hole under it leading into darkness; a draught comes up the hole that smells of moss{if underground_caverns_3.get(:quaked)}, and, since the earth shook, of open air and a long drop, as though the channel below had lost a piece of itself to the chasm. The way down is a way down, and what is at the bottom of it now has a gap in it{/if}." }
+    else { text "A large, heavy manhole cover, iron, set into the floor to one side of the room, with the kind of rust on it that has had time. Something is under it, presumably; that is what manhole covers are for.{if underground_caverns_3.get(:quaked)} A thin draught comes up round its edges that was not there before the earthquake, smelling of moss and open air; whatever is under it has changed shape.{/if}" }
   }
   as target for shift {
     do {
@@ -147,7 +147,11 @@ kind Cover is Scenery, Openable, Concealing {
   passage no_take { The cover is far too heavy to take. }
 }
 
-kind SouthShore is Room { }
+kind SouthShore is Room {
+  on :entered (item, from) {
+    if (item.is(Adventurer) && item.get(:light) > 0 && item.recall(:visits) > 0 && item.get(:mode) != :verbose) { tell item "The light you carry lies on the water, which would take it as readily as the north shore's water did; no light crosses this lake alight. The dark passage to the south is not a dark that light alone answers." }
+  }
+}
 kind GrueLair is DarkRoom { }
 kind DarkTwo is GrueLair { }
 kind KeyRoom is Room { }
@@ -164,7 +168,7 @@ object south_shore is SouthShore in underground_caverns_3 {
     exit north "north" refuse "If you want to go into the lake, you should say so."
   }
   :walls 6
-  passage body { You are on the south shore of the lake. Rock formations prevent movement to the west and thickening swamp to the east makes the going all but impossible. To the south, where the beach meets a rock formation, you can make out a dark passage sloping steeply upward into the rock. }
+  passage body { You are on the south shore of the lake. Rock formations prevent movement to the west and thickening swamp to the east makes the going all but impossible. To the south, where the beach meets a rock formation, you can make out a dark passage sloping steeply upward into the rock. The dark in it is not the ordinary kind that a lamp answers, and no lamp comes across the lake lit in any case; what keeps a grue off a person is sold in a can, and the can is somewhere a light has already been. }
   object beach is Scenery, Diggable, Searchable {
     grammar { name "beach"  nouns "shore", "sand", "bank"  adjectives "south", "southern", "sandy" }
     passage short { beach }
@@ -182,7 +186,7 @@ object south_shore is SouthShore in underground_caverns_3 {
   object dark_passage is Scenery {
     grammar { name "dark passage"  nouns "passage", "opening", "slope"  adjectives "dark", "steep", "sloping", "south" }
     passage short { dark passage }
-    describe { text "A dark passage, sloping steeply upward into the rock to the south, and dark all the way up as far as you can see, which is not far. Nothing comes out of it; something, by the sound, is in it." }
+    describe { text "A dark passage, sloping steeply upward into the rock to the south, and dark all the way up as far as you can see, which is not far. Nothing comes out of it; something, by the sound, is in it, and more than one of it. This is not a dark that a light would settle, even if a light could be got across the lake, which it cannot; it is the kind of dark a grue is at home in, and what keeps a grue off a person is not a lamp but a thing in a spray can, with Frobozz on the label. One such can is in a tiny room with the number eight on its wall, which the table at the Scenic Vista shows now and then." }
     as target for through { do { say "The passage is to the south, and up; say so." } }
     as target for listen { do { say "Something in the dark of the passage is breathing, or several somethings, and not hurrying." } }
   }
@@ -239,9 +243,9 @@ object key_room is KeyRoom in underground_caverns_3 {
   passage body {
     You are between some rock and a dark place. The room is lit dimly from above, revealing a lone, dark path sloping down to the west.{if cover.get(:moved)}
 
-    A heavy manhole cover has been moved to reveal a dark passage below.{else}
+    A heavy manhole cover has been moved to reveal a dark passage below.{if underground_caverns_3.get(:quaked)} A draught comes up through the hole that smells of moss and of a great deal of open air, as though the channel below it no longer went all the way to anywhere; whatever fell in the earthquake, the sound of it came up this hole.{/if}{else}
 
-    To one side of the room is a large manhole cover.{/if}
+    To one side of the room is a large manhole cover.{if underground_caverns_3.get(:quaked)} A thin draught comes up round its edges that was not there before the earth shook, and with it, faintly, the smell of moss and of open air.{/if}{/if}
   }
   object key is StrangeKey
   object cover is Cover
@@ -287,7 +291,7 @@ object aqueduct_1 is AqueductRoom in underground_caverns_3 {
     exit north "north" -> high_arch
   }
   :walls 18
-  passage body { You are in a wide stone channel, part of the water supply system for the Great Underground Empire. The source of water was a waterfall to the south, which has long since dried up. Water flowed along the aqueduct to the north. This region is lit from above, although the source of light is not apparent. }
+  passage body { You are in a wide stone channel, part of the water supply system for the Great Underground Empire. The source of water was a waterfall to the south, which has long since dried up. Water flowed along the aqueduct to the north. This region is lit from above, although the source of light is not apparent.{if underground_caverns_3.get(:quaked)} Some way to the north, where the channel goes out over the chasm, it stops against the air: an arch has fallen since the earth shook, and the channel beyond the gap stands by itself on the far side.{/if} }
   object aqueduct is AqueductStructure
   object channel is WaterChannel
   object moss is Moss

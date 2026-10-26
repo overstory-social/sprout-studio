@@ -13,6 +13,7 @@
 import * as sprout from 'sprout'
 import {Thing, Scenery, Creature, Diggable, Searchable, Concealing} from 'thing'
 import {Light} from 'lamp'
+import {SouthShore} from 'aqueduct'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
 import {examine} from 'sprout'
@@ -143,6 +144,11 @@ kind Wall is Scenery {
   passage altar_wall { Basalt blocks, rudely cut and rudely laid, with torches in brackets throwing a sallow light on them and on what is done in front of them. }
   passage key_wall { Rock, close on three sides, and a dim light from somewhere above that falls on the floor and does not reach the walls, which seem to prefer it that way. }
   passage channel_wall { There are no walls here, only the sides of the channel, a few feet high and green with moss, and past them the air, and a long way below the air the rock. }
+  passage squeeze_wall { The walls are what makes it a squeeze: rough, close, and closer, so that you go through with a shoulder against one and a hip against the other and your head bowed to the roof. }
+  passage grotto_wall { The walls are crystal, or crusted with it, every facet lit from inside by the moss and every one a different colour; where the rock shows through it is wet and dark and ordinary, which only makes the rest more remarkable. }
+  passage hall_wall { Walls of cut stone, tall and plumb and tiled to the height of a man, going up into the vault; on one of them the Royal Seal, and on the others, here and there, the marks of where something hung once and does not. }
+  passage museum_wall { The walls are of dressed stone, the museum's, built to show things off and hold them in; whoever cut them cut them well, and did not sign the work. }
+  passage puzzle_wall { Smooth stone, cut square and close; the museum's masons were here, and left nothing to hold. }
   describe {
     if (self.get(:look) == 1) { text stair_wall }
     else if (self.get(:look) == 2) { text cramped }
@@ -162,6 +168,12 @@ kind Wall is Scenery {
     else if (self.get(:look) == 16) { text altar_wall }
     else if (self.get(:look) == 17) { text key_wall }
     else if (self.get(:look) == 18) { text channel_wall }
+    else if (self.get(:look) == 19) { text squeeze_wall }
+    else if (self.get(:look) == 20) { text grotto_wall }
+    else if (self.get(:look) == 21) { text hall_wall }
+    else if (self.get(:look) == 22) { text hall_wall }
+    else if (self.get(:look) == 23) { text museum_wall }
+    else if (self.get(:look) == 24) { text puzzle_wall }
     else { text plain }
   }
   as target for shift { do { say "You can't budge it; at least from here." } }
@@ -176,7 +188,10 @@ kind Wall is Scenery {
 kind Tunnel is Scenery {
   grammar { name "passage"  nouns "tunnel", "crawlway", "passages"  adjectives "dark", "smoky", "narrow", "wide", "winding", "cramped" }
   passage short { passage }
-  describe { text "The passage is cut through the rock, and goes where it goes. The ways out of here are described above, and you may take any of them." }
+  describe {
+    if (here.is(SouthShore)) { text "The dark passage to the south slopes steeply up into the rock, and is dark all the way up as far as you can see, which is not far. Something, by the sound, is in it, and more than one of it. This is not a dark that a light would settle, even if a light could be got across the lake, which it cannot; it is the kind of dark a grue is at home in, and what keeps a grue off a person is not a lamp but a thing in a spray can, with Frobozz on the label. One such can is in a tiny room with the number eight on its wall, which the table at the Scenic Vista shows now and then." }
+    else { text "The passage is cut through the rock, and goes where it goes. The ways out of here are described above, and you may take any of them." }
+  }
   passage no_take { You must specify a direction to go. }
   as target for through { do { say "Use compass directions for movement, and say which way." } }
   as target for find { do { say "I can't help you there...." } }

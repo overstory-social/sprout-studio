@@ -6,8 +6,8 @@
 // kind those things compose, so it is offered only where one of them is
 // in range; a verb with no role is kept for what works everywhere.
 import * as sprout from 'sprout'
-import {inventory} from 'sprout'
-import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace, Openable, Readable, Searchable, Concealing, Food, Touchable, Shakeable, Squeezable, Greetable, Sprayable} from 'thing'
+import {inventory, wait} from 'sprout'
+import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace, Openable, Readable, Searchable, Concealing, Food, Touchable, Shakeable, Squeezable, Greetable, Sprayable, Pushable, Dial, Knockable} from 'thing'
 
 // Zork III wears a thing by taking it (V-WEAR performs TAKE), so "wear"
 // and "put on" are phrases of `take`, and a worn thing is a held one.
@@ -95,6 +95,54 @@ verb shift {
   "move [target]"  "push [target]"  "pull [target]"  "slide [target]"
   "press [target]"  "shove [target]"  "push on [target]"  "roll [target]"
 }
+// A hood pulled back, a cover pushed back: the same reach as a push.
+intent pull_back {
+  "pull back [x]"  "pull [x] back"  "push back [x]"  "push [x] back"
+  "draw back [x]"  "throw back [x]"  "fold back [x]"  "turn back [x]"
+  do shift (target: x)
+}
+// A thing pushed in a direction (V-PUSH-TO): the gold machine, and the
+// direction is a value the machine reads (the spec's Value roles), so
+// "push machine east" is one reading and never a bare push with "east"
+// dropped.
+verb push_to {
+  role target: Pushable
+  role dir: symbol
+  "push [target] [dir]"  "push [target] to [dir]"  "push [target] to the [dir]"  "move [target] [dir]"
+  "shove [target] [dir]"  "slide [target] [dir]"  "roll [target] [dir]"  "push [target] toward [dir]"
+}
+// A dial set to a year (TM-DIAL-F): the year is a number the dial reads.
+verb set_dial {
+  role target: Dial
+  role year: integer
+  "turn [target] to [year]"  "set [target] to [year]"  "turn [target] [year]"  "set [target] [year]"
+  "spin [target] to [year]"  "dial [target] to [year]"  "set [target] for [year]"  "turn [target] to the year [year]"
+}
+// A thing hidden under another (V-PUT-UNDER): the ring under the seat.
+verb put_under {
+  role item carried
+  role target
+  "put [item] under [target]"  "hide [item] under [target]"  "put [item] beneath [target]"  "slide [item] under [target]"
+  "hide [item] behind [target]"  "put [item] behind [target]"  "stuff [item] under [target]"  "conceal [item] under [target]"
+}
+// Getting out of what you are in: the gold machine, mostly.
+verb get_out { "get out"  "exit"  "leave"  "disembark"  "climb out"  "get off"  "stand up"  "get up" }
+verb exit_thing {
+  role target
+  "get out of [target]"  "exit [target]"  "climb out of [target]"  "get off [target]"
+  "disembark [target]"  "get off of [target]"  "leave [target] behind"  "step out of [target]"
+}
+intent sit_in {
+  "sit in [x]"  "sit on [x]"  "sit down on [x]"  "sit down in [x]"
+  "get on [x]"  "climb on [x]"  "take a seat on [x]"  "seat yourself on [x]"
+  do through (target: x)
+}
+verb knock { role target: Knockable  "knock on [target]"  "knock [target]"  "rap on [target]"  "bang on [target]"  "tap on [target]"  "pound on [target]" }
+// A search with nothing named: the room, as "examine room" reads it.
+verb search_here { "search"  "search around"  "search the area"  "rummage"  "search room"  "look around carefully"  "hunt around"  "search here" }
+// Feeling about, in the dark or out of it.
+verb feel_around { "feel around"  "feel"  "grope"  "grope around"  "feel the dark"  "feel for the wall"  "feel the walls"  "feel in the dark" }
+verb dry { role target  "dry [target]"  "dry off [target]"  "dry out [target]"  "wipe [target]"  "wipe off [target]"  "dry [target] off"  "wring out [target]"  "shake water from [target]" }
 verb raise { role target  "raise [target]"  "lift [target]"  "raise up [target]"  "lift up [target]"  "pull up [target]" }
 verb lower { role target  "lower [target]"  "let down [target]" }
 verb eat { role target: Food  "eat [target]"  "consume [target]"  "taste [target]"  "bite [target]" }
@@ -246,6 +294,22 @@ verb hello { "hello"  "hi" }
 // as nearly the words and holds for, once (adventurer.sprout). A hail,
 // an ahoy and a wave with nobody named are shouts of this kind.
 verb yell { "yell"  "scream"  "shout"  "hail"  "ahoy"  "wave"  "call out"  "holler" }
+// A shout with words in it, or for help: read whole, and a shout.
+intent shout_more {
+  "shout for help"  "call for help"  "cry for help"  "yell for help"
+  "shout hello"  "shout up"  "call out hello"  "shout help"
+  do yell
+}
+intent say_hello_comma {
+  "say hello, [x]"  "say hello [x]"  "say hi, [x]"  "say hi [x]"
+  "say hello to the [x]"  "call hello to [x]"  "shout hello to [x]"  "shout hello at [x]"
+  do greet (target: x)
+}
+// Sleeping and resting are waiting, one move at a time.
+intent rest { "sleep"  "rest"  "nap"  "take a nap"  "lie down"  "wait a while"  "wait a bit"  "wait for a while"  do wait }
+// A wait with a number in it: this world waits one move at a time, and
+// says so, since a number is not a thing the parser reads from a line.
+verb wait_long { "wait 2"  "wait 3"  "wait 4"  "wait 5"  "wait 10"  "wait 20"  "wait 30"  "wait 100" }
 // A question into the dark, which works everywhere: in the land of
 // shadow the footsteps answer it, at the ocean the sailor, and anywhere
 // else nobody, which is the answer wanted.
@@ -272,7 +336,7 @@ verb repent { "repent" }
 verb frobozz { "frobozz" }
 verb answer_bare { "answer"  "reply" }
 verb say_bare { "say"  "speak"  "talk" }
-verb stand { "stand"  "stand up"  "sit"  "sit down" }
+verb stand { "stand"  "sit"  "sit down"  "take a seat" }
 verb chomp { "lose"  "barf"  "chomp" }
 verb odysseus { "odysseus"  "ulysses" }
 verb treasure { "treasure"  "temple" }
@@ -292,7 +356,11 @@ intent how_doing {
 // Where somebody or something may be sent by the world's gate, and which
 // room a room is: every place keeps its own, so that what stands in it
 // can name it to something that cannot see it.
-enum Dest { nowhere, stair, junction, barren, creepy, foggy, shadow_1, shadow_2, shadow_3, shadow_4, shadow_5, shadow_6, shadow_7, shadow_8, ocean, lake_shore, aq_view, on_lake, in_lake, oblivion, cell, scatter, sword, splash, damp, dead_end, view, vista, haul, fall_ledge, fall_base }
+enum Dest { nowhere, stair, junction, barren, creepy, foggy, shadow_1, shadow_2, shadow_3, shadow_4, shadow_5, shadow_6, shadow_7, shadow_8, ocean, lake_shore, aq_view, on_lake, in_lake, oblivion, cell, scatter, sword, splash, damp, dead_end, view, vista, haul, fall_ledge, fall_base, tight_squeeze, grotto, royal_hall, great_door, museum_entrance, jewel_room, tech_museum, cp_ante, cp_out, mid_entrance, mid_jewel, mid_tech, mid_cp_ante, mid_cp_out, old_entrance, old_jewel, old_tech, puzzle, time_trip, machine }
+
+// Which year a museum room is: the present (948 GUE), the years between
+// the dedication and now, and 776, the year the museum was built.
+enum Era { present, mid, old }
 
 // The man at the cliff (MAN-FLAG, MAN-SEEN, CHEST-LIFTED, MAN-GONE), as
 // the world keeps him: not yet met; met, and waiting at the brink for the
@@ -305,7 +373,7 @@ enum Mode { brief, verbose, superbrief }
 
 // A compass direction the hooded figure may block (PICK-DIRECTION), and
 // none.
-enum Direction { none, north, south, east, west, northeast, northwest, southeast, southwest }
+enum Direction { none, north, south, east, west, northeast, northwest, southeast, southwest, up, down, out }
 
 // Light: how many lit lamps a visitor carries, a dark room recounting
 // its lights, whether a room is lit without the visitor's own light, and
@@ -408,3 +476,32 @@ message :ledge_entered
 message :sleeper_gone
 // The old man's three moves awake, counted by the room.
 message :tick_sleep
+// The Royal Puzzle (CPWALL-OBJECT, CPGOTO): a wall pushed in a direction
+// by the one standing beside it; the world told which cell the wall
+// leaves and which it enters, in that order; the pusher told the grid is
+// settled; every square told to read the grid again; the steel door
+// opened by the slot.
+message :cp_push with Direction
+message :cp_from with integer
+message :cp_to with integer
+message :cp_done
+message :cp_changed
+message :cp_open_door
+// The time machine (TM-BUTTON-F, TGOTO, I-SNAP): the point for the dial at
+// 776; the trip, carrying the year; the gold machine pushed in a
+// direction, and told where to follow; a dial told its year; the museum's
+// doors shut by a trip; a visitor arrived in a room of 776; the jewels
+// called home to the pedestal; the machine told to vanish.
+message :tm_point
+message :time_trip with integer
+message :push_machine with Direction
+message :machine_follow with Dest
+message :dial_set with integer
+message :stone_door with boolean
+message :wooden_door with boolean
+message :old_entered
+message :jewels_home
+message :ring_hidden
+message :ring_taken
+message :machine_gone
+message :history with integer

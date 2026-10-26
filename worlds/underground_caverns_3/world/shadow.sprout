@@ -290,6 +290,7 @@ object shadow_1 is ShadowRoom in underground_caverns_3 {
   :walls 5
   passage body { You are at the eastern end of a dark, featureless landscape of shallow hills. Paths to the east and southeast reenter the rock. }
   object hills is Hills
+  object mist is Mist
   object shadows is Shadows
   object paths is Scenery {
     grammar { name "paths"  nouns "path"  adjectives "east", "southeast", "rock" }
@@ -330,6 +331,7 @@ object shadow_2 is ShadowRoom in underground_caverns_3 {
   :walls 10
   passage body { You are in a shadowy land of low, rolling hills stretching out to the west and south. The land is bordered to the north by a massive stone wall. Ancient and weathered, the wall has crumbled enough at one point to permit passage. }
   object hills is Hills
+  object mist is Mist
   object shadows is Shadows
   object stone_wall is StoneWall
   object rubble is Rubble
@@ -409,6 +411,7 @@ object shadow_4 is ShadowRoom in underground_caverns_3 {
   :walls 4
   passage body { You are in an ominously dark land of rolling hills. The ground becomes softer to the south. }
   object hills is Hills
+  object mist is Mist
   object shadows is Shadows
   object soft_ground is Scenery {
     grammar { name "soft earth"  nouns "earth", "softness"  adjectives "soft", "softer", "spongy" }
@@ -445,6 +448,7 @@ object shadow_5 is ShadowRoom in underground_caverns_3 {
   :walls 4
   passage body { You are at the southern end of a shadowy land. The ground here is quite soft, and the area is surrounded by quicksand on most sides. North of here is a terrain of shallow hills. }
   object hills is Hills
+  object mist is Mist
   object shadows is Shadows
   object quicksand is SandyQuicksand
 }
@@ -481,6 +485,7 @@ object shadow_6 is ShadowRoom in underground_caverns_3 {
   :walls 4
   passage body { You are near the southern end of the land of shadow. The ground here is soft and spongy, and it becomes quicksand to the south. North and east of here are gentle, rolling hills. A gentle sea breeze wafts over a steeply sloping path to the west. }
   object hills is Hills
+  object mist is Mist
   object shadows is Shadows
   object quicksand is SandyQuicksand
   object breeze is Scenery {
@@ -534,6 +539,7 @@ object shadow_7 is ShadowRoom in underground_caverns_3 {
   :walls 4
   passage body { You are in a land of dark shadows and shallow hills, which stretch out in all directions. To the west, the land dips sharply. }
   object hills is Hills
+  object mist is Mist
   object shadows is Shadows
   object dip is Scenery {
     grammar { name "dip"  nouns "drop", "edge", "slope"  adjectives "sharp", "west" }
@@ -575,6 +581,7 @@ object shadow_8 is ShadowRoom in underground_caverns_3 {
   :walls 11
   passage body { You are standing atop a steep cliff, looking west over a vast ocean. Far below, the surf pounds at a sandy beach. To the south and east are rolling hills filled with eerie shadows. A path cut into the face of the cliff descends toward the beach. To the north is a tall stone wall, which ends at the cliff edge. It was obviously built long ago, and directly north is a spot where you could climb over the rubble of the decaying wall. }
   object hills is Hills
+  object mist is Mist
   object shadows is Shadows
   object stone_wall is StoneWall
   object rubble is Rubble

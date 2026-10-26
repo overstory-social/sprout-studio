@@ -1,0 +1,239 @@
+// The gold machine in the Technology Museum (TIME-MACHINE, TIME-MACHINE-F,
+// TM-SEAT, TM-DIAL, TM-BUTTON): a Temporizer, donated as a nonworking
+// model and working. It is a place a visitor sits in, so it is a Place
+// inside a room, and it passes everything, so whoever sits in it sees
+// the room round them; it is pushed from room to room, and follows
+// whoever pushes it (adventurer.sprout); and its button, pushed by
+// somebody in the seat with the dial set to another year, sends them to
+// that year (adventurer.sprout's :time_trip), and not the machine, which
+// in the other year is standing where it was built to stand.
+//
+// There is one machine in each year, since each year is its own rooms;
+// the one in the present is the one that moves. The dial's year is set
+// on every dial at once by a trip, as the original's one dial is.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Fixed, Pushable, Dial, Touchable, Concealing, Openable, Receptacle} from 'thing'
+import {Room} from 'room'
+import {Adventurer} from 'adventurer'
+import {Ring} from 'items'
+import {tech_museum, museum_entrance, jewel_room, great_door, mid_tech_museum, old_tech_museum} from 'museum'
+import {cp_ante, cp_out} from 'puzzle'
+import {examine} from 'sprout'
+import {shift, raise, open, close, put, put_on, put_under, look_under, look_in, rub, turn, set_dial, push_to, through, climb_up, smell, listen, take_fixed, Dest, Era, Direction, :push_machine, :machine_follow, :dial_set, :tm_point, :time_trip, :ring_hidden, :ring_taken, :machine_gone, :die, :consume} from 'verbs'
+
+kind TimeMachine is sprout.Place, Fixed, Pushable, Touchable, Openable, Receptacle {
+  pass any (true)
+  grammar {
+    name "gold machine"  article the
+    nouns "machine", "temporizer", "console", "heap"  adjectives "gold", "golden", "time", "large", "shiny"
+    exit out "out" -> tech_museum when (self.get(:room) == :tech_museum)
+    exit out "out" -> museum_entrance when (self.get(:room) == :museum_entrance)
+    exit out "out" -> jewel_room when (self.get(:room) == :jewel_room)
+    exit out "out" -> cp_ante when (self.get(:room) == :cp_ante)
+    exit out "out" -> cp_out when (self.get(:room) == :cp_out)
+    exit out "out" -> great_door when (self.get(:room) == :great_door)
+    exit out "out" -> mid_tech_museum when (self.get(:room) == :mid_tech)
+    exit out "out" -> old_tech_museum when (self.get(:room) == :old_tech)
+  }
+  :room Dest default tech_museum
+  :era Era default present
+  :damaged false
+  :ndesc false
+  :dirs [Direction] default [north, south, east, west, up, down, out]
+  passage short { gold machine }
+  passage indef { A gold machine }
+  passage a_short { a gold machine }
+  passage ldesc { Directly in front of you is a large golden machine, which has a seat with a console in front. On the console is a single button and a dial connected to a three-digit display which reads {dial.get(:year)}. The machine is surprisingly shiny and shows few signs of age. }
+  passage where { {if self.get(:room) == :tech_museum}Round you is the hall of the Technology Museum.{else if self.get(:room) == :museum_entrance}Round you is the entrance hall of the museum.{else if self.get(:room) == :jewel_room}Round you is the Jewel Room.{else if self.get(:room) == :cp_ante}Round you is the small square room at the entrance to the Royal Puzzle.{else if self.get(:room) == :cp_out}Round you is the narrow Side Room.{else if self.get(:room) == :great_door}Round you is the south end of the monumental hall, by the iron door.{else if self.get(:room) == :mid_tech}Round you is the hall of the Technology Museum.{else}Round you is a large, unfinished room.{/if} }
+  describe {
+    if (self.holds(actor)) {
+      text "You are sitting in the gold machine, in the seat before its console. On the console is a single button and a dial connected to a three-digit display which reads {dial.get(:year)}.{if self.get(:damaged)} The machine has a lean to it, since its trip over the stairs, that it did not have before.{/if}"
+      text where
+    }
+    else { text "The machine consists of a seat and a console containing one small button and a dial connected to a display which reads {dial.get(:year)}.{if self.get(:damaged)} It leans a little, as though something underneath had given; it did not lean when you found it.{/if}" }
+  }
+  object seat is TmSeat
+  object dial is TmDial
+  object button is TmButton
+
+  // Moved into a room (V-PUSH-TO, I-SNAP, the robot): remember which, for
+  // the way out and for whoever asks.
+  on :moved (from, to) {
+    if (to.is(Room)) { self.set(:room, to.get(:id)) }
+  }
+  // Told where to follow its pusher, or where the robot carries it
+  // (adventurer.sprout opens the gate first). Only the present's machine
+  // moves; the others stand where they were built to stand.
+  on :machine_follow (from, value) {
+    if (self.get(:era) == :present && !self.get(:unseen)) {
+      if (value == :tech_museum) { move self to tech_museum }
+      else if (value == :museum_entrance) { move self to museum_entrance }
+      else if (value == :jewel_room) { move self to jewel_room }
+      else if (value == :cp_ante) {
+        move self to cp_ante
+        self.set(:damaged, true)
+        tell from "However, the machine seems to have sustained some damage as a result of going over the stairs."
+      }
+      else if (value == :cp_out) { move self to cp_out }
+      else if (value == :great_door) {
+        move self to great_door
+        self.set(:damaged, true)
+        tell from "Pushing the machine through the cleft seems to have damaged it."
+      }
+    }
+  }
+  // The clumsy robbery (TGOTO): the curators removed the machine.
+  on :machine_gone { if (self.get(:era) != :old) { self.set(:unseen, true) } }
+
+  as target for push_to {
+    dir from :dirs
+    do {
+      if (actor.is(Adventurer)) {
+        if (here == self) { say "That would be a good trick from inside it." }
+        else if (self.get(:era) != :present) { say "You put your shoulder to the machine, and think better of it: this is not your century, and the machine is heavy, and the guards are near enough. You leave it where it stands." }
+        else if (bound dir) {
+          say "You put your shoulder to the machine."
+          send actor :push_machine with dir
+        }
+        else { say "You should specify in which direction to push the machine: north, south, east, west, up or down." }
+      }
+    }
+  }
+  as target for shift { do { say "You might be able to move the machine by pushing it, if you said which way." } }
+  as target for raise { do { say "The machine must weigh hundreds of pounds and cannot be carried." } }
+  as target for open { do { say "This is a machine, not a box." } }
+  as target for close { do { say "This is a machine, not a box." } }
+  as container for put { do { say "You can't put anything on or inside the machine itself." } }
+  as surface for put_on { do { say "You can't put anything on or inside the machine itself." } }
+  // Boarded (V-BOARD): the one boarding does it (adventurer.sprout).
+  as target for through { do { } }
+  as target for climb_up { do { } }
+  as target for rub { do { say "Cold, and smooth, and shinier under your hand than two hundred years in a museum should have left it." } }
+  as target for smell { do { say "Metal, and oil, and faintly of ozone, as though it had been struck by lightning once and liked it." } }
+  as target for listen { do { say "It hums, very faintly, the way a thing does that is waiting to be used." } }
+  passage no_take { The machine must weigh hundreds of pounds and cannot be carried. }
+}
+
+// The seat (TM-SEAT, TM-SEAT-F), and the hollow under it where a small
+// thing might be hidden for two hundred years.
+kind TmSeat is Scenery, Concealing, Touchable {
+  grammar { name "seat"  nouns "chair", "hollow", "area"  adjectives "small", "hollow" }
+  passage short { seat }
+  describe { text "A seat moulded to somebody about your size, before the console, with a small hollow area under it. It is the seat of a machine that goes somewhere, and it is turned to face the dial." }
+  as target for look_under {
+    do {
+      if (underground_caverns_3.get(:ring_concealed)) {
+        say "You find the ring under the seat and put it on your finger."
+        spawn Ring in actor
+        send underground_caverns_3 :ring_taken
+      }
+      else { say "You notice a small hollow area under the seat." }
+    }
+  }
+  as target for look_in {
+    do {
+      if (underground_caverns_3.get(:ring_concealed)) {
+        say "You find the ring under the seat and put it on your finger."
+        spawn Ring in actor
+        send underground_caverns_3 :ring_taken
+      }
+      else { say "You notice a small hollow area under the seat." }
+    }
+  }
+  as target for raise {
+    do {
+      if (underground_caverns_3.get(:ring_concealed)) {
+        say "You find the ring under the seat and put it on your finger."
+        spawn Ring in actor
+        send underground_caverns_3 :ring_taken
+      }
+      else { say "You notice a small hollow area under the seat." }
+    }
+  }
+  as target for shift {
+    do {
+      if (underground_caverns_3.get(:ring_concealed)) {
+        say "You find the ring under the seat and put it on your finger."
+        spawn Ring in actor
+        send underground_caverns_3 :ring_taken
+      }
+      else { say "You notice a small hollow area under the seat." }
+    }
+  }
+  as target for rub { do { say "There's nothing odd about the feel of the seat." } }
+  as target for put_under {
+    do {
+      if (item.is(Ring)) {
+        say "The ring is concealed underneath the seat."
+        send underground_caverns_3 :ring_hidden
+        send item :consume
+      }
+      else { say "It's too big to hide under the seat." }
+    }
+  }
+  // Sat on (V-BOARD through the seat): the one sitting does it.
+  as target for through { do { } }
+  as target for climb_up { do { } }
+  passage no_take { The seat is part of the machine, and the machine is not for carrying. }
+}
+
+// The dial (TM-DIAL, TM-DIAL-F): a year, three digits, set by saying one.
+kind TmDial is Scenery, Dial, Touchable {
+  :year 948 min 0 max 999
+  grammar { name "dial"  nouns "display", "setting", "digits", "readout"  adjectives "three-digit" }
+  passage short { dial }
+  describe { text "The dial is set to {self.get(:year)}." }
+  as target for set_dial {
+    year from 0 to 999
+    do {
+      if (bound year) {
+        self.set(:year, year)
+        say "The dial is set to {year}."
+      }
+      else { say "You can't set it beyond 999." }
+    }
+  }
+  as target for turn { do { say "You have to say what to turn it to!" } }
+  as target for shift { do { say "You have to say what to turn it to!" } }
+  as target for rub { do { say "The dial turns easily under your fingers, and settles back to {self.get(:year)} when you let it go; it wants a number." } }
+  on :dial_set (from, value) { self.set(:year, value) }
+  passage no_take { It is part of the console. }
+}
+
+// The button (TM-BUTTON, TM-BUTTON-F): pushed, it does what the dial says,
+// to whoever is in the seat.
+kind TmButton is Scenery, Touchable {
+  grammar { name "button"  nouns "switch", "knob"  adjectives "small", "single" }
+  passage short { button }
+  describe { text "A single small button on the console, worn a little in the middle by a finger that was not yours." }
+  as target for shift {
+    do {
+      if (actor.is(Adventurer)) {
+        if (here.is(TimeMachine)) {
+          each d: TmDial in here {
+            let y = d.get(:year)
+            if (y == 776) { send actor :tm_point }
+            if (here.get(:damaged)) { say "Nothing seems to have happened." }
+            else if (y < 776) {
+              say "You experience a period of disorientation. The area around you seems to be solidifying! Rock formations close in on you and you become engulfed in stone!"
+              send actor :die
+            }
+            else if (y == actor.get(:year)) { say "Nothing seems to have happened." }
+            else {
+              say "You experience a brief period of disorientation."
+              send actor :time_trip with y
+            }
+          }
+        }
+        else {
+          each m: TimeMachine in here {
+            each d: TmDial in m { if (d.get(:year) == 776) { send actor :tm_point } }
+          }
+          say "Nothing seems to have happened."
+        }
+      }
+    }
+  }
+  as target for rub { do { say "You rest a finger on the button without pressing it. It would not take much." } }
+  passage no_take { It is part of the console. }
+}
