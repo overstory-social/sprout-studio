@@ -1,533 +1,148 @@
 {
   "steps": [
-    {
-      "comment": "The sword thrown into the ocean comes back when the figure next appears, as Zork's MOVE by name fetched it; walking out past the figure says that it goes; the figure's wounds are said in literals the same turn's reply cannot change."
-    },
-    {
-      "arrive": "Finch",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. \"You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!\" The dream dissolves around you as his last words echo through the void...."
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "Endless Stair"
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail."
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "Your old friend, the brass lantern, is at your feet."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "take lamp"
-    },
-    {
-      "as": "Finch",
-      "type": "turn on lamp"
-    },
-    {
-      "as": "Finch",
-      "type": "s"
-    },
-    {
-      "as": "Finch",
-      "type": "w",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "Barren Area"
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "You are west of the junction, where the rock-bound passage widens out into a large, flat area. Although the land here is barren, you can see vegetation to the west. South of here is a mighty wall of stone, ancient and crumbling. To the southwest the wall has decayed enough to form an opening, through which seeps a thin mist. A trail dips sharply into rocky terrain to the northwest."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "sw"
-    },
-    {
-      "as": "Finch",
-      "type": "who is there?"
-    },
-    {
-      "as": "Finch",
-      "type": "who is there",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Nobody answers. The footsteps, if they were footsteps, stop, and after a moment start again, no nearer and no further off, keeping whatever pace you keep."
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Through the shadows, a cloaked and hooded figure appears before you, blocking the southwestern exit from the room and carrying a brightly glowing sword."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "From nowhere, the sword from the junction appears in your hand, wildly glowing!"
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "w",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "Land of Shadow"
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "You are standing atop a steep cliff, looking west over a vast ocean. Far below, the surf pounds at a sandy beach. To the south and east are rolling hills filled with eerie shadows. A path cut into the face of the cliff descends toward the beach. To the north is a tall stone wall, which ends at the cliff edge. It was obviously built long ago, and directly north is a spot where you could climb over the rubble of the decaying wall."
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "A cloaked and hooded person, carrying a sword not unlike your own, is standing blocking the way to the southwest."
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "The hooded figure has a great deal of strength, perhaps matching your own."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Behind you, the hooded figure steps back into the shadows, and they close over it like water."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Your sword is no longer glowing."
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Through the shadows, a cloaked and hooded figure appears before you, blocking the southwestern exit from the room and carrying a brightly glowing sword."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Your sword has begun to glow very brightly."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "down",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "Flathead Ocean"
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "You are at the shore of an amazing underground sea, the topic of many a legend among adventurers. Few were known to have arrived at this spot, and fewer to return. There is a heavy surf and a breeze is blowing onshore. The land rises steeply to the east and quicksand prevents movement to the south. A thick mist covers the ocean and extends over the hills to the east. A path heads north along the beach."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Behind you, the hooded figure steps back into the shadows, and they close over it like water."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Your sword is no longer glowing."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "throw sword into ocean",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "The sword falls into the ocean and is lost forever."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "i",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "You are carrying:"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "A lamp (providing light)"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Passing alongside the shore now is an old boat, reminiscent of an ancient Viking ship. Standing on the prow of the ship is an old and crusty sailor, peering out over the misty ocean. He has a hand cupped to one ear, turned toward the shore, as though he were waiting for somebody on it to say something to him; and the ship is not slowing down."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "wait",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Time passes..."
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "The boat sails silently through the mist and out of sight. It will not be back; this shore sees it once, and has seen it."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "wait",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Time passes, and the surf with it, in and out. Nothing else passes; the ship that passes this shore has passed it, and the mist will stay empty however long you give it."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "e",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "Land of Shadow"
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "You are in a land of dark shadows and shallow hills, which stretch out in all directions. To the west, the land dips sharply."
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "You can hear quiet footsteps nearby."
-        }
-      ]
-    },
-    {
-      "seed": 9
-    },
-    {
-      "as": "Finch",
-      "type": "wait",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Time passes..."
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Through the shadows, a cloaked and hooded figure appears before you, blocking the northern exit from the room and carrying a brightly glowing sword."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Something breaks the surface out in the mist, glowing, and comes to you over the water faster than anything thrown; it is your sword, wet and wildly glowing, and it is in your hand. The ocean, it seems, keeps everything but what is needed."
-        },
-        {
-          "level": "warning",
-          "text": "a send reached nothing: flathead_ocean.ocean sent :glow to s, which reaches nothing in its range now"
-        }
-      ]
-    },
-    {
-      "seed": 0
-    },
-    {
-      "as": "Finch",
-      "type": "wait",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Time passes..."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "wait",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Time passes..."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Your quick reflexes cannot stop the hooded figure's stroke! You are hit!"
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "wait",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Time passes..."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "You are wounded by a lightning thrust!"
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "i",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "You are carrying:"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "A lamp (providing light)"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "An Elvish sword"
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Your quick reflexes cannot stop the hooded figure's stroke! You are hit!"
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "examine figure",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "A figure in a hood and a cloak, both dark, both plain, standing the way you stand and holding its sword the way you hold yours, which you had not noticed you did until now. The hood casts a shadow where a face should be, and the sword glows with the same cold blue light as your own. It is watching you; you can feel it watching you, as you can feel yourself watching it."
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "The hooded figure has a great deal of strength, perhaps matching your own."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "You dodge as the hooded figure comes in low."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "take hood",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "You cannot get close enough to the hooded figure to remove the hood. Its guard is still too good for that, and will be while it has the strength to keep it up."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "The hooded figure catches you off guard and wounds you!"
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "attack figure",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "(with the sword)"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "The hooded figure is hit with a quick slash!"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "The figure has a light wound which hasn't affected its seemingly great strength."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "Your sword goes spinning from your grip. The hooded figure watches it fall, watches you, and then hands it back, with a patience that is worse than the stroke."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "attack figure",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "(with the sword)"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "A good stroke, but it's too slow."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "The figure beats your blade down and aside, and for a moment you stand open and empty before it. It waits, and nods at the sword on the ground, and does nothing until you have picked it up."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "attack figure",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "(with the sword)"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "A good stroke, but it's too slow."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "The hooded figure swings its sword and sends yours flying to the ground. Although you are defenseless, the figure reaches for your sword and hands it back to you, nodding grimly."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "attack figure",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "(with the sword)"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "A good stroke, but it's too slow."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "The hooded figure tries to sneak past your guard, but you twist away."
-        }
-      ]
-    },
-    {
-      "as": "Finch",
-      "type": "attack figure",
-      "expect": [
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "(with the sword)"
-        },
-        {
-          "reader": "Finch",
-          "kind": "said",
-          "words": "Your move was not quick enough and misses the mark."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "In your wounded state, you cannot defend yourself against your still-quick opponent. Slowly and carefully, the figure starts to remove its hood as you fall to the ground, dead."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "**** You have died ****"
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "You find yourself deep within the earth in a barren prison cell. Outside the iron-barred window, you can see a great, fiery pit. Flames leap up and very nearly sear your flesh. After a while, footfalls can be heard in the distance, then closer and closer...."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "The door swings open, and in walks an old man."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "He is dressed simply in a hood and cloak, wearing an amulet and ring, carrying an old book under one arm, and leaning on a wooden staff. A single key, as if to a massive prison cell, hangs from his belt."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "He raises the staff toward you and you hear him speak, as if in a dream: \"I await you, though your journey be long and full of peril. Go then, and let me not wait long!\""
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "You feel some great power well up inside you and you fall to the floor. The next moment, you are awakening, as if from a deep slumber."
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "Endless Stair"
-        },
-        {
-          "reader": "Finch",
-          "kind": "described",
-          "words": "There is a brass lantern here (providing light)."
-        },
-        {
-          "reader": "Finch",
-          "kind": "told",
-          "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)"
-        }
-      ]
-    }
+    { "comment": "The sword thrown into the ocean comes back when the figure next appears, as Zork's MOVE by name fetched it; walking out past the figure says that it goes; the figure's wounds are said in literals the same turn's reply cannot change." },
+    { "arrive": "Finch", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. \"You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!\" The dream dissolves around you as his last words echo through the void...." },
+      { "reader": "Finch", "kind": "described", "words": "Endless Stair" },
+      { "reader": "Finch", "kind": "described", "words": "You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail." },
+      { "reader": "Finch", "kind": "described", "words": "Your old friend, the brass lantern, is at your feet." }
+    ] },
+    { "as": "Finch", "type": "take lamp", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Finch", "type": "turn on lamp", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Finch", "type": "s", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Junction" },
+      { "reader": "Finch", "kind": "described", "words": "You are at the junction of a north-south passage and an east-west passage. To the north, you can make out the bottom of a stairway. The ways to the east and south are relatively cramped, but a wider trail leads to the west." },
+      { "reader": "Finch", "kind": "described", "words": "Standing before you is a great rock. Imbedded within it is an Elvish sword." }
+    ] },
+    { "as": "Finch", "type": "w", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Barren Area" },
+      { "reader": "Finch", "kind": "described", "words": "You are west of the junction, where the rock-bound passage widens out into a large, flat area. Although the land here is barren, you can see vegetation to the west. South of here is a mighty wall of stone, ancient and crumbling. To the southwest the wall has decayed enough to form an opening, through which seeps a thin mist. A trail dips sharply into rocky terrain to the northwest." }
+    ] },
+    { "as": "Finch", "type": "sw", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Finch", "kind": "described", "words": "You are in a shadowy land of low, rolling hills stretching out to the west and south. The land is bordered to the north by a massive stone wall. Ancient and weathered, the wall has crumbled enough at one point to permit passage." }
+    ] },
+    { "as": "Finch", "type": "call to the footsteps", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "You call out to the footsteps. They stop, as if somebody were listening, and after a moment go on, no nearer." }
+    ] },
+    { "as": "Finch", "type": "hail footsteps", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "You call out to the footsteps. They stop, as if somebody were listening, and after a moment go on, no nearer." },
+      { "reader": "Finch", "kind": "said", "words": "Through the shadows, a cloaked and hooded figure appears before you, blocking the southwestern exit from the room and carrying a brightly glowing sword." },
+      { "reader": "Finch", "kind": "told", "words": "From nowhere, the sword from the junction appears in your hand, wildly glowing!" }
+    ] },
+    { "as": "Finch", "type": "w", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Finch", "kind": "described", "words": "You are standing atop a steep cliff, looking west over a vast ocean. Far below, the surf pounds at a sandy beach. To the south and east are rolling hills filled with eerie shadows. A path cut into the face of the cliff descends toward the beach. To the north is a tall stone wall, which ends at the cliff edge. It was obviously built long ago, and directly north is a spot where you could climb over the rubble of the decaying wall." },
+      { "reader": "Finch", "kind": "described", "words": "A cloaked and hooded person, carrying a sword not unlike your own, is standing blocking the way to the southwest." },
+      { "reader": "Finch", "kind": "described", "words": "The hooded figure has a great deal of strength, perhaps matching your own." },
+      { "reader": "Finch", "kind": "told", "words": "Behind you, the hooded figure steps back into the shadows, and they close over it like water." },
+      { "reader": "Finch", "kind": "told", "words": "Your sword is no longer glowing." },
+      { "reader": "Finch", "kind": "said", "words": "Through the shadows, a cloaked and hooded figure appears before you, blocking the southwestern exit from the room and carrying a brightly glowing sword." },
+      { "reader": "Finch", "kind": "told", "words": "Your sword has begun to glow very brightly." }
+    ] },
+    { "as": "Finch", "type": "down", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Flathead Ocean" },
+      { "reader": "Finch", "kind": "described", "words": "You are at the shore of an amazing underground sea, the topic of many a legend among adventurers. Few were known to have arrived at this spot, and fewer to return. There is a heavy surf and a breeze is blowing onshore. The land rises steeply to the east and quicksand prevents movement to the south. A thick mist covers the ocean and extends over the hills to the east. A path heads north along the beach." },
+      { "reader": "Finch", "kind": "told", "words": "Behind you, the hooded figure steps back into the shadows, and they close over it like water." },
+      { "reader": "Finch", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "as": "Finch", "type": "throw sword into ocean", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "The sword falls into the ocean and is lost forever." }
+    ] },
+    { "as": "Finch", "type": "i", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Finch", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Finch", "kind": "said", "words": "Passing alongside the shore now is an old boat, reminiscent of an ancient Viking ship. Standing on the prow of the ship is an old and crusty sailor, peering out over the misty ocean. He has a hand cupped to one ear, turned toward the shore, as though he were waiting for somebody on it to say something to him; and the ship is not slowing down." }
+    ] },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." },
+      { "reader": "Finch", "kind": "said", "words": "The boat sails silently through the mist and out of sight. It will not be back; this shore sees it once, and has seen it." }
+    ] },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes, and the surf with it, in and out. Nothing else passes; the ship that passes this shore has passed it, and the mist will stay empty however long you give it." }
+    ] },
+    { "as": "Finch", "type": "e", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Finch", "kind": "described", "words": "You are in a land of dark shadows and shallow hills, which stretch out in all directions. To the west, the land dips sharply." },
+      { "reader": "Finch", "kind": "said", "words": "You can hear quiet footsteps nearby." }
+    ] },
+    { "seed": 9 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." },
+      { "reader": "Finch", "kind": "said", "words": "Through the shadows, a cloaked and hooded figure appears before you, blocking the northern exit from the room and carrying a brightly glowing sword." },
+      { "reader": "Finch", "kind": "told", "words": "Something breaks the surface out in the mist, glowing, and comes to you over the water faster than anything thrown; it is your sword, wet and wildly glowing, and it is in your hand. The ocean, it seems, keeps everything but what is needed." },
+      { "level": "warning", "text": "a send reached nothing: flathead_ocean.ocean sent :glow to s, which reaches nothing in its range now" }
+    ] },
+    { "seed": 0 },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." },
+      { "reader": "Finch", "kind": "told", "words": "Your quick reflexes cannot stop the hooded figure's stroke! You are hit!" },
+      { "reader": "Finch", "kind": "told", "words": "You are wounded lightly. You have a good deal of strength in reserve." }
+    ] },
+    { "as": "Finch", "type": "wait", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Time passes..." },
+      { "reader": "Finch", "kind": "told", "words": "You are wounded by a lightning thrust!" },
+      { "reader": "Finch", "kind": "told", "words": "You have a few wounds, which do not seriously impair your strength." }
+    ] },
+    { "as": "Finch", "type": "i", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Finch", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Finch", "kind": "said", "words": "An Elvish sword" },
+      { "reader": "Finch", "kind": "told", "words": "Your quick reflexes cannot stop the hooded figure's stroke! You are hit!" },
+      { "reader": "Finch", "kind": "told", "words": "You are hurt quite badly. One major wound would probably kill you." }
+    ] },
+    { "as": "Finch", "type": "examine figure", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "A figure in a hood and a cloak, both dark, both plain, standing the way you stand and holding its sword the way you hold yours, which you had not noticed you did until now. The hood casts a shadow where a face should be, and the sword glows with the same cold blue light as your own. It is watching you; you can feel it watching you, as you can feel yourself watching it." },
+      { "reader": "Finch", "kind": "described", "words": "The hooded figure has a great deal of strength, perhaps matching your own." },
+      { "reader": "Finch", "kind": "told", "words": "You dodge as the hooded figure comes in low." }
+    ] },
+    { "as": "Finch", "type": "take hood", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "You cannot get close enough to the hooded figure to remove the hood. Its guard is still too good for that, and will be while it has the strength to keep it up." },
+      { "reader": "Finch", "kind": "told", "words": "The hooded figure catches you off guard and wounds you!" },
+      { "reader": "Finch", "kind": "told", "words": "You are very seriously wounded. One more wound would very likely do you in." }
+    ] },
+    { "as": "Finch", "type": "attack figure", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Finch", "kind": "said", "words": "The hooded figure is hit with a quick slash!" },
+      { "reader": "Finch", "kind": "said", "words": "The figure has a light wound which hasn't affected its seemingly great strength." },
+      { "reader": "Finch", "kind": "told", "words": "Your sword goes spinning from your grip. The hooded figure watches it fall, watches you, and then hands it back, with a patience that is worse than the stroke." }
+    ] },
+    { "as": "Finch", "type": "attack figure", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Finch", "kind": "said", "words": "A good stroke, but it's too slow." },
+      { "reader": "Finch", "kind": "told", "words": "The figure beats your blade down and aside, and for a moment you stand open and empty before it, the sword hanging useless from your hand. It waits, and nods at the blade, and does nothing until you have it up again." }
+    ] },
+    { "as": "Finch", "type": "attack figure", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Finch", "kind": "said", "words": "A good stroke, but it's too slow." },
+      { "reader": "Finch", "kind": "told", "words": "The hooded figure swings its sword and sends yours flying to the ground. Although you are defenseless, the figure reaches for your sword and hands it back to you, nodding grimly." }
+    ] },
+    { "as": "Finch", "type": "attack figure", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Finch", "kind": "said", "words": "A good stroke, but it's too slow." },
+      { "reader": "Finch", "kind": "said", "words": "It fights the way you fight, and no better, and no worse: wounded, you are slower, and so is it. A fight that is going badly can be walked away from, into the dark, where it will not follow; wounds mend with time, on both sides, and the figure will be here when you come back for it." },
+      { "reader": "Finch", "kind": "told", "words": "The hooded figure tries to sneak past your guard, but you twist away." }
+    ] },
+    { "as": "Finch", "type": "attack figure", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Finch", "kind": "said", "words": "Your move was not quick enough and misses the mark." },
+      { "reader": "Finch", "kind": "told", "words": "In your wounded state, you cannot defend yourself against your still-quick opponent. Slowly and carefully, the figure starts to remove its hood as you fall to the ground, dead." },
+      { "reader": "Finch", "kind": "told", "words": "**** You have died ****" },
+      { "reader": "Finch", "kind": "told", "words": "You find yourself deep within the earth in a barren prison cell. Outside the iron-barred window, you can see a great, fiery pit. Flames leap up and very nearly sear your flesh. After a while, footfalls can be heard in the distance, then closer and closer...." },
+      { "reader": "Finch", "kind": "told", "words": "The door swings open, and in walks an old man." },
+      { "reader": "Finch", "kind": "told", "words": "He is dressed simply in a hood and cloak, wearing an amulet and ring, carrying an old book under one arm, and leaning on a wooden staff. A single key, as if to a massive prison cell, hangs from his belt." },
+      { "reader": "Finch", "kind": "told", "words": "He raises the staff toward you and you hear him speak, as if in a dream: \"I await you, though your journey be long and full of peril. Go then, and let me not wait long!\"" },
+      { "reader": "Finch", "kind": "told", "words": "You feel some great power well up inside you and you fall to the floor. The next moment, you are awakening, as if from a deep slumber." },
+      { "reader": "Finch", "kind": "described", "words": "Endless Stair" },
+      { "reader": "Finch", "kind": "described", "words": "There is a brass lantern here (providing light)." },
+      { "reader": "Finch", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+    ] }
   ]
 }

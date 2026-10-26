@@ -1,0 +1,249 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The defenceless window was the design's whole point and most players walked through it blind. The stroke that brings the figure to its last point now names the hood within reach; the figure at its last point no longer strikes, it waits and says so with the hood in the line; and it does not mend while it stands before the visitor and waits, so the window stays open as long as they stay. That departs from I-CURE and is logged."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Pulling, pushing back, lifting, raising and lowering the hood are the natural words at the moment it matters; the hood answers them with the same reach as take hood while the figure wears it."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The sword never leaves the hand in any disarm, so the variant that said it lay on the ground was wrong; it now says the blade hangs useless from the hand. A visitor struck with no sword in hand is not struck at all: the figure waits for the sword to come back, so the leap is never contradicted by a line that assumed it."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Two of three runs lost the ship to a bare word. A shout works everywhere and yell was already a no-role verb, so hail, ahoy, wave and call out are words for it, and at the shore with the ship in sight any of them, say <anything> and who is there are the call the sailor holds for, once; at the empty shore all answer in the mist_empty voice. The brief's rule about offering verbs is kept because a shout is a thing that works everywhere; friction 27's status says what was traded."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "A refusal that turns the swimmer back is not a move, and should not be the roc's; the roc's clock skips a refused command, and its line now says the water is the only cover. Opening the south and west shores removes the other half."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "By the brief's schedule the revision after round 3 builds Q2 whole and opens Q1's exits onto it; this is the point that bears on the unbuilt exits. Twenty-four rooms are built, every Q1 exit but the Creepy Crawl's east (the Tight Squeeze, Q3's) now leads on, and the walkthrough reaches 5 of 7."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The odds are the original's and stay. A wound is now followed by the visitor's own state in DIAGNOSE's words, and three misses in a row with the visitor below four earn the hint book's word that it fights as you fight and a bad fight can be walked away from and mended."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "dive answering as a skip at a lake shore was never what anybody meant; bare dive now enters the lake from any shore and goes under from the surface. Bare swim keeps V-SWIM's joke, which is faithful."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The plunge now says what goes and what stays, and the shore names the sword beside the light; waybread dropped in the lake is lost, as GO-ON-LAKE removes it."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "call out to the footsteps is an intent over hail; who is there, with or without a hello? before it, is a no-role verb the footsteps, the sailor, the man at the cliff or nobody answer, since a question into the dark works everywhere."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "Zork performs the verb on the vial's contents; drink vial and pour vial are now the potion's, behind the same open check as drink from vial."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "The possessive stays Sprout's to add; friction 15 carries the status, and P1's stroke line now makes take hood the obvious wording at the moment it was typed."
+    },
+    {
+      "answers": "P13",
+      "decision": "accept",
+      "reason": "The world cannot change how the reporter counts a place passed through in one turn; friction 24 carries the status, and notes the Sacrificial Altar will show the same artifact."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The figure's last point: the stroke that brings it there names the hood within reach (passage defenceless); the figure's strike at s_strength 1 does not strike but waits, three variants naming the hood; I-CURE skips the figure's point while it stands at 1 in the visitor's room; the fight.json, duel.json, slain.json, sword_sea.json and walkthrough goldens regenerated for the new lines.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/duel.json",
+        "worlds/underground_caverns_3/world/tests/slain.json",
+        "worlds/underground_caverns_3/world/tests/sword_sea.json",
+        "worlds/underground_caverns_3/world/tests/hood_pull.json"
+      ],
+      "for": [
+        "P1",
+        "P12"
+      ]
+    },
+    {
+      "what": "The hood answers shift (pull, push, move), raise (lift) and lower while the figure wears it with the same reach as take hood, saying the adventurer's reveal, forced_back or not_close and sending :hood_taken, whose handler on the adventurer does the rest; a new test pins push hood back.",
+      "files": [
+        "worlds/underground_caverns_3/world/items.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/tests/hood_pull.json"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "The disarm variant that put the sword on the ground now says it hangs useless from the hand; a visitor struck without the sword in hand is not struck that turn: the figure lowers its blade and waits for the sword, which leaps back in the same turn after the wait line.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/fight.json",
+        "worlds/underground_caverns_3/world/tests/sword_sea.json"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "yell takes hail, ahoy, wave, call out and holler as words; at the ocean with the ship in sight a yell, say_bare and who_there are calls that hold the ship once, and at the empty shore all three answer mist_empty; the hail test regenerated; friction 27's status records the trade.",
+      "files": [
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/hail.json",
+        "worlds/underground_caverns_3/world/tests/fight.json",
+        "worlds/underground_caverns_3/friction.md"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "The roc's clock does not run on a refused command, the roc does not come twice, and its line says the water is the only cover; shore.json regenerated.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/shore.json"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "By the brief's schedule, Q2 built whole: the Hairpin Loop, Cliff Base, Cliff and Cliff Ledge with the man at the cliff (an NPC at the top, a voice at the ledge, the haul by act through the gate), the chest, the rope from both ends, the trees, the waybread and the staff; the Damp Passage, Dead End and Engravings Room with the runes, the sleeping old man and the secret door; the Western Shore, Scenic Vista, viewing table, indicator and torch, and the Timber Room, Ladder Bottom, Ladder Top, Dead End, Drafty Room, Machine Room, Room 8 with the grue repellent, and the Sacrificial Altar; the Southern Shore, two Dark Places, Key Room with the strange key and manhole cover, Aqueduct, High Arch and Water Slide; the earthquake and the indicator as the world's clocks; the strange key, repellent, staff, broken staff, waybread and torch; the Dest and ManStage enums, the new verbs (dive, who_there, untie, spray, haul, take_fixed's words) and messages; walls for the new rooms; the manifest.",
+      "files": [
+        "worlds/underground_caverns_3/world/cliff.sprout",
+        "worlds/underground_caverns_3/world/engravings.sprout",
+        "worlds/underground_caverns_3/world/vista.sprout",
+        "worlds/underground_caverns_3/world/aqueduct.sprout",
+        "worlds/underground_caverns_3/world/underground_caverns_3.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/items.sprout",
+        "worlds/underground_caverns_3/world/lamp.sprout",
+        "worlds/underground_caverns_3/world/thing.sprout",
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/room.sprout",
+        "worlds/underground_caverns_3/world/sprout.json"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "By the brief's schedule, Q1's exits opened onto Q2: Junction east to the Damp Passage, Barren Area west to the Cliff and northwest to the Hairpin Loop, the cliff-top Land of Shadow north to the Cliff, the Flathead Ocean north to the Cliff Base, On the Lake south and southwest to the Southern Shore and west and northwest to the Western Shore; the lake stands in all five shore rooms; two scenery objects named cliff renamed so they no longer hide the place; the Aqueduct View's pillars after the quake; death scatters into the Damp Passage and Dead End and sends the key home.",
+      "files": [
+        "worlds/underground_caverns_3/world/way_in.sprout",
+        "worlds/underground_caverns_3/world/shadow.sprout",
+        "worlds/underground_caverns_3/world/ocean.sprout",
+        "worlds/underground_caverns_3/world/lake.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "By the brief's schedule, the walkthrough extended through Q2 to 5 of 7 in 116 moves (the earthquake seeded after the aqueduct crossing), and new tests for the man at the cliff, the old man, the viewing table and altar, and the earthquake; the README brought to two quarters.",
+      "files": [
+        "worlds/underground_caverns_3/world/tests/walkthrough.json",
+        "worlds/underground_caverns_3/world/tests/cliff_man.json",
+        "worlds/underground_caverns_3/world/tests/old_man.json",
+        "worlds/underground_caverns_3/world/tests/vista.json",
+        "worlds/underground_caverns_3/world/tests/quake.json",
+        "worlds/underground_caverns_3/world/README.md"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "After a wound the figure's stroke says the visitor's own state in DIAGNOSE's words, chosen in code; a miss counter says the hint book's as_you_fight line after three misses with the visitor below four.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/fight.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "A bare dive verb enters the lake from the Lake Shore, Western Shore or Southern Shore, goes under from the surface, and is fatal at the drops; dive removed from jump's words; swim keeps its joke.",
+      "files": [
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/vista.json",
+        "worlds/underground_caverns_3/world/tests/fight.json"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "The plunge names what goes and what stays, and a torch or waybread among it; the Lake Shore's body and the lake's shore view name the sword beside the light; death.json, void.json and shore.json regenerated.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/lake.sprout",
+        "worlds/underground_caverns_3/world/items.sprout",
+        "worlds/underground_caverns_3/world/tests/death.json",
+        "worlds/underground_caverns_3/world/tests/void.json",
+        "worlds/underground_caverns_3/world/tests/shore.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "An intent call_out_to reads call out to, call out, shout for, yell at and yell to a Greetable as hail; a no-role verb who_there reads who is there, who's there, is anyone there, hello? who is there and the like, answered by the footsteps, the sailor, the man at the cliff or nobody.",
+      "files": [
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/fight.json"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "The vial composes Drinkable and Pourable and routes drink vial and pour vial to the potion behind the same open check as drink from vial.",
+      "files": [
+        "worlds/underground_caverns_3/world/items.sprout",
+        "worlds/underground_caverns_3/world/tests/fight.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "friction.md: status lines on 15 (the possessive, still open), 24 (the reach metric, unchanged, the altar will show the same) and 27 (bare calls folded into yell); new entries 28 to 36 for the round: an NPC cannot take from a visitor's hand, a room's after command cannot tell an aside, synonyms on a verb whose phrases do not write its name, an exit's guard and the rope on the world, the key's shape set by a look, the haul through the gate, one earthquake and one indicator for all, the altar never read, consumables spawned. intent.md: the round 4 section, the quarters built, what each point changed, how the man, the old man, the table, the repellent, the key and the quake are built, the departures, new secrets and what done looks like.",
+      "files": [
+        "worlds/underground_caverns_3/friction.md",
+        "worlds/underground_caverns_3/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P4",
+        "P6",
+        "P12",
+        "P13"
+      ]
+    }
+  ]
+}

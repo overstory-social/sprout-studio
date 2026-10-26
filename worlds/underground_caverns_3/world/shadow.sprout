@@ -8,13 +8,14 @@
 // as an NPC: its stroke is `strike`, a verb only it performs, whose
 // target's own part takes the wound.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Creature, Hooded, Fixed, Trace} from 'thing'
+import {Thing, Scenery, Creature, Hooded, Fixed, Trace, Touchable, Searchable, Squeezable, Greetable} from 'thing'
 import {Room, DarkRoom} from 'room'
 import {Hood, Cloak} from 'items'
 import {Adventurer} from 'adventurer'
 import {Mist, Rubble, StoneWall} from 'way_in'
 import {creepy_crawl, foggy_room, barren_area} from 'way_in'
 import {flathead_ocean} from 'ocean'
+import {cliff} from 'cliff'
 import {give, talk, play, through, leap_at, rub, look_in, climb_up, climb_down, search, smell, listen, find, follow_sound, squeeze, Direction, :fight_on, :fight_off, :shadow_here, :reply, :block, :unblock, :unhood, :slain, :vanish, :die} from 'verbs'
 
 verb strike { role target: Adventurer }
@@ -24,7 +25,7 @@ kind Guise {
   passage eyes { deep and sorrowful eyes }
 }
 
-kind Shadow is Creature, sprout.Actor, Guise, Hooded, Fixed {
+kind Shadow is Creature, sprout.Actor, Guise, Hooded, Fixed, Touchable {
   pass any (true)
   :capacity 4
   :dir Direction default north
@@ -95,7 +96,7 @@ kind Shadow is Creature, sprout.Actor, Guise, Hooded, Fixed {
 // The quicksand at the land's southern end and along the ocean
 // (QUICKSAND-PSEUDO). At the ocean the beach owns the word "sand"; in the
 // land of shadow nothing else does, and the sandy kind below takes it.
-kind Quicksand is Scenery {
+kind Quicksand is Scenery, Touchable, Searchable {
   grammar { name "quicksand"  nouns "quicks", "bog", "mire"  adjectives "soft", "spongy", "grey" }
   passage short { quicksand }
   describe { text "Soft ground, going softer, going to a grey sand with a wet shine on it that is not quite ground at all. A stick pushed into it does not come back. Neither would you." }
@@ -139,7 +140,7 @@ kind Shadows is Scenery {
 // thing heard and not seen in every room of the land: they keep the
 // visitor's pace, and they tell a visitor who asks that lingering here, in
 // the light, is how the one walking is met.
-kind Footsteps is Scenery, Trace {
+kind Footsteps is Scenery, Trace, Searchable, Squeezable, Greetable {
   grammar { name "footsteps"  nouns "footstep", "footfalls", "footfall", "sound", "sounds", "walker", "someone", "somebody"  adjectives "quiet", "soft", "nearby", "distant" }
   passage short { footsteps }
   passage no_take { They are not a thing to be picked up; they are a thing to be waited for. }
@@ -489,7 +490,7 @@ object shadow_8 is ShadowRoom in underground_caverns_3 {
     exit northwest "northwest" refuse "A stone wall blocks the way."
     exit down "down" -> flathead_ocean
     exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
-    exit north "north" refuse "You climb over the rubble of the wall, and on the other side the mist is down so thick over the cliff-top that you cannot tell the ground from the drop, and you come back over the wall rather than find out which was which."
+    exit north "north" -> cliff
   }
   :id shadow_8
   :walls 11
@@ -498,7 +499,7 @@ object shadow_8 is ShadowRoom in underground_caverns_3 {
   object shadows is Shadows
   object stone_wall is StoneWall
   object rubble is Rubble
-  object cliff is Scenery {
+  object cliff_top is Scenery {
     grammar { name "cliff"  nouns "edge", "drop", "cliff-top"  adjectives "steep", "high" }
     passage short { cliff }
     describe { text "The cliff drops away to the west, a long way, to a beach where the surf is a white line that moves. A path has been cut into its face, going down in steps and slants, by somebody who wanted to reach the sea badly enough to work for it." }

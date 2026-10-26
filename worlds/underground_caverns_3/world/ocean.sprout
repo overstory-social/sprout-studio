@@ -3,12 +3,13 @@
 // to the two words. The ship's clock is its visitor's (adventurer.sprout);
 // the room and the ship read it.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Receptacle, Diggable} from 'thing'
-import {Room} from 'room'
+import {Thing, Scenery, Receptacle, Diggable, Searchable, Greetable} from 'thing'
+import {Room, Sailor} from 'room'
 import {Adventurer} from 'adventurer'
 import {Mist} from 'way_in'
 import {Quicksand} from 'shadow'
 import {shadow_6, shadow_7, shadow_8} from 'shadow'
+import {cliff_base} from 'cliff'
 import {Sword} from 'items'
 import {put, through, leap_at, swim, dig, listen, smell, look_in, cross, search, climb_up, :sword_come, :glow} from 'verbs'
 
@@ -47,8 +48,9 @@ kind Ocean is Scenery, Receptacle {
   as target for smell { do { say "Salt, and cold, and a long way off." } }
 }
 
-// The ship (VIKING-SHIP): seen only in the one move it is here.
-kind Ship is Scenery {
+// The ship (VIKING-SHIP): seen only in the one move it is here. It may
+// be hailed, and the hail is the hailer's (adventurer.sprout).
+kind Ship is Scenery, Greetable {
   grammar { name "Viking ship"  nouns "ship", "boat", "craft", "prow", "vessel"  adjectives "viking", "ancient", "old" }
   passage short { ship }
   passage passing { An old boat, reminiscent of an ancient Viking ship: a long low hull, a high carved prow, a single square sail the colour of the mist, and at the prow an old and crusty sailor, peering out over the water as though he had lost something in it three ages ago. It is passing along the shore, close in, and it is not stopping for anybody who does not say the right thing. }
@@ -79,7 +81,7 @@ kind Ship is Scenery {
 }
 
 // The beach (SHORE-PSEUDO), the surf and the breeze.
-kind Beach is Scenery, Diggable {
+kind Beach is Scenery, Diggable, Searchable {
   grammar { name "beach"  nouns "sand", "shore", "strand"  adjectives "sandy" }
   passage short { beach }
   describe { text "Grey sand, wet and hard-packed where the surf reaches and dry and loose above it, with the marks of the sea's coming and going on it and no footprints at all but yours." }
@@ -124,7 +126,7 @@ kind FlatheadOcean is Room { }
 object flathead_ocean is FlatheadOcean in underground_caverns_3 {
   grammar {
     name "Flathead Ocean"
-    exit north "north" refuse "The path north along the beach runs between the surf and the rocks a little way, and is cut by a fall from the cliff above that the sea has made its own; you would have to swim the gap, and you have seen the surf. Not today."
+    exit north "north" -> cliff_base
     exit in "in" refuse "Between the rocks, wind, and waves, you wouldn't last a minute."
     exit west "west" refuse "Between the rocks, wind, and waves, you wouldn't last a minute."
     exit southwest "southwest" refuse "Between the rocks, wind, and waves, you wouldn't last a minute."
@@ -144,6 +146,7 @@ object flathead_ocean is FlatheadOcean in underground_caverns_3 {
   }
   object ocean is Ocean
   object ship is Ship
+  object sailor is Sailor
   object beach is Beach
   object surf is Surf
   object breeze is Breeze

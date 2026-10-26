@@ -1,0 +1,368 @@
+// The key and the aqueduct (SOUTH-SHORE, DARK-1, DARK-2, KEY-ROOM, AQ-1,
+// AQ-2, AQ-3): the Southern Shore of the lake, reached only by swimming,
+// the two Dark Places above it that are a grue lair, the Key Room with
+// the strange key and the manhole cover, and the aqueduct below it: the
+// channel, the High Arch, and the Water Slide down to the Damp Passage.
+// The earthquake (underground_caverns_3.sprout) breaks the arch, so the
+// aqueduct is crossed before it or not at all.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Portable, Fixed, Openable, Searchable, Concealing, Diggable} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {Adventurer} from 'adventurer'
+import {Lake, Swamp} from 'lake'
+import {StrangeKey} from 'items'
+import {damp_passage} from 'engravings'
+import {shift, raise, open, close, look_in, look_under, search, through, climb_up, climb_down, leap_at, cross, dig, smell, listen, :die} from 'verbs'
+
+// The water channel of the aqueduct (WATER-CHANNEL, WATER-CHANNEL-F).
+kind WaterChannel is Scenery {
+  grammar { name "channel"  nouns "trough", "conduit"  adjectives "water", "wide", "stone" }
+  passage short { channel }
+  describe { text "The channel is a few feet deep and ten feet wide, rounded on the bottom. {if here.is(AqueductRoom)}You are standing in it.{else}It comes down into the room from the south, steep and green with moss, and would have carried a great deal of water when there was water to carry.{/if}" }
+  as target for through {
+    do {
+      if (here.is(AqueductRoom)) { say "You're standing in it. Otherwise, you would be floating in midair above some very nasty rocks." }
+      else { say "Getting into the channel wouldn't be of much use." }
+    }
+  }
+  as target for climb_up {
+    do {
+      if (here.is(AqueductRoom)) { say "You are in it; the channel goes north and south, and you walk." }
+      else { say "The channel is too steep and the moss too slippery." }
+    }
+  }
+  as target for climb_down {
+    do {
+      if (here.is(AqueductRoom)) { say "The only way down from the channel is the one that ends on the rocks." }
+      else { say "You are at the bottom of it already." }
+    }
+  }
+  as target for cross { do { say "You can't cross that! You are in it, or under it; it is not a thing one crosses." } }
+}
+
+// The moss and lichen (MOSS, MOSS-F).
+kind Moss is Scenery {
+  grammar { name "moss and lichen"  nouns "moss", "lichen", "slime"  adjectives "damp", "slippery", "green" }
+  passage short { moss and lichen }
+  describe { text "Damp moss and lichen, green and grey and slick, growing wherever the water went and some way beyond. It is the only thing the aqueduct carries now, and it carries it well." }
+  passage no_take { Don't be silly. }
+  as target for shift { do { say "Don't be silly." } }
+  as target for smell { do { say "Green, and wet, and faintly of a cellar." } }
+}
+
+// The aqueduct as a thing of its own rooms (AQUEDUCT, AQUEDUCT-F).
+kind AqueductStructure is Scenery {
+  grammar { name "aqueduct"  nouns "duct", "structure", "supports", "arches", "span"  adjectives "stone", "monumental", "massive" }
+  passage short { aqueduct }
+  describe { text "The aqueduct is large and impressive. It was probably the major method of water transport in the Empire. From up here you can see how it was done: a channel on arches, the arches on pillars, the pillars on rock, north to south across the gorge, and all of it going quietly back to rock now that nobody needs water carried." }
+  as target for leap_at {
+    do {
+      say "You execute a perfect swan dive into the rocks below!"
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  as target for climb_down { do { say "The way down from the aqueduct is the one you would not survive; the channel is the way along it." } }
+  as target for climb_up { do { say "You are on it." } }
+  as target for cross { do { say "You are crossing it; the channel goes north and south, and you walk." } }
+}
+
+// The arches (ARCH-PSEUDO), one of which the earthquake takes.
+kind Arches is Scenery {
+  grammar { name "arch"  nouns "arches", "pillar", "pillars"  adjectives "high", "tall", "broken", "supporting" }
+  passage short { arch }
+  describe {
+    if (underground_caverns_3.get(:quaked)) { text "The arch before you is broken. The others show signs of decay." }
+    else { text "The arches all show some signs of decay." }
+  }
+  passage no_take { The arch holds you up; it is not for holding. }
+}
+
+// The chasm under the arches (CHASM, CHASM-FCN).
+kind Chasm is Scenery {
+  grammar { name "chasm"  nouns "gorge", "ravine", "drop", "rocks", "floor"  adjectives "rocky", "deep" }
+  passage short { chasm }
+  describe { text "A rocky chasm, hundreds of feet deep, with the aqueduct's pillars standing up out of it and the rock floor at the bottom a long way down and not soft. It is the kind of drop that has a sound." }
+  as target for leap_at { do { say "You look before leaping and realize you would never survive." } }
+  as target for through { do { say "You look before leaping and realize you would never survive." } }
+  as target for climb_down { do { say "It's a long way down.... and nothing to hold on to on the way." } }
+  as target for cross { do { say "You'll have to find a bridge. The aqueduct, as it happens, is one, and you are on it." } }
+  as target for look_in { do { say "Rock, and a long way down, and the base of the pillars, and nothing that has fallen there and been seen again." } }
+  passage no_take { It is a hole; there is nothing of it to take. }
+}
+
+// The manhole cover in the Key Room (COVER, COVER-F).
+kind Cover is Scenery, Openable, Concealing {
+  :moved false
+  grammar { name "manhole cover"  nouns "cover", "manhole", "lid", "disc"  adjectives "large", "heavy", "iron" }
+  passage short { manhole cover }
+  describe {
+    if (self.get(:moved)) { text "A heavy iron cover, moved a little to one side, with a small hole under it leading into darkness; a draught comes up the hole that smells of moss." }
+    else { text "A large, heavy manhole cover, iron, set into the floor to one side of the room, with the kind of rust on it that has had time. Something is under it, presumably; that is what manhole covers are for." }
+  }
+  as target for shift {
+    do {
+      if (self.get(:moved)) { say "The cover has been moved aside already, and the hole is open." }
+      else {
+        self.set(:moved, true)
+        say "The cover is moved a bit to one side, revealing a small hole leading into darkness."
+      }
+    }
+  }
+  as target for raise {
+    do {
+      if (self.get(:moved)) { say "The cover has been moved aside already, and the hole is open." }
+      else {
+        self.set(:moved, true)
+        say "The cover is moved a bit to one side, revealing a small hole leading into darkness."
+      }
+    }
+  }
+  as target for open {
+    do {
+      if (self.get(:moved)) { say "The cover has been moved aside already, and the hole is open." }
+      else {
+        self.set(:moved, true)
+        say "The cover is moved a bit to one side, revealing a small hole leading into darkness."
+      }
+    }
+  }
+  as target for close {
+    do {
+      if (self.get(:moved)) { say "You drag the cover back over the hole, and it slides off again; it is not a cover that sits once it has been moved." }
+      else { say "It is closed, as far as a manhole cover is ever closed." }
+    }
+  }
+  as target for look_under {
+    do {
+      if (self.get(:moved)) { say "Under the cover is a small hole leading into darkness, and under that, by the sound of the draught, a good deal of space." }
+      else { say "You would have to move it first; it is a manhole cover, and it is heavy." }
+    }
+  }
+  as target for look_in {
+    do {
+      if (self.get(:moved)) { say "A small hole leading into darkness, with a draught coming up it." }
+      else { say "It is a cover; it covers." }
+    }
+  }
+  passage no_take { The cover is far too heavy to take. }
+}
+
+kind SouthShore is Room { }
+kind GrueLair is DarkRoom { }
+kind DarkTwo is GrueLair { }
+kind KeyRoom is Room { }
+kind AqueductRoom is Room { }
+kind HighArch is AqueductRoom { }
+kind WaterSlide is AqueductRoom { }
+
+object south_shore is SouthShore in underground_caverns_3 {
+  grammar {
+    name "Southern Shore"
+    exit east "east" refuse "The swamp is too thick."
+    exit up "up" -> dark_1
+    exit south "south" -> dark_1
+    exit north "north" refuse "If you want to go into the lake, you should say so."
+  }
+  :walls 6
+  passage body { You are on the south shore of the lake. Rock formations prevent movement to the west and thickening swamp to the east makes the going all but impossible. To the south, where the beach meets a rock formation, you can make out a dark passage sloping steeply upward into the rock. }
+  object beach is Scenery, Diggable, Searchable {
+    grammar { name "beach"  nouns "shore", "sand", "bank"  adjectives "south", "southern", "sandy" }
+    passage short { beach }
+    describe { text "A strip of coarse sand, the south shore of the lake, with the water very still against it and nothing on it that anybody left; nobody comes this way with anything to leave." }
+    as target for dig { do { say "There's nothing there." } }
+    as target for search { do { say "Sand, and under it sand, and a cold coming up through both from the lake." } }
+  }
+  object swamp is Swamp
+  object rock_formations is Scenery {
+    grammar { name "rock formations"  nouns "rocks", "formation", "formations", "rock"  adjectives "sheer", "west" }
+    passage short { rock formations }
+    describe { text "To the west the shore ends in rock, folded and sheer, coming down into the water; there is no way round it on foot, and to the south, where the beach meets it, a dark passage goes up into it instead." }
+    as target for climb_up { do { say "The rock is sheer and wet at the foot, and the passage to the south is the way up it." } }
+  }
+  object dark_passage is Scenery {
+    grammar { name "dark passage"  nouns "passage", "opening", "slope"  adjectives "dark", "steep", "sloping", "south" }
+    passage short { dark passage }
+    describe { text "A dark passage, sloping steeply upward into the rock to the south, and dark all the way up as far as you can see, which is not far. Nothing comes out of it; something, by the sound, is in it." }
+    as target for through { do { say "The passage is to the south, and up; say so." } }
+    as target for listen { do { say "Something in the dark of the passage is breathing, or several somethings, and not hurrying." } }
+  }
+}
+
+object dark_1 is GrueLair in underground_caverns_3 {
+  grammar {
+    name "Dark Place"
+    exit north "north" -> south_shore
+    exit down "down" -> south_shore
+    exit south "south" -> dark_2
+    exit up "up" -> dark_2
+  }
+  :walls 2
+  passage body { A dark place, sloping upward from the lake to the north and on up to the south, with a smell in it of damp and of something that eats what it finds. It is the kind of dark that is not empty. }
+  object lair is Scenery {
+    grammar { name "lair"  nouns "den", "darkness"  adjectives "grue", "authentic" }
+    passage short { lair }
+    describe { text "Dark, and sloping, and smelling of grue. If you can see this at all, you have a light, and the grues have gone to the edges of it to wait." }
+  }
+}
+
+object dark_2 is DarkTwo in underground_caverns_3 {
+  grammar {
+    name "Dark Place"
+    exit north "north" -> dark_1
+    exit down "down" -> dark_1
+    exit east "east" -> key_room
+    exit up "up" -> key_room
+  }
+  :walls 2
+  passage body { A dark place, the ground sloping upward away from the lake, which is below you to the north. To the east, a dim light, and the slope goes up toward it. }
+  object lair is Scenery {
+    grammar { name "lair"  nouns "den", "darkness"  adjectives "grue", "authentic" }
+    passage short { lair }
+    describe { text "Dark, and sloping, and smelling of grue. If you can see this at all, you have a light, and the grues have gone to the edges of it to wait." }
+  }
+  object dim_light is Scenery {
+    grammar { name "dim light"  nouns "glow", "light"  adjectives "dim", "east" }
+    passage short { dim light }
+    describe { text "A dim light to the east, at the top of the slope: a room, lit from above, which the dark here does not reach into." }
+    passage no_take { It is over there, and you are over here. }
+  }
+}
+
+object key_room is KeyRoom in underground_caverns_3 {
+  grammar {
+    name "Key Room"
+    exit west "west" -> dark_2
+    exit down "down" -> aqueduct_1 when (cover.get(:moved))
+    exit down "down" refuse "You can't walk through a piece of metal."
+  }
+  :walls 17
+  passage body {
+    You are between some rock and a dark place. The room is lit dimly from above, revealing a lone, dark path sloping down to the west.{if cover.get(:moved)}
+
+    A heavy manhole cover has been moved to reveal a dark passage below.{else}
+
+    To one side of the room is a large manhole cover.{/if}
+  }
+  object key is StrangeKey
+  object cover is Cover
+  object hole is Scenery {
+    grammar { name "hole"  nouns "opening", "passage", "darkness"  adjectives "small", "dark", "below" }
+    passage short { hole }
+    describe {
+      if (cover.get(:moved)) { text "A small hole under the manhole cover, leading down into darkness, with a draught of moss coming up it." }
+      else { text "If there is a hole, it is under the manhole cover." }
+    }
+    as target for through {
+      do {
+        if (cover.get(:moved)) { say "The hole goes down; say so." }
+        else { say "You can't walk through a piece of metal." }
+      }
+    }
+    as target for climb_down {
+      do {
+        if (cover.get(:moved)) { say "The hole goes down; say so." }
+        else { say "You can't walk through a piece of metal." }
+      }
+    }
+  }
+  object focused_light is Scenery {
+    grammar { name "dim light"  nouns "glow", "light"  adjectives "dim", "focused", "above" }
+    passage short { dim light }
+    describe { text "The room is lit dimly from above, and the light, dim as it is, seems to have been aimed: it falls in the centre of the room, on the dust, as though whoever arranged it wanted one thing seen." }
+    passage no_take { It is light; it is not for taking. }
+  }
+  object dark_path is Scenery {
+    grammar { name "dark path"  nouns "path", "slope"  adjectives "lone", "dark", "west" }
+    passage short { dark path }
+    describe { text "A lone, dark path, sloping down to the west into the dark place you came up through, or will." }
+    as target for through { do { say "The path goes west, and down; say so." } }
+  }
+}
+
+object aqueduct_1 is AqueductRoom in underground_caverns_3 {
+  grammar {
+    name "Aqueduct"
+    exit up "up" refuse "The hole is too far above your head."
+    exit south "south" refuse "You can't climb the dried-up waterfall."
+    exit north "north" -> high_arch
+  }
+  :walls 18
+  passage body { You are in a wide stone channel, part of the water supply system for the Great Underground Empire. The source of water was a waterfall to the south, which has long since dried up. Water flowed along the aqueduct to the north. This region is lit from above, although the source of light is not apparent. }
+  object aqueduct is AqueductStructure
+  object channel is WaterChannel
+  object moss is Moss
+  object waterfall is Scenery {
+    grammar { name "waterfall"  nouns "fall", "falls", "source", "cliff"  adjectives "dried-up", "dry", "south" }
+    passage short { waterfall }
+    describe { text "To the south, the cliff the water came down: a dried-up waterfall, stained and worn into the shape of water that is not there, and a long way up. It's much too slippery to climb, even dry." }
+    as target for climb_up { do { say "It's much too slippery." } }
+    as target for through { do { say "You can't climb the dried-up waterfall." } }
+  }
+  object light_above is Scenery {
+    grammar { name "light from above"  nouns "light", "glow", "source"  adjectives "dim", "apparent" }
+    passage short { light from above }
+    describe { text "The region is lit from above, evenly and faintly, and the source of the light is not apparent: there is no hole, no torch, no moss that glows. The Empire lit its waterworks and did not say how." }
+    passage no_take { It is light; it is not for taking. }
+  }
+  object hole_above is Scenery {
+    grammar { name "hole above"  nouns "hole", "manhole", "ceiling"  adjectives "small", "above" }
+    passage short { hole above }
+    describe { text "Above you, too far to reach, the small hole you came down through, with the Key Room's dim light in it. The channel does not go back up that way." }
+    as target for climb_up { do { say "The hole is too far above your head." } }
+  }
+}
+
+object high_arch is HighArch in underground_caverns_3 {
+  grammar {
+    name "High Arch"
+    exit north "north" -> water_slide when (!underground_caverns_3.get(:quaked))
+    exit north "north" refuse "The arch before you is broken."
+    exit south "south" -> aqueduct_1
+    exit down "down" refuse "It's a long way down...."
+  }
+  :walls 18
+  passage body {
+    You are now on one of the tallest arches of the aqueduct, hundreds of feet above a rocky chasm. The immensity of the aqueduct project is apparent from here. Stone supports rise from the rock floor to form massive arches, which traverse the region from north to south. The water-carrying channel here is wide and deep. To the west and far below, you can make out a balcony which must command a wide view of the aqueduct.{if underground_caverns_3.get(:quaked)}
+
+    The channel ends abruptly to your north where a supporting pillar has crumbled, casting the arch into the chasm.{/if}
+  }
+  object aqueduct is AqueductStructure
+  object channel is WaterChannel
+  object moss is Moss
+  object arch is Arches
+  object chasm is Chasm
+  object balcony is Scenery {
+    grammar { name "balcony"  nouns "ledge", "shelf"  adjectives "small", "carved", "west", "far" }
+    passage short { balcony }
+    describe { text "To the west and far below, a small balcony carved into the cliff, where somebody might stand and look at the aqueduct and feel what one feels. You stood there, not long ago. It is strange to be the view." }
+  }
+}
+
+object water_slide is WaterSlide in underground_caverns_3 {
+  grammar {
+    name "Water Slide"
+    exit north "north" -> damp_passage
+    exit down "down" -> damp_passage
+    exit south "south" -> high_arch when (!underground_caverns_3.get(:quaked))
+    exit south "south" refuse "The arch to the south is broken."
+  }
+  :walls 18
+  passage body {
+    You are near the northern end of this segment of the aqueduct system. To the south and slightly uphill, the bulk of the aqueduct looms ominously, towering above a gorge. To the north, the water channel drops precipitously and enters a rocky hole. The damp moss and lichen would certainly make that a one-way trip.{if underground_caverns_3.get(:quaked)}
+
+    The southern part of the aqueduct system is inaccessable due to the collapse of one of the water-bearing arches.{/if}
+  }
+  object aqueduct is AqueductStructure
+  object channel is WaterChannel
+  object moss is Moss
+  object arch is Arches
+  object chasm is Chasm
+  object rocky_hole is Scenery {
+    grammar { name "rocky hole"  nouns "hole", "drop", "slide"  adjectives "rocky", "north", "steep" }
+    passage short { rocky hole }
+    describe { text "To the north the channel drops precipitously into a rocky hole, green and slick with moss all the way down. It is a slide, and a slide is a one-way trip; whatever is at the bottom, you will be arriving at it quickly." }
+    as target for through { do { say "The hole is to the north, and down; say so, and mean it." } }
+    as target for climb_down { do { say "The hole is to the north, and down; say so, and mean it." } }
+    as target for look_in { do { say "Moss, going down steeply into the dark, and a sound of dripping from somewhere at the bottom." } }
+  }
+}

@@ -4,13 +4,15 @@
 // STONE-F, SWORD-FCN; STAIRS-F, MIST-PSEUDO, RUBBLE, STONE-WALL), with
 // the scenery the three of them share.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Receptacle, Diggable} from 'thing'
+import {Thing, Scenery, Receptacle, Diggable, Openable, Concealing, Searchable} from 'thing'
 import {Room, DarkRoom} from 'room'
 import {Lamp} from 'lamp'
 import {Sword} from 'items'
 import {Adventurer} from 'adventurer'
 import {shadow_1, shadow_2} from 'shadow'
 import {lake_shore} from 'lake'
+import {damp_passage} from 'engravings'
+import {cliff, hairpin_loop} from 'cliff'
 import {open, close, put, shift, look_under, look_in, through, climb_up, climb_down, smell, listen, search, rub, take, dig, cross} from 'verbs'
 
 // Zork's STAIRS, a LOCAL-GLOBAL: the stair, and the steps at the lake.
@@ -39,7 +41,7 @@ kind Mist is Scenery {
   passage no_take { The mist goes through your fingers, as mist does. }
 }
 // The rubble of the decaying wall (RUBBLE).
-kind Rubble is Scenery {
+kind Rubble is Scenery, Searchable {
   grammar { name "rubble"  nouns "rock", "rocks", "boulder", "boulders", "stones"  adjectives "fallen", "crumbled", "loose" }
   passage short { rubble }
   describe { text "Blocks of the old wall, fallen and broken and gone green at the edges, heaped where they fell. Some of them were cut square by somebody once; none of them will be again." }
@@ -95,7 +97,7 @@ object endless_stair is Room in underground_caverns_3 {
 }
 
 // The great rock at the Junction, with the Elvish sword in it (STONE).
-kind Rock is Scenery, Receptacle {
+kind Rock is Scenery, Receptacle, Openable, Concealing {
   contains
   pass any (true)
   grammar { name "great rock"  nouns "rock", "stone", "boulder"  adjectives "great", "massive" }
@@ -120,7 +122,7 @@ object junction is DarkRoom in underground_caverns_3 {
     exit west "west" -> barren_area
     exit north "north" -> endless_stair
     exit south "south" -> creepy_crawl
-    exit east "east" refuse "The cramped way east runs a few yards and is choked with rock that came down from the roof some time ago; you get your light into the gap, and your arm, and no further. It will not be cleared today."
+    exit east "east" -> damp_passage
   }
   :id junction
   :walls 2
@@ -143,10 +145,10 @@ object barren_area is DarkRoom in underground_caverns_3 {
   grammar {
     name "Barren Area"
     exit southwest "southwest" -> shadow_2
-    exit northwest "northwest" refuse "The trail dips sharply to the northwest into rocky terrain, and a little way down it the rocks have come across it in a slide too steep and too loose to cross. Not today."
+    exit northwest "northwest" -> hairpin_loop
     exit south "south" refuse "A stone wall blocks your way."
     exit southeast "southeast" refuse "A stone wall blocks your way."
-    exit west "west" refuse "You walk west toward the vegetation, and the mist comes down over it thicker with every step, until you cannot see the ground you are walking on and have to turn back to find it."
+    exit west "west" -> cliff
     exit east "east" -> junction
   }
   :id barren
@@ -158,7 +160,7 @@ object barren_area is DarkRoom in underground_caverns_3 {
   object vegetation is Scenery {
     grammar { name "vegetation"  nouns "plants", "green", "trees", "growth"  adjectives "distant" }
     passage short { vegetation }
-    describe { text "To the west, at the edge of the barren ground, something grows: low and grey-green in this light, and further off, taller shapes that might be trees. It is the first green you have seen since the stair, and it is a long way off." }
+    describe { text "To the west, at the edge of the barren ground, something grows: low and grey-green in this light, and further off, taller shapes that are trees, with a light on them that is not the light down here. It is the first green you have seen since the stair, and it is a walk away." }
     passage no_take { It is too far off to pick, and probably too tough. }
   }
   object opening is Scenery {
@@ -170,7 +172,7 @@ object barren_area is DarkRoom in underground_caverns_3 {
   object terrain is Scenery {
     grammar { name "rocky terrain"  nouns "terrain", "slope", "trail"  adjectives "rocky", "northwest" }
     passage short { rocky terrain }
-    describe { text "To the northwest the trail dips sharply into broken, rocky ground, boulders of every size strewn down a slope that looks as though it went somewhere once." }
+    describe { text "To the northwest the trail dips sharply into broken, rocky ground, boulders of every size strewn down a slope that turns back on itself somewhere below and goes on down." }
   }
   object land is Scenery {
     grammar { name "barren land"  nouns "flat", "field", "expanse"  adjectives "barren", "flat", "large" }

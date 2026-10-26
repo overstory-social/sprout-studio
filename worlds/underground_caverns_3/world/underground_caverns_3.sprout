@@ -1,17 +1,25 @@
-// Zork III: The Dungeon Master, the first of its four quarters: the
-// Endless Stair, the Land of Shadow and the lake. The world keeps Zork's
-// narrator for the lines the engine speaks for itself, and a gate: a room
-// cannot reach another, so where Zork moves a body or a thing across the
-// map at a stroke (dying, the lake taking what is carried, the sword
-// called to a hand), whoever needs to asks the world to open the gate,
-// does it, and asks it shut again, in the one turn. While the world
-// passes, every place is in range of every other.
+// Zork III: The Dungeon Master, the first two of its four quarters: the
+// Endless Stair, the Land of Shadow and the lake; the cliff, the old man,
+// the far shores and the aqueduct. The world keeps Zork's narrator for the
+// lines the engine speaks for itself, and a gate: a room cannot reach
+// another, so where Zork moves a body or a thing across the map at a
+// stroke (dying, the lake taking what is carried, the sword called to a
+// hand, the viewing table, the man's rope), whoever needs to asks the
+// world to open the gate, does it, and asks it shut again, in the one
+// turn. While the world passes, every place is in range of every other.
+//
+// The world also keeps the clocks that are the game's and not any one
+// visitor's: the earthquake (I-CLEFT), once, between the 70th and the
+// 140th move, and the viewing table's indicator (I-VIEW-CHANGE), which
+// changes every four moves; and the state of the man at the cliff and
+// his rope, which the cliff's way down must read.
 import * as sprout from 'sprout'
 import {Person} from 'person'
 import {Adventurer} from 'adventurer'
 import {endless_stair} from 'way_in'
+import {cliff, cliff_ledge} from 'cliff'
 import {go} from 'sprout'
-import {:open_gate, :gate_open, :close_gate} from 'verbs'
+import {ManStage, :open_gate, :gate_open, :close_gate, :move_made, :quake, :view_changed, :man_set, :man_stage, :rope_set, :lift_chest, :drop_chest, :ledge_entered, :tied} from 'verbs'
 
 world underground_caverns_3 is sprout.World {
   visitors are Person
@@ -21,11 +29,63 @@ world underground_caverns_3 is sprout.World {
   :gate false
   pass any (self.get(:gate))
 
+  // The earthquake: set going on the first move, and struck once.
+  :quake_set false
+  :quake_in 0 min 0 max 200
+  :quaked false
+  // The viewing table's indicator: one of four views, changing every four
+  // moves (I-VIEW-CHANGE).
+  :view_tick 0 min 0 max 4
+  :active_view 1 min 1 max 4
+  // The man at the cliff, and his rope (ROPE-FLAG, MAN-SEEN, CHEST-LIFTED).
+  :man_stage ManStage default unmet
+  :man_seen false
+  :chest_lifted false
+  :rope_down true
+  :ledge_touched false
+
   on :open_gate (from) {
     self.set(:gate, true)
     send from :gate_open
   }
   on :close_gate { self.set(:gate, false) }
+
+  // A counted move (CLOCKER), from whoever made it.
+  on :move_made {
+    if (!self.get(:quake_set)) {
+      self.set(:quake_set, true)
+      self.set(:quake_in, 70 + random(70))
+    }
+    if (!self.get(:quaked)) {
+      self.adjust(:quake_in, -1)
+      if (self.get(:quake_in) == 0) {
+        self.set(:quaked, true)
+        broadcast :quake
+      }
+    }
+    self.adjust(:view_tick, 1)
+    if (self.get(:view_tick) >= 4) {
+      self.set(:view_tick, 0)
+      if (self.get(:active_view) >= 4) { self.set(:active_view, 1) } else { self.adjust(:active_view, 1) }
+      broadcast :view_changed
+    }
+  }
+
+  on :man_set (from, value) {
+    self.set(:man_stage, value)
+    if (value == :waiting || value == :away) { self.set(:man_seen, true) }
+    send cliff.man :man_stage with value
+    if (value == :gone) { send cliff.man :drop_chest }
+  }
+  on :rope_set (from, value) { self.set(:rope_down, value) }
+  on :ledge_entered { self.set(:ledge_touched, true) }
+  // The chest hauled up from the ledge to the man (I-MAN-APPEARS, the
+  // rope tied): the world moves it, since only the world reaches both.
+  on :lift_chest {
+    self.set(:chest_lifted, true)
+    send cliff_ledge.chest :tied with false
+    move cliff_ledge.chest to cliff.man
+  }
 
   passage unknown         { That sentence isn't one I recognize. }
   passage not_here        { You can't see any such thing. }

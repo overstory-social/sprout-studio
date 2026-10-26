@@ -6,7 +6,7 @@
 // place anyone types in; it is where the old man stands so that what he
 // does to the visitor, he does himself.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Creature, Fixed} from 'thing'
+import {Thing, Scenery, Creature, Fixed, Touchable} from 'thing'
 import {Guise} from 'shadow'
 import {Adventurer} from 'adventurer'
 import {talk, greet, rub, smell, listen} from 'verbs'
@@ -15,7 +15,7 @@ import {talk, greet, rub, smell, listen} from 'verbs'
 // part takes the power that wells up and the waking at the stair.
 verb send_back { role target: Adventurer }
 
-kind OldMan is Creature, sprout.Actor, Guise, Fixed {
+kind OldMan is Creature, sprout.Actor, Guise, Fixed, Touchable {
   pass any (true)
   :capacity 4
   grammar { name "old man"  nouns "man", "master", "visitor", "figure"  adjectives "old", "wizened", "silver-haired" }

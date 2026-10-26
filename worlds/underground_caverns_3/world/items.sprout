@@ -3,13 +3,14 @@
 // the golden amulet (AMULET), and the sailor's vial and what it holds
 // (VIAL-F, POTION-F).
 import * as sprout from 'sprout'
-import {Thing, Portable, Weapon, Wearable, Drinkable, Pourable, Vessel, Fillable} from 'thing'
+import {examine} from 'sprout'
+import {Thing, Portable, Weapon, Wearable, Drinkable, Pourable, Vessel, Fillable, Readable, Concealing, Food, Sprayable, Flame} from 'thing'
 import {Box, Bag} from 'box'
 import {Adventurer} from 'adventurer'
 import {Shadow} from 'shadow'
-import {read, look_under, shift, smell, drink, drink_from, pour, pour_on, fill, shake, :glow, :sword_come, :consume} from 'verbs'
+import {read, look_under, shift, raise, lower, smell, drink, drink_from, pour, pour_on, fill, shake, cut, burn, eat, put, unlock, spray, put_on, :glow, :sword_come, :consume, :hood_taken, :sprayed, :snap, :die} from 'verbs'
 
-kind Sword is Weapon {
+kind Sword is Weapon, Readable {
   grammar { name "sword"  nouns "orcrist", "glamdring", "blade", "runes", "rune"  adjectives "elvish", "old", "antique", "glowing" }
   :size 25
   :glow 0 min 0 max 2
@@ -51,10 +52,50 @@ kind Sword is Weapon {
 
 // The figure's hood: worn when held, and had only when the figure is
 // nearly beaten (HOOD-F).
-kind Hood is Wearable {
+kind Hood is Wearable, Concealing {
   grammar { name "hood"  nouns "cowl"  adjectives "dark", "plain" }
   passage short { hood }
   describe { text "A hood of some dark, plain stuff, deep enough to hide a face in. {if actor.holds(self)}It is on your head, and it is warm, and it smells faintly of somebody else's hair.{else}It casts a shadow where a face should be.{/if}" }
+  // Pulled, lifted, pushed back, raised or lowered while the figure wears
+  // it: the same reach as taking it (HOOD-F), decided by the figure's
+  // wounds. The one reaching is told, and does the rest (adventurer.sprout).
+  without as target for shift from Portable
+  as target for shift {
+    do {
+      if (here.count(Shadow) > 0 && !actor.holds(self) && !here.holds(self)) {
+        if (actor.is(Adventurer)) {
+          let s = actor.get(:s_strength)
+          if (s == 1) { say "{actor.reveal}"  send actor :hood_taken }
+          else if (s == 2) { say "{actor.forced_back}" }
+          else { say "{actor.not_close}" }
+        } else { say "Moving the hood reveals nothing." }
+      } else { say "Moving the hood reveals nothing." }
+    }
+  }
+  as target for raise {
+    do {
+      if (here.count(Shadow) > 0 && !actor.holds(self) && !here.holds(self)) {
+        if (actor.is(Adventurer)) {
+          let s = actor.get(:s_strength)
+          if (s == 1) { say "{actor.reveal}"  send actor :hood_taken }
+          else if (s == 2) { say "{actor.forced_back}" }
+          else { say "{actor.not_close}" }
+        } else { say "Playing in this way with the hood {self.hacked}" }
+      } else { say "Playing in this way with the hood {self.hacked}" }
+    }
+  }
+  as target for lower {
+    do {
+      if (here.count(Shadow) > 0 && !actor.holds(self) && !here.holds(self)) {
+        if (actor.is(Adventurer)) {
+          let s = actor.get(:s_strength)
+          if (s == 1) { say "{actor.reveal}"  send actor :hood_taken }
+          else if (s == 2) { say "{actor.forced_back}" }
+          else { say "{actor.not_close}" }
+        } else { say "Playing in this way with the hood {self.hacked}" }
+      } else { say "Playing in this way with the hood {self.hacked}" }
+    }
+  }
   as target for look_under {
     do {
       if (actor.holds(self)) { say "Under the hood is your own face, which you cannot see from here, and which you have been assured looks pretty much as usual." }
@@ -66,7 +107,7 @@ kind Hood is Wearable {
 
 // The figure's cloak: fastened at its neck while it stands, left on the
 // ground when it goes (CLOAK-F).
-kind Cloak is Wearable {
+kind Cloak is Wearable, Concealing {
   grammar { name "cloak"  nouns "cape", "mantle"  adjectives "dark", "plain" }
   passage short { cloak }
   describe { text "A cloak of the same dark, plain stuff as the hood, long enough to reach the ground and worn thin at the hem by a great deal of walking. {if actor.holds(self)}It hangs from your shoulders as though it had always hung there.{else}It is fastened at the neck with a plain clasp.{/if}" }
@@ -90,7 +131,7 @@ kind Amulet is Wearable {
 }
 
 // The sailor's gift: a small transparent vial, strangely heavy (VIAL).
-kind Vial is Bag, Vessel, Fillable {
+kind Vial is Bag, Vessel, Fillable, Drinkable, Pourable {
   grammar { name "vial"  nouns "bottle", "gift", "flask"  adjectives "small", "transparent", "glass" }
   :size 3
   :capacity 3
@@ -99,6 +140,31 @@ kind Vial is Bag, Vessel, Fillable {
   object potion is Potion
   passage opened_line { The vial is open.{if self.count(Potion) > 0} There is a sweet odor from within the vial, apparently coming from a heavy but invisible liquid.{/if} }
   as target for fill { do { say "You can't seem to put anything in it." } }
+  // Drunk, or poured, by the vial's name (VIAL-F performs the verb on the
+  // potion): what it holds is what goes.
+  as target for drink {
+    do {
+      if (self.count(Potion) > 0) {
+        if (!self.get(:open)) { say "You'll have to open the vial first." }
+        else {
+          each p: Potion in self { send p :consume }
+          if (actor.is(Adventurer)) { send actor :quaff }
+          say "You \"drink\" the contents in one gulp, but nothing unusual seems to have happened as a result."
+        }
+      } else { say "The vial is empty." }
+    }
+  }
+  as target for pour {
+    do {
+      if (self.count(Potion) > 0) {
+        if (!self.get(:open)) { say "You'll have to open the vial first." }
+        else {
+          each p: Potion in self { send p :consume }
+          say "It spills onto the ground and vanishes."
+        }
+      } else { say "The vial is empty." }
+    }
+  }
   as target for smell {
     do {
       if (self.count(Potion) > 0) { say "The vial (or something in it) smells sweet." }
@@ -156,3 +222,169 @@ kind Potion is Portable, Drinkable, Pourable {
 }
 
 message :quaff
+
+// The waybread under the trees at the cliff (WAYBREAD, WAYBREAD-F): the
+// old man's supper, if he is given it; crushed by the sword, if it is
+// cut; eaten, if the visitor is that hungry.
+kind Waybread is Portable, Food {
+  grammar { name "piece of waybread"  nouns "bread", "waybread", "piece", "loaf"  adjectives "way", "fresh", "elvish" }
+  :size 3
+  :has_fdesc true
+  passage short { piece of waybread }
+  passage indef { A piece of waybread }
+  passage a_short { a piece of waybread }
+  passage fdesc { It seems as if somebody has been here recently, as there is some fresh bread lying beneath one of the other trees. }
+  passage ldesc { A piece of bread is on the ground here. }
+  describe { text "A piece of waybread, flat and pale and fresh, of the kind Elves bake for a long road: a mouthful of it is a meal, and it keeps. Somebody left it under the tree not long ago, and did not come back for it, or has not yet." }
+  as target for eat {
+    do {
+      say "You eat the waybread. It is better than it looks, as waybread is, and it sits in you like a day's food; and now there is none, which somebody, somewhere, who was weak and tired and hungry, may have cause to regret."
+      finally destroy self
+    }
+  }
+  as target for smell { do { say "It smells of fresh bread, which, underground, is a smell from another life." } }
+  // Dropped in the lake, it is mush (GO-ON-LAKE).
+  on :consume { finally destroy self }
+  as target for cut {
+    do {
+      if (bound tool) {
+        if (tool.is(Sword)) {
+          say "The bread is crushed rather than cut by your sword, and the crumbs scatter to the wind."
+          finally destroy self
+        } else { say "The \"cutting edge\" of that is hardly adequate." }
+      } else { say "You'll have to say what to cut the bread with." }
+    }
+  }
+}
+
+// The wooden staff from the bottom of the chest (STAFF, STAFF-F): one of
+// the seven things the Dungeon Master asks for. Burned with the torch it
+// goes up in a ball of flame, and so does whoever is holding it.
+kind Staff is Portable {
+  grammar { name "wooden staff"  nouns "staff", "stick", "rod"  adjectives "wooden", "plain" }
+  :size 10
+  passage short { wooden staff }
+  passage indef { A wooden staff }
+  passage a_short { a wooden staff }
+  describe { text "A plain wooden staff, a little taller than you are, worn smooth where a hand has held it for a very long time. It is the kind of staff an old man leans on, and it has, somewhere about it, the look of one you have seen before, in a dream." }
+  // Broken: under the man's throw, or on the rocks below the cliff. What
+  // is left is spawned by whoever broke it, where it lies.
+  on :snap { finally destroy self }
+  as target for burn {
+    do {
+      if (bound tool) {
+        if (tool.is(Flame)) {
+          say "The staff is instantly consumed in a ball of flame. You along with it."
+          if (actor.is(Adventurer)) { send actor :die }
+          finally destroy self
+        } else if (tool.is(Thing)) { say "With {tool.a_short}??!?" }
+        else { say "With that??!?" }
+      } else { say "You didn't say with what!" }
+    }
+  }
+}
+// What is left of the staff, thrown off the cliff or broken under you
+// (BROKEN-STAFF): a thing, and no longer the thing he asks for.
+kind BrokenStaff is Portable {
+  grammar { name "broken staff"  nouns "staff", "stick", "pieces"  adjectives "broken", "wooden", "splintered" }
+  :size 10
+  passage short { broken staff }
+  passage indef { A broken staff }
+  passage a_short { a broken staff }
+  describe { text "What was a plain wooden staff, in two pieces and some splinters. It will not be leaned on again, and whoever it was for will know the difference." }
+}
+
+// The strange key from the Key Room (KEY, KEY-F): it changes shape as you
+// look at it, and fits nothing until the end.
+kind StrangeKey is Portable {
+  grammar { name "strange key"  nouns "key"  adjectives "strange", "rusty", "long", "short", "heavy", "thin", "sharp", "pointed" }
+  :size 10
+  :shape 0 min 0 max 4
+  :has_fdesc true
+  passage short { strange key }
+  passage indef { A strange key }
+  passage a_short { a strange key }
+  passage fdesc { The light from above seems to be focused in the center of the room, where a single key is lying in the dust. }
+  passage ldesc { There is a strange key here. }
+  // Its shape is drawn afresh each time it is looked at (KEY-DESCS), by
+  // the look itself, since a description may not draw.
+  as target for examine { do { self.set(:shape, random(5)) } }
+  describe {
+    if (self.get(:shape) == 0) { text "The key is a long and heavy skeleton key." }
+    else if (self.get(:shape) == 1) { text "The key is short and stubby, shaped like no lock you have ever seen." }
+    else if (self.get(:shape) == 2) { text "The key is round and thin, more like a pencil than a key." }
+    else if (self.get(:shape) == 3) { text "The key is shiny with many prongs." }
+    else { text "The key is sharp as an awl, and rusted badly." }
+    text "Strange, though. The key seems to change shape constantly."
+  }
+  as tool for unlock {
+    do {
+      if (target.is(Thing)) { say "The key, which initially seemed certain to fit the lock, seems to change shape and will not enter the keyhole." }
+      else { say "The key, which initially seemed certain to fit the lock, seems to change shape and will not enter the keyhole." }
+    }
+  }
+}
+
+// The can of Frobozz Magic Grue Repellent from Room 8 (REPELLENT,
+// REPELLENT-FCN): one spraying in it, and five moves of grues keeping
+// their distance for whoever it is sprayed on.
+kind Repellent is Portable, Readable, Sprayable {
+  grammar { name "can of grue repellent"  nouns "can", "repellent", "spray", "spraycan"  adjectives "grue", "magic", "frobozz", "spray" }
+  :size 5
+  :used false
+  :has_fdesc true
+  passage short { can of grue repellent }
+  passage indef { A can of Frobozz Magic Grue Repellent }
+  passage a_short { a can of grue repellent }
+  passage fdesc { A spray can is in the corner. In large type is the legend "Frobozz Magic Grue Repellent." }
+  passage ldesc { There is a can of Frobozz Magic Grue Repellent here. }
+  describe { text "A spray can, dented, of the kind the Frobozz Magic Company sold to adventurers who were going to need it and to everyone else who was not. The legend on it is in large type, with instructions under it in small, and there is {if self.get(:used)}nothing left in it to slosh.{else}a slosh in it when it is moved.{/if}" }
+  passage label {
+    {verbatim}
+    !!! FROBOZZ MAGIC GRUE REPELLENT !!!
+
+    Instructions for use: Apply liberally
+    to creature to be protected. Duration
+    of effect is unpredictable. Use only
+    in place of death!
+
+    (No warranty expressed or implied)
+    {/verbatim}
+  }
+  as target for read { do { say label } }
+  without as target for shake from Portable
+  as target for shake {
+    do {
+      if (self.get(:used)) { say "The can seems empty." }
+      else { say "There is a sloshing sound from inside." }
+    }
+  }
+  as target for burn {
+    do {
+      if (bound tool) {
+        if (tool.is(Flame)) {
+          say "The can explodes and you die a horribly smelly death."
+          if (actor.is(Adventurer)) { send actor :die }
+          finally destroy self
+        } else if (tool.is(Thing)) { say "With {tool.a_short}??!?" }
+        else { say "With that??!?" }
+      } else { say "You didn't say with what!" }
+    }
+  }
+  as target for spray {
+    do {
+      if (self.get(:used)) { say "The repellent is all gone." }
+      else if (bound aim) {
+        self.set(:used, true)
+        if (aim == actor) { send actor :sprayed }
+        say "The spray smells like a mixture of old socks and burning rubber. If I were a grue I'd sure stay clear!"
+      } else {
+        self.set(:used, true)
+        say "The spray stinks amazingly for a few moments, then drifts away."
+      }
+    }
+  }
+  // "put repellent on me" is a spraying (V-PUT-ON's REPELLENT): the one
+  // putting does the spraying (adventurer.sprout).
+  as item for put_on { do { } }
+}

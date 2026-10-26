@@ -6,11 +6,11 @@
 //
 // `:held` is what it holds by weight, the sum of the sizes of the things
 // directly inside it, kept as they come and go.
-import {Thing, Portable, Receptacle} from 'thing'
+import {Thing, Portable, Receptacle, Openable} from 'thing'
 import {open, close, look_in, shake, put} from 'verbs'
 import {Light} from 'lamp'
 
-kind Box is Thing, Receptacle {
+kind Box is Thing, Receptacle, Openable {
   contains
   :open false
   :transparent false

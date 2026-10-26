@@ -1,0 +1,286 @@
+// The old man's corner (DAMP-PASSAGE, DEAD-END, MSTAIRS): the Damp Passage
+// east of the Junction, where the aqueduct's channel comes down and is
+// blocked; the Dead End beside it; and the Engravings Room, with the runes
+// on its north wall, the sleeping old man who is sometimes huddled in its
+// corner, the waybread that wakes him for good, and the secret door he
+// points to, which opens on the stairs down to the fourth quarter.
+//
+// The old man is the Dungeon Master in another guise: an NPC who comes
+// into the room by chance as a visitor enters it, sleeps until shaken,
+// stays awake three moves, takes the waybread when he is awake, and goes.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Fixed, Touchable, Openable, Readable, Searchable, Concealing} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {Guise} from 'shadow'
+import {Adventurer} from 'adventurer'
+import {Rubble} from 'way_in'
+import {junction} from 'way_in'
+import {Waybread} from 'items'
+import {Moss, WaterChannel} from 'aqueduct'
+import {open, close, read, give, talk, greet, hail, alarm, shake, mung, rub, smell, listen, search, look_in, look_under, look_behind, climb_up, climb_down, through, kick, kiss, follow, shift, :door_found, :reveal, :not_yet, :sleeper_gone, :tick_sleep} from 'verbs'
+
+// The old and wizened man (OLD-MAN, OLD-MAN-F), asleep in the corner.
+kind Sleeper is Creature, sprout.Actor, Guise, Fixed, Touchable {
+  :capacity 4
+  :awake false
+  :awake_left 0 min 0 max 3
+  :ndesc false
+  grammar { name "old man"  nouns "man", "sleeper", "beard"  adjectives "old", "wizened", "sleeping", "frail", "weak" }
+  passage short { old man }
+  passage ldesc { {if self.get(:awake)}There is an old man huddled in the corner, eyeing you cautiously. He looks weak and tired.{else}An old and wizened man is huddled, asleep, in the corner. He is snoring loudly, and looks quite weak and frail.{/if} }
+  describe {
+    if (self.get(:awake)) { text "The old man is barely awake and appears to nod off every few moments. He has bright eyes, which appear to see right through your body; they are {self.eyes}, and they are younger than the rest of him by a great deal." }
+    else { text "The man is very, very old and wizened. He has a long, stringy beard and is snoring quite loudly. Asleep, he looks like something the room grew in its corner, and might have been there as long as the runes." }
+  }
+  passage no_take { The old man is not a thing to be picked up, asleep or awake. }
+  passage roused { The old man is roused to consciousness. He peers at you through eyes which appear much younger and stronger than his frail body and waits, as if expecting something to happen. }
+  passage fed { He looks up at you and takes the waybread. Slowly, he eats the bread and pauses when he is finished. He starts to speak: "Perhaps what you seek is through there!" He points at the carved wall to the north, where you now notice the bare outline of a secret door. When you turn back, the old man is gone! }
+
+  // Three moves awake (I-OLD-MAN-SLEEPS), counted by the room.
+  on :tick_sleep {
+    if (self.get(:awake)) {
+      self.adjust(:awake_left, -1)
+      if (self.get(:awake_left) == 0) {
+        self.set(:awake, false)
+        tell "You notice that the old man has fallen asleep."
+      }
+    }
+  }
+  // Attacked (OLD-MAN-F): "Not yet." The one striking tells it.
+  on :not_yet {
+    send here :sleeper_gone
+    finally destroy self
+  }
+
+  as target for alarm {
+    do {
+      self.set(:awake, true)
+      self.set(:awake_left, 3)
+      say roused
+    }
+  }
+  without as target for shake from Creature
+  as target for shake {
+    do {
+      self.set(:awake, true)
+      self.set(:awake_left, 3)
+      say roused
+    }
+  }
+  // Given the waybread while awake, he eats it and points the way; the
+  // one giving puts it in his hands (adventurer.sprout).
+  as recipient for give {
+    permit { if (!self.get(:awake)) { refuse "He is asleep!" } }
+    do {
+      if (item.is(Waybread)) {
+        say fed
+        send here :door_found
+        send here :sleeper_gone
+        finally destroy self
+      }
+      else if (actor.count(Waybread) > 0) { say "He refuses your offer but motions with his arm to the waybread in your hand." }
+      else if (item.is(Thing)) { say "The old man refuses the {item.short} with a wave of his hand." }
+      else { say "The old man refuses it with a wave of his hand." }
+    }
+  }
+  as target for talk {
+    do {
+      if (self.get(:awake)) { say "He nods at you without seeming to have understood." }
+      else { say "He is sleeping soundly and does not respond." }
+    }
+  }
+  as target for greet {
+    do {
+      if (self.get(:awake)) { say "He nods at you without seeming to have understood." }
+      else { say "He is sleeping soundly and does not respond." }
+    }
+  }
+  as target for hail {
+    do {
+      if (self.get(:awake)) { say "He nods at you without seeming to have understood." }
+      else { say "He is sleeping soundly and does not respond." }
+    }
+  }
+  as target for listen {
+    do {
+      if (self.get(:awake)) { say "He isn't talking." }
+      else { say "He is snoring like a buzz saw." }
+    }
+  }
+  as target for mung {
+    do {
+      say "The attack seems to have left the old man unharmed! You watch in awe as he rises to his feet and seems to tower above you. He peers down menacingly, then sadly and wearily. \"Not yet,\" he mourns, and vanishes in a puff of smoke."
+      send self :not_yet
+    }
+  }
+  as target for kick {
+    do {
+      say "The attack seems to have left the old man unharmed! You watch in awe as he rises to his feet and seems to tower above you. He peers down menacingly, then sadly and wearily. \"Not yet,\" he mourns, and vanishes in a puff of smoke."
+      send self :not_yet
+    }
+  }
+  as target for rub {
+    do {
+      if (self.get(:awake)) { say "He suffers your hand, and watches it, and waits for it to do something more to the purpose." }
+      else { say "He is warm, and thin under the robe, and does not wake; whatever he is dreaming, it is holding him." }
+    }
+  }
+  as target for smell { do { say "He smells of candle smoke and old paper, and, faintly, of a fresh breeze." } }
+  as target for kiss { do { say "He is asleep, or near it, and very old, and it would not be sporting." } }
+  as target for follow { do { say "He is going nowhere; he is huddled in the corner, and the corner is where he stays." } }
+}
+
+// The runes on the north wall (RUNES, RUNES-F).
+kind Runes is Scenery, Readable, Searchable, Concealing {
+  grammar { name "runes"  nouns "rune", "engravings", "engraving", "carvings", "writing", "text", "pictures"  adjectives "strange", "carved", "ornate", "unfamiliar" }
+  passage short { runes }
+  describe { text "The runes are in an ancient language. Some pictures among the runes depict flames, stone statues, and an old man." }
+  as target for read { do { say "The runes are in an ancient language. Some pictures among the runes depict flames, stone statues, and an old man. You cannot read the language, but the pictures read you: the flames are leaping up at a window, the statues stand either side of a way, and the old man is waiting." } }
+  as target for search {
+    do {
+      if (here.is(EngravingsRoom)) {
+        if (here.get(:door_found)) { say "Among the runes, the outline of a door, which you would not have found by looking and did not." }
+        else { say "Runes, and pictures among the runes, and the wall under them; if there is more, it is not for finding by hand." }
+      } else { say "Runes." }
+    }
+  }
+  as target for look_behind { do { say "The runes are cut into the wall; behind them is more wall, as far as you can tell, and you cannot tell far." } }
+  as target for rub { do { say "The carving is deep and clean under your fingers, and cold, and older than the hand that cut it." } }
+  passage no_take { The runes are cut into the wall, and the wall into the Empire. }
+}
+
+// The secret door among the runes (SECRET-DOOR, SECRET-DOOR-F): invisible
+// until the old man points to it, and open once it is asked.
+kind SecretDoor is Scenery, Openable {
+  :unseen true
+  :found false
+  :door_open false
+  grammar { name "secret door"  nouns "door", "outline", "doorway"  adjectives "secret", "massive", "stone", "hidden" }
+  passage short { secret door }
+  passage beyond { Beyond the secret door are dark, forbidding stairs leading down to a passage below. Flickering torchlight illuminates the passage. }
+  describe {
+    if (self.get(:door_open)) { text "A massive stone door, standing open among the runes as though it had always stood open. {self.beyond}" }
+    else { text "The outline of a door, barely visible among the runes: a line that is not a rune, going up, and across, and down. It is massive, and stone, and closed, and it was not there until the old man pointed." }
+  }
+  on :reveal {
+    self.set(:unseen, false)
+    self.set(:found, true)
+  }
+  as target for open {
+    do {
+      if (self.get(:door_open)) { say "It is already open." }
+      else {
+        self.set(:door_open, true)
+        say "The massive stone door opens noiselessly. {self.beyond}"
+      }
+    }
+  }
+  as target for close {
+    do {
+      if (self.get(:door_open)) { say "The door is open, and it does not seem to want closing; you push, and it does not move, and the torchlight goes on flickering below." }
+      else { say "It is already closed." }
+    }
+  }
+  as target for shift { do { say "It does not push; it opens, if it opens, when it is asked." } }
+  as target for look_in {
+    do {
+      if (self.get(:door_open)) { say beyond }
+      else { say "It is closed; there is nothing to see in it but the outline." }
+    }
+  }
+  passage no_take { It is a door, and a stone one. }
+}
+
+kind EngravingsRoom is DarkRoom {
+  :door_found false
+  :done false
+}
+
+object damp_passage is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Damp Passage"
+    exit west "west" -> junction
+    exit east "east" -> dead_end
+    exit northeast "northeast" -> engravings_room
+    exit north "north" refuse "The opening is blocked by tons of debris."
+    exit up "up" refuse "The channel is too steep and the moss too slippery."
+    exit south "south" refuse "The channel is too steep and the moss too slippery."
+  }
+  :walls 14
+  passage body { This is a particularly damp spot even by dungeon standards. You can see the junction to the west, and two similar passages to the east and northeast. A wide stone channel steeply descends into the room from the south. It is covered with slippery moss and lichen. The channel crosses the room, but the opening where it once continued north is now blocked by rubble. }
+  object moss is Moss
+  object water_channel is WaterChannel
+  object rubble is Rubble {
+    grammar { nouns "debris" }
+    describe { text "Rubble, filling the opening to the north where the channel once went on: tons of it, fallen from somewhere above and packed by its own weight. Whatever water came down the channel went north once; now it would stop here, if any came." }
+  }
+  object junction_view is Scenery {
+    grammar { name "junction"  nouns "crossing"  adjectives "west" }
+    passage short { junction }
+    describe { text "To the west, where the passage opens out, the junction: the great rock, and the ways north and south and west from it, and the eerie light of the stair spilling a little way down from the north." }
+    as target for through { do { say "The junction is to the west; say so." } }
+  }
+  object damp is Scenery {
+    grammar { name "damp"  nouns "dampness", "wet", "water", "drip"  adjectives "particular" }
+    passage short { damp }
+    describe { text "The walls sweat, the floor is slick, and something is dripping with the patience of a thing that has never been asked to stop. It is damp here the way the ocean is wet." }
+    as target for smell { do { say "Wet stone, and moss, and the beginnings of something growing that should not." } }
+    as target for listen { do { say "Drip. And, after a while, drip." } }
+    passage no_take { It is damp; it takes to you, not you to it. }
+  }
+}
+
+object dead_end is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Dead End"
+    exit west "west" -> damp_passage
+    exit northwest "northwest" -> engravings_room
+  }
+  :walls 2
+  passage body { You have come to the end of two adjoining passages to the west and the northwest. }
+  object end is Scenery {
+    grammar { name "end"  nouns "wall", "rock"  adjectives "dead", "blank" }
+    passage short { end }
+    describe { text "The passages end here, both of them, against rock that has nothing further to say. It is a dead end; the name is on the room." }
+    as target for search { do { say "You search the end of the passage for a way it does not have, and find the wall, which it does." } }
+  }
+}
+
+object engravings_room is EngravingsRoom in underground_caverns_3 {
+  grammar {
+    name "Engravings Room"
+    exit north "north" refuse "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for; the door is open, but the way down is not yours today. You come back up." when (secret_door.get(:door_open))
+    exit north "north" refuse "You can't go that way."
+    exit down "down" refuse "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for; the door is open, but the way down is not yours today. You come back up." when (secret_door.get(:door_open))
+    exit down "down" refuse "You can't go that way."
+    exit southwest "southwest" -> damp_passage
+    exit southeast "southeast" -> dead_end
+  }
+  :walls 15
+  passage body {
+    You are in a room with passages heading southwest and southeast. The north wall is ornately carved, filled with strange runes and writing in an unfamiliar language.{if secret_door.get(:door_open)}
+
+    {secret_door.beyond}{else if self.get(:door_found)}
+
+    The outline of a door is barely visible among the runes.{/if}
+  }
+  object runes is Runes
+  object secret_door is SecretDoor
+  object corner is Scenery {
+    grammar { name "corner"  nouns "corners"  adjectives "dark", "far" }
+    passage short { corner }
+    describe { text "{if here.count(Sleeper) > 0}The corner where the old man is huddled: dark, and out of the draught, and about the size of him.{else}A corner, dark and out of the draught, with a hollow in the dust the size of a huddled person; nobody is in it at present.{/if}" }
+  }
+  // The old man comes in, three times in ten, as a visitor enters, until he
+  // has been fed or affronted (MSTAIRS-F's M-ENTER).
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      if (!self.get(:done) && self.count(Sleeper) == 0 && random(10) < 3) { spawn Sleeper in self }
+    }
+  }
+  on :door_found {
+    self.set(:door_found, true)
+    send secret_door :reveal
+  }
+  on :sleeper_gone { self.set(:done, true) }
+}

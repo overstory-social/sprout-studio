@@ -9,7 +9,7 @@
 // it has been moved, and by its long one (LDESC) after, or by "There is a
 // ... here." when it has none; `here_line` is that rule. A thing marked
 // `:ndesc` (Zork's NDESCBIT) is never listed.
-import {open, close, read, look_in, look_under, look_behind, search, find, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, turn, tie, burn, cut, play, count_things, through, cross, leap_at, unlock, put_on, put, give, talk, alarm, follow, kiss, wave, dig, lamp_on, lamp_off, fill, drink, drink_from, pour, pour_on, take_fixed, :consume} from 'verbs'
+import {open, close, read, look_in, look_under, look_behind, search, find, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, turn, tie, untie, burn, cut, play, count_things, through, cross, leap_at, unlock, put_on, put, give, talk, alarm, follow, kiss, wave, dig, lamp_on, lamp_off, fill, drink, drink_from, pour, pour_on, spray, take_fixed, :consume, :falling} from 'verbs'
 
 kind Thing {
   grammar { article the }
@@ -18,6 +18,9 @@ kind Thing {
   :has_fdesc false
   :ndesc false
   :size 5 min 0 max 100
+  // Marked to go over the cliff or the ledge when the world's gate opens
+  // (CLIFF-OBJECT-F, LEDGE-F): the thrower moves it where it lands.
+  :falling false
 
   passage short default { thing }
   // With its indefinite article, for a list (PRINT-CONT).
@@ -35,20 +38,17 @@ kind Thing {
   passage no_take default { A valiant attempt. }
   passage hacked default {{one of}doesn't seem to work.{or}isn't notably helpful.{or}has no effect.{/one of}}
 
-  on :moved (from, to) { self.set(:touched, true) }
+  on :moved (from, to) {
+    self.set(:touched, true)
+    self.set(:falling, false)
+  }
+  on :falling { self.set(:falling, true) }
 
-  as target for open default { do { say "You must tell me how to do that to a {self.short}." } }
-  as target for close default { do { say "You must tell me how to do that to a {self.short}." } }
-  as target for read default { do { say "How does one read {self.a_short}?" } }
   as target for look_in default { do { say "You can't look inside {self.a_short}." } }
-  as target for look_under default { do { say "There is nothing but dust there." } }
-  as target for look_behind default { do { say "There is nothing behind the {self.short}." } }
-  as target for search default { do { say "You find nothing unusual." } }
   as target for find default { do { if (actor.holds(self)) { say "You have it." } else { say "It's right here." } } }
   as target for shift default { do { say "You can't move the {self.short}." } }
   as target for raise default { do { say "Playing in this way with the {self.short} {self.hacked}" } }
   as target for lower default { do { say "Playing in this way with the {self.short} {self.hacked}" } }
-  as target for eat default { do { say "I don't think that the {self.short} would agree with you." } }
   as target for smell default { do { say "It smells like {self.a_short}." } }
   as target for listen default { do { say "The {self.short} makes no sound." } }
   as target for climb_up default { do { say "You can't do that!" } }
@@ -62,20 +62,24 @@ kind Thing {
       } else { say "Trying to destroy the {self.short} with your bare hands is futile." }
     }
   }
-  as target for kick default { do { say "Kicking the {self.short} {self.hacked}" } }
-  as target for rub default { do { say "Fiddling with the {self.short} {self.hacked}" } }
-  as target for shake default { do { say "You can't take it; thus, you can't shake it!" } }
-  as target for squeeze default { do { say "How singularly useless." } }
   as target for turn default { do { say "Your bare hands don't appear to be enough." } }
   as target for tie default {
     do {
-      if (bound tool) { say "You can't tie the {self.short} to that." }
+      if (bound tool) {
+        if (tool == actor) { say "You can't tie anything to yourself." }
+        else { say "You can't tie the {self.short} to that." }
+      }
       else { say "You'll have to say what to tie the {self.short} to." }
     }
   }
+  as target for untie default { do { say "This cannot be tied, so it cannot be untied!" } }
   as target for burn default {
     do {
-      if (bound tool) { if (tool.is(Thing)) { say "With {tool.a_short}??!?" } else { say "With that??!?" } }
+      if (bound tool) {
+        if (tool.is(Flame)) { say "You hold the flame to the {self.short}, and the {self.short} declines to burn. Not everything down here is as combustible as you are." }
+        else if (tool.is(Thing)) { say "With {tool.a_short}??!?" }
+        else { say "With that??!?" }
+      }
       else { say "You didn't say with what!" }
     }
   }
@@ -100,7 +104,7 @@ kind Thing {
 }
 
 // A thing that can be carried off. Only these answer `take all`.
-kind Portable is Thing {
+kind Portable is Thing, Shakeable {
   as target for shift { do { say "Moving the {self.short} reveals nothing." } }
   as target for shake { do { say "Shaken." } }
   as target for through {
@@ -176,15 +180,65 @@ kind Receptacle is Thing {
 // Whoever wears a hood that might be taken from them: the hooded figure.
 kind Hooded is Thing { }
 
+// Something that can be sprayed: the can of grue repellent.
+kind Sprayable is Thing {
+  as target for spray default { do { say "How singularly useless." } }
+}
+// Something burning, that other things may be burned with: the torch.
+kind Flame is Thing { }
+
 // Something heard and not seen, that might be followed: the footsteps in
 // the land of shadow.
 kind Trace is Thing { }
 
-// Whom a visitor might talk to, wake, follow or kiss: the hooded figure,
-// and the sailor, who is in every room and answers from none but one.
-// Zork's answers for anyone who has none.
-kind Creature is Thing {
+// What answers open and close in its own words: a box, and the great
+// rock, which answers that you can't be serious.
+kind Openable is Thing {
+  as target for open default { do { say "You must tell me how to do that to a {self.short}." } }
+  as target for close default { do { say "You must tell me how to do that to a {self.short}." } }
+}
+// Something with writing on it: the sword's runes.
+kind Readable is Thing {
+  as target for read default { do { say "How does one read {self.a_short}?" } }
+}
+// Something a visitor might search: the ground, the room, the grue, the
+// rubble, the quicksand, the footsteps, the lake's sand and the beach.
+kind Searchable is Thing {
+  as target for search default { do { say "You find nothing unusual." } }
+}
+// Something a visitor might look under or behind: the great rock, the
+// hood, the cloak, the lake, the ground and the grue.
+kind Concealing is Thing {
+  as target for look_under default { do { say "There is nothing but dust there." } }
+  as target for look_behind default { do { say "There is nothing behind the {self.short}." } }
+}
+// Something a visitor might eat: the algae.
+kind Food is Thing {
+  as target for eat default { do { say "I don't think that the {self.short} would agree with you." } }
+}
+// Something a visitor might touch, rub, pat or stroke: the hooded figure,
+// the old man, the quicksand.
+kind Touchable is Thing {
+  as target for rub default { do { say "Fiddling with the {self.short} {self.hacked}" } }
+}
+// Something a visitor might shake: what can be carried, and a creature.
+kind Shakeable is Thing {
+  as target for shake default { do { say "You can't take it; thus, you can't shake it!" } }
+}
+// Something a visitor might squeeze or hug: a creature, and the footsteps.
+kind Squeezable is Thing {
+  as target for squeeze default { do { say "How singularly useless." } }
+}
+// Someone or something a visitor might greet or hail: a creature, the
+// ship, and the footsteps. The one greeting answers (adventurer.sprout).
+kind Greetable is Thing { }
+
+// Whom a visitor might talk to, wake, follow, kiss, kick or taunt: the
+// hooded figure, the old man, and the sailor at the ocean. Zork's answers
+// for anyone who has none.
+kind Creature is Thing, Shakeable, Squeezable, Greetable {
   as target for talk default { do { say "The {self.short} pauses for a moment, perhaps thinking that you should reread the manual." } }
+  as target for kick default { do { say "Kicking the {self.short} {self.hacked}" } }
   as target for alarm default { do { say "He's wide awake, or haven't you noticed..." } }
   as target for follow default { do { say "You're nuts!" } }
   as target for kiss default { do { say "I'd sooner kiss a pig." } }

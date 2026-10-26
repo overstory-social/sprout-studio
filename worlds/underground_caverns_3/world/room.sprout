@@ -11,7 +11,7 @@
 // room counts its own lamps and tells each visitor in it whether it would
 // be lit without them.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Creature, Diggable} from 'thing'
+import {Thing, Scenery, Creature, Diggable, Searchable, Concealing} from 'thing'
 import {Light} from 'lamp'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
@@ -31,7 +31,6 @@ kind Room is sprout.Place {
   object floor is Floor
   object ceiling is Ceiling
   object surroundings is Surroundings
-  object sailor is Sailor
 
   remembers { :visits 0 min 0 max 2 }
   :visited false
@@ -137,6 +136,13 @@ kind Wall is Scenery {
   passage ocean_wall { The land rises steeply to the east, into the hills of the land of shadow; there are no walls here, only the cliff and the sea and the mist between. }
   passage north_wall { The only wall here is the stone one to the north, massive and ancient, built by people who meant it to stand for ever and were nearly right; it has crumbled at one point to a heap of rubble low enough to climb. Everywhere else the land of shadow goes on until the dark takes it. }
   passage cliff_wall { The only wall here is the stone one to the north, tall and old and ending at the cliff edge, with the rubble of its decay heaped where you could climb over. The rest is hills, and the drop to the west, and the mist. }
+  passage oasis_wall { To the south the old stone wall, crumbling, with its jagged opening; everywhere else the walls go up and up to the hole and the light, so far that the trees have room under them. }
+  passage rock_face_wall { The cliff: rock, going up, smooth where it is not sheer and sheer where it is not smooth, and nothing on it to hold. }
+  passage damp_wall { The walls sweat. Water comes down them in a film and goes into the moss at the foot, and the moss is glad of it. }
+  passage carved_wall { The north wall is carved from floor to roof with runes and pictures in a language nobody has spoken for a long age; the others are plain rock, and look plainer for the company. }
+  passage altar_wall { Basalt blocks, rudely cut and rudely laid, with torches in brackets throwing a sallow light on them and on what is done in front of them. }
+  passage key_wall { Rock, close on three sides, and a dim light from somewhere above that falls on the floor and does not reach the walls, which seem to prefer it that way. }
+  passage channel_wall { There are no walls here, only the sides of the channel, a few feet high and green with moss, and past them the air, and a long way below the air the rock. }
   describe {
     if (self.get(:look) == 1) { text stair_wall }
     else if (self.get(:look) == 2) { text cramped }
@@ -149,6 +155,13 @@ kind Wall is Scenery {
     else if (self.get(:look) == 9) { text ocean_wall }
     else if (self.get(:look) == 10) { text north_wall }
     else if (self.get(:look) == 11) { text cliff_wall }
+    else if (self.get(:look) == 12) { text oasis_wall }
+    else if (self.get(:look) == 13) { text rock_face_wall }
+    else if (self.get(:look) == 14) { text damp_wall }
+    else if (self.get(:look) == 15) { text carved_wall }
+    else if (self.get(:look) == 16) { text altar_wall }
+    else if (self.get(:look) == 17) { text key_wall }
+    else if (self.get(:look) == 18) { text channel_wall }
     else { text plain }
   }
   as target for shift { do { say "You can't budge it; at least from here." } }
@@ -170,7 +183,7 @@ kind Tunnel is Scenery {
   as target for dig { do { say "Not a chance." } }
 }
 
-kind Floor is Scenery, Diggable {
+kind Floor is Scenery, Diggable, Searchable, Concealing {
   grammar { name "ground"  nouns "floor", "dirt"  adjectives "stone", "rock", "hard" }
   passage short { ground }
   describe { text "The ground is the sort of thing you stand on. You are standing on it." }
@@ -190,7 +203,7 @@ kind Ceiling is Scenery {
 // room's own description. A room's own name words are refused where
 // anything in it answers better (Room, above), so this is a thing in every
 // room, answering to "room" and the like, and reading the room it is in.
-kind Surroundings is Scenery {
+kind Surroundings is Scenery, Searchable {
   grammar { name "room"  nouns "chamber", "place", "surroundings", "everything", "here"  adjectives "this", "whole", "entire" }
   passage short { room }
   describe { text "{if here.is(Room)}{here.full}{/if}" }
@@ -200,7 +213,7 @@ kind Surroundings is Scenery {
 }
 
 // Zork's GRUE: never here, always nearby.
-kind Grue is Scenery {
+kind Grue is Scenery, Searchable, Concealing {
   grammar { name "lurking grue"  nouns "grue", "grues"  adjectives "lurking", "sinister", "hungry", "silent" }
   passage short { lurking grue }
   passage absent { There is no grue here, but I'm sure there is at least one lurking in the darkness nearby. I wouldn't let my light go out if I were you! }
@@ -212,11 +225,12 @@ kind Grue is Scenery {
   as target for look_under { do { say absent } }
 }
 
-// Zork's SAILOR, a GLOBAL-OBJECT: in every room, so that "hello sailor"
-// is answered wherever it is said; only at the Flathead Ocean, with the
-// ship passing, does it do anything (SAILOR-FCN). Whoever greets him
-// answers for it (adventurer.sprout), since the count and the ship are
-// theirs.
+// Zork's SAILOR, a GLOBAL-OBJECT there; here a thing of the Flathead Ocean
+// only (ocean.sprout), since a thing in every room offers the verbs it
+// answers in every room, and he answers from none but one. Only at the
+// ocean, with the ship passing, does he do anything (SAILOR-FCN). Whoever
+// greets him answers for it (adventurer.sprout), since the count and the
+// ship are theirs.
 // He is a Creature so that he may be talked to, and what he answers while
 // the ship is in sight is in the trick's own direction.
 kind Sailor is Scenery, Creature {

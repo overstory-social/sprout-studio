@@ -7,13 +7,13 @@
 // "definitely dimmer", 100, "nearly out", 50, and out). Dropped into
 // the lake it is fried (FRIED-LAMP), and never lights again.
 import * as sprout from 'sprout'
-import {Portable, Thing, Switchable} from 'thing'
+import {Portable, Thing, Switchable, Flame} from 'thing'
 import {Adventurer} from 'adventurer'
 import {DarkRoom, Room} from 'room'
 import {Box} from 'box'
 import {endless_stair} from 'way_in'
 import {Ocean} from 'ocean'
-import {lamp_on, lamp_off, :light, :relight, :snuffed, :fry, :smash, :lamp_home} from 'verbs'
+import {lamp_on, lamp_off, smell, listen, :light, :relight, :snuffed, :fry, :smash, :lamp_home} from 'verbs'
 
 kind Light is Portable, sprout.LightSource, Switchable {
   on :moved (from, to) {
@@ -163,4 +163,55 @@ kind Lamp is Light {
   // A death sends the lamp back to the stair (JIGS-UP), from wherever it
   // lies; the gate is open when this is heard.
   on :lamp_home { move self to endless_stair }
+}
+
+// The torch on the wall of the Scenic Vista (TORCH, TORCH-F): a flame
+// that burns as long as it likes, that nothing down here can light again
+// once it is out, and that the lake puts out for good (FRIED-TORCH).
+kind Torch is Light, Flame {
+  :lit true
+  :fried false
+  grammar { name "torch"  nouns "flame", "brand"  adjectives "flaming", "burning", "wooden", "burned-out", "dead", "wet" }
+  :size 5
+  :has_fdesc true
+  passage short { torch }
+  passage indef { {if self.get(:fried)}A burned-out torch{else}A torch{/if} }
+  passage a_short { {if self.get(:fried)}a burned-out torch{else}a torch{/if} }
+  passage fdesc { Mounted on one wall is a flaming torch, which fills the room with a flickering light. }
+  passage ldesc { {if self.get(:fried)}There is a burned-out torch here.{else}There is a torch here{if self.get(:lit)}, burning{/if}.{/if} }
+  describe {
+    if (self.get(:fried)) { text "A torch of pitch and rag on a wooden shaft, black and wet and finished. It has been in the lake, and no fire down here will take to it again." }
+    else if (self.get(:lit)) { text "A torch of pitch and rag on a wooden shaft, burning with a steady, smoky flame that does not seem to use the torch up. Somebody lit it a long time ago for somebody to find." }
+    else { text "A torch of pitch and rag on a wooden shaft, out. There is nothing down here to light it with." }
+  }
+  as target for lamp_on {
+    do {
+      if (self.get(:fried)) { say "It's hopeless. The torch is wet." }
+      else if (self.get(:lit)) { say "It's already lit." }
+      else { say "You have nothing to light it with." }
+    }
+  }
+  as target for lamp_off {
+    permit {
+      if (self.get(:fried)) { refuse "It has already been extinguished, by the lake." }
+      if (!self.get(:lit)) { refuse "It has already been extinguished." }
+    }
+    do {
+      self.set(:lit, false)
+      say "You manage to extinguish the flame."
+      if (actor.holds(self)) { send actor :light with -1 } else { send here :relight }
+      if (here.is(DarkRoom)) {
+        if (actor.holds(self)) {
+          let mine = actor.is(Adventurer) && actor.get(:light) > 1
+          if (!here.get(:floor_lit) && here.get(:bearers) <= 1 && !mine) { say "It is now pitch black." }
+        } else if (here.get(:bearers) == 0 && !here.get(:floor_lit)) { say "It is now pitch black." }
+      }
+    }
+  }
+  as target for smell { do { say "Pitch, and smoke, and hot rag." } }
+  as target for listen { do { say "{if self.get(:lit)}It hisses and spits a little, as pitch does.{else}The torch makes no sound.{/if}" } }
+  on :fry {
+    self.set(:lit, false)
+    self.set(:fried, true)
+  }
 }

@@ -145,6 +145,16 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   the visitor's). `examine sailor` anywhere but the ocean with the ship in
   view reads "There is no sailor to be seen."
 - **Spec:** Objects (a kind's body gives every instance its own copy).
+- **Status: changed** after round 2, for the brief's rule that a verb is
+  offered only where something it applies to is in range: a sailor in
+  every room offered `talk to`, `follow`, `kiss`, `wake`, `give` and
+  `take` against him at the Endless Stair, where he is not. He is a thing
+  of the Flathead Ocean now and of nowhere else, so "hello sailor" at the
+  stair is `not_here`, "You can't see any such thing.", where Zork's
+  GLOBAL-OBJECT answered "Nothing happens here." The running joke is kept
+  only where the sailor is. A verb with no role whose words are "hello
+  sailor" would answer everywhere and tie with `greet` at the ocean; not
+  tried.
 
 ### 10. `take all` is filtered by the world, not the parser
 
@@ -251,6 +261,11 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   unread. (The verb is `unmask` and not `unhood` because a verb and a
   message may not share a name in one import list.)
 - **Spec:** Parsing › Nouns; Limits › phrases per verb (8).
+- **Status: still open** after round 3 (P12): a playtester typed "remove
+  the figure's hood" with the figure defenceless before them. The stroke
+  that brings the figure to its last point now names the hood within
+  reach, so "take hood" is the wording the line suggests; the possessive
+  itself is still for Sprout.
 
 ### 16. Two things answering one word in one place are drawn between
 
@@ -417,3 +432,210 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   the caller. The lamp stays lost, as intent.md says; nothing calls it.
 - **Spec:** Events › Sending (a broadcast through a container that
   refuses); Movement and consent › `mover`.
+
+### 26. A verb a few things answer is offered against everything until its role is typed
+
+- Caverns 135, met again: `open`, `close`, `read`, `search`, `look
+  under`, `look behind`, `eat`, `kick`, `rub`, `shake`, `squeeze`, `greet`
+  and `hail` had an untyped `role target`, and `Thing` answered each with
+  Zork's default, so the stair offered `open wall`, `read lurking grue`
+  and `eat ceiling`.
+- **Wrote instead:** each is typed by a kind the things that answer it in
+  their own words compose: `Openable` (the vial, the great rock),
+  `Readable` (the sword), `Searchable` (the ground, the room, the grue,
+  the rubble, the quicksand, the footsteps, the lake's sand, the beach),
+  `Concealing` (the rock, the hood, the cloak, the lake, the ground, the
+  grue), `Food` (the algae), `Touchable` (the figure, the old man, the
+  quicksand), `Shakeable` (what can be carried, and a creature),
+  `Squeezable` (a creature, the footsteps), `Greetable` (a creature, the
+  ship, the footsteps), and `kick` by `Creature`, which nothing answered
+  in its own words and which "taunt" fits. Zork's default stays on the
+  kind as a `default` play. The cost is caverns 135's: Zork's jokes for
+  these verbs said of anything else ("How does one read a wall?", "I
+  don't think that the ceiling would agree with you.", "Kicking the
+  ground doesn't seem to work.", "It's a well known fact that only
+  schizophrenics say \"Hello\" to a lamp.") are the engine's `cannot`
+  now. The general verbs (move, raise, lower, find, smell, listen, climb,
+  break, burn, cut, turn, tie, play, count, enter, cross, jump, unlock)
+  keep Zork's default on `Thing` and are offered against everything, as
+  caverns 135 kept them.
+- **Spec:** Verbs › Declaring a verb; The runtime › The view (a verb is
+  offered when its roles can be filled).
+
+### 27. A bare call cannot be said only where there is somebody to call
+
+- **Wanted:** bare `hail`, `ahoy`, `wave` and `shout hello` at the shore
+  with the ship passing, and "who is there?" asked of the footsteps in
+  the land of shadow, offered there and nowhere else.
+- **Found:** caverns 137: a verb with no role is offered everywhere, and
+  every phrase of a verb with a role names it, so a bare call cannot be
+  tied to a place or a thing. `hail_bare`, `wave_bare` and `who_there`
+  were on the stair's list with nobody to call and nobody to ask; the
+  brief keeps a verb with no role for what works everywhere.
+- **Wrote instead:** they are gone. The call names whom it is for: `ahoy
+  sailor`, `hail ship`, `wave to the sailor`, `call sailor`, `hail
+  footsteps`, `call to the footsteps`, `hello footsteps`, each typed by
+  `Greetable` (26) and offered only where one is in range; they answer as
+  the bare ones did, and hold the ship the same once. Bare `hail`,
+  `ahoy`, `wave` and `who is there` are `unknown`, where Zork would ask
+  "What do you want to hail?" and this world's footsteps answered a
+  question. A no-role verb typed but never offered is still asked of
+  Sprout (caverns 137, sprout#787).
+- **Spec:** Verbs › Declaring a verb ("A phrase always names the
+  target"); The runtime › The view.
+- **Status: changed** after round 3 (P4, P10): the first things two
+  playtesters typed at the passing ship were bare `hail`, which was
+  `unknown`, and bare `shout`, which was Zork's yell and spent the ship's
+  one command. A shout works everywhere, and `yell` was already a verb
+  with no role, so `hail`, `ahoy`, `wave` and `call out` are now words
+  for it, and a yell at the shore with the ship in sight is the call
+  across the water the sailor holds for, once; elsewhere it is still
+  "Aaaarrrrgggghhhh!". "Who is there" is a verb with no role too, since
+  a question into the dark is asked anywhere and answered everywhere,
+  by the footsteps, the sailor, the man at the cliff or nobody. The
+  rule that a verb is offered where something it applies to is in range
+  is kept by reading both as things that work everywhere, which they
+  do; what is given up is caverns 137's wish for a bare call tied to a
+  place. "Call out to the footsteps" is an intent over `hail`.
+
+## Round 4: the first revision after round 3, and the second quarter
+
+### 28. An NPC cannot take a thing from a visitor's hand; the visitor hands it over
+
+- **Wanted:** OLD-MAN-F's GIVE: the old man takes the waybread from the
+  visitor (REMOVE and the eating), and MAN-F's lift of the chest from the
+  visitor's arms ("All at once, the chest is lifted from you").
+- **Found:** `sprout.Actor` "releases only to its own hand, so nobody is
+  picked": a `move item to self` in the old man's `as recipient for give`
+  is refused by the giver's own `release`, since the mover is the old
+  man. Guards are conjunctive, so nothing the old man composes can let
+  him through.
+- **Wrote instead:** the adventurer's own `give` moves the waybread into
+  the old man when he is awake and it is the waybread, and the old man's
+  part says what he does with it and destroys himself with it inside.
+  The chest is not tied while it is held ("put the chest down first"),
+  so the man lifts it from the ledge and never from the visitor's arms;
+  the world moves it into him, since only the world reaches both the
+  ledge and the top of the cliff, and he lets it down himself, since
+  only he may release what he holds.
+- **Spec:** Movement and consent › The three roles; Kinds › Consent under
+  composition.
+
+### 29. A room's `after command` cannot tell an aside from a move
+
+- **Wanted:** CLIFF-F's M-END weather (movement among the trees, the sea
+  from the southwest) and I-OLD-MAN-SLEEPS's count, on the room, running
+  only on moves that count (`score`, `verbose` and the like are no move).
+- **Found:** what runs after a command runs nearest the visitor first,
+  so the adventurer's own `after command`, which counts the move and
+  clears its `:aside`, has run before the room's; the room reads
+  `:aside` as already false and cannot tell `score` from `wait`. The
+  lamp, which is carried, runs before the visitor and reads it right,
+  which is why the battery counts moves correctly.
+- **Wrote instead:** both clocks are in the adventurer's own counted
+  block, keyed on `here`; the rooms keep no `after command`. The same
+  fold the ship's and the lake's clocks took in round 1 (friction 7),
+  for a different reason.
+- **Spec:** Verbs › After a command (the order things run in).
+
+### 30. A verb whose phrases do not write its name gets nothing from `synonyms`
+
+- **Wanted:** "grab rope" at the ledge, where the man has said "grab onto
+  the rope", read by `take_fixed`, whose words are `take`'s.
+- **Found:** a synonym "takes every phrase of the verb that writes the
+  verb's name", and `take_fixed`'s phrases write `take`, so its
+  `synonyms "grab", "hold", …` generated nothing, silently; "grab rope"
+  was `unknown`, though "take rope" was read. The spec says so; what is
+  missing is a warning for a `synonyms` line that generates no phrase.
+- **Wrote instead:** the words written out as phrases, eight of them.
+- **Spec:** Parsing › Synonyms; The compiler › What it warns about.
+
+### 31. An exit's guard cannot read the actor, so the rope is the world's
+
+- **Wanted:** CLIFF's `DOWN TO CLIFF-LEDGE IF ROPE-FLAG`, with ROPE-FLAG
+  changed by what the man does for one visitor.
+- **Found:** an exit's `when` binds neither `actor` nor `here`, and may
+  read the place, the place it leads to, and the world. A per-visitor
+  rope, kept on the adventurer as the ship is, could not decide the
+  cliff's way down.
+- **Wrote instead:** whether the rope is down, and the man's stage
+  (unmet, waiting, away, returned, at the cliff, gone), are the world's,
+  set by messages from whoever changes them; his clocks (the five moves
+  to his appearing, the ten to his return, his patience) are the
+  visitor's, as every clock here is (friction 7). A world with several
+  visitors has one man and one rope, which is right, and one set of his
+  clocks per visitor, which is the nearest thing. The Timber Room's "You
+  cannot fit through this passage with that load" is the same shape: the
+  exit cannot weigh the visitor's hands, so the adventurer's own part of
+  `go` refuses it, reading a `:bulky` flag its `after command` set at
+  the end of the previous command.
+- **Spec:** Verbs › An exit may be conditional; Verbs › Engine verbs
+  (`go`, the actor's own part).
+
+### 32. A description may not draw, but a look may set what it reads
+
+- A note, not a gap. KEY-F's EXAMINE picks one of five shapes for the
+  strange key each time it is looked at. A `describe` may not draw, so
+  the key plays `as target for examine { do { self.set(:shape,
+  random(5)) } }`, which the compiler accepts for an engine verb, and the
+  description, rendered after the turn's work, reads the shape the look
+  chose. The spec's Chance says a description re-runs on every poll and
+  must not shimmer; this one changes only when somebody looks, which is
+  what the original wanted.
+- **Spec:** Chance › Where chance is forbidden; Verbs › Engine verbs.
+
+### 33. The man hauls across two places through the gate
+
+- **Wanted:** I-MAN-LIFT: the man at the top of the cliff hauls the
+  visitor up from the ledge and hands them the staff.
+- **Found:** the man is an actor in the Cliff, the visitor in the Cliff
+  Ledge, and an `act haul (target: …)` on a target out of range tells
+  it nothing and could move nothing. The brief asks that what he does to
+  the visitor he does by acting.
+- **Wrote instead:** the visitor's clock opens the world's gate (friction
+  3) and asks the man to haul; with the gate open he acts, tells the
+  target, lets the chest down and hands the staff over, and the
+  visitor's own part of `haul` moves them to the top while the gate is
+  still open, which it is, since the gate shuts in the message queued
+  after his. Order of delivery is the spec's, and the test pins it.
+- **Spec:** Verbs › Acting; Events › Sending; The runtime › Turns.
+
+### 34. One earthquake and one indicator for every visitor
+
+- **Wanted:** I-CLEFT (once, 70 to 140 moves in) and I-VIEW-CHANGE (every
+  four moves), game clocks; and the brief's question of what one
+  visitor's earthquake does to another's aqueduct.
+- **Found:** a clock that counts moves is a visitor's, so a world-level
+  clock has to be fed by each visitor's `after command`.
+- **Wrote instead:** each counted move sends the world `:move_made`; the
+  world draws the quake's move on the first of them, counts down, and
+  broadcasts `:quake` once, which each adventurer tells themselves in
+  the words for where they stand; the world cycles the indicator the
+  same way and broadcasts `:view_changed`, which the vista tells its
+  occupants. There is one earthquake and one aqueduct: the first
+  visitor's seventieth-odd move breaks the arch for everyone, which is
+  what one world should do, and the brief's open question is answered
+  this way for the table and the quake; the time machine is the third
+  quarter's to answer.
+- **Spec:** Verbs › After a command; Events › Sending (broadcast).
+
+### 35. A death's own room is never read, again
+
+- Friction 19, met again at the Sacrificial Altar: ZORK-IV-F kills on
+  entering, with the room's text as the death's. A visitor carried to
+  the cell and the stair in the same turn never reads the altar, so the
+  altar tells them its name and its text itself from `on :entered`, as
+  the cell does, and keeps a `describe` nobody reads.
+- **Spec:** The world model › Places; The runtime › Effects.
+
+### 36. A declared object that is eaten, broken or spent
+
+- The waybread is eaten, crushed or given; the staff is broken; the
+  repellent can explode. A declared object destroyed "never comes back",
+  which the compiler warns of, so each is spawned instead: the waybread
+  into the Cliff and the staff into the man's hands when a visitor first
+  comes to the top, the can into Room 8 when one first arrives there. The
+  warning is right and the cost is small; logged because every port has
+  consumables and will do this.
+- **Spec:** The world model › Destroying; The compiler › What it warns
+  about.
