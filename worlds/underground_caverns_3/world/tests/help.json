@@ -1,0 +1,22 @@
+{
+  "about": "The engine's `help`, answered in the world's own words and bounded, so that it never overruns a turn: at the Endless Stair empty-handed, with the lamp in hand, and in the dark at the Junction with the lamp lit.",
+  "steps": [
+    { "arrive": "Marta" },
+    { "as": "Marta", "type": "help", "forbid": ["error"], "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "Help, down here, is what you bring with you. The words that work are the usual ones: the compass, UP and DOWN to move; LOOK and EXAMINE to see; TAKE, DROP, OPEN, PUSH and whatever a thing seems to invite when it is looked at; INVENTORY for what you carry, SCORE for how you stand, DIAGNOSE for how you are, HINT for what passes for one down here. Of what is in reach just now, you might try: take lamp, look in wall, look in lurking grue, look in passage, look in ground, look in ceiling, look in room, look in lamp, look in stairs, look in eerie glow, look in shadows, look in trail, search lurking grue, search ground, search room, look under lurking grue, look under ground, look behind lurking grue, look behind ground, find wall, find lurking grue, find passage, find ground, find ceiling, and a good deal more that you can work out for yourself." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "help", "forbid": ["error"] },
+    { "as": "Marta", "type": "?", "forbid": ["error"] },
+    { "as": "Marta", "type": "s" },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Marta", "type": "help", "forbid": ["error"] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 0 of a possible 7, in 3 moves." }
+    ] }
+  ]
+}

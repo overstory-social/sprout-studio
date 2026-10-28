@@ -14,7 +14,7 @@
 // time the void. Getting anywhere at a stroke takes the world's gate,
 // since no room can otherwise reach another.
 import * as sprout from 'sprout'
-import {Thing, Portable, Scenery, Creature, Wearable, Weapon, Flame, Diggable} from 'thing'
+import {Thing, Portable, Scenery, Creature, Wearable, Weapon, Flame, Diggable, Placeable} from 'thing'
 import {Box} from 'box'
 import {Lamp, Light, Torch} from 'lamp'
 import {Sword, Hood, Cloak, Amulet, Vial, Potion, Waybread, Staff, BrokenStaff, StrangeKey, Repellent, LoreBook, Ring, Sceptre, JewelledKnife, Jewel, :quaff} from 'items'
@@ -36,9 +36,9 @@ import {BeamRoom, Beam, MirrorBox, GuardianRoom, GuardianSide, Guardians, Channe
 import {DungeonMaster, MasterVoice, FarCell, SlotCell, DungeonRoom, Parapet, BronzeDoor, CellDoor, FlamingPit, front_door, behind_door, parapet, dungeon_cell, good_cell, wrong_cell, north_corridor, south_corridor, east_corridor, west_corridor} from 'dungeon'
 import {scenic_vista, timber_room, room_8, altar_room, TimberRoom, MineRoom, Altar, FarShore, VistaRoom, TorchBracket} from 'vista'
 import {key_room, SouthShore, GrueLair, DarkTwo, KeyRoom, AqueductRoom, HighArch, WaterSlide, FarBalcony, Chasm} from 'aqueduct'
-import {take, take_fixed, drop, put, put_on, put_under, give, throw, throw_dir, throw_far, scramble, dig_here, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, get_out, exit_thing, board, search_here, feel_around, wait_long, hint, cant_wear, incant, master_follow, master_stay, master_go, master_parapet, master_push, master_dial, master_spin, master_take, master_open, master_other, Dest, Mode, Direction, ManStage, Era, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep, :cp_push, :cp_from, :cp_to, :cp_done, :cp_open_door, :tm_point, :time_trip, :push_machine, :machine_follow, :dial_set, :stone_door, :wooden_door, :old_entered, :jewels_home, :history, :mirror_out, :admitted, :sent_back, :cell_turned, :quest_done, :dm_order, :dm_follow_set, :dm_folflag_set, :wood_set, :pole_set} from 'verbs'
+import {take, take_fixed, drop, put, put_on, put_under, pour_on, give, throw, throw_dir, throw_far, scramble, dig_here, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, get_out, exit_thing, board, search_here, feel_around, wait_long, hint, cant_wear, incant, master_follow, master_stay, master_go, master_parapet, master_push, master_dial, master_spin, master_take, master_open, master_other, Dest, Mode, Direction, ManStage, Era, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep, :cp_push, :cp_from, :cp_to, :cp_done, :cp_open_door, :tm_point, :time_trip, :push_machine, :machine_follow, :dial_set, :stone_door, :wooden_door, :old_entered, :jewels_home, :history, :mirror_out, :admitted, :sent_back, :cell_turned, :quest_done, :dm_order, :dm_follow_set, :dm_folflag_set, :wood_set, :pole_set} from 'verbs'
 
-kind Adventurer is sprout.Visitor {
+kind Adventurer is sprout.Visitor, Placeable {
   :capacity 30
   capacity 100 by :size
   grammar { nouns "me", "myself", "self", "adventurer", "cretin" }
@@ -248,7 +248,7 @@ kind Adventurer is sprout.Visitor {
   // The figure killed (SHADOW-F): the trap sprung.
   passage slain_line { The hooded figure, fatally wounded, slumps to the ground. It gazes up at you once, and you catch a brief glimpse of deep and sorrowful eyes. Before you can react, the figure vanishes in a cloud of fetid vapor. Its hood and its cloak go with it, and the land of shadow is quiet in a way it was not before, as though something that had been waiting here a long time had stopped. }
   // The old man's staff raised (JIGS-UP), felt from the visitor's side.
-  passage sent_back { You feel some great power well up inside you and you fall to the floor. The next moment, you are awakening, as if from a deep slumber. What you were carrying is not with you: the old man scatters what a visitor brings him, and it is lying where he left it, somewhere along the way in, between the stair and the lake, with the lamp alone brought back to your feet. }
+  passage sent_back { You feel some great power well up inside you and you fall to the floor. The next moment, you are awakening, as if from a deep slumber. What you were carrying is not with you: the old man scatters what a visitor brings him, and it is lying where he left it, somewhere along the ways in, between the stair and the lake or in the passages east of the junction, with the lamp alone brought back to your feet. }
   passage void { You feel yourself disembodied in a deep blackness. A voice from the void speaks: "I have waited a long age for you, my friend, but perhaps it has been another that I have been seeking. Good night, oh worthy adventurer!" It is the last you hear. }
   // The man at the cliff, as he is heard from the ledge (I-MAN-APPEARS,
   // MAN-WAITS, I-MAN-PRESENT, I-MAN-RETURNS, I-MAN-LIFT, I-MAN-LEAVES).
@@ -1082,8 +1082,9 @@ kind Adventurer is sprout.Visitor {
     } else if (d == :scatter) {
       // RANDOMIZE-OBJECTS: the lamp to the stair, wherever it lies (Zork's
       // CURRENT-LAMP), the key home if the death was in its country, the
-      // rest to one of the rooms on the way in (DEAD-OBJ-LOCS, less the
-      // Tight Squeeze, which is the third quarter's). A lamp in these hands
+      // rest to one of the rooms on the way in (DEAD-OBJ-LOCS: the four
+      // between the stair and the lake, and the three east of the
+      // junction, the Tight Squeeze among them). A lamp in these hands
       // is moved by them, since nothing in a person's hands reaches past
       // them; one lying in a room hears the broadcast and goes itself; one
       // at the bottom of the ocean is past hearing.
@@ -1441,6 +1442,10 @@ kind Adventurer is sprout.Visitor {
         if (t.is(Thing)) {
           if (several && self.holds(t)) { }
           else if (self.holds(t)) { say "You already have that!" }
+          // ALL means what is in the open, as Zork's does: it never reaches
+          // into the vial for the potion, which only a hand that names it
+          // wastes (round 8's P4).
+          else if (several && t.is(Potion)) { }
           // The potion, reached for (POTION-F): it goes to the air.
           else if (t.is(Potion)) {
             say "{if several}{t.short}: {/if}Nothing seems to come out, although the sweet smell disappears from the vial, seeming to permeate the air briefly before fading entirely."
@@ -1469,7 +1474,7 @@ kind Adventurer is sprout.Visitor {
           else if (t.is(ShinyObject)) {
             if (self.count(Amulet) > 0) { say "{if several}{t.short}: {/if}{t.no_take}" }
             else if (random(2) == 0) {
-              say "{if several}{t.short}: {/if}You reach the shiny object. It is a simple golden amulet!"
+              say "{if several}{t.short}: {/if}You reach the shiny object. It is a simple golden amulet! You are now wearing the golden amulet, on its chain, round your neck."
               spawn Amulet in self
               send t :taken
             }
@@ -1525,7 +1530,10 @@ kind Adventurer is sprout.Visitor {
       let several = target.count > 1
       self.set(:beam_done, false)
       each t of target {
-        if (t.is(Potion)) {
+        // ALL means what is in the hands and not what is in the vial in
+        // them: the potion goes to the air only when it is named.
+        if (several && !self.holds(t)) { }
+        else if (t.is(Potion)) {
           say "{if several}{t.short}: {/if}Nothing seems to come out, although the sweet smell disappears from the vial, seeming to permeate the air briefly before fading entirely."
           send t :consume
         }
@@ -1653,6 +1661,31 @@ kind Adventurer is sprout.Visitor {
         "Royal Puzzle Exit Fee Paid
               Item Confiscated"
     {/verbatim}
+  }
+
+  // Poured on something (V-POUR-ON): what is poured is in these hands,
+  // which nothing in the room reaches, so the hand does the pouring. The
+  // vial's content goes to the air, by the vial's name or its own, and
+  // the line and the state agree.
+  as actor for pour_on {
+    do {
+      if (item.is(Vial)) {
+        if (item.count(Potion) == 0) { say "The vial is empty." }
+        else if (!item.get(:open)) { say "You'll have to open the vial first." }
+        else {
+          each p: Potion in item { send p :consume }
+          if (target.is(Thing)) { say "It spills onto the {target.short} and vanishes, and the sweet smell with it; the vial is light now, and empty." }
+          else { say "It spills out and vanishes, and the sweet smell with it; the vial is light now, and empty." }
+        }
+      }
+      else if (item.is(Potion)) {
+        send item :consume
+        if (target.is(Thing)) { say "It spills onto the {target.short} and vanishes, and the sweet smell with it; the vial is light now, and empty." }
+        else { say "It spills out and vanishes, and the sweet smell with it; the vial is light now, and empty." }
+      }
+      else if (item.is(Thing)) { say "You can't pour the {item.short}." }
+      else { say "You can't pour that." }
+    }
   }
 
   as actor for put_on {
@@ -2009,6 +2042,9 @@ kind Adventurer is sprout.Visitor {
         else if (st == :returned) { say "\"Hello,\" the man bellows down. \"Grab onto the rope!\"" }
         else { say "{one of}Hello.{or}Good day.{or}Nice weather we've been having lately.{or}Goodbye.{/one of}" }
       }
+      // At the top of the cliff, before he has shown himself, a hello is
+      // for the something among the trees, and it answers as it does.
+      else if (here.is(CliffTop) && underground_caverns_3.get(:man_stage) == :unmet) { say "\"Hello?\" you say to the trees. Nobody answers; among the trunks, something that is not a tree slips back a little further, and goes on keeping very still. There seems to be nobody there, but it's hard to tell." }
       else { say "{one of}Hello.{or}Good day.{or}Nice weather we've been having lately.{or}Goodbye.{/one of}" }
     }
   }
@@ -2043,7 +2079,7 @@ kind Adventurer is sprout.Visitor {
   // hears every call that is nearly the words: the ship holds, once.
   as actor for yell {
     do {
-      if (here.is(PuzzleSquare)) { say "The walls take the shout and give nothing back, and nobody comes; the note at the entrance said as much. If you pray enough, it is said down here, your prayers may be answered." }
+      if (here.is(PuzzleSquare)) { say "The walls take the shout and give nothing back, and nobody comes; the note at the entrance said as much. {if self.count(LoreBook) > 0}There is the steel door in the far south-east of the Puzzle, and the slot beside it that opens it, and its fee is the book you are carrying. {else}There is the steel door in the far south-east of the Puzzle, and the slot beside it, and the slot's fee, if you have it. {/if}And failing that: if you pray enough, it is said down here, your prayers may be answered, at the usual price." }
       else
       if (here.is(FlatheadOcean)) {
         if (self.get(:ship_visible)) {
@@ -2100,6 +2136,7 @@ kind Adventurer is sprout.Visitor {
         else if (st == :returned) { say "\"Your friend with the rope,\" the man bellows. \"Grab onto it!\"" }
         else { say "Nobody, now. Whoever was at the top of the cliff has gone, and taken the chest with him." }
       }
+      else if (here.is(CliffTop) && underground_caverns_3.get(:man_stage) == :unmet) { say "Nobody answers. Among the trees, something that is not a tree keeps very still, and keeps on keeping it; there seems to be nobody there, but it's hard to tell." }
       else { say "Nobody answers, which, down here, is the answer you were hoping for." }
     }
   }

@@ -1032,14 +1032,26 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
 - **Wrote instead:** `hint` ("hint", "hints", "help me", "clue", "what
   now", "what should i do", "i need help", "give me a hint"), answered
   with one paragraph in Zork's voice; the walkthrough runs it in the
-  first puzzle square. `help` is left to the engine, and a test that ran
-  it could only record the fault, so none does. For
+  first puzzle square. And, found after the round-7 revision: the verb
+  is the engine's, but its line is not. `help` is one of the engine
+  lines a world may replace (Prose › Engine lines), given `readings`, a
+  set, and a passage loop binds `$index`; so the world's `help` passage
+  (underground_caverns_3.sprout) says the usual words in Zork's voice
+  and then the first two dozen readings in reach, `{if $index <= 24}`,
+  and stops, and the output is bounded whatever is in range. `tests/help.json`
+  runs `help` and `?` at the Endless Stair empty-handed, with the lamp,
+  and in the dark; the walkthrough runs it in the first puzzle square
+  with a full inventory, with `forbid: ["error"]`. What is lost: the
+  readings a world cannot choose among, so the two dozen are whichever
+  the engine builds first ("look in lurking grue" before "turn on lamp"),
+  and a visitor who wants the rest has no second page. For
   overstory-social/sprout: the engine's `help` should bound or summarise
   its own output (the verbs alone, or the first screenful, or the
-  readings of what the visitor carries left out) rather than fault; and
-  a world should be able to answer `help` itself, as it may answer
-  `take`. Until then, "No fault in any run" cannot be promised to a
-  visitor who types `help`.
+  readings of what the visitor carries left out) rather than fault, and
+  its default `help` line should not be the one engine line whose
+  default can fault a turn; and a world should be able to answer `help`
+  itself, as it may answer `take`, or at least order the readings it is
+  given.
 - **Spec:** Verbs › Engine verbs; Limits › Runtime budgets.
 
 ### 57. A verb typed by a kind answers "can't see" to a thing in plain view
@@ -1205,6 +1217,63 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   remainder after a line that was answered should not add an
   unrecognised notice, and a remainder should be refused or read, never
   dropped.
+
+## Round 9: the revision after round 8
+
+### 66. `all` in a carried role reaches into an open container the visitor carries
+
+- **Wanted:** Zork's ALL: `drop all` and `take all` mean what is in the
+  hands and what lies in the open, never the contents of a held
+  container. Round 8's P4: `drop all` at the Lake Shore, with the vial
+  open, bound the potion inside it and spilled it, on the shore whose
+  own text had just told the visitor to leave everything in their hands
+  there.
+- **Wrote instead:** the world's `take` and `drop` pass over the potion
+  when the set has more than one thing in it (`several && t.is(Potion)`,
+  `several && !self.holds(t)`), so only a hand that names the liquid
+  wastes it. The spec's rule is the engine's and cannot be narrowed from
+  a world: a carried role "is filled only by what the actor carries, in
+  their hands or inside something they carry, at any depth their range
+  reaches", and `all` in it "takes only what is carried", which includes
+  the depth. For overstory-social/sprout: `all` in a carried role, and
+  in a set role whose actor moves its things elsewhere, should bind what
+  is held directly unless narrowed with `from` or `in`; a named thing
+  inside a held container should still be reachable by name.
+- **Spec:** Verbs › Carried roles; Verbs › Sequences, again and all.
+
+### 67. A thing in the room cannot `send` to a thing in the pourer's hands
+
+- **Wanted:** `pour vial on rock`, answered by the rock in Zork's words
+  and the potion consumed. Round 8's P5: the rock's `as target for
+  pour_on` said the line and sent `:consume` to `item`, and the send
+  reached nothing, since what the actor carries is out of a room thing's
+  range; the prose and the state disagreed.
+- **Wrote instead:** the pouring is the actor's (`as actor for pour_on`
+  in adventurer.sprout), whose range covers its own hands and the
+  transparent vial in them; the Thing default for the target is silent.
+  The same shape as 13 and 59: whatever must change a thing in the hands
+  is done by the hands.
+- **Spec:** Objects › Range; Verbs › Sight into the hands.
+
+### 68. Whether the Royal Puzzle is still solvable is not a thing a push can ask
+
+- **Wanted:** a warning, on the push that makes the Royal Puzzle
+  unwinnable, that it has. Round 8's P8: explorer-1-opus's grid was
+  replayed in a solver outside the world, and it went past saving at the
+  run's turn 291, when the ladder on the west wall (the wrong one) was
+  pushed north from the fifth row into the west column; the good ladder
+  was never touched, so the past-saving line, which reads only the good
+  ladder's dead squares, never fired, and the visitor spent a life on
+  prayer while holding the book that pays the slot.
+- **Wrote instead:** the shout in the puzzle, and the past-saving line,
+  name the steel door, the slot and its fee, the book, before prayer; so
+  a held book is offered as the cheaper way out. A general check is a
+  search over the eight movable walls and the visitor's position
+  (millions of states from the start), which no handler can run in a
+  turn's budget and no property can hold the table of; and the puzzle
+  has no restore to undo a push with, which is the original's answer.
+  Kept as the original's trap, told at the shout.
+- **Spec:** Limits › Runtime budgets.
 
 ## What all three worlds copy
 

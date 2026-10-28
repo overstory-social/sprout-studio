@@ -70,6 +70,7 @@ kind CliffMan is Creature, sprout.Actor, Guise, Fixed, Touchable {
       }
       self.set(:unseen, false)
       tell target "The chest, open and empty, is at your feet."
+      tell target "The staff is worn smooth to a hand that was not his and is not yours; it is the kind of staff a silver-haired old man would lean on, and you have seen such a man, lately, in a dream, who said to seek him."
     }
   }
   // Killed with the sword (MAN-F): he dies without ceremony, and the

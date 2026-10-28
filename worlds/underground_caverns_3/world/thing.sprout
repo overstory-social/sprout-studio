@@ -100,14 +100,22 @@ kind Thing {
   as target for leap_at default { do { say "{one of}Very good. Now you can go to the second grade.{or}Are you enjoying yourself?{or}Wheeeeeeeeee!!!!!{or}Do you expect me to applaud?{/one of}" } }
   as target for unlock default { do { say "It doesn't seem to work." } }
   as surface for put_on default { do { say "There's no good surface on the {self.short}." } }
-  as target for pour_on default { do { say "It spills onto the {self.short} and vanishes."  send item :consume } }
+  // Poured on: what is poured is in the pourer's hands, which nothing in
+  // the room reaches, so the pouring is the pourer's to do and say
+  // (adventurer.sprout).
+  as target for pour_on default { do { } }
   as target for dry default { do { say "The {self.short} is as dry as it is going to get, which is to say as dry as it was." } }
   as target for put_under default { do { say "There is no under to the {self.short} that anything could be put in." } }
   as target for exit_thing default { do { say "You are not in the {self.short}, so far as either of you can tell." } }
 }
 
+// What may fill `put`'s item: a thing that can be carried, the short pole
+// of the mirror box, and the visitor; so that `put` is never offered for
+// a wall, and `help` never lists one going into the vial.
+kind Placeable { }
+
 // A thing that can be carried off. Only these answer `take all`.
-kind Portable is Thing, Shakeable {
+kind Portable is Thing, Shakeable, Placeable {
   as target for shift { do { say "Moving the {self.short} reveals nothing." } }
   as target for shake { do { say "Shaken." } }
   as target for through {

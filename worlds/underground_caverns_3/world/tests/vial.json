@@ -1,0 +1,224 @@
+{
+  "about": "The vial and ALL (round 8's P4 and P5): the way to the ocean as the walkthrough has it, the ship brought in with the two words and the vial taken; then the vial opened and `drop all`, which drops the vial and never reaches the potion in it; `take all` again; and the vial poured on the sand, which empties it and says so.",
+  "steps": [
+    {
+      "arrive": "Marta"
+    },
+    {
+      "seed": 4
+    },
+    {
+      "as": "Marta",
+      "type": "take lamp"
+    },
+    {
+      "as": "Marta",
+      "type": "turn on lamp"
+    },
+    {
+      "as": "Marta",
+      "type": "s"
+    },
+    {
+      "as": "Marta",
+      "type": "s"
+    },
+    {
+      "as": "Marta",
+      "type": "sw"
+    },
+    {
+      "seed": 9
+    },
+    {
+      "as": "Marta",
+      "type": "wait"
+    },
+    {
+      "seed": 0
+    },
+    {
+      "as": "Marta",
+      "type": "attack figure with sword"
+    },
+    {
+      "seed": 0
+    },
+    {
+      "as": "Marta",
+      "type": "attack figure with sword"
+    },
+    {
+      "seed": 0
+    },
+    {
+      "as": "Marta",
+      "type": "attack figure with sword"
+    },
+    {
+      "seed": 0
+    },
+    {
+      "as": "Marta",
+      "type": "attack figure with sword"
+    },
+    {
+      "seed": 0
+    },
+    {
+      "as": "Marta",
+      "type": "take hood"
+    },
+    {
+      "as": "Marta",
+      "type": "take cloak"
+    },
+    {
+      "as": "Marta",
+      "type": "i"
+    },
+    {
+      "as": "Marta",
+      "type": "w"
+    },
+    {
+      "as": "Marta",
+      "type": "w"
+    },
+    {
+      "as": "Marta",
+      "type": "down"
+    },
+    {
+      "seed": 4
+    },
+    {
+      "as": "Marta",
+      "type": "hello sailor"
+    },
+    {
+      "seed": 0
+    },
+    {
+      "as": "Marta",
+      "type": "hello sailor"
+    },
+    {
+      "as": "Marta",
+      "type": "take vial"
+    },
+    {
+      "comment": "ALL means what is in the hands, not what is in the vial in them: with the vial open, drop all drops the vial and leaves the potion in it; and a pour on something in the room empties the vial and says so, the line and the state agreeing."
+    },
+    {
+      "as": "Marta",
+      "type": "open vial",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The vial is open. There is a sweet odor from within the vial, apparently coming from a heavy but invisible liquid."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "drop all",
+      "forbid": [
+        "warning"
+      ],
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "vial: Dropped."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "examine vial",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "It is a small, transparent vial which looks empty but is strangely heavy."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take vial",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "take all",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "lamp: Taken."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "look in vial",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The vial contains:"
+        },
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "A heavy but invisible liquid"
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "pour vial on sand",
+      "forbid": [
+        "warning"
+      ],
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "It spills onto the beach and vanishes, and the sweet smell with it; the vial is light now, and empty."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "examine vial",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "described",
+          "words": "It is a small, transparent vial which is light and empty."
+        }
+      ]
+    },
+    {
+      "as": "Marta",
+      "type": "pour vial on sand",
+      "expect": [
+        {
+          "reader": "Marta",
+          "kind": "said",
+          "words": "The vial is empty."
+        }
+      ]
+    }
+  ]
+}

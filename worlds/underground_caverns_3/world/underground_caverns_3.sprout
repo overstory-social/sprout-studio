@@ -404,4 +404,11 @@ world underground_caverns_3 is sprout.World {
   passage waited          { Time passes... }
   passage not_carrying    { You don't have {thing}. }
   passage too_heavy       { {if to.is(Adventurer)}{to.too_heavy}{else}{to} cannot hold {item}.{/if} }
+  // The engine's `help`, in the world's own words and bounded: the
+  // library's default lists every reading in range, which in a crowded
+  // place runs past what one turn may say. This says the usual words,
+  // then the first two dozen of what is in reach, and no more.
+  passage help {
+    Help, down here, is what you bring with you. The words that work are the usual ones: the compass, UP and DOWN to move; LOOK and EXAMINE to see; TAKE, DROP, OPEN, PUSH and whatever a thing seems to invite when it is looked at; INVENTORY for what you carry, SCORE for how you stand, DIAGNOSE for how you are, HINT for what passes for one down here. Of what is in reach just now, you might try: {for reading of readings}{if $index <= 24}{reading}{if $last}.{else if $index == 24}, and a good deal more that you can work out for yourself.{else}, {/if}{/if}{/for}
+  }
 }

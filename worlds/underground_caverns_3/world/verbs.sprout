@@ -7,7 +7,7 @@
 // in range; a verb with no role is kept for what works everywhere.
 import * as sprout from 'sprout'
 import {inventory, wait} from 'sprout'
-import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace, Openable, Readable, Searchable, Concealing, Food, Touchable, Shakeable, Squeezable, Greetable, Sprayable, Pushable, Dial, Knockable, Seatable, Orderable} from 'thing'
+import {Placeable, Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace, Openable, Readable, Searchable, Concealing, Food, Touchable, Shakeable, Squeezable, Greetable, Sprayable, Pushable, Dial, Knockable, Seatable, Orderable} from 'thing'
 
 // Zork III wears a thing by taking it (V-WEAR performs TAKE), so "wear"
 // and "put on" are phrases of `take`, and a worn thing is a held one.
@@ -47,7 +47,7 @@ verb drop {
   "discard [target]"  "drop [target] here"  "put down [target] here"  "leave [target]"
 }
 verb put {
-  role item
+  role item: Placeable
   role container: Receptacle
   "put [item] in [container]"  "put [item] into [container]"  "place [item] in [container]"
   "insert [item] in [container]"  "insert [item] into [container]"  "stuff [item] in [container]"

@@ -19,7 +19,7 @@
 // goes by way of a landing that the one leaving is carried on from, since
 // an exit's destination is written in source and the box's are not.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Portable, Fixed, Creature, Touchable, Openable, Receptacle, Trace, Concealing} from 'thing'
+import {Thing, Scenery, Portable, Fixed, Creature, Touchable, Openable, Receptacle, Trace, Concealing, Placeable} from 'thing'
 import {Room, Floor, Ceiling} from 'room'
 import {Adventurer} from 'adventurer'
 import {Stairs} from 'way_in'
@@ -50,10 +50,10 @@ kind Hallway is Room {
   passage hall_para { This is a part of the long hallway. The east and west walls are dressed stone. In the center of the hall is a shallow stone channel. In the center of the room the channel widens into a large hole around which is engraved a compass rose. }
   passage local default { {if false}.{/if} }
   passage box_north {
-    {if underground_caverns_3.get(:mloc) == self.get(:kn)}{if underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180}The north side of the room is divided by a wooden wall into small hallways to the northeast and northwest.{else}{if underground_caverns_3.get(:mdir) > 180}{if underground_caverns_3.get(:mr1)}A large mirror fills the north side of the hallway.{else}A large panel fills the north side of the hallway.{/if}{if underground_caverns_3.get(:mirror_open)} {if underground_caverns_3.get(:mr1)}The mirror is mounted on a panel which has been opened outward.{else}The panel has been opened outward.{/if}{/if}{else}{if underground_caverns_3.get(:mr2)}A large mirror fills the north side of the hallway.{else}A large panel fills the north side of the hallway.{/if}{/if}{/if}{/if}
+    {if underground_caverns_3.get(:mloc) == self.get(:kn)}{if underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180}The north side of the room is divided by a wooden wall into small hallways to the northeast and northwest.{if self.get(:kn) == 4} They run on north between the Guardians' pedestals, one on each side of the structure, in plain view of both statues.{/if}{else}{if underground_caverns_3.get(:mdir) > 180}{if underground_caverns_3.get(:mr1)}A large mirror fills the north side of the hallway.{else}A large panel fills the north side of the hallway.{/if}{if underground_caverns_3.get(:mirror_open)} {if underground_caverns_3.get(:mr1)}The mirror is mounted on a panel which has been opened outward.{else}The panel has been opened outward.{/if}{/if}{else}{if underground_caverns_3.get(:mr2)}A large mirror fills the north side of the hallway.{else}A large panel fills the north side of the hallway.{/if}{/if}{/if}{/if}
   }
   passage box_south {
-    {if underground_caverns_3.get(:mloc) == self.get(:ks)}{if underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180}The south side of the room is divided by a wooden wall into small hallways to the southeast and southwest.{else}{if underground_caverns_3.get(:mdir) < 180}{if underground_caverns_3.get(:mr1)}A large mirror fills the south side of the hallway.{else}A large panel fills the south side of the hallway.{/if}{if underground_caverns_3.get(:mirror_open)} {if underground_caverns_3.get(:mr1)}The mirror is mounted on a panel which has been opened outward.{else}The panel has been opened outward.{/if}{/if}{else}{if underground_caverns_3.get(:mr2)}A large mirror fills the south side of the hallway.{else}A large panel fills the south side of the hallway.{/if}{/if}{/if}{/if}
+    {if underground_caverns_3.get(:mloc) == self.get(:ks)}{if underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180}The south side of the room is divided by a wooden wall into small hallways to the southeast and southwest.{if self.get(:ks) == 4} They run on south between the Guardians' pedestals, one on each side of the structure, in plain view of both statues.{/if}{else}{if underground_caverns_3.get(:mdir) < 180}{if underground_caverns_3.get(:mr1)}A large mirror fills the south side of the hallway.{else}A large panel fills the south side of the hallway.{/if}{if underground_caverns_3.get(:mirror_open)} {if underground_caverns_3.get(:mr1)}The mirror is mounted on a panel which has been opened outward.{else}The panel has been opened outward.{/if}{/if}{else}{if underground_caverns_3.get(:mr2)}A large mirror fills the south side of the hallway.{else}A large panel fills the south side of the hallway.{/if}{/if}{/if}{/if}
   }
   passage continues {
     {if !self.get(:ntell) && underground_caverns_3.get(:mloc) != self.get(:kn) && !self.get(:stell) && underground_caverns_3.get(:mloc) != self.get(:ks)}The corridor continues north and south.{else if !self.get(:ntell) && underground_caverns_3.get(:mloc) != self.get(:kn)}The corridor continues north.{else if !self.get(:stell) && underground_caverns_3.get(:mloc) != self.get(:ks)}The corridor continues south.{/if}
@@ -150,8 +150,9 @@ kind Guardians is Scenery, Creature {
   passage a_short { the Guardians of Zork }
   describe {
     if (here.is(MirrorBox)) { text "You can't see them from here." }
-    else { text "The Guardians are quite impressive. I wouldn't get in their way if I were you! They are portrayed as heavily armored warriors clasping formidable bludgeons, and they stand with the stillness of things that have never yet had to move twice; the bludgeons are raised a little, as if the sculptor had been asked to show them in the moment before, and had." }
+    else { text looked_at }
   }
+  passage looked_at { The Guardians are quite impressive. I wouldn't get in their way if I were you! They are portrayed as heavily armored warriors clasping formidable bludgeons, and they stand with the stillness of things that have never yet had to move twice; the bludgeons are raised a little, as if the sculptor had been asked to show them in the moment before, and had. Their eyes are open, and the eyes are the point of them: they strike, it is said, at whatever they see pass between them, and at nothing they do not see; and nobody has yet reported what they do about a visitor they cannot see, there having been, so far, no such visitor. }
   passage no_take { They are stone, and larger than you, and they would take it as an approach. }
   as target for talk { do { say "The statues are impassive." } }
   as target for greet { do { say "The statues are impassive." } }
@@ -183,19 +184,39 @@ kind Channel is Scenery, Receptacle {
 
 // The wooden wall of the box, seen from a hallway the box stands long-ways
 // beside (WOODEN-WALL, WOODEN-WALL-F).
-kind WoodenWall is Scenery {
+kind WoodenWall is Scenery, Openable {
   grammar { name "wooden wall"  nouns "structure", "box"  adjectives "wooden", "wood", "large" }
   passage short { wooden wall }
   :seen_here false
+  passage no_door { There is no door in this end of it, and no way in from here: the structure is entered by the mirror on its long side, which the red button in the room at the foot of the stairs opens, and from nowhere else. }
   describe {
     if (here.is(Hallway)) {
       if ((underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180) && (underground_caverns_3.get(:mloc) == here.get(:kn) || underground_caverns_3.get(:mloc) == here.get(:ks))) {
-        text "The end of a large wooden structure, standing in the hallway with its long sides toward the walls, so that there is room to pass on either side of it and none to pass through. The wood is carved and polished, and the end facing you is a panel of a single plank, with no handle and no hinge that you can find."
+        text "The end of a large wooden structure, standing in the hallway with its long sides toward the walls, so that there is room to pass on either side of it and none to pass through. The wood is carved and polished, and the end facing you is a panel of a single plank, with no handle and no hinge that you can find. {self.no_door}"
       }
       else { text "You can't see any wooden wall here." }
     }
     else { text "You can't see any wooden wall here." }
   }
+  as target for through {
+    do {
+      self.set(:seen_here, false)
+      if (here.is(Hallway)) {
+        if ((underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180) && (underground_caverns_3.get(:mloc) == here.get(:kn) || underground_caverns_3.get(:mloc) == here.get(:ks))) { self.set(:seen_here, true) }
+      }
+      if (self.get(:seen_here)) { say "You hit your head against the wooden wall as you attempt this feat. {self.no_door}" } else { say "You can't see any wooden wall here." }
+    }
+  }
+  as target for open {
+    do {
+      self.set(:seen_here, false)
+      if (here.is(Hallway)) {
+        if ((underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180) && (underground_caverns_3.get(:mloc) == here.get(:kn) || underground_caverns_3.get(:mloc) == here.get(:ks))) { self.set(:seen_here, true) }
+      }
+      if (self.get(:seen_here)) { say "You can't open the wooden wall. {self.no_door}" } else { say "You can't see any wooden wall here." }
+    }
+  }
+  as target for close { do { say "It is as closed as a wall can be." } }
   as target for shift {
     do {
       self.set(:seen_here, false)
@@ -904,7 +925,7 @@ kind MirrorBox is sprout.Place {
   grammar { article none }
   passage closed_box { You are inside a closed box! }
   passage wall_there { There's a wall there. }
-  passage hit_panels { You would hit one of the panels. }
+  passage hit_panels { You would hit one of the panels.{if underground_caverns_3.get(:wood_open)} The pine door stands open to the {self.pine_dir}, and that is the way out through it.{/if}{if underground_caverns_3.get(:mirror_open)} The mirror stands open to the {self.mirror_dir}, and that is the way out through it.{/if} }
   describe { text full }
   passage full {
     Inside Mirror
@@ -921,12 +942,16 @@ kind MirrorBox is sprout.Place {
 
     The long pole at the center of the bar extends from the ceiling through the bar to the circular area in the stone channel. This bottom end of the pole has a T-bar a bit less than two feet long attached to it, and on the T-bar is carved an arrow. The arrow and T-bar are pointing {self.arrow}.{if underground_caverns_3.get(:wood_open)}
 
-    The pine panel has been opened outward.{/if}{if underground_caverns_3.get(:mirror_open)}
+    The pine panel has been opened outward, to the {self.pine_dir}; the hallway shows through it, and sees in through it.{/if}{if underground_caverns_3.get(:mirror_open)}
 
     The mirror on the entrance side stands open, and the hallway shows through it.{/if}
 
     {self.objects}
   }
+  // The pine door is the short wall opposite the arrow, and the mirror
+  // the long wall on the entrance side, a quarter-turn widdershins of it.
+  passage pine_dir { {if underground_caverns_3.get(:mdir) == 0}south{else if underground_caverns_3.get(:mdir) == 45}southwest{else if underground_caverns_3.get(:mdir) == 90}west{else if underground_caverns_3.get(:mdir) == 135}northwest{else if underground_caverns_3.get(:mdir) == 180}north{else if underground_caverns_3.get(:mdir) == 225}northeast{else if underground_caverns_3.get(:mdir) == 270}east{else}southeast{/if} }
+  passage mirror_dir { {if underground_caverns_3.get(:mdir) == 0}west{else if underground_caverns_3.get(:mdir) == 45}northwest{else if underground_caverns_3.get(:mdir) == 90}north{else if underground_caverns_3.get(:mdir) == 135}northeast{else if underground_caverns_3.get(:mdir) == 180}east{else if underground_caverns_3.get(:mdir) == 225}southeast{else if underground_caverns_3.get(:mdir) == 270}south{else}southwest{/if} }
   passage arrow { {if underground_caverns_3.get(:mdir) == 0}north{else if underground_caverns_3.get(:mdir) == 45}northeast{else if underground_caverns_3.get(:mdir) == 90}east{else if underground_caverns_3.get(:mdir) == 135}southeast{else if underground_caverns_3.get(:mdir) == 180}south{else if underground_caverns_3.get(:mdir) == 225}southwest{else if underground_caverns_3.get(:mdir) == 270}west{else}northwest{/if} }
   passage objects {
     {for t: Thing in self}{if !t.get(:ndesc)}
@@ -1056,12 +1081,13 @@ kind BoxPanel is Scenery, Touchable, Openable {
   :dying false
   describe {
     if (self.get(:which) == :mahogany) { text "A short wall of mahogany, dark and close-grained and polished to a glow, to your left as you face away from the entrance. It is the wall the arrow points at, and from the look of the wear on it, the one that gets pushed." }
-    else if (self.get(:which) == :pine) { text "A short wall of pine, pale against the mahogany opposite, to your right as you face away from the entrance. {if underground_caverns_3.get(:wood_open)}It stands open outward, on hinges along one edge, and the hallway shows through it.{else}There is a line down one edge of it that might be a hinge, and no handle.{/if}" }
+    else if (self.get(:which) == :pine) { text pine_looked_at }
     else if (self.get(:which) == :red) { text "The left half of the wall you face, painted red, a long wall; the paint is old and the red has gone the colour of brick. Pushing on it, you would think, would push the box round." }
     else if (self.get(:which) == :black) { text "The right half of the wall you face, painted black, a long wall; the black has stayed black, as black does. Pushing on it, you would think, would push the box round the other way." }
     else if (self.get(:which) == :white) { text "The white half of the entrance wall, opposite the red; it is the wall the mirror is mounted on, from the other side, and white so that you could tell it from the yellow." }
     else { text "The yellow half of the entrance wall, opposite the black; the mirror is on the far side of it, and the yellow is to tell it from the white, which is all a colour is for in here." }
   }
+  passage pine_looked_at { A short wall of pine, pale against the mahogany opposite, to your right as you face away from the entrance{if here.is(MirrorBox)}, which is to say on the {here.pine_dir} side of the box as it stands now{/if}. {if underground_caverns_3.get(:wood_open)}It stands open outward, on hinges along one edge, and the hallway shows through it; which is to say that the hallway sees in through it, and anything that watches the hallway sees whatever the box is carrying.{else}There is a line down one edge of it that might be a hinge, and no handle. It is the box's door, and a door the hallway would show through is a door the hallway could see through.{/if} }
   as target for close { do { say "You can't do that to the panel." } }
   as target for open {
     do {
@@ -1081,7 +1107,10 @@ kind BoxPanel is Scenery, Touchable, Openable {
             say "The Guardians awake, and in perfect unison, utterly destroy you with their stone bludgeons. Satisfied, they resume their posts."
             if (actor.is(Adventurer)) { send actor :die }
           }
-          else { send underground_caverns_3 :wood_set with true }
+          else {
+            send underground_caverns_3 :wood_set with true
+            say "{if here.is(MirrorBox)}It opens to the {here.pine_dir}, onto the hallway, which shows through the doorway and would see in through it as readily: while it stands open, whatever is in the box is in plain view of whatever is in the hall.{else}It opens onto the hallway, which shows through the doorway and would see in through it as readily.{/if}"
+          }
         }
       }
     }
@@ -1104,7 +1133,10 @@ kind BoxPanel is Scenery, Touchable, Openable {
             say "The Guardians awake, and in perfect unison, utterly destroy you with their stone bludgeons. Satisfied, they resume their posts."
             if (actor.is(Adventurer)) { send actor :die }
           }
-          else { send underground_caverns_3 :wood_set with true }
+          else {
+            send underground_caverns_3 :wood_set with true
+            say "{if here.is(MirrorBox)}It opens to the {here.pine_dir}, onto the hallway, which shows through the doorway and would see in through it as readily: while it stands open, whatever is in the box is in plain view of whatever is in the hall.{else}It opens onto the hallway, which shows through the doorway and would see in through it as readily.{/if}"
+          }
         }
       }
       // The slide (MENDS, MIRMOVE): along the channel, the way the arrow
@@ -1129,6 +1161,12 @@ kind BoxPanel is Scenery, Touchable, Openable {
               if (actor.is(Adventurer)) { send actor :die }
             }
           }
+          // A slide made with a door open, short of the Guardians: the
+          // open door is heard and felt, so that the next slide is made
+          // knowing it (round 8's P1).
+          else if (underground_caverns_3.get(:wood_open) && underground_caverns_3.get(:mirror_open)) { say "The open pine door swings and creaks on its hinges as the box moves, and the open mirror with it, and the hallway goes by in both gaps; the box is travelling with its two doors open, and anything in the hall that cared to look could look straight in." }
+          else if (underground_caverns_3.get(:wood_open)) { say "The open pine door swings and creaks on its hinges as the box moves, and a draught comes through it with the hallway going by in the gap; the box is travelling with its door open, and anything in the hall that cared to look could look straight in." }
+          else if (underground_caverns_3.get(:mirror_open)) { say "The open mirror swings a little on its hinge as the box moves, and the hallway goes by in the gap; the box is travelling with its door open, and anything in the hall that cared to look could look straight in." }
         }
       }
       // The turn (MPANELS): clockwise for red and yellow, the other way
@@ -1183,7 +1221,7 @@ kind BoxPanel is Scenery, Touchable, Openable {
 // The short pole (SHORT-POLE, SHORT-POLE-F): raised, it frees the box to
 // turn; dropped into the channel, it steadies the box's slide; dropped
 // into the hole at the second rose, it anchors the box where it began.
-kind ShortPole is Scenery, Touchable {
+kind ShortPole is Scenery, Touchable, Placeable {
   grammar { name "short pole"  nouns "pole", "post", "handgrip", "grip"  adjectives "short", "small", "hand" }
   passage short { short pole }
   describe { text "A pole through the left end of the bar, extending about a foot above it and ending in a hand grip, worn smooth. Below the bar it goes down to the floor{if underground_caverns_3.get(:poleup) == 0}, and into it{else if underground_caverns_3.get(:poleup) == 1}, and rests on it{else}, and stops a little above it, held where it is by friction{/if}. It is the kind of pole that is for pulling up and letting down, and it has been." }

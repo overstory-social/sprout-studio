@@ -543,11 +543,16 @@ What round 7's playtest, and the set-aside round 8, changed:
   tell" and a slip back among the trunks; `look among the trees` is an
   intent over `look_in`. It goes unseen the moment he shows himself, as
   the cue does.
-- **`hint` is the world's; `help` is the engine's** (P2, S1). The world
-  may not declare `help`, and the engine's listing faults where there is
-  much in range (friction 56); `hint` and its kin answer in one paragraph
-  of Zork's voice, and the walkthrough runs it in the first puzzle
-  square. No test runs `help`, since it could only record a fault.
+- **`hint` is the world's; `help` is the engine's, but its line is the
+  world's** (P2, S1). The world may not declare the verb `help`, and the
+  library's default listing faults where there is much in range
+  (friction 56); `hint` and its kin answer in one paragraph of Zork's
+  voice, and the walkthrough runs it in the first puzzle square. The
+  world replaces the engine's `help` line with its own: the hint's usual
+  words, then the first two dozen readings in reach and no more, so it
+  cannot overrun a turn anywhere. `tests/help.json` runs it at the stair,
+  and the walkthrough runs it in the puzzle square with a full inventory;
+  both forbid a fault.
 - **The cracked rock answers the verbs it invites** (P3): it composes
   `Shakeable`, `shake` takes a tool, `attack` has "strike [target] with
   [weapon]", and the examine line says the shake it waits for is the
@@ -638,6 +643,68 @@ Choices that depart from the original, in Q4: friction 65 (the wrong
 cell's heat and window, prayer in the puzzle, the Dungeon Master struck,
 the entrance's diagonals, the Guardians noticed on entering, one box for
 everyone).
+
+**Round 9 (the revision after round 8): all four quarters refined,
+nothing widened.** Nobody reached the Treasury in round 8; the two runs
+that went deep died in the mirror box or at the Guardians' feet, and what
+killed them was the original's death, unexplained. What the playtest
+changed:
+
+- **The open pine door is readable before it kills** (P1). The pine panel
+  examined names the compass side it stands on, read from the arrow as
+  the arrow is named, and says that a door the hallway shows through is a
+  door the hallway sees through; the line that opens it, where it does
+  not open into the Guardians' view, says which way it opened and that
+  the box's contents are in plain view of the hall while it stands open;
+  a slide made with a door open, short of the Guardians, has the door
+  creaking on its hinges and the hallway going by in the gap; and the
+  box's "You would hit one of the panels" says which way the open door
+  is. The deaths and their odds are the original's and untouched.
+- **A death in the box leaves the box where it died** (P2), as the
+  original does; there is no sending it home. What changed is the
+  reading: the stretch south of the statues, with the box long-ways in
+  theirs, says the small hallways run on between the Guardians'
+  pedestals in plain view of both; and the box's end wall, examined,
+  entered or opened from a hallway, says the structure is entered by the
+  mirror on its long side, which the red button opens, and from nowhere
+  else. The potion route is the way on from there, and the Guardians now
+  say as much.
+- **The Guardians say what they strike at** (P3): examined, they strike at
+  whatever they see pass between them and at nothing they do not see,
+  and nobody has yet reported what they do about a visitor they cannot
+  see. That is the riddle's other half; the vial's half is unchanged.
+- **ALL means what is in the hands** (P4): `take all` and `drop all` pass
+  over the potion, which the engine's `all` reaches through the open
+  vial; only a hand that names the liquid wastes it (friction 66).
+- **A pour on something in the room empties the vial** (P5): the pouring
+  is the pourer's, since nothing in the room reaches into the hands, and
+  the line and the state agree (friction 67).
+- **`put`'s item is typed** (P6) by `Placeable`, which what can be
+  carried, the short pole and the visitor compose, so `help` never offers
+  a wall going into the vial.
+- **The death line names every room the scatter uses** (P7): the ways in,
+  between the stair and the lake or in the passages east of the junction;
+  the list is the original's seven and unchanged.
+- **The puzzle's shout names the fee before the prayer** (P8): with the
+  book in hand it says the slot's fee is the book you are carrying, and
+  prayer comes after, at the usual price. The run's grid was replayed:
+  it was past saving from the push at its turn 291, which moved the
+  other ladder, the one on the west wall, north into the west column,
+  not the good ladder at all; the past-saving warning reads only the
+  good ladder's dead positions, and a general check is not a thing a
+  turn can do (friction 68). The puzzle keeps its trap; the fee is now
+  pointed at.
+- **The staff points at the man in the dream** (P9): examined, it is worn
+  to somebody else's hand, the kind a silver-haired old man would lean
+  on, the one who said to seek him; and the man's handing-over says so
+  too. The dream is as the brief fixes it.
+- **A hello at the top of the cliff** (P10), and "who is there", before the
+  man has shown himself, go to the something among the trees and are
+  answered as it answers; the yuks are kept for where nobody could be
+  listening.
+- **The amulet's take line ends with it round the neck** (P11).
+- **Kept as they are** (P12): the ledge's beats, the watcher, the duel's
+  turn to the hood.
 
 ## The arc
 

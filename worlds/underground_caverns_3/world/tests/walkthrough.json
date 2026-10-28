@@ -142,7 +142,7 @@
     ] },
     { "seed": 0 },
     { "as": "Marta", "type": "take shiny object", "expect": [
-      { "reader": "Marta", "kind": "said", "words": "You reach the shiny object. It is a simple golden amulet!" }
+      { "reader": "Marta", "kind": "said", "words": "You reach the shiny object. It is a simple golden amulet! You are now wearing the golden amulet, on its chain, round your neck." }
     ] },
     { "seed": 0 },
     { "as": "Marta", "type": "u", "expect": [
@@ -568,6 +568,8 @@
     { "as": "Marta", "type": "hint", "expect": [
       { "reader": "Marta", "kind": "said", "words": "Help, down here, is what you bring with you. The words that work are the usual ones: the compass, UP and DOWN to move; LOOK and EXAMINE to see; TAKE, DROP, OPEN, PUSH and whatever a thing seems to invite when it is looked at; INVENTORY for what you carry, SCORE for how you stand, DIAGNOSE for how you are. The old man said to seek him when you felt yourself worthy, and that is the only hint he gives, and he meant it." }
     ] },
+    { "comment": "The engine's help, in a puzzle square with a full inventory: the step is here so that it cannot fault, and what it lists is the world's bounded help line." },
+    { "as": "Marta", "type": "help", "forbid": ["error"] },
     { "as": "Marta", "type": "push south wall", "expect": [
       { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
       { "reader": "Marta", "kind": "told", "words": "The architecture of this region is getting complex, so that further descriptions will be diagrams of the immediate vicinity in a 3x3 grid. The walls here are rock, but of two different types - sandstone and marble. The following notations will be used:" },
