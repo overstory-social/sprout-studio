@@ -1,0 +1,1210 @@
+{
+  "about": "From the Endless Stair to the end of the third quarter: the lamp, the Land of Shadow and the hooded figure, the fight to its last point and the hood taken (the face beneath it), the cloak, the Flathead Ocean and the Viking ship hailed with the two words, the vial, the Lake Shore with the lamp left on it, the lake entered, the dive and the shiny thing in the sand that is the amulet, and the shore again with everything recovered (3 of 7); then the cliff and its waybread, the rope down to the Cliff Ledge (4 of 7), the man at the brink, the chest tied and lifted, the rope back and the haul to the top with the staff; the Engravings Room, the old man woken and fed, and the secret door opened; the lake crossed to the Western Shore and the Scenic Vista, the torch taken, the table touched (5 of 7) for Room 8 and the grue repellent and again for the Damp Passage where the torch is left; the repellent sprayed, the lake crossed to the Southern Shore, the grue lair climbed through, the strange key and the manhole cover, the aqueduct walked to the Water Slide and down to the Damp Passage before the earthquake, and the Lake Shore again with everything recovered; then the Tight Squeeze, the Crystal Grotto, the Royal Hall and the Great Door with the cleft the earthquake opened, the Museum Entrance and the Royal Puzzle, the first wall pushed (6 of 7), the book taken from its niche and the ladder walked under the hole and climbed out by; the Jewel Room and its plaque, the gold machine pushed to the Jewel Room, the dial set to 776 and the button pushed (7 of 7), the guards waited out in 776, the ring taken and hidden under the machine's seat, the machine ridden home to 948 and the ring found under its seat, and the museum's history changed: 7 of 7 potential, every point the game holds, and six of the seven things the old man carries.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. \"You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!\" The dream dissolves around you as his last words echo through the void...." },
+      { "reader": "Marta", "kind": "described", "words": "Endless Stair" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail." },
+      { "reader": "Marta", "kind": "described", "words": "Your old friend, the brass lantern, is at your feet." }
+    ] },
+    { "seed": 4 },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Junction" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the junction of a north-south passage and an east-west passage. To the north, you can make out the bottom of a stairway. The ways to the east and south are relatively cramped, but a wider trail leads to the west." },
+      { "reader": "Marta", "kind": "described", "words": "Standing before you is a great rock. Imbedded within it is an Elvish sword." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Creepy Crawl" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and quite creepy crawlway with passages leaving to the north, east, south, and southwest." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the eastern end of a dark, featureless landscape of shallow hills. Paths to the east and southeast reenter the rock." },
+      { "reader": "Marta", "kind": "described", "words": "A cloaked and hooded person, carrying a sword not unlike your own, is standing blocking the way to the northwest." },
+      { "reader": "Marta", "kind": "described", "words": "The hooded figure has a great deal of strength, perhaps matching your own." },
+      { "reader": "Marta", "kind": "said", "words": "Through the shadows, a cloaked and hooded figure appears before you, blocking the northwestern exit from the room and carrying a brightly glowing sword." },
+      { "reader": "Marta", "kind": "told", "words": "From nowhere, the sword from the junction appears in your hand, wildly glowing!" }
+    ] },
+    { "seed": 9 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "attack figure with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A good parry! Your sword wounds the hooded figure!" },
+      { "reader": "Marta", "kind": "said", "words": "The figure has a light wound which hasn't affected its seemingly great strength." },
+      { "reader": "Marta", "kind": "told", "words": "The hooded figure stabs nonchalantly with its sword and misses." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "attack figure with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A good parry! Your sword wounds the hooded figure!" },
+      { "reader": "Marta", "kind": "said", "words": "The figure has some wounds and is probably not capable of hindering your movement." },
+      { "reader": "Marta", "kind": "told", "words": "The hooded figure stabs nonchalantly with its sword and misses." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "attack figure with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A good parry! Your sword wounds the hooded figure!" },
+      { "reader": "Marta", "kind": "said", "words": "The figure is hurt, and its strength appears to be fading." },
+      { "reader": "Marta", "kind": "told", "words": "The hooded figure attempts a thrust, but its weakened state prevents hitting you." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "attack figure with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A quick stroke catches the hooded figure off guard! Blood trickles down the figure's arm!" },
+      { "reader": "Marta", "kind": "said", "words": "The figure appears to be badly hurt and defenseless." },
+      { "reader": "Marta", "kind": "said", "words": "It lowers its sword, and its head with it, and waits; the hood hangs within reach of your hand." },
+      { "reader": "Marta", "kind": "told", "words": "The hooded figure does not strike. It stands with its sword lowered and its head bowed, and the hood hangs within reach of your hand." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "take hood", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You slowly remove the hood from your badly wounded opponent and recoil in horror at the sight of your own face, weary and wounded. A faint smile comes to the lips and then the face starts to change, very slowly, into that of an old, wizened person. The image fades and with it the body of your hooded opponent. The cloak remains on the ground." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "as": "Marta", "type": "take cloak", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are now wearing the cloak." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "An Elvish sword" },
+      { "reader": "Marta", "kind": "said", "words": "A hood (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A cloak (being worn)" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and shadowy land. All around you are gentle hills and eerie shadows. Far above, shrouded in mist, you can barely make out the ceiling of the enormous cavern that spans this entire land." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a land of dark shadows and shallow hills, which stretch out in all directions. To the west, the land dips sharply." }
+    ] },
+    { "as": "Marta", "type": "down", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Flathead Ocean" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the shore of an amazing underground sea, the topic of many a legend among adventurers. Few were known to have arrived at this spot, and fewer to return. There is a heavy surf and a breeze is blowing onshore. The land rises steeply to the east and quicksand prevents movement to the south. A thick mist covers the ocean and extends over the hills to the east. A path heads north along the beach." }
+    ] },
+    { "seed": 4 },
+    { "as": "Marta", "type": "hello sailor", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Nothing happens yet." },
+      { "reader": "Marta", "kind": "said", "words": "Passing alongside the shore now is an old boat, reminiscent of an ancient Viking ship. Standing on the prow of the ship is an old and crusty sailor, peering out over the misty ocean. He has a hand cupped to one ear, turned toward the shore, as though he were waiting for somebody on it to say something to him; and the ship is not slowing down." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "hello sailor", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The seaman looks up and maneuvers the boat toward shore. He cries out \"I have waited three ages for someone to say those words and save me from sailing this endless ocean. Please accept this gift. You may find it useful!\" He throws something which falls near you in the sand, then sails off toward the west, singing a lively, but somewhat uncouth, sailor song." }
+    ] },
+    { "as": "Marta", "type": "take vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foggy Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dank passage filled with a wispy fog. A spooky passageway leads north and a wider path heads off to the south. To the west, the path leaves the rock and enters an eerie, shadowy land." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Lake Shore" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a wide cavern on the north shore of a small lake. Some polished stone steps lead to the southeast and a sheer rock face prevents any movement around the lake to the southwest. The cavern is dimly lit from above. The water has the look of a cold that would open your hands for you, and would not give back what fell out of them; everything in your hands goes to the bottom, not the light and the sword only but every last thing you carry, and whatever you cannot afford to lose there had better be left on the shore, which is lit, after its fashion, and will keep it. What you wear, it leaves you." },
+      { "reader": "Marta", "kind": "told", "words": "The light you carry throws your shadow on the water, which does not want it: a lamp goes under here, lit or dark, and comes up a dead one, and the shore is where it should be left, with everything else in your hands." }
+    ] },
+    { "as": "Marta", "type": "drop lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "drop sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "drop vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "enter lake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are nearly paralyzed by the icy waters as you swim into the center of the lake." },
+      { "reader": "Marta", "kind": "described", "words": "On the Lake" },
+      { "reader": "Marta", "kind": "described", "words": "You are floating on the surface of the lake. The water is ice cold and your ability to survive here for long is very questionable. A swim north puts you at your starting point. Conditions to the east are poor where the lake turns into swamp. The west and south shores are suitable for walking, however." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 3 of a possible 7, in 28 moves." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Underwater" },
+      { "reader": "Marta", "kind": "described", "words": "You are below the surface of the lake. It turns out that the lake is quite shallow and the bottom is only a few feet below you. Considering the frigid temperature of the water, you should probably not plan an extended stay. The lake bottom is sandy and a few hearty plants and algae live there." },
+      { "reader": "Marta", "kind": "said", "words": "You catch a brief glimpse of something shiny in the sand." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "take shiny object", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You reach the shiny object. It is a simple golden amulet! You are now wearing the golden amulet, on its chain, round your neck." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "On the Lake" },
+      { "reader": "Marta", "kind": "said", "words": "The icy waters are taking their toll. You will not be able to hold out much longer." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Lake Shore" },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here (providing light)." },
+      { "reader": "Marta", "kind": "described", "words": "There is an Elvish sword here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a vial here." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "take vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A hood (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A cloak (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A golden amulet (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "An Elvish sword" },
+      { "reader": "Marta", "kind": "said", "words": "A vial" }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 3 of a possible 7, in 36 moves." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foggy Room" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Creepy Crawl" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Junction" },
+      { "reader": "Marta", "kind": "described", "words": "Standing before you is a great rock." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Barren Area" },
+      { "reader": "Marta", "kind": "described", "words": "You are west of the junction, where the rock-bound passage widens out into a large, flat area. Although the land here is barren, you can see vegetation to the west. South of here is a mighty wall of stone, ancient and crumbling. To the southwest the wall has decayed enough to form an opening, through which seeps a thin mist. A trail dips sharply into rocky terrain to the northwest." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Cliff" },
+      { "reader": "Marta", "kind": "described", "words": "This is a remarkable spot in the dungeon. Perhaps two hundred feet above you is a gaping hole in the earth's surface through which pours bright sunshine! A few seedlings from the world above, nurtured by the sunlight and occasional rains, have grown into giant trees, making this a virtual oasis in the desert of the Underground Empire. To the west is a sheer precipice, dropping nearly fifty feet to jagged rocks below. The way south is barred by a forbidding stone wall, crumbling from age. There is a jagged opening in the wall to the southwest, through which leaks a fine mist. The land to the east looks lifeless and barren." },
+      { "reader": "Marta", "kind": "described", "words": "A rope is tied to one of the large trees here and is dangling over the side of the cliff, reaching down to the shelf below. Among the trees, unless you are mistaken, something that is not a tree is keeping very still." },
+      { "reader": "Marta", "kind": "described", "words": "It seems as if somebody has been here recently, as there is some fresh bread lying beneath one of the other trees." }
+    ] },
+    { "as": "Marta", "type": "take bread", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "climb down rope", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You take the rope in both hands and go down it, hand over hand, with the cliff face going by in front of your nose, to the shelf below." },
+      { "reader": "Marta", "kind": "described", "words": "Cliff Ledge" },
+      { "reader": "Marta", "kind": "described", "words": "This is a rock-strewn ledge near the base of a tall cliff. The bottom of the cliff is another fifteen feet below. You have little hope of climbing up the cliff face, but you might be able to scramble down from here (though it's doubtful you could return)." },
+      { "reader": "Marta", "kind": "described", "words": "A long piece of rope is dangling down from the top of the cliff and is within your reach." },
+      { "reader": "Marta", "kind": "described", "words": "A large chest, closed and locked, is lying among the boulders." },
+      { "reader": "Marta", "kind": "told", "words": "Far above you, at the brink of the cliff, something that is not a tree moves against the light, and the rope twitches once, as though somebody up there had a hand on it and had just taken it off." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 4 of a possible 7, in 43 moves." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "At the edge of the cliff above you, a man appears. He looks down at you and speaks. \"Hello, down there! You seem to have a problem. Maybe I can help you.\" He chuckles in an unsettling sort of way. \"Perhaps if you tied that chest to the end of the rope I might be able to drag it up for you. Then, I'll be more than happy to help you up!\" He laughs again." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "The man on the cliff clears his throat loudly. \"I don't mean to be rushing you, but I do have some pressing engagements....\"" }
+    ] },
+    { "as": "Marta", "type": "tie chest to rope", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The chest is now tied to the rope." },
+      { "reader": "Marta", "kind": "said", "words": "The man above you looks pleased. \"Now there's a good friend! Thank you very much, indeed!\" He pulls on the rope and the chest is lifted to the top of the cliff and out of sight. With a short laugh, he disappears. \"I'll be back in a short while!\" are his last words." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... Above you, the lock gives, and a lid goes back on a hinge that has not moved in a long time; and then a silence that is somebody looking. Nothing comes down the cliff yet." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... From the top of the cliff, a low whistle, of the kind a man gives at the sight of more than he was expecting. Nothing comes down the cliff." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... Above you, coins: counted, by the sound, one at a time, onto rock. The chest, it seems, had a good deal in it." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... The counting stops, and starts again from the beginning, by somebody who does not trust his own arithmetic. Nothing comes down the cliff yet." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... A pause above. Then footsteps, up there, going away from the brink, and the sound of things being gathered up. He is not gone; you can still hear him." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... Footsteps, going away from the brink and coming back to it, the way a man paces who is deciding something, and deciding it in his own favour." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... The footsteps come back to the brink and stop there. Nothing is said; somebody is looking down at you, and taking his time about it." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... Something scrapes on the rock at the top, where the rope is tied, and a coil of it shifts against the edge; he is not long now." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "A familiar voice calls down to you. \"Are you still there?\" he bellows with a coarse laugh. \"Well, then, grab onto the rope and we'll see what we can do.\" The rope drops to within your reach." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "The man appears impatient. \"Are you coming up then, or not?\"" }
+    ] },
+    { "as": "Marta", "type": "take rope", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You grab securely on to the rope." },
+      { "reader": "Marta", "kind": "told", "words": "The man starts to heave on the rope and within a few moments you arrive at the top of the cliff. The man removes the last few valuables from the chest and prepares to leave. \"You've been a good sport! Here, take this, for whatever good it is! I can't see that I'll be needing one!\" He hands you a plain wooden staff from the bottom of the chest and begins examining his valuables." },
+      { "reader": "Marta", "kind": "told", "words": "The chest, open and empty, is at your feet." },
+      { "reader": "Marta", "kind": "described", "words": "Cliff" },
+      { "reader": "Marta", "kind": "described", "words": "Your \"friend\" from the cliff is here, with a number of valuables under one arm, going through them with great attention." },
+      { "reader": "Marta", "kind": "described", "words": "There is a chest here, open and empty." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A hood (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A cloak (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A golden amulet (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "An Elvish sword" },
+      { "reader": "Marta", "kind": "said", "words": "A vial" },
+      { "reader": "Marta", "kind": "said", "words": "A piece of waybread" },
+      { "reader": "Marta", "kind": "said", "words": "A wooden staff" },
+      { "reader": "Marta", "kind": "said", "words": "Your \"friend\", moving quickly, dodges behind some trees and is lost from sight." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Barren Area" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Junction" },
+      { "reader": "Marta", "kind": "described", "words": "Standing before you is a great rock." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Damp Passage" },
+      { "reader": "Marta", "kind": "described", "words": "This is a particularly damp spot even by dungeon standards. You can see the junction to the west, and two similar passages to the east and northeast. A wide stone channel steeply descends into the room from the south. It is covered with slippery moss and lichen. The channel crosses the room, but the opening where it once continued north is now blocked by rubble." }
+    ] },
+    { "seed": 3 },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Engravings Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a room with passages heading southwest and southeast. The north wall is ornately carved, filled with strange runes and writing in an unfamiliar language." },
+      { "reader": "Marta", "kind": "described", "words": "An old and wizened man is huddled, asleep, in the corner. He is snoring loudly, and looks quite weak and frail." }
+    ] },
+    { "as": "Marta", "type": "wake man", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The old man is roused to consciousness. He peers at you through eyes which appear much younger and stronger than his frail body and waits, as if expecting something to happen." }
+    ] },
+    { "as": "Marta", "type": "give bread to man", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "He looks up at you and takes the waybread. Slowly, he eats the bread and pauses when he is finished. He starts to speak: \"Perhaps what you seek is through there!\" He points at the carved wall to the north, where you now notice the bare outline of a secret door. When you turn back, the old man is gone!" }
+    ] },
+    { "as": "Marta", "type": "open door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The massive stone door opens noiselessly. Beyond the secret door are dark, forbidding stairs leading down to a passage below. Flickering torchlight illuminates the passage." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Engravings Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a room with passages heading southwest and southeast. The north wall is ornately carved, filled with strange runes and writing in an unfamiliar language." },
+      { "reader": "Marta", "kind": "described", "words": "Beyond the secret door are dark, forbidding stairs leading down to a passage below. Flickering torchlight illuminates the passage." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Damp Passage" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Junction" },
+      { "reader": "Marta", "kind": "described", "words": "Standing before you is a great rock." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Creepy Crawl" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foggy Room" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Lake Shore" },
+      { "reader": "Marta", "kind": "told", "words": "The light you carry throws your shadow on the water, which does not want it: a lamp goes under here, lit or dark, and comes up a dead one, and the shore is where it should be left, with everything else in your hands." }
+    ] },
+    { "as": "Marta", "type": "drop lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "drop sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "drop vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "drop staff", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "enter lake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are nearly paralyzed by the icy waters as you swim into the center of the lake." },
+      { "reader": "Marta", "kind": "described", "words": "On the Lake" }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Western Shore" },
+      { "reader": "Marta", "kind": "described", "words": "You are on the western shore of the lake. The ground here is quite hard, but a few sickly reeds manage to grow near the water's edge. The only path leads into the rock to the south. The water is the same water as on the north shore, as cold and as still, and it will open your hands as readily from this side; a flame least of all comes out of it burning. No light crosses this lake alight, from either shore; whatever is to be had on the far side in the dark will have to be got some other way than by carrying a light to it. What you cannot lose to the bottom had better be left on the hard ground here, which is lit, after its fashion, from the south." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Scenic Vista" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a small chamber carved in the rock, with the sole exit to the north. Mounted on one wall is a table labelled \"Scenic Vista,\" whose featureless surface is angled toward you. One might believe that the table was used to indicate points of interest in the view from this spot, like those found in many parks. On the other hand, your surroundings are far from spacious and by no stretch of the imagination could this spot be considered scenic. An indicator above the table reads \"I\"." },
+      { "reader": "Marta", "kind": "described", "words": "Mounted on one wall is a flaming torch, which fills the room with a flickering light." }
+    ] },
+    { "as": "Marta", "type": "take torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... The image under the surface is stirring now, going thin at the edges; the indicator will not be long." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "told", "words": "The indicator above the table flickers briefly, then changes to \"II\"." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... On the table, under the pale surface, the image lies quiet, the way a thing does that has just arrived." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over." }
+    ] },
+    { "as": "Marta", "type": "touch table", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You touch the table and are instantly transported to another place!" },
+      { "reader": "Marta", "kind": "described", "words": "Room 8" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small chamber carved out of the rock at the end of a short crawl. On the wall is crudely chiseled the number \"8\". The only apparent exit, to the east, seems to be a blur and a loud, whirring sound resounds through the rock." },
+      { "reader": "Marta", "kind": "described", "words": "A spray can is in the corner. In large type is the legend \"Frobozz Magic Grue Repellent.\"" }
+    ] },
+    { "as": "Marta", "type": "take can", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "You suddenly find yourself back in the viewing room!" },
+      { "reader": "Marta", "kind": "described", "words": "Scenic Vista" }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over." }
+    ] },
+    { "as": "Marta", "type": "touch table", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You touch the table and are instantly transported to another place!" },
+      { "reader": "Marta", "kind": "described", "words": "Damp Passage" }
+    ] },
+    { "as": "Marta", "type": "drop torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "You suddenly find yourself back in the viewing room!" },
+      { "reader": "Marta", "kind": "described", "words": "Scenic Vista" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Western Shore" }
+    ] },
+    { "as": "Marta", "type": "spray can on me", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The spray smells like a mixture of old socks and burning rubber. If I were a grue I'd sure stay clear!" }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "enter lake", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The shock of entering the frigid water has made you drop all your possessions into the lake! Everything you were carrying, that is: what you wear stays with you, and the rest is on the bottom." },
+      { "reader": "Marta", "kind": "described", "words": "On the Lake" }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The smell is holding, for the moment: it is good for about as long as the climb takes, if you do not dawdle on the beach." },
+      { "reader": "Marta", "kind": "described", "words": "Southern Shore" },
+      { "reader": "Marta", "kind": "described", "words": "You are on the south shore of the lake. Rock formations prevent movement to the west and thickening swamp to the east makes the going all but impossible. To the south, where the beach meets a rock formation, you can make out a dark passage sloping steeply upward into the rock. The dark in it is not the ordinary kind that a lamp answers, and no lamp comes across the lake lit in any case; what keeps a grue off a person is sold in a can, and the can is somewhere a light has already been." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You have moved into a dark place, and a thicker dark than the usual kind: it has a smell, and a sound in it of breathing, and more than one of each. Whatever is said of grues elsewhere, here they are not a likelihood." },
+      { "reader": "Marta", "kind": "described", "words": "It is pitch black." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "There are sinister gurgling noises in the darkness all around you!" },
+      { "reader": "Marta", "kind": "described", "words": "It is pitch black. You are likely to be eaten by a grue. The ground continues to slope upwards away from the lake. You can barely detect a dim light from the east." },
+      { "reader": "Marta", "kind": "said", "words": "That horrible smell is much less pungent now, which is to say it is nearly gone, and the dark up the slope, which kept its distance while it lasted, has noticed." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "u", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Key Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are between some rock and a dark place. The room is lit dimly from above, revealing a lone, dark path sloping down to the west." },
+      { "reader": "Marta", "kind": "described", "words": "To one side of the room is a large manhole cover." },
+      { "reader": "Marta", "kind": "described", "words": "The light from above seems to be focused in the center of the room, where a single key is lying in the dust." }
+    ] },
+    { "as": "Marta", "type": "take key", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "move cover", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The cover is moved a bit to one side, revealing a small hole leading into darkness." }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Aqueduct" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a wide stone channel, part of the water supply system for the Great Underground Empire. The source of water was a waterfall to the south, which has long since dried up. Water flowed along the aqueduct to the north. This region is lit from above, although the source of light is not apparent." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "High Arch" },
+      { "reader": "Marta", "kind": "described", "words": "You are now on one of the tallest arches of the aqueduct, hundreds of feet above a rocky chasm. The immensity of the aqueduct project is apparent from here. Stone supports rise from the rock floor to form massive arches, which traverse the region from north to south. The water-carrying channel here is wide and deep. To the west and far below, you can make out a balcony which must command a wide view of the aqueduct." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Water Slide" },
+      { "reader": "Marta", "kind": "described", "words": "You are near the northern end of this segment of the aqueduct system. To the south and slightly uphill, the bulk of the aqueduct looms ominously, towering above a gorge. To the north, the water channel drops precipitously and enters a rocky hole. The damp moss and lichen would certainly make that a one-way trip." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Damp Passage" },
+      { "reader": "Marta", "kind": "described", "words": "There is a torch here, burning." }
+    ] },
+    { "as": "Marta", "type": "take torch", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Junction" },
+      { "reader": "Marta", "kind": "described", "words": "Standing before you is a great rock." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Creepy Crawl" }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foggy Room" },
+      { "reader": "Marta", "kind": "told", "words": "There is a great tremor from within the earth. The entire dungeon shakes violently and loose debris falls from above you." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Lake Shore" },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here (providing light)." },
+      { "reader": "Marta", "kind": "described", "words": "There is an Elvish sword here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a vial here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a wooden staff here." },
+      { "reader": "Marta", "kind": "told", "words": "The light you carry throws your shadow on the water, which does not want it: a lamp goes under here, lit or dark, and comes up a dead one, and the shore is where it should be left, with everything else in your hands." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take staff", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A hood (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A cloak (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A golden amulet (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A strange key" },
+      { "reader": "Marta", "kind": "said", "words": "A torch (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "An Elvish sword" },
+      { "reader": "Marta", "kind": "said", "words": "A vial" },
+      { "reader": "Marta", "kind": "said", "words": "A wooden staff" }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 5 of a possible 7, in 116 moves." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foggy Room" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Creepy Crawl" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Tight Squeeze" },
+      { "reader": "Marta", "kind": "described", "words": "This is a very low and narrow passage leading east to west." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Crystal Grotto" },
+      { "reader": "Marta", "kind": "described", "words": "This is a chamber of breathtaking beauty. Mighty stalagmites form crystalline-encrusted rock formations. Phosphorescent mosses, fed by a trickle of water from above, make the crystals glow and sparkle with every color of the rainbow. There is an opening to the west, and a man-made passage heads south." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Royal Hall" },
+      { "reader": "Marta", "kind": "described", "words": "This is the north end of a large hall with a vaulted ceiling. A long, tiled hallway leads north through a tall arch. Although the purpose of this room is unclear, there is a large rendering of the Royal Seal of Lord Dimwit Flathead carved on the wall." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Great Door" },
+      { "reader": "Marta", "kind": "described", "words": "This is the south end of a monumental hall, full of debris from a recent earthquake. To the east is a great iron door, rusted shut. To its right, however, is a gaping cleft in the rock and behind, a cleared area." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Museum Entrance" },
+      { "reader": "Marta", "kind": "described", "words": "This is the entrance to the Royal Museum, the finest and grandest in the Great Underground Empire. To the south, down a few steps, is the entrance to the Royal Puzzle and to the east, through a stone door, is the Royal Jewel Collection. A wooden door to the north is open and leads to the Museum of Technology. To the west is a great iron door, rusted shut. To its left, however, is a cleft in the rock providing an exit from the museum." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Museum Entrance" },
+      { "reader": "Marta", "kind": "described", "words": "This is the entrance to the Royal Museum, the finest and grandest in the Great Underground Empire. To the south, down a few steps, is the entrance to the Royal Puzzle and to the east, through a stone door, is the Royal Jewel Collection. A wooden door to the north is open and leads to the Museum of Technology. To the west is a great iron door, rusted shut. To its left, however, is a cleft in the rock providing an exit from the museum." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Royal Puzzle Entrance" },
+      { "reader": "Marta", "kind": "described", "words": "This is a small square room, in the middle of which is a round hole through which you can discern the floor some ten feet below. The area under the hole is dark, but it appears to be completely enclosed in rock. In any event, it doesn't seem likely that you could climb back up. Exits are west and, up a few steps, north." },
+      { "reader": "Marta", "kind": "described", "words": "Lying on the ground is a small note of some kind." }
+    ] },
+    { "as": "Marta", "type": "take note", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "read note", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Warning:\n    The Royal Puzzle is dangerous and\nit is possible to become trapped within\nits confines. Please do not enter the\npuzzle after hours when museum\npersonnel are not present.\n              The Management" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a small square room bounded to the north and west with marble walls and to the east and south with sandstone walls." },
+      { "reader": "Marta", "kind": "described", "words": "In the ceiling above you is a large circular opening." }
+    ] },
+    { "as": "Marta", "type": "hint", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Help, down here, is what you bring with you. The words that work are the usual ones: the compass, UP and DOWN to move; LOOK and EXAMINE to see; TAKE, DROP, OPEN, PUSH and whatever a thing seems to invite when it is looked at; INVENTORY for what you carry, SCORE for how you stand, DIAGNOSE for how you are. The old man said to seek him when you felt yourself worthy, and that is the only hint he gives, and he meant it." }
+    ] },
+    { "comment": "The engine's help, in a puzzle square with a full inventory: the step is here so that it cannot fault, and what it lists is the world's bounded help line." },
+    { "as": "Marta", "type": "help", "forbid": ["error"] },
+    { "as": "Marta", "type": "push south wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "told", "words": "The architecture of this region is getting complex, so that further descriptions will be diagrams of the immediate vicinity in a 3x3 grid. The walls here are rock, but of two different types - sandstone and marble. The following notations will be used:" },
+      { "reader": "Marta", "kind": "told", "words": ".. = your position (middle of grid)" },
+      { "reader": "Marta", "kind": "told", "words": "MM = marble wall" },
+      { "reader": "Marta", "kind": "told", "words": "SS = sandstone wall" },
+      { "reader": "Marta", "kind": "told", "words": "__ = open floor" },
+      { "reader": "Marta", "kind": "told", "words": "?? = unknown (blocked by walls)" },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM __ SS +" },
+      { "reader": "Marta", "kind": "described", "words": "West + MM .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? SS __ +" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? MM ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + MM .. SS + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "In the ceiling above you is a large circular opening." }
+    ] },
+    { "as": "Marta", "type": "push east wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM MM ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. SS + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ MM +" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ SS +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. MM + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS __ __ +" }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ MM __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ SS +" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM __ SS +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS SS +" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. MM + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS SS ?? +" }
+    ] },
+    { "as": "Marta", "type": "push south wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ MM +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? SS __ +" }
+    ] },
+    { "as": "Marta", "type": "push south wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS MM +" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ MM +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ __ +" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. MM + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS __ __ +" }
+    ] },
+    { "as": "Marta", "type": "nw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS __ SS +" },
+      { "reader": "Marta", "kind": "described", "words": "West + MM .. SS + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "There is a ladder here, firmly attached to the east wall." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? MM ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. SS + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM __ SS +" }
+    ] },
+    { "as": "Marta", "type": "push east wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM MM ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. SS + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS ?? +" }
+    ] },
+    { "as": "Marta", "type": "push south wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ SS +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS MM +" }
+    ] },
+    { "as": "Marta", "type": "push south wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. MM + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS SS ?? +" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS SS +" }
+    ] },
+    { "as": "Marta", "type": "push south wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. SS + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS SS ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "The center of the floor here is noticeably depressed. There is a ladder here, firmly attached to the east wall." },
+      { "reader": "Marta", "kind": "described", "words": "Nestled inside the niche is an old and dusty book." }
+    ] },
+    { "as": "Marta", "type": "take book", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "push south wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ SS +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? SS SS +" }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS SS MM +" }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? MM ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. MM + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ MM +" }
+    ] },
+    { "as": "Marta", "type": "push west wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ MM +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ __ +" }
+    ] },
+    { "as": "Marta", "type": "push west wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "The center of the floor here is noticeably depressed." }
+    ] },
+    { "as": "Marta", "type": "push west wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? SS __ +" }
+    ] },
+    { "as": "Marta", "type": "push south wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM SS SS +" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS SS __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM MM SS +" }
+    ] },
+    { "as": "Marta", "type": "push north wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? SS __ +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "There is a ladder here, firmly attached to the west wall." }
+    ] },
+    { "as": "Marta", "type": "push north wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? SS MM +" },
+      { "reader": "Marta", "kind": "described", "words": "West + SS .. __ + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS __ __ +" }
+    ] },
+    { "as": "Marta", "type": "push north wall", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wall slides forward and you follow it." },
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ __ SS ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + __ .. MM + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ SS __ __ +" }
+    ] },
+    { "as": "Marta", "type": "nw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Room in a Puzzle" },
+      { "reader": "Marta", "kind": "described", "words": "+ ?? MM ?? +" },
+      { "reader": "Marta", "kind": "described", "words": "West + MM .. SS + East" },
+      { "reader": "Marta", "kind": "described", "words": "+ MM __ __ +" },
+      { "reader": "Marta", "kind": "described", "words": "In the ceiling above you is a large circular opening. There is a ladder here, firmly attached to the east wall." }
+    ] },
+    { "as": "Marta", "type": "up", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "With the help of the ladder, you exit the puzzle." },
+      { "reader": "Marta", "kind": "described", "words": "Royal Puzzle Entrance" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Museum Entrance" }
+    ] },
+    { "as": "Marta", "type": "open stone door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door is now open." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Jewel Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a high-ceilinged chamber in the middle of which sits a tall, round steel cage, which is securely locked. In the middle of the cage is a pedestal on which sit the Crown Jewels of the Great Underground Empire: a sceptre, a jewelled knife, and a golden ring. A small bronze plaque, now tarnished, is on the cage." }
+    ] },
+    { "as": "Marta", "type": "read plaque", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "         Crown Jewels\n\n  Presented To The Royal Museum\n      By His Gracious Lord\n\n        DIMWIT FLATHEAD\n\n          Dedicated\n         * 777 GUE *" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Museum Entrance" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Technology Museum" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large hall which hosted the technological exhibits of the Great Underground Empire. A door to the south is open." },
+      { "reader": "Marta", "kind": "described", "words": "A strange grey machine, shaped somewhat like a clothes dryer, is on one side of the room. On the other side of the hall is a powerful-looking black machine, a tight tangle of wires, pipes, and motors. A plaque is mounted near the door. The writing is faded, however, and cannot be made out clearly. The two machines seem to be in bad shape, rusting in many spots." },
+      { "reader": "Marta", "kind": "described", "words": "Directly in front of you is a large golden machine, which has a seat with a console in front. On the console is a single button and a dial connected to a three-digit display which reads 948. The machine is surprisingly shiny and shows few signs of age." }
+    ] },
+    { "as": "Marta", "type": "examine gold machine", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "The machine consists of a seat and a console containing one small button and a dial connected to a display which reads 948. It stands on the floor and not on a plinth, and the floor round it is scuffed in long arcs toward the door, as though it had been moved before and could be again; a hand on it rocks it a little. It would go where it was pushed." }
+    ] },
+    { "as": "Marta", "type": "push machine south", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You put your shoulder to the machine." },
+      { "reader": "Marta", "kind": "described", "words": "Museum Entrance" },
+      { "reader": "Marta", "kind": "described", "words": "Directly in front of you is a large golden machine, which has a seat with a console in front. On the console is a single button and a dial connected to a three-digit display which reads 948. The machine is surprisingly shiny and shows few signs of age." },
+      { "reader": "Marta", "kind": "told", "words": "With some effort, you push the machine into the room with you." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "push machine east", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You put your shoulder to the machine." },
+      { "reader": "Marta", "kind": "described", "words": "Jewel Room" },
+      { "reader": "Marta", "kind": "described", "words": "Directly in front of you is a large golden machine, which has a seat with a console in front. On the console is a single button and a dial connected to a three-digit display which reads 948. The machine is surprisingly shiny and shows few signs of age." },
+      { "reader": "Marta", "kind": "told", "words": "With some effort, you push the machine into the room with you." }
+    ] },
+    { "as": "Marta", "type": "board machine", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You climb into the gold machine and settle on the seat before the console." },
+      { "reader": "Marta", "kind": "described", "words": "You are sitting in the gold machine, in the seat before its console. On the console is a single button and a dial connected to a three-digit display which reads 948." },
+      { "reader": "Marta", "kind": "described", "words": "Round you is the Jewel Room." }
+    ] },
+    { "as": "Marta", "type": "turn dial to 776", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The dial is set to 776." }
+    ] },
+    { "as": "Marta", "type": "push button", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You experience a brief period of disorientation." },
+      { "reader": "Marta", "kind": "told", "words": "When your vision returns, your surroundings appear to have changed. From outside the door you hear the sounds of guards talking." },
+      { "reader": "Marta", "kind": "told", "words": "You notice that everything you were holding is gone!" },
+      { "reader": "Marta", "kind": "told", "words": "You notice that the golden machine has disappeared!" },
+      { "reader": "Marta", "kind": "described", "words": "Jewel Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a high-ceilinged chamber, in the center of which is a pedestal which is the intended home of the Crown Jewels of the Great Underground Empire: a jewelled knife, a golden ring, and the royal sceptre. The room is, by appearances, unfinished. Through the door you can hear voices which, from their sound, belong to military or police personnel." },
+      { "reader": "Marta", "kind": "described", "words": "There is a pedestal here." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 7 of a possible 7, in 172 moves." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." },
+      { "reader": "Marta", "kind": "said", "words": "You hear, from outside the door, guards marching away, their voices fading. After a few moments, a booming crash signals the close of what must be a tremendous door. Then there is silence." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "as": "Marta", "type": "take ring", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are now wearing the golden ring." }
+    ] },
+    { "as": "Marta", "type": "open stone door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door is now open." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Museum Entrance" },
+      { "reader": "Marta", "kind": "described", "words": "This appears to be an unfinished entranceway to the Royal Museum. There are doors to the east and north, and a blind stairway to the south. A heavy iron door to the west is closed and locked." }
+    ] },
+    { "as": "Marta", "type": "open wooden door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wooden door is now open." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Technology Museum" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a large, unfinished room, probably intended to be a part of the Royal Museum." },
+      { "reader": "Marta", "kind": "described", "words": "A strange grey machine, shaped somewhat like a clothes dryer, is on one side of the room. On the other side of the hall is a powerful-looking black machine, a tight tangle of wires, pipes, and motors. A plaque is mounted near the door. The grey machine, it turns out, is a Frobozz Magic Pressurizer, used in the coal mines of the Empire. The black machine is a Frobozz Magic Room Spinner. The golden machine is referred to as a Temporizer. All are nonworking models donated by Frobozzco president John D. Flathead." },
+      { "reader": "Marta", "kind": "described", "words": "Directly in front of you is a large golden machine, which has a seat with a console in front. On the console is a single button and a dial connected to a three-digit display which reads 776. The machine is surprisingly shiny and shows few signs of age." }
+    ] },
+    { "as": "Marta", "type": "put ring under seat", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The ring is concealed underneath the seat." }
+    ] },
+    { "as": "Marta", "type": "board machine", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You climb into the gold machine and settle on the seat before the console." },
+      { "reader": "Marta", "kind": "described", "words": "You are sitting in the gold machine, in the seat before its console. On the console is a single button and a dial connected to a three-digit display which reads 776." },
+      { "reader": "Marta", "kind": "described", "words": "Round you is a large, unfinished room." }
+    ] },
+    { "as": "Marta", "type": "set dial to 948", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The dial is set to 948." }
+    ] },
+    { "as": "Marta", "type": "push button", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You experience a brief period of disorientation." },
+      { "reader": "Marta", "kind": "told", "words": "When your vision returns, your surroundings appear somewhat altered." },
+      { "reader": "Marta", "kind": "described", "words": "You are sitting in the gold machine, in the seat before its console. On the console is a single button and a dial connected to a three-digit display which reads 948." },
+      { "reader": "Marta", "kind": "described", "words": "Round you is the hall of the Technology Museum." }
+    ] },
+    { "as": "Marta", "type": "look under seat", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You find the ring under the seat and put it on your finger." }
+    ] },
+    { "as": "Marta", "type": "out", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Technology Museum" },
+      { "reader": "Marta", "kind": "described", "words": "Directly in front of you is a large golden machine, which has a seat with a console in front. On the console is a single button and a dial connected to a three-digit display which reads 948. The machine is surprisingly shiny and shows few signs of age." }
+    ] },
+    { "as": "Marta", "type": "open wooden door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The wooden door is now open." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Museum Entrance" }
+    ] },
+    { "as": "Marta", "type": "open stone door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The door is now open." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Jewel Room" },
+      { "reader": "Marta", "kind": "described", "words": "There is a hood here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a cloak here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a golden amulet here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a strange key here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a torch here, burning." },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here (providing light)." },
+      { "reader": "Marta", "kind": "described", "words": "There is an Elvish sword here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a vial here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a wooden staff here." },
+      { "reader": "Marta", "kind": "described", "words": "There is a small note here." },
+      { "reader": "Marta", "kind": "described", "words": "There is an old book here." }
+    ] },
+    { "as": "Marta", "type": "take all", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "hood: You are now wearing the hood." },
+      { "reader": "Marta", "kind": "said", "words": "cloak: You are now wearing the cloak." },
+      { "reader": "Marta", "kind": "said", "words": "golden amulet: You are now wearing the golden amulet." },
+      { "reader": "Marta", "kind": "said", "words": "strange key: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "torch: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "lamp: Taken." },
+      { "reader": "Marta", "kind": "said", "words": "sword: Taken." }
+    ] },
+    { "as": "Marta", "type": "take vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take staff", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take note", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "take book", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "i", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You are carrying:" },
+      { "reader": "Marta", "kind": "said", "words": "A golden ring (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A hood (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A cloak (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A golden amulet (being worn)" },
+      { "reader": "Marta", "kind": "said", "words": "A strange key" },
+      { "reader": "Marta", "kind": "said", "words": "A torch (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "A lamp (providing light)" },
+      { "reader": "Marta", "kind": "said", "words": "An Elvish sword" },
+      { "reader": "Marta", "kind": "said", "words": "A vial" },
+      { "reader": "Marta", "kind": "said", "words": "A wooden staff" },
+      { "reader": "Marta", "kind": "said", "words": "A warning note" },
+      { "reader": "Marta", "kind": "said", "words": "A very ancient book" }
+    ] },
+    { "as": "Marta", "type": "read plaque", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The plaque explains that this room was to be the home of the Crown Jewels of the Empire. However, following the unexplained disappearance of a priceless ring during the final stages of construction, Lord Flathead decided to place the remaining jewels in a safer location. Interestingly, he placed his most prized possession, an incredibly gaudy crown, in a locked safe in a volcano specifically hollowed out for that purpose." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 7 of a possible 7, in 208 moves." }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Museum Entrance" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Great Door" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Royal Hall" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Crystal Grotto" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Tight Squeeze" }
+    ] },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Creepy Crawl" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Junction" },
+      { "reader": "Marta", "kind": "described", "words": "Standing before you is a great rock." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Damp Passage" }
+    ] },
+    { "as": "Marta", "type": "ne", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Engravings Room" }
+    ] },
+    { "as": "Marta", "type": "d", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You go through the secret door and down the dark, forbidding stairs, toward the flickering torchlight below." },
+      { "reader": "Marta", "kind": "described", "words": "Button Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the southern end of a long hall. To the south, stairs ascend into darkness. To the north the corridor is illuminated by torches set high in the walls, out of reach. On one wall is a red button." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Beam Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in the middle of a long north-south corridor whose walls are polished stone. A narrow red beam of light crosses the room at the north end, inches above the floor." },
+      { "reader": "Marta", "kind": "described", "words": "The corridor continues north and south." }
+    ] },
+    { "as": "Marta", "type": "drop note", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You conveniently drop the warning note in position to block the beam of light." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Button Room" }
+    ] },
+    { "as": "Marta", "type": "push button", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Click. Snap!" }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Beam Room" },
+      { "reader": "Marta", "kind": "described", "words": "There is a small note here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Hallway" },
+      { "reader": "Marta", "kind": "described", "words": "This is a part of the long hallway. The east and west walls are dressed stone. In the center of the hall is a shallow stone channel. In the center of the room the channel widens into a large hole around which is engraved a compass rose." },
+      { "reader": "Marta", "kind": "described", "words": "The hallway continues to the south." },
+      { "reader": "Marta", "kind": "described", "words": "A large mirror fills the north side of the hallway. The mirror is mounted on a panel which has been opened outward." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Inside Mirror" },
+      { "reader": "Marta", "kind": "described", "words": "You are inside a rectangular box of wood whose structure is rather complicated. Four sides and the roof are filled in, and the floor is open." },
+      { "reader": "Marta", "kind": "described", "words": "As you face the side opposite the entrance, two short sides of carved and polished wood are to your left and right. The left panel is mahogany, the right pine. The wall you face is red on its left half and black on its right. On the entrance side, the wall is white opposite the red part of the wall it faces, and yellow opposite the black section. The painted walls are at least twice the length of the unpainted ones. The ceiling is painted blue." },
+      { "reader": "Marta", "kind": "described", "words": "In the floor is a stone channel about six inches wide and a foot deep. The channel is oriented in a north-south direction. In the exact center of the room the channel widens into a circular depression perhaps two feet wide. Incised in the stone around this area is a compass rose." },
+      { "reader": "Marta", "kind": "described", "words": "Running from one short wall to the other at about waist height is a wooden bar, carefully carved and drilled. This bar is pierced in two places. The first hole is in the center of the bar (and thus the center of the room). The second is at the left end of the room (as you face opposite the entrance). Through each hole runs a wooden pole." },
+      { "reader": "Marta", "kind": "described", "words": "The pole at the left end of the bar is short, extending about a foot above the bar, and ends in a hand grip. The pole has been dropped into a hole carved in the stone floor." },
+      { "reader": "Marta", "kind": "described", "words": "The long pole at the center of the bar extends from the ceiling through the bar to the circular area in the stone channel. This bottom end of the pole has a T-bar a bit less than two feet long attached to it, and on the T-bar is carved an arrow. The arrow and T-bar are pointing west." },
+      { "reader": "Marta", "kind": "described", "words": "The mirror on the entrance side stands open, and the hallway shows through it." }
+    ] },
+    { "as": "Marta", "type": "raise pole", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The pole is now slightly above the floor." }
+    ] },
+    { "as": "Marta", "type": "push red panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure rotates clockwise." },
+      { "reader": "Marta", "kind": "said", "words": "The arrow on the compass rose now indicates northwest." }
+    ] },
+    { "as": "Marta", "type": "push red panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure rotates clockwise." },
+      { "reader": "Marta", "kind": "said", "words": "The arrow on the compass rose now indicates north." },
+      { "reader": "Marta", "kind": "told", "words": "The mirror quietly swings shut." }
+    ] },
+    { "as": "Marta", "type": "lower pole", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The pole is lowered into the channel." }
+    ] },
+    { "as": "Marta", "type": "push mahogany panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure slides north and stops over another compass rose." }
+    ] },
+    { "as": "Marta", "type": "push mahogany panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure slides north and stops over another compass rose." }
+    ] },
+    { "as": "Marta", "type": "push mahogany panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure slides north and stops over another compass rose." }
+    ] },
+    { "as": "Marta", "type": "raise pole", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The pole is now slightly above the floor." }
+    ] },
+    { "as": "Marta", "type": "push red panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure rotates clockwise." },
+      { "reader": "Marta", "kind": "said", "words": "The arrow on the compass rose now indicates northeast." }
+    ] },
+    { "as": "Marta", "type": "push red panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure rotates clockwise." },
+      { "reader": "Marta", "kind": "said", "words": "The arrow on the compass rose now indicates east." }
+    ] },
+    { "as": "Marta", "type": "push red panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure rotates clockwise." },
+      { "reader": "Marta", "kind": "said", "words": "The arrow on the compass rose now indicates southeast." }
+    ] },
+    { "as": "Marta", "type": "push red panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The structure rotates clockwise." },
+      { "reader": "Marta", "kind": "said", "words": "The arrow on the compass rose now indicates south." }
+    ] },
+    { "as": "Marta", "type": "push pine panel", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The pine wall swings open." }
+    ] },
+    { "as": "Marta", "type": "north", "expect": [
+      { "reader": "Marta", "kind": "told", "words": "As you leave, the door swings shut." },
+      { "reader": "Marta", "kind": "described", "words": "Dungeon Entrance" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a north-south hallway which ends, to the north, at a large wooden door." },
+      { "reader": "Marta", "kind": "described", "words": "The wooden door has a barred panel in it at about head height. The door itself is closed." },
+      { "reader": "Marta", "kind": "described", "words": "The south side of the room is divided by a wooden wall into small hallways to the southeast and southwest." }
+    ] },
+    { "as": "Marta", "type": "look", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Dungeon Entrance" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a north-south hallway which ends, to the north, at a large wooden door." },
+      { "reader": "Marta", "kind": "described", "words": "The wooden door has a barred panel in it at about head height. The door itself is closed." },
+      { "reader": "Marta", "kind": "described", "words": "The south side of the room is divided by a wooden wall into small hallways to the southeast and southwest." }
+    ] },
+    { "as": "Marta", "type": "knock on door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The knock reverberates along the hall. For a time it seems there will be no answer. Then you hear someone unlatching the small panel. Through the bars of the great door, the wrinkled face of an old man appears." },
+      { "reader": "Marta", "kind": "said", "words": "He starts to smile broadly and opens the massive door without a sound. The old man motions and you feel yourself drawn toward him." },
+      { "reader": "Marta", "kind": "said", "words": "\"I am the Master of the Dungeon!\" he booms. \"I have been watching you closely during your journey through the Great Underground Empire. Yes!,\" he says, as if recalling some almost forgotten time, \"we have met before, although I may not appear as I did then.\" You look closely into his deeply lined face and see the faces of the old man by the secret door, your \"friend\" at the cliff, and the hooded figure. \"You have shown kindness to the old man, and compassion toward the hooded one. You displayed patience in the puzzle and trust at the cliff. You have demonstrated strength, ingenuity, and valor. However, one final test awaits you. Now! Command me as you will, and complete your quest!\"" },
+      { "reader": "Marta", "kind": "described", "words": "Narrow Corridor" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a narrow north-south corridor. At the south end is a door and at the north end is an east-west corridor. The door is closed." },
+      { "reader": "Marta", "kind": "described", "words": "The dungeon master is quietly leaning on his staff here." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "South Corridor" },
+      { "reader": "Marta", "kind": "described", "words": "You are in an east-west corridor which turns north at its eastern and western ends. The walls are made of the finest marble. Another hall leads south at the center of the corridor." },
+      { "reader": "Marta", "kind": "described", "words": "The dungeon master is quietly leaning on his staff here." },
+      { "reader": "Marta", "kind": "said", "words": "The dungeon master follows you." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "East Corridor" },
+      { "reader": "Marta", "kind": "described", "words": "This is a hall with polished marble walls. It widens slightly as it turns west at its northern and southern ends." },
+      { "reader": "Marta", "kind": "described", "words": "The dungeon master is quietly leaning on his staff here." },
+      { "reader": "Marta", "kind": "said", "words": "The dungeon master follows you." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North Corridor" },
+      { "reader": "Marta", "kind": "described", "words": "This is a wide east-west corridor which opens onto a northern parapet at its center. You can see flames and smoke as you peer towards the parapet. The corridor turns south at either end, and in the center of the south wall is a heavy wooden door with a small barred window. The door is closed." },
+      { "reader": "Marta", "kind": "described", "words": "The dungeon master is quietly leaning on his staff here." },
+      { "reader": "Marta", "kind": "said", "words": "The dungeon master follows you." }
+    ] },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Parapet" },
+      { "reader": "Marta", "kind": "described", "words": "You are standing behind a stone retaining wall which rims a parapet overlooking a fiery pit. It is difficult to see through the smoke and flame which fills the pit, but it seems to be bottomless. The pit itself is circular, about two hundred feet in diameter, and is fashioned of roughly hewn stone. The flames generate considerable heat, so it is rather uncomfortable standing here." },
+      { "reader": "Marta", "kind": "described", "words": "There is an object here which looks like a sundial. On it are an indicator arrow surrounding a large button. On the face of the dial are numbers 1 through 8. The indicator points to the number 1." },
+      { "reader": "Marta", "kind": "described", "words": "To the south, across a narrow corridor, is a prison cell." },
+      { "reader": "Marta", "kind": "described", "words": "The dungeon master is quietly leaning on his staff here." },
+      { "reader": "Marta", "kind": "said", "words": "The dungeon master follows you." }
+    ] },
+    { "as": "Marta", "type": "set dial to 4", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The dial now points to 4." }
+    ] },
+    { "as": "Marta", "type": "push button", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The button depresses with a slight click, and pops back." }
+    ] },
+    { "as": "Marta", "type": "set dial to 1", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The dial now points to 1." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "North Corridor" },
+      { "reader": "Marta", "kind": "described", "words": "The dungeon master is quietly leaning on his staff here." },
+      { "reader": "Marta", "kind": "said", "words": "The dungeon master follows you." }
+    ] },
+    { "as": "Marta", "type": "open door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The cell door opens." }
+    ] },
+    { "as": "Marta", "type": "master, go north", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"Very well. I am at the parapet!\"" }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Prison Cell" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a featureless prison cell. You can see an east-west corridor outside the cell door. Your view also takes in the parapet and a large, fiery pit." },
+      { "reader": "Marta", "kind": "described", "words": "The dungeon master is at the parapet, leaning on his staff. His keen gaze is fixed on you and he looks tense, as if waiting for something to happen." },
+      { "reader": "Marta", "kind": "described", "words": "Behind you, to the south, is a bronze door which is closed." }
+    ] },
+    { "as": "Marta", "type": "master, push button", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "\"If you wish,\" he replies." },
+      { "reader": "Marta", "kind": "told", "words": "You notice that the cell door is now closed." },
+      { "reader": "Marta", "kind": "described", "words": "Prison Cell" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a bare prison cell. Its wooden door is securely fastened, and you can see only flames and smoke through its small window. On the south wall is a bronze door which seems to be closed." }
+    ] },
+    { "as": "Marta", "type": "unlock bronze door with key", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The key seems to mold itself to the shape of the lock. With a mere twist of your hand, the massive bolt gives way." }
+    ] },
+    { "as": "Marta", "type": "open bronze door", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "On the other side of the bronze door is a narrow passage which opens out into a larger area." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Treasury of Zork" },
+      { "reader": "Marta", "kind": "described", "words": "This is a large room, richly appointed in a style that bespeaks exquisite taste. To judge from its contents, it is the ultimate storehouse of the wealth of the Great Underground Empire." },
+      { "reader": "Marta", "kind": "described", "words": "There are chests containing precious jewels, mountains of zorkmids, rare paintings, ancient statuary, and beguiling curios." },
+      { "reader": "Marta", "kind": "described", "words": "On one wall is an annotated map of the Empire, showing the locations of various troves of treasure, and of many superior scenic views." },
+      { "reader": "Marta", "kind": "described", "words": "On a desk at the far end of the room are stock certificates representing a controlling interest in FrobozzCo International, the multinational conglomerate and parent company of the Frobozz Magic Boat Co., etc." },
+      { "reader": "Marta", "kind": "told", "words": "As you examine your new-found riches, the Dungeon Master materializes beside you, and says, \"Now that you have solved all the mysteries of the Dungeon, it is time for you to assume your rightly earned place in the scheme of things. Long have I waited for one capable of releasing me from my burden!\" He taps you lightly on the head with his staff, mumbling a few well-chosen spells, and you feel yourself changing, growing older and more stooped. For a moment there are two identical mages standing among the treasure, then your counterpart dissolves into a mist and disappears, a sardonic grin on his face." },
+      { "reader": "Marta", "kind": "told", "words": "For a moment you are relieved, safe in the knowledge that you have at last completed your quest in ZORK. You begin to feel the vast powers and lore at your command and thirst for an opportunity to use them." }
+    ] },
+    { "as": "Marta", "type": "score", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Your potential is 7 of a possible 7, in 255 moves." }
+    ] }
+  ]
+}

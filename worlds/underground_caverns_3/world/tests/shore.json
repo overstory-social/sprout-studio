@@ -1,0 +1,83 @@
+{
+  "steps": [
+    { "comment": "The shore warns, the plunge names the lamp, a dive is a dive, and take all underwater reaches for the shiny thing and the lamp; restart is refused honestly." },
+    { "arrive": "Finch", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. \"You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!\" The dream dissolves around you as his last words echo through the void...." },
+      { "reader": "Finch", "kind": "described", "words": "Endless Stair" },
+      { "reader": "Finch", "kind": "described", "words": "You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail." },
+      { "reader": "Finch", "kind": "described", "words": "Your old friend, the brass lantern, is at your feet." }
+    ] },
+    { "as": "Finch", "type": "take lamp", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Finch", "type": "turn on lamp", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Finch", "type": "s", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Junction" },
+      { "reader": "Finch", "kind": "described", "words": "You are at the junction of a north-south passage and an east-west passage. To the north, you can make out the bottom of a stairway. The ways to the east and south are relatively cramped, but a wider trail leads to the west." },
+      { "reader": "Finch", "kind": "described", "words": "Standing before you is a great rock. Imbedded within it is an Elvish sword." }
+    ] },
+    { "as": "Finch", "type": "s", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Creepy Crawl" },
+      { "reader": "Finch", "kind": "described", "words": "You are in a dark and quite creepy crawlway with passages leaving to the north, east, south, and southwest." }
+    ] },
+    { "as": "Finch", "type": "s", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Foggy Room" },
+      { "reader": "Finch", "kind": "described", "words": "You are in a dank passage filled with a wispy fog. A spooky passageway leads north and a wider path heads off to the south. To the west, the path leaves the rock and enters an eerie, shadowy land." }
+    ] },
+    { "as": "Finch", "type": "s", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "Lake Shore" },
+      { "reader": "Finch", "kind": "described", "words": "You are in a wide cavern on the north shore of a small lake. Some polished stone steps lead to the southeast and a sheer rock face prevents any movement around the lake to the southwest. The cavern is dimly lit from above. The water has the look of a cold that would open your hands for you, and would not give back what fell out of them; everything in your hands goes to the bottom, not the light and the sword only but every last thing you carry, and whatever you cannot afford to lose there had better be left on the shore, which is lit, after its fashion, and will keep it. What you wear, it leaves you." },
+      { "reader": "Finch", "kind": "told", "words": "The light you carry throws your shadow on the water, which does not want it: a lamp goes under here, lit or dark, and comes up a dead one, and the shore is where it should be left, with everything else in your hands." }
+    ] },
+    { "as": "Finch", "type": "examine lake", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "A small lake, dark and very still, in a wide cavern dimly lit from above, with polished stone steps going down toward it to the southeast and a sheer rock face closing off the shore to the southwest. It does not look warm. It looks, in fact, like the kind of cold that opens a hand whether its owner likes it or not, and anyone going in would do well to leave on the shore whatever they cannot afford to have at the bottom, which is to say everything in their hands, the sword as much as the light and the rest with them; the shore is lit, after its fashion, and will keep it. It does not look deep, either, though a lake that still keeps its secrets at this age may be expected to keep that one." }
+    ] },
+    { "as": "Finch", "type": "drop lamp", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Dropped." }
+    ] },
+    { "as": "Finch", "type": "examine light", "expect": [
+      { "reader": "Finch", "kind": "described", "words": "It is the brass lantern you have carried through two adventures already: battery-powered, dented in the places you remember, with a stout handle and a glass somebody has kept clean. It has the look of an old friend who has followed you somewhere it would rather not have come." },
+      { "reader": "Finch", "kind": "described", "words": "The lamp is on." }
+    ] },
+    { "as": "Finch", "type": "take lamp", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Finch", "type": "enter lake", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "The shock of entering the frigid water has made you drop all your possessions into the lake! Everything you were carrying, that is: what you wear stays with you, and the rest is on the bottom." },
+      { "reader": "Finch", "kind": "said", "words": "Your lamp goes under with the rest. There is a hiss, a brief glow in the water below you, and then not." },
+      { "reader": "Finch", "kind": "described", "words": "On the Lake" },
+      { "reader": "Finch", "kind": "described", "words": "You are floating on the surface of the lake. The water is ice cold and your ability to survive here for long is very questionable. A swim north puts you at your starting point. Conditions to the east are poor where the lake turns into swamp. The west and south shores are suitable for walking, however." },
+      { "reader": "Finch", "kind": "said", "words": "A giant roc, previously hidden among the rocks, is heading right toward you, its mouth gaping wide! You have one move, and the water is the only cover there is." }
+    ] },
+    { "seed": 0 },
+    { "as": "Finch", "type": "dive", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "You take a breath and go under." },
+      { "reader": "Finch", "kind": "described", "words": "Underwater" },
+      { "reader": "Finch", "kind": "described", "words": "You are below the surface of the lake. It turns out that the lake is quite shallow and the bottom is only a few feet below you. Considering the frigid temperature of the water, you should probably not plan an extended stay. The lake bottom is sandy and a few hearty plants and algae live there." },
+      { "reader": "Finch", "kind": "described", "words": "There is a brass lantern here." },
+      { "reader": "Finch", "kind": "said", "words": "You catch a brief glimpse of something shiny in the sand." }
+    ] },
+    { "seed": 0 },
+    { "as": "Finch", "type": "take all", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "shiny object: You reach the shiny object. It is a simple golden amulet! You are now wearing the golden amulet, on its chain, round your neck." },
+      { "reader": "Finch", "kind": "said", "words": "lamp: Taken." }
+    ] },
+    { "seed": 0 },
+    { "as": "Finch", "type": "take lake", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "The water slips through your fingers, and is colder than you expected." },
+      { "reader": "Finch", "kind": "said", "words": "The icy waters are taking their toll. You will not be able to hold out much longer." },
+      { "reader": "Finch", "kind": "said", "words": "You run out of air and return to the surface." },
+      { "reader": "Finch", "kind": "described", "words": "On the Lake" },
+      { "reader": "Finch", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" }
+    ] },
+    { "seed": 0 },
+    { "as": "Finch", "type": "take fish", "expect": [
+      { "reader": "Finch", "kind": "refused", "words": "There is no fish visible now." }
+    ] },
+    { "as": "Finch", "type": "restart", "expect": [
+      { "reader": "Finch", "kind": "said", "words": "This world does not start over on request. What you have lost stays lost, and what you have done stays done. The stair is to the north of wherever you are, more or less; and the old man will carry you back to it, with your lamp, such as it is, three times, and the fourth time he will keep you, which is as near to an ending as a lost visitor gets." }
+    ] }
+  ]
+}

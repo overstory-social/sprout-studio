@@ -1,0 +1,1703 @@
+// The thirty-six squares of the Royal Puzzle (CP, CPTABLE), generated
+// from the original's table of walls: 0 open floor, 1 marble, -1
+// sandstone, -2 the sandstone with the good ladder, -3 the one with the
+// bad. Each square keeps a copy of the twelve cells round it and reads
+// them again from the world whenever a wall is pushed (:cp_changed); its
+// ways out are decided by those copies, so a square whose neighbour is a
+// wall offers no way there, and a diagonal step needs an open square on
+// one side of the corner (CPEXIT). Cell 1 is under the round hole, cell
+// 22 holds the book's niche, and cell 33 the steel door and the slot.
+import * as sprout from 'sprout'
+import {PuzzleSquare, cp_ante, cp_out} from 'puzzle'
+import {:cp_changed} from 'verbs'
+
+
+object cp_1 is PuzzleSquare in underground_caverns_3 {
+  :idx 1
+  :col 1
+  :row 1
+  :vn 1
+  :vs -1
+  :ve -1
+  :vw 1
+  :vne 1
+  :vnw 1
+  :vse 0
+  :vsw 1
+  :vn2 1
+  :vs2 0
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_7 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_2 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_8 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" -> cp_ante say "With the help of the ladder, you exit the puzzle." when (self.get(:ve) == -2)
+    exit up "up" refuse "The exit is too far above your head."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vs, underground_caverns_3.get(:c7))
+    self.set(:ve, underground_caverns_3.get(:c2))
+    self.set(:vse, underground_caverns_3.get(:c8))
+    self.set(:vs2, underground_caverns_3.get(:c13))
+    self.set(:ve2, underground_caverns_3.get(:c3))
+  }
+}
+
+object cp_2 is PuzzleSquare in underground_caverns_3 {
+  :idx 2
+  :col 2
+  :row 1
+  :vn 1
+  :vs 0
+  :ve 0
+  :vw 0
+  :vne 1
+  :vnw 1
+  :vse 1
+  :vsw -1
+  :vn2 1
+  :vs2 0
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_8 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_3 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_1 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_9 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_7 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vs, underground_caverns_3.get(:c8))
+    self.set(:ve, underground_caverns_3.get(:c3))
+    self.set(:vw, underground_caverns_3.get(:c1))
+    self.set(:vse, underground_caverns_3.get(:c9))
+    self.set(:vsw, underground_caverns_3.get(:c7))
+    self.set(:vs2, underground_caverns_3.get(:c14))
+    self.set(:ve2, underground_caverns_3.get(:c4))
+  }
+}
+
+object cp_3 is PuzzleSquare in underground_caverns_3 {
+  :idx 3
+  :col 3
+  :row 1
+  :vn 1
+  :vs 1
+  :ve 0
+  :vw -1
+  :vne 1
+  :vnw 1
+  :vse 0
+  :vsw 0
+  :vn2 1
+  :vs2 0
+  :ve2 -1
+  :vw2 0
+  grammar {
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_9 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_4 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_2 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_10 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_8 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vs, underground_caverns_3.get(:c9))
+    self.set(:ve, underground_caverns_3.get(:c4))
+    self.set(:vw, underground_caverns_3.get(:c2))
+    self.set(:vse, underground_caverns_3.get(:c10))
+    self.set(:vsw, underground_caverns_3.get(:c8))
+    self.set(:vs2, underground_caverns_3.get(:c15))
+    self.set(:ve2, underground_caverns_3.get(:c5))
+    self.set(:vw2, underground_caverns_3.get(:c1))
+  }
+}
+
+object cp_4 is PuzzleSquare in underground_caverns_3 {
+  :idx 4
+  :col 4
+  :row 1
+  :vn 1
+  :vs 0
+  :ve -1
+  :vw 0
+  :vne 1
+  :vnw 1
+  :vse -2
+  :vsw 1
+  :vn2 1
+  :vs2 0
+  :ve2 0
+  :vw2 -1
+  grammar {
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_10 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_5 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_3 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_11 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_9 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vs, underground_caverns_3.get(:c10))
+    self.set(:ve, underground_caverns_3.get(:c5))
+    self.set(:vw, underground_caverns_3.get(:c3))
+    self.set(:vse, underground_caverns_3.get(:c11))
+    self.set(:vsw, underground_caverns_3.get(:c9))
+    self.set(:vs2, underground_caverns_3.get(:c16))
+    self.set(:ve2, underground_caverns_3.get(:c6))
+    self.set(:vw2, underground_caverns_3.get(:c2))
+  }
+}
+
+object cp_5 is PuzzleSquare in underground_caverns_3 {
+  :idx 5
+  :col 5
+  :row 1
+  :vn 1
+  :vs -2
+  :ve 0
+  :vw 0
+  :vne 1
+  :vnw 1
+  :vse 0
+  :vsw 0
+  :vn2 1
+  :vs2 0
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_11 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_6 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_4 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_12 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_10 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vs, underground_caverns_3.get(:c11))
+    self.set(:ve, underground_caverns_3.get(:c6))
+    self.set(:vw, underground_caverns_3.get(:c4))
+    self.set(:vse, underground_caverns_3.get(:c12))
+    self.set(:vsw, underground_caverns_3.get(:c10))
+    self.set(:vs2, underground_caverns_3.get(:c17))
+    self.set(:vw2, underground_caverns_3.get(:c3))
+  }
+}
+
+object cp_6 is PuzzleSquare in underground_caverns_3 {
+  :idx 6
+  :col 6
+  :row 1
+  :vn 1
+  :vs 0
+  :ve 1
+  :vw -1
+  :vne 1
+  :vnw 1
+  :vse 1
+  :vsw -2
+  :vn2 1
+  :vs2 1
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_12 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_5 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_11 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vs, underground_caverns_3.get(:c12))
+    self.set(:vw, underground_caverns_3.get(:c5))
+    self.set(:vsw, underground_caverns_3.get(:c11))
+    self.set(:vs2, underground_caverns_3.get(:c18))
+    self.set(:vw2, underground_caverns_3.get(:c4))
+  }
+}
+
+object cp_7 is PuzzleSquare in underground_caverns_3 {
+  :idx 7
+  :col 1
+  :row 2
+  :vn 0
+  :vs 0
+  :ve 0
+  :vw 1
+  :vne -1
+  :vnw 1
+  :vse 0
+  :vsw 1
+  :vn2 1
+  :vs2 -3
+  :ve2 1
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_1 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_13 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_8 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_2 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_14 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c1))
+    self.set(:vs, underground_caverns_3.get(:c13))
+    self.set(:ve, underground_caverns_3.get(:c8))
+    self.set(:vne, underground_caverns_3.get(:c2))
+    self.set(:vse, underground_caverns_3.get(:c14))
+    self.set(:vs2, underground_caverns_3.get(:c19))
+    self.set(:ve2, underground_caverns_3.get(:c9))
+  }
+}
+
+object cp_8 is PuzzleSquare in underground_caverns_3 {
+  :idx 8
+  :col 2
+  :row 2
+  :vn -1
+  :vs 0
+  :ve 1
+  :vw -1
+  :vne 0
+  :vnw 0
+  :vse 0
+  :vsw 0
+  :vn2 1
+  :vs2 0
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_2 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_14 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_9 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_7 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_3 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_1 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_15 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_13 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c2))
+    self.set(:vs, underground_caverns_3.get(:c14))
+    self.set(:ve, underground_caverns_3.get(:c9))
+    self.set(:vw, underground_caverns_3.get(:c7))
+    self.set(:vne, underground_caverns_3.get(:c3))
+    self.set(:vnw, underground_caverns_3.get(:c1))
+    self.set(:vse, underground_caverns_3.get(:c15))
+    self.set(:vsw, underground_caverns_3.get(:c13))
+    self.set(:vs2, underground_caverns_3.get(:c20))
+    self.set(:ve2, underground_caverns_3.get(:c10))
+  }
+}
+
+object cp_9 is PuzzleSquare in underground_caverns_3 {
+  :idx 9
+  :col 3
+  :row 2
+  :vn 0
+  :vs 0
+  :ve 0
+  :vw 0
+  :vne 0
+  :vnw -1
+  :vse 0
+  :vsw 0
+  :vn2 1
+  :vs2 0
+  :ve2 -2
+  :vw2 -1
+  grammar {
+    exit north "north" -> cp_3 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_15 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_10 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_8 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_4 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_2 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_16 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_14 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c3))
+    self.set(:vs, underground_caverns_3.get(:c15))
+    self.set(:ve, underground_caverns_3.get(:c10))
+    self.set(:vw, underground_caverns_3.get(:c8))
+    self.set(:vne, underground_caverns_3.get(:c4))
+    self.set(:vnw, underground_caverns_3.get(:c2))
+    self.set(:vse, underground_caverns_3.get(:c16))
+    self.set(:vsw, underground_caverns_3.get(:c14))
+    self.set(:vs2, underground_caverns_3.get(:c21))
+    self.set(:ve2, underground_caverns_3.get(:c11))
+    self.set(:vw2, underground_caverns_3.get(:c7))
+  }
+}
+
+object cp_10 is PuzzleSquare in underground_caverns_3 {
+  :idx 10
+  :col 4
+  :row 2
+  :vn 0
+  :vs 0
+  :ve -2
+  :vw 1
+  :vne -1
+  :vnw 0
+  :vse 0
+  :vsw 0
+  :vn2 1
+  :vs2 -1
+  :ve2 0
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_4 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_16 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_11 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_9 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_5 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_3 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_17 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_15 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c4))
+    self.set(:vs, underground_caverns_3.get(:c16))
+    self.set(:ve, underground_caverns_3.get(:c11))
+    self.set(:vw, underground_caverns_3.get(:c9))
+    self.set(:vne, underground_caverns_3.get(:c5))
+    self.set(:vnw, underground_caverns_3.get(:c3))
+    self.set(:vse, underground_caverns_3.get(:c17))
+    self.set(:vsw, underground_caverns_3.get(:c15))
+    self.set(:vs2, underground_caverns_3.get(:c22))
+    self.set(:ve2, underground_caverns_3.get(:c12))
+    self.set(:vw2, underground_caverns_3.get(:c8))
+  }
+}
+
+object cp_11 is PuzzleSquare in underground_caverns_3 {
+  :idx 11
+  :col 5
+  :row 2
+  :vn -1
+  :vs 0
+  :ve 0
+  :vw 0
+  :vne 0
+  :vnw 0
+  :vse 1
+  :vsw 0
+  :vn2 1
+  :vs2 -1
+  :ve2 1
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_5 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_17 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_12 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_10 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_6 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_4 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_18 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_16 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c5))
+    self.set(:vs, underground_caverns_3.get(:c17))
+    self.set(:ve, underground_caverns_3.get(:c12))
+    self.set(:vw, underground_caverns_3.get(:c10))
+    self.set(:vne, underground_caverns_3.get(:c6))
+    self.set(:vnw, underground_caverns_3.get(:c4))
+    self.set(:vse, underground_caverns_3.get(:c18))
+    self.set(:vsw, underground_caverns_3.get(:c16))
+    self.set(:vs2, underground_caverns_3.get(:c23))
+    self.set(:vw2, underground_caverns_3.get(:c9))
+  }
+}
+
+object cp_12 is PuzzleSquare in underground_caverns_3 {
+  :idx 12
+  :col 6
+  :row 2
+  :vn 0
+  :vs 1
+  :ve 1
+  :vw -2
+  :vne 1
+  :vnw -1
+  :vse 1
+  :vsw 0
+  :vn2 1
+  :vs2 0
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_6 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_18 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_11 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_5 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_17 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c6))
+    self.set(:vs, underground_caverns_3.get(:c18))
+    self.set(:vw, underground_caverns_3.get(:c11))
+    self.set(:vnw, underground_caverns_3.get(:c5))
+    self.set(:vsw, underground_caverns_3.get(:c17))
+    self.set(:vs2, underground_caverns_3.get(:c24))
+    self.set(:vw2, underground_caverns_3.get(:c10))
+  }
+}
+
+object cp_13 is PuzzleSquare in underground_caverns_3 {
+  :idx 13
+  :col 1
+  :row 3
+  :vn -1
+  :vs -3
+  :ve 0
+  :vw 1
+  :vne 0
+  :vnw 1
+  :vse 0
+  :vsw 1
+  :vn2 0
+  :vs2 0
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_7 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_19 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_14 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_8 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_20 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c7))
+    self.set(:vs, underground_caverns_3.get(:c19))
+    self.set(:ve, underground_caverns_3.get(:c14))
+    self.set(:vne, underground_caverns_3.get(:c8))
+    self.set(:vse, underground_caverns_3.get(:c20))
+    self.set(:vn2, underground_caverns_3.get(:c1))
+    self.set(:vs2, underground_caverns_3.get(:c25))
+    self.set(:ve2, underground_caverns_3.get(:c15))
+  }
+}
+
+object cp_14 is PuzzleSquare in underground_caverns_3 {
+  :idx 14
+  :col 2
+  :row 3
+  :vn 0
+  :vs 0
+  :ve 0
+  :vw 0
+  :vne 1
+  :vnw -1
+  :vse 0
+  :vsw -3
+  :vn2 -1
+  :vs2 0
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_8 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_20 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_15 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_13 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_9 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_7 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_21 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_19 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c8))
+    self.set(:vs, underground_caverns_3.get(:c20))
+    self.set(:ve, underground_caverns_3.get(:c15))
+    self.set(:vw, underground_caverns_3.get(:c13))
+    self.set(:vne, underground_caverns_3.get(:c9))
+    self.set(:vnw, underground_caverns_3.get(:c7))
+    self.set(:vse, underground_caverns_3.get(:c21))
+    self.set(:vsw, underground_caverns_3.get(:c19))
+    self.set(:vn2, underground_caverns_3.get(:c2))
+    self.set(:vs2, underground_caverns_3.get(:c26))
+    self.set(:ve2, underground_caverns_3.get(:c16))
+  }
+}
+
+object cp_15 is PuzzleSquare in underground_caverns_3 {
+  :idx 15
+  :col 3
+  :row 3
+  :vn 1
+  :vs 0
+  :ve 0
+  :vw 0
+  :vne 0
+  :vnw 0
+  :vse -1
+  :vsw 0
+  :vn2 0
+  :vs2 -1
+  :ve2 0
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_9 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_21 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_16 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_14 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_10 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_8 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_22 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_20 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c9))
+    self.set(:vs, underground_caverns_3.get(:c21))
+    self.set(:ve, underground_caverns_3.get(:c16))
+    self.set(:vw, underground_caverns_3.get(:c14))
+    self.set(:vne, underground_caverns_3.get(:c10))
+    self.set(:vnw, underground_caverns_3.get(:c8))
+    self.set(:vse, underground_caverns_3.get(:c22))
+    self.set(:vsw, underground_caverns_3.get(:c20))
+    self.set(:vn2, underground_caverns_3.get(:c3))
+    self.set(:vs2, underground_caverns_3.get(:c27))
+    self.set(:ve2, underground_caverns_3.get(:c17))
+    self.set(:vw2, underground_caverns_3.get(:c13))
+  }
+}
+
+object cp_16 is PuzzleSquare in underground_caverns_3 {
+  :idx 16
+  :col 4
+  :row 3
+  :vn 0
+  :vs -1
+  :ve 0
+  :vw 0
+  :vne -2
+  :vnw 1
+  :vse -1
+  :vsw 0
+  :vn2 0
+  :vs2 0
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_10 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_22 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_17 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_15 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_11 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_9 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_23 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_21 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c10))
+    self.set(:vs, underground_caverns_3.get(:c22))
+    self.set(:ve, underground_caverns_3.get(:c17))
+    self.set(:vw, underground_caverns_3.get(:c15))
+    self.set(:vne, underground_caverns_3.get(:c11))
+    self.set(:vnw, underground_caverns_3.get(:c9))
+    self.set(:vse, underground_caverns_3.get(:c23))
+    self.set(:vsw, underground_caverns_3.get(:c21))
+    self.set(:vn2, underground_caverns_3.get(:c4))
+    self.set(:vs2, underground_caverns_3.get(:c28))
+    self.set(:ve2, underground_caverns_3.get(:c18))
+    self.set(:vw2, underground_caverns_3.get(:c14))
+  }
+}
+
+object cp_17 is PuzzleSquare in underground_caverns_3 {
+  :idx 17
+  :col 5
+  :row 3
+  :vn -2
+  :vs -1
+  :ve 1
+  :vw 0
+  :vne 0
+  :vnw 0
+  :vse 0
+  :vsw -1
+  :vn2 -1
+  :vs2 0
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_11 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_23 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_18 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_16 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_12 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_10 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_24 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_22 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c11))
+    self.set(:vs, underground_caverns_3.get(:c23))
+    self.set(:ve, underground_caverns_3.get(:c18))
+    self.set(:vw, underground_caverns_3.get(:c16))
+    self.set(:vne, underground_caverns_3.get(:c12))
+    self.set(:vnw, underground_caverns_3.get(:c10))
+    self.set(:vse, underground_caverns_3.get(:c24))
+    self.set(:vsw, underground_caverns_3.get(:c22))
+    self.set(:vn2, underground_caverns_3.get(:c5))
+    self.set(:vs2, underground_caverns_3.get(:c29))
+    self.set(:vw2, underground_caverns_3.get(:c15))
+  }
+}
+
+object cp_18 is PuzzleSquare in underground_caverns_3 {
+  :idx 18
+  :col 6
+  :row 3
+  :vn 0
+  :vs 0
+  :ve 1
+  :vw 0
+  :vne 1
+  :vnw -2
+  :vse 1
+  :vsw -1
+  :vn2 0
+  :vs2 0
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_12 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_24 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_17 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_11 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_23 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c12))
+    self.set(:vs, underground_caverns_3.get(:c24))
+    self.set(:vw, underground_caverns_3.get(:c17))
+    self.set(:vnw, underground_caverns_3.get(:c11))
+    self.set(:vsw, underground_caverns_3.get(:c23))
+    self.set(:vn2, underground_caverns_3.get(:c6))
+    self.set(:vs2, underground_caverns_3.get(:c30))
+    self.set(:vw2, underground_caverns_3.get(:c16))
+  }
+}
+
+object cp_19 is PuzzleSquare in underground_caverns_3 {
+  :idx 19
+  :col 1
+  :row 4
+  :vn 0
+  :vs 0
+  :ve 0
+  :vw 1
+  :vne 0
+  :vnw 1
+  :vse 0
+  :vsw 1
+  :vn2 -1
+  :vs2 1
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_13 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_25 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_20 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_14 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_26 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c13))
+    self.set(:vs, underground_caverns_3.get(:c25))
+    self.set(:ve, underground_caverns_3.get(:c20))
+    self.set(:vne, underground_caverns_3.get(:c14))
+    self.set(:vse, underground_caverns_3.get(:c26))
+    self.set(:vn2, underground_caverns_3.get(:c7))
+    self.set(:vs2, underground_caverns_3.get(:c31))
+    self.set(:ve2, underground_caverns_3.get(:c21))
+  }
+}
+
+object cp_20 is PuzzleSquare in underground_caverns_3 {
+  :idx 20
+  :col 2
+  :row 4
+  :vn 0
+  :vs 0
+  :ve 0
+  :vw -3
+  :vne 0
+  :vnw 0
+  :vse -1
+  :vsw 0
+  :vn2 0
+  :vs2 1
+  :ve2 -1
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_14 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_26 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_21 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_19 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_15 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_13 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_27 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_25 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c14))
+    self.set(:vs, underground_caverns_3.get(:c26))
+    self.set(:ve, underground_caverns_3.get(:c21))
+    self.set(:vw, underground_caverns_3.get(:c19))
+    self.set(:vne, underground_caverns_3.get(:c15))
+    self.set(:vnw, underground_caverns_3.get(:c13))
+    self.set(:vse, underground_caverns_3.get(:c27))
+    self.set(:vsw, underground_caverns_3.get(:c25))
+    self.set(:vn2, underground_caverns_3.get(:c8))
+    self.set(:vs2, underground_caverns_3.get(:c32))
+    self.set(:ve2, underground_caverns_3.get(:c22))
+  }
+}
+
+object cp_21 is PuzzleSquare in underground_caverns_3 {
+  :idx 21
+  :col 3
+  :row 4
+  :vn 0
+  :vs -1
+  :ve -1
+  :vw 0
+  :vne 0
+  :vnw 0
+  :vse 0
+  :vsw 0
+  :vn2 1
+  :vs2 0
+  :ve2 -1
+  :vw2 -3
+  grammar {
+    exit north "north" -> cp_15 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_27 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_22 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_20 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_16 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_14 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_28 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_26 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c15))
+    self.set(:vs, underground_caverns_3.get(:c27))
+    self.set(:ve, underground_caverns_3.get(:c22))
+    self.set(:vw, underground_caverns_3.get(:c20))
+    self.set(:vne, underground_caverns_3.get(:c16))
+    self.set(:vnw, underground_caverns_3.get(:c14))
+    self.set(:vse, underground_caverns_3.get(:c28))
+    self.set(:vsw, underground_caverns_3.get(:c26))
+    self.set(:vn2, underground_caverns_3.get(:c9))
+    self.set(:vs2, underground_caverns_3.get(:c33))
+    self.set(:ve2, underground_caverns_3.get(:c23))
+    self.set(:vw2, underground_caverns_3.get(:c19))
+  }
+}
+
+object cp_22 is PuzzleSquare in underground_caverns_3 {
+  :idx 22
+  :col 4
+  :row 4
+  :vn 0
+  :vs 0
+  :ve -1
+  :vw 0
+  :vne 0
+  :vnw 0
+  :vse 0
+  :vsw -1
+  :vn2 0
+  :vs2 0
+  :ve2 0
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_16 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_28 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_23 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_21 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_17 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_15 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_29 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_27 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c16))
+    self.set(:vs, underground_caverns_3.get(:c28))
+    self.set(:ve, underground_caverns_3.get(:c23))
+    self.set(:vw, underground_caverns_3.get(:c21))
+    self.set(:vne, underground_caverns_3.get(:c17))
+    self.set(:vnw, underground_caverns_3.get(:c15))
+    self.set(:vse, underground_caverns_3.get(:c29))
+    self.set(:vsw, underground_caverns_3.get(:c27))
+    self.set(:vn2, underground_caverns_3.get(:c10))
+    self.set(:vs2, underground_caverns_3.get(:c34))
+    self.set(:ve2, underground_caverns_3.get(:c24))
+    self.set(:vw2, underground_caverns_3.get(:c20))
+  }
+}
+
+object cp_23 is PuzzleSquare in underground_caverns_3 {
+  :idx 23
+  :col 5
+  :row 4
+  :vn 0
+  :vs 0
+  :ve 0
+  :vw -1
+  :vne 1
+  :vnw 0
+  :vse 0
+  :vsw 0
+  :vn2 -2
+  :vs2 0
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_17 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_29 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_24 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_22 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_18 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_16 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_30 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_28 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c17))
+    self.set(:vs, underground_caverns_3.get(:c29))
+    self.set(:ve, underground_caverns_3.get(:c24))
+    self.set(:vw, underground_caverns_3.get(:c22))
+    self.set(:vne, underground_caverns_3.get(:c18))
+    self.set(:vnw, underground_caverns_3.get(:c16))
+    self.set(:vse, underground_caverns_3.get(:c30))
+    self.set(:vsw, underground_caverns_3.get(:c28))
+    self.set(:vn2, underground_caverns_3.get(:c11))
+    self.set(:vs2, underground_caverns_3.get(:c35))
+    self.set(:vw2, underground_caverns_3.get(:c21))
+  }
+}
+
+object cp_24 is PuzzleSquare in underground_caverns_3 {
+  :idx 24
+  :col 6
+  :row 4
+  :vn 1
+  :vs 0
+  :ve 1
+  :vw -1
+  :vne 1
+  :vnw 0
+  :vse 1
+  :vsw 0
+  :vn2 0
+  :vs2 1
+  :ve2 1
+  :vw2 -1
+  grammar {
+    exit north "north" -> cp_18 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_30 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_23 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_17 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_29 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c18))
+    self.set(:vs, underground_caverns_3.get(:c30))
+    self.set(:vw, underground_caverns_3.get(:c23))
+    self.set(:vnw, underground_caverns_3.get(:c17))
+    self.set(:vsw, underground_caverns_3.get(:c29))
+    self.set(:vn2, underground_caverns_3.get(:c12))
+    self.set(:vs2, underground_caverns_3.get(:c36))
+    self.set(:vw2, underground_caverns_3.get(:c22))
+  }
+}
+
+object cp_25 is PuzzleSquare in underground_caverns_3 {
+  :idx 25
+  :col 1
+  :row 5
+  :vn -3
+  :vs 1
+  :ve 0
+  :vw 1
+  :vne 0
+  :vnw 1
+  :vse 1
+  :vsw 1
+  :vn2 0
+  :vs2 1
+  :ve2 -1
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_19 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_31 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_26 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_20 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_32 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c19))
+    self.set(:vs, underground_caverns_3.get(:c31))
+    self.set(:ve, underground_caverns_3.get(:c26))
+    self.set(:vne, underground_caverns_3.get(:c20))
+    self.set(:vse, underground_caverns_3.get(:c32))
+    self.set(:vn2, underground_caverns_3.get(:c13))
+    self.set(:ve2, underground_caverns_3.get(:c27))
+  }
+}
+
+object cp_26 is PuzzleSquare in underground_caverns_3 {
+  :idx 26
+  :col 2
+  :row 5
+  :vn 0
+  :vs 1
+  :ve -1
+  :vw 0
+  :vne 0
+  :vnw -3
+  :vse 0
+  :vsw 1
+  :vn2 0
+  :vs2 1
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_20 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_32 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_27 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_25 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_21 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_19 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_33 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_31 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c20))
+    self.set(:vs, underground_caverns_3.get(:c32))
+    self.set(:ve, underground_caverns_3.get(:c27))
+    self.set(:vw, underground_caverns_3.get(:c25))
+    self.set(:vne, underground_caverns_3.get(:c21))
+    self.set(:vnw, underground_caverns_3.get(:c19))
+    self.set(:vse, underground_caverns_3.get(:c33))
+    self.set(:vsw, underground_caverns_3.get(:c31))
+    self.set(:vn2, underground_caverns_3.get(:c14))
+    self.set(:ve2, underground_caverns_3.get(:c28))
+  }
+}
+
+object cp_27 is PuzzleSquare in underground_caverns_3 {
+  :idx 27
+  :col 3
+  :row 5
+  :vn 0
+  :vs 0
+  :ve 0
+  :vw 0
+  :vne -1
+  :vnw 0
+  :vse 0
+  :vsw 1
+  :vn2 0
+  :vs2 1
+  :ve2 0
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_21 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_33 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_28 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_26 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_22 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_20 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_34 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_32 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c21))
+    self.set(:vs, underground_caverns_3.get(:c33))
+    self.set(:ve, underground_caverns_3.get(:c28))
+    self.set(:vw, underground_caverns_3.get(:c26))
+    self.set(:vne, underground_caverns_3.get(:c22))
+    self.set(:vnw, underground_caverns_3.get(:c20))
+    self.set(:vse, underground_caverns_3.get(:c34))
+    self.set(:vsw, underground_caverns_3.get(:c32))
+    self.set(:vn2, underground_caverns_3.get(:c15))
+    self.set(:ve2, underground_caverns_3.get(:c29))
+    self.set(:vw2, underground_caverns_3.get(:c25))
+  }
+}
+
+object cp_28 is PuzzleSquare in underground_caverns_3 {
+  :idx 28
+  :col 4
+  :row 5
+  :vn -1
+  :vs 0
+  :ve 0
+  :vw -1
+  :vne -1
+  :vnw 0
+  :vse 0
+  :vsw 0
+  :vn2 0
+  :vs2 1
+  :ve2 0
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_22 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_34 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_29 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_27 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_23 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_21 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_35 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_33 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c22))
+    self.set(:vs, underground_caverns_3.get(:c34))
+    self.set(:ve, underground_caverns_3.get(:c29))
+    self.set(:vw, underground_caverns_3.get(:c27))
+    self.set(:vne, underground_caverns_3.get(:c23))
+    self.set(:vnw, underground_caverns_3.get(:c21))
+    self.set(:vse, underground_caverns_3.get(:c35))
+    self.set(:vsw, underground_caverns_3.get(:c33))
+    self.set(:vn2, underground_caverns_3.get(:c16))
+    self.set(:ve2, underground_caverns_3.get(:c30))
+    self.set(:vw2, underground_caverns_3.get(:c26))
+  }
+}
+
+object cp_29 is PuzzleSquare in underground_caverns_3 {
+  :idx 29
+  :col 5
+  :row 5
+  :vn -1
+  :vs 0
+  :ve 0
+  :vw 0
+  :vne 0
+  :vnw -1
+  :vse 1
+  :vsw 0
+  :vn2 0
+  :vs2 1
+  :ve2 1
+  :vw2 -1
+  grammar {
+    exit north "north" -> cp_23 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_35 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_30 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_28 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_24 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_22 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" -> cp_36 when (self.get(:vse) == 0 && (self.get(:vs) == 0 || self.get(:ve) == 0))
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_34 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c23))
+    self.set(:vs, underground_caverns_3.get(:c35))
+    self.set(:ve, underground_caverns_3.get(:c30))
+    self.set(:vw, underground_caverns_3.get(:c28))
+    self.set(:vne, underground_caverns_3.get(:c24))
+    self.set(:vnw, underground_caverns_3.get(:c22))
+    self.set(:vse, underground_caverns_3.get(:c36))
+    self.set(:vsw, underground_caverns_3.get(:c34))
+    self.set(:vn2, underground_caverns_3.get(:c17))
+    self.set(:vw2, underground_caverns_3.get(:c27))
+  }
+}
+
+object cp_30 is PuzzleSquare in underground_caverns_3 {
+  :idx 30
+  :col 6
+  :row 5
+  :vn 0
+  :vs 1
+  :ve 1
+  :vw 0
+  :vne 1
+  :vnw -1
+  :vse 1
+  :vsw 0
+  :vn2 1
+  :vs2 1
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_24 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" -> cp_36 when (self.get(:vs) == 0)
+    exit south "south" refuse "There is a wall there."
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_29 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_23 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" -> cp_35 when (self.get(:vsw) == 0 && (self.get(:vs) == 0 || self.get(:vw) == 0))
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c24))
+    self.set(:vs, underground_caverns_3.get(:c36))
+    self.set(:vw, underground_caverns_3.get(:c29))
+    self.set(:vnw, underground_caverns_3.get(:c23))
+    self.set(:vsw, underground_caverns_3.get(:c35))
+    self.set(:vn2, underground_caverns_3.get(:c18))
+    self.set(:vw2, underground_caverns_3.get(:c28))
+  }
+}
+
+object cp_31 is PuzzleSquare in underground_caverns_3 {
+  :idx 31
+  :col 1
+  :row 6
+  :vn 0
+  :vs 1
+  :ve 1
+  :vw 1
+  :vne 0
+  :vnw 1
+  :vse 1
+  :vsw 1
+  :vn2 -3
+  :vs2 1
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_25 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_32 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_26 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c25))
+    self.set(:ve, underground_caverns_3.get(:c32))
+    self.set(:vne, underground_caverns_3.get(:c26))
+    self.set(:vn2, underground_caverns_3.get(:c19))
+    self.set(:ve2, underground_caverns_3.get(:c33))
+  }
+}
+
+object cp_32 is PuzzleSquare in underground_caverns_3 {
+  :idx 32
+  :col 2
+  :row 6
+  :vn 0
+  :vs 1
+  :ve 0
+  :vw 1
+  :vne -1
+  :vnw 0
+  :vse 1
+  :vsw 1
+  :vn2 0
+  :vs2 1
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_26 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_33 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_31 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_27 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_25 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c26))
+    self.set(:ve, underground_caverns_3.get(:c33))
+    self.set(:vw, underground_caverns_3.get(:c31))
+    self.set(:vne, underground_caverns_3.get(:c27))
+    self.set(:vnw, underground_caverns_3.get(:c25))
+    self.set(:vn2, underground_caverns_3.get(:c20))
+    self.set(:ve2, underground_caverns_3.get(:c34))
+  }
+}
+
+object cp_33 is PuzzleSquare in underground_caverns_3 {
+  :idx 33
+  :col 3
+  :row 6
+  :vn -1
+  :vs 1
+  :ve 0
+  :vw 1
+  :vne 0
+  :vnw 0
+  :vse 1
+  :vsw 1
+  :vn2 0
+  :vs2 1
+  :ve2 0
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_27 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_34 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_32 when (self.get(:vw) == 0)
+    exit northeast "northeast" -> cp_28 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_26 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+    exit west "west" -> cp_out when (underground_caverns_3.get(:cp_door_open))
+    exit west "west" refuse "The metal door bars the way."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c27))
+    self.set(:ve, underground_caverns_3.get(:c34))
+    self.set(:vw, underground_caverns_3.get(:c32))
+    self.set(:vne, underground_caverns_3.get(:c28))
+    self.set(:vnw, underground_caverns_3.get(:c26))
+    self.set(:vn2, underground_caverns_3.get(:c21))
+    self.set(:ve2, underground_caverns_3.get(:c35))
+    self.set(:vw2, underground_caverns_3.get(:c31))
+  }
+}
+
+object cp_34 is PuzzleSquare in underground_caverns_3 {
+  :idx 34
+  :col 4
+  :row 6
+  :vn 0
+  :vs 1
+  :ve 0
+  :vw 0
+  :vne 0
+  :vnw -1
+  :vse 1
+  :vsw 1
+  :vn2 -1
+  :vs2 1
+  :ve2 1
+  :vw2 1
+  grammar {
+    exit north "north" -> cp_28 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_35 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_33 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_29 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_27 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c28))
+    self.set(:ve, underground_caverns_3.get(:c35))
+    self.set(:vw, underground_caverns_3.get(:c33))
+    self.set(:vne, underground_caverns_3.get(:c29))
+    self.set(:vnw, underground_caverns_3.get(:c27))
+    self.set(:vn2, underground_caverns_3.get(:c22))
+    self.set(:ve2, underground_caverns_3.get(:c36))
+    self.set(:vw2, underground_caverns_3.get(:c32))
+  }
+}
+
+object cp_35 is PuzzleSquare in underground_caverns_3 {
+  :idx 35
+  :col 5
+  :row 6
+  :vn 0
+  :vs 1
+  :ve 1
+  :vw 0
+  :vne 0
+  :vnw 0
+  :vse 1
+  :vsw 1
+  :vn2 -1
+  :vs2 1
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_29 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" refuse "There is a wall there."
+    exit east "east" -> cp_36 when (self.get(:ve) == 0)
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_34 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" -> cp_30 when (self.get(:vne) == 0 && (self.get(:vn) == 0 || self.get(:ve) == 0))
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_28 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c29))
+    self.set(:ve, underground_caverns_3.get(:c36))
+    self.set(:vw, underground_caverns_3.get(:c34))
+    self.set(:vne, underground_caverns_3.get(:c30))
+    self.set(:vnw, underground_caverns_3.get(:c28))
+    self.set(:vn2, underground_caverns_3.get(:c23))
+    self.set(:vw2, underground_caverns_3.get(:c33))
+  }
+}
+
+object cp_36 is PuzzleSquare in underground_caverns_3 {
+  :idx 36
+  :col 6
+  :row 6
+  :vn 0
+  :vs 1
+  :ve 1
+  :vw 0
+  :vne 1
+  :vnw 0
+  :vse 1
+  :vsw 1
+  :vn2 0
+  :vs2 1
+  :ve2 1
+  :vw2 0
+  grammar {
+    exit north "north" -> cp_30 when (self.get(:vn) == 0)
+    exit north "north" refuse "There is a wall there."
+    exit south "south" refuse "There is a wall there."
+    exit east "east" refuse "There is a wall there."
+    exit west "west" -> cp_35 when (self.get(:vw) == 0)
+    exit west "west" refuse "There is a wall there."
+    exit northeast "northeast" refuse "There is a wall there."
+    exit northwest "northwest" -> cp_29 when (self.get(:vnw) == 0 && (self.get(:vn) == 0 || self.get(:vw) == 0))
+    exit northwest "northwest" refuse "There is a wall there."
+    exit southeast "southeast" refuse "There is a wall there."
+    exit southwest "southwest" refuse "There is a wall there."
+    exit up "up" refuse "There is no way up."
+    exit down "down" refuse "There's no way down here."
+  }
+  on :cp_changed {
+    self.set(:vn, underground_caverns_3.get(:c30))
+    self.set(:vw, underground_caverns_3.get(:c35))
+    self.set(:vnw, underground_caverns_3.get(:c29))
+    self.set(:vn2, underground_caverns_3.get(:c24))
+    self.set(:vw2, underground_caverns_3.get(:c34))
+  }
+}

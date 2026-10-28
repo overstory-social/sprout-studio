@@ -1,0 +1,30 @@
+{
+  "about": "A hello at the top of the cliff, and asking who is there, before the man has shown himself: both go to the something among the trees and are answered as it answers, never with Zork's random yuks, which are kept for where nobody could be listening.",
+  "steps": [
+    { "arrive": "Ann" },
+    { "as": "Ann", "type": "take lamp", "expect": [
+      { "reader": "Ann", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Ann", "type": "turn on lamp", "expect": [
+      { "reader": "Ann", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Ann", "type": "s" },
+    { "as": "Ann", "type": "w" },
+    { "as": "Ann", "type": "w", "expect": [
+      { "reader": "Ann", "kind": "described", "words": "Cliff" }
+    ] },
+    { "as": "Ann", "type": "hello", "expect": [
+      { "reader": "Ann", "kind": "said", "words": "\"Hello?\" you say to the trees. Nobody answers; among the trunks, something that is not a tree slips back a little further, and goes on keeping very still. There seems to be nobody there, but it's hard to tell." }
+    ] },
+    { "as": "Ann", "type": "who is there", "expect": [
+      { "reader": "Ann", "kind": "said", "words": "Nobody answers. Among the trees, something that is not a tree keeps very still, and keeps on keeping it; there seems to be nobody there, but it's hard to tell." }
+    ] },
+    { "as": "Ann", "type": "hello, who is there?", "forbid": ["error"] },
+    { "as": "Ann", "type": "e", "expect": [
+      { "reader": "Ann", "kind": "described", "words": "Barren Area" }
+    ] },
+    { "as": "Ann", "type": "hello", "expect": [
+      { "reader": "Ann", "kind": "said", "words": "Nice weather we've been having lately." }
+    ] }
+  ]
+}

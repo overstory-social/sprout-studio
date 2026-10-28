@@ -1,0 +1,168 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The one-command window is the original's (I-BOAT-DISAPPEAR queued 2 fires one command after the arrival) and stays; what failed was that the nudge arrived in the command that spent the window and nothing said the ship was gone for good. The nudge now lands in the arrival text (the sailor's hand cupped to his ear); a call that is nearly the words (hail, ahoy, wave, shout/say hello or ahoy, talk to sailor) is answered with the nudge and holds the ship one command longer, once, so the near-miss is a second chance rather than the loss; the ungreeted ship says it will not be back; and at the empty shore wait, every greeting and every call answer in the 'anymore' voice. The two words are still the only greeting that brings it in, which is the brief's puzzle."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "A real bug, and exactly the rendering rule the spec states: the slot read the strength after the same turn's reply had killed the visitor and reset it. The diagnosis is now chosen in code by the strength just computed and said as a literal in both strokes, and the figure's examine description branches in code the same way. Logged as friction 20."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The refusal was the original's line but gave no reason; it now points at the figure's guard, which is its strength. The 'send it flying to the ground' miss is the original's (S-MISSES) and is kept, with a clause that it is up again at once, since a downed opponent reads as an opening to anyone who fences."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "Five of seven, and the only hook in Q1 was invisible to three of them. The footsteps are now a presence in every shadow room answering examine, listen, follow, find, hug and hello, and 'who is there' is read; they keep the visitor's pace and say that standing in the light, or walking the hills in it, is how the one walking is met. The figure's odds are the original's and are untouched, as the point asks."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "The plain warning moves into the Lake Shore's own description, where it is read without an examine, naming the light first. Bare swim at the shore stays 'Go jump in a lake!': I checked V-SWIM, and at the Lake Shore that is the original's own answer (only ON-LAKE, IN-LAKE and the ocean say otherwise), which the point's own clause asks me to keep."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "Checked against the source: OCEAN-F REMOVEs the thrown thing, and SHADOW-ARRIVAL and I-SHADOW-REPLY MOVE the sword by name from wherever it is, so in the original a sword thrown into the sea comes back when the figure appears. The world now follows the original: the ocean, which is the only thing that can hear the call, gives the sword up itself. Outcome logged in intent.md beside the lamp entry and in friction 25."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The figure's going should read as its own act. The room cannot tell a visitor who has already left it (friction 21), so the visitor says it to themselves on arriving: 'Behind you, the hooded figure steps back into the shadows.'"
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Agreed that it is the reporter's artifact, not the world's. I write only the world and its two logs, so filing the issue is the steward's; the finding is recorded as friction 24 so it is not lost, and no world change is made for it."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "No change, as recommended: the 'not today' refusals are what the brief wants until the revision after round 3 opens Q2, and the round's unread rate is those refusals, not misreads."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The ship's nudge moved into its arrival text; new verbs hail, hail_bare and wave_bare (hail/ahoy/call/shout/wave to the sailor or ship, and the bare forms including 'shout ahoy', 'say ahoy', 'say hello', 'wave'), answered at the ocean with the nudge and holding the ship one command longer once (:ship_held), a second time with the sailor turning away; talking to the sailor does the same via :near_greet; the ungreeted ship's sail-off says it will not be back, examine ship after says the same (:ship_greeted), and wait, greetings and calls at the empty shore answer in the 'anymore' voice (a waited passage on the Adventurer keyed on :shore_empty, set as the clock begins).",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/ocean.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/room.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The figure's wounds after a stroke chosen in code and said as literals in both strokes (the s_diag slot removed); the figure's examine description branches in code on the visitor's s_strength instead of rendering a slot.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/shadow.sprout"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "The early hood refusal now points at the figure's guard and strength; the 'flying to the ground' miss says the figure is up again at once with its guard up.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "A Footsteps kind (Scenery, Trace) in every ShadowRoom answering examine, listen, follow (follow_sound), find, hug and hello, with lines that change when the figure stands or is gone; a who_there verb ('who is there', 'who's there', ...) answered by the figure, the footsteps or the empty Empire; listen in a shadow room says the footsteps keep the visitor's pace.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/shadow.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/thing.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "The Lake Shore's own description says plainly to leave on the lit shore whatever cannot be lost to the bottom, the light first of all; the five tests that read the shore updated to the new line.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/lake.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/death.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/shore.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/void.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "The Ocean handles :sword_come itself: it walks its contents for a sword, moves it to the caller as its own mover (release now refuses every mover but self), sets the glow and tells the caller; the sword thrown into the sea comes back when the figure next appears, as the original's does.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/ocean.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "Walking out past the figure tells the visitor 'Behind you, the hooded figure steps back into the shadows, and they close over it like water', from the visitor's own :moved via a :figure_near flag set when the figure appears and cleared on fight_off, unhood, slaying and death.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/shadow.sprout"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "Two regression tests: hail.json (footsteps, 'who is there?', the nudge in the arrival, the hold once and not twice, the mute sail-off, the empty-shore wait and calls) and sword_sea.json (the sword from the ocean, the figure's departure line, the literal diagnosis); ship.json and walkthrough.json updated to the ship's new arrival, sail-off and 'anymore' lines.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/hail.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/sword_sea.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/ship.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P4",
+        "P6",
+        "P7"
+      ]
+    },
+    {
+      "what": "intent.md: a Round 3 section listing every change above, the ship's hold, the footsteps and the sword's return added to the secrets, and the departures list extended with the sword-from-the-ocean outcome beside the lamp entry and the ship's one-time hold.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/intent.md"
+      ],
+      "for": [
+        "P1",
+        "P4",
+        "P5",
+        "P6",
+        "P7"
+      ]
+    },
+    {
+      "what": "friction.md: entries 20 (a passage cannot say what was true when it was said), 21 (a room cannot tell a visitor who has just left), 22 (the waited line is given nothing and rendered after the clock), 23 (a do that only sends is answered nothing_happens), 24 (the reach metric misses a place passed through in one turn, a note for the reporter) and 25 (what the ocean holds cannot hear the call, so the ocean answers it).",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/friction.md"
+      ],
+      "for": [
+        "P2",
+        "P7",
+        "P1",
+        "P8",
+        "P6"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+// Where a fourth death leaves a visitor: the voice from the void, and
+// then nothing (JIGS-UP's QUIT). A place with no way out.
+import * as sprout from 'sprout'
+
+object oblivion is sprout.Place in underground_caverns_3 {
+  grammar { name "Void"  article none }
+  describe { text remains }
+  passage remains {
+    Void
+
+    A deep blackness, in which you are not so much standing as suspended. The voice has gone, and the Empire with it. Nothing further will happen to you in this game; whoever the old man was waiting for, he has gone to look for them elsewhere.
+  }
+}

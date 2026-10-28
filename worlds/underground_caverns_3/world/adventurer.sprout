@@ -1,0 +1,2715 @@
+// The adventurer: what every visitor is made of. Zork's own parts of the
+// verbs that are the adventurer's to answer (taking, dropping, putting,
+// throwing, the score), the light they carry, the fight with the hooded
+// figure as they suffer it (I-SHADOW-REPLY, SHADOW-ATTACK, I-CURE), the
+// lake's clocks (I-ON-LAKE, I-ROC, I-IN-LAKE), the ship's (I-BOAT-
+// DISAPPEAR), the potion's (I-VISIBLE), the man at the cliff's (I-MAN-
+// APPEARS, I-MAN-PRESENT, I-MAN-RETURNS, I-MAN-LIFT, I-MAN-LEAVES), the
+// viewing table's snap (I-VIEW-SNAP), the repellent's (I-SPRAY), and
+// their deaths.
+//
+// Dying is Zork's JIGS-UP: the visitor carried to the cell, where the old
+// man (cell.sprout) sends them back by his own act, the lamp back at the
+// stair, what was carried scattered (RANDOMIZE-OBJECTS), and the fourth
+// time the void. Getting anywhere at a stroke takes the world's gate,
+// since no room can otherwise reach another.
+import * as sprout from 'sprout'
+import {Thing, Portable, Scenery, Creature, Wearable, Weapon, Flame, Diggable, Placeable} from 'thing'
+import {Box} from 'box'
+import {Lamp, Light, Torch} from 'lamp'
+import {Sword, Hood, Cloak, Amulet, Vial, Potion, Waybread, Staff, BrokenStaff, StrangeKey, Repellent, LoreBook, Ring, Sceptre, JewelledKnife, Jewel, :quaff} from 'items'
+import {MuseumRoom, MuseumEntrance, JewelRoom, TechMuseum, GreatDoor, Cleft, OldPedestal, IronDoor, StoneDoor, WoodenDoor} from 'museum'
+import {tight_squeeze, museum_entrance, jewel_room, tech_museum, mid_museum_entrance, mid_jewel_room, mid_tech_museum, old_museum_entrance, old_jewel_room, old_tech_museum, great_door} from 'museum'
+import {TimeMachine, TmSeat, TmDial} from 'time_machine'
+import {PuzzleSquare, PuzzleAnte, SideRoom, PuzzleLadder, PuzzleSlot, SteelDoor, PuzzleHole, cp_ante, cp_out} from 'puzzle'
+import {Room, DarkRoom, Sailor, Floor, Wall} from 'room'
+import {go, look, examine, inventory, help} from 'sprout'
+import {endless_stair, junction, barren_area, creepy_crawl, foggy_room} from 'way_in'
+import {ShadowRoom, Shadow, Footsteps, Quicksand, strike} from 'shadow'
+import {FlatheadOcean, Ocean, Ship} from 'ocean'
+import {on_lake, in_lake, OnLake, Underwater, LakeShore, AqueductView, Lake, ShinyObject, :taken} from 'lake'
+import {oblivion} from 'oblivion'
+import {prison_cell, send_back} from 'cell'
+import {cliff, cliff_ledge, cliff_base, CliffTop, CliffLedge, CliffBase, CliffMan, LedgeMan, CliffRope, LedgeRope, CliffEdge, Ledge, Chest, haul} from 'cliff'
+import {damp_passage, dead_end, Sleeper, EngravingsRoom} from 'engravings'
+import {BeamRoom, Beam, MirrorBox, GuardianRoom, GuardianSide, Guardians, Channel, ShortPole, BoxFace, BoxMirror, BoxOuterPanel, Hallway, mra, mrb, mrc, mrg, mrd, mrae, mraw, mrbe, mrbw, mrce, mrcw, mrge, mrgw, mrde, mrdw, beam_room, button_room} from 'mirror'
+import {DungeonMaster, MasterVoice, FarCell, SlotCell, DungeonRoom, Parapet, BronzeDoor, CellDoor, FlamingPit, front_door, behind_door, parapet, dungeon_cell, good_cell, wrong_cell, north_corridor, south_corridor, east_corridor, west_corridor} from 'dungeon'
+import {scenic_vista, timber_room, room_8, altar_room, TimberRoom, MineRoom, Altar, FarShore, VistaRoom, TorchBracket} from 'vista'
+import {key_room, SouthShore, GrueLair, DarkTwo, KeyRoom, AqueductRoom, HighArch, WaterSlide, FarBalcony, Chasm} from 'aqueduct'
+import {take, take_fixed, drop, put, put_on, put_under, pour_on, give, throw, throw_dir, throw_far, scramble, dig_here, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, get_out, exit_thing, board, search_here, feel_around, wait_long, hint, cant_wear, incant, master_follow, master_stay, master_go, master_parapet, master_push, master_dial, master_spin, master_take, master_open, master_other, Dest, Mode, Direction, ManStage, Era, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep, :cp_push, :cp_from, :cp_to, :cp_done, :cp_open_door, :tm_point, :time_trip, :push_machine, :machine_follow, :dial_set, :stone_door, :wooden_door, :old_entered, :jewels_home, :history, :mirror_out, :admitted, :sent_back, :cell_turned, :quest_done, :dm_order, :dm_follow_set, :dm_folflag_set, :wood_set, :pole_set} from 'verbs'
+
+kind Adventurer is sprout.Visitor, Placeable {
+  :capacity 30
+  capacity 100 by :size
+  grammar { nouns "me", "myself", "self", "adventurer", "cretin" }
+  // The potential: a point for starting down a path with promise.
+  :score 0 min 0 max 7
+  :pt_shadow false
+  :pt_struck false
+  :pt_lake false
+  :pt_ledge false
+  :pt_table false
+  :pt_puzzle false
+  :pt_time false
+  :deaths 0 min 0 max 4
+  :light 0 min 0 max 9
+  :room_dark false
+  :own_light false
+  :load 0 min 0 max 900
+  // Whether anything carried weighs more than four, for the Timber Room's
+  // narrow way west (NO-OBJS); counted as each command ends.
+  :bulky false
+  :dest Dest default stair
+  :mode Mode default brief
+  :moves 0 min 0 max 1000000
+  :aside false
+  :finished false
+  :devoured false
+  :dying false
+  // Told once, on the first room seen again by its name alone, about
+  // LOOK and VERBOSE.
+  :brief_told false
+  // The fight (P-STRENGTH, S-STRENGTH, ATTACK-MODE, I-CURE, SHADOW-GONE).
+  // The figure's strength is kept here beside the visitor's own, since it
+  // is a figure who is the visitor, and it is spawned afresh each time it
+  // appears.
+  :strength 5 min 0 max 5
+  :s_strength 5 min 0 max 5
+  :fighting false
+  :cure 0 min 0 max 10
+  :shadow_gone false
+  :glow_now 0 min 0 max 2
+  :sword_leaps false
+  // Strokes missed in a row, for the word about stepping away.
+  :misses 0 min 0 max 20
+  // Whether the figure stands with the visitor, so that walking out past
+  // it can say that it goes (the room cannot tell a visitor who has left).
+  :figure_near false
+  // Whether the visitor stood on the shore with the ship already gone as
+  // the turn's clock began: for the waited line, which is given nothing,
+  // reads the one waiting, and is rendered after the clock has run.
+  :shore_empty false
+  :ledge_waiting false
+  // Scratch for a stroke: whether it is made with the sword, named or not.
+  :armed false
+  // The lake (LAKE-TIME, I-ROC, I-IN-LAKE).
+  :in_water false
+  :lake_time 0 min 0 max 100
+  :air 0 min 0 max 3
+  :roc 0 min 0 max 2
+  // The ship (BOAT-SEEN, SHIP-GONE, I-BOAT-DISAPPEAR), and "hello sailor"
+  // counted (HS).
+  :ship_seen false
+  :ship_visible false
+  :ship_gone false
+  :ship_timer 0 min 0 max 2
+  // The ship held one command longer by a call that was nearly the words,
+  // which it does once; and whether the words were said in time.
+  :ship_held false
+  :ship_greeted false
+  :hs 0 min 0 max 1000000
+  // The potion (INVIS, I-VISIBLE).
+  :invisible false
+  :invis_left 0 min 0 max 3
+  // The grue repellent (SPRAYED?, I-SPRAY): five moves of it.
+  :sprayed false
+  :spray_left 0 min 0 max 5
+  // The viewing table's three moves away (I-VIEW-SNAP).
+  :view_snap 0 min 0 max 3
+  // The man at the cliff's clocks: five moves to his appearing, ten to
+  // his return, his patience at the brink, his patience with the rope,
+  // and whether the rope is in hand.
+  :man_timer 0 min 0 max 10
+  :man_waiting 0 min 0 max 20
+  :lift_wait 0 min 0 max 10
+  :holding_rope false
+  // Whether a death sends the strange key home (JIGS-UP).
+  :key_home false
+  // The dungeon (IN-DUNGEON, and FRONT-DOOR's TOUCHBIT for the two words):
+  // let in by the Dungeon Master; been to his door; the end reached; and
+  // the moves spent in a cell gone back to the rim of the pit.
+  :in_dungeon false
+  :front_door_touched false
+  :won false
+  :cell_heat 0 min 0 max 20
+  // Scratch: where the box lets out, the number an order sets the dial
+  // to, and whether a drop has broken the beam this command.
+  :mo Dest default nowhere
+  :dm_target Dest default nowhere
+  :dm_n 0
+  :cell_to 1 min 1 max 8
+  :beam_done false
+  // The directions an order to the Dungeon Master may name.
+  :ways [Direction] default [north, south, east, west, northeast, northwest, southeast, southwest, up, down, out]
+  // Scratch for taking several things in one command.
+  :fresh 0 min 0 max 50
+  // Whether the visitor stood at the Scenic Vista as the turn's clock
+  // began, for the waited line.
+  :at_vista false
+  // The year the visitor is in (YEAR), the year a trip is to (TM-YEAR),
+  // where it lands, the forty moves before the present takes them back
+  // (I-SNAP), and where it takes them to (SNAP-LOC).
+  :year 948 min 0 max 999
+  :tm_year 948 min 0 max 999
+  :tm_dest Dest default nowhere
+  :snap_in 0 min 0 max 40
+  :snap_loc Dest default tech_museum
+  :snapping false
+  // The guards outside the door in 776 (GUARDS-PRESENT, I-GUARDS-LEAVE),
+  // and Lord Flathead heard through it, once.
+  :guards false
+  :guards_timer 0 min 0 max 20
+  :flathead_heard false
+  // The Royal Puzzle: the legend told once, and the way a pushed wall went.
+  :cp_legend_seen false
+  :push_dir Direction default none
+  // The gold machine pushed: whether this move is a push, and where the
+  // machine is to follow.
+  :pushing false
+  :push_told false
+  :follow_to Dest default tech_museum
+
+  describe {
+    if (self.get(:invisible)) { text "A good trick, as you are currently invisible." }
+    else { text "What you can see looks pretty much as usual, sorry to say." }
+  }
+
+  passage inventory {
+    {if self.count(Thing) == 0}You are empty-handed.{else}You are carrying:{for t: Thing in self}
+
+    {t.indef}{if t.is(Light)}{if t.get(:lit)} (providing light){/if}{/if}{if t.is(Wearable)} (being worn){/if}{t.inside_lines}{/for}{/if}
+  }
+  passage too_heavy { Your load is too heavy. }
+  passage over { {if self.get(:won)}Your quest in ZORK is complete. The lore and the powers are yours, and the burden with them; there is nothing further this world can ask of you, and nothing further you need do in it but enjoy the treasury, which is a thing a Dungeon Master learns to do slowly.{else}The game is over. Nothing further will happen to you in it; whoever the old man was waiting for, he has gone to look for them elsewhere.{/if} }
+  passage score_line {
+    Your potential is {self.get(:score)} of a possible 7, in {self.get(:moves)} {if self.get(:moves) == 1}move{else}moves{/if}.
+  }
+  passage diag_line {
+    {if self.get(:strength) >= 5}You are in perfect health.{else if self.get(:strength) == 4}You are wounded lightly. You have a good deal of strength in reserve.{else if self.get(:strength) == 3}You have a few wounds, which do not seriously impair your strength.{else if self.get(:strength) == 2}You are hurt quite badly. One major wound would probably kill you.{else if self.get(:strength) == 1}You are very seriously wounded. One more wound would very likely do you in.{else}You are dead.{/if}{if self.get(:strength) < 5 && self.get(:cure) > 0} You will be cured after {self.get(:cure)} {if self.get(:cure) == 1}move{else}moves{/if}.{/if}
+  }
+  // The Royal Puzzle's first push (CPWALL-OBJECT): the legend, once.
+  passage cp_legend {
+    The architecture of this region is getting complex, so that further descriptions will be diagrams of the immediate vicinity in a 3x3 grid. The walls here are rock, but of two different types - sandstone and marble. The following notations will be used:
+
+    .. = your position (middle of grid)
+
+    MM = marble wall
+
+    SS = sandstone wall
+
+    __ = open floor
+
+    ?? = unknown (blocked by walls)
+  }
+  // The guards of 776 (GUARD-KILLERS, GUARD-CAUGHT, FLATHEAD-SENTENCE), and
+  // their going (I-GUARDS-LEAVE).
+  passage guards_kill { {one of}you are surrounded by heavily armed guards who seem awed by your presence. One, whose IQ might be 15, aims a strange waffle-like instrument in your direction and all goes black.{or}you are confronted with many particularly stupid-looking people dressed in peculiar uniforms and pointing waffle-like objects in your direction. One twists his waffle and you slump to the ground, dead.{or}you see a row of military people who, if appearances do not deceive, have the cumulative intelligence of an unripe grapefruit. One of them aims a waffle-shaped implement in your direction and you become numb and then paralyzed and then dead.{/one of} }
+  passage guard_caught { A particularly vicious-looking guard enters the room and sees you. He grinds his teeth unpleasantly, pulls a waffle out of his garment, and vaporizes you with a flick of his finger. }
+  passage flathead_sentence { He speaks loudly, nearly deafening the poor civil servant whose duty it is to see that his wishes are carried out. "Aha! A thief! Didn't I tell you that we needed more security! But, no! You all said my idea to build the museum under two miles of mountain and surrounded by five hundred feet of steel was impractical! Now, what to do with this ... intruder? I have it! We'll build a tremendous fortress on the highest mountain peak, with one narrow ladder stretching thousands of feet to the pinnacle. There he will stay for the rest of his life!" His brow-beaten assistant hesitates. "Don't you think, Your Lordship, that your plan is a bit, well, a bit much?" Flathead gives it a second's thought. "No, not really." he says, and you are led away. A few years later, your prison is finished. You are taken there, and spend the rest of your life in misery. }
+  passage guards_leave { You hear, from outside the door, guards marching away, their voices fading. After a few moments, a booming crash signals the close of what must be a tremendous door. Then there is silence. }
+  passage hear_flathead { One particularly loud and grating voice can be heard above the others outside the room. "Very nice! Very nice! Not enough security, but very nice! Now, Lord Feepness, pay attention! I've been thinking that what we need is a dam, a tremendous dam to control the Frigid River, with thousands of gates. We shall call it ... Flood Control Dam #2. No, not quite right. Aha! Flood Control Dam #3." "Pardon me, my Lord, but wouldn't that be just a tad excessive?" "Nonsense! Now, let me tell you my idea for hollowing out volcanoes..." With that, the voices trail out nothingness. }
+  passage robot_line { An odd robot-like device glides in, dusting the floor as it moves. Its head gyrates briefly as it scans the machine. "Shame. Shame," it says, rather tinnily. "Someone has been tampering with the machines again." Six beady mechanical eyes focus on you as the robot picks up the gold machine. "Hands off, adventurer!" it says as it leaves the room, closing the door behind it. }
+  // The dark (DESCRIBE-ROOM): the grue's warning, unless the repellent is
+  // on; and in the upper Dark Place, the dim light to the east.
+  passage dark { It is pitch black.{if !self.get(:sprayed)} You are likely to be eaten by a grue.{/if}{if here.is(DarkTwo)} The ground continues to slope upwards away from the lake. You can barely detect a dim light from the east.{/if} }
+  // The hood reached for (HOOD-F): had when the figure is nearly beaten,
+  // and then the face beneath it; otherwise held off.
+  passage reveal { You slowly remove the hood from your badly wounded opponent and recoil in horror at the sight of your own face, weary and wounded. A faint smile comes to the lips and then the face starts to change, very slowly, into that of an old, wizened person. The image fades and with it the body of your hooded opponent. The cloak remains on the ground. }
+  passage forced_back { The hooded figure, though recovering from wounds, is strong enough to force you back. }
+  passage not_close { You cannot get close enough to the hooded figure to remove the hood. Its guard is still too good for that, and will be while it has the strength to keep it up. }
+  // The figure brought to its last point: it stops, and the hood is there.
+  passage defenceless {
+    The figure appears to be badly hurt and defenseless.
+
+    It lowers its sword, and its head with it, and waits; the hood hangs within reach of your hand.
+  }
+  // The ship held a moment by a call that was nearly the words (once), and
+  // not held a second time.
+  passage ship_holds { He cups a hand to his ear, and the ship, for a moment, holds alongside, as though he were waiting for something in particular and this was not quite it. Whatever he is waiting to hear is short, and friendly, and is the greeting every adventurer in the Empire has been told to try on a sailor, and has tried, these three games, on everything but one. }
+  passage ship_tired { He shakes his head, slowly, and turns back to the prow. He has waited three ages for two words, and he is not going to wait for any others. }
+  passage ship_sails { The boat sails silently through the mist and out of sight. It will not be back; this shore sees it once, and has seen it. He had been listening for something, with that hand to his ear, and it was not said. }
+  passage mist_empty { Nothing happens anymore. The mist is empty, and it will stay empty; the ship that passes this shore has passed it. }
+  passage steps_back { Behind you, the hooded figure steps back into the shadows, and they close over it like water. }
+  // Zork's "Time passes..." everywhere but the shore after the ship, where
+  // waiting is for nothing, and the line says so.
+  // At the ledge while he is away, the wait is a sequence (the clock has
+  // run by the time this is rendered, so it reads the moves he has left),
+  // one beat a move and no beat said twice: the lock, the lid, the
+  // whistle, the coins, the recount, the gathering up, the pacing, the
+  // brink, and the rope shifting. At the Vista, the image under the
+  // table's surface stirs as the indicator nears its change.
+  passage waited { {if self.get(:shore_empty)}Time passes, and the surf with it, in and out. Nothing else passes; the ship that passes this shore has passed it, and the mist will stay empty however long you give it.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 9}Time passes... From the top of the cliff, faintly, the sound of a lock being tried, and tried again. He said a short while, and the ledge is where he left you, and where he will look.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 8}Time passes... Above you, the lock gives, and a lid goes back on a hinge that has not moved in a long time; and then a silence that is somebody looking. Nothing comes down the cliff yet.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 7}Time passes... From the top of the cliff, a low whistle, of the kind a man gives at the sight of more than he was expecting. Nothing comes down the cliff.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 6}Time passes... Above you, coins: counted, by the sound, one at a time, onto rock. The chest, it seems, had a good deal in it.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 5}Time passes... The counting stops, and starts again from the beginning, by somebody who does not trust his own arithmetic. Nothing comes down the cliff yet.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 4}Time passes... A pause above. Then footsteps, up there, going away from the brink, and the sound of things being gathered up. He is not gone; you can still hear him.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 3}Time passes... Footsteps, going away from the brink and coming back to it, the way a man paces who is deciding something, and deciding it in his own favour.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 2}Time passes... The footsteps come back to the brink and stop there. Nothing is said; somebody is looking down at you, and taking his time about it.{else if self.get(:ledge_waiting) && self.get(:man_timer) == 1}Time passes... Something scrapes on the rock at the top, where the rope is tied, and a coil of it shifts against the edge; he is not long now.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 1}Time passes... On the table, under the pale surface, the image lies quiet, the way a thing does that has just arrived.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 2}Time passes... Something under the table's surface shifts, slowly, like a sleeper turning over.{else if self.get(:at_vista) && underground_caverns_3.get(:view_tick) == 3}Time passes... The image under the surface is stirring now, going thin at the edges; the indicator will not be long.{else}Time passes...{/if} }
+  // Disarmed at the last point of strength (I-SHADOW-REPLY), and the sword
+  // handed back: the original's line first, and others of its kind, since
+  // it is said often. The sword never leaves the hand in any of them.
+  passage disarmed { {one of}The hooded figure swings its sword and sends yours flying to the ground. Although you are defenseless, the figure reaches for your sword and hands it back to you, nodding grimly.{or}A turn of the figure's wrist and your sword is out of your hand and in the dust. It could end this. Instead it stoops, picks up your sword, and gives it back to you hilt first, the way a teacher does.{or}The figure beats your blade down and aside, and for a moment you stand open and empty before it, the sword hanging useless from your hand. It waits, and nods at the blade, and does nothing until you have it up again.{or}Your sword goes spinning from your grip. The hooded figure watches it fall, watches you, and then hands it back, with a patience that is worse than the stroke.{/one of} }
+  // The word a losing fight earns (the hint book's): it fights as you fight.
+  passage as_you_fight { It fights the way you fight, and no better, and no worse: wounded, you are slower, and so is it. A fight that is going badly can be walked away from, into the dark, where it will not follow; wounds mend with time, on both sides, and the figure will be here when you come back for it. }
+  // The figure killed (SHADOW-F): the trap sprung.
+  passage slain_line { The hooded figure, fatally wounded, slumps to the ground. It gazes up at you once, and you catch a brief glimpse of deep and sorrowful eyes. Before you can react, the figure vanishes in a cloud of fetid vapor. Its hood and its cloak go with it, and the land of shadow is quiet in a way it was not before, as though something that had been waiting here a long time had stopped. }
+  // The old man's staff raised (JIGS-UP), felt from the visitor's side.
+  passage sent_back { You feel some great power well up inside you and you fall to the floor. The next moment, you are awakening, as if from a deep slumber. What you were carrying is not with you: the old man scatters what a visitor brings him, and it is lying where he left it, somewhere along the ways in, between the stair and the lake or in the passages east of the junction, with the lamp alone brought back to your feet. }
+  passage void { You feel yourself disembodied in a deep blackness. A voice from the void speaks: "I have waited a long age for you, my friend, but perhaps it has been another that I have been seeking. Good night, oh worthy adventurer!" It is the last you hear. }
+  // The man at the cliff, as he is heard from the ledge (I-MAN-APPEARS,
+  // MAN-WAITS, I-MAN-PRESENT, I-MAN-RETURNS, I-MAN-LIFT, I-MAN-LEAVES).
+  passage man_appears { At the edge of the cliff above you, a man appears. He looks down at you and speaks. "Hello, down there! You seem to have a problem. Maybe I can help you." He chuckles in an unsettling sort of way. "Perhaps if you tied that chest to the end of the rope I might be able to drag it up for you. Then, I'll be more than happy to help you up!" He laughs again. }
+  passage man_lifts { All at once, the chest is lifted from you. Looking up, you see a man at the top of the cliff, pulling intently at the rope. "That is uncommonly good of you, I do say!" He chuckles unpleasantly. "Oh, you are stuck, aren't you. Well, I'll be right back to get you!" He leaves your sight. }
+  passage man_waits { {one of}The man appears to be getting somewhat impatient.{or}Your friend at the cliff top has started pacing nervously around.{or}"Yoo hoo!" calls the man at the brink of the cliff. "Remember me?"{or}The man on the cliff waves at you. "It would just take a moment to tie that rope to the chest. I'd be much obliged, and there might even be something in it for you!"{or}A few small stones fall near your feet. You look up and see your friend waving. "I haven't got all day, fella. Be a pal and pass up the chest!"{or}The man on the cliff clears his throat loudly. "I don't mean to be rushing you, but I do have some pressing engagements...."{/one of} }
+  passage man_displeased { The man looks quite displeased. "All right, then. I guess someone else can always help me! See you around, sport!" He disappears. }
+  passage man_returns { A familiar voice calls down to you. "Are you still there?" he bellows with a coarse laugh. "Well, then, grab onto the rope and we'll see what we can do." The rope drops to within your reach. }
+  passage man_impatient { The man appears impatient. "Are you coming up then, or not?" }
+  passage man_no_day { "Well, I don't have all day. See you around sometime." Showering you with gravel, he disappears from sight. }
+  passage man_dodges { Your "friend", moving quickly, dodges behind some trees and is lost from sight. }
+  passage man_proud { Your "friend" examines his valuables with great pride. }
+  // The earthquake (I-CLEFT), as it is felt where the visitor stands.
+  passage tremor_mild { You feel a mild tremor from within the earth which passes quickly. }
+  passage tremor_great { There is a great tremor from within the earth. The entire dungeon shakes violently and loose debris falls from above you. }
+
+  on :entered (item, from) { if (item.is(Thing)) { self.adjust(:load, item.get(:size)) } }
+  on :left (item, to) { if (item.is(Thing)) { self.adjust(:load, 0 - item.get(:size)) } }
+
+  // Zork's CLOCKER: every command counts a move, but the ones about the
+  // game itself (`score`, `verbose`, `quit` and the like), which say so.
+  // The move also drives every clock only a visitor's moves can: the
+  // fight's cure, the potion, the ship, the lake, the man, the table.
+  after command {
+    self.set(:shore_empty, here.is(FlatheadOcean) && self.get(:ship_gone))
+    self.set(:ledge_waiting, here.is(CliffLedge) && underground_caverns_3.get(:man_stage) == :away)
+    self.set(:at_vista, here.is(VistaRoom))
+    self.set(:pushing, false)
+    self.set(:load, 0)
+    self.set(:bulky, false)
+    each t: Thing in self {
+      self.adjust(:load, t.get(:size))
+      if (t.is(Box)) { self.adjust(:load, t.get(:held)) }
+      if (t.get(:size) > 4) { self.set(:bulky, true) }
+    }
+    if (self.get(:aside)) { self.set(:aside, false) }
+    else if (!self.get(:finished) && !self.get(:dying)) {
+      self.adjust(:moves, 1)
+      send underground_caverns_3 :move_made
+      // I-CURE: ten moves after the fight begins, and every ten after,
+      // both sides mend a point until both are whole. A figure brought
+      // to its last point, standing before you and waiting, does not
+      // mend while it stands; it has stopped fighting, and the hood is
+      // there for as long as you stay.
+      if (self.get(:cure) > 0) {
+        self.adjust(:cure, -1)
+        if (self.get(:cure) == 0) {
+          if (self.get(:strength) < 5) { self.adjust(:strength, 1) }
+          if (self.get(:s_strength) < 5) {
+            if (self.get(:s_strength) == 1 && here.count(Shadow) > 0) { }
+            else { self.adjust(:s_strength, 1) }
+          }
+          if (self.get(:strength) + self.get(:s_strength) < 10) { self.set(:cure, 10) }
+        }
+      }
+      // I-VISIBLE: the potion wears off.
+      if (self.get(:invisible)) {
+        self.adjust(:invis_left, -1)
+        if (self.get(:invis_left) == 0) {
+          self.set(:invisible, false)
+          if (here.is(GuardianRoom) || here.is(GuardianSide)) {
+            say "One of the stone figures (or maybe both, it's hard to tell) suddenly springs to life and crushes you with his stone bludgeon."
+            self.set(:dying, true)
+            send self :die
+          }
+        }
+      }
+      // I-SPRAY: the repellent wears off; on the far shore, or in the
+      // lair, the line says what that means (round 7's P5).
+      if (self.get(:sprayed)) {
+        self.adjust(:spray_left, -1)
+        if (self.get(:spray_left) == 0) {
+          self.set(:sprayed, false)
+          if (here.is(SouthShore) || here.is(GrueLair)) { say "That horrible smell is much less pungent now, which is to say it is nearly gone, and the dark up the slope, which kept its distance while it lasted, has noticed." }
+          else { say "That horrible smell is much less pungent now." }
+        }
+      }
+      // The Dungeon Master follows (I-FOLIN): at the end of each move, to
+      // wherever the visitor has gone, by his own walk with the world's
+      // gate open; never into a cell, which he says once.
+      if (!self.get(:dying) && self.get(:in_dungeon) && underground_caverns_3.get(:dm_following) && here.is(Room)) {
+        if (underground_caverns_3.get(:dm_at) != here.get(:id)) {
+          if (here.is(SlotCell) || here.is(FarCell)) {
+            if (underground_caverns_3.get(:dm_folflag)) {
+              say "You notice that the dungeon master doesn't follow you."
+              send underground_caverns_3 :dm_folflag_set with false
+            }
+          }
+          else if (here.is(DungeonRoom)) {
+            if (!underground_caverns_3.get(:dm_folflag)) {
+              say "The dungeon master rejoins you."
+              send underground_caverns_3 :dm_folflag_set with true
+            }
+            else { say "The dungeon master follows you." }
+            self.set(:dest, :dm_follow)
+            send underground_caverns_3 :open_gate
+          }
+        }
+      }
+      // A cell gone back to its place on the rim of the pit is the fire's
+      // own: the original leaves a visitor in the wrong one for ever, and
+      // this world, which has no restore, lets the heat end it instead,
+      // at a death's price.
+      if (!self.get(:dying) && here.is(FarCell)) {
+        self.adjust(:cell_heat, 1)
+        if (self.get(:cell_heat) == 4) { say "The heat through the window is fierce, and getting fiercer; the cell, back in its own place on the rim, is as near the fire as a cell can be, and the fire knows it." }
+        else if (self.get(:cell_heat) == 7) { say "The air is scorching now, and hard to breathe. Whatever is to be done in this cell wants doing soon, and if there is nothing to be done in it, the window is quicker than the heat." }
+        else if (self.get(:cell_heat) >= 10) {
+          say "The heat has done what the fire could not reach to do. You slide down the wall of the cell, and the pit's roar goes a long way off."
+          self.set(:dying, true)
+          send self :die
+        }
+      } else { self.set(:cell_heat, 0) }
+      // The Viking ship (FLATHEAD-OCEAN-F, I-BOAT-DISAPPEAR): once, one
+      // time in five per move on the shore, and gone again at the end of
+      // the next move.
+      if (self.get(:ship_visible)) {
+        self.adjust(:ship_timer, -1)
+        if (self.get(:ship_timer) == 0) {
+          self.set(:ship_visible, false)
+          self.set(:ship_gone, true)
+          if (here.is(FlatheadOcean)) { say ship_sails }
+        }
+      }
+      else if (here.is(FlatheadOcean) && !self.get(:ship_seen) && random(5) == 0) {
+        self.set(:ship_seen, true)
+        self.set(:ship_visible, true)
+        self.set(:ship_timer, 1)
+        say "Passing alongside the shore now is an old boat, reminiscent of an ancient Viking ship. Standing on the prow of the ship is an old and crusty sailor, peering out over the misty ocean. He has a hand cupped to one ear, turned toward the shore, as though he were waiting for somebody on it to say something to him; and the ship is not slowing down."
+      }
+      // The lake. In Zork's order: the bottom's own end-of-turn (the fish,
+      // the shiny thing), then the roc's clock, then the cold's, then the
+      // air's. A command the water refused, a swim toward a shore that
+      // turned you back, does not spend the roc's one move.
+      if (self.get(:in_water)) {
+        if (here.is(OnLake) || here.is(Underwater)) {
+          let under = here.is(Underwater)
+          if (under) {
+            let r = random(100)
+            if (r < 10) { say "A large and hungry-looking fish is swimming in the neighborhood." }
+            else if (r < 14 && !self.get(:invisible)) {
+              say "Oh, no! A tremendous fish just swallowed you whole!"
+              self.set(:dying, true)
+              send self :die
+            }
+            else {
+              each o: ShinyObject in here {
+                if (!o.get(:taken)) {
+                  let q = random(100)
+                  if (q < 40) { say "Out of the corner of your eye, a small, shiny object appears in the sand. A moment later, it is gone!" }
+                  else if (q < 82) { say "You catch a brief glimpse of something shiny in the sand." }
+                  else { say "Something sparkling in the sand catches your eye for a moment." }
+                }
+              }
+            }
+          }
+          if (!self.get(:dying) && self.get(:roc) > 0 && !refused) {
+            self.adjust(:roc, -1)
+            if (self.get(:roc) == 0 && !under && !self.get(:invisible)) {
+              say "The roc snatches you in its jaws and has you for lunch."
+              self.set(:dying, true)
+              send self :die
+            }
+          }
+          if (!self.get(:dying)) {
+            self.adjust(:lake_time, 1)
+            if (!under && !self.get(:invisible) && self.get(:roc) == 0 && random(10) == 0) {
+              say "A giant roc, previously hidden among the rocks, is heading right toward you, its mouth gaping wide! You have one move, and the water is the only cover there is."
+              self.set(:roc, 1)
+            }
+            else if (self.get(:lake_time) == 4) { say "The icy waters are taking their toll. You will not be able to hold out much longer." }
+            else if (self.get(:lake_time) == 6) { say "You are becoming very weak. You had better leave the water before you drown!" }
+            else if (self.get(:lake_time) >= 8) {
+              say "Your strength gives out, and you drown in the frigid waters."
+              self.set(:dying, true)
+              send self :die
+            }
+          }
+          if (!self.get(:dying) && under) {
+            self.adjust(:air, -1)
+            if (self.get(:air) == 0) {
+              say "You run out of air and return to the surface."
+              move self to on_lake
+            }
+          }
+        } else {
+          self.set(:in_water, false)
+          self.set(:roc, 0)
+          self.set(:air, 0)
+          self.set(:lake_time, 0)
+        }
+      }
+      // The cliff's own weather (CLIFF-F's M-END): movement among the trees
+      // until the ledge has been stood on, and the sea from the southwest.
+      if (here.is(CliffTop)) {
+        if (!underground_caverns_3.get(:ledge_touched) && random(100) < 15) { say "You catch, out of the corner of your eye, some movement among the trees." }
+        else if (random(100) < 20) { say "You seem to hear, from the southwest, the sounds of the sea." }
+      }
+      // The old man's three moves awake (I-OLD-MAN-SLEEPS).
+      each m: Sleeper in here { send m :tick_sleep }
+      // The year 776 (OLD-TECH-MUSEUM-F, I-GUARDS-LEAVE, GUARD-CAUGHT,
+      // HEAR-FLATHEAD): the guards outside the door go when their clock
+      // runs out; while they are there, one command in thirty-three brings
+      // one in, and Lord Flathead is heard through the door, once.
+      if (!self.get(:dying) && self.get(:year) == 776 && self.get(:guards)) {
+        if (here.is(MuseumRoom) && random(100) < 3) {
+          say guard_caught
+          self.set(:dying, true)
+          send self :die
+        }
+        else {
+          if (self.get(:guards_timer) > 0) {
+            self.adjust(:guards_timer, -1)
+            if (self.get(:guards_timer) == 0) {
+              self.set(:guards, false)
+              say guards_leave
+            }
+          }
+          if (self.get(:guards) && here.is(MuseumRoom) && !self.get(:flathead_heard) && random(100) < 6) {
+            self.set(:flathead_heard, true)
+            say hear_flathead
+          }
+        }
+      }
+      // The present takes back what it lent (I-SNAP): forty moves in
+      // another year, and then the room you left.
+      if (!self.get(:dying) && self.get(:year) != 948 && self.get(:snap_in) > 0) {
+        self.adjust(:snap_in, -1)
+        if (self.get(:snap_in) == 0) {
+          say "You start to feel light-headed and quickly become completely disoriented. When your head clears, you realize that your surroundings have changed."
+          self.set(:tm_year, 948)
+          self.set(:tm_dest, self.get(:snap_loc))
+          self.set(:snapping, true)
+          self.set(:dest, :time_trip)
+          send underground_caverns_3 :open_gate
+        }
+      }
+      // The robot that tidies the museum (JEWEL-ROOM-F): the gold machine
+      // left in the Jewel Room is carried back, one move in twenty-five,
+      // and the doors shut behind it.
+      if (!self.get(:dying) && here.is(JewelRoom) && here.get(:era) == :present && here.count(TimeMachine) > 0 && random(100) < 4) {
+        say robot_line
+        send underground_caverns_3 :stone_door with false
+        send underground_caverns_3 :wooden_door with false
+        self.set(:follow_to, :tech_museum)
+        self.set(:dest, :machine)
+        send underground_caverns_3 :open_gate
+      }
+      // The viewing table's three moves (I-VIEW-SNAP).
+      if (!self.get(:dying) && self.get(:view_snap) > 0) {
+        self.adjust(:view_snap, -1)
+        if (self.get(:view_snap) == 0) {
+          say "You suddenly find yourself back in the viewing room!"
+          self.set(:dest, :vista)
+          send underground_caverns_3 :open_gate
+        }
+      }
+      // The man at the cliff (I-MAN-APPEARS, I-MAN-PRESENT, I-MAN-RETURNS,
+      // I-MAN-LIFT, I-MAN-LEAVES).
+      if (!self.get(:dying)) {
+        let st = underground_caverns_3.get(:man_stage)
+        if (st == :unmet) {
+          if (self.get(:man_timer) > 0) {
+            self.adjust(:man_timer, -1)
+            if (self.get(:man_timer) == 0 && here.is(CliffLedge) && (here.count(Chest) > 0 || self.count(Chest) > 0)) {
+              self.set(:man_waiting, 0)
+              each c: Chest in here {
+                if (c.get(:tied)) {
+                  say man_lifts
+                  send underground_caverns_3 :lift_chest
+                  send underground_caverns_3 :man_set with :away
+                  send underground_caverns_3 :rope_set with false
+                  self.set(:man_timer, 10)
+                } else {
+                  say man_appears
+                  send underground_caverns_3 :man_set with :waiting
+                }
+              }
+              each c: Chest in self {
+                say man_appears
+                send underground_caverns_3 :man_set with :waiting
+              }
+            }
+          }
+        }
+        else if (st == :waiting) {
+          if (!here.is(CliffLedge)) { send underground_caverns_3 :man_set with :gone }
+          else {
+            self.adjust(:man_waiting, 1)
+            if (self.get(:man_waiting) > 10) {
+              say man_displeased
+              send underground_caverns_3 :man_set with :gone
+            }
+            else { say man_waits }
+          }
+        }
+        else if (st == :away) {
+          if (self.get(:man_timer) > 0) {
+            self.adjust(:man_timer, -1)
+            if (self.get(:man_timer) == 0) {
+              send underground_caverns_3 :rope_set with true
+              if (here.is(CliffLedge)) {
+                say man_returns
+                self.set(:lift_wait, 0)
+                self.set(:holding_rope, false)
+                send underground_caverns_3 :man_set with :returned
+              }
+              else { send underground_caverns_3 :man_set with :gone }
+            }
+          }
+        }
+        else if (st == :returned) {
+          if (!here.is(CliffLedge)) { send underground_caverns_3 :man_set with :gone }
+          else if (self.get(:holding_rope)) {
+            self.set(:dest, :haul)
+            send underground_caverns_3 :open_gate
+          }
+          else {
+            self.adjust(:lift_wait, 1)
+            if (self.get(:lift_wait) > 4) {
+              say man_no_day
+              send underground_caverns_3 :man_set with :gone
+            }
+            else { say man_impatient }
+          }
+        }
+        else if (st == :at_cliff) {
+          if (!here.is(CliffTop)) { send underground_caverns_3 :man_set with :gone }
+          else if (random(5) < 2) {
+            say man_dodges
+            send underground_caverns_3 :man_set with :gone
+          }
+          else { say man_proud }
+        }
+      }
+    }
+  }
+
+  on :brief_hint {
+    if (!self.get(:brief_told)) {
+      self.set(:brief_told, true)
+      tell self "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)"
+    }
+  }
+
+  // Light: how many lit lamps are carried, and whether the room is dark
+  // without them.
+  on :light (from, value) {
+    self.adjust(:light, value)
+    broadcast :relight
+  }
+  on :room_lit (from, value) { self.set(:room_dark, !value) }
+  pass :snuffed (true)
+  on :snuffed (from) { if (self.holds(from)) { send self :light with -1 } }
+
+  // A call to the sailor that is nearly the words, in the one command the
+  // ship allows: the nudge, and the ship holds one command more, once.
+  on :near_greet {
+    if (here.is(FlatheadOcean) && self.get(:ship_visible)) {
+      if (!self.get(:ship_held)) {
+        self.set(:ship_held, true)
+        self.set(:ship_timer, 2)
+        tell self ship_holds
+      } else { tell self ship_tired }
+    }
+  }
+
+  // The potion drunk: three moves unseen (POTION-F).
+  on :quaff {
+    self.set(:invisible, true)
+    self.set(:invis_left, 3)
+  }
+  // The repellent sprayed on: five moves of it (REPELLENT-FCN, I-SPRAY).
+  on :sprayed {
+    self.set(:sprayed, true)
+    self.set(:spray_left, 5)
+  }
+
+  // The hood had by a verb of the hood's own (pull, lift, push back): the
+  // hood told what the figure's wounds allowed; this is the rest of it.
+  on :hood_taken {
+    self.set(:shadow_gone, true)
+    self.set(:fighting, false)
+    self.set(:figure_near, false)
+    each sh: Shadow in here { send sh :unhood }
+    send here :unblock
+    send self :settle with 0
+  }
+
+  // The viewing table touched (VIEWING-TABLE-F): a point, the first time,
+  // and the place it shows, for three moves.
+  on :table_touched {
+    if (!self.get(:pt_table)) {
+      self.set(:pt_table, true)
+      self.adjust(:score, 1)
+    }
+    self.set(:dest, :view)
+    send underground_caverns_3 :open_gate
+  }
+  // The time machine's button, with the dial at 776 (TM-BUTTON-F): a point,
+  // the first time, whether or not the machine goes anywhere.
+  on :tm_point {
+    if (!self.get(:pt_time)) {
+      self.set(:pt_time, true)
+      self.adjust(:score, 1)
+    }
+  }
+  // A trip through time (TM-BUTTON-F): where the dial's year lands you
+  // depends on where you sit. Before 883 the museum is guarded, and only
+  // 776 is survivable, and only in the Jewel Room and the Technology
+  // Museum; 777 is the dedication, and Lord Flathead is there. From 883
+  // on, the same room in that year; past 948, the present with the cleft
+  // filled in. The button has said the first sentence; this is the rest.
+  on :time_trip (from, value) {
+    if (here.is(TimeMachine)) {
+      let r = here.get(:room)
+      let at_entrance = r == :museum_entrance || r == :mid_entrance || r == :old_entrance
+      let at_jewel = r == :jewel_room || r == :mid_jewel || r == :old_jewel
+      let at_tech = r == :tech_museum || r == :mid_tech || r == :old_tech
+      self.set(:tm_year, value)
+      self.set(:tm_dest, :nowhere)
+      if (value < 883) {
+        if (at_entrance) {
+          if (value == 777) {
+            tell self "When your vision returns, you are surrounded by a number of heavily armed guards, the dress and speech of which seem strange and unfamiliar. A commotion starts at a door to the east and a person with a flat head, wearing a gaudy crown and a purple robe, bursts into the room."
+            tell self flathead_sentence
+          }
+          else { tell self "When your vision returns, {self.guards_kill}" }
+          self.set(:dying, true)
+          send self :die
+        }
+        else if (at_jewel) {
+          if (value == 777) {
+            tell self "When your vision returns, you find yourself in the middle of some kind of ceremony, with a strange flat-headed man wearing royal vestments about to break a bottle on the bars of an iron cage containing magnificent jewels. He appears pleased by your presence."
+            tell self flathead_sentence
+            self.set(:dying, true)
+            send self :die
+          }
+          else if (value > 777) {
+            tell self "When your vision returns, {self.guards_kill}"
+            self.set(:dying, true)
+            send self :die
+          }
+          else {
+            tell self "When your vision returns, your surroundings appear to have changed. From outside the door you hear the sounds of guards talking."
+            self.set(:tm_dest, :old_jewel)
+          }
+        }
+        else if (at_tech) {
+          if (value != 776) {
+            tell self "When your vision returns, {self.guards_kill}"
+            self.set(:dying, true)
+            send self :die
+          }
+          else {
+            tell self "When your vision returns, your surroundings appear to have changed. From outside the door you hear the sounds of guards talking."
+            self.set(:tm_dest, :old_tech)
+          }
+        }
+        else { tell self "When your vision returns, you are exactly where you were. Whatever the machine does, it does not seem to do it from here; the museum was built round it, and it works, if it works, in the museum's rooms." }
+      }
+      else {
+        tell self "When your vision returns, your surroundings appear somewhat altered."
+        if (at_jewel) { if (value < 948) { self.set(:tm_dest, :mid_jewel) } else { self.set(:tm_dest, :jewel_room) } }
+        else if (at_tech) { if (value < 948) { self.set(:tm_dest, :mid_tech) } else { self.set(:tm_dest, :tech_museum) } }
+        else { if (value < 948) { self.set(:tm_dest, :mid_entrance) } else { self.set(:tm_dest, :museum_entrance) } }
+      }
+      if (self.get(:tm_dest) != :nowhere) {
+        self.set(:snapping, false)
+        self.set(:dest, :time_trip)
+        send underground_caverns_3 :open_gate
+      }
+    }
+  }
+  // Arrived in a room of 776 with the guards outside (OLD-TECH-MUSEUM-F's
+  // M-ENTER): their clock, three to fourteen moves.
+  on :old_entered {
+    if (self.get(:guards)) { self.set(:guards_timer, 3 + random(12)) }
+  }
+  // A wall of the Royal Puzzle pushed (CPWALL-OBJECT): a point, the first
+  // time, and the legend; then the world moves the wall, and tells this
+  // visitor to follow it.
+  on :cp_push (from, value) {
+    if (here.is(PuzzleSquare)) {
+      self.set(:push_dir, value)
+      if (!self.get(:pt_puzzle)) {
+        self.set(:pt_puzzle, true)
+        self.adjust(:score, 1)
+      }
+      if (!self.get(:cp_legend_seen)) {
+        self.set(:cp_legend_seen, true)
+        tell self cp_legend
+      }
+      let i = here.get(:idx)
+      if (value == :north) {
+        send underground_caverns_3 :cp_from with i - 6
+        send underground_caverns_3 :cp_to with i - 12
+      }
+      else if (value == :south) {
+        send underground_caverns_3 :cp_from with i + 6
+        send underground_caverns_3 :cp_to with i + 12
+      }
+      else if (value == :east) {
+        send underground_caverns_3 :cp_from with i + 1
+        send underground_caverns_3 :cp_to with i + 2
+      }
+      else {
+        send underground_caverns_3 :cp_from with i - 1
+        send underground_caverns_3 :cp_to with i - 2
+      }
+    }
+  }
+  // The grid is settled: into the square the wall left (CPGOTO).
+  on :cp_done {
+    let d = self.get(:push_dir)
+    if (d == :north) { move self north }
+    else if (d == :south) { move self south }
+    else if (d == :east) { move self east }
+    else if (d == :west) { move self west }
+  }
+  // The gold machine pushed in a direction (V-PUSH-TO): where it can go
+  // from where it stands, and what is in the way. The visitor goes first,
+  // through the way as a walk would take it, and the machine follows them
+  // (:moved, below), as the original walks first and moves the machine
+  // after.
+  on :push_machine (from, value) {
+    if (here.is(Room)) {
+      let r = here.get(:id)
+      self.set(:push_told, false)
+      self.set(:push_dir, :none)
+      if (r == :tech_museum) {
+        if (value == :south || value == :out) {
+          if (underground_caverns_3.get(:wooden_door_open)) { self.set(:push_dir, :south) }
+          else { self.set(:push_told, true)  tell self "The wooden door is closed." }
+        }
+      }
+      else if (r == :museum_entrance) {
+        if (value == :north) {
+          if (underground_caverns_3.get(:wooden_door_open)) { self.set(:push_dir, :north) }
+          else { self.set(:push_told, true)  tell self "The wooden door is closed." }
+        }
+        else if (value == :east) {
+          if (underground_caverns_3.get(:jewel_door_open)) { self.set(:push_dir, :east) }
+          else { self.set(:push_told, true)  tell self "The stone door is closed." }
+        }
+        else if (value == :west) {
+          if (underground_caverns_3.get(:quaked) && self.get(:year) == 948) { self.set(:push_dir, :west) }
+          else { self.set(:push_told, true)  tell self "The iron door is rusted shut, and there is no other way west for a machine." }
+        }
+        else if (value == :south || value == :down) { self.set(:push_dir, :south) }
+      }
+      else if (r == :jewel_room) {
+        if (value == :west || value == :out) {
+          if (underground_caverns_3.get(:jewel_door_open)) { self.set(:push_dir, :west) }
+          else { self.set(:push_told, true)  tell self "The stone door is closed." }
+        }
+      }
+      else if (r == :cp_ante) {
+        if (value == :north || value == :up) { self.set(:push_dir, :north) }
+        else if (value == :west) { self.set(:push_dir, :west) }
+        else if (value == :down) { self.set(:push_told, true)  tell self "You can't push the machine down the hole: it would not fit, and you would not want to be under it if it did." }
+      }
+      else if (r == :cp_out) {
+        if (value == :north || value == :up) { self.set(:push_dir, :north) }
+        else if (value == :east) { self.set(:push_told, true)  tell self "The doorway is too narrow for the machine, open or shut." }
+      }
+      else if (r == :great_door) {
+        if (value == :east) { self.set(:push_dir, :east) }
+        else if (value == :north) { self.set(:push_told, true)  tell self "You push, and the machine moves an inch and settles, as though it knew which building it belonged to. It is a museum piece, and it stays in the museum, or as near the museum as a cleft in the rock." }
+      }
+      if (self.get(:push_dir) == :none) {
+        if (!self.get(:push_told)) { tell self "The machine doesn't budge in that direction." }
+      }
+      else {
+        self.set(:pushing, true)
+        let d = self.get(:push_dir)
+        if (d == :north) { move self north }
+        else if (d == :south) { move self south }
+        else if (d == :east) { move self east }
+        else if (d == :west) { move self west }
+      }
+    }
+    else { tell self "That would be a good trick from inside it." }
+  }
+  // The Sacrificial Altar (ZORK-IV-F): a death, told by the altar.
+  on :altar_death {
+    self.set(:view_snap, 0)
+    self.set(:dying, true)
+    send self :die
+  }
+  // The Cliff Ledge entered (CLIFF-LEDGE-F): a point, the first time, and
+  // the man's clock, if he has not yet been met.
+  on :ledge_entered {
+    if (!self.get(:pt_ledge)) {
+      self.set(:pt_ledge, true)
+      self.adjust(:score, 1)
+    }
+    // Somebody is up there, and the ledge says so before he does, so that
+    // a visitor has a reason to stay the few moves he takes to appear.
+    if (underground_caverns_3.get(:man_stage) == :unmet) {
+      self.set(:man_timer, 5)
+      tell self "Far above you, at the brink of the cliff, something that is not a tree moves against the light, and the rope twitches once, as though somebody up there had a hand on it and had just taken it off."
+    }
+  }
+  // The chest gone up with the man (GLOBAL-ROPE-F's TIE): ten moves.
+  on :man_away { self.set(:man_timer, 10) }
+  // The rope taken hold of, once he is back (HOLDING-ROPE).
+  on :holding { self.set(:holding_rope, true) }
+
+  // The earthquake (I-CLEFT), felt where the visitor stands.
+  on :quake {
+    if (here.is(MineRoom) || here.is(Altar)) { tell self tremor_mild }
+    else { tell self tremor_great }
+    if (here.is(AqueductView)) { tell self "One of the giant pillars supporting the aqueduct collapses in a pile of smoke and rubble!" }
+    else if (here.is(HighArch)) { tell self "The channel beneath your feet trembles. Then the channel just to the north collapses and falls into the chasm!" }
+    else if (here.is(WaterSlide)) { tell self "The channel beneath your feet trembles. Then the channel just to the south collapses and falls into the chasm!" }
+    else if (here.is(GreatDoor)) { tell self "To the east, next to the great iron door, a cleft opens up, revealing an open area behind!" }
+    else if (here.is(KeyRoom)) { tell self "From below the manhole cover comes a long grinding, and a crash a long way off, and then a draught up through the gaps round the cover that was not there before." }
+  }
+
+  // Arriving somewhere: the dark, the lake's air, the fight left behind;
+  // and the gold machine, if this was a push, following into the room.
+  on :moved (from, to) {
+    if (to.is(Room) && !to.is(DarkRoom)) { self.set(:room_dark, false) }
+    if (to.is(Underwater)) { self.set(:air, 3) }
+    if (self.get(:pushing) && to.is(Room)) {
+      self.set(:pushing, false)
+      tell self "With some effort, you push the machine into the room with you."
+      self.set(:follow_to, to.get(:id))
+      self.set(:dest, :machine)
+      send underground_caverns_3 :open_gate
+    }
+    if (from.is(ShadowRoom)) {
+      if (self.get(:figure_near)) {
+        self.set(:figure_near, false)
+        tell self steps_back
+      }
+      self.set(:fighting, false)
+      send self :settle with 0
+    }
+  }
+  // The sword's glow (I-SWORD), as the figure comes and goes.
+  on :settle (from, value) {
+    if (self.count(Sword) == 0) { self.set(:glow_now, value) }
+    each s: Sword in self {
+      if (self.get(:glow_now) != value) {
+        self.set(:glow_now, value)
+        if (value == 2) { tell self "Your sword has begun to glow very brightly." }
+        else if (value == 1) { tell self "Your sword is glowing with a faint blue glow." }
+        else { tell self "Your sword is no longer glowing." }
+      }
+      send s :glow with value
+    }
+  }
+
+  // The fight begun (ATTACK-MODE, I-CURE): by the visitor's stroke, or by
+  // the figure's own choice.
+  on :fight_on {
+    self.set(:fighting, true)
+    self.set(:cure, 10)
+  }
+  // The fight broken off: the room went dark and the figure with it.
+  on :fight_off {
+    self.set(:fighting, false)
+    self.set(:figure_near, false)
+    send self :settle with 0
+  }
+  // The figure appeared (SHADOW-ARRIVAL): a point, the first time, and
+  // the sword to hand, from the stone or from wherever it lies.
+  on :shadow_here {
+    self.set(:figure_near, true)
+    self.set(:misses, 0)
+    if (!self.get(:pt_shadow)) {
+      self.set(:pt_shadow, true)
+      self.adjust(:score, 1)
+    }
+    if (self.count(Sword) == 0) {
+      self.set(:glow_now, 2)
+      self.set(:sword_leaps, false)
+      self.set(:dest, :sword)
+      send underground_caverns_3 :open_gate
+    } else {
+      send self :settle with 2
+    }
+  }
+
+  // The figure's stroke (I-SHADOW-REPLY), as the visitor takes it. A
+  // visitor without the sword in hand is not struck: the figure waits for
+  // the sword to come back to the hand, which it does, leaping, before
+  // the next stroke. At its last point the figure does not strike at
+  // all; it waits, and the hood is there. After a wound, the visitor's
+  // own state, as DIAGNOSE would give it, chosen in code since the turn
+  // may yet change it.
+  as target for strike {
+    do {
+      if (self.count(Sword) == 0) {
+        self.set(:glow_now, 2)
+        self.set(:sword_leaps, true)
+        self.set(:dest, :sword)
+        send underground_caverns_3 :open_gate
+        tell self "The hooded figure lowers its blade and waits, as a teacher waits, for you to be armed again."
+      } else {
+        let s = self.get(:s_strength)
+        if (s == 1) { tell self "{one of}The hooded figure does not strike. It stands with its sword lowered and its head bowed, and the hood hangs within reach of your hand.{or}The figure waits. It has stopped fighting the way you fight; its sword is down, its head is down, and the hood is within your reach.{or}The hooded figure makes no move at all. Its guard is gone, and the hood that has kept its face from you hangs where your hand could take it.{/one of}" }
+        else if (s > 1 && random(100) < s * 10 + 10) {
+          if (random(100) < 90) {
+            if (self.get(:strength) - 1 < 1) {
+              self.set(:strength, 1)
+              tell self disarmed
+            } else {
+              self.adjust(:strength, -1)
+              tell self "{one of}The hooded figure catches you off guard and wounds you!{or}You are wounded by a lightning thrust!{or}Your quick reflexes cannot stop the hooded figure's stroke! You are hit!{/one of}"
+              let p = self.get(:strength)
+              if (p == 4) { tell self "You are wounded lightly. You have a good deal of strength in reserve." }
+              else if (p == 3) { tell self "You have a few wounds, which do not seriously impair your strength." }
+              else if (p == 2) { tell self "You are hurt quite badly. One major wound would probably kill you." }
+              else { tell self "You are very seriously wounded. One more wound would very likely do you in." }
+            }
+          } else {
+            if (self.get(:strength) - 2 < 1) {
+              self.set(:strength, 0)
+              tell self "In your wounded state, you cannot defend yourself against your still-quick opponent. Slowly and carefully, the figure starts to remove its hood as you fall to the ground, dead."
+              self.set(:dying, true)
+              send self :die
+            } else {
+              self.adjust(:strength, -2)
+              let p = self.get(:strength)
+              if (p == 3) { tell self "A brilliant feint puts you off guard, and the hooded figure slips its sword between your ribs and out again before you can close with it." }
+              else { tell self "A brilliant feint puts you off guard, and the hooded figure slips its sword between your ribs. You are hurt very badly." }
+              if (p == 3) { tell self "You have a few wounds, which do not seriously impair your strength." }
+              else if (p == 2) { tell self "You are hurt quite badly. One major wound would probably kill you." }
+              else { tell self "You are very seriously wounded. One more wound would very likely do you in." }
+            }
+          }
+        }
+        else if (s < 3) { tell self "The hooded figure attempts a thrust, but its weakened state prevents hitting you." }
+        else { tell self "{one of}The hooded figure stabs nonchalantly with its sword and misses.{or}You dodge as the hooded figure comes in low.{or}The hooded figure tries to sneak past your guard, but you twist away.{or}The hooded figure thrusts, but you fight back and send it flying to the ground! It is on its feet again before you can take a step, its guard up, as yours would be.{/one of}" }
+      }
+    }
+  }
+
+  on :grue {
+    self.set(:devoured, false)
+    tell self "Oh, no! A lurking grue slithered into the room and devoured you!"
+    self.set(:dying, true)
+    send self :die
+  }
+
+  // JIGS-UP: to the cell, where the old man sends the visitor back to the
+  // stair; the fourth time, the void. The key, if it is carried and the
+  // death is in the key's own country, goes home to the Key Room.
+  on :die {
+    if (self.get(:finished)) { }
+    else {
+      self.set(:dying, false)
+      self.adjust(:deaths, 1)
+      self.set(:strength, 5)
+      self.set(:s_strength, 5)
+      self.set(:fighting, false)
+      self.set(:figure_near, false)
+      self.set(:cure, 0)
+      self.set(:in_water, false)
+      self.set(:air, 0)
+      self.set(:roc, 0)
+      self.set(:lake_time, 0)
+      self.set(:invisible, false)
+      self.set(:invis_left, 0)
+      self.set(:devoured, false)
+      self.set(:glow_now, 0)
+      self.set(:view_snap, 0)
+      self.set(:holding_rope, false)
+      self.set(:man_timer, 0)
+      // A death in another year is a death in this one: the present takes
+      // you back, and the guards keep whatever they were debating.
+      self.set(:year, 948)
+      self.set(:snap_in, 0)
+      self.set(:guards, false)
+      self.set(:pushing, false)
+      self.set(:cell_heat, 0)
+      self.set(:key_home, here.is(GrueLair) || here.is(KeyRoom) || here.is(AqueductRoom))
+      // The man's clocks die with you (KILL-INTERRUPTS): a man away with
+      // the chest does not come back for anyone.
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :away || st == :returned || st == :waiting || st == :at_cliff) {
+        send underground_caverns_3 :man_set with :gone
+        send underground_caverns_3 :rope_set with true
+      }
+      each s: Sword in self { send s :glow with 0 }
+      tell self "****  You have died  ****"
+      if (self.get(:deaths) > 3) {
+        tell self void
+        self.set(:finished, true)
+        self.set(:strength, 0)
+        self.set(:dest, :oblivion)
+      } else {
+        self.set(:dest, :cell)
+      }
+      send underground_caverns_3 :open_gate
+    }
+  }
+
+  // The old man's staff (JIGS-UP), as the visitor takes it: the power
+  // wells up, and the stair again, with what was carried scattered.
+  as target for send_back {
+    do {
+      tell self sent_back
+      self.set(:dest, :scatter)
+      send underground_caverns_3 :open_gate
+    }
+  }
+
+  // The man's rope (I-MAN-LIFT), as the visitor takes it: the top of the
+  // cliff, with the gate still open from the errand that asked him.
+  as target for haul {
+    do {
+      self.set(:holding_rope, false)
+      send underground_caverns_3 :man_set with :at_cliff
+      move self to cliff
+    }
+  }
+
+  // The gate is open: go where the world sends you, or send for what you
+  // need, and ask it shut.
+  on :gate_open {
+    let d = self.get(:dest)
+    if (d == :oblivion) {
+      move self to oblivion
+    } else if (d == :cell) {
+      // JIGS-UP: to the cell, where the old man is waiting.
+      move self to prison_cell
+    } else if (d == :scatter) {
+      // RANDOMIZE-OBJECTS: the lamp to the stair, wherever it lies (Zork's
+      // CURRENT-LAMP), the key home if the death was in its country, the
+      // rest to one of the rooms on the way in (DEAD-OBJ-LOCS: the four
+      // between the stair and the lake, and the three east of the
+      // junction, the Tight Squeeze among them). A lamp in these hands
+      // is moved by them, since nothing in a person's hands reaches past
+      // them; one lying in a room hears the broadcast and goes itself; one
+      // at the bottom of the ocean is past hearing.
+      broadcast :lamp_home
+      each t: Thing in self {
+        if (t.is(Lamp)) { move t to endless_stair }
+        else if (t.is(StrangeKey) && self.get(:key_home)) { move t to key_room }
+        else {
+          let r = random(7)
+          if (r == 0) { move t to junction }
+          else if (r == 1) { move t to barren_area }
+          else if (r == 2) { move t to creepy_crawl }
+          else if (r == 3) { move t to damp_passage }
+          else if (r == 4) { move t to dead_end }
+          else if (r == 5) { move t to tight_squeeze }
+          else { move t to foggy_room }
+        }
+      }
+      move self to endless_stair
+    } else if (d == :mirror_out) {
+      // MIROUT: out of the box by whichever of its doors is open, to the
+      // room the box's place and facing say.
+      let ml = underground_caverns_3.get(:mloc)
+      let md = underground_caverns_3.get(:mdir)
+      self.set(:mo, :nowhere)
+      if (underground_caverns_3.get(:mirror_open)) {
+        if (md == 0) {
+          if (ml == 1) { self.set(:mo, :mraw) } else if (ml == 2) { self.set(:mo, :mrbw) } else if (ml == 3) { self.set(:mo, :mrcw) } else if (ml == 4) { self.set(:mo, :mrgw) } else { self.set(:mo, :mrdw) }
+        }
+        else if (md == 180) {
+          if (ml == 1) { self.set(:mo, :mrae) } else if (ml == 2) { self.set(:mo, :mrbe) } else if (ml == 3) { self.set(:mo, :mrce) } else if (ml == 4) { self.set(:mo, :mrge) } else { self.set(:mo, :mrde) }
+        }
+        else if (md < 180) {
+          if (ml == 1) { self.set(:mo, :mrb) } else if (ml == 2) { self.set(:mo, :mrc) } else if (ml == 3) { self.set(:mo, :mrg) } else if (ml == 4) { self.set(:mo, :mrd) } else { self.set(:mo, :front_door) }
+        }
+        else {
+          if (ml == 1) { self.set(:mo, :beam_room) } else if (ml == 2) { self.set(:mo, :mra) } else if (ml == 3) { self.set(:mo, :mrb) } else if (ml == 4) { self.set(:mo, :mrc) } else { self.set(:mo, :mrg) }
+        }
+      }
+      else {
+        tell self "As you leave, the door swings shut."
+        send underground_caverns_3 :wood_set with false
+        if (md == 0) {
+          if (ml == 1) { self.set(:mo, :beam_room) } else if (ml == 2) { self.set(:mo, :mra) } else if (ml == 3) { self.set(:mo, :mrb) } else if (ml == 4) { self.set(:mo, :mrc) } else { self.set(:mo, :mrg) }
+        }
+        else {
+          if (ml == 1) { self.set(:mo, :mrb) } else if (ml == 2) { self.set(:mo, :mrc) } else if (ml == 3) { self.set(:mo, :mrg) } else if (ml == 4) { self.set(:mo, :mrd) } else { self.set(:mo, :front_door) }
+        }
+      }
+      let mo = self.get(:mo)
+      if (mo == :mraw) { move self to mraw } else if (mo == :mrbw) { move self to mrbw } else if (mo == :mrcw) { move self to mrcw } else if (mo == :mrgw) { move self to mrgw } else if (mo == :mrdw) { move self to mrdw }
+      else if (mo == :mrae) { move self to mrae } else if (mo == :mrbe) { move self to mrbe } else if (mo == :mrce) { move self to mrce } else if (mo == :mrge) { move self to mrge } else if (mo == :mrde) { move self to mrde }
+      else if (mo == :mra) { move self to mra } else if (mo == :mrb) { move self to mrb } else if (mo == :mrc) { move self to mrc } else if (mo == :mrg) { move self to mrg } else if (mo == :mrd) { move self to mrd }
+      else if (mo == :front_door) { move self to front_door } else if (mo == :beam_room) { move self to beam_room }
+    } else if (d == :dm_follow || d == :dm_send || d == :dm_push || d == :dm_dial || d == :dm_spin) {
+      // I-FOLIN, and the orders: the Dungeon Master is found in the room
+      // the world says he stands in, and told the errand.
+      if (here.is(Room)) { self.set(:dm_target, here.get(:id)) }
+      let dm_pos = underground_caverns_3.get(:dm_at)
+      if (dm_pos == :behind_door) { if (behind_door.is(DungeonRoom)) { each m: DungeonMaster in behind_door { send m :dm_order with d } } }
+      else if (dm_pos == :south_corridor) { if (south_corridor.is(DungeonRoom)) { each m: DungeonMaster in south_corridor { send m :dm_order with d } } }
+      else if (dm_pos == :east_corridor) { if (east_corridor.is(DungeonRoom)) { each m: DungeonMaster in east_corridor { send m :dm_order with d } } }
+      else if (dm_pos == :west_corridor) { if (west_corridor.is(DungeonRoom)) { each m: DungeonMaster in west_corridor { send m :dm_order with d } } }
+      else if (dm_pos == :north_corridor) { if (north_corridor.is(DungeonRoom)) { each m: DungeonMaster in north_corridor { send m :dm_order with d } } }
+      else if (dm_pos == :parapet) { if (parapet.is(Parapet)) { each m: DungeonMaster in parapet { send m :dm_order with d } } }
+    } else if (d == :cell_turn) {
+      // CELL-MOVE: round the pit with the cell, to the fourth cell's own
+      // place or another's.
+      if (self.get(:cell_to) == 4) { move self to good_cell } else { move self to wrong_cell }
+    } else if (d == :to_button) {
+      // DUNGEON-DOOR-F: sent back to the Button Room with the two words.
+      move self to button_room
+    } else if (d == :to_front) {
+      // V-SAY's FROTZ OZMOO: from the secret door to the Dungeon Entrance.
+      move self to front_door
+    } else if (d == :to_behind) {
+      // DUNGEON-DOOR-F: let in.
+      move self to behind_door
+    } else if (d == :sword) {
+      broadcast :sword_come
+    } else if (d == :splash) {
+      // GO-ON-LAKE: everything not worn into the lake, the lamp fried.
+      each t: Thing in self {
+        if (!t.is(Wearable)) {
+          if (t.is(Waybread)) { send t :consume }
+          else {
+            move t to in_lake
+            if (t.is(Lamp) || t.is(Torch)) { send t :fry }
+          }
+        }
+      }
+      if (!self.get(:pt_lake)) {
+        self.set(:pt_lake, true)
+        self.adjust(:score, 1)
+      }
+      self.set(:in_water, true)
+      self.set(:lake_time, 0)
+      self.set(:air, 0)
+      self.set(:roc, 0)
+      move self to on_lake
+    } else if (d == :view) {
+      // VIEWING-TABLE-F: the place the table shows, for three moves.
+      let v = underground_caverns_3.get(:active_view)
+      self.set(:view_snap, 3)
+      if (v == 1) { move self to timber_room }
+      else if (v == 2) { move self to room_8 }
+      else if (v == 3) { move self to damp_passage }
+      else { move self to altar_room }
+    } else if (d == :vista) {
+      // I-VIEW-SNAP: back to the viewing room.
+      move self to scenic_vista
+    } else if (d == :haul) {
+      // I-MAN-LIFT: the man hauls, by his own act, with the gate open.
+      send cliff.man :haul_me
+    } else if (d == :fall_ledge) {
+      // CLIFF-OBJECT-F's THROW-OFF: over the cliff to the ledge; a lamp
+      // breaks, and so does the staff.
+      each t: Thing in self {
+        if (t.get(:falling)) {
+          if (t.is(Staff)) {
+            spawn BrokenStaff in cliff_ledge
+            send t :snap
+          } else {
+            move t to cliff_ledge
+            if (t.is(Lamp)) { send t :smash }
+          }
+        }
+      }
+    } else if (d == :fall_base) {
+      // LEDGE-F's THROW-OFF: off the ledge to the base of the cliff.
+      each t: Thing in self {
+        if (t.get(:falling)) { move t to cliff_base }
+      }
+    } else if (d == :machine) {
+      // V-PUSH-TO, and the robot: the gold machine follows into a room.
+      broadcast :machine_follow with self.get(:follow_to)
+    } else if (d == :time_trip) {
+      // TGOTO: the trip itself. Nothing goes through time but the one in
+      // the seat: what they hold and what lies in the machine is left in
+      // the room; the museum's doors shut in every year; a trip out of
+      // 776 settles what history says of the jewels; forty moves in
+      // another year and the present takes you back to the room you left.
+      let y = self.get(:tm_year)
+      let cur = self.get(:year)
+      let dst = self.get(:tm_dest)
+      self.set(:invisible, false)
+      self.set(:invis_left, 0)
+      if (cur == 948 && !self.get(:snapping)) {
+        if (here.is(TimeMachine)) { self.set(:snap_loc, here.get(:room)) }
+        else if (here.is(Room)) { self.set(:snap_loc, here.get(:id)) }
+        self.set(:snap_in, 40)
+      }
+      if (y == 948) { self.set(:snap_in, 0) }
+      send underground_caverns_3 :stone_door with false
+      send underground_caverns_3 :wooden_door with false
+      if (cur == 776) {
+        if (old_jewel_room.pedestal.is(OldPedestal)) {
+          let concealed = underground_caverns_3.get(:ring_concealed)
+          let sk = old_jewel_room.pedestal.count(Sceptre) > 0 && old_jewel_room.pedestal.count(JewelledKnife) > 0
+          if (concealed && sk) { send underground_caverns_3 :history with 1 }
+          else if (concealed) { send underground_caverns_3 :history with 2 }
+          else if (old_jewel_room.pedestal.count(Jewel) < 3) { send underground_caverns_3 :history with 3 }
+        }
+      }
+      if (y == 776) {
+        send underground_caverns_3 :history with 0
+        self.set(:guards, true)
+        self.set(:flathead_heard, false)
+      }
+      self.set(:year, y)
+      // MOVE-TM-OBJECTS: what is in the machine, and what is in hand, stays
+      // in the year it belongs to, in the room the machine stands in.
+      if (here.is(TimeMachine)) {
+        let r = here.get(:room)
+        if (here.count(Portable) > 0 && self.count(Thing) > 0) { tell self "You notice that everything in the machine is gone: come to mention it, everything you were holding has vanished too!" }
+        else if (here.count(Portable) > 0) { tell self "You notice that everything in the machine is gone!" }
+        else if (self.count(Thing) > 0) { tell self "You notice that everything you were holding is gone!" }
+        each t: Portable in here {
+          if (r == :tech_museum) { move t to tech_museum } else if (r == :museum_entrance) { move t to museum_entrance } else if (r == :jewel_room) { move t to jewel_room } else if (r == :cp_ante) { move t to cp_ante } else if (r == :cp_out) { move t to cp_out } else if (r == :great_door) { move t to great_door } else if (r == :mid_tech) { move t to mid_tech_museum } else { move t to old_tech_museum }
+        }
+        each t: Thing in self {
+          if (r == :tech_museum) { move t to tech_museum } else if (r == :museum_entrance) { move t to museum_entrance } else if (r == :jewel_room) { move t to jewel_room } else if (r == :cp_ante) { move t to cp_ante } else if (r == :cp_out) { move t to cp_out } else if (r == :great_door) { move t to great_door } else if (r == :mid_tech) { move t to mid_tech_museum } else { move t to old_tech_museum }
+        }
+      }
+      else {
+        if (self.count(Thing) > 0) { tell self "You notice that everything you were holding is gone!" }
+        each t: Thing in self { move t to here }
+      }
+      // The dial reads the year in every machine, as the original's one
+      // dial does; the jewels go home to their pedestal; and the present's
+      // machine goes home to its hall.
+      broadcast :dial_set with y
+      if (y == 776) { broadcast :jewels_home }
+      if (y == 948) { broadcast :machine_follow with :tech_museum }
+      // Where the trip lands: the same room in the other year, and the seat
+      // of the machine where there is one to sit in.
+      if (dst == :old_jewel) {
+        move self to old_jewel_room
+        tell self "You notice that the golden machine has disappeared!"
+      }
+      else if (dst == :old_tech) { move self to old_tech_museum.machine }
+      else if (dst == :mid_jewel) {
+        move self to mid_jewel_room
+        if (!self.get(:snapping)) { tell self "You notice that the golden machine has disappeared!" }
+      }
+      else if (dst == :mid_tech) {
+        if (underground_caverns_3.get(:clumsy_robbery)) {
+          move self to mid_tech_museum
+          if (!self.get(:snapping)) { tell self "You notice that the golden machine has disappeared!" }
+        }
+        else { move self to mid_tech_museum.machine }
+      }
+      else if (dst == :mid_entrance) {
+        move self to mid_museum_entrance
+        if (!self.get(:snapping)) { tell self "You notice that the golden machine has disappeared!" }
+      }
+      else if (dst == :jewel_room) {
+        move self to jewel_room
+        if (!self.get(:snapping)) { tell self "You notice that the golden machine has disappeared!" }
+      }
+      else if (dst == :tech_museum) {
+        move self to tech_museum
+        if (!underground_caverns_3.get(:clumsy_robbery)) { send self :board_here }
+        else if (!self.get(:snapping)) { tell self "You notice that the golden machine has disappeared!" }
+      }
+      else if (dst == :museum_entrance) {
+        move self to museum_entrance
+        if (!self.get(:snapping)) { tell self "You notice that the golden machine has disappeared!" }
+      }
+      else if (dst == :cp_ante) { move self to cp_ante }
+      else if (dst == :cp_out) { move self to cp_out }
+      else if (dst == :great_door) { move self to great_door }
+      self.set(:snapping, false)
+    }
+    send underground_caverns_3 :close_gate
+  }
+  // Out of the mirror box (MIROUT): the landing says so, and the gate
+  // does the rest.
+  on :mirror_out {
+    self.set(:dest, :mirror_out)
+    send underground_caverns_3 :open_gate
+  }
+  // Let in at the dungeon door (DUNGEON-DOOR-F): the Dungeon Master
+  // follows from here on, and the narrow corridor is where he stands.
+  on :admitted {
+    self.set(:in_dungeon, true)
+    self.set(:front_door_touched, true)
+    send underground_caverns_3 :dm_follow_set with true
+    send underground_caverns_3 :dm_folflag_set with true
+    self.set(:dest, :to_behind)
+    send underground_caverns_3 :open_gate
+  }
+  // Sent back from the door to the Button Room, with the two words.
+  on :sent_back {
+    self.set(:front_door_touched, true)
+    self.set(:dest, :to_button)
+    send underground_caverns_3 :open_gate
+  }
+  // The cell turned round the pit with you in it (CELL-MOVE): to the
+  // fourth cell's own place, or another's.
+  on :cell_turned (from, value) {
+    self.set(:cell_to, value)
+    self.set(:dest, :cell_turn)
+    send underground_caverns_3 :open_gate
+  }
+  // The Treasury (NIRVANA-F): the end.
+  on :quest_done {
+    self.set(:finished, true)
+    self.set(:won, true)
+  }
+  // Back in the present's Technology Museum, with the machine there: into
+  // its seat (TGOTO's last MOVE), once the machine has come home.
+  on :board_here {
+    each m: TimeMachine in here {
+      if (!m.get(:unseen) && !self.get(:dying)) { move self to m }
+    }
+  }
+
+  // The game over: nothing but the questions about it.
+  as actor for any except score, diagnose, quit, restart, save, restore, version, help, verbose, brief, superbrief, look, inventory {
+    permit { if (self.get(:finished)) { refuse over } }
+  }
+
+  // Walking: not with the chest tied to the rope (CLIFF-LEDGE-F), not
+  // through the Timber Room's narrow way with a load (NO-OBJS); into the
+  // dark, and what waits there (GOTO): a grue, four times in five, where
+  // the room left was dark too; a lair of them above the lake; and only
+  // noises, with the repellent on.
+  as actor for go {
+    permit {
+      each c: Chest in self {
+        if (c.get(:tied)) { refuse "You can't go anywhere holding that chest. The rope is tied around it!" }
+      }
+      if (here.is(TimberRoom) && way == "west" && self.get(:bulky)) { refuse "You cannot fit through this passage with that load. The passageway takes nothing through it bigger than your hand: not the lamp, not the torch, not the sword; a person, and what a person can close a fist on, and no more." }
+      // The cleft is the present's (CLEFT-F): a visitor the machine has
+      // sent past 948 finds it filled in.
+      if (here.is(MuseumEntrance) && way == "west" && self.get(:year) > 948) { refuse "The iron door is rusted shut. The cleft in the rock, present when you started, has filled in with rubble; it belongs to a year you have left." }
+    }
+    do {
+      self.set(:own_light, self.get(:light) > 0)
+      each b: Box in self {
+        if (b.get(:open) || b.get(:transparent)) { each l: Light in b { if (l.get(:lit)) { self.set(:own_light, true) } } }
+      }
+      // On the far shore with the repellent still on (round 7's P5): a
+      // hurry-up, not a retreat.
+      if (here.is(SouthShore) && self.get(:sprayed)) { say "The smell is holding, for the moment: it is good for about as long as the climb takes, if you do not dawdle on the beach." }
+      if (here.is(DarkRoom)) {
+        if (!self.get(:own_light) && !here.get(:alight)) {
+          if (self.get(:room_dark) && random(5) < 4) {
+            if (self.get(:sprayed)) { say "There are sinister gurgling noises in the darkness all around you!" }
+            else if (here.is(GrueLair)) {
+              say "Oh, no! Dozens of lurking grues attack and devour you! You must have stumbled into an authentic grue lair!"
+              self.set(:dying, true)
+              send self :die
+            }
+            else {
+              self.set(:devoured, true)
+              send self :grue
+            }
+          } else if (here.is(GrueLair)) {
+            say "You have moved into a dark place, and a thicker dark than the usual kind: it has a smell, and a sound in it of breathing, and more than one of each. Whatever is said of grues elsewhere, here they are not a likelihood."
+          } else {
+            say "You have moved into a dark place."
+          }
+        }
+      }
+    }
+  }
+
+  as actor for take {
+    permit {
+      if (target.count == 1) {
+        each t of target {
+          if (t.is(Thing)) {
+            if (self.holds(t)) {
+              if (t.is(Wearable)) { refuse "You are already wearing it." } else { refuse "You already have that!" }
+            }
+            // From the seat of the gold machine (TIME-MACHINE-F's M-BEG),
+            // what is in the room is out of reach.
+            if (here.is(TimeMachine) && !here.holds(t)) { refuse "You can't do that from inside the machine." }
+          }
+        }
+      }
+    }
+    do {
+      let several = target.count > 1
+      // "take all" (ITAKE under ALL): only what could be taken is tried,
+      // and where nothing could be, it says so.
+      self.set(:fresh, 0)
+      each c of target {
+        if (!self.holds(c)) { self.adjust(:fresh, 1) }
+      }
+      if (several && self.get(:fresh) == 0) { say "There's nothing here you can take." }
+      else { each t of target {
+        if (t.is(Thing)) {
+          if (several && self.holds(t)) { }
+          else if (self.holds(t)) { say "You already have that!" }
+          // ALL means what is in the open, as Zork's does: it never reaches
+          // into the vial for the potion, which only a hand that names it
+          // wastes (round 8's P4).
+          else if (several && t.is(Potion)) { }
+          // The potion, reached for (POTION-F): it goes to the air.
+          else if (t.is(Potion)) {
+            say "{if several}{t.short}: {/if}Nothing seems to come out, although the sweet smell disappears from the vial, seeming to permeate the air briefly before fading entirely."
+            send t :consume
+          }
+          // The sword in the stone (SWORD-FCN).
+          else if (t.is(Sword) && t.get(:in_stone)) { say "{if several}{t.short}: {/if}{t.stuck}" }
+          // The figure's hood (HOOD-F): had only when the figure is nearly
+          // beaten, and then the face beneath it.
+          else if (t.is(Hood) && !here.holds(t) && here.count(Shadow) > 0) {
+            let s = self.get(:s_strength)
+            if (s == 1) {
+              say "{if several}{t.short}: {/if}{self.reveal}"
+              self.set(:shadow_gone, true)
+              self.set(:fighting, false)
+              self.set(:figure_near, false)
+              each sh: Shadow in here { send sh :unhood }
+              send here :unblock
+              send self :settle with 0
+            }
+            else if (s == 2) { say "{if several}{t.short}: {/if}{self.forced_back}" }
+            else { say "{if several}{t.short}: {/if}{self.not_close}" }
+          }
+          else if (t.is(Cloak) && !here.holds(t) && here.count(Shadow) > 0) { say "{if several}{t.short}: {/if}The cloak is fastened around the neck of the hooded figure. It would be difficult to remove." }
+          // The shiny thing in the sand (SHINY-OBJECT-F): one time in two.
+          else if (t.is(ShinyObject)) {
+            if (self.count(Amulet) > 0) { say "{if several}{t.short}: {/if}{t.no_take}" }
+            else if (random(2) == 0) {
+              say "{if several}{t.short}: {/if}You reach the shiny object. It is a simple golden amulet! You are now wearing the golden amulet, on its chain, round your neck."
+              spawn Amulet in self
+              send t :taken
+            }
+            else { say "{if several}{t.short}: {/if}The shiny object slips from your grasp and back onto the floor of the lake, where it is covered in sand. It is still there, under the sand, within reach of another try." }
+          }
+          else if (!t.is(Portable)) { say "{if several}{t.short}: {/if}{t.no_take}" }
+          // Underwater (IN-LAKE-F): a load over 25 is too much, and a thing
+          // slips three times in ten.
+          else if (here.is(Underwater) && self.get(:load) > 25) { say "{if several}{t.short}: {/if}You can't carry that much underwater." }
+          else if (here.is(Underwater) && random(10) < 3) { say "{if several}{t.short}: {/if}The {t.short} is yours for a moment, but drops from your grasp, and settles in the sand within reach; another try might hold it." }
+          else if (self.get(:load) + t.get(:size) > 100) { say "{if several}{t.short}: {/if}Your load is too heavy." }
+          else if (!t.is(Wearable) && self.count(Thing) - self.count(Wearable) > 7 && random(100) < (self.count(Thing) - self.count(Wearable)) * 8) { say "{if several}{t.short}: {/if}You're holding too many things already!" }
+          else {
+            move t to self
+            if (t.is(Wearable)) { say "{if several}{t.short}: {/if}You are now wearing the {t.short}." }
+            else { say "{if several}{t.short}: {/if}Taken." }
+          }
+        }
+      } }
+    }
+  }
+
+  // A fixed thing refuses `take_fixed` before this runs; it is here for
+  // any that should ever consent, so that the line is never silent. The
+  // rope at the ledge consents once the man is back, and says so itself.
+  as actor for take_fixed { do { if (!target.is(LedgeRope)) { say "{target.no_take}" } } }
+
+  // The hood named by its wearer ("remove hood from figure"): the same
+  // reach as `take hood`.
+  as actor for unmask {
+    do {
+      if (target.is(Shadow)) {
+        let s = self.get(:s_strength)
+        if (s == 0) { say "There is nothing left of the hooded figure to unhood." }
+        else if (s == 1) {
+          say reveal
+          self.set(:shadow_gone, true)
+          self.set(:fighting, false)
+          self.set(:figure_near, false)
+          send target :unhood
+          send here :unblock
+          send self :settle with 0
+        }
+        else if (s == 2) { say forced_back }
+        else { say not_close }
+      }
+      else { say "There is no hood on that to remove." }
+    }
+  }
+
+  as actor for drop {
+    do {
+      let several = target.count > 1
+      self.set(:beam_done, false)
+      each t of target {
+        // ALL means what is in the hands and not what is in the vial in
+        // them: the potion goes to the air only when it is named.
+        if (several && !self.holds(t)) { }
+        else if (t.is(Potion)) {
+          say "{if several}{t.short}: {/if}Nothing seems to come out, although the sweet smell disappears from the vial, seeming to permeate the air briefly before fading entirely."
+          send t :consume
+        }
+        // MREYE-ROOM: a thing dropped in the Beam Room, with the beam
+        // whole, lands where it breaks the beam.
+        else if (here.is(BeamRoom) && !here.get(:blocked) && !self.get(:beam_done)) {
+          self.set(:beam_done, true)
+          move t to here
+          say "{if several}{t.short}: {/if}You conveniently drop the {t.short} in position to block the beam of light."
+        }
+        else {
+          move t to here
+          say "{if several}{t.short}: {/if}Dropped."
+        }
+      }
+    }
+  }
+
+  as actor for put {
+    do {
+      if (item == container) { say "How can you do that?" }
+      else if (container.is(Ocean)) {
+        if (!self.holds(item)) { say "You don't have that." }
+        else if (item.is(Thing)) {
+          if (item.is(Light)) { if (item.get(:lit)) { self.adjust(:light, -1)  broadcast :relight } }
+          move item to container
+          say "The {item.short} falls into the ocean and is lost forever."
+        }
+      }
+      // The chest (CHEST-F): what came out of it does not go back in.
+      else if (container.is(Chest)) {
+        if (!self.holds(item)) { say "You don't have that." }
+        else if (!container.get(:opened)) { say "The chest is locked and cannot be opened." }
+        else if (item.is(Staff)) { say "It doesn't fit. Awfully peculiar, though, since it's where the staff came from." }
+        else if (item.is(Lamp) || item.is(Torch)) { say "It doesn't fit." }
+        else if (container.holds(item)) { say "It is already in the chest." }
+        else {
+          move item to container
+          say "Done."
+        }
+      }
+      // The slot by the steel door (CP-SLOT-FCN): it takes anything that
+      // fits, and the book is the fee.
+      else if (container.is(PuzzleSlot)) {
+        if (!self.holds(item)) { say "You don't have that." }
+        else if (item.is(Thing)) {
+          if (item.get(:size) > 10) { say "It doesn't fit." }
+          else if (item.is(LoreBook)) {
+            move item to container
+            say "The book drops into the slot and vanishes. The metal door slides open, revealing a passageway to the west, and a sign flashes:"
+            say fee_paid
+            send underground_caverns_3 :cp_open_door
+          }
+          else {
+            move item to container
+            say "The item vanishes into the slot. A moment later, a previously unseen sign flashes \"Garbage In, Garbage Out\" and spews out the {item.short} (now atomized)."
+          }
+        }
+      }
+      // The beam (BEAM-FUNCTION): a thing put in it lies on the floor and
+      // breaks it.
+      else if (container.is(Beam)) {
+        if (item == self) { say "You step into the beam, and it is broken for as long as you stand there, and whole again when you step back; a thing on the floor would do it better, and stay." }
+        else if (self.holds(item)) {
+          if (item.is(Thing)) {
+            move item to here
+            say "The beam is now interrupted by {item.a_short} lying on the floor."
+          }
+        }
+        else if (here.holds(item)) { if (item.is(Thing)) { say "The {item.short} already breaks the beam." } }
+        else if (item.is(Thing)) { say "You're not holding the {item.short}." }
+        else { say "You're not holding that." }
+      }
+      // The channel (SHORT-POLE-F's PUT): the short pole dropped into it.
+      else if (container.is(Channel)) {
+        if (item.is(ShortPole)) {
+          let p = underground_caverns_3.get(:poleup)
+          let md = underground_caverns_3.get(:mdir)
+          if (p == 0) { say "The pole cannot be lowered further." }
+          else if (md == 0 || md == 180) { send underground_caverns_3 :pole_set with 0  say "The pole is lowered into the channel." }
+          else if (md == 270 && underground_caverns_3.get(:mloc) == 2) { send underground_caverns_3 :pole_set with 0  say "The pole is lowered into the stone hole." }
+          else if (p == 1) { say "The pole is already resting on the floor." }
+          else { send underground_caverns_3 :pole_set with 1  say "The pole now rests on the stone floor." }
+        }
+        else if (self.holds(item)) {
+          if (item.is(Thing)) { move item to here  say "You lay the {item.short} in the channel, which is a few inches deep, so that it is lying, in effect, on the floor." }
+        }
+        else { say "You don't have that." }
+      }
+      // The flaming pit (FLAMING-PIT-F): what goes in is gone.
+      else if (container.is(FlamingPit)) {
+        if (item == self) { say "It would be a pity to end your life so near the end of your quest!" }
+        else if (!self.holds(item)) { say "You don't have that." }
+        else if (here.is(Room)) {
+          if (here.is(Parapet) || here.get(:id) == :north_corridor) {
+            if (item.is(Thing)) {
+              move item to container
+              say "You cast the {item.short} into the pit, where it is lost forever."
+            }
+          }
+          else { say "You're not close enough." }
+        }
+        else { say "You're not close enough." }
+      }
+      else if (container.is(OldPedestal)) {
+        if (!self.holds(item)) { say "You don't have that." }
+        else if (item.is(Thing)) {
+          move item to container
+          say "The {item.short} is now resting on the pedestal."
+        }
+      }
+      else if (container.is(Box)) {
+        if (!container.get(:open)) { say "The {container.short} isn't open." }
+        else if (container.holds(item)) { if (item.is(Thing)) { say "The {item.short} is already in the {container.short}." } else { say "It is already there." } }
+        else if (!self.holds(item)) { say "You don't have that." }
+        else {
+          move item to container
+          say "Done."
+        }
+      }
+    }
+  }
+  passage fee_paid {
+    {verbatim}
+        "Royal Puzzle Exit Fee Paid
+              Item Confiscated"
+    {/verbatim}
+  }
+
+  // Poured on something (V-POUR-ON): what is poured is in these hands,
+  // which nothing in the room reaches, so the hand does the pouring. The
+  // vial's content goes to the air, by the vial's name or its own, and
+  // the line and the state agree.
+  as actor for pour_on {
+    do {
+      if (item.is(Vial)) {
+        if (item.count(Potion) == 0) { say "The vial is empty." }
+        else if (!item.get(:open)) { say "You'll have to open the vial first." }
+        else {
+          each p: Potion in item { send p :consume }
+          if (target.is(Thing)) { say "It spills onto the {target.short} and vanishes, and the sweet smell with it; the vial is light now, and empty." }
+          else { say "It spills out and vanishes, and the sweet smell with it; the vial is light now, and empty." }
+        }
+      }
+      else if (item.is(Potion)) {
+        send item :consume
+        if (target.is(Thing)) { say "It spills onto the {target.short} and vanishes, and the sweet smell with it; the vial is light now, and empty." }
+        else { say "It spills out and vanishes, and the sweet smell with it; the vial is light now, and empty." }
+      }
+      else if (item.is(Thing)) { say "You can't pour the {item.short}." }
+      else { say "You can't pour that." }
+    }
+  }
+
+  as actor for put_on {
+    do {
+      // "put repellent on me" is a spraying (V-PUT-ON's REPELLENT).
+      if (item.is(Repellent)) { act spray (target: item, aim: surface) }
+      // The pedestal of 776 (CROWN-JEWELS-F's PUT): a jewel put back.
+      else if (surface.is(OldPedestal)) {
+        if (item.is(Thing)) {
+          move item to surface
+          say "The {item.short} is now resting on the pedestal."
+        }
+      }
+      // The torch back on the wall of the Scenic Vista, or in its bracket
+      // (round 6's P11): the hand lets it go, and the wall says so.
+      else if (surface.is(Wall) || surface.is(TorchBracket)) {
+        if (item.is(Torch) && here.is(VistaRoom)) { move item to here }
+      }
+      else if (surface.is(Floor)) {
+        if (item.is(Potion)) {
+          say "Nothing seems to come out, although the sweet smell disappears from the vial, seeming to permeate the air briefly before fading entirely."
+          send item :consume
+        } else {
+          move item to here
+          say "Dropped."
+        }
+      }
+    }
+  }
+
+  // The ring hidden under the seat (TM-SEAT-F's PUT-UNDER): it leaves the
+  // hand first, since only this hand may let it go; the seat does the rest.
+  as actor for put_under {
+    do {
+      if (target.is(TmSeat) && item.is(Ring)) { move item to here }
+    }
+  }
+
+  // A gift: the old man in the Engravings Room takes the waybread, if he
+  // is awake, from this hand, since nothing else may reach into it; the
+  // figure is not interested, and the sailor and the man refuse politely.
+  // The recipient answers.
+  as actor for give {
+    do {
+      if (recipient.is(Sleeper) && item.is(Waybread)) {
+        if (recipient.get(:awake)) { move item to recipient }
+      }
+    }
+  }
+
+  as actor for throw {
+    do {
+      if (target.is(Thing)) {
+        if (bound aim) {
+          if (aim == self) {
+            move target to here
+            say "A terrific throw! The {target.short} hits you squarely in the head. Normally, this wouldn't do much damage, but by incredible mischance, you fall over backwards trying to duck, and break your neck, justice being swift and merciful in the Great Underground Empire."
+            self.set(:dying, true)
+            send self :die
+          }
+          else if (aim.is(Ocean)) {
+            if (target.is(Light)) { if (target.get(:lit)) { self.adjust(:light, -1)  broadcast :relight } }
+            move target to aim
+            say "The {target.short} falls into the ocean and is lost forever."
+          }
+          // Thrown at the balcony far below the High Arch, or into the
+          // chasm: the throw is not made, as the lake's is not, since what
+          // goes over the edge here is not seen again.
+          else if (aim.is(FarBalcony)) {
+            say "The balcony is far below and a long way across, and the throw would fall short, into the chasm, which keeps what it is given. You keep hold of the {target.short}."
+          }
+          else if (aim.is(Chasm)) {
+            say "You weigh the {target.short} in your hand and the chasm with your eye, and keep the one. Nothing that has gone into that chasm has been seen again, and the {target.short} would not be the first exception."
+          }
+          // Thrown at the Guardians (GUARDIANS): destroyed in perfect
+          // unison.
+          else if (aim.is(Guardians)) {
+            move target to aim
+            say "The {target.short} falls in front of the Guardians, who destroy it in perfect unison. Satisfied, they resume their posts."
+          }
+          // Thrown at the man at the brink (GLOBAL-MAN-F): not nearly far
+          // enough.
+          else if (aim.is(LedgeMan)) {
+            move target to here
+            say "The {target.short} flies upward, but not nearly far enough to hit the man. It does seem to amuse him, however, especially as it passes within inches of your head. \"We're wasting time now. Be a good fellow and tie the rope!\""
+          }
+          // Over the cliff (CLIFF-OBJECT-F): to the ledge, and broken if it
+          // was a lamp or the staff; off the ledge (LEDGE-F): to the base.
+          else if (aim.is(CliffEdge) && here.is(CliffTop)) {
+            say "The {target.short} goes over the cliff and lands among the rocks below."
+            send target :falling
+            self.set(:dest, :fall_ledge)
+            send underground_caverns_3 :open_gate
+          }
+          else if (aim.is(Ledge) && here.is(CliffLedge)) {
+            say "The {target.short} falls to the base of the cliff below."
+            send target :falling
+            self.set(:dest, :fall_base)
+            send underground_caverns_3 :open_gate
+          }
+          // At the lake (LAKE-F has no word for it): too wide to throw
+          // across, and the throw is not made.
+          else if (aim.is(Lake)) {
+            say "The lake is too wide to throw anything across, the {target.short} included; it would go in with a small sound and be on the bottom, which is where the lake keeps things. You keep hold of it. If you want it on the far side, the far side is a swim, and the bottom is on the way."
+          }
+          else if (target.is(Lamp)) {
+            move target to here
+            send target :smash
+            say "The lamp smashes. The light is now out."
+          }
+          else if (aim.is(Creature)) {
+            move target to here
+            if (aim.is(Thing)) { say "The {aim.short} ducks as the {target.short} flies by and crashes to the ground." }
+            else { say "Thrown." }
+          }
+          else {
+            move target to here
+            say "Thrown."
+          }
+        }
+        else if (target.is(Lamp)) {
+          move target to here
+          send target :smash
+          say "The lamp smashes. The light is now out."
+        }
+        else {
+          move target to here
+          say "Thrown."
+        }
+      }
+    }
+  }
+
+  // A thing thrown in a direction, at nothing ("throw lamp south"): the
+  // whole line is read, and answered without the throw, since a throw
+  // with nothing aimed at is a smash, and a smashed lamp is the end of
+  // the light.
+  as actor for throw_dir {
+    do {
+      if (target.is(Thing)) {
+        if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore) || here.is(OnLake)) { say "The lake is too wide to throw anything across, the {target.short} included; it would go in with a small sound and be on the bottom, which is where the lake keeps things. You keep hold of it. If you want it on the far side, the far side is a swim, and the bottom is on the way." }
+        else if (target.is(Lamp)) { say "You could throw the lamp that way, and it would land that way, in pieces, and the light would go out with it. You keep hold of it. If you mean to throw it at something, say what." }
+        else { say "You could throw the {target.short} that way, and then it would be that way, and you would be walking after it. You keep hold of it. If you mean to throw it at something, say what." }
+      }
+    }
+  }
+  as actor for throw_far {
+    do {
+      if (target.is(Thing)) {
+        if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore) || here.is(OnLake)) { say "The lake is too wide to throw anything across, the {target.short} included; it would go in with a small sound and be on the bottom, which is where the lake keeps things. You keep hold of it. If you want it on the far side, the far side is a swim, and the bottom is on the way." }
+        else if (here.is(CliffTop) || here.is(CliffLedge) || here.is(AqueductView) || here.is(HighArch)) { say "There is a drop here, and a thing thrown toward it goes over it; if that is what you want, say so: throw it over the edge, or off the ledge." }
+        else if (target.is(Lamp)) { say "You could throw the lamp, and it would land, in pieces, and the light would go out with it. You keep hold of it. If you mean to throw it at something, say what." }
+        else { say "You could throw the {target.short}, and then you would be walking after it. You keep hold of it. If you mean to throw it at something, say what." }
+      }
+    }
+  }
+  // The ledge's own way down, in the ledge's own word (CLIFF-LEDGE's
+  // DOWN); at the top of the cliff, the rope; anywhere else, a direction.
+  as actor for scramble {
+    do {
+      if (here.is(CliffLedge)) {
+        say "You scramble down from the ledge, boulder to boulder and then rock face, with the shelf going up out of reach behind you; it is not a climb you could make the other way."
+        move self down
+      }
+      else if (here.is(CliffTop)) {
+        if (underground_caverns_3.get(:rope_down)) {
+          say "You take the rope in both hands and go down it, hand over hand, with the cliff face going by in front of your nose, to the shelf below."
+          move self down
+        } else { say "The drop would kill you, and there is no rope over the side to make it anything else." }
+      }
+      else if (here.is(CliffBase)) { say "You are at the bottom of the cliff already; there is nothing here to scramble down." }
+      else { say "Scrambling is for cliffs. Where the ground goes down from here, down is a direction, and you can say so." }
+    }
+  }
+  // A dig with nothing named (V-DIG): the quicksand digs back, the sand
+  // and the shore give nothing, and the rock is rock.
+  as actor for dig_here {
+    do {
+      if (here.count(Quicksand) > 0) { say "You dig at the quicksand with your hands, and the quicksand digs back, and you take them out of it while they are still yours. There is nothing under it but more of it, and then the dark." }
+      else if (here.count(Diggable) > 0) { say "Digging with your bare hands is slow and tedious, and turns up nothing but what you were digging in." }
+      else { say "The ground is too hard for digging here." }
+    }
+  }
+
+  // The fight, from the visitor's side (SHADOW-F, SHADOW-ATTACK): a stroke
+  // with the sword, with the odds the visitor's strength gives; anything
+  // else the figure ignores, and fights anyway. The man at the cliff dies
+  // of the sword (MAN-F), and the old man in the Engravings Room does not
+  // (OLD-MAN-F).
+  as actor for attack {
+    do {
+      // The weapon, named or not: a stroke with no weapon named is made
+      // with the sword where the sword is in hand, as Zork's parser fills
+      // an orphaned instrument from what is held, and says so.
+      self.set(:armed, false)
+      if (bound weapon) { if (weapon.is(Sword)) { self.set(:armed, true) } }
+      else if (self.count(Sword) > 0 && (target.is(Shadow) || target.is(CliffMan))) {
+        self.set(:armed, true)
+        say "(with the sword)"
+      }
+      if (target == self) {
+        if (bound weapon) {
+          if (weapon.is(Weapon)) {
+            say "If you insist.... Poof, you're dead!"
+            self.set(:dying, true)
+            send self :die
+          } else { say "Suicide is not the answer." }
+        } else { say "Suicide is not the answer." }
+      }
+      else if (target.is(Shadow)) {
+        if (self.get(:s_strength) == 0) { say "There is nothing left of the hooded figure to strike at." }
+        else if (self.get(:armed)) {
+          if (!self.get(:pt_struck)) {
+            self.set(:pt_struck, true)
+            self.adjust(:score, 1)
+          }
+          if (!self.get(:fighting)) { send self :fight_on }
+          let p = self.get(:strength)
+          if (random(100) < p * 10 + 10) {
+            self.set(:misses, 0)
+            if (random(100) < 85) {
+              self.adjust(:s_strength, -1)
+              if (self.get(:s_strength) <= 0) {
+                say slain_line
+                self.set(:shadow_gone, true)
+                self.set(:fighting, false)
+                self.set(:figure_near, false)
+                send target :slain
+                send here :unblock
+                send self :settle with 0
+              } else {
+                say "{one of}A good parry! Your sword wounds the hooded figure!{or}A quick stroke catches the hooded figure off guard! Blood trickles down the figure's arm!{or}The hooded figure is hit with a quick slash!{/one of}"
+                let sd = self.get(:s_strength)
+                if (sd >= 5) { say "The figure has a great deal of strength, perhaps matching your own." }
+                else if (sd == 4) { say "The figure has a light wound which hasn't affected its seemingly great strength." }
+                else if (sd == 3) { say "The figure has some wounds and is probably not capable of hindering your movement." }
+                else if (sd == 2) { say "The figure is hurt, and its strength appears to be fading." }
+                else { say defenceless }
+              }
+            } else {
+              let before = self.get(:s_strength)
+              if (before <= 1) {
+                self.set(:s_strength, 0)
+                say slain_line
+                self.set(:shadow_gone, true)
+                self.set(:fighting, false)
+                self.set(:figure_near, false)
+                send target :slain
+                send here :unblock
+                send self :settle with 0
+              } else {
+                if (before == 2) { self.set(:s_strength, 1) } else { self.adjust(:s_strength, -2) }
+                say "A sharp thrust and the hooded figure is badly wounded!"
+                let sd = self.get(:s_strength)
+                if (sd >= 5) { say "The figure has a great deal of strength, perhaps matching your own." }
+                else if (sd == 4) { say "The figure has a light wound which hasn't affected its seemingly great strength." }
+                else if (sd == 3) { say "The figure has some wounds and is probably not capable of hindering your movement." }
+                else if (sd == 2) { say "The figure is hurt, and its strength appears to be fading." }
+                else { say defenceless }
+              }
+            }
+          } else {
+            if (self.get(:s_strength) < 2) { say "{one of}Your opponent blocks your attack with its sword.{or}The hooded figure, hurt as it is, turns your stroke aside without looking up.{or}Your blade meets the figure's and slides off it; even now it is quick enough for that, and no quicker.{or}The figure parries, late and low, and does not strike back.{/one of}" }
+            else {
+              say "{one of}Your move was not quick enough and misses the mark.{or}A quick stroke, but the hooded figure is on guard.{or}A good stroke, but it's too slow.{or}A good slash, but it misses by a mile.{or}You charge, but the hooded figure jumps nimbly aside.{/one of}"
+              self.adjust(:misses, 1)
+              if (self.get(:misses) >= 3 && self.get(:strength) < 4) {
+                self.set(:misses, 0)
+                say as_you_fight
+              }
+            }
+          }
+        } else {
+          say "The hooded figure ignores your feeble attack."
+          if (!self.get(:fighting)) { send self :fight_on }
+        }
+      }
+      else if (target.is(CliffMan)) {
+        if (self.get(:armed)) {
+          let broken = self.count(Staff) > 0 || here.count(Staff) > 0
+          if (broken) { say "The man is taken by surprise and is hit with the sword. He grabs you and throws you to the ground, breaking the staff in the process, but you finish him off with a quick thrust to the chest. He dies, and disappears without ceremony in the usual style of the Great Underground Empire. His assorted valuables remain behind." }
+          else { say "The man is taken by surprise and is hit with the sword. He grabs you and throws you to the ground, but you finish him off with a quick thrust to the chest. He dies, and disappears without ceremony in the usual style of the Great Underground Empire. His assorted valuables remain behind." }
+          each st: Staff in self {
+            spawn BrokenStaff in self
+            send st :snap
+          }
+          each st: Staff in here {
+            spawn BrokenStaff in here
+            send st :snap
+          }
+          send target :slain
+        } else { say "You wouldn't hurt him with that!" }
+      }
+      else if (target.is(LedgeMan)) { say "It's unlikely you'll succeed at this distance." }
+      else if (target.is(Guardians)) { say "You aren't close enough, and even if you were, the fight would be a bit one-sided." }
+      // The Dungeon Master struck (DUNGEON-MASTER-F's REALLY-DEAD): here a
+      // death like any other, since this world has no restore.
+      else if (target.is(DungeonMaster)) {
+        say "The dungeon master is taken by surprise. He dodges your blow, and with a disappointed expression on his face, traces a complicated pattern in the air with his staff. You crumble into dust."
+        self.set(:dying, true)
+        send self :die
+      }
+      else if (target.is(MasterVoice)) { say "The dungeon master isn't here." }
+      else if (target.is(Sleeper)) {
+        say "The attack seems to have left the old man unharmed! You watch in awe as he rises to his feet and seems to tower above you. He peers down menacingly, then sadly and wearily. \"Not yet,\" he mourns, and vanishes in a puff of smoke."
+        send target :not_yet
+      }
+      else if (target.is(Creature)) {
+        if (bound weapon) {
+          if (weapon.is(Weapon)) { say "You can't." }
+          else if (weapon.is(Thing)) { say "Trying to attack the {target.short} with {weapon.a_short} is suicidal." }
+          else { say "Trying to attack the {target.short} with that is suicidal." }
+        } else { say "Trying to attack {target.a_short} with your bare hands is suicidal." }
+      }
+      else if (target.is(Thing)) { say "I've known strange people, but fighting {target.a_short}?" }
+      else { say "I've known strange people, but fighting that?" }
+    }
+  }
+
+  // "Hello, sailor" (SAILOR-FCN, V-HELLO): the two words, at the ocean,
+  // with the ship passing, bring it in; anywhere else they are a running
+  // joke three games old.
+  as actor for greet {
+    do {
+      if (target.is(Sailor)) {
+        self.adjust(:hs, 1)
+        if (here.is(FlatheadOcean) && self.get(:ship_visible)) {
+          say "The seaman looks up and maneuvers the boat toward shore. He cries out \"I have waited three ages for someone to say those words and save me from sailing this endless ocean. Please accept this gift. You may find it useful!\" He throws something which falls near you in the sand, then sails off toward the west, singing a lively, but somewhat uncouth, sailor song."
+          self.set(:ship_visible, false)
+          self.set(:ship_gone, true)
+          self.set(:ship_greeted, true)
+          spawn Vial in here
+        }
+        else if (here.is(FlatheadOcean)) {
+          if (self.get(:ship_gone)) { say mist_empty } else { say "Nothing happens yet." }
+        }
+        else { say "Nothing happens here." }
+      }
+      else if (target.is(Shadow)) { say "The hooded figure does not respond to your words." }
+      else if (target.is(Footsteps)) { say "You say hello to the hills. The footsteps stop, as if somebody were listening, and after a moment go on, no nearer." }
+      else if (target.is(CliffMan) || target.is(LedgeMan) || target.is(Sleeper) || target.is(Guardians) || target.is(DungeonMaster) || target.is(MasterVoice)) { }
+      else if (target.is(Creature)) { say "The {target.short} bows his head to you in greeting." }
+      else if (target.is(Thing)) { say "It's a well known fact that only schizophrenics say \"Hello\" to {target.a_short}." }
+      else { say "It's a well known fact that only schizophrenics say \"Hello\" to that." }
+    }
+  }
+  as actor for hello {
+    do {
+      if (here.is(CliffLedge)) {
+        let st = underground_caverns_3.get(:man_stage)
+        if (st == :unmet) { say "\"Hello,\" you call up the cliff. Nothing answers; then, from among the trees at the top, a chuckle, brief and not unfriendly. \"Hello yourself,\" says a voice, not to you exactly. \"Heavy-looking chest, that. Shame there's no way to get it up here.\" Somebody up there has heard you and is taking his time." }
+        else if (st == :waiting) { say "\"Hello yourself,\" calls the man at the brink. \"Now, about that chest....\"" }
+        else if (st == :away) { say "\"Hello,\" you call. \"Hello, hello,\" comes back from above, over the sound of a chest being gone through. \"A short while, I said.\"" }
+        else if (st == :returned) { say "\"Hello,\" the man bellows down. \"Grab onto the rope!\"" }
+        else { say "{one of}Hello.{or}Good day.{or}Nice weather we've been having lately.{or}Goodbye.{/one of}" }
+      }
+      // At the top of the cliff, before he has shown himself, a hello is
+      // for the something among the trees, and it answers as it does.
+      else if (here.is(CliffTop) && underground_caverns_3.get(:man_stage) == :unmet) { say "\"Hello?\" you say to the trees. Nobody answers; among the trunks, something that is not a tree slips back a little further, and goes on keeping very still. There seems to be nobody there, but it's hard to tell." }
+      else { say "{one of}Hello.{or}Good day.{or}Nice weather we've been having lately.{or}Goodbye.{/one of}" }
+    }
+  }
+  // A hail, an ahoy, a wave, a shout: nearly the words, and not them. At
+  // the ocean with the ship passing, the nudge, and the ship holds once;
+  // anywhere else, the dark does not come when called.
+  as actor for hail {
+    do {
+      if (target.is(Sailor) || target.is(Ship)) {
+        if (here.is(FlatheadOcean) && self.get(:ship_visible)) {
+          if (!self.get(:ship_held)) {
+            self.set(:ship_held, true)
+            self.set(:ship_timer, 2)
+            say ship_holds
+          } else { say ship_tired }
+        }
+        else if (here.is(FlatheadOcean)) {
+          if (self.get(:ship_gone)) { say mist_empty } else { say "Nothing happens yet. The surf answers you, and nothing else does." }
+        }
+        else { say "Nothing happens here. There is nobody to hail but the dark, and it does not come when called." }
+      }
+      else if (target.is(Shadow)) { say "The hooded figure does not respond to your words, and does not need calling; it is already here." }
+      else if (target.is(Footsteps)) { say "You call out to the footsteps. They stop, as if somebody were listening, and after a moment go on, no nearer." }
+      else if (target.is(CliffMan) || target.is(LedgeMan) || target.is(Sleeper)) { }
+      else if (target.is(Creature)) { say "The {target.short} hears you, and does not come any nearer for it." }
+      else if (target.is(Thing)) { say "You hail {target.a_short}. It does not answer; it would be a strange {target.short} that did." }
+      else { say "You hail it. It does not answer." }
+    }
+  }
+  // A shout with nobody named (V-YELL): at the ocean, with the ship
+  // passing, it is a call across the water, and the sailor hears it as he
+  // hears every call that is nearly the words: the ship holds, once.
+  as actor for yell {
+    do {
+      if (here.is(PuzzleSquare)) { say "The walls take the shout and give nothing back, and nobody comes; the note at the entrance said as much. {if self.count(LoreBook) > 0}There is the steel door in the far south-east of the Puzzle, and the slot beside it that opens it, and its fee is the book you are carrying. {else}There is the steel door in the far south-east of the Puzzle, and the slot beside it, and the slot's fee, if you have it. {/if}And failing that: if you pray enough, it is said down here, your prayers may be answered, at the usual price." }
+      else
+      if (here.is(FlatheadOcean)) {
+        if (self.get(:ship_visible)) {
+          say "You shout across the water, and the sailor, his hand still cupped to his ear, turns toward the sound."
+          if (!self.get(:ship_held)) {
+            self.set(:ship_held, true)
+            self.set(:ship_timer, 2)
+            say ship_holds
+          } else { say ship_tired }
+        }
+        else if (self.get(:ship_gone)) { say mist_empty }
+        else { say "Aaaarrrrgggghhhh! The surf answers you, and nothing else does; nothing happens yet." }
+      }
+      else if (here.is(ShadowRoom) && !self.get(:shadow_gone) && here.count(Shadow) == 0) { say "Aaaarrrrgggghhhh! Off in the hills the footsteps stop, as if somebody were listening, and after a moment go on, no nearer." }
+      // At the ledge, a shout goes up the cliff, and what comes down
+      // depends on where he is (GLOBAL-MAN-F, I-MAN-APPEARS).
+      else if (here.is(CliffLedge)) {
+        let st = underground_caverns_3.get(:man_stage)
+        if (st == :unmet) { say "Aaaarrrrgggghhhh! Your shout goes up the cliff and does not come down again. Then, from somewhere among the trees at the top, somebody chuckles, briefly. \"That's a heavy-looking chest you've got down there,\" a voice remarks, to nobody in particular. \"Pity there's no way of sending it up.\" Whoever it is has heard you, and is in no hurry; he will come to the brink when it suits him, and it may suit him soon." }
+        else if (st == :waiting) { say "Aaaarrrrgggghhhh! The man at the top of the cliff winces, and waves, and points at the chest." }
+        else if (st == :away) { say "Aaaarrrrgggghhhh! From the top of the cliff, between the sounds of a chest being gone through, a voice calls down: \"Still there? Good. I said a short while, and a short while is what I meant; keep your shirt on.\"" }
+        else if (st == :returned) { say "\"I can hear you fine,\" the man bellows down. \"Grab onto the rope!\"" }
+        else { say "Aaaarrrrgggghhhh! Nothing answers from the top of the cliff. Whoever was up there has gone, and the chest with him." }
+      }
+      else if (here.is(CliffTop) && underground_caverns_3.get(:man_stage) == :at_cliff) { say "Aaaarrrrgggghhhh! The man looks up from his valuables, winces, and goes back to them." }
+      else { say "Aaaarrrrgggghhhh!" }
+    }
+  }
+  // A question into the dark: who is there?
+  as actor for who_there {
+    do {
+      if (here.is(FlatheadOcean)) {
+        if (self.get(:ship_visible)) {
+          say "The sailor, if he heard, does not say who he is; he cups his hand to his ear and waits for you to say who you are, and in the right words."
+          if (!self.get(:ship_held)) {
+            self.set(:ship_held, true)
+            self.set(:ship_timer, 2)
+            say ship_holds
+          } else { say ship_tired }
+        }
+        else if (self.get(:ship_gone)) { say mist_empty }
+        else { say "The surf, and the mist, and nothing else answers; nothing happens yet." }
+      }
+      else if (here.is(ShadowRoom)) {
+        if (here.count(Shadow) > 0) { say "It is here, in front of you, and it does not answer; it is you, more or less, and you have never answered that question either." }
+        else if (self.get(:shadow_gone)) { say "Nobody, now. Whatever was walking the land of shadow has stopped walking it." }
+        else { say "The footsteps stop, off in the hills, as if somebody were listening; and after a moment they go on, no nearer. Standing a while in the light, or walking the hills in it, is how such a one is met." }
+      }
+      else if (here.is(CliffLedge)) {
+        let st = underground_caverns_3.get(:man_stage)
+        if (st == :unmet) { say "Nobody answers; but from the top of the cliff, after a moment, comes a short sound that might be a chuckle, and a voice, musing: \"Heavy chest, that one. Wonder if there's a way of getting it up.\" Somebody is up there, and would rather you waited to find out who." }
+        else if (st == :waiting) { say "\"Me!\" calls the man at the top of the cliff. \"Your friend! Now, about that chest....\"" }
+        else if (st == :away) { say "\"Me again,\" calls a voice from above, over the sound of a lid going back. \"Patience, sport. A short while, I said.\"" }
+        else if (st == :returned) { say "\"Your friend with the rope,\" the man bellows. \"Grab onto it!\"" }
+        else { say "Nobody, now. Whoever was at the top of the cliff has gone, and taken the chest with him." }
+      }
+      else if (here.is(CliffTop) && underground_caverns_3.get(:man_stage) == :unmet) { say "Nobody answers. Among the trees, something that is not a tree keeps very still, and keeps on keeping it; there seems to be nobody there, but it's hard to tell." }
+      else { say "Nobody answers, which, down here, is the answer you were hoping for." }
+    }
+  }
+
+  // Into the water (LAKE-F, GO-ON-LAKE): from a shore, everything not
+  // worn goes in and the visitor after it; from the surface, down.
+  // The plunge is said before the move; a lamp or a torch among what goes
+  // under is named as it goes, since it will not light again.
+  passage plunge { The shock of entering the frigid water has made you drop all your possessions into the lake! Everything you were carrying, that is: what you wear stays with you, and the rest is on the bottom. }
+  passage lamp_under { Your lamp goes under with the rest. There is a hiss, a brief glow in the water below you, and then not. }
+  passage lamp_dark_under { Your lamp goes under with the rest, dark; there is a hiss where the water finds its way in, and no glow, since there was none to put out. It will not light again. }
+  passage lamp_gone_under { Your lamp goes under with the rest, and the lake does nothing further to it; it had already done everything a lake can do to a lamp. }
+  passage torch_under { The torch goes under with the rest, and goes out with a hiss, and will not be lit again by anything down here. }
+  passage bread_under { The waybread goes to mush in the water, and is gone. }
+  passage paralyzed { You are nearly paralyzed by the icy waters as you swim into the center of the lake. }
+  passage go_under { You take a breath and go under. }
+  as actor for through {
+    do {
+      // The mirror box entered by its mirror or its panel (MIRIN): in,
+      // where the opened side faces you, and told why not where it does
+      // not.
+      if (target.is(BoxFace)) {
+        let m = target.get(:m)
+        if (m == 1 && underground_caverns_3.get(:mirror_open)) { move self in }
+        else if (m == 1 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1)) { say "A mirror blocks your way." }
+        else if (m == 1) { say "The panel is closed." }
+        else { say "The structure blocks your way." }
+      }
+      // The cell door (CELL-DOOR-F): south through it, from the corridor.
+      else if (target.is(CellDoor)) {
+        if (here.is(SlotCell)) { say "Look around." }
+        else if (underground_caverns_3.get(:cell_door_open)) { move self south }
+        else { say "The cell door is closed." }
+      }
+      // The bronze door: south through it, from the fourth cell.
+      else if (target.is(BronzeDoor)) {
+        if (here.is(FarCell) && underground_caverns_3.get(:bronze_open)) { move self south }
+        else if (underground_caverns_3.get(:bronze_open)) { move self north }
+        else { say "The bronze door is closed." }
+      }
+      // The gold machine, boarded (V-BOARD), by its name or its seat's.
+      else if (target.is(TimeMachine)) {
+        if (here == target) { say "You are in it already, in the seat, before the console." }
+        else {
+          say "You climb into the gold machine and settle on the seat before the console."
+          move self to target
+        }
+      }
+      else if (target.is(TmSeat)) {
+        if (here.is(TimeMachine)) { say "You are in the seat already." }
+        else {
+          say "You climb into the gold machine and settle on the seat before the console."
+          each m: TimeMachine in here { move self to m }
+        }
+      }
+      // The round hole (CP-HOLE-F): down into the puzzle.
+      else if (target.is(PuzzleHole)) {
+        if (here.is(PuzzleAnte)) {
+          if (here.get(:era) != :present || underground_caverns_3.get(:cp_blocked)) { say "The hole is blocked by sandstone." }
+          else {
+            say "You let yourself down through the hole, hang a moment by your hands, and drop the rest of the way to the floor below."
+            move self down
+          }
+        }
+      }
+      // The cleft beside the iron door (CLEFT): east into the museum, or
+      // west out of it.
+      else if (target.is(Cleft)) {
+        if (here.is(GreatDoor)) {
+          say "You squeeze through the cleft."
+          move self east
+        }
+        else if (self.get(:year) > 948) { say "The cleft in the rock, present when you started, has filled in with rubble; it belongs to a year you have left." }
+        else {
+          say "You squeeze through the cleft."
+          move self west
+        }
+      }
+      // The steel door, open: through it, either way.
+      else if (target.is(SteelDoor)) {
+        if (!underground_caverns_3.get(:cp_door_open)) { say "The steel door is closed." }
+        else if (here.is(PuzzleSquare)) {
+          say "You go through the steel door."
+          move self west
+        }
+        else {
+          say "You go through the steel door."
+          move self east
+        }
+      }
+      else if (target.is(Lake)) {
+        if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore)) {
+          if (self.count(Thing) - self.count(Wearable) > 0) {
+            say plunge
+            each l: Lamp in self { if (l.get(:fried) || l.get(:broken)) { say lamp_gone_under } else if (l.get(:lit)) { say lamp_under } else { say lamp_dark_under } }
+            each l: Torch in self { say torch_under }
+            each l: Waybread in self { say bread_under }
+          }
+          else { say paralyzed }
+          self.set(:dest, :splash)
+          send underground_caverns_3 :open_gate
+        }
+        else if (here.is(OnLake)) {
+          say go_under
+          move self down
+        }
+        else { say "Just where do you think you are?" }
+      }
+    }
+  }
+  as actor for leap_at {
+    do {
+      // BEAM-FUNCTION's LEAP: over the beam and north.
+      if (target.is(Beam)) {
+        say "You jump over the beam and into the hallway."
+        move self north
+      }
+      else if (target.is(Lake)) {
+        if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore)) {
+          if (self.count(Thing) - self.count(Wearable) > 0) {
+            say plunge
+            each l: Lamp in self { if (l.get(:fried) || l.get(:broken)) { say lamp_gone_under } else if (l.get(:lit)) { say lamp_under } else { say lamp_dark_under } }
+            each l: Torch in self { say torch_under }
+            each l: Waybread in self { say bread_under }
+          }
+          else { say paralyzed }
+          self.set(:dest, :splash)
+          send underground_caverns_3 :open_gate
+        }
+        else if (here.is(OnLake)) {
+          say go_under
+          move self down
+        }
+        else { say "Just where do you think you are?" }
+      }
+    }
+  }
+  as actor for swim {
+    do {
+      if (here.is(OnLake) || here.is(Underwater)) { say "What do you think you're doing?" }
+      else if (here.is(FlatheadOcean)) { say "Between the rocks and waves, you wouldn't last a minute!" }
+      else { say "Go jump in a lake!" }
+    }
+  }
+  // A dive, bare: into the lake from its shore, under it from its surface.
+  as actor for dive {
+    do {
+      if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore)) {
+        if (self.count(Thing) - self.count(Wearable) > 0) {
+          say plunge
+          each l: Lamp in self { if (l.get(:fried) || l.get(:broken)) { say lamp_gone_under } else if (l.get(:lit)) { say lamp_under } else { say lamp_dark_under } }
+          each l: Torch in self { say torch_under }
+          each l: Waybread in self { say bread_under }
+        }
+        else { say paralyzed }
+        self.set(:dest, :splash)
+        send underground_caverns_3 :open_gate
+      }
+      else if (here.is(OnLake)) {
+        say go_under
+        move self down
+      }
+      else if (here.is(Underwater)) { say "You are underwater. The only way to dive here is further, and there is no further; the bottom is a few feet below you." }
+      else if (here.is(AqueductView) || here.is(CliffTop) || here.is(HighArch)) {
+        say "This was not a very safe place to try diving."
+        say "{one of}You should have looked before you leaped.{or}In the movies, your life would be passing before your eyes.{or}Geronimo...{/one of}"
+        self.set(:dying, true)
+        send self :die
+      }
+      else { say "{one of}Very good. Now you can go to the second grade.{or}Are you enjoying yourself?{or}Wheeeeeeeeee!!!!!{or}Do you expect me to applaud?{/one of}" }
+    }
+  }
+  // V-LEAP with nothing named: down, where down is a drop; a skip
+  // anywhere else.
+  as actor for jump {
+    do {
+      if (here.is(OnLake)) {
+        say go_under
+        move self down
+      }
+      else if (here.is(Underwater)) { say "You are underwater. The only way to jump here is up, and that is called swimming." }
+      else if (here.is(AqueductView) || here.is(CliffTop) || here.is(HighArch)) {
+        say "This was not a very safe place to try jumping."
+        say "{one of}You should have looked before you leaped.{or}In the movies, your life would be passing before your eyes.{or}Geronimo...{/one of}"
+        self.set(:dying, true)
+        send self :die
+      }
+      else { say "{one of}Very good. Now you can go to the second grade.{or}Are you enjoying yourself?{or}Wheeeeeeeeee!!!!!{or}Do you expect me to applaud?{/one of}" }
+    }
+  }
+  // The rope at the top of the cliff climbed (ROPE-F's CLIMB-FOO): down
+  // to the ledge, if the rope is over the side.
+  as actor for climb_down {
+    do {
+      if (target.is(PuzzleHole) && here.is(PuzzleAnte)) {
+        if (here.get(:era) != :present || underground_caverns_3.get(:cp_blocked)) { say "The hole is blocked by sandstone." }
+        else {
+          say "You let yourself down through the hole, hang a moment by your hands, and drop the rest of the way to the floor below."
+          move self down
+        }
+      }
+      else if (here.is(CliffTop) && (target.is(CliffRope) || target.is(CliffEdge))) {
+        if (underground_caverns_3.get(:rope_down)) {
+          say "You take the rope in both hands and go down it, hand over hand, with the cliff face going by in front of your nose, to the shelf below."
+          move self down
+        } else { say "The fall would kill you." }
+      }
+    }
+  }
+  as actor for climb_up {
+    do {
+      // The puzzle's ladders (CPLADDER-OBJECT): the good one, under the
+      // hole, is the way out; anywhere else, the ceiling.
+      if (target.is(PuzzleLadder)) {
+        if (here.is(PuzzleSquare)) {
+          if (here.get(:ve) == -2) {
+            if (here.get(:idx) == 1) { move self up }
+            else { say "You hit your head on the ceiling and fall off the ladder." }
+          }
+          else if (here.get(:vw) == -3) { say "You hit your head on the ceiling and fall off the ladder." }
+          else { say "You can't see any ladder here." }
+        }
+        else { say "You can't see any ladder here." }
+      }
+      else if (target.is(TimeMachine) || target.is(TmSeat)) {
+        if (here.is(TimeMachine)) { say "You are in it already." }
+        else {
+          say "You climb into the gold machine and settle on the seat before the console."
+          if (target.is(TimeMachine)) { move self to target } else { each m: TimeMachine in here { move self to m } }
+        }
+      }
+      else if (here.is(CliffTop) && target.is(CliffRope)) {
+        if (underground_caverns_3.get(:rope_down)) {
+          say "The rope goes down, not up; you take it in both hands and go down it, hand over hand, to the shelf below."
+          move self down
+        } else { say "The rope is not over the side, and there is nowhere up to climb it to." }
+      }
+    }
+  }
+
+  as actor for score { do { self.set(:aside, true)  say score_line } }
+  as actor for diagnose {
+    do {
+      self.set(:aside, true)
+      say diag_line
+      if (self.get(:deaths) == 1) { say "You have been killed once." }
+      else if (self.get(:deaths) == 2) { say "You have been killed twice." }
+      else if (self.get(:deaths) >= 3) { say "You have been killed an awful lot." }
+    }
+  }
+  // Help, in Zork's voice (round 7's P2): the library's listing overran
+  // a turn in the Royal Puzzle; this is the world's own, and short.
+  as actor for help { do { self.set(:aside, true) } }
+  passage hint_line { Help, down here, is what you bring with you. The words that work are the usual ones: the compass, UP and DOWN to move; LOOK and EXAMINE to see; TAKE, DROP, OPEN, PUSH and whatever a thing seems to invite when it is looked at; INVENTORY for what you carry, SCORE for how you stand, DIAGNOSE for how you are. The old man said to seek him when you felt yourself worthy, and that is the only hint he gives, and he meant it. }
+  as actor for hint { do { self.set(:aside, true)  say hint_line } }
+  as actor for cant_wear { do { say "You can't wear the {target.short}." } }
+  // The two words (V-SAY's FROTZ OZMOO): at the secret door, once the
+  // Dungeon Master has given them, back to his door; anywhere else,
+  // nothing; before he has given them, an echo.
+  as actor for incant {
+    do {
+      if (!self.get(:front_door_touched)) { say "The incantation echoes back faintly, but nothing else happens." }
+      else if (here.is(EngravingsRoom)) {
+        say "The runes on the north wall brighten, one after another, and the room goes out like a lamp."
+        self.set(:dest, :to_front)
+        send underground_caverns_3 :open_gate
+      }
+      else { say "Nothing happens." }
+    }
+  }
+  // Orders to the Dungeon Master (DUNGEON-MASTER-F with WINNER the master,
+  // MASTER-F): answered by where he stands, and done by him.
+  passage dm_not_here { The dungeon master isn't here. }
+  passage dm_cant_hear { He can't hear you. }
+  as actor for master_follow {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (here.is(Room) && underground_caverns_3.get(:dm_at) == here.get(:id)) {
+        say "The dungeon master answers, \"I will follow.\""
+        send underground_caverns_3 :dm_follow_set with true
+      }
+      else { say "The dungeon master's voice replies, \"You must come here first!\"" }
+    }
+  }
+  as actor for master_stay {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else {
+        say "The dungeon master answers, \"I will stay.\""
+        send underground_caverns_3 :dm_follow_set with false
+      }
+    }
+  }
+  as actor for master_go {
+    way from :ways
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (bound way) {
+        let dm_pos = underground_caverns_3.get(:dm_at)
+        if (dm_pos == :north_corridor && way == :north) {
+          say "\"Very well. I am at the parapet!\""
+          send underground_caverns_3 :dm_follow_set with false
+          self.set(:dest, :dm_send)
+          send underground_caverns_3 :open_gate
+        }
+        else if (dm_pos == :north_corridor && way == :south) { say "\"I am not permitted to enter the prison cell.\"" }
+        else if (dm_pos == :south_corridor && way == :north) { say "\"I am not permitted to enter the prison cell.\"" }
+        else { say "\"I prefer to stay where I am, thank you.\"" }
+      }
+      else { say "\"I prefer to stay where I am, thank you.\"" }
+    }
+  }
+  as actor for master_parapet {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (underground_caverns_3.get(:dm_at) == :parapet) {
+        say "\"I am at the parapet already,\" he replies, \"and I will stay at it.\""
+        send underground_caverns_3 :dm_follow_set with false
+      }
+      else {
+        say "\"Very well!\""
+        send underground_caverns_3 :dm_follow_set with false
+        self.set(:dest, :dm_send)
+        send underground_caverns_3 :open_gate
+      }
+    }
+  }
+  as actor for master_push {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (underground_caverns_3.get(:dm_at) == :parapet) {
+        say "\"If you wish,\" he replies."
+        self.set(:dest, :dm_push)
+        send underground_caverns_3 :open_gate
+      }
+      else { say "\"If you wish,\" he replies, and then, after a moment, \"but there is no button where I am standing. The button is on the parapet.\"" }
+    }
+  }
+  as actor for master_dial {
+    n from 1 to 8
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (underground_caverns_3.get(:dm_at) == :parapet) {
+        if (bound n) {
+          say "\"If you wish,\" he replies."
+          self.set(:dm_n, n)
+          self.set(:dest, :dm_dial)
+          send underground_caverns_3 :open_gate
+        }
+        else { say "\"There is no such setting,\" he replies." }
+      }
+      else { say "\"If you wish,\" he replies, and then, after a moment, \"but there is no dial where I am standing. The dial is on the parapet.\"" }
+    }
+  }
+  as actor for master_spin {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (underground_caverns_3.get(:dm_at) == :parapet) {
+        say "\"If you wish,\" he replies."
+        self.set(:dest, :dm_spin)
+        send underground_caverns_3 :open_gate
+      }
+      else { say "\"If you wish,\" he replies, and then, after a moment, \"but there is no dial where I am standing. The dial is on the parapet.\"" }
+    }
+  }
+  as actor for master_take {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else { say "\"I will have no use for that, I am afraid.\"" }
+    }
+  }
+  as actor for master_open {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else { say "The dungeon master appears angered. \"Do not run from your quest: you are nearing the end!\"" }
+    }
+  }
+  as actor for master_other {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else { say "\"Do not be foolish! Consider the end of your quest!\"" }
+    }
+  }
+  as actor for verbose { do { self.set(:aside, true)  self.set(:mode, :verbose)  say "Maximum verbosity." } }
+  as actor for brief { do { self.set(:aside, true)  self.set(:mode, :brief)  say "Brief descriptions." } }
+  as actor for superbrief { do { self.set(:aside, true)  self.set(:mode, :superbrief)  say "Superbrief descriptions." } }
+  as actor for quit { do { self.set(:aside, true)  say score_line  say "There is no leaving a world by typing at it; to go, go. Your potential will keep until you come back." } }
+  // Refused in character, and honest about it: what is lost stays lost,
+  // and the way that is left is said.
+  as actor for restart {
+    do {
+      self.set(:aside, true)
+      if (self.get(:finished)) { say "There is no starting over from here. This is the Void; it is where starting over stops." }
+      else if (self.get(:deaths) >= 3) { say "This world does not start over on request. What you have lost stays lost, and what you have done stays done. The old man has carried you back to the stair three times, and the next time he will keep you; after that there is nothing further, which is, in its way, an ending." }
+      else { say "This world does not start over on request. What you have lost stays lost, and what you have done stays done. The stair is to the north of wherever you are, more or less; and the old man will carry you back to it, with your lamp, such as it is, three times, and the fourth time he will keep you, which is as near to an ending as a lost visitor gets." }
+    }
+  }
+  as actor for save { do { self.set(:aside, true)  say "Ok. (This world remembers you on its own; there is nothing to save.)" } }
+  as actor for restore { do { self.set(:aside, true)  say "Ok. (Nothing was saved, so nothing is restored; everything is as you left it.)" } }
+  as actor for version { do { self.set(:aside, true)  say "Underground Caverns 3: The Dungeon Master. After ZORK III: The Dungeon Master, Infocom, 1982; the map, the puzzles and most of the words are theirs." } }
+  as actor for xyzzy { do { say "A hollow voice says \"Fool.\"" } }
+  as actor for zork { do { say "At your service!" } }
+  as actor for curse { do { say "Such language in a high-class establishment like this!" } }
+  // Prayer in the Royal Puzzle (the set-aside round 8's finding): the
+  // original lets a visitor seal themselves in for good and restore; this
+  // world has no restore, so a prayer there is answered, at what a death
+  // costs. Zork's own line everywhere else is the hint.
+  as actor for pray {
+    do {
+      if (here.is(PuzzleSquare)) {
+        say "You pray. The Puzzle takes the sound of it the way it takes every sound, and gives nothing back; and then the sandstone goes dark round you, and the floor goes from under you, and somebody who has been watching you all this while answers, after his fashion. It costs what it costs."
+        self.set(:dying, true)
+        send self :die
+      }
+      else { say "If you pray enough, your prayers may be answered." }
+    }
+  }
+  as actor for walk_about { do { say "Use compass directions for movement." } }
+  as actor for back { do { say "Sorry, my memory is poor. Please give a direction." } }
+  as actor for stay { do { say "You will be lost without me!" } }
+  as actor for win { do { say "Naturally!" } }
+  as actor for wish { do { say "With luck, your wish will come true." } }
+  as actor for bug { do { say "Bug? Not in a flawless program like this! (Cough, cough)." } }
+  as actor for echo { do { say "echo echo ..." } }
+  as actor for repent { do { say "It could very well be too late!" } }
+  as actor for frobozz { do { say "The FROBOZZ Corporation created, owns, and operates this dungeon." } }
+  as actor for answer_bare { do { say "Nobody seems to be awaiting your answer." } }
+  // Something said with nobody named: at the shore, the sailor hears it,
+  // or the mist does.
+  as actor for say_bare {
+    do {
+      if (here.count(Shadow) > 0) { say "You must address the hooded figure directly." }
+      else if (here.is(FlatheadOcean)) {
+        if (self.get(:ship_visible)) {
+          say "You say it, loudly, toward the ship, and the sailor turns his cupped ear toward you."
+          if (!self.get(:ship_held)) {
+            self.set(:ship_held, true)
+            self.set(:ship_timer, 2)
+            say ship_holds
+          } else { say ship_tired }
+        }
+        else if (self.get(:ship_gone)) { say mist_empty }
+        else { say "You say it to the sea, and the sea says nothing back. Nothing happens yet." }
+      }
+      else { say "Talking to yourself is a sign of impending mental collapse." }
+    }
+  }
+  // Into the seat (V-BOARD, by `sit in`, `get in` and their kin): the
+  // gold machine is the one thing here with a seat, so a bare "machine"
+  // resolves to it and not to the grey or the black.
+  as actor for board {
+    do {
+      if (target.is(TimeMachine)) {
+        if (here == target) { say "You are in it already, in the seat, before the console." }
+        else {
+          say "You climb into the gold machine and settle on the seat before the console."
+          move self to target
+        }
+      }
+      else if (target.is(TmSeat)) {
+        if (here.is(TimeMachine)) { say "You are in the seat already." }
+        else {
+          say "You climb into the gold machine and settle on the seat before the console."
+          each m: TimeMachine in here { move self to m }
+        }
+      }
+      else { say "There is nothing to sit in there." }
+    }
+  }
+  as actor for stand { do { say "{if here.is(TimeMachine)}You are sitting, in the seat of the gold machine; to be standing, get out.{else}You are already standing, I think.{/if}" } }
+  // Out of the gold machine, or of nothing in particular.
+  as actor for get_out {
+    do {
+      if (here.is(TimeMachine)) {
+        say "You climb out of the machine."
+        move self out
+      }
+      else { say "You are not in anything to get out of, that a compass direction would not get you out of better." }
+    }
+  }
+  as actor for exit_thing {
+    do {
+      if (target.is(TimeMachine)) {
+        if (here == target) {
+          say "You climb out of the machine."
+          move self out
+        }
+        else { say "You are not in the machine." }
+      }
+      else if (target.is(TmSeat)) {
+        if (here.is(TimeMachine)) {
+          say "You climb out of the machine."
+          move self out
+        }
+        else { say "You are not in the seat." }
+      }
+    }
+  }
+  // A search with nothing named: the room, as a look reads it.
+  as actor for search_here {
+    do {
+      if (here.is(Room)) { say "You search the place, which is to say you look at it closely, and it looks like this: {here.full}" }
+      else { say "You search the place, and it is as it is described; nothing is hidden in it that a look does not find." }
+    }
+  }
+  // Feeling about, in the dark or out of it.
+  passage room_8_felt { You feel around. Rock, rough, and in one corner something that rolls under your hand and is a can, by the feel of it; and the dark keeps it. There is no telling in the dark which end of it sprays, or reading what it says, or finding it again once it has rolled, and the table will have you back before your hands have learned what a light would have told you at a glance. The flame on the wall beside the table is a light that has not been near the water. }
+  as actor for feel_around {
+    do {
+      // Room 8 in the dark (round 7's P4): the can is there, and the dark
+      // keeps it; the lesson is the light.
+      if (self.get(:room_dark) && here.is(DarkRoom) && !here.get(:alight) && self.get(:light) == 0 && here == room_8) { say room_8_felt }
+      else if (self.get(:room_dark) && here.is(DarkRoom) && !here.get(:alight) && self.get(:light) == 0) { say "You feel around. Rock, cold and a little wet, where the walls are; air, which is where the ways out are, and the ways out are still compass directions in the dark; and nothing, yet, that bites. A light would be better than a hand." }
+      else { say "You feel around, and find what is listed above, at about the height you expected it, and nothing that the light had not already shown you." }
+    }
+  }
+  // A wait with a number in it: one move, and a word about why.
+  as actor for wait_long { do { say "Time passes... one move of it. This world waits a move at a time, and says so, so that nothing passes you while you are not looking; say it again for another." } }
+  as actor for chomp { do { say "Preposterous!" } }
+  as actor for odysseus { do { say "Wasn't he a sailor?" } }
+  as actor for treasure { do { say "Nothing happens." } }
+  as actor for mumble { do { say "You'll have to speak up if you expect me to hear you!" } }
+  as actor for look_up {
+    do {
+      if (here.is(Underwater)) { say "Above you is the underside of the surface, bright and shifting, closer than you would like it to be far." }
+      else if (here.is(OnLake)) { say "Far above, the cavern's roof, where the dim light comes from; it is too far to be any use." }
+      else if (here.is(CliffTop)) { say "Two hundred feet up, a hole in the earth's surface with the sky in it, and sunshine coming down through the hole. It is the best thing you have seen in three adventures and there is no way to it." }
+      else if (here.is(CliffLedge)) { say "The cliff goes up, and at the top of it the trees, and above them the light." }
+      else { say "You see the ceiling, or where the ceiling would be if the light reached it." }
+    }
+  }
+  as actor for look_down {
+    do {
+      if (here.is(OnLake)) { say "You can't quite make out the bottom of the lake from here..." }
+      else if (here.is(AqueductView)) { say "The drop is a long one, to rocks, and then a longer one. You step back from the edge of the balcony without being told to." }
+      else if (here.is(CliffTop)) { say "Nearly fifty feet down, the ledge, with its boulders and whatever is among them; and past the ledge, further, the rocks." }
+      else if (here.is(HighArch)) { say "Hundreds of feet, to the floor of the chasm, which is rock. You hold on to the channel's side, which does not help and feels as though it does." }
+      else { say "You see the ground, and whatever is on it, which is listed above." }
+    }
+  }
+  as actor for smell_here {
+    do {
+      if (here.is(FlatheadOcean)) { say "It smells of salt, and of the mist, which smells vaguely salty too." }
+      else if (here.is(OnLake) || here.is(Underwater)) { say "It smells of cold water, which smells of nothing, very strongly." }
+      else if (here.is(CliffTop)) { say "It smells of trees, and of rain that fell somewhere else, and of daylight, which has a smell when you have been without it long enough." }
+      else if (here.is(GrueLair)) { say "It smells of grue, which is a smell you know without ever having smelled it: wet, and hungry, and close." }
+      else { say "It smells like the inside of the earth, which is to say of rock, damp and a great deal of time." }
+    }
+  }
+  as actor for listen_here {
+    do {
+      if (here.is(FlatheadOcean)) { say "The surf pounds the beach, and the wind takes the sound of it off over the hills." }
+      else if (here.is(ShadowRoom)) {
+        if (self.get(:shadow_gone)) { say "Nothing. The land of shadow is as quiet as it looks." }
+        else if (here.count(Shadow) > 0) { say "The figure's breathing, which keeps time with yours, and nothing else; whatever was walking the hills has stopped, and is standing in front of you." }
+        else { say "Quiet. Then, perhaps, footsteps; then quiet again. They are keeping your pace, somewhere off in the hills, and when you stand still to hear them better they stand still too." }
+      }
+      else if (here.is(CliffTop)) { say "Leaves, moving, two hundred feet up; and from the southwest, now and then, the sea." }
+      else if (here.is(GrueLair)) { say "Breathing, more than one of it, and the sound of something that is not in a hurry because it does not need to be." }
+      else if (here.is(MuseumRoom) && here.get(:era) == :old && self.get(:guards)) { say "The voices are muffled by the door which (fortunately for you) separates you. They seem to be in heated debate on the topic of {one of}wage scales for guards{or}the excessive nature of the Royal Government{or}the soon to be constructed Royal Puzzle{or}the proper way to execute trespassers{or}torturing thieves{or}the banishment of the Wizard of Frobozz{/one of}." }
+      else if (here.is(TimeMachine)) { say "The machine hums, very faintly, the way a thing does that is waiting to be used." }
+      else { say "You hear nothing unusual." }
+    }
+  }
+}
+message :board_here

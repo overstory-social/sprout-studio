@@ -1,0 +1,414 @@
+// Zork III: The Dungeon Master, all four of its quarters: the Endless
+// Stair, the Land of Shadow and the lake; the cliff, the old man, the far
+// shores and the aqueduct; the Royal Museum, its puzzle and its time
+// machine; and beyond the secret door the mirror box, the Guardians, the
+// Dungeon Master and his dungeon, and the Treasury of Zork. The world keeps Zork's narrator for the
+// lines the engine speaks for itself, and a gate: a room cannot reach
+// another, so where Zork moves a body or a thing across the map at a
+// stroke (dying, the lake taking what is carried, the sword called to a
+// hand, the viewing table, the man's rope), whoever needs to asks the
+// world to open the gate, does it, and asks it shut again, in the one
+// turn. While the world passes, every place is in range of every other.
+//
+// The world also keeps the clocks that are the game's and not any one
+// visitor's: the earthquake (I-CLEFT), once, between the 70th and the
+// 140th move, and the viewing table's indicator (I-VIEW-CHANGE), which
+// changes every four moves; the state of the man at the cliff and his
+// rope, which the cliff's way down must read; the Royal Puzzle's grid of
+// walls, which is one puzzle for everyone; the museum's doors, which a
+// trip through time shuts in every year at once; the history the time
+// machine can change, which the present reads; the mirror box, which is
+// one box in one hallway; and the dungeon's doors, dial and cells, and
+// where the Dungeon Master stands.
+import * as sprout from 'sprout'
+import {Person} from 'person'
+import {Adventurer} from 'adventurer'
+import {endless_stair} from 'way_in'
+import {cliff, cliff_ledge} from 'cliff'
+import {go} from 'sprout'
+import {Portable} from 'thing'
+import {cp_out} from 'puzzle'
+import {dungeon_cell, good_cell, wrong_cell, cell_store_1, cell_store_2, cell_store_3, cell_store_4, cell_store_5, cell_store_6, cell_store_7, cell_store_8} from 'dungeon'
+import {cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36} from 'puzzle_grid'
+import {ManStage, Dest, :beam_set, :mirror_set, :mirror_shut, :wood_set, :wood_shut, :mdir_set, :mloc_set, :pole_set, :mirror_broken, :guardians_seen, :cell_door_set, :bronze_set, :bronze_unlocked, :pnumb_set, :cells_turned, :cell_turned, :turn_cells, :dm_at_set, :dm_follow_set, :dm_folflag_set, :dm_moved, :open_gate, :gate_open, :close_gate, :move_made, :quake, :view_changed, :man_set, :man_stage, :rope_set, :lift_chest, :drop_chest, :ledge_entered, :tied, :cp_from, :cp_to, :cp_done, :cp_changed, :cp_open_door, :stone_door, :wooden_door, :ring_hidden, :ring_taken, :history, :machine_gone} from 'verbs'
+
+world underground_caverns_3 is sprout.World {
+  visitors are Person
+  visitors arrive at endless_stair
+  synonyms go: "climb", "proceed", "head"
+
+  :gate false
+  pass any (self.get(:gate))
+
+  // The earthquake: set going on the first move, and struck once.
+  :quake_set false
+  :quake_in 0 min 0 max 200
+  :quaked false
+  // The viewing table's indicator: one of four views, changing every four
+  // moves (I-VIEW-CHANGE).
+  :view_tick 0 min 0 max 4
+  :active_view 1 min 1 max 4
+  // The man at the cliff, and his rope (ROPE-FLAG, MAN-SEEN, CHEST-LIFTED).
+  :man_stage ManStage default unmet
+  :man_seen false
+  :chest_lifted false
+  :rope_down true
+  :ledge_touched false
+  // The museum's doors (JEWEL-DOOR, WOODEN-DOOR), in every year at once.
+  :jewel_door_open false
+  :wooden_door_open true
+  // What the time machine has done to history (RING-CONCEALED,
+  // RING-STOLEN, CLUMSY-ROBBERY, MYSTERY).
+  :ring_concealed false
+  :ring_stolen false
+  :clumsy_robbery false
+  :mystery false
+  // The Royal Puzzle's grid (CPTABLE): 0 open floor, 1 marble, -1
+  // sandstone, -2 the sandstone with the good ladder, -3 the bad; and
+  // whether a wall has ever been pushed (CPPUSH-FLAG), whether one stands
+  // under the round hole (CPBLOCK-FLAG), and whether the steel door is
+  // open (CP-FLAG).
+  :c1 0 min -3 max 1
+  :c2 -1 min -3 max 1
+  :c3 0 min -3 max 1
+  :c4 0 min -3 max 1
+  :c5 -1 min -3 max 1
+  :c6 0 min -3 max 1
+  :c7 -1 min -3 max 1
+  :c8 0 min -3 max 1
+  :c9 1 min -3 max 1
+  :c10 0 min -3 max 1
+  :c11 -2 min -3 max 1
+  :c12 0 min -3 max 1
+  :c13 0 min -3 max 1
+  :c14 0 min -3 max 1
+  :c15 0 min -3 max 1
+  :c16 0 min -3 max 1
+  :c17 0 min -3 max 1
+  :c18 1 min -3 max 1
+  :c19 -3 min -3 max 1
+  :c20 0 min -3 max 1
+  :c21 0 min -3 max 1
+  :c22 -1 min -3 max 1
+  :c23 -1 min -3 max 1
+  :c24 0 min -3 max 1
+  :c25 0 min -3 max 1
+  :c26 0 min -3 max 1
+  :c27 -1 min -3 max 1
+  :c28 0 min -3 max 1
+  :c29 0 min -3 max 1
+  :c30 0 min -3 max 1
+  :c31 1 min -3 max 1
+  :c32 1 min -3 max 1
+  :c33 0 min -3 max 1
+  :c34 0 min -3 max 1
+  :c35 0 min -3 max 1
+  :c36 1 min -3 max 1
+  :cp_from 0 min 0 max 36
+  :cp_val 0 min -3 max 1
+  :cp_snap false
+  :cp_pushed false
+  :cp_blocked false
+  :cp_door_open false
+  // The mirror box (MLOC, MDIR, POLEUP-FLAG, MR1-FLAG, MR2-FLAG,
+  // MIRROR-OPEN-FLAG, MIRROR-OPENED, WOOD-OPEN-FLAG, GUARDIANS-SEEN,
+  // BEAM-STOPPED?): where it stands, 1 to 5 south to north; which way
+  // its arrow points, in eighths of a turn from north; its short pole, 0
+  // dropped, 1 on the floor, 2 raised; its two mirrors whole; its mirror
+  // side opened by the button, for seven moves (I-MRINT); its pine side
+  // opened from inside, for five (I-PININ); and whether the beam in the
+  // Beam Room is broken.
+  :mloc 2 min 1 max 5
+  :mdir 270 min 0 max 315
+  :poleup 0 min 0 max 2
+  :mr1 true
+  :mr2 true
+  :mirror_open false
+  :mirror_left 0 min 0 max 7
+  :mirror_opened false
+  :wood_open false
+  :wood_left 0 min 0 max 5
+  :guardians_seen false
+  :beam_blocked false
+  // The dungeon (CELL-DOOR, BRONZE-DOOR, BRONZE-DOOR-LOCKED, LCELL,
+  // PNUMB, FOLFLAG): its doors, which cell is in the slot, where the
+  // sundial points, where the Dungeon Master stands and whether he
+  // follows.
+  :cell_door_open false
+  :bronze_open false
+  :bronze_locked true
+  :lcell 1 min 1 max 8
+  :pnumb 1 min 1 max 8
+  :dm_at Dest default behind_door
+  :dm_following false
+  :dm_folflag true
+  on :beam_set (from, value) { self.set(:beam_blocked, value) }
+  on :mirror_set (from, value) {
+    self.set(:mirror_open, value)
+    if (value) { self.set(:mirror_left, 7)  self.set(:mirror_opened, true) } else { self.set(:mirror_left, 0) }
+  }
+  on :wood_set (from, value) {
+    self.set(:wood_open, value)
+    if (value) { self.set(:wood_left, 5) } else { self.set(:wood_left, 0) }
+  }
+  on :mdir_set (from, value) { if (value >= 360) { self.set(:mdir, value - 360) } else { self.set(:mdir, value) } }
+  on :mloc_set (from, value) { self.set(:mloc, value) }
+  on :pole_set (from, value) { self.set(:poleup, value) }
+  on :mirror_broken (from, value) { if (value == 1) { self.set(:mr1, false) } else { self.set(:mr2, false) } }
+  on :guardians_seen { self.set(:guardians_seen, true) }
+  on :cell_door_set (from, value) { self.set(:cell_door_open, value) }
+  on :bronze_set (from, value) { self.set(:bronze_open, value) }
+  on :bronze_unlocked { self.set(:bronze_locked, false) }
+  on :pnumb_set (from, value) { self.set(:pnumb, value) }
+  // The button pushed (DIALBUTTON, CELL-MOVE, MOVE-CELL-OBJECTS): both
+  // doors shut; if the dial points elsewhere than the cell in the slot,
+  // whoever is in that cell goes round the pit with it (and their things
+  // with them), and otherwise what lies in it goes to its store and what
+  // lay in the cell the dial names comes out.
+  on :turn_cells (from, value) {
+    self.set(:cell_door_open, false)
+    self.set(:bronze_open, false)
+    let p = self.get(:pnumb)
+    let l = self.get(:lcell)
+    if (p != l) {
+      self.set(:cell_occupied, false)
+      each a: Adventurer in dungeon_cell { self.set(:cell_occupied, true) }
+      if (self.get(:cell_occupied)) {
+        each a: Adventurer in dungeon_cell {
+          if (value) { tell a "You notice that the cell door is now closed." }
+          send a :cell_turned with l
+        }
+        if (l == 4) { each t: Portable in dungeon_cell { move t to good_cell } }
+        else { each t: Portable in dungeon_cell { move t to wrong_cell } }
+      }
+      else {
+        if (l == 1) { each t: Portable in dungeon_cell { move t to cell_store_1 } }
+        else if (l == 2) { each t: Portable in dungeon_cell { move t to cell_store_2 } }
+        else if (l == 3) { each t: Portable in dungeon_cell { move t to cell_store_3 } }
+        else if (l == 4) { each t: Portable in dungeon_cell { move t to cell_store_4 } }
+        else if (l == 5) { each t: Portable in dungeon_cell { move t to cell_store_5 } }
+        else if (l == 6) { each t: Portable in dungeon_cell { move t to cell_store_6 } }
+        else if (l == 7) { each t: Portable in dungeon_cell { move t to cell_store_7 } }
+        else { each t: Portable in dungeon_cell { move t to cell_store_8 } }
+        if (p == 1) { each t: Portable in cell_store_1 { move t to dungeon_cell } }
+        else if (p == 2) { each t: Portable in cell_store_2 { move t to dungeon_cell } }
+        else if (p == 3) { each t: Portable in cell_store_3 { move t to dungeon_cell } }
+        else if (p == 4) { each t: Portable in cell_store_4 { move t to dungeon_cell } }
+        else if (p == 5) { each t: Portable in cell_store_5 { move t to dungeon_cell } }
+        else if (p == 6) { each t: Portable in cell_store_6 { move t to dungeon_cell } }
+        else if (p == 7) { each t: Portable in cell_store_7 { move t to dungeon_cell } }
+        else { each t: Portable in cell_store_8 { move t to dungeon_cell } }
+      }
+      self.set(:lcell, p)
+      broadcast :cells_turned
+    }
+  }
+  :cell_occupied false
+  on :dm_at_set (from, value) {
+    self.set(:dm_at, value)
+    broadcast :dm_moved with value
+  }
+  on :dm_follow_set (from, value) { self.set(:dm_following, value) }
+  on :dm_folflag_set (from, value) { self.set(:dm_folflag, value) }
+  on :cp_from (from, value) { self.set(:cp_from, value) }
+  // The wall leaves one cell and enters the next (CPWALL-OBJECT): what lay
+  // in the cell it enters is carried to the Side Room with a snap, a wall
+  // under the round hole blocks the way in, and every square reads the
+  // grid again before the pusher follows the wall.
+  on :cp_to (from, value) {
+    self.set(:cp_pushed, true)
+    self.set(:cp_snap, false)
+    let f = self.get(:cp_from)
+    if (f == 1) { self.set(:cp_val, self.get(:c1))  self.set(:c1, 0) }
+    else if (f == 2) { self.set(:cp_val, self.get(:c2))  self.set(:c2, 0) }
+    else if (f == 3) { self.set(:cp_val, self.get(:c3))  self.set(:c3, 0) }
+    else if (f == 4) { self.set(:cp_val, self.get(:c4))  self.set(:c4, 0) }
+    else if (f == 5) { self.set(:cp_val, self.get(:c5))  self.set(:c5, 0) }
+    else if (f == 6) { self.set(:cp_val, self.get(:c6))  self.set(:c6, 0) }
+    else if (f == 7) { self.set(:cp_val, self.get(:c7))  self.set(:c7, 0) }
+    else if (f == 8) { self.set(:cp_val, self.get(:c8))  self.set(:c8, 0) }
+    else if (f == 9) { self.set(:cp_val, self.get(:c9))  self.set(:c9, 0) }
+    else if (f == 10) { self.set(:cp_val, self.get(:c10))  self.set(:c10, 0) }
+    else if (f == 11) { self.set(:cp_val, self.get(:c11))  self.set(:c11, 0) }
+    else if (f == 12) { self.set(:cp_val, self.get(:c12))  self.set(:c12, 0) }
+    else if (f == 13) { self.set(:cp_val, self.get(:c13))  self.set(:c13, 0) }
+    else if (f == 14) { self.set(:cp_val, self.get(:c14))  self.set(:c14, 0) }
+    else if (f == 15) { self.set(:cp_val, self.get(:c15))  self.set(:c15, 0) }
+    else if (f == 16) { self.set(:cp_val, self.get(:c16))  self.set(:c16, 0) }
+    else if (f == 17) { self.set(:cp_val, self.get(:c17))  self.set(:c17, 0) }
+    else if (f == 18) { self.set(:cp_val, self.get(:c18))  self.set(:c18, 0) }
+    else if (f == 19) { self.set(:cp_val, self.get(:c19))  self.set(:c19, 0) }
+    else if (f == 20) { self.set(:cp_val, self.get(:c20))  self.set(:c20, 0) }
+    else if (f == 21) { self.set(:cp_val, self.get(:c21))  self.set(:c21, 0) }
+    else if (f == 22) { self.set(:cp_val, self.get(:c22))  self.set(:c22, 0) }
+    else if (f == 23) { self.set(:cp_val, self.get(:c23))  self.set(:c23, 0) }
+    else if (f == 24) { self.set(:cp_val, self.get(:c24))  self.set(:c24, 0) }
+    else if (f == 25) { self.set(:cp_val, self.get(:c25))  self.set(:c25, 0) }
+    else if (f == 26) { self.set(:cp_val, self.get(:c26))  self.set(:c26, 0) }
+    else if (f == 27) { self.set(:cp_val, self.get(:c27))  self.set(:c27, 0) }
+    else if (f == 28) { self.set(:cp_val, self.get(:c28))  self.set(:c28, 0) }
+    else if (f == 29) { self.set(:cp_val, self.get(:c29))  self.set(:c29, 0) }
+    else if (f == 30) { self.set(:cp_val, self.get(:c30))  self.set(:c30, 0) }
+    else if (f == 31) { self.set(:cp_val, self.get(:c31))  self.set(:c31, 0) }
+    else if (f == 32) { self.set(:cp_val, self.get(:c32))  self.set(:c32, 0) }
+    else if (f == 33) { self.set(:cp_val, self.get(:c33))  self.set(:c33, 0) }
+    else if (f == 34) { self.set(:cp_val, self.get(:c34))  self.set(:c34, 0) }
+    else if (f == 35) { self.set(:cp_val, self.get(:c35))  self.set(:c35, 0) }
+    else if (f == 36) { self.set(:cp_val, self.get(:c36))  self.set(:c36, 0) }
+    let v = self.get(:cp_val)
+    if (value == 1) { each t: Portable in cp_1 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c1, v) }
+    else if (value == 2) { each t: Portable in cp_2 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c2, v) }
+    else if (value == 3) { each t: Portable in cp_3 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c3, v) }
+    else if (value == 4) { each t: Portable in cp_4 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c4, v) }
+    else if (value == 5) { each t: Portable in cp_5 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c5, v) }
+    else if (value == 6) { each t: Portable in cp_6 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c6, v) }
+    else if (value == 7) { each t: Portable in cp_7 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c7, v) }
+    else if (value == 8) { each t: Portable in cp_8 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c8, v) }
+    else if (value == 9) { each t: Portable in cp_9 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c9, v) }
+    else if (value == 10) { each t: Portable in cp_10 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c10, v) }
+    else if (value == 11) { each t: Portable in cp_11 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c11, v) }
+    else if (value == 12) { each t: Portable in cp_12 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c12, v) }
+    else if (value == 13) { each t: Portable in cp_13 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c13, v) }
+    else if (value == 14) { each t: Portable in cp_14 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c14, v) }
+    else if (value == 15) { each t: Portable in cp_15 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c15, v) }
+    else if (value == 16) { each t: Portable in cp_16 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c16, v) }
+    else if (value == 17) { each t: Portable in cp_17 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c17, v) }
+    else if (value == 18) { each t: Portable in cp_18 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c18, v) }
+    else if (value == 19) { each t: Portable in cp_19 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c19, v) }
+    else if (value == 20) { each t: Portable in cp_20 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c20, v) }
+    else if (value == 21) { each t: Portable in cp_21 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c21, v) }
+    else if (value == 22) { each t: Portable in cp_22 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c22, v) }
+    else if (value == 23) { each t: Portable in cp_23 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c23, v) }
+    else if (value == 24) { each t: Portable in cp_24 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c24, v) }
+    else if (value == 25) { each t: Portable in cp_25 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c25, v) }
+    else if (value == 26) { each t: Portable in cp_26 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c26, v) }
+    else if (value == 27) { each t: Portable in cp_27 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c27, v) }
+    else if (value == 28) { each t: Portable in cp_28 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c28, v) }
+    else if (value == 29) { each t: Portable in cp_29 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c29, v) }
+    else if (value == 30) { each t: Portable in cp_30 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c30, v) }
+    else if (value == 31) { each t: Portable in cp_31 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c31, v) }
+    else if (value == 32) { each t: Portable in cp_32 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c32, v) }
+    else if (value == 33) { each t: Portable in cp_33 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c33, v) }
+    else if (value == 34) { each t: Portable in cp_34 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c34, v) }
+    else if (value == 35) { each t: Portable in cp_35 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c35, v) }
+    else if (value == 36) { each t: Portable in cp_36 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c36, v) }
+    if (value == 1) { self.set(:cp_blocked, true) }
+    if (self.get(:cp_snap)) { tell from "You hear a soft \"snap\" from behind the wall you were pushing." }
+    // The good ladder pushed where nothing can get behind it to push it
+    // back (the set-aside round 8's finding): against the west side,
+    // along the south side, into the far corner of the north side, or
+    // under the hole itself. The pusher is told, since the Puzzle has no
+    // restore to undo it with.
+    if (v == -2) {
+      if (value == 1 || value == 6 || value == 7 || value == 13 || value == 19 || value == 25 || value == 31 || value == 32 || value == 33 || value == 34 || value == 35 || value == 36) {
+        tell from "The wall with the ladder on it has gone where nothing can get behind it to push it back: it is against the outer wall of the Puzzle now, and the Puzzle keeps what reaches its edges. Whatever way out that ladder was, it is not one any longer. There is still the door, and its fee, if you have the fee; and failing that, it is said, prayer."
+      }
+    }
+    broadcast :cp_changed
+    send from :cp_done
+  }
+  on :cp_open_door { self.set(:cp_door_open, true) }
+
+  on :open_gate (from) {
+    self.set(:gate, true)
+    send from :gate_open
+  }
+  on :close_gate { self.set(:gate, false) }
+
+  // A counted move (CLOCKER), from whoever made it.
+  on :move_made {
+    if (!self.get(:quake_set)) {
+      self.set(:quake_set, true)
+      self.set(:quake_in, 70 + random(70))
+    }
+    if (!self.get(:quaked)) {
+      self.adjust(:quake_in, -1)
+      if (self.get(:quake_in) == 0) {
+        self.set(:quaked, true)
+        broadcast :quake
+      }
+    }
+    // The mirror's opened side swings shut seven moves after the button
+    // (I-MRINT), and the pine wall five after it is opened (I-PININ).
+    if (self.get(:mirror_left) > 0) {
+      self.adjust(:mirror_left, -1)
+      if (self.get(:mirror_left) == 0) {
+        self.set(:mirror_open, false)
+        broadcast :mirror_shut
+      }
+    }
+    if (self.get(:wood_left) > 0) {
+      self.adjust(:wood_left, -1)
+      if (self.get(:wood_left) == 0 && self.get(:wood_open)) {
+        self.set(:wood_open, false)
+        broadcast :wood_shut
+      }
+    }
+    self.adjust(:view_tick, 1)
+    if (self.get(:view_tick) >= 4) {
+      self.set(:view_tick, 0)
+      if (self.get(:active_view) >= 4) { self.set(:active_view, 1) } else { self.adjust(:active_view, 1) }
+      broadcast :view_changed
+    }
+  }
+
+  on :man_set (from, value) {
+    self.set(:man_stage, value)
+    if (value == :waiting || value == :away) { self.set(:man_seen, true) }
+    send cliff.man :man_stage with value
+    send cliff.still_thing :man_stage with value
+    if (value == :gone) { send cliff.man :drop_chest }
+  }
+  on :rope_set (from, value) { self.set(:rope_down, value) }
+  on :stone_door (from, value) { self.set(:jewel_door_open, value) }
+  on :wooden_door (from, value) { self.set(:wooden_door_open, value) }
+  on :ring_hidden { self.set(:ring_concealed, true) }
+  on :ring_taken { self.set(:ring_concealed, false) }
+  // History, as a trip out of 776 leaves it (TGOTO): 1, the ring stolen
+  // and the cage never built; 2, a clumsy robbery and the machine taken
+  // off exhibit; 3, a mystery and a different plaque; 0, a fresh arrival
+  // in 776, which forgets a mystery but never a theft.
+  on :history (from, value) {
+    if (value == 1) {
+      if (!self.get(:ring_stolen)) {
+        self.set(:ring_stolen, true)
+        broadcast :history with 1
+      }
+    }
+    else if (value == 2) {
+      if (!self.get(:clumsy_robbery)) {
+        self.set(:clumsy_robbery, true)
+        broadcast :machine_gone
+      }
+    }
+    else if (value == 3) { self.set(:mystery, true) }
+    else {
+      self.set(:mystery, false)
+    }
+  }
+  on :ledge_entered { self.set(:ledge_touched, true) }
+  // The chest hauled up from the ledge to the man (I-MAN-APPEARS, the
+  // rope tied): the world moves it, since only the world reaches both.
+  on :lift_chest {
+    self.set(:chest_lifted, true)
+    send cliff_ledge.chest :tied with false
+    move cliff_ledge.chest to cliff.man
+  }
+
+  passage unknown         { That sentence isn't one I recognize. }
+  passage not_here        { You can't see any such thing. }
+  passage no_way          { You can't go that way. }
+  passage dark            { It is pitch black. You are likely to be eaten by a grue. }
+  passage unremarkable    { There's nothing special about {thing}. }
+  passage nothing_happens { Nothing happens. }
+  passage waited          { Time passes... }
+  passage not_carrying    { You don't have {thing}. }
+  passage too_heavy       { {if to.is(Adventurer)}{to.too_heavy}{else}{to} cannot hold {item}.{/if} }
+  // The engine's `help`, in the world's own words and bounded: the
+  // library's default lists every reading in range, which in a crowded
+  // place runs past what one turn may say. This says the usual words,
+  // then the first two dozen of what is in reach, and no more.
+  passage help {
+    Help, down here, is what you bring with you. The words that work are the usual ones: the compass, UP and DOWN to move; LOOK and EXAMINE to see; TAKE, DROP, OPEN, PUSH and whatever a thing seems to invite when it is looked at; INVENTORY for what you carry, SCORE for how you stand, DIAGNOSE for how you are, HINT for what passes for one down here. Of what is in reach just now, you might try: {for reading of readings}{if $index <= 24}{reading}{if $last}.{else if $index == 24}, and a good deal more that you can work out for yourself.{else}, {/if}{/if}{/for}
+  }
+}

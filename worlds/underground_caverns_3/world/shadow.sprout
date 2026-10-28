@@ -1,0 +1,613 @@
+// The Land of Shadow: eight rooms of one name (SHADOW-1 to SHADOW-8), the
+// quicksand and the mist, and the hooded figure (SHADOW, SHADOW-ROOMS,
+// SHADOW-F, SHADOW-ARRIVAL, PICK-DIRECTION). The figure is the Dungeon
+// Master in one of his guises: it is spawned into a shadow room when it
+// appears and destroyed when it goes, so there is never more than one;
+// its strength and the fight's state live on the visitor it fights,
+// since it is a figure who is the visitor (adventurer.sprout). It acts
+// as an NPC: its stroke is `strike`, a verb only it performs, whose
+// target's own part takes the wound.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Creature, Hooded, Fixed, Trace, Touchable, Searchable, Squeezable, Greetable} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {Hood, Cloak} from 'items'
+import {Adventurer} from 'adventurer'
+import {Mist, Rubble, StoneWall} from 'way_in'
+import {creepy_crawl, foggy_room, barren_area} from 'way_in'
+import {flathead_ocean} from 'ocean'
+import {cliff} from 'cliff'
+import {give, talk, play, through, leap_at, rub, look_in, climb_up, climb_down, search, smell, listen, find, follow_sound, squeeze, Direction, :fight_on, :fight_off, :shadow_here, :reply, :block, :unblock, :unhood, :slain, :vanish, :die} from 'verbs'
+
+verb strike { role target: Adventurer }
+
+// What every body the Dungeon Master wears has in common.
+kind Guise {
+  passage eyes { deep and sorrowful eyes }
+}
+
+kind Shadow is Creature, sprout.Actor, Guise, Hooded, Fixed, Touchable {
+  pass any (true)
+  :capacity 4
+  :dir Direction default north
+  grammar { name "hooded figure"  nouns "figure", "shadow", "man", "woman", "person", "opponent", "stranger", "swordsman"  adjectives "hooded", "cloaked" }
+  passage short { hooded figure }
+  passage ldesc {
+    A cloaked and hooded person, carrying a sword not unlike your own, {if bound actor}{if actor.is(Adventurer)}{if actor.get(:s_strength) > 3}is standing blocking the way to the {self.get(:dir)}.{else}is here.{/if}{else}is here.{/if}{else}is here.{/if}
+
+    The hooded figure {self.diag}
+  }
+  passage diag {
+    {if bound actor}{if actor.is(Adventurer)}{if actor.get(:s_strength) >= 5}has a great deal of strength, perhaps matching your own.{else if actor.get(:s_strength) == 4}has a light wound which hasn't affected its seemingly great strength.{else if actor.get(:s_strength) == 3}has some wounds and is probably not capable of hindering your movement.{else if actor.get(:s_strength) == 2}is hurt, and its strength appears to be fading.{else}appears to be badly hurt and defenseless.{/if}{/if}{/if}
+  }
+  // Chosen in code and said as literals: a slot would be rendered after the
+  // turn's later handlers, and the figure's reply this same turn may kill
+  // the one looking, which resets its strength to whole.
+  passage looked_open { A figure in a hood and a cloak, both dark, both plain, standing the way you stand and holding its sword the way you hold yours, which you had not noticed you did until now. The hood casts a shadow where a face should be, and the sword glows with the same cold blue light as your own. It is watching you; you can feel it watching you, as you can feel yourself watching it. }
+  passage stopped { It has stopped fighting the way you fight; it has stopped fighting at all. It stands with the point of its sword in the ground and its head bowed, and the hood, which has kept its face from you all this while, hangs within reach of your hand. }
+  describe {
+    text looked_open
+    if (actor.is(Adventurer)) {
+      let s = actor.get(:s_strength)
+      if (s >= 5) { text "The hooded figure has a great deal of strength, perhaps matching your own." }
+      else if (s == 4) { text "The hooded figure has a light wound which hasn't affected its seemingly great strength." }
+      else if (s == 3) { text "The hooded figure has some wounds and is probably not capable of hindering your movement." }
+      else if (s == 2) { text "The hooded figure is hurt, and its strength appears to be fading." }
+      else {
+        text "The hooded figure appears to be badly hurt and defenseless."
+        text stopped
+      }
+    }
+  }
+  object hood is Hood
+  object cloak is Cloak
+
+  on :block (from, value) { self.set(:dir, value) }
+  // Its stroke each move while the fight is on (I-SHADOW-REPLY), at
+  // whoever is fighting it.
+  on :reply {
+    each a: Adventurer in here { if (a.get(:fighting)) { act strike (target: a) } }
+  }
+  // Its hood taken (HOOD-F): the hood to the hand that took it, the cloak
+  // to the ground, and the body gone.
+  on :unhood (from) {
+    if (from.is(Adventurer)) {
+      move hood to from
+      move cloak to here
+      finally destroy self
+    }
+  }
+  on :slain { finally destroy self }
+  on :vanish { finally destroy self }
+
+  passage no_take { The hooded figure is not a thing to be picked up, and does not care to be tried. }
+  as recipient for give { do { say "The hooded figure isn't interested in your gifts." } }
+  as target for talk { do { say "The hooded figure does not respond to your words." } }
+  as target for play {
+    do {
+      say "You become so engrossed in the role of the hooded figure that you kill yourself, just as he might have done!"
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  as target for rub { do { say "You reach for the figure, and it is not where your hand goes; it has moved, exactly as you would have moved." } }
+  as target for smell { do { say "It smells of cold, and of a long walk, and, faintly, of you." } }
+  as target for listen { do { say "It breathes when you breathe. You try holding yours, and so does it." } }
+}
+
+// The quicksand at the land's southern end and along the ocean
+// (QUICKSAND-PSEUDO). At the ocean the beach owns the word "sand"; in the
+// land of shadow nothing else does, and the sandy kind below takes it.
+kind Quicksand is Scenery, Touchable, Searchable {
+  grammar { name "quicksand"  nouns "quicks", "bog", "mire"  adjectives "soft", "spongy", "grey" }
+  passage short { quicksand }
+  describe { text "Soft ground, going softer, going to a grey sand with a wet shine on it that is not quite ground at all. A stick pushed into it does not come back. Neither would you." }
+  passage no_take { It is quicksand; it takes, it does not give. }
+  as target for through {
+    do {
+      say "You enter the quicksand and slowly sink to a new low in adventuring."
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  as target for leap_at {
+    do {
+      say "You enter the quicksand and slowly sink to a new low in adventuring."
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  as target for rub { do { say "It's quicksand all right!" } }
+  as target for look_in { do { say "It's hard to tell what's in there." } }
+  as target for search { do { say "It's hard to tell what's in there, and you are not going to find out by reaching." } }
+}
+kind SandyQuicksand is Quicksand {
+  grammar { nouns "sand" }
+}
+
+// The shallow hills, and the shadows on them.
+kind Hills is Scenery {
+  grammar { name "hills"  nouns "hill", "landscape", "hillside"  adjectives "shallow", "low", "rolling", "gentle", "dark", "featureless" }
+  passage short { hills }
+  describe { text "Low, rolling, featureless hills, one after another, grey under a light that comes from nowhere and casts no shadow you can account for. They are the sort of hills that are easy to walk over and hard to remember." }
+  as target for climb_up { do { say "You walk up one and down the other side, and are where you were, more or less. Say a direction." } }
+}
+// They answer to "shadows" and not to "shadow", which is the figure's word.
+kind Shadows is Scenery {
+  grammar { name "shadows"  nouns "dark", "darkness", "gloom"  adjectives "eerie", "dark" }
+  passage short { shadows }
+  describe { text "The shadows lie across the hills in the wrong places, long where nothing stands to throw them, and some of them, when you look away, seem to have moved. It is a land named for them, and it has earned the name." }
+  as target for look_in { do { say "You look into the shadows and the shadows, as far as you can tell, look back." } }
+}
+
+// The footsteps (SHADOW-ROOMS' "You can hear quiet footsteps nearby."), a
+// thing heard and not seen in every room of the land: they keep the
+// visitor's pace, and they tell a visitor who asks that lingering here, in
+// the light, is how the one walking is met.
+kind Footsteps is Scenery, Trace, Searchable, Squeezable, Greetable {
+  grammar { name "footsteps"  nouns "footstep", "footfalls", "footfall", "sound", "sounds", "walker", "someone", "somebody"  adjectives "quiet", "soft", "nearby", "distant" }
+  passage short { footsteps }
+  passage no_take { They are not a thing to be picked up; they are a thing to be waited for. }
+  passage walking { You cannot see anybody. The footsteps are somewhere off in the hills, in the shadows, and they are keeping your pace exactly: when you stand still, they stop; when you walk, they walk, a little behind you and a little to one side. Whoever it is does not seem to be in any hurry, and does not seem to be going away. Standing a while in the light, or walking the hills in it, is how such a one is met. }
+  passage stood { The footsteps have stopped. The one who was making them is standing in front of you, in a hood and a cloak, with a sword. }
+  passage over { There are no footsteps now. Whatever was walking the land of shadow has stopped walking it. }
+  describe {
+    if (here.count(Shadow) > 0) { text stood }
+    else if (actor.is(Adventurer)) {
+      if (actor.get(:shadow_gone)) { text over } else { text walking }
+    }
+    else { text walking }
+  }
+  as target for listen {
+    do {
+      if (here.count(Shadow) > 0) { say stood }
+      else if (actor.is(Adventurer) && actor.get(:shadow_gone)) { say over }
+      else { say "Quiet. Then, perhaps, footsteps; then quiet again. They are keeping your pace, and when you hold your breath to hear them better, they wait too." }
+    }
+  }
+  as target for follow_sound {
+    do {
+      if (here.count(Shadow) > 0) { say "There is nothing to follow; the one who was walking is here, and has stopped." }
+      else if (actor.is(Adventurer) && actor.get(:shadow_gone)) { say over }
+      else { say "You go after the footsteps, and they go after you: they are behind you whichever way you turn, and no nearer for turning. Wherever they are going, it is where you are, and they will get there when they are ready. Wait here in the light, or walk the hills in it; it comes to the same thing." }
+    }
+  }
+  as target for find {
+    do {
+      if (here.count(Shadow) > 0) { say stood }
+      else if (actor.is(Adventurer) && actor.get(:shadow_gone)) { say over }
+      else { say "Nearby, and no nearer when you look. They are always nearby." }
+    }
+  }
+  as target for search { do { say "You search the shadows for the one walking in them, and find shadows. They are good at it." } }
+  as target for squeeze { do { say "You cannot hug a sound, though it is a kind thought, and the footsteps, for a moment, stop as if they had heard it." } }
+  as target for smell { do { say "They smell of nothing, or of the hills, or, faintly, of you." } }
+}
+
+// A room of the Land of Shadow: the figure comes and goes here, and
+// blocks one way out while it stands (SHADOW-ROOMS, BLOCKED-DIR).
+kind ShadowRoom is DarkRoom {
+  :blocked Direction default none
+  // The room's real ways out, for the figure to block one of: a list
+  // cannot be drawn from, so they are counted and named one by one.
+  :nways 0 min 0 max 8
+  :pick 0 min 0 max 7
+  :w0 Direction default none
+  :w1 Direction default none
+  :w2 Direction default none
+  :w3 Direction default none
+  :w4 Direction default none
+  :w5 Direction default none
+  :w6 Direction default none
+  :w7 Direction default none
+  passage blocked_way { Your way is blocked by the hooded figure. }
+  object footsteps is Footsteps
+
+  after command {
+    if (actor.is(Adventurer)) {
+      if (!actor.get(:finished) && !actor.get(:dying)) {
+        // The room gone dark around the figure: it is a thing of the light
+        // it appears in, and the dark takes it back. It can be met again
+        // when there is light to meet it by.
+        if (self.count(Shadow) > 0 && !self.get(:alight)) {
+          say "In the dark, the glow of the figure's sword dwindles, as though it were walking away from you very fast without moving, and goes out. Whatever it is, it is not here any more; the dark has it, and you are alone in it."
+          each f: Shadow in self { send f :vanish }
+          self.set(:blocked, :none)
+          send actor :fight_off
+        }
+        else if (self.count(Shadow) > 0) {
+          let start = !actor.get(:fighting) && random(10) < 3
+          if (start) { send actor :fight_on }
+          if (start || actor.get(:fighting)) { each f: Shadow in self { send f :reply } }
+        }
+        else if (!actor.get(:shadow_gone)) {
+          if (random(10) < 3) { say "You can hear quiet footsteps nearby." }
+          else if (random(10) < 3 && self.get(:alight) && actor.get(:s_strength) > 3) {
+            // One of the room's real ways out (SHADOW-ARRIVAL), never a
+            // direction whose only answer is a wall.
+            // The bound of a draw is a literal, so the count is branched on
+            // and the draw carried out in a property (friction 40).
+            let n = self.get(:nways)
+            if (n == 3) { self.set(:pick, random(3)) }
+            else if (n == 6) { self.set(:pick, random(6)) }
+            else if (n == 7) { self.set(:pick, random(7)) }
+            else { self.set(:pick, random(8)) }
+            let d = self.get(:pick)
+            if (d == 0) { self.set(:blocked, self.get(:w0)) }
+            else if (d == 1) { self.set(:blocked, self.get(:w1)) }
+            else if (d == 2) { self.set(:blocked, self.get(:w2)) }
+            else if (d == 3) { self.set(:blocked, self.get(:w3)) }
+            else if (d == 4) { self.set(:blocked, self.get(:w4)) }
+            else if (d == 5) { self.set(:blocked, self.get(:w5)) }
+            else if (d == 6) { self.set(:blocked, self.get(:w6)) }
+            else { self.set(:blocked, self.get(:w7)) }
+            say "Through the shadows, a cloaked and hooded figure appears before you, blocking the {self.get(:blocked)}ern exit from the room and carrying a brightly glowing sword."
+            let f = spawn Shadow in self
+            send f :block with self.get(:blocked)
+            send actor :shadow_here
+          }
+        }
+      }
+    }
+  }
+  on :unblock { self.set(:blocked, :none) }
+  // The visitor gone: the figure goes too; the visitor, who is out of the
+  // room's voice by now, says so to themselves (adventurer.sprout).
+  on :left (item, to) {
+    if (item.is(Adventurer)) {
+      if (self.count(Adventurer) == 0) {
+        each f: Shadow in self { send f :vanish }
+        self.set(:blocked, :none)
+      }
+    }
+  }
+}
+
+object shadow_1 is ShadowRoom in underground_caverns_3 {
+  grammar {
+    name "Land of Shadow"
+    exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
+    exit north "north" refuse "Towering walls of rock bar your way."
+    exit northeast "northeast" refuse blocked_way when (self.get(:blocked) == :northeast)
+    exit northeast "northeast" refuse "Towering walls of rock bar your way."
+    exit south "south" refuse blocked_way when (self.get(:blocked) == :south)
+    exit south "south" -> shadow_5
+    exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
+    exit east "east" -> creepy_crawl
+    exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
+    exit northwest "northwest" -> shadow_2
+    exit west "west" refuse blocked_way when (self.get(:blocked) == :west)
+    exit west "west" -> shadow_3
+    exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
+    exit southwest "southwest" -> shadow_4
+    exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
+    exit southeast "southeast" -> foggy_room
+  }
+  :nways 6
+  :w0 south
+  :w1 east
+  :w2 northwest
+  :w3 west
+  :w4 southwest
+  :w5 southeast
+  :id shadow_1
+  :walls 5
+  passage body { You are at the eastern end of a dark, featureless landscape of shallow hills. Paths to the east and southeast reenter the rock. }
+  object hills is Hills
+  object mist is Mist
+  object shadows is Shadows
+  object paths is Scenery {
+    grammar { name "paths"  nouns "path"  adjectives "east", "southeast", "rock" }
+    passage short { paths }
+    describe { text "Two paths leave the hills to the east and southeast and go back into the rock, where there is a roof over your head again. From here they look like the mouths of burrows." }
+    as target for through { do { say "Use compass directions for movement, and say which way." } }
+  }
+}
+
+object shadow_2 is ShadowRoom in underground_caverns_3 {
+  grammar {
+    name "Land of Shadow"
+    exit northeast "northeast" refuse blocked_way when (self.get(:blocked) == :northeast)
+    exit northeast "northeast" refuse "A stone wall blocks the way."
+    exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
+    exit north "north" -> barren_area
+    exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
+    exit northwest "northwest" refuse "A stone wall blocks the way."
+    exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
+    exit southeast "southeast" -> shadow_1
+    exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
+    exit southwest "southwest" -> shadow_7
+    exit south "south" refuse blocked_way when (self.get(:blocked) == :south)
+    exit south "south" -> shadow_3
+    exit west "west" refuse blocked_way when (self.get(:blocked) == :west)
+    exit west "west" -> shadow_8
+    exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
+    exit east "east" -> shadow_1
+  }
+  :nways 6
+  :w0 north
+  :w1 southeast
+  :w2 southwest
+  :w3 south
+  :w4 west
+  :w5 east
+  :id shadow_2
+  :walls 10
+  passage body { You are in a shadowy land of low, rolling hills stretching out to the west and south. The land is bordered to the north by a massive stone wall. Ancient and weathered, the wall has crumbled enough at one point to permit passage. }
+  object hills is Hills
+  object mist is Mist
+  object shadows is Shadows
+  object stone_wall is StoneWall
+  object rubble is Rubble
+}
+
+object shadow_3 is ShadowRoom in underground_caverns_3 {
+  grammar {
+    name "Land of Shadow"
+    exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
+    exit northwest "northwest" -> shadow_8
+    exit northeast "northeast" refuse blocked_way when (self.get(:blocked) == :northeast)
+    exit northeast "northeast" -> shadow_1
+    exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
+    exit southeast "southeast" -> shadow_1
+    exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
+    exit southwest "southwest" -> shadow_6
+    exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
+    exit north "north" -> shadow_2
+    exit south "south" refuse blocked_way when (self.get(:blocked) == :south)
+    exit south "south" -> shadow_4
+    exit west "west" refuse blocked_way when (self.get(:blocked) == :west)
+    exit west "west" -> shadow_7
+    exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
+    exit east "east" -> shadow_1
+  }
+  :nways 8
+  :w0 northwest
+  :w1 northeast
+  :w2 southeast
+  :w3 southwest
+  :w4 north
+  :w5 south
+  :w6 west
+  :w7 east
+  :id shadow_3
+  :walls 4
+  passage body { You are in a dark and shadowy land. All around you are gentle hills and eerie shadows. Far above, shrouded in mist, you can barely make out the ceiling of the enormous cavern that spans this entire land. }
+  object hills is Hills
+  object shadows is Shadows
+  object mist is Mist
+  object cavern is Scenery {
+    grammar { name "cavern"  nouns "cave"  adjectives "enormous", "entire" }
+    passage short { cavern }
+    describe { text "The cavern that holds the whole of the land of shadow: its roof is up there somewhere in the mist, so far up that the hills have room for weather under it, and its walls are nowhere you can see. Somebody once said the Empire was great; this is the size of room they meant." }
+  }
+}
+
+object shadow_4 is ShadowRoom in underground_caverns_3 {
+  grammar {
+    name "Land of Shadow"
+    exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
+    exit north "north" -> shadow_3
+    exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
+    exit east "east" -> shadow_1
+    exit northeast "northeast" refuse blocked_way when (self.get(:blocked) == :northeast)
+    exit northeast "northeast" -> shadow_1
+    exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
+    exit southeast "southeast" -> shadow_5
+    exit south "south" refuse blocked_way when (self.get(:blocked) == :south)
+    exit south "south" -> shadow_5
+    exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
+    exit southwest "southwest" refuse "The ground becomes too soft to walk on in that direction."
+    exit west "west" refuse blocked_way when (self.get(:blocked) == :west)
+    exit west "west" -> shadow_6
+    exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
+    exit northwest "northwest" -> shadow_7
+  }
+  :nways 7
+  :w0 north
+  :w1 east
+  :w2 northeast
+  :w3 southeast
+  :w4 south
+  :w5 west
+  :w6 northwest
+  :id shadow_4
+  :walls 4
+  passage body { You are in an ominously dark land of rolling hills. The ground becomes softer to the south. }
+  object hills is Hills
+  object mist is Mist
+  object shadows is Shadows
+  object soft_ground is Scenery {
+    grammar { name "soft earth"  nouns "earth", "softness"  adjectives "soft", "softer", "spongy" }
+    passage short { soft earth }
+    describe { text "The ground gives a little underfoot here, and more to the south, where it goes from giving to taking. It is wise to stop walking south before it decides." }
+  }
+}
+
+object shadow_5 is ShadowRoom in underground_caverns_3 {
+  grammar {
+    name "Land of Shadow"
+    exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
+    exit north "north" -> shadow_4
+    exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
+    exit northwest "northwest" -> shadow_6
+    exit northeast "northeast" refuse blocked_way when (self.get(:blocked) == :northeast)
+    exit northeast "northeast" -> shadow_1
+    exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
+    exit southeast "southeast" refuse "The quicksand prevents movement in that direction."
+    exit west "west" refuse blocked_way when (self.get(:blocked) == :west)
+    exit west "west" refuse "The quicksand prevents movement in that direction."
+    exit south "south" refuse blocked_way when (self.get(:blocked) == :south)
+    exit south "south" refuse "The quicksand prevents movement in that direction."
+    exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
+    exit southwest "southwest" refuse "The quicksand prevents movement in that direction."
+    exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
+    exit east "east" refuse "The quicksand prevents movement in that direction."
+  }
+  :nways 3
+  :w0 north
+  :w1 northwest
+  :w2 northeast
+  :id shadow_5
+  :walls 4
+  passage body { You are at the southern end of a shadowy land. The ground here is quite soft, and the area is surrounded by quicksand on most sides. North of here is a terrain of shallow hills. }
+  object hills is Hills
+  object mist is Mist
+  object shadows is Shadows
+  object quicksand is SandyQuicksand
+}
+
+object shadow_6 is ShadowRoom in underground_caverns_3 {
+  grammar {
+    name "Land of Shadow"
+    exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
+    exit north "north" -> shadow_7
+    exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
+    exit northwest "northwest" -> flathead_ocean
+    exit west "west" refuse blocked_way when (self.get(:blocked) == :west)
+    exit west "west" -> flathead_ocean
+    exit down "down" -> flathead_ocean
+    exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
+    exit southeast "southeast" -> shadow_5
+    exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
+    exit east "east" -> shadow_4
+    exit northeast "northeast" refuse blocked_way when (self.get(:blocked) == :northeast)
+    exit northeast "northeast" -> shadow_3
+    exit south "south" refuse blocked_way when (self.get(:blocked) == :south)
+    exit south "south" refuse "The quicksand prevents movement in that direction."
+    exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
+    exit southwest "southwest" refuse "The quicksand prevents movement in that direction."
+  }
+  :nways 6
+  :w0 north
+  :w1 northwest
+  :w2 west
+  :w3 southeast
+  :w4 east
+  :w5 northeast
+  :id shadow_6
+  :walls 4
+  passage body { You are near the southern end of the land of shadow. The ground here is soft and spongy, and it becomes quicksand to the south. North and east of here are gentle, rolling hills. A gentle sea breeze wafts over a steeply sloping path to the west. }
+  object hills is Hills
+  object mist is Mist
+  object shadows is Shadows
+  object quicksand is SandyQuicksand
+  object breeze is Scenery {
+    grammar { name "sea breeze"  nouns "breeze", "wind", "air"  adjectives "gentle", "sea", "salt" }
+    passage short { sea breeze }
+    describe { text "A gentle breeze, salt and cold, coming up the slope from the west with the sound of surf somewhere under it. It is the first wind you have felt underground, and it does not belong here any more than the sea does." }
+    as target for smell { do { say "It smells of salt, and of a long way off." } }
+    as target for listen { do { say "Under the breeze, faint and steady, surf." } }
+    passage no_take { You breathe it in, which is as much of it as you can take. }
+  }
+  object slope is Scenery {
+    grammar { name "sloping path"  nouns "path", "slope"  adjectives "steep", "steeply", "sloping", "west" }
+    passage short { sloping path }
+    describe { text "A path drops steeply away to the west, down toward the breeze and the sound of the sea." }
+    as target for through { do { say "The path goes down to the west; say so." } }
+    as target for climb_down { do { say "The path goes down to the west; say so." } }
+  }
+}
+
+object shadow_7 is ShadowRoom in underground_caverns_3 {
+  grammar {
+    name "Land of Shadow"
+    exit northeast "northeast" refuse blocked_way when (self.get(:blocked) == :northeast)
+    exit northeast "northeast" -> shadow_2
+    exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
+    exit east "east" -> shadow_3
+    exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
+    exit southeast "southeast" -> shadow_4
+    exit south "south" refuse blocked_way when (self.get(:blocked) == :south)
+    exit south "south" -> shadow_6
+    exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
+    exit north "north" -> shadow_8
+    exit down "down" -> flathead_ocean
+    exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
+    exit northwest "northwest" -> flathead_ocean
+    exit west "west" refuse blocked_way when (self.get(:blocked) == :west)
+    exit west "west" -> flathead_ocean
+    exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
+    exit southwest "southwest" -> flathead_ocean
+  }
+  :nways 8
+  :w0 northeast
+  :w1 east
+  :w2 southeast
+  :w3 south
+  :w4 north
+  :w5 northwest
+  :w6 west
+  :w7 southwest
+  :id shadow_7
+  :walls 4
+  passage body { You are in a land of dark shadows and shallow hills, which stretch out in all directions. To the west, the land dips sharply. }
+  object hills is Hills
+  object mist is Mist
+  object shadows is Shadows
+  object dip is Scenery {
+    grammar { name "dip"  nouns "drop", "edge", "slope"  adjectives "sharp", "west" }
+    passage short { dip }
+    describe { text "To the west the hills stop and the land goes down, sharply, toward a sound of surf and a smell of salt and a mist that hides the bottom." }
+    as target for climb_down { do { say "The land dips to the west; say so." } }
+  }
+}
+
+object shadow_8 is ShadowRoom in underground_caverns_3 {
+  grammar {
+    name "Land of Shadow"
+    exit south "south" refuse blocked_way when (self.get(:blocked) == :south)
+    exit south "south" -> shadow_7
+    exit east "east" refuse blocked_way when (self.get(:blocked) == :east)
+    exit east "east" -> shadow_2
+    exit southeast "southeast" refuse blocked_way when (self.get(:blocked) == :southeast)
+    exit southeast "southeast" -> shadow_3
+    exit southwest "southwest" refuse blocked_way when (self.get(:blocked) == :southwest)
+    exit southwest "southwest" -> flathead_ocean
+    exit west "west" refuse blocked_way when (self.get(:blocked) == :west)
+    exit west "west" -> flathead_ocean
+    exit northeast "northeast" refuse blocked_way when (self.get(:blocked) == :northeast)
+    exit northeast "northeast" refuse "A stone wall blocks the way."
+    exit northwest "northwest" refuse blocked_way when (self.get(:blocked) == :northwest)
+    exit northwest "northwest" refuse "A stone wall blocks the way."
+    exit down "down" -> flathead_ocean
+    exit north "north" refuse blocked_way when (self.get(:blocked) == :north)
+    exit north "north" -> cliff
+  }
+  :nways 6
+  :w0 south
+  :w1 east
+  :w2 southeast
+  :w3 southwest
+  :w4 west
+  :w5 north
+  :id shadow_8
+  :walls 11
+  passage body { You are standing atop a steep cliff, looking west over a vast ocean. Far below, the surf pounds at a sandy beach. To the south and east are rolling hills filled with eerie shadows. A path cut into the face of the cliff descends toward the beach. To the north is a tall stone wall, which ends at the cliff edge. It was obviously built long ago, and directly north is a spot where you could climb over the rubble of the decaying wall. }
+  object hills is Hills
+  object mist is Mist
+  object shadows is Shadows
+  object stone_wall is StoneWall
+  object rubble is Rubble
+  object cliff_top is Scenery {
+    grammar { name "cliff"  nouns "edge", "drop", "cliff-top"  adjectives "steep", "high" }
+    passage short { cliff }
+    describe { text "The cliff drops away to the west, a long way, to a beach where the surf is a white line that moves. A path has been cut into its face, going down in steps and slants, by somebody who wanted to reach the sea badly enough to work for it." }
+    as target for climb_down { do { say "The path down the cliff is the way; it goes down, or west, or southwest, as you like to call it." } }
+    as target for leap_at { do { say "You look before leaping and realize you would never survive." } }
+  }
+  object ocean_view is Scenery {
+    grammar { name "vast ocean"  nouns "ocean", "sea", "water", "surf", "waves"  adjectives "vast", "misty" }
+    passage short { vast ocean }
+    describe { text "An ocean, underground: grey water going out to a grey mist and no horizon, and the surf coming in on the beach far below with a sound that reaches you a moment after you see it. The Flatheads named it after themselves, as they named everything, and for once the thing was big enough to carry the name." }
+    passage no_take { It is a long way down, and wet. }
+  }
+  object beach_view is Scenery {
+    grammar { name "sandy beach"  nouns "beach", "sand", "shore"  adjectives "sandy" }
+    passage short { sandy beach }
+    describe { text "Far below, a sandy beach, pale against the grey water, with the surf working at it. Something is lying on it, or nothing is; from this height it is hard to be sure." }
+  }
+  object cliff_path is Scenery {
+    grammar { name "cliff path"  nouns "path", "steps"  adjectives "cliff", "cut", "steep" }
+    passage short { cliff path }
+    describe { text "A path cut into the face of the cliff, narrow and steep, descending in slants toward the beach. It is the way down, and the way back up, and it looks like more of the second than the first." }
+    as target for through { do { say "The path goes down the cliff; down, or west, will take it." } }
+    as target for climb_down { do { say "The path goes down the cliff; down, or west, will take it." } }
+  }
+}

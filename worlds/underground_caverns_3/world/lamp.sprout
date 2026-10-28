@@ -1,0 +1,230 @@
+// Lights. A `Light` lights whatever dark room it is in, lying on the floor
+// or carried, and tells its bearer when it is lit, put out, picked up or
+// set down; a light on the floor tells the room, for the grue's sake: see
+// the dark room, in room.sprout. The old brass lantern is a `Lamp`, a
+// light that turns on and off and burns down by the move (Zork III's
+// I-LANTERN and LAMP-TABLE: 200 moves, then "a bit dimmer", 300 more,
+// "definitely dimmer", 100, "nearly out", 50, and out). Dropped into
+// the lake it is fried (FRIED-LAMP), and never lights again.
+import * as sprout from 'sprout'
+import {Portable, Thing, Switchable, Flame} from 'thing'
+import {Adventurer} from 'adventurer'
+import {DarkRoom, Room} from 'room'
+import {Box} from 'box'
+import {endless_stair} from 'way_in'
+import {Ocean} from 'ocean'
+import {lamp_on, lamp_off, smell, listen, dry, :light, :relight, :snuffed, :fry, :smash, :lamp_home} from 'verbs'
+
+kind Light is Portable, sprout.LightSource, Switchable {
+  on :moved (from, to) {
+    // Into the ocean (OCEAN-F), it is out of everyone's reach, so the one
+    // who threw it counts it off their own light (adventurer.sprout).
+    if (to.is(Ocean)) { self.set(:lit, false) }
+    else if (self.get(:lit)) {
+      if (from.is(Adventurer)) { send from :light with -1 }
+      if (to.is(Adventurer)) { send to :light with 1 }
+    }
+  }
+}
+
+kind Lamp is Light {
+  :others 0 min 0 max 50
+  :life 650 min 0 max 650
+  :age 0 min 0 max 4
+  :burned_out false
+  :fried false
+  :broken false
+  grammar { name "lamp"  nouns "lantern", "light"  adjectives "brass", "old", "friend", "broken" }
+  :size 15
+  :has_fdesc true
+  passage short { lamp }
+  passage indef { {if self.get(:broken)}A broken lantern{else}A lamp{/if} }
+  passage fdesc { Your old friend, the brass lantern, is at your feet. }
+  passage ldesc { {if self.get(:broken)}There is a broken lantern here.{else}There is a brass lantern here{if self.get(:lit)} (providing light){/if}.{/if} }
+
+  describe {
+    if (self.get(:broken)) { text broken_view }
+    else if (self.get(:fried)) { text fried_view }
+    else if (self.get(:burned_out)) { text spent_view }
+    else if (self.get(:lit)) { text lit_view }
+    else { text dark_view }
+  }
+  passage view default { It is the brass lantern you have carried through two adventures already: battery-powered, dented in the places you remember, with a stout handle and a glass somebody has kept clean. It has the look of an old friend who has followed you somewhere it would rather not have come. }
+  passage spent_view {
+    {self.view}
+
+    The lamp has burned out.
+  }
+  passage lit_view {
+    {self.view}
+
+    The lamp is on.
+  }
+  passage dark_view {
+    {self.view}
+
+    The lamp is turned off.
+  }
+  passage fried_view {
+    {self.view}
+
+    It has been in the lake, and it is the worse for it: there is water behind the glass and a smell of wet metal, and it will not light again.
+  }
+  passage broken_view { It is what is left of the brass lantern: a dented frame, a twisted handle and a good deal of broken glass, none of it inclined to give light ever again. It was a perfectly good lamp until somebody threw it. }
+
+  // Said rather than refused, so that "light lamp" is never a draw between
+  // this part and `burn`'s (thing.sprout's Switchable).
+  as target for lamp_on {
+    do {
+      if (self.get(:broken)) { say "You can't turn that on." }
+      else if (self.get(:fried)) { say "The lamp isn't functioning (probably from having gotten wet)." }
+      else if (self.get(:burned_out)) { say "A burned-out lamp won't light." }
+      else if (self.get(:lit)) { say "It is already on." }
+      else {
+        let was_dark = here.is(DarkRoom) && !here.get(:alight)
+        self.set(:lit, true)
+        say "The {self.short} is now on."
+        if (actor.holds(self)) { send actor :light with 1 } else { send here :relight }
+        if (was_dark && here.is(Room)) { say "{here.full}" }
+      }
+    }
+  }
+
+  as target for lamp_off {
+    permit {
+      if (self.get(:broken)) { refuse "You can't turn that off." }
+      if (self.get(:fried)) { refuse "The lamp isn't functioning (probably from having gotten wet)." }
+      if (self.get(:burned_out)) { refuse "The lamp has already burned out." }
+      if (!self.get(:lit)) { refuse "It is already off." }
+    }
+    do {
+      self.set(:lit, false)
+      say "The {self.short} is now off."
+      if (actor.holds(self)) { send actor :light with -1 } else { send here :relight }
+      if (here.is(DarkRoom)) {
+        if (actor.holds(self)) {
+          let mine = actor.is(Adventurer) && actor.get(:light) > 1
+          if (!here.get(:floor_lit) && here.get(:bearers) <= 1 && !mine) { say "It is now pitch black." }
+        } else {
+          self.set(:others, 0)
+          each l: Light in here { if (l != self && l.get(:lit)) { self.adjust(:others, 1) } }
+          each b: Box in here {
+            if (b.get(:open)) { each l: Light in b { if (l != self && l.get(:lit)) { self.adjust(:others, 1) } } }
+          }
+          if (self.get(:others) == 0 && here.get(:bearers) == 0) { say "It is now pitch black." }
+        }
+      }
+    }
+  }
+
+  // The battery, burning down by the move while the lamp is lit and
+  // carried (I-LANTERN, LIGHT-INT). A command about the game itself is no
+  // move.
+  after command {
+    let counted = !(actor.is(Adventurer) && actor.get(:aside))
+    if (counted && self.get(:lit) && !self.get(:burned_out)) {
+      self.adjust(:life, -1)
+      if (self.get(:life) <= 0) {
+        self.set(:burned_out, true)
+        self.set(:lit, false)
+        self.set(:age, 4)
+        say "You'd better have more light than from the lamp."
+        broadcast :snuffed
+      } else {
+        if (self.get(:life) <= 50 && self.get(:age) < 3) {
+          self.set(:age, 3)
+          say "The lamp is nearly out."
+        } else if (self.get(:life) <= 150 && self.get(:age) < 2) {
+          self.set(:age, 2)
+          say "The lamp is definitely dimmer now."
+        } else if (self.get(:life) <= 450 && self.get(:age) < 1) {
+          self.set(:age, 1)
+          say "The lamp appears a bit dimmer."
+        }
+      }
+    }
+  }
+  as target for dry {
+    do {
+      if (self.get(:fried)) { say "You dry the lamp, with your sleeve and then with patience, and it is dry, and it is still not working: the lake got into it where drying does not reach, and what it did there it did for good." }
+      else if (self.get(:broken)) { say "You could dry it, and it would be a dry broken lantern." }
+      else { say "The lamp is dry already." }
+    }
+  }
+  // Dropped into the lake (GO-ON-LAKE): out, and out for good. It is
+  // moved first, so its going out is counted off its bearer's light.
+  on :fry {
+    self.set(:lit, false)
+    self.set(:fried, true)
+  }
+  // Thrown (LANTERN's THROW): smashed, and out for good; what is left of
+  // it is a broken lantern (BROKEN-LAMP), still the lamp for the old
+  // man's purposes, since he sends it back to the stair.
+  on :smash {
+    if (self.get(:lit)) {
+      self.set(:lit, false)
+      broadcast :snuffed
+    }
+    self.set(:broken, true)
+  }
+  // A death sends the lamp back to the stair (JIGS-UP), from wherever it
+  // lies; the gate is open when this is heard.
+  on :lamp_home { move self to endless_stair }
+}
+
+// The torch on the wall of the Scenic Vista (TORCH, TORCH-F): a flame
+// that burns as long as it likes, that nothing down here can light again
+// once it is out, and that the lake puts out for good (FRIED-TORCH).
+kind Torch is Light, Flame {
+  :lit true
+  :fried false
+  grammar { name "torch"  nouns "flame", "brand"  adjectives "flaming", "burning", "wooden", "burned-out", "dead", "wet" }
+  :size 5
+  :has_fdesc true
+  passage short { torch }
+  passage indef { {if self.get(:fried)}A burned-out torch{else}A torch{/if} }
+  passage a_short { {if self.get(:fried)}a burned-out torch{else}a torch{/if} }
+  passage fdesc { Mounted on one wall is a flaming torch, which fills the room with a flickering light. }
+  passage ldesc { {if self.get(:fried)}There is a burned-out torch here.{else}There is a torch here{if self.get(:lit)}, burning{/if}.{/if} }
+  describe {
+    if (self.get(:fried)) { text "A torch of pitch and rag on a wooden shaft, black and wet and finished. It has been in the lake, and no fire down here will take to it again." }
+    else if (self.get(:lit)) { text "A torch of pitch and rag on a wooden shaft, burning with a steady, smoky flame that does not seem to use the torch up. Somebody lit it a long time ago for somebody to find. It is a flame for dry land: it will go wherever you carry it on foot, and the lake would put it out for good, and there is nothing down here that would light it again." }
+    else { text "A torch of pitch and rag on a wooden shaft, out. There is nothing down here to light it with." }
+  }
+  as target for lamp_on {
+    do {
+      if (self.get(:fried)) { say "It's hopeless. The torch is wet." }
+      else if (self.get(:lit)) { say "It's already lit." }
+      else { say "You have nothing to light it with." }
+    }
+  }
+  as target for lamp_off {
+    permit {
+      if (self.get(:fried)) { refuse "It has already been extinguished, by the lake." }
+      if (!self.get(:lit)) { refuse "It has already been extinguished." }
+    }
+    do {
+      self.set(:lit, false)
+      say "You manage to extinguish the flame."
+      if (actor.holds(self)) { send actor :light with -1 } else { send here :relight }
+      if (here.is(DarkRoom)) {
+        if (actor.holds(self)) {
+          let mine = actor.is(Adventurer) && actor.get(:light) > 1
+          if (!here.get(:floor_lit) && here.get(:bearers) <= 1 && !mine) { say "It is now pitch black." }
+        } else if (here.get(:bearers) == 0 && !here.get(:floor_lit)) { say "It is now pitch black." }
+      }
+    }
+  }
+  as target for smell { do { say "Pitch, and smoke, and hot rag." } }
+  as target for dry {
+    do {
+      if (self.get(:fried)) { say "You wring the torch out, and it drips, and goes on being a black wet stick; the lake put it out for good, and dry is not the same as lit." }
+      else { say "The torch is dry, and burning, and best left so." }
+    }
+  }
+  as target for listen { do { say "{if self.get(:lit)}It hisses and spits a little, as pitch does.{else}The torch makes no sound.{/if}" } }
+  on :fry {
+    self.set(:lit, false)
+    self.set(:fried, true)
+  }
+}

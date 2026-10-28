@@ -1,0 +1,202 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The death is the original's and stays, odds untouched; but a door the hallway shows through should be read as a door the hallway sees through before it kills. The pine panel now names its compass side from :mdir as the arrow is named, says the hall sees in through it, the opening line says which way it opened and that the box's contents are in plain view while it stands open, a slide made with a door open short of the Guardians has the door creaking and the hall going by in the gap, and 'You would hit one of the panels' says which way the open door is."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "Accepted in its second form: the box stays where a death left it, as the original leaves it; sending it home would be a kindness the original does not give and the potion route is the original's own way on from a long-ways box. What changed is the reading: the stretch south of the statues says the small hallways run on between the Guardians' pedestals in plain view of both, and the box's end wall examined, entered or opened says it is entered by the mirror on its long side, which the red button opens, and from nowhere else. No friction entry, since no language limit was met."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The riddle is kept; the Guardians examined now give its other half in Zork's voice: they strike at whatever they see pass between them and at nothing they do not see, and nobody has yet reported what they do about a visitor they cannot see."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "A bulk command the world's own shore text invited should never spend an endgame item. The engine's `all` in a carried role reaches through the open vial and a world cannot narrow it, so `take all` and `drop all` pass over the potion; a deliberate 'drop liquid' or a pour still wastes it. Logged as friction 66."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "The prose and the state disagreed because a room thing cannot send to what is in the pourer's hands. The pouring is now the actor's: the vial's content is consumed by its name or its own, the line names the target, and the Thing default is silent. Logged as friction 67; the vial test pins it with a forbid on the warning."
+    },
+    {
+      "answers": "P6",
+      "decision": "accept",
+      "reason": "The brief offers a verb only where something it applies to is in range. `put`'s item is now typed by a new `Placeable` kind, composed by what can be carried, the short pole (which is put in the channel) and the visitor, so scenery never fills it and `help` never lists a wall going into the vial."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The list is the original's seven rooms and stays; the line and the comment were wrong. The death line now says 'along the ways in, between the stair and the lake or in the passages east of the junction', and the comment names the three eastern rooms, the Tight Squeeze among them."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Replayed in a solver outside the world: the grid went past saving at the run's turn 291, when the wrong ladder (the west-wall one) was pushed north into the west column; the good ladder was never touched, so the warning, which reads only the good ladder's dead squares, could not fire. A general solvability check is a search over millions of states that no turn can run (friction 68), so the gap is logged rather than patched; the shout now names the steel door, the slot and its fee, the book you are carrying, before it mentions prayer, since a held book is the cheaper way out."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "The dream stays as the brief fixes it. The staff's line and the man's handing-over now point at the silver-haired old man the dream did show: worn to somebody else's hand, the kind of staff such a man would lean on, the one who said to seek him."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "A random yuk read as a reply from the thing in the trees is a lie the world told. While the man is unmet, `hello` and 'who is there' at the Cliff reach the watcher and are answered with its slip back among the trunks; the yuks are kept for where nobody could be listening."
+    },
+    {
+      "answers": "P11",
+      "decision": "accept",
+      "reason": "The amulet's take line now ends with it going round your neck on its chain, as the hood's and cloak's lines do."
+    },
+    {
+      "answers": "P12",
+      "decision": "accept",
+      "reason": "Kept as it is: the ledge's nine beats, the watcher and the duel's turn to the hood landed in every run that reached them, and nothing is changed there."
+    }
+  ],
+  "changes": [
+    {
+      "what": "The pine panel examined names its compass side (a new `pine_dir` passage read from :mdir, with `mirror_dir` beside it) and says the hallway sees in through it; the line that opens it short of the Guardians says which way it opened and that the box's contents are in plain view; a slide with a door open, short of the Guardians, has the door creaking and the hall going by in the gap; the box's LOOK and its 'You would hit one of the panels' name the open door's side. Long texts moved into passages to stay under the 600-character cap.",
+      "files": [
+        "worlds/underground_caverns_3/world/mirror.sprout"
+      ],
+      "for": [
+        "P1"
+      ]
+    },
+    {
+      "what": "The hallway's view of the long-ways box in the Guardians' stretch says the small hallways run on between the pedestals in plain view of both statues; the WoodenWall composes Openable and answers examine, enter and open with 'entered by the mirror on its long side, which the red button opens, and from nowhere else'. The box stays where a death left it.",
+      "files": [
+        "worlds/underground_caverns_3/world/mirror.sprout"
+      ],
+      "for": [
+        "P2"
+      ]
+    },
+    {
+      "what": "The Guardians examined say they strike at whatever they see pass between them and at nothing they do not see, and that nobody has yet reported what they do about a visitor they cannot see.",
+      "files": [
+        "worlds/underground_caverns_3/world/mirror.sprout"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "`take all` and `drop all` pass over the potion (several && Potion; several && not directly held), so ALL never reaches into the vial; a named drop or a pour still wastes it. New tests/vial.json plays to the vial, opens it, drops all and recovers it.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/vial.json"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "`as actor for pour_on` does the pouring: the vial's content (by the vial's name or the liquid's) is consumed and the line names the target and the empty vial; the Thing default target handler no longer says a line or sends to an item it cannot reach. tests/vial.json pours on the sand with a forbid on warnings.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/thing.sprout",
+        "worlds/underground_caverns_3/world/tests/vial.json"
+      ],
+      "for": [
+        "P5"
+      ]
+    },
+    {
+      "what": "New bare kind `Placeable`, composed by Portable, the ShortPole and the Adventurer; `put`'s item role is typed by it, so scenery never fills it and help never offers a wall going into the vial.",
+      "files": [
+        "worlds/underground_caverns_3/world/thing.sprout",
+        "worlds/underground_caverns_3/world/verbs.sprout",
+        "worlds/underground_caverns_3/world/mirror.sprout",
+        "worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P6"
+      ]
+    },
+    {
+      "what": "The death line names every room the scatter uses ('between the stair and the lake or in the passages east of the junction') and the scatter's comment names the three eastern rooms; the five tests quoting the line updated.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/death.json",
+        "worlds/underground_caverns_3/world/tests/vista.json",
+        "worlds/underground_caverns_3/world/tests/sword_sea.json",
+        "worlds/underground_caverns_3/world/tests/void.json"
+      ],
+      "for": [
+        "P7"
+      ]
+    },
+    {
+      "what": "The shout in a puzzle square names the steel door, the slot and its fee (the book you are carrying, when held) before prayer, at the usual price. The run's grid was replayed in a solver: past saving from the wrong ladder's push at turn 291, not covered by the good-ladder warning; logged as friction 68.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/friction.md"
+      ],
+      "for": [
+        "P8"
+      ]
+    },
+    {
+      "what": "The staff examined is worn to somebody else's hand, the kind a silver-haired old man would lean on, the one of the dream who said to seek him; the man's haul adds a second tell saying the same. cliff_man.json's staff expectation updated.",
+      "files": [
+        "worlds/underground_caverns_3/world/items.sprout",
+        "worlds/underground_caverns_3/world/cliff.sprout",
+        "worlds/underground_caverns_3/world/tests/cliff_man.json"
+      ],
+      "for": [
+        "P9"
+      ]
+    },
+    {
+      "what": "`hello` and `who is there` at the Cliff, while the man is unmet, reach the something among the trees and answer with its slip back among the trunks; new tests/cliff_hello.json pins both and the yuk elsewhere.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/cliff_hello.json"
+      ],
+      "for": [
+        "P10"
+      ]
+    },
+    {
+      "what": "The shiny object's take line ends 'You are now wearing the golden amulet, on its chain, round your neck.'; shore.json and walkthrough.json expectations updated.",
+      "files": [
+        "worlds/underground_caverns_3/world/adventurer.sprout",
+        "worlds/underground_caverns_3/world/tests/shore.json",
+        "worlds/underground_caverns_3/world/tests/walkthrough.json"
+      ],
+      "for": [
+        "P11"
+      ]
+    },
+    {
+      "what": "intent.md gains the Round 9 section recording every change above and the replay finding; friction.md gains entries 66 (ALL reaching into a held container), 67 (a room thing cannot send into the hands) and 68 (puzzle solvability is not a thing a push can ask).",
+      "files": [
+        "worlds/underground_caverns_3/intent.md",
+        "worlds/underground_caverns_3/friction.md"
+      ],
+      "for": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11",
+        "P12"
+      ]
+    }
+  ]
+}

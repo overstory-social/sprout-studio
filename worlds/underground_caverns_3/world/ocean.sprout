@@ -1,0 +1,158 @@
+// The Flathead Ocean (FLATHEAD-OCEAN, FLATHEAD-OCEAN-F): the shore of an
+// underground sea, the Viking ship that passes it once, and what it says
+// to the two words. The ship's clock is its visitor's (adventurer.sprout);
+// the room and the ship read it.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Receptacle, Diggable, Searchable, Greetable} from 'thing'
+import {Room, Sailor} from 'room'
+import {Adventurer} from 'adventurer'
+import {Mist} from 'way_in'
+import {Quicksand} from 'shadow'
+import {shadow_6, shadow_7, shadow_8} from 'shadow'
+import {cliff_base} from 'cliff'
+import {Sword} from 'items'
+import {put, through, leap_at, swim, dig, listen, smell, look_in, cross, search, climb_up, :sword_come, :glow} from 'verbs'
+
+// The sea itself (OCEAN): nothing goes in it and comes back. What is
+// thrown in is held by it, out of everyone's reach, which is Zork's
+// "lost forever" without destroying what the world declared; whoever
+// throws does the throwing (adventurer.sprout). One thing excepted: the
+// sword, which comes to the hand when it is needed (SHADOW-ARRIVAL and
+// I-SHADOW-REPLY move it by name from wherever it is, the original's
+// REMOVE included), and which the ocean gives up itself when the call
+// comes, since nothing inside it can hear the call.
+kind Ocean is Scenery, Receptacle {
+  contains
+  pass any (false)
+  release (item, to) { if (mover != self) { refuse "It is lost forever; the ocean does not give back." } }
+  on :sword_come (from) {
+    if (from.is(Adventurer)) {
+      each s: Sword in self {
+        if (!from.holds(s)) {
+          move s to from
+          send s :glow with 2
+          tell from "Something breaks the surface out in the mist, glowing, and comes to you over the water faster than anything thrown; it is your sword, wet and wildly glowing, and it is in your hand. The ocean, it seems, keeps everything but what is needed."
+        }
+      }
+    }
+  }
+  grammar { name "Flathead Ocean"  nouns "ocean", "sea", "water", "waves", "deep"  adjectives "flathead", "underground", "amazing" }
+  passage short { ocean }
+  describe { text "An underground sea, the topic of many a legend among adventurers: grey water under a grey mist, with no far shore and no horizon, and a heavy surf coming in out of the mist as though it had been coming in since the Empire fell and meant to go on after. The Flatheads named it for themselves. It is big enough to carry the name." }
+  passage no_take { You would be killed by the pounding surf! }
+  as target for through { do { say "You would be killed by the pounding surf!" } }
+  as target for leap_at { do { say "You would be killed by the pounding surf!" } }
+  as target for cross { do { say "You can't cross that! It has no other side that anyone has come back from." } }
+  as container for put { do { } }
+  as target for listen { do { say "The surf, and under it, if you listen long enough, something that might be singing, a long way out, and might be the wind." } }
+  as target for smell { do { say "Salt, and cold, and a long way off." } }
+}
+
+// The ship (VIKING-SHIP): seen only in the one move it is here. It may
+// be hailed, and the hail is the hailer's (adventurer.sprout).
+kind Ship is Scenery, Greetable {
+  grammar { name "Viking ship"  nouns "ship", "boat", "craft", "prow", "vessel"  adjectives "viking", "ancient", "old" }
+  passage short { ship }
+  passage passing { An old boat, reminiscent of an ancient Viking ship: a long low hull, a high carved prow, a single square sail the colour of the mist, and at the prow an old and crusty sailor, peering out over the water as though he had lost something in it three ages ago. It is passing along the shore, close in, and it is not stopping for anybody who does not say the right thing. }
+  passage sailed { The ship has gone, west, into the mist, and the sailor's song went with it. The sea is as it was. }
+  passage sailed_mute { The ship has gone, west, into the mist, ungreeted, and it will not be back; this shore sees it once. The sea is as it was, and will stay so. }
+  passage no_ship { There is no ship to be seen; only the mist, and the surf, and a feeling that this is a shore things pass. }
+  describe {
+    if (actor.is(Adventurer)) {
+      if (actor.get(:ship_visible)) { text passing }
+      else if (actor.get(:ship_greeted)) { text sailed }
+      else if (actor.get(:ship_gone)) { text sailed_mute }
+      else { text no_ship }
+    } else { text no_ship }
+  }
+  passage no_take { It is some way out, and moving, and not yours. }
+  passage too_far { It is too far out to board, and the surf between you and it would see to you long before you saw to it. If it is going to come in, something will have to bring it; a word, perhaps, if it is the right one. }
+  passage not_here { There is no ship here to board. }
+  // Read by an `if` as the body runs, not by a slot in the line: the ship
+  // may sail at the end of this same command, and a slot is rendered after
+  // that, which would answer "no ship" to someone looking straight at it.
+  as target for through {
+    do {
+      if (actor.is(Adventurer)) {
+        if (actor.get(:ship_visible)) { say too_far } else { say not_here }
+      } else { say not_here }
+    }
+  }
+}
+
+// The beach (SHORE-PSEUDO), the surf and the breeze.
+kind Beach is Scenery, Diggable, Searchable {
+  grammar { name "beach"  nouns "sand", "shore", "strand"  adjectives "sandy" }
+  passage short { beach }
+  describe { text "Grey sand, wet and hard-packed where the surf reaches and dry and loose above it, with the marks of the sea's coming and going on it and no footprints at all but yours." }
+  as target for dig { do { say "There's nothing there." } }
+  as target for search { do { say "Sand, and more sand, and the sea's leavings: nothing anyone would cross the Empire for." } }
+}
+kind Surf is Scenery {
+  grammar { name "surf"  nouns "breakers", "spray"  adjectives "heavy", "pounding" }
+  passage short { surf }
+  describe { text "A heavy surf, breaking on the sand and on the rocks either side of it with a weight you can feel through your feet. It would not take long to drown in, and it would not be pleasant." }
+  as target for through { do { say "You would be killed by the pounding surf!" } }
+  as target for listen { do { say "It pounds, and draws back, and pounds. It has been doing it a long time and is not tired of it." } }
+}
+kind Breeze is Scenery {
+  grammar { name "breeze"  nouns "wind", "air"  adjectives "onshore", "sea" }
+  passage short { breeze }
+  describe { text "An onshore breeze, cold and salt, blowing in off the water and carrying the mist up over the hills to the east. A wind, underground; somebody built this place on a scale that needed one." }
+  as target for smell { do { say "Salt, and cold, and the mist." } }
+  passage no_take { It is wind. }
+}
+kind Rocks is Scenery {
+  grammar { name "rocks"  nouns "rock"  adjectives "wet", "black" }
+  passage short { rocks }
+  describe { text "Black rocks, wet and sharp, either side of the beach where the cliff comes down into the sea; the surf breaks on them with particular enthusiasm." }
+  as target for climb_up { do { say "The rocks are wet, sharp and surrounded by surf, and climbing them would improve nothing." } }
+}
+kind RisingLand is Scenery {
+  grammar { name "rising land"  nouns "land", "hills", "path"  adjectives "steep", "east", "north" }
+  passage short { rising land }
+  describe { text "The land rises steeply to the east, into the hills of the land of shadow, with a path cut into the cliff face; and a path heads north along the beach, between the surf and the rocks, until the mist takes it." }
+  as target for through { do { say "Use compass directions for movement, and say which way." } }
+}
+kind Legend is Scenery {
+  grammar { name "legend"  nouns "legends", "topic"  adjectives "many" }
+  passage short { legend }
+  describe { text "The legends say that few ever came to this shore and fewer came back, and that something passes it, now and then, that has been passing it a long time. The legends, as usual, do not say what to do about it." }
+  passage no_take { A legend is not a thing to carry; it carries you. }
+}
+
+kind FlatheadOcean is Room { }
+
+object flathead_ocean is FlatheadOcean in underground_caverns_3 {
+  grammar {
+    name "Flathead Ocean"
+    exit north "north" -> cliff_base
+    exit in "in" refuse "Between the rocks, wind, and waves, you wouldn't last a minute."
+    exit west "west" refuse "Between the rocks, wind, and waves, you wouldn't last a minute."
+    exit southwest "southwest" refuse "Between the rocks, wind, and waves, you wouldn't last a minute."
+    exit northwest "northwest" refuse "Between the rocks, wind, and waves, you wouldn't last a minute."
+    exit southeast "southeast" -> shadow_6
+    exit northeast "northeast" -> shadow_8
+    exit east "east" -> shadow_7
+    exit up "up" -> shadow_7
+    exit south "south" refuse "The quicksand prevents movement here."
+  }
+  :id ocean
+  :walls 9
+  passage body {
+    You are at the shore of an amazing underground sea, the topic of many a legend among adventurers. Few were known to have arrived at this spot, and fewer to return. There is a heavy surf and a breeze is blowing onshore. The land rises steeply to the east and quicksand prevents movement to the south. A thick mist covers the ocean and extends over the hills to the east. A path heads north along the beach.{if bound actor}{if actor.is(Adventurer)}{if actor.get(:ship_visible)}
+
+    An ancient Viking ship is passing along the shore, an old and crusty sailor at the helm.{/if}{/if}{/if}
+  }
+  object ocean is Ocean
+  object ship is Ship
+  object sailor is Sailor
+  object beach is Beach
+  object surf is Surf
+  object breeze is Breeze
+  object rocks is Rocks
+  object mist is Mist
+  object quicksand is Quicksand
+  object rising_land is RisingLand
+  object legend is Legend
+}

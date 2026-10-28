@@ -1,0 +1,260 @@
+// The lake: the Lake Shore, the Aqueduct View, On the Lake and Underwater
+// (LAKE-SHORE, AQ-VIEW, ON-LAKE, IN-LAKE), the lake itself (LAKE-F), the
+// fish and the sand and the algae, and the shiny object in the sand that
+// is the amulet (SHINY-OBJECT-F). The cold, the air, the roc and the fish
+// are the visitor's own clocks (adventurer.sprout).
+import * as sprout from 'sprout'
+import {examine} from 'sprout'
+import {Thing, Scenery, Portable, Diggable, Concealing, Searchable, Food} from 'thing'
+import {Room} from 'room'
+import {Adventurer} from 'adventurer'
+import {Stairs} from 'way_in'
+import {foggy_room} from 'way_in'
+import {far_shore, FarShore} from 'vista'
+import {south_shore, SouthShore} from 'aqueduct'
+import {through, leap_at, look_under, cross, take, dig, eat, smell, search, look_in, listen, climb_up, climb_down, find, shift, shake, :die} from 'verbs'
+
+// The lake (LAKE), one thing on the shore, on the surface and under it.
+kind Lake is Scenery, Concealing {
+  grammar { name "lake"  nouns "water", "surface", "waters"  adjectives "small", "cold", "icy", "frigid" }
+  passage short { lake }
+  passage under_view { Water, cold and clear and everywhere, with the light coming down through it in slow bars and the bottom a few feet below you, sandy and dim. }
+  passage surface_view { The lake is all round you, ice cold and very still but for what you are doing to it, and the north shore is a swim behind you. You can't quite make out the bottom from here. }
+  passage shore_view { A small lake, dark and very still, in a wide cavern dimly lit from above, with polished stone steps going down toward it to the southeast and a sheer rock face closing off the shore to the southwest. It does not look warm. It looks, in fact, like the kind of cold that opens a hand whether its owner likes it or not, and anyone going in would do well to leave on the shore whatever they cannot afford to have at the bottom, which is to say everything in their hands, the sword as much as the light and the rest with them; the shore is lit, after its fashion, and will keep it. It does not look deep, either, though a lake that still keeps its secrets at this age may be expected to keep that one. }
+  passage far_view { The lake, from its far side: dark and very still, with the north shore a swim away across it and the cavern's dim light lying on the water between. It is as cold from this side as from the other, and it will take what you carry as readily. }
+  describe {
+    if (here.is(Underwater)) { text under_view }
+    else if (here.is(OnLake)) { text surface_view }
+    else if (here.is(LakeShore)) { text shore_view }
+    else { text far_view }
+  }
+  passage no_take { The water slips through your fingers, and is colder than you expected. }
+  // Going in is the visitor's own doing (adventurer.sprout).
+  as target for through { do { } }
+  as target for leap_at { do { } }
+  as target for look_under {
+    do {
+      if (here.is(OnLake)) { say "You can't quite make out the bottom of the lake from here..." }
+      else { say "You can't see under the surface from here." }
+    }
+  }
+  as target for cross { do { say "You can't cross that! Not on foot, anyway; and the other ways of crossing it begin with getting into it." } }
+  as target for smell { do { say "It smells of cold, which has no smell, very strongly." } }
+  as target for listen { do { say "The lake is quite silent. Whatever is in it is quiet too." } }
+}
+
+// The fish (FISH), never where you can see it.
+kind Fish is Scenery {
+  grammar { name "fish"  nouns "fishes"  adjectives "large", "hungry", "tremendous" }
+  passage short { fish }
+  describe { text "There is no fish visible now." }
+  passage no_take { There is no fish visible now. }
+  // `take` is left to the one taking, whose part passes over what cannot
+  // be taken: a refusal here would be the whole answer to "take all", since
+  // a set role's consent is asked for all of it at once.
+  as target for any except examine, take { permit { refuse "There is no fish visible now." } }
+}
+
+// The lake's floor (SAND), and what grows on it (ALGAE). The room's own
+// ground answers to "floor".
+kind Sand is Scenery, Diggable, Searchable {
+  grammar { name "sand"  nouns "bottom", "lakebed", "silt"  adjectives "sandy", "lake" }
+  passage short { sand }
+  describe { text "There is nothing notable on the floor of the lake, except some plants and algae." }
+  passage no_take { It slips through your fingers. }
+  as target for dig { do { say "You don't come across anything unusual." } }
+  as target for search { do { say "You don't come across anything unusual{if here.count(ShinyObject) > 0}, although something in it, now and then, catches the light{/if}." } }
+}
+kind Algae is Scenery, Food {
+  grammar { name "plants and algae"  nouns "plants", "plant", "algae", "weed", "weeds"  adjectives "hearty", "few" }
+  passage short { plants and algae }
+  describe { text "A few hearty plants, grey-green and waving slightly, and algae on the stones, which is what lives in water this cold. Nothing has ever eaten them, and nothing should." }
+  passage no_take { The plants are rooted deeper than they look, and the algae comes off on your hands, which is worse. }
+  as target for eat { do { say "Yeecchhhh!" } }
+  as target for smell { do { say "Faintly green, and faintly worse." } }
+}
+
+// The shiny thing in the sand (SHINY-OBJECT): the amulet, had one time in
+// two (adventurer.sprout), and then gone from the sand. It is Portable so
+// that `take all` reaches for it, and never listed, as Zork's is not.
+kind ShinyObject is Portable {
+  grammar { name "shiny object"  nouns "object", "amulet", "glint", "thing"  adjectives "shiny", "small", "sparkling" }
+  :ndesc true
+  :taken false
+  passage short { shiny object }
+  describe { text "Something small and shiny, half in the sand and half out of it, that catches the light coming down through the water and then does not; the sand moves over it as you watch. It is close enough to reach for." }
+  passage no_take { The shiny object slips from your grasp and back onto the floor of the lake, where it is covered in sand. It is still there, under the sand, within reach of another try. }
+  on :taken {
+    self.set(:taken, true)
+    self.set(:unseen, true)
+  }
+  as target for find { do { say "It's right here, in the sand; and then it isn't; and then it is again." } }
+  as target for shift { do { say "You stir the sand around it, and it is somewhere else in the sand, no nearer." } }
+  as target for shake { do { say "You would have to have hold of it first." } }
+}
+message :taken
+
+// The swamp to the east of the lake (SWAMP-PSEUDO).
+kind Swamp is Scenery {
+  grammar { name "swamp"  nouns "marsh", "bog", "reeds"  adjectives "impassable", "east" }
+  passage short { swamp }
+  describe { text "To the east the lake shallows into a swamp, reeds and mud and water that is neither one thing nor the other, and a smell that comes across the water to you now and then. Conditions there are poor. Conditions here are not much better." }
+  as target for through { do { say "Yucko." } }
+  as target for smell { do { say "Yucko. Swamp gas, probably, and worse." } }
+}
+
+// The four rooms, as kinds, so that whoever stands in one can ask which.
+// A shore tells a visitor who comes back to it carrying a lit light what
+// the water does to a light, since a room seen again is given by its name
+// alone and the warning is in its description.
+kind LakeShore is Room {
+  on :entered (item, from) {
+    if (item.is(Adventurer) && item.get(:light) > 0 && item.recall(:visits) > 0 && item.get(:mode) != :verbose) { tell item "The light you carry throws your shadow on the water, which does not want it: a lamp goes under here, lit or dark, and comes up a dead one, and the shore is where it should be left, with everything else in your hands." }
+  }
+}
+kind AqueductView is Room { }
+kind OnLake is Room { }
+kind Underwater is Room { }
+
+object lake_shore is LakeShore in underground_caverns_3 {
+  grammar {
+    name "Lake Shore"
+    exit southeast "southeast" -> aqueduct_view
+    exit down "down" -> aqueduct_view
+    exit south "south" refuse "If you really want to enter the lake, you should say so."
+    exit southwest "southwest" refuse "The sheer rock face prevents movement along the lake shore."
+    exit north "north" -> foggy_room
+  }
+  :id lake_shore
+  :walls 6
+  passage body { You are in a wide cavern on the north shore of a small lake. Some polished stone steps lead to the southeast and a sheer rock face prevents any movement around the lake to the southwest. The cavern is dimly lit from above. The water has the look of a cold that would open your hands for you, and would not give back what fell out of them; everything in your hands goes to the bottom, not the light and the sword only but every last thing you carry, and whatever you cannot afford to lose there had better be left on the shore, which is lit, after its fashion, and will keep it. What you wear, it leaves you. }
+  object steps is Stairs {
+    describe { text "Polished stone steps, worn smooth and a little hollow in the middle by feet that stopped coming a long time ago, lead down to the southeast toward a balcony in the cliff." }
+  }
+  object rock_face is Scenery {
+    grammar { name "rock face"  nouns "face", "cliff"  adjectives "sheer" }
+    passage short { rock face }
+    describe { text "A sheer face of rock comes down into the water to the southwest and stops the shore dead. There is no way round it on foot; the lake has that side to itself." }
+    as target for climb_up { do { say "The rock face is sheer, wet at the foot and smooth all the way up. It is not for climbing." } }
+  }
+  object shore is Scenery, Diggable {
+    grammar { name "shore"  nouns "beach", "edge", "bank"  adjectives "north" }
+    passage short { shore }
+    describe { text "The north shore of the lake: a strip of wet stone and coarse sand between the cavern wall and the water, with the water's edge marked by a line of cold." }
+    as target for dig { do { say "There's nothing there." } }
+  }
+  // Named so that "light" is the lamp's word here, where the lamp is
+  // meant to be left.
+  object dim_glow is Scenery {
+    grammar { name "dim glow"  nouns "glow", "dimness"  adjectives "dim", "above", "light" }
+    passage short { dim glow }
+    describe { text "The cavern is lit from above, dimly, by something too far up to see: moss, or a crack to somewhere lighter, or the Empire's last lamp. It is enough to see by and not enough to be cheerful in." }
+    passage no_take { It is too far up, and not that sort of light. }
+  }
+  object cavern is Scenery {
+    grammar { name "cavern"  nouns "cave"  adjectives "wide" }
+    passage short { cavern }
+    describe { text "A wide cavern with the lake in the floor of it and the roof lost in a dim light; the stone steps and the rock face are at the far end, and the fog from the north comes a little way in and stops." }
+  }
+}
+
+object aqueduct_view is AqueductView in underground_caverns_3 {
+  grammar {
+    name "Aqueduct View"
+    exit northwest "northwest" -> lake_shore
+    exit up "up" -> lake_shore
+    exit down "down" refuse "The drop would be fatal."
+  }
+  :id aq_view
+  :walls 7
+  passage body { This is a small balcony carved into a near-vertical cliff. To the east, stretching from north to south, stands a monumental aqueduct supported by mighty stone pillars, some of which are starting to crumble from age. You feel a sense of loss and sadness as you ponder this once-proud structure and the failure of the Empire which created this and other engineering marvels. Some stone steps lead up to the northwest. }
+  object steps is Stairs {
+    describe { text "Stone steps lead up to the northwest, back to the lake shore; they were cut for the view, and the view is still here." }
+  }
+  object aqueduct is Scenery {
+    grammar { name "aqueduct"  nouns "structure", "duct", "arches", "arch", "marvel"  adjectives "monumental", "stone", "once-proud" }
+    passage short { aqueduct }
+    describe { text "The aqueduct is large and impressive. It was probably the major method of water transport in the Empire. It strides from north to south across the gorge on arches that would hold up a city, and did; and here and there a pillar has begun to go, and the arch above it with it, and the channel on top carries nothing now but moss and a little rain. It is the saddest thing you have seen underground, and you have seen some sad things." }
+    as target for leap_at {
+      do {
+        say "You execute a perfect swan dive into the rocks below!"
+        if (actor.is(Adventurer)) { send actor :die }
+      }
+    }
+    as target for climb_up { do { say "The aqueduct is across a gorge, hundreds of feet off, and the only way onto it that you can see is a long way round and not from here." } }
+    as target for through { do { say "The aqueduct is across the gorge; you would need wings, or another way round." } }
+  }
+  object pillars is Scenery {
+    grammar { name "pillars"  nouns "pillar", "supports", "support", "columns"  adjectives "mighty", "stone", "crumbling" }
+    passage short { pillars }
+    describe { text "Mighty stone pillars rise from the floor of the gorge to hold the arches up, each one the work of a year and a hundred men; some stand as they stood, and some are starting to crumble from age, and the arches they hold have begun to lean. {if underground_caverns_3.get(:quaked)}One of them has gone: a heap of smoke and rubble at the foot of the gorge, and above it, where an arch was, a gap with the far side of the channel standing in the air.{else}One of them, you think, will not need much more.{/if}" }
+  }
+  object balcony is Scenery {
+    grammar { name "balcony"  nouns "ledge", "shelf"  adjectives "small", "carved" }
+    passage short { balcony }
+    describe { text "A small balcony, carved into the cliff for exactly this: to stand on, and look at the aqueduct, and feel what you are feeling. There is a worn place at the edge where other people stood." }
+    as target for climb_down { do { say "The drop would be fatal." } }
+  }
+  object cliff_wall is Scenery {
+    grammar { name "cliff"  nouns "rock", "drop", "gorge", "chasm"  adjectives "near-vertical", "vertical", "rocky" }
+    passage short { cliff }
+    describe { text "The cliff goes down from the lip of the balcony, near-vertical, to a floor of rock a very long way below, and up behind you to the lake shore. The gorge between it and the aqueduct is the kind of deep that makes a sound in your ears." }
+    as target for climb_down { do { say "The drop would be fatal." } }
+    as target for leap_at { do { say "You look before leaping and realize you would never survive." } }
+  }
+  object empire is Scenery {
+    grammar { name "empire"  nouns "failure", "loss", "sadness"  adjectives "great", "underground" }
+    passage short { empire }
+    describe { text "The Great Underground Empire: it built this, and the dam, and the Bank, and a thousand rooms you have walked through, and then it failed, the way empires do, from the top down and the inside out, and left its marvels to the moss. You have been picking over what it left for three adventures. This is the first time it has made you sad." }
+    passage no_take { It is gone; there is nothing of it to take that you have not taken already. }
+  }
+}
+
+object on_lake is OnLake in underground_caverns_3 {
+  grammar {
+    name "On the Lake"
+    exit north "north" -> lake_shore
+    exit south "south" -> south_shore
+    exit southwest "southwest" -> south_shore
+    exit southeast "southeast" refuse "The swamp is impassable."
+    exit east "east" refuse "The swamp is impassable."
+    exit northeast "northeast" refuse "The swamp is impassable."
+    exit west "west" -> far_shore
+    exit northwest "northwest" -> far_shore
+    exit down "down" -> in_lake
+  }
+  :id on_lake
+  :walls 6
+  passage body { You are floating on the surface of the lake. The water is ice cold and your ability to survive here for long is very questionable. A swim north puts you at your starting point. Conditions to the east are poor where the lake turns into swamp. The west and south shores are suitable for walking, however. }
+  object swamp is Swamp
+  object shores is Scenery {
+    grammar { name "shores"  nouns "shore", "bank"  adjectives "west", "south", "far", "western", "southern" }
+    passage short { shores }
+    describe { text "The west and south shores are low and hard and suitable for walking: a swim west, or a swim south, across water this cold. The north shore, behind you, is where you came in." }
+  }
+}
+
+object in_lake is Underwater in underground_caverns_3 {
+  grammar {
+    name "Underwater"
+    exit up "up" -> on_lake
+    exit down "down" refuse "You are already at the bottom of the lake."
+    exit north "north" refuse "You swim a little way along the bottom, and it is all the same bottom: sand, and plants, and cold."
+    exit south "south" refuse "You swim a little way along the bottom, and it is all the same bottom: sand, and plants, and cold."
+    exit east "east" refuse "You swim a little way along the bottom, and it is all the same bottom: sand, and plants, and cold."
+    exit west "west" refuse "You swim a little way along the bottom, and it is all the same bottom: sand, and plants, and cold."
+    exit northeast "northeast" refuse "You swim a little way along the bottom, and it is all the same bottom: sand, and plants, and cold."
+    exit northwest "northwest" refuse "You swim a little way along the bottom, and it is all the same bottom: sand, and plants, and cold."
+    exit southeast "southeast" refuse "You swim a little way along the bottom, and it is all the same bottom: sand, and plants, and cold."
+    exit southwest "southwest" refuse "You swim a little way along the bottom, and it is all the same bottom: sand, and plants, and cold."
+  }
+  :id in_lake
+  :walls 6
+  passage body { You are below the surface of the lake. It turns out that the lake is quite shallow and the bottom is only a few feet below you. Considering the frigid temperature of the water, you should probably not plan an extended stay. The lake bottom is sandy and a few hearty plants and algae live there. }
+  object sand is Sand
+  object algae is Algae
+  object shiny is ShinyObject
+}
+
+object lake is Lake in lake_shore, on_lake, in_lake, far_shore, south_shore
+object fish is Fish in on_lake, in_lake

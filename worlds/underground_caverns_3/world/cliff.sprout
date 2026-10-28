@@ -1,0 +1,680 @@
+// The cliff (SLOPE, CLIFF-BASE, CLIFF, CLIFF-LEDGE): the Hairpin Loop
+// down from the Barren Area, the base of the cliff by the ocean, the oasis
+// at the top with its trees and its rope and its waybread, and the ledge
+// below with the locked chest; and the man at the cliff, the Dungeon
+// Master in another guise, who wants the chest and gives the staff.
+//
+// The man is an NPC who lives at the top of the cliff and is unseen until
+// he shows himself there; while he talks down to the ledge he is a voice
+// from above, a thing of the ledge that answers for him. What he does to
+// the visitor, hauling them up, he does by acting (`haul`); the clocks of
+// his waiting and his going are the visitor's (adventurer.sprout), since
+// nothing else counts a visitor's moves, and what the world keeps of him,
+// his stage and whether the rope is down, is the world's, so that the
+// cliff's way down can read it.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Portable, Creature, Fixed, Touchable, Openable, Searchable, Concealing} from 'thing'
+import {Room, DarkRoom} from 'room'
+import {Box} from 'box'
+import {Guise} from 'shadow'
+import {Adventurer} from 'adventurer'
+import {Rubble, StoneWall, Mist} from 'way_in'
+import {barren_area} from 'way_in'
+import {shadow_8} from 'shadow'
+import {flathead_ocean} from 'ocean'
+import {Waybread, Staff, BrokenStaff, Sword} from 'items'
+import {Lamp} from 'lamp'
+import {examine} from 'sprout'
+import {tie, untie, climb_up, climb_down, through, leap_at, take_fixed, shift, raise, open, close, unlock, put, give, talk, greet, hail, attack, mung, burn, cut, look_in, search, smell, listen, look_under, find, ManStage, :man_set, :man_stage, :lift_chest, :drop_chest, :haul_me, :tied, :opened, :slain, :man_away, :holding, :snap, :rope_set, :ledge_entered, :die, kiss, follow, look_behind, follow_sound} from 'verbs'
+
+// The man's hauling: a verb only he performs, whose target's own part
+// climbs to the top (adventurer.sprout).
+verb haul { role target: Adventurer }
+
+// The man at the top of the cliff (MAN, MAN-F): stocky, stubbled, and in
+// no way to be trusted, with the only key to the chest and a laugh that
+// does not improve on acquaintance. He is seen only once he has hauled
+// the visitor up and stands beside them going through his valuables.
+kind CliffMan is Creature, sprout.Actor, Guise, Fixed, Touchable {
+  :capacity 4
+  :unseen true
+  grammar { name "man"  nouns "friend", "fellow", "sport", "joker", "stranger"  adjectives "stocky", "stubbled", "unpleasant", "practical" }
+  passage short { man }
+  passage ldesc { Your "friend" from the cliff is here, with a number of valuables under one arm, going through them with great attention. }
+  describe { text "The man is stocky and of medium height, with several days' growth of stubble on his face. He is carrying a number of valuables under his arm, presumably from the now-open chest. He does not look up much; when he does, it is with {self.eyes}, which sit oddly in a face like his, as though they had been borrowed from somebody graver." }
+  passage no_take { The man is not for picking up, and would take it badly. }
+  object valuables is Valuables
+
+  on :man_stage (from, value) { self.set(:unseen, value != :at_cliff) }
+  // The chest let down at the top, open and empty (CLIFF-F, I-MAN-LIFT):
+  // when he gives up on the ledge, or the visitor finds him gone.
+  on :drop_chest {
+    each c: Chest in self {
+      move c to here
+      send c :opened
+    }
+  }
+  on :haul_me (from) {
+    if (from.is(Adventurer)) { act haul (target: from) }
+  }
+  // The visitor hauled up on the rope (I-MAN-LIFT): the staff from the
+  // bottom of the chest, the chest let down open and empty, and the man
+  // in plain sight at last.
+  as actor for haul {
+    do {
+      tell target "The man starts to heave on the rope and within a few moments you arrive at the top of the cliff. The man removes the last few valuables from the chest and prepares to leave. \"You've been a good sport! Here, take this, for whatever good it is! I can't see that I'll be needing one!\" He hands you a plain wooden staff from the bottom of the chest and begins examining his valuables."
+      each s: Staff in self { move s to target }
+      each c: Chest in self {
+        move c to here
+        send c :opened
+      }
+      self.set(:unseen, false)
+      tell target "The chest, open and empty, is at your feet."
+      tell target "The staff is worn smooth to a hand that was not his and is not yours; it is the kind of staff a silver-haired old man would lean on, and you have seen such a man, lately, in a dream, who said to seek him."
+    }
+  }
+  // Killed with the sword (MAN-F): he dies without ceremony, and the
+  // valuables stay. The one striking tells it (adventurer.sprout).
+  on :slain {
+    each v: Valuables in self { move v to here }
+    send underground_caverns_3 :man_set with :gone
+    self.set(:unseen, true)
+  }
+
+  as target for greet { do { say "He responds cheerfully. \"It is a wonderful day, isn't it?\"" } }
+  as target for hail { do { say "He responds cheerfully. \"It is a wonderful day, isn't it?\"" } }
+  as target for talk { do { say "The man is thoroughly engrossed in the examination of his booty and doesn't seem to hear you." } }
+  as recipient for give { do { say "He glances at it, and at his valuables, and does not seem to think the one would improve the other. \"Keep it, sport,\" he says. \"I'm provided for.\"" } }
+  as target for smell { do { say "He smells of sweat, and rope, and a chest that had been shut a long time." } }
+  as target for listen { do { say "He is humming, under his breath, a tune that is mostly about money." } }
+}
+
+// His valuables (VALUABLES): a pile of assorted things from the chest, of
+// no use to anyone, which stay behind if he dies.
+kind Valuables is Portable {
+  grammar { name "pile of assorted valuables"  nouns "valuables", "treasure", "pile", "booty", "loot"  adjectives "assorted" }
+  :size 20
+  passage short { pile of assorted valuables }
+  passage indef { A pile of assorted valuables }
+  passage a_short { a pile of assorted valuables }
+  passage ldesc { His assorted valuables remain behind. }
+  describe { text "A pile of assorted valuables: coins of several empires, a bracelet, some cut stones, a small figure of a bird in something that might be gold, and a good deal of tarnish. It is the kind of pile a man dies for and nobody else would cross a room for. None of it is what the old man asked you to bring him." }
+}
+
+// The pile of valuables as a thing of the cliff while the man stands
+// there going through it: it answers in his words, and is his.
+kind ValuablesPile is Scenery {
+  grammar { name "valuables"  nouns "treasure", "pile", "booty", "loot"  adjectives "assorted", "his" }
+  passage short { valuables }
+  describe { text "A number of valuables, under the man's arm and going through his fingers one by one: coins, a bracelet, cut stones, a little gold bird. He counts them as though they might have got fewer since the last time." }
+  as target for any { permit { if (underground_caverns_3.get(:man_stage) != :at_cliff) { refuse "What valuables?" } } }
+  passage no_take { The man recoils sharply. "These here things are mine. It's my chest and they're my valuables. You've a lot of nerve trying to take them from me after me saving you like that!" }
+  as target for shift { do { say no_take } }
+}
+
+// The man as the ledge hears him (GLOBAL-MAN, GLOBAL-MAN-F): a voice and
+// a face at the brink, far above, and out of reach of everything but a
+// shout and a thrown thing.
+kind LedgeMan is Scenery, Creature {
+  grammar { name "man"  nouns "friend", "fellow", "voice", "face", "stranger", "person", "somebody", "someone"  adjectives "stocky", "cliff", "above", "up", "top" }
+  passage short { man }
+  passage absent { You can't see any man here. }
+  // Called up to before he has shown himself (round 6's P7): the shout is
+  // answered by stage, as a bare shout is, and before he appears the
+  // chuckle says what he is waiting for.
+  passage unmet_call { Nothing answers, at first; then, from among the trees at the top of the cliff, a chuckle, brief and not unfriendly, and a voice remarking to nobody in particular that it's a heavy-looking chest you've got down there, and a pity there's no way of sending it up. Somebody has heard you, and is in no hurry; he will come to the brink when it suits him, and it may suit him soon. }
+  passage away_call { From the top of the cliff, between the sounds of a chest being gone through, a voice calls down: "Still there? Good. I said a short while, and a short while is what I meant; keep your shirt on." }
+  passage returned_call { "I can hear you fine," the man bellows down. "Grab onto the rope!" }
+  passage gone_call { Nothing answers from the top of the cliff. Whoever was up there has gone, and the chest with him. }
+  describe {
+    let st = underground_caverns_3.get(:man_stage)
+    if (st == :waiting || st == :returned) { text "Far above you, at the brink of the cliff, a stocky man with several days' growth of stubble looks down, and chuckles, and does not stop looking at the chest. From here you can see the shape of him against the sunlight and not much more; what you can see of his face is pleased with itself." }
+    else if (st == :gone || st == :at_cliff) { text "You've lost him among the trees." }
+    else { text absent }
+  }
+  as target for any except examine, greet, hail, talk {
+    permit {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st != :waiting && st != :returned) { refuse absent }
+    }
+  }
+  passage no_take { You aren't even close to him! }
+  as target for greet {
+    do {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) { say "The man waves back in a friendly way. \"Now, about that chest....\"" }
+      else if (st == :returned) { say returned_call }
+      else if (st == :unmet) { say unmet_call }
+      else if (st == :away) { say away_call }
+      else { say gone_call }
+    }
+  }
+  as target for hail {
+    do {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) { say "The man waves back in a friendly way, and cups a hand to his ear, and shrugs, and points at the chest." }
+      else if (st == :returned) { say returned_call }
+      else if (st == :unmet) { say unmet_call }
+      else if (st == :away) { say away_call }
+      else { say gone_call }
+    }
+  }
+  as target for talk {
+    do {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) {
+        if (underground_caverns_3.get(:chest_lifted)) { say "He yells back, \"What's that you say? I can't hear you very well.\"" }
+        else { say "He yells back, \"What's that you say? I can't hear you very well. Just tie the rope to the chest and we can chat afterwards!\" He smiles broadly." }
+      }
+      else if (st == :returned) { say returned_call }
+      else if (st == :unmet) { say unmet_call }
+      else if (st == :away) { say away_call }
+      else { say gone_call }
+    }
+  }
+  as recipient for give { do { say "You aren't even close to him!" } }
+  as target for mung { do { say "It's unlikely you'll succeed at this distance." } }
+  as target for kiss { do { say "He is a long way up, which is the right distance for him." } }
+  as target for follow { do { say "He is at the top of the cliff, and you are not, which is rather the point of him." } }
+}
+
+// The chest on the ledge (CHEST, CHEST-F): large, locked, and the man's
+// to open. Tied to the rope, it goes up; it comes back open and empty.
+kind Chest is Box, Portable {
+  grammar { name "chest"  nouns "box", "trunk", "strongbox"  adjectives "large", "locked", "closed", "open", "empty" }
+  :size 40
+  :capacity 20
+  :tied false
+  :opened false
+  :has_fdesc true
+  passage short { chest }
+  passage indef { A chest }
+  passage a_short { a chest }
+  passage fdesc { A large chest, closed and locked, is lying among the boulders. }
+  passage ldesc { {if self.get(:opened)}There is a chest here, open and empty.{else}There is a large, locked chest here{if self.get(:tied)}, tied to the rope{/if}.{/if} }
+  passage examined {
+    {if self.get(:opened)}A large chest of iron-bound wood, standing open and holding nothing; whatever was in it is under the man's arm, and whatever was at the bottom of it is yours. The lock has been turned with a key you never saw.{else}A large chest of iron-bound wood, closed, and locked with a lock that has not been picked and will not be. It is heavy, and it has the look of a thing that somebody wants, and not the look of a thing that will open for you.{if self.get(:tied)} The rope is tied round it, and well.{/if}{/if}
+  }
+  depart (to) {
+    if (self.get(:tied) && mover.is(Adventurer)) { refuse "The rope is tied around the chest, and the chest is going nowhere you are not hauling it." }
+  }
+  on :tied (from, value) { self.set(:tied, value) }
+  on :opened {
+    self.set(:opened, true)
+    self.set(:open, true)
+    self.set(:tied, false)
+  }
+  without as target for open from Box
+  without as target for close from Box
+  as target for open {
+    do {
+      if (self.get(:opened)) { say "It is already open." }
+      else if (underground_caverns_3.get(:man_stage) == :waiting) { say "The man calls down to you. \"Is this what you're looking for?\" he cackles, waving a small key over his head. You try to open the chest, but it is locked." }
+      else if (underground_caverns_3.get(:man_stage) == :unmet && here.is(CliffLedge)) { say "The chest is locked and cannot be opened. From somewhere above you, at the top of the cliff, somebody finds this funny, briefly, and stops." }
+      else { say "The chest is locked and cannot be opened." }
+    }
+  }
+  as target for close {
+    do {
+      if (self.get(:opened)) { say "You close the chest, and it will not latch; the man has done something to the lock. It drifts open again." }
+      else { say "It is already closed, and locked, which is more than you asked." }
+    }
+  }
+  as target for unlock {
+    do {
+      if (self.get(:opened)) { say "It is already open." }
+      else if (underground_caverns_3.get(:man_stage) == :waiting) { say "The man calls down to you. \"Is this what you're looking for?\" he cackles, waving a small key over his head. You try to open the chest, but it is locked." }
+      else if (bound tool) { say "The chest is locked and cannot be opened; whatever you have does not fit the lock, which seems to want one key in particular." }
+      else { say "The chest is locked and cannot be opened." }
+    }
+  }
+  as target for tie {
+    do {
+      if (bound tool) {
+        if (tool.is(LedgeRope) || tool.is(CliffRope)) { }
+        else if (tool == actor) { say "You can't tie anything to yourself." }
+        else { say "You can't tie the chest to that." }
+      } else { say "You'll have to say what to tie the chest to." }
+    }
+  }
+  as target for untie {
+    do {
+      if (self.get(:tied)) {
+        send self :tied with false
+        say "The chest is now disconnected from the rope."
+      } else { say "The chest isn't tied to anything." }
+    }
+  }
+}
+
+// The rope as the ledge sees it (GLOBAL-ROPE, GLOBAL-ROPE-F): dangling
+// from the top within reach, when it is down at all. It is the man's
+// instrument, and it does what he wants done with it.
+kind LedgeRope is Scenery {
+  grammar { name "rope"  nouns "line", "end", "cord"  adjectives "dangling", "long", "hanging" }
+  passage short { rope }
+  // Gone up with the chest, the rope is missed in the world's words, and
+  // the man's promise is said again, since nothing else repeats it.
+  passage absent { {if underground_caverns_3.get(:man_stage) == :away}The rope is not within reach; it went up the cliff with the chest. The man said he would be back in a short while, and a short while, for a man with a chest to go through, has not been long enough yet.{else}You can't see any rope here.{/if} }
+  describe {
+    if (underground_caverns_3.get(:rope_down)) { text "A long piece of rope, dangling down the face of the cliff from somewhere above, and ending within your reach. It is tied to something up there, by somebody who knew how, and it is a good deal stouter than it needs to be for the use you can think of for it." }
+    else { text absent }
+  }
+  as target for any except examine { permit { if (!underground_caverns_3.get(:rope_down)) { refuse absent } } }
+  as tool for any { permit { if (!underground_caverns_3.get(:rope_down)) { refuse absent } } }
+  // Taken hold of (GLOBAL-ROPE-F's TAKE): only once he is back and wants
+  // you up is there anything to be had by it.
+  without as target for take_fixed from Fixed
+  as target for take_fixed {
+    permit {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) { refuse "The man scowls. \"I may help you up, but not before I have that chest.\" He points to the chest near you on the ledge." }
+      else if (st != :returned) { refuse "A short tug on the rope convinces you that it is securely fastened from above." }
+    }
+    do {
+      say "You grab securely on to the rope."
+      if (actor.is(Adventurer)) { send actor :holding }
+    }
+  }
+  as target for shift {
+    do {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) { say "The man scowls. \"I may help you up, but not before I have that chest.\" He points to the chest near you on the ledge." }
+      else if (st == :returned) {
+        say "You grab securely on to the rope."
+        if (actor.is(Adventurer)) { send actor :holding }
+      }
+      else { say "A short tug on the rope convinces you that it is securely fastened from above." }
+    }
+  }
+  as target for climb_up {
+    do {
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :waiting) { say "The man scowls. \"I may help you up, but not before I have that chest.\" He points to the chest near you on the ledge." }
+      else if (st == :returned) {
+        say "You grab securely on to the rope."
+        if (actor.is(Adventurer)) { send actor :holding }
+      }
+      else if (st == :unmet) { say "You try to climb the rope, but you cannot reach the top even with your best effort. As you slide back, the rope twitches in your hands, once, from above, and from somewhere among the trees up there comes a short sound that might be a chuckle. Somebody is at the top of this rope, and is in no hurry to say so." }
+      else { say "You try to climb the rope, but you cannot reach the top even with your best effort." }
+    }
+  }
+  as target for climb_down { do { say "The rope goes up, not down; down is the way you can scramble without it, and the rope would be no help." } }
+  as target for burn { do { say "The rope won't catch fire." } }
+  as target for cut {
+    do {
+      if (bound tool) { say "The rope is made of pretty tough stuff and won't cut." }
+      else { say "You'll have to say what to cut the rope with." }
+    }
+  }
+  // Tied to the chest, from either end of the sentence (GLOBAL-ROPE-F's
+  // TIE): the chest is tied; and if the man is waiting for it, it goes up.
+  as tool for tie {
+    do {
+      if (target.is(Chest)) {
+        if (target.get(:opened)) { say "What's the point?" }
+        else if (target.get(:tied)) { say "The chest is already tied to the rope." }
+        else if (actor.holds(target)) { say "You cannot tie a knot round a thing you are holding up; put the chest down first." }
+        else {
+          say "The chest is now tied to the rope."
+          if (underground_caverns_3.get(:man_stage) == :waiting) {
+            say "The man above you looks pleased. \"Now there's a good friend! Thank you very much, indeed!\" He pulls on the rope and the chest is lifted to the top of the cliff and out of sight. With a short laugh, he disappears. \"I'll be back in a short while!\" are his last words."
+            send underground_caverns_3 :lift_chest
+            send underground_caverns_3 :man_set with :away
+            send underground_caverns_3 :rope_set with false
+            if (actor.is(Adventurer)) { send actor :man_away }
+          } else { send target :tied with true }
+        }
+      }
+      else if (target == actor) {
+        let st = underground_caverns_3.get(:man_stage)
+        if (st == :returned) { say "\"Just grab onto it!\", the man bellows." }
+        else if (st == :waiting) { say "The man looks cross. \"I want the chest, not you!\" he snaps. \"Now stop fooling around and pass it up!\"" }
+        else { say "You're unable to tie the rope around yourself." }
+      }
+      else { say "You're unable to tie the rope to that." }
+    }
+  }
+  as target for tie {
+    do {
+      if (bound tool) {
+        if (tool.is(Chest)) {
+          if (tool.get(:opened)) { say "What's the point?" }
+          else if (tool.get(:tied)) { say "The chest is already tied to the rope." }
+          else if (actor.holds(tool)) { say "You cannot tie a knot round a thing you are holding up; put the chest down first." }
+          else {
+            say "The chest is now tied to the rope."
+            if (underground_caverns_3.get(:man_stage) == :waiting) {
+              say "The man above you looks pleased. \"Now there's a good friend! Thank you very much, indeed!\" He pulls on the rope and the chest is lifted to the top of the cliff and out of sight. With a short laugh, he disappears. \"I'll be back in a short while!\" are his last words."
+              send underground_caverns_3 :lift_chest
+              send underground_caverns_3 :man_set with :away
+              send underground_caverns_3 :rope_set with false
+              if (actor.is(Adventurer)) { send actor :man_away }
+            } else { send tool :tied with true }
+          }
+        }
+        else if (tool == actor) {
+          let st = underground_caverns_3.get(:man_stage)
+          if (st == :returned) { say "\"Just grab onto it!\", the man bellows." }
+          else if (st == :waiting) { say "The man looks cross. \"I want the chest, not you!\" he snaps. \"Now stop fooling around and pass it up!\"" }
+          else { say "You're unable to tie the rope around yourself." }
+        }
+        else { say "You're unable to tie the rope to that." }
+      } else { say "You'll have to say what to tie the rope to; the chest, perhaps." }
+    }
+  }
+  as target for untie {
+    do {
+      if (here.count(Chest) > 0) {
+        each c: Chest in here {
+          if (c.get(:tied)) {
+            send c :tied with false
+            say "The chest is now disconnected from the rope."
+          } else { say "The rope isn't tied to anything." }
+        }
+      } else { say "The rope isn't tied to anything." }
+    }
+  }
+}
+
+// The rope at the top (ROPE, ROPE-F): tied to a tree, and over the side
+// when it is over the side.
+kind CliffRope is Scenery {
+  grammar { name "rope"  nouns "line", "cord", "knot"  adjectives "long", "coiled" }
+  passage short { rope }
+  describe {
+    if (underground_caverns_3.get(:rope_down)) { text "A long rope, tied to the trunk of one of the great trees with a knot that has thought about the matter, and dangling over the side of the cliff to the shelf below. It would hold you. It would hold several of you." }
+    else { text "A long rope, tied to the trunk of one of the great trees and lying in a heap at its foot, hauled up by somebody who knots better than he unties. It is not over the side at present." }
+  }
+  passage no_take { The rope is tied to a tree. }
+  as target for shift { do { say "The rope is tied to a tree, and the tree is not going anywhere." } }
+  as target for burn { do { say "The rope won't catch fire." } }
+  as target for untie { do { say "The rope is very securely tied and cannot be undone." } }
+  as target for cut {
+    do {
+      if (bound tool) { say "The rope is made of pretty tough stuff and won't cut." }
+      else { say "You'll have to say what to cut the rope with." }
+    }
+  }
+  as tool for tie { do { say "The rope is tied to a tree already, and the knot is not inviting company." } }
+  as target for tie { do { say "The rope is tied to a tree already, and the knot is not inviting company." } }
+  // Climbed: the way down to the ledge, which the one climbing takes
+  // (adventurer.sprout).
+  as target for climb_down { do { } }
+  as target for climb_up { do { } }
+}
+
+// The giant trees at the top (TREE, TREE-F), and what may be among them.
+kind Trees is Scenery, Searchable, Concealing {
+  grammar { name "trees"  nouns "tree", "trunk", "trunks", "branches", "seedlings", "vegetation", "plants"  adjectives "giant", "large", "tall", "great" }
+  passage short { trees }
+  describe {
+    text "A few seedlings from the world above, nurtured by the sunlight and the occasional rain that comes down the hole with it, have grown into giant trees, their trunks too wide to get your arms round and their tops lost in the light. They are the only things of their kind in the Empire, and they do not seem to know it."
+    if (!underground_caverns_3.get(:man_seen)) { text "There seems to be nobody there, but it's hard to tell." }
+    else if (underground_caverns_3.get(:man_stage) == :gone) { text "You've lost him among the trees." }
+  }
+  as target for look_in {
+    do {
+      if (!underground_caverns_3.get(:man_seen)) { say "There seems to be nobody there, but it's hard to tell." }
+      else if (underground_caverns_3.get(:man_stage) == :gone) { say "You've lost him among the trees." }
+      else { say "Trees, and the light coming down through them, and the shadows the light makes." }
+    }
+  }
+  as target for search {
+    do {
+      if (!underground_caverns_3.get(:man_seen)) { say "There seems to be nobody there, but it's hard to tell." }
+      else { say "You've lost him among the trees, if he was ever in them." }
+    }
+  }
+  as target for look_under { do { say "Under the trees is the ground, and some fallen leaves, and whatever anybody left there." } }
+  as target for look_behind { do { say "You look behind the nearest tree, and the one behind that, and the trees go on being trees." } }
+  as target for climb_up { do { say "The trunks are too large for you to climb them." } }
+  as target for burn {
+    do {
+      say "Smokey the Bear puts out both the fire and you."
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  passage no_take { They are rooted, and large, and you are not. }
+}
+
+// The something among the trees that is not a tree (round 7's P1): the
+// man, before he has shown himself, as the cliff's description names him.
+// Gone, as a thing to be named, once he has.
+kind StillThing is Scenery, Searchable {
+  grammar { name "something among the trees"  nouns "something", "thing", "shape", "figure", "watcher", "somebody", "someone", "movement"  adjectives "still", "dark", "not" }
+  passage short { something among the trees }
+  describe { text "There seems to be nobody there, but it's hard to tell. Whatever it was, if it was anything, has the knack of being a trunk whenever you look straight at it, and of being a little to one side of where you looked when you look away. It is keeping very still, and it is not keeping still the way a tree does." }
+  as target for search { do { say "You look among the trunks, and the trunks look back, and one of them, you would swear, has moved; but a tree that has moved is a tree, by the time you reach it. There seems to be nobody there, but it's hard to tell." } }
+  as target for look_in { do { say "Among the trees: the light coming down through them, and the shadows the light makes, and one shadow that is a little the wrong shape and slips back among the trunks as you look at it." } }
+  as target for find { do { say "It is among the trees, if it is anywhere; it does not seem to want finding, and the trees are on its side." } }
+  as target for listen { do { say "Nothing; and then, from among the trees, a sound that might be somebody not laughing." } }
+  as target for talk { do { say "Nobody answers. Among the trees, something that is not a tree goes on keeping very still." } }
+  as target for follow_sound { do { say "You go in among the trunks, and whatever it was is not where you go; it is behind you, or to one side, or a tree." } }
+  passage no_take { You would have to find it first, and it has an opinion about that. }
+  on :man_stage (from, value) { self.set(:unseen, value != :unmet) }
+}
+
+// The precipice at the top (CLIFF-OBJECT, CLIFF-OBJECT-F): a fifty-foot
+// drop to the ledge, down a rope or not at all.
+kind CliffEdge is Scenery {
+  grammar { name "cliff"  nouns "precipice", "edge", "drop", "brink", "side", "rocks"  adjectives "sheer", "steep", "west", "jagged" }
+  passage short { cliff }
+  describe { text "To the west the ground stops, sheer, and goes down nearly fifty feet to a shelf of rock with boulders on it, and then further, to jagged rocks and the sea's noise. {if underground_caverns_3.get(:rope_down)}A rope hangs over the edge to the shelf below, which is the only way down a person might come back from.{else}There is nothing over the edge but air.{/if}" }
+  as target for leap_at {
+    do {
+      say "You should have looked before you leaped."
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  as target for climb_down { do { } }
+  as target for climb_up { do { say "You are at the top of it already." } }
+  as target for through { do { say "The way down the cliff is the rope, or the air; say which." } }
+  passage no_take { It is a cliff. }
+}
+
+// The ledge as a thing (LEDGE, LEDGE-F): seen from below, a wide shelf;
+// stood on, the ground, and a place things may be thrown off.
+kind Ledge is Scenery {
+  grammar { name "ledge"  nouns "shelf", "rock-shelf"  adjectives "wide", "rock-strewn", "rocky" }
+  passage short { ledge }
+  describe {
+    if (here.is(CliffLedge)) { text "A wide shelf of rock, strewn with boulders that came down from above some time ago and stopped here, about fifteen feet above the base of the cliff. It is wide enough to be comfortable on and not wide enough to be anywhere." }
+    else { text "Directly above you, perhaps fifteen feet up, is a wide ledge, with boulders on it; and far above that, a hole in the roof of the world with the sky in it." }
+  }
+  as target for climb_up {
+    do {
+      if (here.is(CliffLedge)) { say "You are on it." }
+      else { say "You can't get up the rock face." }
+    }
+  }
+  as target for climb_down {
+    do {
+      if (here.is(CliffLedge)) { say "You might be able to scramble down from here; say down." }
+      else { say "You are at the bottom of it already." }
+    }
+  }
+  passage no_take { It is a ledge; it is attached to the cliff, and the cliff to the Empire. }
+}
+
+// The cliff face from the ledge and the base.
+kind CliffFace is Scenery {
+  grammar { name "cliff face"  nouns "cliff", "face", "rock", "wall"  adjectives "tall", "steep", "sheer" }
+  passage short { cliff face }
+  describe {
+    if (here.is(CliffLedge)) { text "The cliff goes up above you, tall and smooth and not to be climbed; at the top, against the light, are the tops of trees. Below, another fifteen feet, is the base of it, which you might scramble down to, though it is doubtful you could return." }
+    else { text "A steep cliff, going up to a wide ledge and far above that to a hole in the earth's surface, with natural sunlight coming down through it: real light, the first you have seen in three adventures that nobody made. You can't get up the rock face." }
+  }
+  as target for climb_up {
+    do {
+      if (here.is(CliffLedge)) { say "You attempt the climb but slide back down." }
+      else { say "You can't get up the rock face." }
+    }
+  }
+  as target for climb_down {
+    do {
+      if (here.is(CliffLedge)) { say "You might be able to scramble down from here; say down." }
+      else { say "You are at the bottom of it already." }
+    }
+  }
+}
+
+// The hole in the earth's surface, and the sunshine that pours through it.
+kind Sunlight is Scenery {
+  grammar { name "sunshine"  nouns "sunlight", "sun", "hole", "sky", "daylight", "light"  adjectives "bright", "natural", "gaping" }
+  passage short { sunshine }
+  describe { text "Perhaps two hundred feet above you is a gaping hole in the earth's surface, and through it pours bright sunshine, which is a thing you had almost forgotten the look of. It comes down in a column with dust turning in it and lies on the ground in a pool, and the trees stand in the pool and drink. There is sky up there, a small round piece of it, and nothing you can do about it from here." }
+  passage no_take { It is two hundred feet up, and the sun is further. }
+  as target for climb_up { do { say "The hole is two hundred feet above you, and there's no tree here suitable for climbing." } }
+}
+
+kind CliffTop is Room { }
+kind CliffLedge is Room { }
+kind CliffBase is Room { }
+
+object hairpin_loop is DarkRoom in underground_caverns_3 {
+  grammar {
+    name "Hairpin Loop"
+    exit southeast "southeast" -> barren_area
+    exit up "up" -> barren_area
+    exit southwest "southwest" -> cliff_base
+    exit down "down" -> cliff_base
+  }
+  :walls 12
+  passage body { You are at a sharp turn on a narrow and steeply sloping path, strewn with boulders of various sizes. The path climbs sharply toward a desolate plain to the southeast. Southwest of here the path winds down to the base of a cliff. }
+  object rubble is Rubble {
+    grammar { nouns "boulders" }
+    describe { text "Boulders of various sizes, strewn down the path as though somebody had emptied a very large pocket: some you step over, some you step round, and one or two you would rather not have come down while you were under them." }
+  }
+  object path is Scenery {
+    grammar { name "path"  nouns "turn", "hairpin", "slope", "plain"  adjectives "narrow", "sloping", "steep", "desolate" }
+    passage short { path }
+    describe { text "A narrow path, sloping steeply, which turns back on itself here like a hairpin: up and southeast toward the barren plain, down and southwest toward the base of the cliff, and the sound of the sea somewhere below that." }
+    as target for through { do { say "Use compass directions for movement, and say which way." } }
+    as target for climb_up { do { say "The path climbs to the southeast; say so." } }
+    as target for climb_down { do { say "The path winds down to the southwest; say so." } }
+  }
+}
+
+object cliff_base is CliffBase in underground_caverns_3 {
+  grammar {
+    name "Cliff Base"
+    exit up "up" refuse "You can't get up the rock face."
+    exit south "south" -> flathead_ocean
+    exit northeast "northeast" -> hairpin_loop
+  }
+  :walls 13
+  passage body { You are at the base of a steep cliff. Directly above you is a wide ledge and far above that some natural sunlight can be seen. To the northeast is a steeply climbing path and the ground becomes sandy toward the south. }
+  object ledge is Ledge
+  object cliff_face is CliffFace
+  object sunshine is Sunlight {
+    describe { text "Far above the ledge, at the top of the cliff, natural sunlight: a pale wash of it coming down from somewhere further up still, and lying on the top of the cliff where, by the look of it, things grow." }
+  }
+  object sandy_ground is Scenery {
+    grammar { name "sandy ground"  nouns "sand", "ground"  adjectives "sandy", "south" }
+    passage short { sandy ground }
+    describe { text "The ground goes to sand toward the south, and the sand to a beach, and the beach, by the sound of it, to the sea." }
+  }
+  object climbing_path is Scenery {
+    grammar { name "climbing path"  nouns "path", "trail"  adjectives "steep", "climbing", "northeast" }
+    passage short { climbing path }
+    describe { text "A path climbs steeply to the northeast, in a long loop with boulders on it, toward the barren plain above." }
+    as target for through { do { say "The path climbs to the northeast; say so." } }
+    as target for climb_up { do { say "The path climbs to the northeast; say so." } }
+  }
+}
+
+object cliff is CliffTop in underground_caverns_3 {
+  grammar {
+    name "Cliff"
+    exit down "down" -> cliff_ledge when (underground_caverns_3.get(:rope_down))
+    exit down "down" refuse "The drop would kill you."
+    exit up "up" refuse "There's no tree here suitable for climbing."
+    exit southwest "southwest" -> shadow_8
+    exit east "east" -> barren_area
+  }
+  :walls 12
+  :seeded false
+  passage body {
+    This is a remarkable spot in the dungeon. Perhaps two hundred feet above you is a gaping hole in the earth's surface through which pours bright sunshine! A few seedlings from the world above, nurtured by the sunlight and occasional rains, have grown into giant trees, making this a virtual oasis in the desert of the Underground Empire. To the west is a sheer precipice, dropping nearly fifty feet to jagged rocks below. The way south is barred by a forbidding stone wall, crumbling from age. There is a jagged opening in the wall to the southwest, through which leaks a fine mist. The land to the east looks lifeless and barren.{if underground_caverns_3.get(:rope_down)}
+
+    A rope is tied to one of the large trees here and is dangling over the side of the cliff, reaching down to the shelf below.{if underground_caverns_3.get(:man_stage) == :unmet} Among the trees, unless you are mistaken, something that is not a tree is keeping very still.{/if}{/if}
+  }
+  object trees is Trees
+  object still_thing is StillThing
+  object rope is CliffRope
+  object precipice is CliffEdge
+  object sunshine is Sunlight
+  object man is CliffMan
+  object valuables_pile is ValuablesPile
+  object stone_wall is StoneWall
+  object rubble is Rubble
+  object mist is Mist
+  object opening is Scenery {
+    grammar { name "jagged opening"  nouns "opening", "gap", "breach"  adjectives "jagged", "southwest" }
+    passage short { jagged opening }
+    describe { text "A jagged opening in the old wall to the southwest, through which a fine mist leaks from the land beyond, and with it, now and then, the sound of the sea." }
+    as target for through { do { say "The opening is to the southwest; say so." } }
+  }
+  object east_land is Scenery {
+    grammar { name "barren land"  nouns "land", "east", "plain"  adjectives "lifeless", "barren" }
+    passage short { barren land }
+    describe { text "To the east the trees stop and the ground goes flat and grey and lifeless, as far as the gloom lets you see: the barren area you came through, which looks worse from here, with something green behind you." }
+  }
+  object oasis is Scenery {
+    grammar { name "oasis"  nouns "spot", "desert"  adjectives "virtual", "remarkable" }
+    passage short { oasis }
+    describe { text "An oasis, as the Empire counts them: light, and trees, and air that has been somewhere. It is the only place underground you have ever wanted to stay in, which is probably why somebody else did." }
+  }
+  // The man gone to earth with the chest, and the visitor arrived at the
+  // top (CLIFF-F's M-ENTER): the chest is let down, open, and the rope
+  // put back; he will not be coming back for anyone.
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      if (!self.get(:seeded)) {
+        self.set(:seeded, true)
+        spawn Waybread in self
+        spawn Staff in man
+      }
+      let st = underground_caverns_3.get(:man_stage)
+      if (st == :away || st == :returned) {
+        send underground_caverns_3 :man_set with :gone
+        send underground_caverns_3 :rope_set with true
+      }
+    }
+  }
+}
+
+object cliff_ledge is CliffLedge in underground_caverns_3 {
+  grammar {
+    name "Cliff Ledge"
+    exit up "up" refuse "You attempt the climb but slide back down."
+    exit down "down" -> cliff_base
+  }
+  :walls 13
+  passage body {
+    This is a rock-strewn ledge near the base of a tall cliff. The bottom of the cliff is another fifteen feet below. You have little hope of climbing up the cliff face, but you might be able to scramble down from here (though it's doubtful you could return).{if underground_caverns_3.get(:rope_down)}
+
+    A long piece of rope is dangling down from the top of the cliff and is within your reach.{else if underground_caverns_3.get(:man_stage) == :away}
+
+    The rope has gone up the cliff with the chest. The man said he would be back in a short while; he did not say how short.{/if}
+  }
+  object chest is Chest
+  object rope is LedgeRope
+  object ledge is Ledge
+  object cliff_face is CliffFace
+  object man is LedgeMan
+  object boulders is Rubble {
+    grammar { nouns "boulders" }
+    describe { text "Boulders, strewn about the ledge, which came down from above some time ago and were stopped here by the ledge, which is what the ledge is for. The chest is lying among them." }
+    as target for look_under { do { say "Under the boulders is the ledge, and under the ledge the cliff, and it is a long way to the bottom of that." } }
+  }
+  // The ledge reached (CLIFF-LEDGE-F's M-ENTER): a point, the first time,
+  // and the man's clock set going, if he has not been met.
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      send underground_caverns_3 :ledge_entered
+      send item :ledge_entered
+    }
+  }
+}

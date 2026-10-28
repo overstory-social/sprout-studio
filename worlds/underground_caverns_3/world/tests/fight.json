@@ -1,0 +1,183 @@
+{
+  "about": "The duel's cues (P3, P7): the sword dropped mid-fight is waited for and leaps back, a wound is followed by the visitor's own state, a run of misses by the word that it fights as you fight; and the calls (P4, P8, P10, P11): a bare shout at the passing ship holds it once, who is there, a call out to the footsteps, a dive at the shore, and the vial drunk by name.",
+  "steps": [
+    { "arrive": "Marta", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. \"You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!\" The dream dissolves around you as his last words echo through the void...." },
+      { "reader": "Marta", "kind": "described", "words": "Endless Stair" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the bottom of a seemingly endless stair, winding its way upward beyond your vision. An eerie light, coming from all around you, casts strange shadows on the walls. To the south is a dark and winding trail." },
+      { "reader": "Marta", "kind": "described", "words": "Your old friend, the brass lantern, is at your feet." }
+    ] },
+    { "as": "Marta", "type": "take lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Junction" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the junction of a north-south passage and an east-west passage. To the north, you can make out the bottom of a stairway. The ways to the east and south are relatively cramped, but a wider trail leads to the west." },
+      { "reader": "Marta", "kind": "described", "words": "Standing before you is a great rock. Imbedded within it is an Elvish sword." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Creepy Crawl" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and quite creepy crawlway with passages leaving to the north, east, south, and southwest." }
+    ] },
+    { "as": "Marta", "type": "sw", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the eastern end of a dark, featureless landscape of shallow hills. Paths to the east and southeast reenter the rock." }
+    ] },
+    { "as": "Marta", "type": "call out to the footsteps", "expect": [
+      { "level": "info", "text": "step: underground_caverns_3.hail" },
+      { "reader": "Marta", "kind": "said", "words": "You call out to the footsteps. They stop, as if somebody were listening, and after a moment go on, no nearer." }
+    ] },
+    { "as": "Marta", "type": "who is there", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The footsteps stop, off in the hills, as if somebody were listening; and after a moment they go on, no nearer. Standing a while in the light, or walking the hills in it, is how such a one is met." },
+      { "reader": "Marta", "kind": "said", "words": "Through the shadows, a cloaked and hooded figure appears before you, blocking the southeastern exit from the room and carrying a brightly glowing sword." },
+      { "reader": "Marta", "kind": "told", "words": "From nowhere, the sword from the junction appears in your hand, wildly glowing!" }
+    ] },
+    { "seed": 9 },
+    { "as": "Marta", "type": "wait", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Time passes..." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "attack figure with sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "A good parry! Your sword wounds the hooded figure!" },
+      { "reader": "Marta", "kind": "said", "words": "The figure has a light wound which hasn't affected its seemingly great strength." },
+      { "reader": "Marta", "kind": "told", "words": "The hooded figure stabs nonchalantly with its sword and misses." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "drop sword", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." },
+      { "reader": "Marta", "kind": "told", "words": "The hooded figure lowers its blade and waits, as a teacher waits, for you to be armed again." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword, glowing wildly, leaps into your hand!" }
+    ] },
+    { "seed": 3 },
+    { "as": "Marta", "type": "attack figure", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "A quick stroke, but the hooded figure is on guard." },
+      { "reader": "Marta", "kind": "told", "words": "You are wounded by a lightning thrust!" },
+      { "reader": "Marta", "kind": "told", "words": "You are wounded lightly. You have a good deal of strength in reserve." }
+    ] },
+    { "seed": 3 },
+    { "as": "Marta", "type": "attack figure", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "A quick stroke, but the hooded figure is on guard." },
+      { "reader": "Marta", "kind": "told", "words": "You are wounded by a lightning thrust!" },
+      { "reader": "Marta", "kind": "told", "words": "You have a few wounds, which do not seriously impair your strength." }
+    ] },
+    { "seed": 3 },
+    { "as": "Marta", "type": "attack figure", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "(with the sword)" },
+      { "reader": "Marta", "kind": "said", "words": "A quick stroke, but the hooded figure is on guard." },
+      { "reader": "Marta", "kind": "said", "words": "It fights the way you fight, and no better, and no worse: wounded, you are slower, and so is it. A fight that is going badly can be walked away from, into the dark, where it will not follow; wounds mend with time, on both sides, and the figure will be here when you come back for it." },
+      { "reader": "Marta", "kind": "told", "words": "You are wounded by a lightning thrust!" },
+      { "reader": "Marta", "kind": "told", "words": "You are hurt quite badly. One major wound would probably kill you." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "turn off lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now off." },
+      { "reader": "Marta", "kind": "said", "words": "It is now pitch black." },
+      { "reader": "Marta", "kind": "said", "words": "In the dark, the glow of the figure's sword dwindles, as though it were walking away from you very fast without moving, and goes out. Whatever it is, it is not here any more; the dark has it, and you are alone in it." },
+      { "reader": "Marta", "kind": "told", "words": "Your sword is no longer glowing." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "turn on lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The lamp is now on." },
+      { "reader": "Marta", "kind": "said", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "said", "words": "You are at the eastern end of a dark, featureless landscape of shallow hills. Paths to the east and southeast reenter the rock." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dark and shadowy land. All around you are gentle hills and eerie shadows. Far above, shrouded in mist, you can barely make out the ceiling of the enormous cavern that spans this entire land." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "w", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a land of dark shadows and shallow hills, which stretch out in all directions. To the west, the land dips sharply." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "down", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Flathead Ocean" },
+      { "reader": "Marta", "kind": "described", "words": "You are at the shore of an amazing underground sea, the topic of many a legend among adventurers. Few were known to have arrived at this spot, and fewer to return. There is a heavy surf and a breeze is blowing onshore. The land rises steeply to the east and quicksand prevents movement to the south. A thick mist covers the ocean and extends over the hills to the east. A path heads north along the beach." }
+    ] },
+    { "seed": 4 },
+    { "as": "Marta", "type": "hello sailor", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Nothing happens yet." },
+      { "reader": "Marta", "kind": "said", "words": "Passing alongside the shore now is an old boat, reminiscent of an ancient Viking ship. Standing on the prow of the ship is an old and crusty sailor, peering out over the misty ocean. He has a hand cupped to one ear, turned toward the shore, as though he were waiting for somebody on it to say something to him; and the ship is not slowing down." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "shout", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You shout across the water, and the sailor, his hand still cupped to his ear, turns toward the sound." },
+      { "reader": "Marta", "kind": "said", "words": "He cups a hand to his ear, and the ship, for a moment, holds alongside, as though he were waiting for something in particular and this was not quite it. Whatever he is waiting to hear is short, and friendly, and is the greeting every adventurer in the Empire has been told to try on a sailor, and has tried, these three games, on everything but one." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "hello sailor", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The seaman looks up and maneuvers the boat toward shore. He cries out \"I have waited three ages for someone to say those words and save me from sailing this endless ocean. Please accept this gift. You may find it useful!\" He throws something which falls near you in the sand, then sails off toward the west, singing a lively, but somewhat uncouth, sailor song." }
+    ] },
+    { "as": "Marta", "type": "take vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Taken." }
+    ] },
+    { "as": "Marta", "type": "drink vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You'll have to open the vial first." }
+    ] },
+    { "as": "Marta", "type": "open vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The vial is open. There is a sweet odor from within the vial, apparently coming from a heavy but invisible liquid." }
+    ] },
+    { "as": "Marta", "type": "drink vial", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "You \"drink\" the contents in one gulp, but nothing unusual seems to have happened as a result." }
+    ] },
+    { "as": "Marta", "type": "examine me", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "A good trick, as you are currently invisible." }
+    ] },
+    { "as": "Marta", "type": "say ahoy", "expect": [
+      { "reader": "Marta", "kind": "notice", "words": "(say)" },
+      { "reader": "Marta", "kind": "said", "words": "Nothing happens anymore. The mist is empty, and it will stay empty; the ship that passes this shore has passed it." }
+    ] },
+    { "as": "Marta", "type": "hail", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Nothing happens anymore. The mist is empty, and it will stay empty; the ship that passes this shore has passed it." }
+    ] },
+    { "as": "Marta", "type": "who is there", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Nothing happens anymore. The mist is empty, and it will stay empty; the ship that passes this shore has passed it." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "told", "words": "(You have been here before, so only the room's name is given. LOOK describes it again; VERBOSE describes every room in full every time, and BRIEF puts it back.)" },
+      { "reader": "Marta", "kind": "said", "words": "You can hear quiet footsteps nearby." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "said", "words": "You can hear quiet footsteps nearby." }
+    ] },
+    { "as": "Marta", "type": "e", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Land of Shadow" },
+      { "reader": "Marta", "kind": "said", "words": "You can hear quiet footsteps nearby." }
+    ] },
+    { "as": "Marta", "type": "se", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Foggy Room" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a dank passage filled with a wispy fog. A spooky passageway leads north and a wider path heads off to the south. To the west, the path leaves the rock and enters an eerie, shadowy land." }
+    ] },
+    { "as": "Marta", "type": "s", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Lake Shore" },
+      { "reader": "Marta", "kind": "described", "words": "You are in a wide cavern on the north shore of a small lake. Some polished stone steps lead to the southeast and a sheer rock face prevents any movement around the lake to the southwest. The cavern is dimly lit from above. The water has the look of a cold that would open your hands for you, and would not give back what fell out of them; everything in your hands goes to the bottom, not the light and the sword only but every last thing you carry, and whatever you cannot afford to lose there had better be left on the shore, which is lit, after its fashion, and will keep it. What you wear, it leaves you." },
+      { "reader": "Marta", "kind": "told", "words": "The light you carry throws your shadow on the water, which does not want it: a lamp goes under here, lit or dark, and comes up a dead one, and the shore is where it should be left, with everything else in your hands." }
+    ] },
+    { "as": "Marta", "type": "drop lamp", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "Dropped." }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "dive", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "The shock of entering the frigid water has made you drop all your possessions into the lake! Everything you were carrying, that is: what you wear stays with you, and the rest is on the bottom." },
+      { "reader": "Marta", "kind": "described", "words": "On the Lake" },
+      { "reader": "Marta", "kind": "described", "words": "You are floating on the surface of the lake. The water is ice cold and your ability to survive here for long is very questionable. A swim north puts you at your starting point. Conditions to the east are poor where the lake turns into swamp. The west and south shores are suitable for walking, however." }
+    ] },
+    { "as": "Marta", "type": "swim", "expect": [
+      { "reader": "Marta", "kind": "said", "words": "What do you think you're doing?" }
+    ] },
+    { "seed": 0 },
+    { "as": "Marta", "type": "n", "expect": [
+      { "reader": "Marta", "kind": "described", "words": "Lake Shore" },
+      { "reader": "Marta", "kind": "described", "words": "There is a brass lantern here (providing light)." }
+    ] }
+  ]
+}

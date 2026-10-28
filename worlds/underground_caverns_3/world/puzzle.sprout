@@ -1,0 +1,418 @@
+// The Royal Puzzle (CP-ANTE, CP-OUT, CP; CPEXIT, CPWALL-OBJECT, CPGOTO,
+// CPWHERE, CP-SLOT-FCN, CPLADDER-OBJECT): the small square room with the
+// round hole in its floor, the Side Room with the steel door, and the
+// puzzle itself, a six-by-six grid of squares walled in marble and
+// sandstone, with the sandstone walls pushed a square at a time and the
+// map of the eight squares round you drawn as you go.
+//
+// The original is one room that redraws itself round a position; here
+// every square is a place of its own (puzzle_grid.sprout, generated from
+// the original's table), so that a thing dropped in one square lies in
+// that square and two visitors may stand in two. The grid itself, which
+// walls are where, is the world's, since it is one puzzle for everyone;
+// each square keeps a copy of the twelve cells it needs to describe
+// itself and to decide its ways out, and reads the grid again whenever a
+// wall is pushed. The four walls and the ladder are one thing each,
+// standing in every square, as the original's local-globals do.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Portable, Fixed, Openable, Readable, Searchable, Concealing, Touchable, Receptacle, Knockable} from 'thing'
+import {Room, Floor, Ceiling} from 'room'
+import {Adventurer} from 'adventurer'
+import {Stairs} from 'way_in'
+import {LoreBook, WarningNote} from 'items'
+import {museum_entrance, mid_museum_entrance} from 'museum'
+import {cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36} from 'puzzle_grid'
+import {examine} from 'sprout'
+import {open, close, read, look_in, look_under, search, shift, raise, through, climb_up, climb_down, knock, mung, put, rub, smell, listen, take_fixed, dig, Dest, Era, Direction, :cp_push, :cp_changed, :cp_open_door} from 'verbs'
+
+kind PuzzleAnte is Room {
+  :era Era default present
+}
+kind SideRoom is Room {
+  :era Era default present
+}
+
+// A square of the puzzle. Its twelve cells are the eight round it and the
+// four one further on, as the grid has them: 0 is open floor, 1 marble,
+// -1 sandstone, -2 the sandstone that carries the good ladder, -3 the one
+// that carries the bad. A cell past the edge of the grid is marble.
+kind PuzzleSquare is sprout.Place {
+  grammar { name "Room in a Puzzle"  article none }
+  :idx 1 min 1 max 36
+  :col 1 min 1 max 6
+  :row 1 min 1 max 6
+  :vn 1 min -3 max 1
+  :vs 1 min -3 max 1
+  :ve 1 min -3 max 1
+  :vw 1 min -3 max 1
+  :vne 1 min -3 max 1
+  :vnw 1 min -3 max 1
+  :vse 1 min -3 max 1
+  :vsw 1 min -3 max 1
+  :vn2 1 min -3 max 1
+  :vs2 1 min -3 max 1
+  :ve2 1 min -3 max 1
+  :vw2 1 min -3 max 1
+  :seeded false
+  object floor is Floor
+  object ceiling is Ceiling
+
+  // The map of the eight squares round you (CPWHERE): two letters a
+  // square, MM for marble, SS for sandstone, two underscores for open
+  // floor, ?? for a corner you cannot see past the walls on either side of
+  // it, and .. for where you stand. The original sets it in a fixed-width
+  // face; here each row is a line of its own.
+  passage g_n { {if self.get(:vn) == 0}__{else if self.get(:vn) == 1}MM{else}SS{/if} }
+  passage g_s { {if self.get(:vs) == 0}__{else if self.get(:vs) == 1}MM{else}SS{/if} }
+  passage g_e { {if self.get(:ve) == 0}__{else if self.get(:ve) == 1}MM{else}SS{/if} }
+  passage g_w { {if self.get(:vw) == 0}__{else if self.get(:vw) == 1}MM{else}SS{/if} }
+  passage g_ne { {if self.get(:vn) != 0 && self.get(:ve) != 0}??{else if self.get(:vne) == 0}__{else if self.get(:vne) == 1}MM{else}SS{/if} }
+  passage g_nw { {if self.get(:vn) != 0 && self.get(:vw) != 0}??{else if self.get(:vnw) == 0}__{else if self.get(:vnw) == 1}MM{else}SS{/if} }
+  passage g_se { {if self.get(:vs) != 0 && self.get(:ve) != 0}??{else if self.get(:vse) == 0}__{else if self.get(:vse) == 1}MM{else}SS{/if} }
+  passage g_sw { {if self.get(:vs) != 0 && self.get(:vw) != 0}??{else if self.get(:vsw) == 0}__{else if self.get(:vsw) == 1}MM{else}SS{/if} }
+  passage grid {
+    + {self.g_nw} {self.g_n} {self.g_ne} +
+
+    West + {self.g_w} .. {self.g_e} + East
+
+    + {self.g_sw} {self.g_s} {self.g_se} +
+  }
+  passage first_room { You are in a small square room bounded to the north and west with marble walls and to the east and south with sandstone walls. }
+  passage extras { {if self.get(:idx) == 1}In the ceiling above you is a large circular opening.{/if}{if self.get(:idx) == 22}The center of the floor here is noticeably depressed.{/if}{if self.get(:idx) == 33}In the center of the west wall is a steel door which is {if underground_caverns_3.get(:cp_door_open)}open{else}closed{/if}. On one side of the door is a narrow slot.{/if}{if self.get(:ve) == -2} There is a ladder here, firmly attached to the east wall.{/if}{if self.get(:vw) == -3} There is a ladder here, firmly attached to the west wall.{/if} }
+  passage objects {
+    {for t: Thing in self}{if !t.get(:ndesc) && t.get(:has_fdesc) && !t.get(:touched)}
+
+    {t.fdesc}{/if}{/for}{for t: Thing in self}{if t.get(:ndesc) || !t.get(:has_fdesc) || t.get(:touched)}{if !t.get(:ndesc)}
+
+    {t.ldesc}{/if}{/if}{/for}
+  }
+  passage full {
+    Room in a Puzzle
+
+    {if !underground_caverns_3.get(:cp_pushed) && self.get(:idx) == 1}{self.first_room}{else}{self.grid}{/if}
+
+    {self.extras}
+
+    {self.objects}
+  }
+  describe { text full }
+  as target for any { permit { refuse "You can't see any such thing." } }
+  as tool for any { permit { refuse "You can't see any such thing." } }
+
+  // The book in its niche (GO puts LORE-BOOK in cell 22): spawned the first
+  // time anyone stands where it is, since a declared thing that is spent
+  // never comes back (friction 36).
+  on :entered (item, from) {
+    if (item.is(Adventurer) && self.get(:idx) == 22 && !self.get(:seeded)) {
+      self.set(:seeded, true)
+      spawn LoreBook in self
+    }
+  }
+}
+
+// A wall of the puzzle (CPEWL, CPWWL, CPNWL, CPSWL; CPWALL-OBJECT): one
+// thing in every square, read against the square it is named from.
+kind PuzzleWall is Scenery, Touchable {
+  :dir Direction default east
+  passage sandstone { The wall is sandstone, rough and dry and lighter than it looks. A wall of this stuff might be pushed, if there were room beyond it to push it into. }
+  passage marble { The wall is marble, polished and cold and not going anywhere. }
+  passage open_way { There is only a passage in that direction. }
+  describe {
+    if (here.is(PuzzleSquare)) {
+      let d = self.get(:dir)
+      if (d == :east) {
+        let v = here.get(:ve)
+        if (v == 0) { text open_way } else if (v == 1) { text marble } else { text sandstone  if (v == -2) { text "A ladder is fixed to it." } }
+      }
+      else if (d == :west) {
+        let v = here.get(:vw)
+        if (v == 0) { text open_way } else if (v == 1) { text marble } else { text sandstone  if (v == -3) { text "A ladder is fixed to it." } }
+      }
+      else if (d == :north) {
+        let v = here.get(:vn)
+        if (v == 0) { text open_way } else if (v == 1) { text marble } else { text sandstone }
+      }
+      else {
+        let v = here.get(:vs)
+        if (v == 0) { text open_way } else if (v == 1) { text marble } else { text sandstone }
+      }
+    }
+    else { text "A wall." }
+  }
+  // Pulled, moved, pressed: a wall of this kind is pushed, and the refusal
+  // is what lets the push's own reading win (the spec's Choosing a reading).
+  as target for shift { permit { refuse "You can't grab the wall to pull it; a wall of this kind is pushed, and pushed only." } }
+  as target for push_wall {
+    do {
+      if (here.is(PuzzleSquare) && actor.is(Adventurer)) {
+        let d = self.get(:dir)
+        if (d == :east) {
+          if (here.get(:col) == 6) { say "The wall doesn't budge." }
+          else if (here.get(:ve) == 0) { say open_way }
+          else if (here.get(:ve) == 1) { say "The wall doesn't budge." }
+          else if (here.get(:col) == 5 || here.get(:ve2) != 0) { say "The wall barely gives." }
+          else { say "The wall slides forward and you follow it."  send actor :cp_push with :east }
+        }
+        else if (d == :west) {
+          if (here.get(:col) == 1) { say "The wall doesn't budge." }
+          else if (here.get(:vw) == 0) { say open_way }
+          else if (here.get(:vw) == 1) { say "The wall doesn't budge." }
+          else if (here.get(:col) == 2 || here.get(:vw2) != 0) { say "The wall barely gives." }
+          else { say "The wall slides forward and you follow it."  send actor :cp_push with :west }
+        }
+        else if (d == :north) {
+          if (here.get(:row) == 1) { say "The wall doesn't budge." }
+          else if (here.get(:vn) == 0) { say open_way }
+          else if (here.get(:vn) == 1) { say "The wall doesn't budge." }
+          else if (here.get(:row) == 2 || here.get(:vn2) != 0) { say "The wall barely gives." }
+          else { say "The wall slides forward and you follow it."  send actor :cp_push with :north }
+        }
+        else {
+          if (here.get(:row) == 6) { say "The wall doesn't budge." }
+          else if (here.get(:vs) == 0) { say open_way }
+          else if (here.get(:vs) == 1) { say "The wall doesn't budge." }
+          else if (here.get(:row) == 5 || here.get(:vs2) != 0) { say "The wall barely gives." }
+          else { say "The wall slides forward and you follow it."  send actor :cp_push with :south }
+        }
+      }
+      else { say "The wall doesn't budge." }
+    }
+  }
+  as target for rub { do { say "{if here.is(PuzzleSquare)}Stone, cold and dry. The sandstone is rough and the marble is smooth, and your hand can tell them apart in the dark.{else}Stone.{/if}" } }
+  as target for climb_up { do { say "The walls go up to the ceiling, which is close, and the ceiling is rock. There is nothing up there to climb to." } }
+  as target for mung { do { say "You would need a mason's tools and a mason's lifetime. The walls were built to be pushed, not broken." } }
+  passage no_take { The wall is a wall; even sandstone does not come up in the hand. }
+}
+verb push_wall {
+  role target: PuzzleWall
+  "push [target]"  "push on [target]"  "shove [target]"  "press [target]"
+  "lean on [target]"  "push against [target]"  "slide [target]"  "push [target] forward"
+}
+
+// The ladders (CPLADDER, CPLADDER-OBJECT): fixed to two of the sandstone
+// walls, and seen from the square beside them. Climbing one is the one
+// climbing's to do (adventurer.sprout).
+kind PuzzleLadder is Scenery, Touchable {
+  grammar { name "ladder"  nouns "rungs"  adjectives "wooden", "fixed", "firmly" }
+  passage short { ladder }
+  describe {
+    if (here.is(PuzzleSquare)) {
+      if (here.get(:ve) == -2) { text "A ladder, firmly attached to the sandstone wall to the east, going up to the ceiling, which is close. Under the hole in the ceiling it would be a way out; anywhere else it is a way to bang your head." }
+      else if (here.get(:vw) == -3) { text "A ladder, firmly attached to the sandstone wall to the west. It goes up to the ceiling and stops there, as ladders in rooms with ceilings do." }
+      else { text "You can't see any ladder here." }
+    }
+    else { text "You can't see any ladder here." }
+  }
+  as target for climb_up { do { } }
+  as target for shift { do { say "The ladder is firmly attached to the wall; it goes where the wall goes, and not otherwise." } }
+  passage no_take { The ladder is firmly attached to the wall. }
+}
+
+// The slot beside the steel door (CP-SLOT, CP-SLOT-FCN): it takes what it
+// is given, and gives nothing back; the book opens the door.
+kind PuzzleSlot is Scenery, Receptacle, Searchable {
+  contains
+  pass any (false)
+  release (item, to) { refuse "The slot does not give back." }
+  grammar { name "narrow slot"  nouns "slot", "slit", "opening"  adjectives "narrow", "small" }
+  passage short { narrow slot }
+  describe { text "A narrow slot in the wall beside the steel door, a little wider than a book, going down into the dark further than a slot has any right to. Something about it says it is for paying, and what it is for paying with is written small along its lip: the fee is the book, the ancient one from the niche, and nothing less, and it is not given back. The steel door opens for the fee and for nothing else." }
+  as container for put { do { } }
+  as target for look_in { do { say "Dark, and narrow, and nothing in it that you can see; whatever goes in does not stay where you could see it." } }
+  as target for search { do { say "You feel into the slot as far as a hand goes, and the slot goes further." } }
+  passage no_take { It is a slot; it is the wall's. }
+}
+
+// The steel door (CPDOOR, CPDOOR-F): one door, seen from the Side Room
+// and from the square behind it, opened only by the slot.
+kind SteelDoor is Scenery, Openable, Knockable, Touchable {
+  grammar { name "steel door"  nouns "door"  adjectives "steel", "metal" }
+  passage short { steel door }
+  describe {
+    if (underground_caverns_3.get(:cp_door_open)) { text "A steel door, standing open on a passage {if here.is(SideRoom)}east{else}west{/if}, slid back into the wall with no sign of how it was done or how it would be undone." }
+    else { text "A steel door, closed, and flush with the wall, with no handle on this side and, as far as you can tell, no handle on the other. {if here.is(SideRoom)}Whatever it opens on is on the other side of it.{else}Beside it is a narrow slot.{/if}" }
+  }
+  as target for open {
+    do {
+      if (underground_caverns_3.get(:cp_door_open)) { say "The steel door has already opened." }
+      else { say "You can't force it open." }
+    }
+  }
+  as target for close {
+    do {
+      if (underground_caverns_3.get(:cp_door_open)) { say "There doesn't seem to be any way to close it." }
+      else { say "Do you think it isn't already?" }
+    }
+  }
+  as target for mung { do { say "The door is, to a first approximation, indestructible." } }
+  as target for knock { do { say "Besides a great amount of reverberation, nothing happens." } }
+  as target for shift { do { say "{if underground_caverns_3.get(:cp_door_open)}It is open, and it is in the wall; there is nothing of it to push.{else}You push, and the door is a wall, and pushes back the way walls do.{/if}" } }
+  // Going through it is going east or west (adventurer.sprout).
+  as target for through { do { } }
+  passage no_take { It is a door, and a steel one. }
+}
+
+// The round hole in the floor of the entrance room (CP-HOLE, CP-HOLE-F,
+// CPENTER): the way down into the puzzle, until a wall is pushed under
+// it, or in a year the puzzle has not been cut.
+kind PuzzleHole is Scenery, Concealing {
+  grammar { name "round hole"  nouns "hole", "opening"  adjectives "round", "large" }
+  passage short { round hole }
+  describe {
+    if (here.is(PuzzleAnte)) {
+      if (here.get(:era) != :present || underground_caverns_3.get(:cp_blocked)) { text "A round hole in the middle of the floor, a yard across, blocked a little way down by smooth sandstone: a wall, by the look of it, standing where the floor of the room below ought to be." }
+      else { text "A round hole in the middle of the floor, a yard across, through which you can see the floor some ten feet below, dark and enclosed in rock. It is the only way in that you can see, and from the look of the drop, not a way back up it. The room below is not the whole of what is down there, though: the dark goes off to one side, square-cut, the way a room does that has others beyond it, and the note was written by somebody who expected visitors to come out again, by another way than they went in. There is a way out of a puzzle, or it is not a puzzle." }
+    }
+    else { text "A hole." }
+  }
+  as target for look_in {
+    do {
+      if (here.is(PuzzleAnte)) {
+        if (here.get(:era) != :present || underground_caverns_3.get(:cp_blocked)) { say "Sandstone, smooth and close, a few feet down." }
+        else { say "Some ten feet below, a floor, dark, and rock on every side of it that you can see; and to one side, where your light does not quite reach, the dark goes on, square-cut, into more of the same. Whatever is down there is bigger than the hole, and was built to be got out of some other way." }
+      } else { say "A hole." }
+    }
+  }
+  as target for through { do { } }
+  as target for climb_down { do { } }
+  as target for look_under { do { say "Under the hole is the puzzle, which is rather the point of the hole." } }
+  passage no_take { It is a hole; you could fall into it, and that is as near as you will come to having it. }
+}
+
+object cp_ante is PuzzleAnte in underground_caverns_3 {
+  grammar {
+    name "Royal Puzzle Entrance"
+    exit west "west" -> cp_out
+    exit north "north" -> museum_entrance
+    exit up "up" -> museum_entrance
+    exit down "down" -> cp_1 when (!underground_caverns_3.get(:cp_blocked))
+    exit down "down" refuse "The hole is blocked by sandstone."
+  }
+  :id cp_ante
+  :era present
+  :walls 24
+  passage body { This is a small square room, in the middle of which is a round hole{if underground_caverns_3.get(:cp_blocked)} which is blocked by smooth sandstone.{else} through which you can discern the floor some ten feet below. The area under the hole is dark, but it appears to be completely enclosed in rock. In any event, it doesn't seem likely that you could climb back up. Exits are west and, up a few steps, north.{/if} }
+  :seeded false
+  object hole is PuzzleHole
+  object steps is Stairs {
+    grammar { nouns "steps" }
+    describe { text "A few steps, going up to the north toward the museum's entrance hall." }
+    as target for climb_up { do { say "The steps go up to the north; say so." } }
+  }
+  // The warning note (WARNING-NOTE): spawned the first time anyone comes,
+  // since a note that can be burned never comes back (friction 36).
+  on :entered (item, from) {
+    if (item.is(Adventurer) && !self.get(:seeded)) {
+      self.set(:seeded, true)
+      spawn WarningNote in self
+    }
+  }
+}
+
+object cp_out is SideRoom in underground_caverns_3 {
+  grammar {
+    name "Side Room"
+    exit north "north" -> cp_ante
+    exit up "up" -> cp_ante
+    exit east "east" -> cp_33 when (underground_caverns_3.get(:cp_door_open))
+    exit east "east" refuse "The steel door is closed."
+  }
+  :id cp_out
+  :era present
+  :walls 24
+  passage body { You are in a narrow room, lit from above. A flight of steps leads up to the north, and a {if underground_caverns_3.get(:cp_door_open)}passage{else}metal door{/if} leads to the east. }
+  object steps is Stairs {
+    grammar { nouns "steps", "flight" }
+    describe { text "A flight of steps going up to the north, to the small square room with the hole in its floor." }
+    as target for climb_up { do { say "The steps go up to the north; say so." } }
+  }
+}
+
+object mid_cp_ante is PuzzleAnte in underground_caverns_3 {
+  grammar {
+    name "Royal Puzzle Entrance"
+    exit west "west" -> mid_cp_out
+    exit north "north" -> mid_museum_entrance
+    exit up "up" -> mid_museum_entrance
+    exit down "down" refuse "The hole is blocked by sandstone."
+  }
+  :id mid_cp_ante
+  :era mid
+  :walls 24
+  passage body { This is a small square room, in the middle of which is a round hole which is blocked by smooth sandstone. }
+  object hole is PuzzleHole
+  object steps is Stairs {
+    grammar { nouns "steps" }
+    describe { text "A few steps, going up to the north toward the museum's entrance hall." }
+    as target for climb_up { do { say "The steps go up to the north; say so." } }
+  }
+}
+
+object mid_cp_out is SideRoom in underground_caverns_3 {
+  grammar {
+    name "Side Room"
+    exit north "north" -> mid_cp_ante
+    exit up "up" -> mid_cp_ante
+    exit east "east" refuse "The steel door is closed."
+  }
+  :id mid_cp_out
+  :era mid
+  :walls 24
+  passage body { You are in a narrow room, lit from above. A flight of steps leads up to the north, and a metal door leads to the east. }
+  object steps is Stairs {
+    grammar { nouns "steps", "flight" }
+    describe { text "A flight of steps going up to the north." }
+    as target for climb_up { do { say "The steps go up to the north; say so." } }
+  }
+  object mid_steel_door is Scenery, Openable, Knockable {
+    grammar { name "steel door"  nouns "door"  adjectives "steel", "metal" }
+    passage short { steel door }
+    describe { text "A steel door, closed, and flush with the wall, with no handle on this side. Whatever it opens on is on the other side of it, and in this year it is not for you." }
+    as target for open { do { say "You can't force it open." } }
+    as target for close { do { say "Do you think it isn't already?" } }
+    as target for knock { do { say "Besides a great amount of reverberation, nothing happens." } }
+    passage no_take { It is a door, and a steel one. }
+  }
+}
+
+object steel_door is SteelDoor in cp_out, cp_33
+object slot is PuzzleSlot in cp_33
+
+object puzzle_east_wall is PuzzleWall in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36 {
+  :dir east
+  grammar { name "eastern wall"  nouns "wall"  adjectives "east", "eastern" }
+  passage short { eastern wall }
+}
+object puzzle_west_wall is PuzzleWall in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36 {
+  :dir west
+  grammar { name "western wall"  nouns "wall"  adjectives "west", "western" }
+  passage short { western wall }
+}
+object puzzle_north_wall is PuzzleWall in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36 {
+  :dir north
+  grammar { name "northern wall"  nouns "wall"  adjectives "north", "northern" }
+  passage short { northern wall }
+}
+object puzzle_south_wall is PuzzleWall in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36 {
+  :dir south
+  grammar { name "southern wall"  nouns "wall"  adjectives "south", "southern" }
+  passage short { southern wall }
+}
+// "Walls", together (round 7's P8): a thing of every square that answers
+// for the four at once, in the square's own words.
+kind PuzzleWalls is Scenery {
+  grammar { name "walls"  nouns "stone", "sandstone", "marble"  adjectives "four", "surrounding" }
+  passage short { walls }
+  passage four_walls { Four walls, close: to the north {if here.is(PuzzleSquare)}{if here.get(:vn) == 0}an opening{else if here.get(:vn) == 1}marble, polished and cold{else}sandstone, rough and dry{/if}; to the south {if here.get(:vs) == 0}an opening{else if here.get(:vs) == 1}marble{else}sandstone{/if}; to the east {if here.get(:ve) == 0}an opening{else if here.get(:ve) == 1}marble{else}sandstone{if here.get(:ve) == -2}, with a ladder fixed to it{/if}{/if}; to the west {if here.get(:vw) == 0}an opening{else if here.get(:vw) == 1}marble{else}sandstone{if here.get(:vw) == -3}, with a ladder fixed to it{/if}{/if}{/if}. The marble is not going anywhere; the sandstone might be pushed, where there is room beyond it, by naming the wall. }
+  describe {
+    if (here.is(PuzzleSquare)) {
+      text four_walls
+    }
+    else { text "Walls." }
+  }
+  as target for shift { do { say "Name the wall: the eastern, the western, the northern or the southern; a wall of this kind is pushed one at a time." } }
+  as target for rub { do { say "Stone, cold and dry; the sandstone rough and the marble smooth, and your hand can tell them apart in the dark." } }
+  passage no_take { They are the walls. }
+}
+object puzzle_walls is PuzzleWalls in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36
+object puzzle_ladder is PuzzleLadder in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36

@@ -1,0 +1,282 @@
+// Everything in the last corners of the Empire that a visitor can see and
+// name. A thing answers each of Zork's general verbs with Zork's default
+// refusal (gverbs.zil), as a `default` play that a thing with better
+// words replaces by writing its own. A verb for one sort of thing (drink,
+// fill, dig, wear …) is typed by a kind below instead, so it is offered
+// only where such a thing is in range.
+//
+// Zork describes a thing in a room by its first description (FDESC) until
+// it has been moved, and by its long one (LDESC) after, or by "There is a
+// ... here." when it has none; `here_line` is that rule. A thing marked
+// `:ndesc` (Zork's NDESCBIT) is never listed.
+import {open, close, read, look_in, look_under, look_behind, search, find, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, turn, tie, untie, burn, cut, play, count_things, through, cross, leap_at, unlock, put_on, put, give, talk, alarm, follow, kiss, wave, dig, lamp_on, lamp_off, fill, drink, drink_from, pour, pour_on, spray, take_fixed, dry, knock, put_under, exit_thing, push_to, set_dial, master_go, Direction, :consume, :falling} from 'verbs'
+
+kind Thing {
+  grammar { article the }
+
+  :touched false
+  :has_fdesc false
+  :ndesc false
+  :size 5 min 0 max 100
+  // Marked to go over the cliff or the ledge when the world's gate opens
+  // (CLIFF-OBJECT-F, LEDGE-F): the thrower moves it where it lands.
+  :falling false
+
+  passage short default { thing }
+  // With its indefinite article, for a list (PRINT-CONT).
+  passage indef default { A {self.short} }
+  // With its indefinite article, in the middle of a line.
+  passage a_short default { a {self.short} }
+  passage fdesc default { {self.ldesc} }
+  passage ldesc default { There is a {self.short} here. }
+  passage here_line default {
+    {if !self.get(:ndesc)}{if self.get(:has_fdesc) && !self.get(:touched)}{self.fdesc}{else}{self.ldesc}{/if}{/if}
+  }
+  passage inside_lines default { {if false}.{/if} }
+  // Zork's YUKS, the first of them: a fixed thing refuses `take` from a
+  // `permit`, which may not draw, so the line does not vary.
+  passage no_take default { A valiant attempt. }
+  passage hacked default {{one of}doesn't seem to work.{or}isn't notably helpful.{or}has no effect.{/one of}}
+
+  on :moved (from, to) {
+    self.set(:touched, true)
+    self.set(:falling, false)
+  }
+  on :falling { self.set(:falling, true) }
+
+  as target for look_in default { do { say "You can't look inside {self.a_short}." } }
+  as target for find default { do { if (actor.holds(self)) { say "You have it." } else { say "It's right here." } } }
+  as target for shift default { do { say "You can't move the {self.short}." } }
+  as target for raise default { do { say "Playing in this way with the {self.short} {self.hacked}" } }
+  as target for lower default { do { say "Playing in this way with the {self.short} {self.hacked}" } }
+  as target for smell default { do { say "It smells like {self.a_short}." } }
+  as target for listen default { do { say "The {self.short} makes no sound." } }
+  as target for climb_up default { do { say "You can't do that!" } }
+  as target for climb_down default { do { say "You can't do that!" } }
+  as target for mung default {
+    do {
+      if (bound tool) {
+        if (tool.is(Weapon)) { say "Nice try." }
+        else if (tool.is(Thing)) { say "Trying to destroy the {self.short} with {tool.a_short} is futile." }
+        else { say "Trying to destroy the {self.short} with that is futile." }
+      } else { say "Trying to destroy the {self.short} with your bare hands is futile." }
+    }
+  }
+  as target for turn default { do { say "Your bare hands don't appear to be enough." } }
+  as target for tie default {
+    do {
+      if (bound tool) {
+        if (tool == actor) { say "You can't tie anything to yourself." }
+        else { say "You can't tie the {self.short} to that." }
+      }
+      else { say "You'll have to say what to tie the {self.short} to." }
+    }
+  }
+  as target for untie default { do { say "This cannot be tied, so it cannot be untied!" } }
+  as target for burn default {
+    do {
+      if (bound tool) {
+        if (tool.is(Flame)) { say "You hold the flame to the {self.short}, and the {self.short} declines to burn. Not everything down here is as combustible as you are." }
+        else if (tool.is(Thing)) { say "With {tool.a_short}??!?" }
+        else { say "With that??!?" }
+      }
+      else { say "You didn't say with what!" }
+    }
+  }
+  as target for cut default {
+    do {
+      if (bound tool) {
+        if (tool.is(Weapon)) { say "Strange concept, cutting the {self.short}...." }
+        else if (tool.is(Thing)) { say "The \"cutting edge\" of {tool.a_short} is hardly adequate." }
+        else { say "The \"cutting edge\" of that is hardly adequate." }
+      }
+      else { say "You'll have to say what to cut the {self.short} with." }
+    }
+  }
+  as target for play default { do { say "That's silly!" } }
+  as target for count_things default { do { say "You have lost your mind." } }
+  as target for through default { do { say "You hit your head against the {self.short} as you attempt this feat." } }
+  as target for cross default { do { say "You can't cross that!" } }
+  as target for leap_at default { do { say "{one of}Very good. Now you can go to the second grade.{or}Are you enjoying yourself?{or}Wheeeeeeeeee!!!!!{or}Do you expect me to applaud?{/one of}" } }
+  as target for unlock default { do { say "It doesn't seem to work." } }
+  as surface for put_on default { do { say "There's no good surface on the {self.short}." } }
+  // Poured on: what is poured is in the pourer's hands, which nothing in
+  // the room reaches, so the pouring is the pourer's to do and say
+  // (adventurer.sprout).
+  as target for pour_on default { do { } }
+  as target for dry default { do { say "The {self.short} is as dry as it is going to get, which is to say as dry as it was." } }
+  as target for put_under default { do { say "There is no under to the {self.short} that anything could be put in." } }
+  as target for exit_thing default { do { say "You are not in the {self.short}, so far as either of you can tell." } }
+}
+
+// What may fill `put`'s item: a thing that can be carried, the short pole
+// of the mirror box, and the visitor; so that `put` is never offered for
+// a wall, and `help` never lists one going into the vial.
+kind Placeable { }
+
+// A thing that can be carried off. Only these answer `take all`.
+kind Portable is Thing, Shakeable, Placeable {
+  as target for shift { do { say "Moving the {self.short} reveals nothing." } }
+  as target for shake { do { say "Shaken." } }
+  as target for through {
+    do {
+      if (actor.holds(self)) { say "That would involve quite a contortion!" }
+      else { say "{one of}A valiant attempt.{or}You can't be serious.{or}An interesting idea...{or}What a concept!{/one of}" }
+    }
+  }
+  as target for wave default { do { say "Waving the {self.short} {self.hacked}" } }
+}
+
+// A thing that stays where it is: `take` reaches it by a verb of its own,
+// `take_fixed`, which it refuses in its own words. The refusal is a
+// `permit`'s, so that `take all`, which both verbs read, is read by
+// `take`'s set of what can be carried: a reading its consent allows beats
+// one it refuses, and nothing fixed consents.
+kind Fixed is Thing {
+  as target for take_fixed { permit { refuse no_take } }
+}
+
+// A thing Zork describes only in its room's own words.
+kind Scenery is Fixed {
+  :ndesc true
+}
+
+// Something to fight with (WEAPONBIT).
+kind Weapon is Portable { }
+
+// Something worn when held (WEARBIT): the hood, the cloak, the amulet.
+// Zork III wears a thing the moment it is taken, lists it "(being worn)",
+// counts it as one of weight, and lets the lake keep its hands off it.
+kind Wearable is Portable {
+  :size 1
+}
+
+// The kinds a verb for one sort of thing is typed by. A role of a kind is
+// filled only by what composes it, so the verb is not offered where
+// nothing of the kind is in range. Each carries Zork's default answer.
+kind Switchable is Thing {
+  as target for lamp_on default { do { say "You can't turn that on." } }
+  as target for lamp_off default { do { say "You can't turn that off." } }
+  // "light lamp" is read by `lamp_on` and by `burn` alike; this refusal is
+  // what lets the lamp's own part win the reading (the spec's Choosing a
+  // reading: consent first). With a tool named, `burn` goes ahead.
+  as target for burn { permit { if (!bound tool) { refuse "You can't burn {self.a_short}." } } }
+}
+kind Drinkable is Thing {
+  as target for drink default { do { say "Thank you very much. I was rather thirsty (from all this talking, probably)." } }
+}
+kind Vessel is Thing {
+  as target for drink_from default { do { say "How peculiar!" } }
+}
+kind Fillable is Thing {
+  as target for fill default {
+    do {
+      if (bound tool) { say "You may know how to do that, but I don't." }
+      else { say "There's nothing to fill it with." }
+    }
+  }
+}
+kind Pourable is Thing {
+  as target for pour default { do { say "You can't pour that." } }
+  as item for pour_on default { do { } }
+}
+kind Diggable is Thing {
+  as target for dig default { do { say "The ground is too hard for digging here." } }
+}
+// What may be put into: the vial, the great rock, the ocean.
+kind Receptacle is Thing {
+  as container for put default { do { say "You can't do that." } }
+}
+
+// Whoever wears a hood that might be taken from them: the hooded figure.
+kind Hooded is Thing { }
+
+// Something that can be sprayed: the can of grue repellent.
+kind Sprayable is Thing {
+  as target for spray default { do { say "How singularly useless." } }
+}
+// Something burning, that other things may be burned with: the torch.
+kind Flame is Thing { }
+
+// Something that can be pushed in a direction (V-PUSH-TO): the gold
+// machine. The direction is a value the thing reads from its own list.
+kind Pushable is Thing { }
+// Something set to a number (TM-DIAL-F): the time machine's dial.
+kind Dial is Thing { }
+// Something with a seat in it that a visitor may sit in (V-BOARD): the
+// gold machine and its seat, and nothing else, so that "sit in machine"
+// has one machine to mean.
+kind Seatable is Thing { }
+// Something that answers a knock: a door.
+kind Knockable is Thing {
+  as target for knock default { do { say "Knocking on the {self.short} is not notably helpful." } }
+}
+
+// Somebody who takes orders (DUNGEON-MASTER-F with WINNER the master): the
+// Dungeon Master, and the presence that stands for him in a room he is
+// not in. A direction in an order is a value he reads from his own list.
+kind Orderable is Thing {
+  :ways [Direction] default [north, south, east, west, northeast, northwest, southeast, southwest, up, down, out]
+  as target for master_go { way from :ways  do { } }
+}
+
+// Something heard and not seen, that might be followed: the footsteps in
+// the land of shadow.
+kind Trace is Thing { }
+
+// What answers open and close in its own words: a box, and the great
+// rock, which answers that you can't be serious.
+kind Openable is Thing {
+  as target for open default { do { say "You must tell me how to do that to a {self.short}." } }
+  as target for close default { do { say "You must tell me how to do that to a {self.short}." } }
+}
+// Something with writing on it: the sword's runes.
+kind Readable is Thing {
+  as target for read default { do { say "How does one read {self.a_short}?" } }
+}
+// Something a visitor might search: the ground, the room, the grue, the
+// rubble, the quicksand, the footsteps, the lake's sand and the beach.
+kind Searchable is Thing {
+  as target for search default { do { say "You find nothing unusual." } }
+}
+// Something a visitor might look under or behind: the great rock, the
+// hood, the cloak, the lake, the ground and the grue.
+kind Concealing is Thing {
+  as target for look_under default { do { say "There is nothing but dust there." } }
+  as target for look_behind default { do { say "There is nothing behind the {self.short}." } }
+}
+// Something a visitor might eat: the algae.
+kind Food is Thing {
+  as target for eat default { do { say "I don't think that the {self.short} would agree with you." } }
+}
+// Something a visitor might touch, rub, pat or stroke: the hooded figure,
+// the old man, the quicksand.
+kind Touchable is Thing {
+  as target for rub default { do { say "Fiddling with the {self.short} {self.hacked}" } }
+}
+// Something a visitor might shake: what can be carried, and a creature.
+kind Shakeable is Thing {
+  as target for shake default { do { say "You can't take it; thus, you can't shake it!" } }
+}
+// Something a visitor might squeeze or hug: a creature, and the footsteps.
+kind Squeezable is Thing {
+  as target for squeeze default { do { say "How singularly useless." } }
+}
+// Someone or something a visitor might greet or hail: a creature, the
+// ship, and the footsteps. The one greeting answers (adventurer.sprout).
+kind Greetable is Thing { }
+
+// Whom a visitor might talk to, wake, follow, kiss, kick or taunt: the
+// hooded figure, the old man, and the sailor at the ocean. Zork's answers
+// for anyone who has none.
+kind Creature is Thing, Shakeable, Squeezable, Greetable {
+  as target for talk default { do { say "The {self.short} pauses for a moment, perhaps thinking that you should reread the manual." } }
+  as target for kick default { do { say "Kicking the {self.short} {self.hacked}" } }
+  as target for alarm default { do { say "He's wide awake, or haven't you noticed..." } }
+  as target for follow default { do { say "You're nuts!" } }
+  as target for kiss default { do { say "I'd sooner kiss a pig." } }
+  as recipient for give default { do { say "The {self.short} refuses it politely." } }
+  as target for leap_at { do { say "The {self.short} is too big to jump over." } }
+  as target for squeeze { do { say "The {self.short} does not understand this." } }
+  as target for shake { do { say "This seems to have no effect." } }
+}
