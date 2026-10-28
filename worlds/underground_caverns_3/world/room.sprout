@@ -24,7 +24,7 @@ kind Room is sprout.Place {
 
   :id Dest default nowhere
   // Which walls these are, for the wall to describe.
-  :walls 0 min 0 max 30
+  :walls 0 min 0 max 40
 
   object wall is Wall
   object grue is Grue
@@ -123,7 +123,7 @@ kind DarkRoom is Room {
 kind Wall is Scenery {
   grammar { name "wall"  nouns "walls"  adjectives "east", "west", "north", "south", "eastern", "western", "northern", "southern" }
   passage short { wall }
-  :look 0 min 0 max 30
+  :look 0 min 0 max 40
   on :wall_look (from, value) { self.set(:look, value) }
   passage plain { The walls are solid rock, plain and entirely uninterested in you. }
   passage stair_wall { The walls go up with the stair, and the eerie light that comes from everywhere throws your shadow on them in several directions at once, none of them the right one. }
@@ -149,6 +149,14 @@ kind Wall is Scenery {
   passage hall_wall { Walls of cut stone, tall and plumb and tiled to the height of a man, going up into the vault; on one of them the Royal Seal, and on the others, here and there, the marks of where something hung once and does not. }
   passage museum_wall { The walls are of dressed stone, the museum's, built to show things off and hold them in; whoever cut them cut them well, and did not sign the work. }
   passage puzzle_wall { Smooth stone, cut square and close; the museum's masons were here, and left nothing to hold. }
+  passage polished_wall { Polished stone, dark and smooth as still water, with the torchlight lying along it; the hall was cut by people who meant it to be walked down slowly. }
+  passage hallway_wall { Dressed stone, squared and fitted without mortar, going up to a vault you can just make out; the stone channel runs down the middle of the floor between the walls, and the walls take no notice of it. }
+  passage narrow_wall { On one side, solid rock, dressed and plain; on the other, the long side of the wooden structure, close enough to touch, which is not a wall of the room but a wall of something standing in it. }
+  passage marble_wall { The finest marble, white with a grain of grey in it, polished until the torches show in it twice. }
+  passage parapet_wall_look { Rough-hewn stone on three sides, blackened above the height of a man by smoke, and on the fourth side no wall at all but the retaining wall and the pit beyond it. }
+  passage cell_wall { Stone, featureless and close, and warm; a cell's walls, built to be looked at for a long time by somebody with nothing else to look at. }
+  passage corridor_wall { Stone, close on both sides, torchlit, and running north from a door that is closed. }
+  passage treasury_wall { Walls hung with paintings and a map, and panelled where they are not hung, in a style that bespeaks exquisite taste and a great deal of money. }
   describe {
     if (self.get(:look) == 1) { text stair_wall }
     else if (self.get(:look) == 2) { text cramped }
@@ -175,6 +183,14 @@ kind Wall is Scenery {
     else if (self.get(:look) == 23) { text museum_wall }
     else if (self.get(:look) == 24) { text puzzle_wall }
     else if (self.get(:look) == 25) { text vista_wall }
+    else if (self.get(:look) == 26) { text polished_wall }
+    else if (self.get(:look) == 27) { text hallway_wall }
+    else if (self.get(:look) == 28) { text narrow_wall }
+    else if (self.get(:look) == 29) { text marble_wall }
+    else if (self.get(:look) == 30) { text parapet_wall_look }
+    else if (self.get(:look) == 31) { text cell_wall }
+    else if (self.get(:look) == 32) { text corridor_wall }
+    else if (self.get(:look) == 33) { text treasury_wall }
     else { text plain }
   }
   passage vista_wall { The walls are rock, cut square, and lit by the torch when the torch is here; one of them has the table on it, angled toward you, and another an iron bracket at the height of a hand, {if here.count(Torch) > 0}with the torch in it{else}empty, where the torch was{/if}. }

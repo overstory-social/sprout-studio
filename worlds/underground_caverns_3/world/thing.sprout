@@ -9,7 +9,7 @@
 // it has been moved, and by its long one (LDESC) after, or by "There is a
 // ... here." when it has none; `here_line` is that rule. A thing marked
 // `:ndesc` (Zork's NDESCBIT) is never listed.
-import {open, close, read, look_in, look_under, look_behind, search, find, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, turn, tie, untie, burn, cut, play, count_things, through, cross, leap_at, unlock, put_on, put, give, talk, alarm, follow, kiss, wave, dig, lamp_on, lamp_off, fill, drink, drink_from, pour, pour_on, spray, take_fixed, dry, knock, put_under, exit_thing, push_to, set_dial, :consume, :falling} from 'verbs'
+import {open, close, read, look_in, look_under, look_behind, search, find, shift, raise, lower, eat, smell, listen, climb_up, climb_down, mung, kick, rub, shake, squeeze, turn, tie, untie, burn, cut, play, count_things, through, cross, leap_at, unlock, put_on, put, give, talk, alarm, follow, kiss, wave, dig, lamp_on, lamp_off, fill, drink, drink_from, pour, pour_on, spray, take_fixed, dry, knock, put_under, exit_thing, push_to, set_dial, master_go, Direction, :consume, :falling} from 'verbs'
 
 kind Thing {
   grammar { article the }
@@ -202,6 +202,14 @@ kind Seatable is Thing { }
 // Something that answers a knock: a door.
 kind Knockable is Thing {
   as target for knock default { do { say "Knocking on the {self.short} is not notably helpful." } }
+}
+
+// Somebody who takes orders (DUNGEON-MASTER-F with WINNER the master): the
+// Dungeon Master, and the presence that stands for him in a room he is
+// not in. A direction in an order is a value he reads from his own list.
+kind Orderable is Thing {
+  :ways [Direction] default [north, south, east, west, northeast, northwest, southeast, southwest, up, down, out]
+  as target for master_go { way from :ways  do { } }
 }
 
 // Something heard and not seen, that might be followed: the footsteps in

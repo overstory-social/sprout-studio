@@ -1,0 +1,1224 @@
+// Beyond the secret door (MR-ANTE, MREYE, MRA to MRD, the ten narrow rooms,
+// IN-MIRROR; MRGO, MIRIN, MIROUT, MIRNS, MIREW, LOOK-TO, EWTELL, GUARDIANS,
+// MIRROR-FUNCTION, PANEL-FUNCTION, BEAM-FUNCTION, MRSWITCH, I-MRINT,
+// MAGIC-MIRROR, MPANELS, MENDS, I-PININ, MIRMOVE, SHORT-POLE-F): the
+// Button Room and its red button, the Beam Room and its beam, the long
+// hallway with the Guardians of Zork in the middle of it, and the mirror
+// box, a room you are inside that moves: turned an eighth at a time on
+// its pole and slid along the channel from one compass rose to the next,
+// past the Guardians, who strike what they see.
+//
+// The box is one box for everyone, so where it stands (MLOC, 1 to 5 for
+// the hallways MRA to MRD), which way its arrow points (MDIR, in eighths
+// of a turn from north), its pole, its two mirrors, its two doors and
+// their clocks are the world's. The hallway is five places and the box's
+// sides are ten more: a narrow room is the strip of hallway beside the
+// box when the box stands long-ways, and leads nowhere when it does not.
+// Every way into or out of the box depends on where it stands and which
+// way it faces, so each is a run of conditional exits, and leaving the box
+// goes by way of a landing that the one leaving is carried on from, since
+// an exit's destination is written in source and the box's are not.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Portable, Fixed, Creature, Touchable, Openable, Receptacle, Trace, Concealing} from 'thing'
+import {Room, Floor, Ceiling} from 'room'
+import {Adventurer} from 'adventurer'
+import {Stairs} from 'way_in'
+import {engravings_room} from 'engravings'
+import {front_door} from 'dungeon'
+import {examine} from 'sprout'
+import {open, close, look_in, shift, raise, lower, turn, mung, through, talk, greet, hail, put, rub, listen, follow_sound, leap_at, take_fixed, Panel, Dest, :die, :beam_set, :mirror_set, :mirror_shut, :wood_set, :wood_shut, :mdir_set, :mloc_set, :pole_set, :mirror_broken, :guardians_seen, :mirror_out} from 'verbs'
+
+// Which side of the box a narrow room lies on.
+enum Side { east, west }
+
+// A mirror or a panel told which side of the box it is, 1 the side the
+// button opens, 2 the other, 0 neither, by its room as a visitor comes in,
+// since which side faces a room changes only while the box is turned from
+// inside, and a thing that is not an actor has no `here` of its own.
+message :set_side with integer
+
+// A stretch of the long hallway (MRA to MRD, MREYE and FRONT-DOOR at its
+// ends): `:k` is its place in the line, 0 the Beam Room, 1 to 5 the
+// hallways, 6 the Dungeon Entrance; `:kn` and `:ks` the stretches north
+// and south of it.
+kind Hallway is Room {
+  :k 0 min 0 max 6
+  :kn 0 min 0 max 6
+  :ks 0 min 0 max 6
+  :ntell false
+  :stell false
+  passage hall_para { This is a part of the long hallway. The east and west walls are dressed stone. In the center of the hall is a shallow stone channel. In the center of the room the channel widens into a large hole around which is engraved a compass rose. }
+  passage local default { {if false}.{/if} }
+  passage box_north {
+    {if underground_caverns_3.get(:mloc) == self.get(:kn)}{if underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180}The north side of the room is divided by a wooden wall into small hallways to the northeast and northwest.{else}{if underground_caverns_3.get(:mdir) > 180}{if underground_caverns_3.get(:mr1)}A large mirror fills the north side of the hallway.{else}A large panel fills the north side of the hallway.{/if}{if underground_caverns_3.get(:mirror_open)} {if underground_caverns_3.get(:mr1)}The mirror is mounted on a panel which has been opened outward.{else}The panel has been opened outward.{/if}{/if}{else}{if underground_caverns_3.get(:mr2)}A large mirror fills the north side of the hallway.{else}A large panel fills the north side of the hallway.{/if}{/if}{/if}{/if}
+  }
+  passage box_south {
+    {if underground_caverns_3.get(:mloc) == self.get(:ks)}{if underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180}The south side of the room is divided by a wooden wall into small hallways to the southeast and southwest.{else}{if underground_caverns_3.get(:mdir) < 180}{if underground_caverns_3.get(:mr1)}A large mirror fills the south side of the hallway.{else}A large panel fills the south side of the hallway.{/if}{if underground_caverns_3.get(:mirror_open)} {if underground_caverns_3.get(:mr1)}The mirror is mounted on a panel which has been opened outward.{else}The panel has been opened outward.{/if}{/if}{else}{if underground_caverns_3.get(:mr2)}A large mirror fills the south side of the hallway.{else}A large panel fills the south side of the hallway.{/if}{/if}{/if}{/if}
+  }
+  passage continues {
+    {if !self.get(:ntell) && underground_caverns_3.get(:mloc) != self.get(:kn) && !self.get(:stell) && underground_caverns_3.get(:mloc) != self.get(:ks)}The corridor continues north and south.{else if !self.get(:ntell) && underground_caverns_3.get(:mloc) != self.get(:kn)}The corridor continues north.{else if !self.get(:stell) && underground_caverns_3.get(:mloc) != self.get(:ks)}The corridor continues south.{/if}
+  }
+  passage body {
+    {if self.get(:k) >= 1 && self.get(:k) <= 5}{self.hall_para}{/if}
+
+    {self.local}
+
+    {self.box_north}{self.box_south}
+
+    {self.continues}
+  }
+  passage wooden_wall { There is a wooden wall blocking your way. }
+  passage mirror_block { There is a large mirror blocking your way. }
+  passage broken_block { There is a large broken mirror blocking your way. }
+  // The mirror's first side, the one the button opens, faces this stretch
+  // when the box stands across the corridor next door with that side
+  // toward it.
+  :faced false
+  on :mirror_shut {
+    self.set(:faced, false)
+    if (underground_caverns_3.get(:mloc) == self.get(:kn) && underground_caverns_3.get(:mdir) > 180) { self.set(:faced, true) }
+    if (underground_caverns_3.get(:mloc) == self.get(:ks) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180) { self.set(:faced, true) }
+    if (self.get(:faced)) { tell "The mirror quietly swings shut." }
+  }
+  on :wood_shut {
+    self.set(:faced, false)
+    if (underground_caverns_3.get(:mloc) == self.get(:kn) && underground_caverns_3.get(:mdir) == 0) { self.set(:faced, true) }
+    if (underground_caverns_3.get(:mloc) == self.get(:ks) && underground_caverns_3.get(:mdir) == 180) { self.set(:faced, true) }
+    if (self.get(:faced)) { tell "Somewhere in the wooden structure a panel closes quietly." }
+  }
+  :side_now 0 min 0 max 2
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      let md = underground_caverns_3.get(:mdir)
+      let ml = underground_caverns_3.get(:mloc)
+      self.set(:side_now, 0)
+      if (md != 0 && md != 180) {
+        if (ml == self.get(:kn)) { if (md > 180) { self.set(:side_now, 1) } else { self.set(:side_now, 2) } }
+        else if (ml == self.get(:ks)) { if (md < 180) { self.set(:side_now, 1) } else { self.set(:side_now, 2) } }
+      }
+      each m: BoxMirror in self { send m :set_side with self.get(:side_now) }
+      each p: BoxOuterPanel in self { send p :set_side with self.get(:side_now) }
+    }
+  }
+}
+
+// The strip of hallway beside the box (MRAE to MRDW; EWTELL): east or
+// west of the box when it stands long-ways in the stretch `:k`.
+kind NarrowRoom is Room {
+  :k 1 min 1 max 5
+  :side Side default east
+  passage local default { {if false}.{/if} }
+  passage body {
+    You are in a narrow room, whose {if self.get(:side) == :east}west{else}east{/if} wall is a large {if self.get(:side) == :east}{if underground_caverns_3.get(:mdir) == 180}{if underground_caverns_3.get(:mr1)}mirror.{else}wooden panel which once contained a mirror.{/if}{if underground_caverns_3.get(:mirror_open)} {if underground_caverns_3.get(:mr1)}The mirror is mounted on a panel which has been opened outward.{else}The panel has been opened outward.{/if}{/if}{else}{if underground_caverns_3.get(:mr2)}mirror.{else}wooden panel which once contained a mirror.{/if}{/if}{else}{if underground_caverns_3.get(:mdir) == 0}{if underground_caverns_3.get(:mr1)}mirror.{else}wooden panel which once contained a mirror.{/if}{if underground_caverns_3.get(:mirror_open)} {if underground_caverns_3.get(:mr1)}The mirror is mounted on a panel which has been opened outward.{else}The panel has been opened outward.{/if}{/if}{else}{if underground_caverns_3.get(:mr2)}mirror.{else}wooden panel which once contained a mirror.{/if}{/if}{/if} The opposite wall is solid rock.
+
+    {self.local}
+  }
+  passage mirror_blocks { A mirror blocks your way. }
+  passage panel_closed { The panel is closed. }
+  passage structure_blocks { The structure blocks your way. }
+  :faced false
+  on :mirror_shut {
+    self.set(:faced, false)
+    if (self.get(:side) == :east && underground_caverns_3.get(:mdir) == 180) { self.set(:faced, true) }
+    if (self.get(:side) == :west && underground_caverns_3.get(:mdir) == 0) { self.set(:faced, true) }
+    if (self.get(:faced)) { tell "The mirror quietly swings shut." }
+  }
+  :side_now 0 min 0 max 2
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      let md = underground_caverns_3.get(:mdir)
+      self.set(:side_now, 2)
+      if (self.get(:side) == :east && md == 180) { self.set(:side_now, 1) }
+      if (self.get(:side) == :west && md == 0) { self.set(:side_now, 1) }
+      each m: BoxMirror in self { send m :set_side with self.get(:side_now) }
+      each p: BoxOuterPanel in self { send p :set_side with self.get(:side_now) }
+    }
+  }
+}
+
+// The Guardians of Zork (GUARDIAN, GUARDIANS): two stone statues facing
+// each other across the hallway, who strike what they see between them,
+// in perfect unison, and cannot tell a reflection from each other. A
+// thing of every room they can be seen from, and of the box, from which
+// they cannot.
+kind Guardians is Scenery, Creature {
+  contains
+  pass any (false)
+  grammar { name "Guardians of Zork"  nouns "guardians", "guardian", "statues", "statue", "guards", "guard", "warriors", "bludgeons"  adjectives "stone", "identical", "impassive", "heavily", "armored" }
+  passage short { Guardians of Zork }
+  passage indef { The Guardians of Zork }
+  passage a_short { the Guardians of Zork }
+  describe {
+    if (here.is(MirrorBox)) { text "You can't see them from here." }
+    else { text "The Guardians are quite impressive. I wouldn't get in their way if I were you! They are portrayed as heavily armored warriors clasping formidable bludgeons, and they stand with the stillness of things that have never yet had to move twice; the bludgeons are raised a little, as if the sculptor had been asked to show them in the moment before, and had." }
+  }
+  passage no_take { They are stone, and larger than you, and they would take it as an approach. }
+  as target for talk { do { say "The statues are impassive." } }
+  as target for greet { do { say "The statues are impassive." } }
+  as target for hail { do { say "The statues are impassive." } }
+  as target for listen { do { say "Stone makes no sound, and these make less than most; and yet you have the feeling of being listened to." } }
+  as target for rub { do { say "You are not close enough to touch them, and you find that you do not mind." } }
+}
+
+// The compass rose (ROSE, ROSE-F), cut in the stone round the hole in the
+// channel, in every hallway and under the box.
+kind Rose is Scenery {
+  grammar { name "compass rose"  nouns "rose", "hole", "depression"  adjectives "compass", "engraved", "incised", "circular" }
+  passage short { compass rose }
+  describe { text "A compass rose, cut into the stone floor round a circular hole where the channel widens: the eight points of the compass, north at the top, incised deep and clean by somebody who meant them to be read by a thing rather than a person. The hole in the middle is the size of a pole's end." }
+  as target for turn { do { say "The compass rose is made of stone and is imbedded in the ground. You could not possibly turn it or move it." } }
+  as target for shift { do { say "The compass rose is made of stone and is imbedded in the ground. You could not possibly turn it or move it." } }
+  passage no_take { It is cut into the floor. }
+}
+
+// The stone channel (CHANNEL) down the middle of the hallway, that the box
+// slides along, and that the short pole may be dropped into.
+kind Channel is Scenery, Receptacle {
+  grammar { name "stone channel"  nouns "channel", "groove", "track"  adjectives "stone", "shallow", "narrow" }
+  passage short { stone channel }
+  describe { text "A shallow channel cut in the stone floor, about six inches wide and a foot deep, running north and south down the middle of the hallway and widening, at each compass rose, into a round hole. Something was meant to run along it, and from the wear on its edges, something has." }
+  as container for put { do { } }
+  passage no_take { It is a groove in the floor, and the floor is staying. }
+}
+
+// The wooden wall of the box, seen from a hallway the box stands long-ways
+// beside (WOODEN-WALL, WOODEN-WALL-F).
+kind WoodenWall is Scenery {
+  grammar { name "wooden wall"  nouns "structure", "box"  adjectives "wooden", "wood", "large" }
+  passage short { wooden wall }
+  :seen_here false
+  describe {
+    if (here.is(Hallway)) {
+      if ((underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180) && (underground_caverns_3.get(:mloc) == here.get(:kn) || underground_caverns_3.get(:mloc) == here.get(:ks))) {
+        text "The end of a large wooden structure, standing in the hallway with its long sides toward the walls, so that there is room to pass on either side of it and none to pass through. The wood is carved and polished, and the end facing you is a panel of a single plank, with no handle and no hinge that you can find."
+      }
+      else { text "You can't see any wooden wall here." }
+    }
+    else { text "You can't see any wooden wall here." }
+  }
+  as target for shift {
+    do {
+      self.set(:seen_here, false)
+      if (here.is(Hallway)) {
+        if ((underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180) && (underground_caverns_3.get(:mloc) == here.get(:kn) || underground_caverns_3.get(:mloc) == here.get(:ks))) { self.set(:seen_here, true) }
+      }
+      if (self.get(:seen_here)) { say "The structure won't budge." } else { say "You can't see any wooden wall here." }
+    }
+  }
+  passage no_take { It is a wall, of a structure a good deal heavier than you. }
+}
+
+// A mirror of the box, seen from outside (MIRROR, MIRROR-FUNCTION): the
+// first, which the button opens, or the second; which one faces a room is
+// worked out as a visitor comes in (`:refresh`), since it changes only
+// while the box is turned from inside.
+kind BoxFace is Scenery, Touchable {
+  :m 0 min 0 max 2
+  on :set_side (from, value) { self.set(:m, value) }
+}
+kind BoxMirror is BoxFace {
+  grammar { name "mirror"  nouns "structure", "glass", "reflection"  adjectives "large", "huge", "tall" }
+  passage short { mirror }
+  describe {
+    if (self.get(:m) == 0) { text "You can't see any mirror here." }
+    else if ((self.get(:m) == 1 && !underground_caverns_3.get(:mr1)) || (self.get(:m) == 2 && !underground_caverns_3.get(:mr2))) { text "Where the mirror was is a wooden panel, plain and close-grained, the glass gone from it as though it had never been; a few specks along the frame catch the light and go out." }
+    else { text "A large mirror, taller than you and nearly as wide as the hallway, mounted on a wooden panel which is the side of a wooden structure. It is a very good mirror. The hallway in it goes on as far as the hallway does, and the person in it is looking at you with an expression you recognise." }
+  }
+  as target for look_in {
+    do {
+      if (self.get(:m) == 0) { say "You can't see any mirror here." }
+      else if ((self.get(:m) == 1 && underground_caverns_3.get(:mr1)) || (self.get(:m) == 2 && underground_caverns_3.get(:mr2))) {
+        if (actor.is(Adventurer)) {
+          if (actor.get(:invisible)) { say "Amazingly, you have no reflection!" } else { say "A disheveled adventurer stares back at you." }
+        } else { say "A disheveled adventurer stares back at you." }
+      }
+      else { say "You have destroyed the mirror, or have you forgotten?" }
+    }
+  }
+  as target for mung {
+    do {
+      if (self.get(:m) == 0) { say "You can't see any mirror here." }
+      else if (self.get(:m) == 1) {
+        if (underground_caverns_3.get(:mr1)) {
+          send underground_caverns_3 :mirror_broken with 1
+          say "The mirror breaks, revealing a wooden panel behind it. The glistening fragments of mirror quietly sparkle into nonexistance."
+        } else { say "The mirror has already been broken." }
+      }
+      else if (underground_caverns_3.get(:mr2)) {
+        send underground_caverns_3 :mirror_broken with 2
+        say "The mirror breaks, revealing a wooden panel behind it. The glistening fragments of mirror quietly sparkle into nonexistance."
+      }
+      else { say "The mirror has already been broken." }
+    }
+  }
+  as target for shift {
+    do {
+      if (self.get(:m) == 0) { say "You can't see any mirror here." }
+      else if ((self.get(:m) == 1 && !underground_caverns_3.get(:mr1)) || (self.get(:m) == 2 && !underground_caverns_3.get(:mr2))) { say "There's no mirror left." }
+      else if (self.get(:m) == 1) { say "The mirror is mounted on a wooden panel which moves slightly inward as you push, and back out when you let go. It feels fragile." }
+      else { say "The mirror is unyielding, but seems fragile." }
+    }
+  }
+  as target for open {
+    do {
+      if (self.get(:m) == 0) { say "You can't see any mirror here." }
+      else { say "You don't see a way to open the mirror here." }
+    }
+  }
+  as target for rub {
+    do {
+      if (self.get(:m) == 0) { say "You can't see any mirror here." }
+      else if ((self.get(:m) == 1 && !underground_caverns_3.get(:mr1)) || (self.get(:m) == 2 && !underground_caverns_3.get(:mr2))) { say "Wood, where there was glass; smooth, and a little warm." }
+      else { say "Cold glass, and a hand coming to meet yours from the other side of it, which stops exactly where yours does." }
+    }
+  }
+  // Going in by the mirror is going in: the one going does it
+  // (adventurer.sprout).
+  as target for through { do { } }
+  passage no_take { It is mounted on the side of a structure that is heavier than the Empire's debts. }
+}
+
+// The panel a mirror is mounted on, seen from outside (PANEL,
+// PANEL-FUNCTION).
+kind BoxOuterPanel is BoxFace, Openable {
+  grammar { name "wooden panel"  nouns "panel"  adjectives "wooden", "wood" }
+  passage short { wooden panel }
+  describe {
+    if (self.get(:m) == 0) { text "You can't see any panel here." }
+    else if (self.get(:m) == 1 && underground_caverns_3.get(:mirror_open)) { text "A wooden panel, one long side of a wooden structure, with a mirror mounted on it; it has been opened outward on a hinge you could not see when it was shut, and behind it is the inside of the structure, and a way in." }
+    else { text "A wooden panel, carved and polished, one long side of a wooden structure that stands in the hallway{if (self.get(:m) == 1 && underground_caverns_3.get(:mr1)) || (self.get(:m) == 2 && underground_caverns_3.get(:mr2))}, with a large mirror mounted on it{/if}. It gives a little when leaned on, the way a door does." }
+  }
+  as target for open {
+    do {
+      if (self.get(:m) == 0) { say "You can't see any panel here." }
+      else { say "You don't see a way to open the panel here." }
+    }
+  }
+  as target for close { do { say "You can't do that to the panel." } }
+  as target for mung {
+    do {
+      if (self.get(:m) == 0) { say "You can't see any panel here." }
+      else if ((self.get(:m) == 1 && underground_caverns_3.get(:mr1)) || (self.get(:m) == 2 && underground_caverns_3.get(:mr2))) { say "To break the panel you would have to break the mirror first." }
+      else { say "The panel is not that easily destroyed." }
+    }
+  }
+  as target for shift {
+    do {
+      if (self.get(:m) == 0) { say "You can't see any panel here." }
+      else if (self.get(:m) == 1) { say "The wooden panel moves slightly inward as you push, and back out when you let go." }
+      else { say "The panel is unyielding." }
+    }
+  }
+  as target for through { do { } }
+  passage no_take { It is the side of a structure, and stays with it. }
+}
+
+// The Button Room (MR-ANTE): the foot of the stairs down from the secret
+// door, and the red button on its wall.
+object button_room is Room in underground_caverns_3 {
+  grammar {
+    name "Button Room"
+    exit south "south" -> engravings_room
+    exit up "up" -> engravings_room
+    exit north "north" -> beam_room
+  }
+  :id button_room
+  :walls 26
+  passage body { You are at the southern end of a long hall. To the south, stairs ascend into darkness. To the north the corridor is illuminated by torches set high in the walls, out of reach. On one wall is a red button. }
+  object button is Scenery, Touchable {
+    grammar { name "red button"  nouns "button", "switch"  adjectives "red", "large", "round" }
+    passage short { red button }
+    describe { text "A red button, set in the wall at the height of a hand, with nothing written near it to say what it does. It has been pushed before; the red is worn through to brass at the middle." }
+    // MRSWITCH: with the beam broken, the button opens the mirror's first
+    // side for seven moves; otherwise it clicks.
+    as target for shift {
+      do {
+        if (underground_caverns_3.get(:mirror_open)) { say "Click." }
+        else if (underground_caverns_3.get(:beam_blocked)) {
+          say "Click. Snap!"
+          send underground_caverns_3 :mirror_set with true
+        }
+        else { say "Click." }
+      }
+    }
+    as target for rub { do { say "It is a button; it would rather be pushed than felt." } }
+    passage no_take { It is set in the wall. }
+  }
+  object torches is Scenery {
+    grammar { name "torches"  nouns "torch", "flame", "flames", "light"  adjectives "high", "flickering", "wall" }
+    passage short { torches }
+    describe { text "Torches, set in brackets high in the walls to the north, well out of reach, and burning with a steadiness that torches do not usually manage; whoever lit them did not expect to have to come back and do it again." }
+    passage no_take { The torches are out of reach. }
+    as target for rub { do { say "The torches are out of reach." } }
+  }
+  object stairs is Stairs {
+    grammar { nouns "staircase", "steps" }
+    describe { text "The stairs go up to the south, into the dark, to the secret door and the Engravings Room beyond it. They are the stairs you came down." }
+  }
+  on :mirror_shut { tell "The button pops back to its original position." }
+}
+
+// The Beam Room (MREYE, MREYE-ROOM, BEAM, BEAM-FUNCTION): a red beam of
+// light across its north end, an inch above the floor, which a thing laid
+// on the floor breaks.
+kind BeamRoom is Hallway {
+  :blocked false
+  on :entered (item, from) {
+    if (item.is(Portable)) {
+      self.set(:blocked, true)
+      send underground_caverns_3 :beam_set with true
+    }
+  }
+  on :left (item, to) {
+    if (item.is(Portable)) {
+      self.set(:blocked, false)
+      each t: Portable in self { self.set(:blocked, true) }
+      send underground_caverns_3 :beam_set with self.get(:blocked)
+    }
+  }
+}
+kind Beam is Scenery, Receptacle, Trace {
+  grammar { name "red beam of light"  nouns "beam", "light", "ray"  adjectives "red", "narrow", "thin" }
+  passage short { red beam of light }
+  describe { text "The red beam of light crosses the north end of the room only an inch or so above the floor.{if here.is(BeamRoom)}{if here.get(:blocked)} The beam is broken by {for t: Portable in here}{if !$first}, {if $last}and {/if}{/if}{t.a_short}{/for} lying on the ground.{/if}{/if}" }
+  as container for put { do { } }
+  as target for follow_sound { do { say "It simply crosses the northern end of the room, so there's nowhere to follow it." } }
+  as target for mung { do { if (!bound tool) { say "You pass your hand through the beam, and the beam is broken briefly as it passes through, and whole again behind it." } } }
+  as target for rub { do { say "The beam is broken briefly as your hand passes through." } }
+  as target for leap_at { do { } }
+  passage no_take { No doubt you have a bottle of moonbeams as well. }
+}
+
+object beam_room is BeamRoom in underground_caverns_3 {
+  grammar {
+    name "Beam Room"
+    exit north "north" -> mra when (underground_caverns_3.get(:mloc) != 1)
+    exit north "north" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit north "north" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit north "north" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit north "north" refuse mirror_block
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 1 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit in "in" refuse structure_blocks
+    exit northeast "northeast" -> mra when (underground_caverns_3.get(:mloc) != 1)
+    exit northeast "northeast" -> mrae when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northeast "northeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northeast "northeast" refuse mirror_block
+    exit northwest "northwest" -> mra when (underground_caverns_3.get(:mloc) != 1)
+    exit northwest "northwest" -> mraw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northwest "northwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northwest "northwest" refuse mirror_block
+    exit south "south" -> button_room
+  }
+  :id beam_room
+  :k 0
+  :kn 1
+  :ks 0
+  :walls 26
+  passage structure_blocks { The structure blocks your way. }
+  passage local { You are in the middle of a long north-south corridor whose walls are polished stone. A narrow red beam of light crosses the room at the north end, inches above the floor.{if self.get(:blocked)} The beam is blocked by {for t: Portable in self}{if !$first}, {if $last}and {/if}{/if}{t.a_short}{/for} lying on the floor.{/if} }
+  object beam is Beam
+}
+
+// The hallways (MRA, MRB, MRC, MRG, MRD; MRGO), south to north.
+object mra is Hallway in underground_caverns_3 {
+  grammar {
+    name "Hallway"
+    exit north "north" -> mrb when (underground_caverns_3.get(:mloc) != 2)
+    exit north "north" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit north "north" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit north "north" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit north "north" refuse mirror_block
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 2 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit in "in" refuse structure_blocks
+    exit northeast "northeast" -> mrb when (underground_caverns_3.get(:mloc) != 2)
+    exit northeast "northeast" -> mrbe when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northeast "northeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northeast "northeast" refuse mirror_block
+    exit northwest "northwest" -> mrb when (underground_caverns_3.get(:mloc) != 2)
+    exit northwest "northwest" -> mrbw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northwest "northwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northwest "northwest" refuse mirror_block
+    exit south "south" -> beam_room
+  }
+  :id mra
+  :k 1
+  :kn 2
+  :ks 0
+  :stell true
+  :walls 27
+  passage structure_blocks { The structure blocks your way. }
+  passage local { The hallway continues to the south. }
+  object rose is Rose
+  object channel is Channel
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object wooden_wall_obj is WoodenWall
+}
+
+object mrb is Hallway in underground_caverns_3 {
+  grammar {
+    name "Hallway"
+    exit north "north" -> mrc when (underground_caverns_3.get(:mloc) != 3)
+    exit north "north" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit north "north" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit north "north" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit north "north" refuse mirror_block
+    exit northeast "northeast" -> mrc when (underground_caverns_3.get(:mloc) != 3)
+    exit northeast "northeast" -> mrce when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northeast "northeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northeast "northeast" refuse mirror_block
+    exit northwest "northwest" -> mrc when (underground_caverns_3.get(:mloc) != 3)
+    exit northwest "northwest" -> mrcw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northwest "northwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northwest "northwest" refuse mirror_block
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 3 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 1 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit in "in" refuse structure_blocks
+    exit south "south" -> mra when (underground_caverns_3.get(:mloc) != 1)
+    exit south "south" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit south "south" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit south "south" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit south "south" refuse mirror_block
+    exit southeast "southeast" -> mra when (underground_caverns_3.get(:mloc) != 1)
+    exit southeast "southeast" -> mrae when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southeast "southeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southeast "southeast" refuse mirror_block
+    exit southwest "southwest" -> mra when (underground_caverns_3.get(:mloc) != 1)
+    exit southwest "southwest" -> mraw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southwest "southwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southwest "southwest" refuse mirror_block
+  }
+  :id mrb
+  :k 2
+  :kn 3
+  :ks 1
+  :walls 27
+  passage structure_blocks { The structure blocks your way. }
+  object rose is Rose
+  object channel is Channel
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object wooden_wall_obj is WoodenWall
+}
+
+object mrc is Hallway in underground_caverns_3 {
+  grammar {
+    name "Hallway"
+    exit north "north" -> mrg when (underground_caverns_3.get(:mloc) != 4)
+    exit north "north" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit north "north" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit north "north" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit north "north" refuse mirror_block
+    exit northeast "northeast" -> mrg when (underground_caverns_3.get(:mloc) != 4)
+    exit northeast "northeast" -> mrge when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northeast "northeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northeast "northeast" refuse mirror_block
+    exit northwest "northwest" -> mrg when (underground_caverns_3.get(:mloc) != 4)
+    exit northwest "northwest" -> mrgw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northwest "northwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northwest "northwest" refuse mirror_block
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 4 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 2 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit in "in" refuse structure_blocks
+    exit south "south" -> mrb when (underground_caverns_3.get(:mloc) != 2)
+    exit south "south" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit south "south" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit south "south" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit south "south" refuse mirror_block
+    exit southeast "southeast" -> mrb when (underground_caverns_3.get(:mloc) != 2)
+    exit southeast "southeast" -> mrbe when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southeast "southeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southeast "southeast" refuse mirror_block
+    exit southwest "southwest" -> mrb when (underground_caverns_3.get(:mloc) != 2)
+    exit southwest "southwest" -> mrbw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southwest "southwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southwest "southwest" refuse mirror_block
+  }
+  :id mrc
+  :k 3
+  :kn 4
+  :ks 2
+  :ntell true
+  :walls 27
+  passage structure_blocks { The structure blocks your way. }
+  passage local { Somewhat to the north, identical stone statues face each other from pedestals on opposite sides of the corridor. The statues represent Guardians of Zork, a military order of ancient lineage. They are portrayed as heavily armored warriors clasping formidable bludgeons. }
+  on :entered (item, from) { if (item.is(Adventurer)) { send underground_caverns_3 :guardians_seen } }
+  object rose is Rose
+  object channel is Channel
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object wooden_wall_obj is WoodenWall
+  object guardians is Guardians
+}
+
+// The Guardians' own stretch (MRG): entered on foot, it is a death, unless
+// the one entering cannot be seen. The box is the other way past them.
+kind GuardianRoom is Hallway {
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      send underground_caverns_3 :guardians_seen
+      if (!item.get(:invisible)) {
+        tell item "The Guardians awake, and in perfect unison, pulverize you with their bludgeons. Satisfied, they resume their posts."
+        send item :die
+      }
+    }
+  }
+}
+kind GuardianSide is NarrowRoom {
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      send underground_caverns_3 :guardians_seen
+      if (!item.get(:invisible)) {
+        tell item "The Guardians awake, and in perfect unison, pulverize you with their bludgeons. Satisfied, they resume their posts."
+        send item :die
+      }
+    }
+  }
+}
+
+object mrg is GuardianRoom in underground_caverns_3 {
+  grammar {
+    name "Hallway"
+    exit north "north" -> mrd when (underground_caverns_3.get(:mloc) != 5)
+    exit north "north" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit north "north" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit north "north" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit north "north" refuse mirror_block
+    exit northeast "northeast" -> mrd when (underground_caverns_3.get(:mloc) != 5)
+    exit northeast "northeast" -> mrde when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northeast "northeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northeast "northeast" refuse mirror_block
+    exit northwest "northwest" -> mrd when (underground_caverns_3.get(:mloc) != 5)
+    exit northwest "northwest" -> mrdw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit northwest "northwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr2)))
+    exit northwest "northwest" refuse mirror_block
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 5 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 180)
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 3 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit in "in" refuse structure_blocks
+    exit south "south" -> mrc when (underground_caverns_3.get(:mloc) != 3)
+    exit south "south" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit south "south" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit south "south" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit south "south" refuse mirror_block
+    exit southeast "southeast" -> mrc when (underground_caverns_3.get(:mloc) != 3)
+    exit southeast "southeast" -> mrce when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southeast "southeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southeast "southeast" refuse mirror_block
+    exit southwest "southwest" -> mrc when (underground_caverns_3.get(:mloc) != 3)
+    exit southwest "southwest" -> mrcw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southwest "southwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southwest "southwest" refuse mirror_block
+  }
+  :id mrg
+  :k 4
+  :kn 5
+  :ks 3
+  :walls 27
+  passage structure_blocks { The structure blocks your way. }
+  passage local { On either side of you are identical stone statues holding bludgeons. They appear ready to strike, though, for the moment, they remain impassive. }
+  object rose is Rose
+  object channel is Channel
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object wooden_wall_obj is WoodenWall
+  object guardians is Guardians
+}
+
+object mrd is Hallway in underground_caverns_3 {
+  grammar {
+    name "Hallway"
+    exit north "north" -> front_door
+    exit northeast "northeast" -> front_door
+    exit northwest "northwest" -> front_door
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 4 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit in "in" refuse structure_blocks
+    exit south "south" -> mrg when (underground_caverns_3.get(:mloc) != 4)
+    exit south "south" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit south "south" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit south "south" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit south "south" refuse mirror_block
+    exit southeast "southeast" -> mrg when (underground_caverns_3.get(:mloc) != 4)
+    exit southeast "southeast" -> mrge when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southeast "southeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southeast "southeast" refuse mirror_block
+    exit southwest "southwest" -> mrg when (underground_caverns_3.get(:mloc) != 4)
+    exit southwest "southwest" -> mrgw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southwest "southwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southwest "southwest" refuse mirror_block
+  }
+  :id mrd
+  :k 5
+  :kn 6
+  :ks 4
+  :stell true
+  :walls 27
+  passage structure_blocks { The structure blocks your way. }
+  passage local { Somewhat to the south, identical stone statues face each other from pedestals on opposite sides of the corridor. The statues represent Guardians of Zork, a military order of ancient lineage. They are portrayed as heavily armored warriors clasping formidable bludgeons. }
+  on :entered (item, from) { if (item.is(Adventurer)) { send underground_caverns_3 :guardians_seen } }
+  object rose is Rose
+  object channel is Channel
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object wooden_wall_obj is WoodenWall
+  object guardians is Guardians
+}
+
+// The narrow rooms, east and west of each stretch (MRAE to MRDW; MIRIN).
+object mrae is NarrowRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> mrb
+    exit south "south" -> beam_room
+    exit west "west" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit west "west" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit west "west" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit west "west" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrae
+  :k 1
+  :side east
+  :walls 28
+  passage local { To the north is a large hallway. }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+}
+object mraw is NarrowRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> mrb
+    exit south "south" -> beam_room
+    exit east "east" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit east "east" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit east "east" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit east "east" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit in "in" refuse structure_blocks
+  }
+  :id mraw
+  :k 1
+  :side west
+  :walls 28
+  passage local { To the north is a large hallway. }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+}
+object mrbe is NarrowRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> mrc
+    exit south "south" -> mra
+    exit west "west" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit west "west" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit west "west" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit west "west" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrbe
+  :k 2
+  :side east
+  :walls 28
+  passage local { To the north and south are large hallways. }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+}
+object mrbw is NarrowRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> mrc
+    exit south "south" -> mra
+    exit east "east" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit east "east" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit east "east" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit east "east" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrbw
+  :k 2
+  :side west
+  :walls 28
+  passage local { To the north and south are large hallways. }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+}
+object mrce is NarrowRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> mrg
+    exit south "south" -> mrb
+    exit west "west" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit west "west" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit west "west" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit west "west" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrce
+  :k 3
+  :side east
+  :walls 28
+  passage local { Somewhat to the north, identical stone statues face each other from pedestals on opposite sides of the corridor. The statues represent Guardians of Zork, a military order of ancient lineage. They are portrayed as heavily armored warriors clasping formidable bludgeons. }
+  on :entered (item, from) { if (item.is(Adventurer)) { send underground_caverns_3 :guardians_seen } }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object guardians is Guardians
+}
+object mrcw is NarrowRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> mrg
+    exit south "south" -> mrb
+    exit east "east" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit east "east" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit east "east" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit east "east" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrcw
+  :k 3
+  :side west
+  :walls 28
+  passage local { Somewhat to the north, identical stone statues face each other from pedestals on opposite sides of the corridor. The statues represent Guardians of Zork, a military order of ancient lineage. They are portrayed as heavily armored warriors clasping formidable bludgeons. }
+  on :entered (item, from) { if (item.is(Adventurer)) { send underground_caverns_3 :guardians_seen } }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object guardians is Guardians
+}
+object mrge is GuardianSide in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> mrd
+    exit south "south" -> mrc
+    exit west "west" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit west "west" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit west "west" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit west "west" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrge
+  :k 4
+  :side east
+  :walls 28
+  passage local { To the east and west are the Guardians of Zork, in perfect symmetry. From here, it's hard to tell which of the two is a reflection! }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object guardians is Guardians
+}
+object mrgw is GuardianSide in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> mrd
+    exit south "south" -> mrc
+    exit east "east" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit east "east" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit east "east" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit east "east" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrgw
+  :k 4
+  :side west
+  :walls 28
+  passage local { To the east and west are the Guardians of Zork, in perfect symmetry. From here, it's hard to tell which of the two is a reflection! }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object guardians is Guardians
+}
+object mrde is NarrowRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> front_door
+    exit south "south" -> mrg
+    exit west "west" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit west "west" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit west "west" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit west "west" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 180 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 180 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 180)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrde
+  :k 5
+  :side east
+  :walls 28
+  passage local { Somewhat to the south, identical stone statues face each other from pedestals on opposite sides of the corridor. The statues represent Guardians of Zork, a military order of ancient lineage. They are portrayed as heavily armored warriors clasping formidable bludgeons. }
+  on :entered (item, from) { if (item.is(Adventurer)) { send underground_caverns_3 :guardians_seen } }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object guardians is Guardians
+}
+object mrdw is NarrowRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Room"
+    exit north "north" -> front_door
+    exit south "south" -> mrg
+    exit east "east" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit east "east" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit east "east" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit east "east" refuse structure_blocks
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mdir) == 0 && underground_caverns_3.get(:mirror_open))
+    exit in "in" refuse mirror_blocks when (underground_caverns_3.get(:mdir) == 0 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1))
+    exit in "in" refuse panel_closed when (underground_caverns_3.get(:mdir) == 0)
+    exit in "in" refuse structure_blocks
+  }
+  :id mrdw
+  :k 5
+  :side west
+  :walls 28
+  passage local { Somewhat to the south, identical stone statues face each other from pedestals on opposite sides of the corridor. The statues represent Guardians of Zork, a military order of ancient lineage. They are portrayed as heavily armored warriors clasping formidable bludgeons. }
+  on :entered (item, from) { if (item.is(Adventurer)) { send underground_caverns_3 :guardians_seen } }
+  object mirror is BoxMirror
+  object panel is BoxOuterPanel
+  object guardians is Guardians
+}
+
+// Inside the box (IN-MIRROR, MAGIC-MIRROR). Its ways out depend on which
+// of its two doors is open and which way the box has been turned, and
+// lead to a place that is not written anywhere a direction could name, so
+// each leads to the landing, which carries whoever arrives on to where
+// the box's state says (adventurer.sprout's `:mirror_out`).
+kind MirrorBox is sprout.Place {
+  grammar { article none }
+  passage closed_box { You are inside a closed box! }
+  passage wall_there { There's a wall there. }
+  passage hit_panels { You would hit one of the panels. }
+  describe { text full }
+  passage full {
+    Inside Mirror
+
+    You are inside a rectangular box of wood whose structure is rather complicated. Four sides and the roof are filled in, and the floor is open.
+
+    As you face the side opposite the entrance, two short sides of carved and polished wood are to your left and right. The left panel is mahogany, the right pine. The wall you face is red on its left half and black on its right. On the entrance side, the wall is white opposite the red part of the wall it faces, and yellow opposite the black section. The painted walls are at least twice the length of the unpainted ones. The ceiling is painted blue.
+
+    In the floor is a stone channel about six inches wide and a foot deep. The channel is oriented in a north-south direction. In the exact center of the room the channel widens into a circular depression perhaps two feet wide. Incised in the stone around this area is a compass rose.
+
+    Running from one short wall to the other at about waist height is a wooden bar, carefully carved and drilled. This bar is pierced in two places. The first hole is in the center of the bar (and thus the center of the room). The second is at the left end of the room (as you face opposite the entrance). Through each hole runs a wooden pole.
+
+    The pole at the left end of the bar is short, extending about a foot above the bar, and ends in a hand grip. The pole {if underground_caverns_3.get(:mloc) == 2 && underground_caverns_3.get(:mdir) == 270}{if underground_caverns_3.get(:poleup) != 0}has been lifted out of a hole carved in the stone floor. There is evidently enough friction to keep the pole from dropping back down.{else}has been dropped into a hole carved in the stone floor.{/if}{else if underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180}{if underground_caverns_3.get(:poleup) != 0}is positioned above the stone channel in the floor.{else}has been dropped into the stone channel incised in the floor.{/if}{else}is resting on the stone floor.{/if}
+
+    The long pole at the center of the bar extends from the ceiling through the bar to the circular area in the stone channel. This bottom end of the pole has a T-bar a bit less than two feet long attached to it, and on the T-bar is carved an arrow. The arrow and T-bar are pointing {self.arrow}.{if underground_caverns_3.get(:wood_open)}
+
+    The pine panel has been opened outward.{/if}{if underground_caverns_3.get(:mirror_open)}
+
+    The mirror on the entrance side stands open, and the hallway shows through it.{/if}
+
+    {self.objects}
+  }
+  passage arrow { {if underground_caverns_3.get(:mdir) == 0}north{else if underground_caverns_3.get(:mdir) == 45}northeast{else if underground_caverns_3.get(:mdir) == 90}east{else if underground_caverns_3.get(:mdir) == 135}southeast{else if underground_caverns_3.get(:mdir) == 180}south{else if underground_caverns_3.get(:mdir) == 225}southwest{else if underground_caverns_3.get(:mdir) == 270}west{else}northwest{/if} }
+  passage objects {
+    {for t: Thing in self}{if !t.get(:ndesc)}
+
+    {t.ldesc}{/if}{/for}
+  }
+  as target for any { permit { refuse "You can't see any such thing." } }
+  as tool for any { permit { refuse "You can't see any such thing." } }
+  on :mirror_shut { tell "The mirror quietly swings shut." }
+  on :wood_shut { tell "The pine wall closes quietly." }
+}
+
+object in_mirror is MirrorBox in underground_caverns_3 {
+  grammar {
+    name "Inside Mirror"
+    exit out "out" -> mirror_landing when (underground_caverns_3.get(:mirror_open) || underground_caverns_3.get(:wood_open))
+    exit out "out" refuse closed_box
+    exit north "north" -> mirror_landing when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) == 90)
+    exit north "north" refuse wall_there when (underground_caverns_3.get(:mirror_open))
+    exit north "north" -> mirror_landing when (underground_caverns_3.get(:wood_open) && underground_caverns_3.get(:mdir) == 180)
+    exit north "north" refuse hit_panels when (underground_caverns_3.get(:wood_open))
+    exit north "north" refuse closed_box
+    exit northeast "northeast" -> mirror_landing when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) == 135)
+    exit northeast "northeast" refuse wall_there when (underground_caverns_3.get(:mirror_open))
+    exit northeast "northeast" refuse hit_panels when (underground_caverns_3.get(:wood_open))
+    exit northeast "northeast" refuse closed_box
+    exit east "east" -> mirror_landing when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) == 180)
+    exit east "east" refuse wall_there when (underground_caverns_3.get(:mirror_open))
+    exit east "east" refuse hit_panels when (underground_caverns_3.get(:wood_open))
+    exit east "east" refuse closed_box
+    exit southeast "southeast" -> mirror_landing when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) == 225)
+    exit southeast "southeast" refuse wall_there when (underground_caverns_3.get(:mirror_open))
+    exit southeast "southeast" refuse hit_panels when (underground_caverns_3.get(:wood_open))
+    exit southeast "southeast" refuse closed_box
+    exit south "south" -> mirror_landing when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) == 270)
+    exit south "south" refuse wall_there when (underground_caverns_3.get(:mirror_open))
+    exit south "south" -> mirror_landing when (underground_caverns_3.get(:wood_open) && underground_caverns_3.get(:mdir) == 0)
+    exit south "south" refuse hit_panels when (underground_caverns_3.get(:wood_open))
+    exit south "south" refuse closed_box
+    exit southwest "southwest" -> mirror_landing when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) == 315)
+    exit southwest "southwest" refuse wall_there when (underground_caverns_3.get(:mirror_open))
+    exit southwest "southwest" refuse hit_panels when (underground_caverns_3.get(:wood_open))
+    exit southwest "southwest" refuse closed_box
+    exit west "west" -> mirror_landing when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) == 0)
+    exit west "west" refuse wall_there when (underground_caverns_3.get(:mirror_open))
+    exit west "west" refuse hit_panels when (underground_caverns_3.get(:wood_open))
+    exit west "west" refuse closed_box
+    exit northwest "northwest" -> mirror_landing when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) == 45)
+    exit northwest "northwest" refuse wall_there when (underground_caverns_3.get(:mirror_open))
+    exit northwest "northwest" refuse hit_panels when (underground_caverns_3.get(:wood_open))
+    exit northwest "northwest" refuse closed_box
+    exit up "up" refuse "The roof is filled in, and painted blue, and no nearer for being looked at."
+    exit down "down" refuse "The floor of the box is open, and under it is the stone floor of the hallway, which you are standing on already."
+  }
+  object floor is Floor
+  object ceiling is Scenery {
+    grammar { name "ceiling"  nouns "roof"  adjectives "blue", "painted" }
+    passage short { ceiling }
+    describe { text "The roof of the box, painted blue, a flat and confident blue such as the sky is said to be. The long pole goes up into it." }
+  }
+  object red_panel is BoxPanel { :which red  grammar { name "red panel"  nouns "panel", "wall", "half", "side"  adjectives "red", "left" }  passage short { red panel } }
+  object black_panel is BoxPanel { :which black  grammar { name "black panel"  nouns "panel", "wall", "half", "side"  adjectives "black", "right" }  passage short { black panel } }
+  object white_panel is BoxPanel { :which white  grammar { name "white panel"  nouns "panel", "wall", "half", "side"  adjectives "white", "entrance" }  passage short { white panel } }
+  object yellow_panel is BoxPanel { :which yellow  grammar { name "yellow panel"  nouns "panel", "wall", "half", "side"  adjectives "yellow" }  passage short { yellow panel } }
+  object mahogany_panel is BoxPanel { :which mahogany  grammar { name "mahogany panel"  nouns "panel", "wall", "side", "mahogany"  adjectives "mahogany", "left", "short" }  passage short { mahogany panel } }
+  object pine_panel is BoxPanel { :which pine  grammar { name "pine panel"  nouns "panel", "wall", "door", "side", "pine"  adjectives "pine", "right", "short" }  passage short { pine panel } }
+  object t_bar is Scenery, Touchable {
+    grammar { name "T-bar"  nouns "t-bar", "bar", "tbar", "crossbar"  adjectives "carved", "short" }
+    passage short { T-bar }
+    describe { text "A bar a little under two feet long, fixed across the bottom end of the long pole where it meets the floor, and carved with an arrow. The arrow is pointing {if here.is(MirrorBox)}{here.arrow}{else}somewhere{/if}. It is the box's way of saying which way it faces, and it is the only part of the box that does not move when you push it." }
+    as target for turn { do { say "You don't have enough leverage to turn the T-bar. You might be able to turn the whole structure, however." } }
+    as target for shift { do { say "You don't have enough leverage to turn the T-bar. You might be able to turn the whole structure, however." } }
+    as target for rub { do { say "Smooth old wood, and the arrow's groove under your thumb." } }
+    passage no_take { It is fixed to the pole, and the pole to the box, and the box to its own idea of itself. }
+  }
+  object long_pole is Scenery, Touchable {
+    grammar { name "long pole"  nouns "pole", "pivot"  adjectives "long", "center", "central", "wooden" }
+    passage short { long pole }
+    describe { text "A wooden pole as thick as your wrist, running from the ceiling through the center of the bar to the circular depression in the channel below, where it ends in the T-bar. Everything else in the box is arranged round it; it is the pivot the box turns on, and it does not turn itself." }
+    // Refused from a `permit`, so that a bare "pole" raised, lowered or
+    // pushed is the short one, whose consent allows (the spec's Choosing
+    // a reading); named "long", it answers in these words.
+    as target for raise { permit { refuse "The long pole goes through the roof and into the floor, and is not a thing a person lifts." } }
+    as target for lower { permit { refuse "It is as low as a pole can be that goes through the floor already." } }
+    as target for shift { permit { refuse "The pole does not move; the box moves round it, if the box moves." } }
+    as target for turn { permit { refuse "You don't have enough leverage. You might be able to turn the whole structure, however." } }
+    as target for rub { do { say "Old wood, polished by hands, most of them, you suspect, in a hurry." } }
+    passage no_take { It goes through the roof and into the floor. }
+  }
+  object short_pole is ShortPole
+  object wooden_bar is Scenery, Touchable {
+    grammar { name "wooden bar"  nouns "bar", "crossbar"  adjectives "wooden", "wood", "carved", "drilled" }
+    passage short { wooden bar }
+    describe { text "A bar of wood running from one short wall to the other at about the height of your waist, carefully carved and drilled: two holes through it, one at the center of the room for the long pole and one at the left end for the short. It is what you would hold on to, if the box did anything sudden." }
+    as target for rub { do { say "Solid, and very slightly sticky, as old varnish is." } }
+    as target for turn { do { say "The bar is fixed at both ends." } }
+    passage no_take { It is fixed to the walls at both ends. }
+  }
+  object compass_arrow is Scenery {
+    grammar { name "compass arrow"  nouns "arrow", "indicator"  adjectives "compass", "carved" }
+    passage short { compass arrow }
+    describe { text "The arrow carved on the T-bar, pointing {if here.is(MirrorBox)}{here.arrow}{else}somewhere{/if}. Below it, round the depression in the channel, the compass rose it points at." }
+    passage no_take { It is carved into the T-bar. }
+  }
+  object rose is Rose
+  object channel is Channel
+  object guardians is Guardians
+}
+
+// The landing: never read, only passed through (MIROUT).
+object mirror_landing is sprout.Place in underground_caverns_3 {
+  grammar { name "Inside Mirror"  article none }
+  describe { text "You are between the box and the hallway, and then you are not." }
+  on :entered (item, from) {
+    if (item.is(Adventurer)) { send item :mirror_out }
+  }
+}
+
+// A panel of the box's inside (MPANELS, MENDS): the red and yellow ones
+// turn the box clockwise when pushed, the black and white ones
+// counterclockwise, once the short pole is up; the mahogany one slides
+// the box along the channel, the way the arrow points, when the box
+// stands along it; the pine one swings open, into the hallway, for five
+// moves.
+kind BoxPanel is Scenery, Touchable, Openable {
+  :which Panel default red
+  :dying false
+  describe {
+    if (self.get(:which) == :mahogany) { text "A short wall of mahogany, dark and close-grained and polished to a glow, to your left as you face away from the entrance. It is the wall the arrow points at, and from the look of the wear on it, the one that gets pushed." }
+    else if (self.get(:which) == :pine) { text "A short wall of pine, pale against the mahogany opposite, to your right as you face away from the entrance. {if underground_caverns_3.get(:wood_open)}It stands open outward, on hinges along one edge, and the hallway shows through it.{else}There is a line down one edge of it that might be a hinge, and no handle.{/if}" }
+    else if (self.get(:which) == :red) { text "The left half of the wall you face, painted red, a long wall; the paint is old and the red has gone the colour of brick. Pushing on it, you would think, would push the box round." }
+    else if (self.get(:which) == :black) { text "The right half of the wall you face, painted black, a long wall; the black has stayed black, as black does. Pushing on it, you would think, would push the box round the other way." }
+    else if (self.get(:which) == :white) { text "The white half of the entrance wall, opposite the red; it is the wall the mirror is mounted on, from the other side, and white so that you could tell it from the yellow." }
+    else { text "The yellow half of the entrance wall, opposite the black; the mirror is on the far side of it, and the yellow is to tell it from the white, which is all a colour is for in here." }
+  }
+  as target for close { do { say "You can't do that to the panel." } }
+  as target for open {
+    do {
+      if (self.get(:which) == :pine) { self.set(:pushed, true) }
+      else { say "You don't see a way to open the panel here; it is a wall of the box, and the box has the two doors it has." }
+      if (self.get(:pushed)) {
+        self.set(:pushed, false)
+        let md = underground_caverns_3.get(:mdir)
+        let ml = underground_caverns_3.get(:mloc)
+        if (md != 0 && md != 180) { say "The structure rocks back and forth slightly but doesn't move." }
+        else if (underground_caverns_3.get(:wood_open)) { say "The pine wall is open already." }
+        else {
+          say "The pine wall swings open."
+          if ((ml == 5 && md == 0) || (ml == 3 && md == 180) || ml == 4) {
+            if (underground_caverns_3.get(:guardians_seen)) { say "The pine door opens into the field of view of the Guardians." }
+            else { say "The pine door opens into the field of view of the Guardians of Zork, represented by two identical stone statues carrying bludgeons." }
+            say "The Guardians awake, and in perfect unison, utterly destroy you with their stone bludgeons. Satisfied, they resume their posts."
+            if (actor.is(Adventurer)) { send actor :die }
+          }
+          else { send underground_caverns_3 :wood_set with true }
+        }
+      }
+    }
+  }
+  :pushed false
+  as target for shift {
+    do {
+      let md = underground_caverns_3.get(:mdir)
+      let ml = underground_caverns_3.get(:mloc)
+      // The door (MENDS, I-PININ): the pine wall swings open into the
+      // hallway, unless the hallway it swings into is the Guardians'.
+      if (self.get(:which) == :pine) {
+        if (md != 0 && md != 180) { say "The structure rocks back and forth slightly but doesn't move." }
+        else if (underground_caverns_3.get(:wood_open)) { say "The pine wall is open already." }
+        else {
+          say "The pine wall swings open."
+          if ((ml == 5 && md == 0) || (ml == 3 && md == 180) || ml == 4) {
+            if (underground_caverns_3.get(:guardians_seen)) { say "The pine door opens into the field of view of the Guardians." }
+            else { say "The pine door opens into the field of view of the Guardians of Zork, represented by two identical stone statues carrying bludgeons." }
+            say "The Guardians awake, and in perfect unison, utterly destroy you with their stone bludgeons. Satisfied, they resume their posts."
+            if (actor.is(Adventurer)) { send actor :die }
+          }
+          else { send underground_caverns_3 :wood_set with true }
+        }
+      }
+      // The slide (MENDS, MIRMOVE): along the channel, the way the arrow
+      // points, one compass rose at a time; into the Guardians' stretch
+      // with the pole up, a mirror broken or a door open, a death.
+      else if (self.get(:which) == :mahogany) {
+        if (md != 0 && md != 180) { say "The structure rocks back and forth slightly but doesn't move." }
+        else if (md == 0 && ml == 5) { say "The structure has reached the end of the stone channel and won't budge." }
+        else if (md == 180 && ml == 1) { say "The structure has reached the end of the stone channel and won't budge." }
+        else {
+          self.set(:dying, false)
+          if (underground_caverns_3.get(:poleup) != 0) { say "The structure sways unsteadily {if md == 0}north{else}south{/if} and stops over another compass rose." }
+          else { say "The structure slides {if md == 0}north{else}south{/if} and stops over another compass rose." }
+          if (md == 0) { send underground_caverns_3 :mloc_set with ml + 1 } else { send underground_caverns_3 :mloc_set with ml - 1 }
+          if ((md == 0 && ml == 3) || (md == 180 && ml == 5)) {
+            if (underground_caverns_3.get(:poleup) != 0) { self.set(:dying, true) }
+            if (!underground_caverns_3.get(:mr1) || !underground_caverns_3.get(:mr2)) { self.set(:dying, true) }
+            if (underground_caverns_3.get(:mirror_open) || underground_caverns_3.get(:wood_open)) { self.set(:dying, true) }
+            if (self.get(:dying)) {
+              if (underground_caverns_3.get(:guardians_seen)) { say "Suddenly the Guardians realize someone is trying to sneak by them in the structure. They awake and, in perfect unison, hammer the contents of the box (in other words you) to pulp. They then resume their posts, satisfied." }
+              else { say "Suddenly, two identical stone bludgeons come through the roof and hammer the contents of the box to pulp. That includes you." }
+              if (actor.is(Adventurer)) { send actor :die }
+            }
+          }
+        }
+      }
+      // The turn (MPANELS): clockwise for red and yellow, the other way
+      // for black and white, in eighths; in the Guardians' stretch it is
+      // a death.
+      else if (underground_caverns_3.get(:poleup) != 0) {
+        if (ml == 4) {
+          if (underground_caverns_3.get(:guardians_seen)) { say "The Guardians awake, and in perfect unison, utterly destroy you with their stone bludgeons. Satisfied, they resume their posts." }
+          else { say "All at once, two immense stone bludgeons come through the top of the structure, crushing you." }
+          if (actor.is(Adventurer)) { send actor :die }
+        }
+        else {
+          if (self.get(:which) == :red || self.get(:which) == :yellow) {
+            say "The structure rotates clockwise."
+            send underground_caverns_3 :mdir_set with md + 45
+            if (md == 315) { say "The arrow on the compass rose now indicates north." }
+            else if (md == 0) { say "The arrow on the compass rose now indicates northeast." }
+            else if (md == 45) { say "The arrow on the compass rose now indicates east." }
+            else if (md == 90) { say "The arrow on the compass rose now indicates southeast." }
+            else if (md == 135) { say "The arrow on the compass rose now indicates south." }
+            else if (md == 180) { say "The arrow on the compass rose now indicates southwest." }
+            else if (md == 225) { say "The arrow on the compass rose now indicates west." }
+            else { say "The arrow on the compass rose now indicates northwest." }
+          }
+          else {
+            say "The structure rotates counterclockwise."
+            send underground_caverns_3 :mdir_set with md + 315
+            if (md == 45) { say "The arrow on the compass rose now indicates north." }
+            else if (md == 90) { say "The arrow on the compass rose now indicates northeast." }
+            else if (md == 135) { say "The arrow on the compass rose now indicates east." }
+            else if (md == 180) { say "The arrow on the compass rose now indicates southeast." }
+            else if (md == 225) { say "The arrow on the compass rose now indicates south." }
+            else if (md == 270) { say "The arrow on the compass rose now indicates southwest." }
+            else if (md == 315) { say "The arrow on the compass rose now indicates west." }
+            else { say "The arrow on the compass rose now indicates northwest." }
+          }
+          if (underground_caverns_3.get(:wood_open)) {
+            send underground_caverns_3 :wood_set with false
+            say "The pine wall closes quietly."
+          }
+        }
+      }
+      else if (md == 0 || md == 180) { say "The short pole prevents the structure from rotating." }
+      else { say "The structure shakes slightly but doesn't move." }
+    }
+  }
+  as target for rub { do { say "Painted wood, or polished wood; it gives a very little under the hand, and settles back." } }
+  as target for mung { do { say "The box was made by somebody who expected it to be kicked, and made it to outlast the kicker." } }
+  passage no_take { It is a wall of the box you are standing in. }
+}
+
+// The short pole (SHORT-POLE, SHORT-POLE-F): raised, it frees the box to
+// turn; dropped into the channel, it steadies the box's slide; dropped
+// into the hole at the second rose, it anchors the box where it began.
+kind ShortPole is Scenery, Touchable {
+  grammar { name "short pole"  nouns "pole", "post", "handgrip", "grip"  adjectives "short", "small", "hand" }
+  passage short { short pole }
+  describe { text "A pole through the left end of the bar, extending about a foot above it and ending in a hand grip, worn smooth. Below the bar it goes down to the floor{if underground_caverns_3.get(:poleup) == 0}, and into it{else if underground_caverns_3.get(:poleup) == 1}, and rests on it{else}, and stops a little above it, held where it is by friction{/if}. It is the kind of pole that is for pulling up and letting down, and it has been." }
+  as target for raise {
+    do {
+      if (underground_caverns_3.get(:poleup) == 2) { say "The pole cannot be raised further." }
+      else {
+        send underground_caverns_3 :pole_set with 2
+        say "The pole is now slightly above the floor."
+      }
+    }
+  }
+  as target for lower {
+    do {
+      let p = underground_caverns_3.get(:poleup)
+      let md = underground_caverns_3.get(:mdir)
+      if (p == 0) { say "The pole cannot be lowered further." }
+      else if (md == 0 || md == 180) { send underground_caverns_3 :pole_set with 0  say "The pole is lowered into the channel." }
+      else if (md == 270 && underground_caverns_3.get(:mloc) == 2) { send underground_caverns_3 :pole_set with 0  say "The pole is lowered into the stone hole." }
+      else if (p == 1) { say "The pole is already resting on the floor." }
+      else { send underground_caverns_3 :pole_set with 1  say "The pole now rests on the stone floor." }
+    }
+  }
+  as target for shift {
+    do {
+      let p = underground_caverns_3.get(:poleup)
+      let md = underground_caverns_3.get(:mdir)
+      if (p == 0) { say "The pole cannot be lowered further." }
+      else if (md == 0 || md == 180) { send underground_caverns_3 :pole_set with 0  say "The pole is lowered into the channel." }
+      else if (md == 270 && underground_caverns_3.get(:mloc) == 2) { send underground_caverns_3 :pole_set with 0  say "The pole is lowered into the stone hole." }
+      else if (p == 1) { say "The pole is already resting on the floor." }
+      else { send underground_caverns_3 :pole_set with 1  say "The pole now rests on the stone floor." }
+    }
+  }
+  as target for turn { do { say "The pole turns in your hand, and the box does not turn with it; it is a pin, not a handle." } }
+  as target for rub { do { say "The grip is worn to the shape of a hand, and the hand was about the size of yours." } }
+  passage no_take { It goes through the bar and would have to come up through it; it comes up a foot, and no more. }
+}

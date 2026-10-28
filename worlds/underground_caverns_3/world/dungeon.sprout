@@ -1,0 +1,717 @@
+// The Dungeon Master's domain (FRONT-DOOR, BEHIND-DOOR, SOUTH-CORRIDOR,
+// EAST-CORRIDOR, WEST-CORRIDOR, NORTH-CORRIDOR, PARAPET, CELL,
+// PRISON-CELL, GOOD-CELL, NIRVANA; DUNGEON-DOOR-F, DUNGEON-MASTER-F,
+// MASTER-F, I-FOLIN, PARAPET-F, DIAL, DIALBUTTON, CELL-MOVE,
+// MOVE-CELL-OBJECTS, CELL-ROOM, NCELL-ROOM, BRONZE-DOOR-F, KEY-F,
+// NIRVANA-F): the wooden door the visitor knocks at, the old man who opens
+// it and knows them, the corridors round a parapet over a pit of fire, the
+// sundial and the button that turn eight cells round the pit, and the one
+// cell with a bronze door, which the strange key fits at last.
+//
+// The Dungeon Master is the last of his guises: an NPC who follows, stays,
+// and does what he is told. He walks by his own move with the world's gate
+// open, since a room cannot reach another; the dial he turns and the
+// button he pushes he turns and pushes by acting, at the parapet, while
+// the visitor waits in a cell that turns round the pit. An order is a verb
+// whose first role is him, or the presence that stands for him from
+// another room (the original's local-global MASTER), as caverns 2 ordered
+// its robot. Which cell is in the slot (LCELL), where the dial points
+// (PNUMB), the doors and where he stands are the world's.
+import * as sprout from 'sprout'
+import {Thing, Scenery, Portable, Fixed, Creature, Touchable, Openable, Readable, Knockable, Receptacle, Concealing, Searchable, Dial, Orderable} from 'thing'
+import {Room, Floor, Ceiling} from 'room'
+import {Guise} from 'shadow'
+import {Adventurer} from 'adventurer'
+import {Hood, Cloak, Amulet, Staff, Ring, LoreBook, StrangeKey} from 'items'
+import {Hallway, mrd, mrde, mrdw, in_mirror} from 'mirror'
+import {examine} from 'sprout'
+import {open, close, knock, look_in, look_behind, read, search, shift, turn, set_dial, rub, listen, smell, talk, greet, hail, give, follow, kiss, kick, alarm, through, climb_up, climb_down, unlock, put, take_fixed, leap_at, Dest, :die, :admitted, :sent_back, :cell_door_set, :bronze_set, :bronze_unlocked, :pnumb_set, :cells_turned, :turn_cells, :dm_order, :dm_at_set, :dm_moved, :quest_done} from 'verbs'
+
+// The Dungeon Master as himself (DUNGEON-MASTER, DUNGEON-MASTER-F).
+kind DungeonMaster is Creature, sprout.Actor, Guise, Fixed, Touchable, Orderable {
+  :capacity 4
+  grammar { name "dungeon master"  nouns "master", "man", "mage", "wizard"  adjectives "dungeon", "old", "wrinkled" }
+  passage short { dungeon master }
+  passage indef { The dungeon master }
+  passage a_short { the dungeon master }
+  passage ldesc { The dungeon master is quietly leaning on his staff here. }
+  describe { text "He is dressed simply in a hood and cloak, wearing an amulet and ring, carrying an old book under one arm, and leaning on a wooden staff. A single key, as if to a prison cell, hangs from his belt. His eyes are {self.eyes}, and you have met them before: under a hood in the land of shadow, at the brink of the cliff, in the corner of the Engravings Room, and in a cell with a window on a pit of fire. He waits with the patience of somebody who has waited a long age and expects, now, not to wait much longer." }
+  passage no_take { "I'm willing to accompany you, but not ride in your pocket!" }
+  // Ordered (I-FOLIN; DIALBUTTON and DIAL with WINNER the master): to come
+  // to the room the one ordering has named on themselves, or to the
+  // parapet, he walks there himself, unseen for the step so that the
+  // engine does not tell it twice, and tells the world where he stands;
+  // to push the button or set the dial, he does it himself, at the
+  // parapet. The order reaches him with the world's gate open, found in
+  // whichever room the world says he stands in.
+  :going Dest default nowhere
+  on :dm_order (from, value) {
+    if (from.is(Adventurer)) {
+      if (value == :dm_follow || value == :dm_send) {
+        if (value == :dm_send) { self.set(:going, :parapet) } else { self.set(:going, from.get(:dm_target)) }
+        let g = self.get(:going)
+        self.set(:unseen, true)
+        if (g == :behind_door) { move self to behind_door }
+        else if (g == :south_corridor) { move self to south_corridor }
+        else if (g == :east_corridor) { move self to east_corridor }
+        else if (g == :west_corridor) { move self to west_corridor }
+        else if (g == :north_corridor) { move self to north_corridor }
+        else if (g == :parapet) { move self to parapet }
+        self.set(:unseen, false)
+        send underground_caverns_3 :dm_at_set with g
+      }
+      else if (value == :dm_push) { act shift (target: parapet.button) }
+      else if (value == :dm_dial) {
+        let sd = parapet.sundial
+        if (sd.is(Dial)) { act set_dial (target: sd, year: from.get(:dm_n)) }
+      }
+      else if (value == :dm_spin) { act turn (target: parapet.sundial) }
+    }
+  }
+  as recipient for give { do { say "\"I have no need for those things.\"" } }
+  as target for talk { do { say "The dungeon master pauses for a moment, perhaps thinking that you should reread the manual. If you mean to tell him to do something, tell him so: \"master, follow me\", and the like." } }
+  as target for greet { do { say "He inclines his head. \"We have met before, you and I, in several places. Command me as you will.\"" } }
+  as target for hail { do { say "He inclines his head. \"We have met before, you and I, in several places. Command me as you will.\"" } }
+  as target for follow { do { say "He is standing still; it is you he follows, when he follows, and not the other way about." } }
+  as target for kiss { do { say "He steps back a pace, not unkindly. \"Consider the end of your quest!\"" } }
+  as target for kick { do { say "He does not move, and the kick does not seem to have reached him; the staff, you notice, has moved a little." } }
+  as target for alarm { do { say "He's wide awake, or haven't you noticed..." } }
+  as target for rub { do { say "Your hand finds the cloak, which is a cloak like yours, and under it an arm that is older than the cloak and a great deal older than you." } }
+  as target for smell { do { say "He smells of candle smoke and old paper, and, faintly, of a fresh breeze." } }
+  as target for listen { do { say "He breathes slowly, the way somebody does who has all the time there is and is nearly done with it." } }
+  as target for leap_at { do { say "The dungeon master is too big to jump over, and too old to be jumped at." } }
+}
+
+// The Dungeon Master as he is spoken to from another room (MASTER, the
+// local-global; MASTER-F): a presence in every room of the dungeon and at
+// its door, which answers to his name while he is elsewhere and is out of
+// sight while he stands here.
+kind MasterVoice is Scenery, Orderable {
+  grammar { name "dungeon master"  nouns "master", "man", "mage", "wizard"  adjectives "dungeon", "old" }
+  passage short { dungeon master }
+  :room Dest default nowhere
+  describe {
+    if (here.is(Room)) {
+      if (underground_caverns_3.get(:dm_at) == :parapet && (here.get(:id) == :dungeon_cell || here.get(:id) == :north_corridor)) { text "The dungeon master is standing on the parapet, leaning on his staff. His keen gaze is fixed on you." }
+      else { text "The dungeon master isn't here." }
+    }
+    else { text "The dungeon master isn't here." }
+  }
+  on :dm_moved (from, value) { self.set(:unseen, self.get(:room) == value) }
+  passage no_take { The dungeon master isn't here. }
+  as target for talk { do { say "{if here.is(FarCell)}He can't hear you.{else}The dungeon master isn't here.{/if}" } }
+  as target for greet { do { say "{if here.is(FarCell)}He can't hear you.{else}The dungeon master isn't here.{/if}" } }
+  as target for hail { do { say "{if here.is(FarCell)}He can't hear you.{else}The dungeon master isn't here.{/if}" } }
+  as target for rub { do { say "The dungeon master isn't here." } }
+  as target for listen { do { say "{if here.is(FarCell)}Nothing, through the door and the heat.{else}He is not here to be listened to; somewhere in the dungeon a staff taps stone, and stops.{/if}" } }
+  as target for smell { do { say "The dungeon master isn't here." } }
+}
+
+// The wooden door of the dungeon (DUNGEON-DOOR, DUNGEON-DOOR-F), with its
+// barred panel (DUNGEON-PANEL): knocked at, it is answered by the Dungeon
+// Master, who lets in whoever wears all seven of his things and sends
+// everybody else back to the Button Room with the two words.
+kind DungeonDoor is Scenery, Openable, Knockable, Touchable {
+  grammar { name "wooden door"  nouns "door"  adjectives "wooden", "wood", "large", "great", "massive", "heavy" }
+  passage short { wooden door }
+  describe { text "A large wooden door, closed, of planks as thick as your arm bound with iron, with a small barred panel in it at about head height. It is a door for keeping something in or something out, and from this side it is hard to say which. There is no handle." }
+  :n 0 min 0 max 7
+  passage admitted_speech { "I am the Master of the Dungeon!" he booms. "I have been watching you closely during your journey through the Great Underground Empire. Yes!," he says, as if recalling some almost forgotten time, "we have met before, although I may not appear as I did then." You look closely into his deeply lined face and see the faces of the old man by the secret door, your "friend" at the cliff, and the hooded figure. "You have shown kindness to the old man, and compassion toward the hooded one. You displayed patience in the puzzle and trust at the cliff. You have demonstrated strength, ingenuity, and valor. However, one final test awaits you. Now! Command me as you will, and complete your quest!" }
+  passage turned_away { He looks you over with a piercing gaze and then speaks gravely. "I have been waiting a long time for you, {if self.get(:n) == 0}but I fear my waiting may be in vain.{else if self.get(:n) == 1}but you have far to go before you are ready.{else if self.get(:n) == 2}and you seem to have made slight some progress.{else if self.get(:n) == 3}and your journey is half complete. Be of good cheer!{else if self.get(:n) == 4}and you are nearing the end of your long quest!{else if self.get(:n) == 5}and it will not be long before you are ready!{else}and you are nearly ready for the last test!{/if} I will remain here. When you feel you are ready, go to the secret door and 'SAY "FROTZ OZMOO"'! Go, now!" He wags his finger in warning. "Do not forget the double quotes!" A moment later, you find yourself in the Button Room. }
+  as target for open { do { say "The door won't budge." } }
+  as target for close { do { say "The door won't budge." } }
+  as target for shift { do { say "The door won't budge." } }
+  as target for look_in { do { say "Through the bars of the panel: a narrow corridor, lit by torches, going away north, and nobody in it that you can see." } }
+  as target for listen { do { say "Nothing, from the other side; and then, perhaps, the tap of a staff on stone, a long way off, or not." } }
+  as target for rub { do { say "Old oak, and cold iron, and under your hand, very faintly, the feeling of being expected." } }
+  as target for knock {
+    do {
+      if (!here.is(Hallway)) { say "Knocking on the wooden door is not notably helpful." }
+      else {
+        say "The knock reverberates along the hall. For a time it seems there will be no answer. Then you hear someone unlatching the small panel. Through the bars of the great door, the wrinkled face of an old man appears.{if actor.is(Adventurer)}{if actor.get(:invisible)} He seems not to notice you for a brief moment, then recovers.{/if}{/if}"
+        self.set(:n, 0)
+        if (actor.count(Hood) > 0) { self.adjust(:n, 1) }
+        if (actor.count(Cloak) > 0) { self.adjust(:n, 1) }
+        if (actor.count(Amulet) > 0) { self.adjust(:n, 1) }
+        if (actor.count(Staff) > 0) { self.adjust(:n, 1) }
+        if (actor.count(Ring) > 0) { self.adjust(:n, 1) }
+        if (actor.count(LoreBook) > 0) { self.adjust(:n, 1) }
+        if (actor.count(StrangeKey) > 0) { self.adjust(:n, 1) }
+        if (self.get(:n) >= 7) {
+          say "He starts to smile broadly and opens the massive door without a sound. The old man motions and you feel yourself drawn toward him."
+          say admitted_speech
+          if (actor.is(Adventurer)) { send actor :admitted }
+        }
+        else {
+          say turned_away
+          if (actor.is(Adventurer)) { send actor :sent_back }
+        }
+      }
+    }
+  }
+  as target for through { do { say "The door is closed, and it is not a door that opens for a push; knock." } }
+  passage no_take { It is a door, and the hinges are on the other side. }
+}
+kind DoorPanel is Scenery, Openable, Concealing {
+  grammar { name "barred panel"  nouns "panel", "bars", "window", "grille"  adjectives "barred", "small", "iron" }
+  passage short { barred panel }
+  describe { text "A small panel set into the door at about the height of a head, barred with iron, and shut from the other side. Somebody could look out through it, if somebody were there." }
+  as target for open { do { say "You can't open the panel. It's set into the door." } }
+  as target for close { do { say "It is closed, from the other side." } }
+  as target for look_in { do { say "There's not much to be seen." } }
+  as target for look_behind { do { say "Behind the panel is the inside of the door, and the inside of the door is on the other side." } }
+  passage no_take { It is set into the door. }
+}
+
+// The Dungeon Entrance (FRONT-DOOR, FRONT-DOOR-F): the north end of the
+// long hallway, at the wooden door.
+object front_door is Hallway in underground_caverns_3 {
+  grammar {
+    name "Dungeon Entrance"
+    exit north "north" refuse "The wooden door is closed."
+    exit south "south" -> mrd when (underground_caverns_3.get(:mloc) != 5)
+    exit south "south" refuse wooden_wall when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit south "south" -> in_mirror when (underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit south "south" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit south "south" refuse mirror_block
+    exit southeast "southeast" -> mrd when (underground_caverns_3.get(:mloc) != 5)
+    exit southeast "southeast" -> mrde when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southeast "southeast" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southeast "southeast" refuse mirror_block
+    exit southwest "southwest" -> mrd when (underground_caverns_3.get(:mloc) != 5)
+    exit southwest "southwest" -> mrdw when (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180)
+    exit southwest "southwest" refuse broken_block when ((underground_caverns_3.get(:mdir) == 90 && !underground_caverns_3.get(:mr1)) || (underground_caverns_3.get(:mdir) == 270 && !underground_caverns_3.get(:mr2)))
+    exit southwest "southwest" refuse mirror_block
+    exit in "in" -> in_mirror when (underground_caverns_3.get(:mloc) == 5 && underground_caverns_3.get(:mirror_open) && underground_caverns_3.get(:mdir) > 0 && underground_caverns_3.get(:mdir) < 180)
+    exit in "in" refuse "The wooden door is closed."
+  }
+  :id front_door
+  :k 6
+  :kn 6
+  :ks 5
+  :ntell true
+  :walls 27
+  passage local {
+    You are in a north-south hallway which ends, to the north, at a large wooden door.
+
+    The wooden door has a barred panel in it at about head height. The door itself is closed.
+  }
+  object wooden_door is DungeonDoor
+  object door_panel is DoorPanel
+  object master_voice is MasterVoice { :room front_door }
+  object wooden_wall_obj is Scenery {
+    grammar { name "wooden wall"  nouns "structure", "box"  adjectives "wooden", "wood", "large" }
+    passage short { wooden wall }
+    describe {
+      if ((underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180) && underground_caverns_3.get(:mloc) == 5) { text "The end of a large wooden structure, standing in the hallway to the south with its long sides toward the walls, so that there is room to pass on either side of it and none to pass through." }
+      else { text "You can't see any wooden wall here." }
+    }
+    as target for shift { do { say "{if (underground_caverns_3.get(:mdir) == 0 || underground_caverns_3.get(:mdir) == 180) && underground_caverns_3.get(:mloc) == 5}The structure won't budge.{else}You can't see any wooden wall here.{/if}" } }
+    passage no_take { It is a wall, of a structure a good deal heavier than you. }
+  }
+}
+
+// The corridors of the dungeon.
+kind DungeonRoom is Room { }
+
+object behind_door is DungeonRoom in underground_caverns_3 {
+  grammar {
+    name "Narrow Corridor"
+    exit north "north" -> south_corridor
+    exit south "south" refuse "The wooden door is closed, and it stays closed; the dungeon master's door opens one way."
+  }
+  :id behind_door
+  :walls 32
+  passage body { You are in a narrow north-south corridor. At the south end is a door and at the north end is an east-west corridor. The door is closed. }
+  object dungeon_master is DungeonMaster
+  object master_voice is MasterVoice { :room behind_door  :unseen true }
+  object inner_door is Scenery, Openable, Knockable {
+    grammar { name "wooden door"  nouns "door"  adjectives "wooden", "wood", "massive", "closed" }
+    passage short { wooden door }
+    describe { text "The great wooden door, from the inside: closed, barred, and with its small panel shut. You came through it a moment ago, and it does not look as though it remembers." }
+    as target for open { do { say "The door won't budge." } }
+    as target for close { do { say "The door won't budge." } }
+    as target for knock { do { say "You knock, and nobody answers, since the one who answers it is on this side of it with you." } }
+    passage no_take { It is a door. }
+  }
+}
+
+object south_corridor is DungeonRoom in underground_caverns_3 {
+  grammar {
+    name "South Corridor"
+    exit east "east" -> east_corridor
+    exit west "west" -> west_corridor
+    exit south "south" -> behind_door
+    exit north "north" -> dungeon_cell when (underground_caverns_3.get(:lcell) == 4 && underground_caverns_3.get(:bronze_open))
+    exit north "north" refuse "The bronze door is closed." when (underground_caverns_3.get(:lcell) == 4)
+    exit north "north" refuse "You can't go that way."
+  }
+  :id south_corridor
+  :walls 29
+  passage body { You are in an east-west corridor which turns north at its eastern and western ends. The walls are made of the finest marble. Another hall leads south at the center of the corridor.{if underground_caverns_3.get(:lcell) == 4} In the center of the north wall is a bronze door which is {if underground_caverns_3.get(:bronze_open)}open.{else}closed.{/if}{/if} }
+  object master_voice is MasterVoice { :room south_corridor }
+  object marble is Scenery, Touchable {
+    grammar { name "marble"  nouns "stone"  adjectives "fine", "finest", "polished" }
+    passage short { marble }
+    describe { text "The finest marble, white with a grain of grey in it, polished until the torches show in it twice. Lord Flathead did not stint on his dungeon; it was, after all, where he expected to spend his money's worth of time with people he disliked." }
+    as target for rub { do { say "Cold, and smooth, and faintly damp, the way marble is in a place with a pit of fire at the end of it." } }
+    passage no_take { It is the wall. }
+  }
+}
+
+object east_corridor is DungeonRoom in underground_caverns_3 {
+  grammar {
+    name "East Corridor"
+    exit north "north" -> north_corridor
+    exit south "south" -> south_corridor
+  }
+  :id east_corridor
+  :walls 29
+  passage body { This is a hall with polished marble walls. It widens slightly as it turns west at its northern and southern ends. }
+  object master_voice is MasterVoice { :room east_corridor }
+}
+
+object west_corridor is DungeonRoom in underground_caverns_3 {
+  grammar {
+    name "West Corridor"
+    exit north "north" -> north_corridor
+    exit south "south" -> south_corridor
+  }
+  :id west_corridor
+  :walls 29
+  passage body { This is a hall with polished marble walls. It widens slightly as it turns east at its northern and southern ends. }
+  object master_voice is MasterVoice { :room west_corridor }
+}
+
+// The cell door (CELL-DOOR, CELL-DOOR-F): the heavy wooden door with the
+// barred window, between the North Corridor and whichever cell is in the
+// slot; one door, seen from both sides.
+kind CellDoor is Scenery, Openable, Knockable, Touchable, Concealing {
+  grammar { name "cell door"  nouns "door", "window"  adjectives "cell", "wooden", "wood", "heavy", "barred", "small" }
+  passage short { cell door }
+  describe { text "A heavy wooden door with a small barred window in it, {if underground_caverns_3.get(:cell_door_open)}standing open{else}closed{/if}, in the center of the corridor's south wall; through the window, {if here.is(DungeonRoom)}a featureless cell{else}the corridor, and beyond it the parapet and the pit{/if}. It has a lock, which nobody has troubled to use." }
+  as target for open {
+    do {
+      if (underground_caverns_3.get(:cell_door_open)) { say "It is already open." }
+      else {
+        send underground_caverns_3 :cell_door_set with true
+        say "The cell door opens."
+      }
+    }
+  }
+  as target for close {
+    do {
+      if (!underground_caverns_3.get(:cell_door_open)) { say "It is already closed." }
+      else {
+        send underground_caverns_3 :cell_door_set with false
+        say "The cell door is now closed."
+      }
+    }
+  }
+  as target for unlock { do { say "{if bound tool}The cell door is not locked, only shut, and the lock has nothing to say to a key.{else}The cell door is not locked, only shut.{/if}" } }
+  as target for look_in { do { say "{if here.is(DungeonRoom)}Through the small window: a featureless cell, and nothing in it that is not stone.{else}Through the small window: the corridor, and across it the parapet, and behind that smoke and flames rising from the pit.{/if}" } }
+  as target for look_behind { do { say "Behind the door is the other side of it, and the room the other side is in." } }
+  // Going through it is going south (adventurer.sprout).
+  as target for through { do { } }
+  as container for put { do { say "You will have to enter the cell first." } }
+  as target for knock { do { say "You knock on the cell door, and the cell, which is empty, does not answer." } }
+  passage no_take { It is a door, and hung on hinges that have held worse than you. }
+}
+
+// The flaming pit (FLAMING-PIT, FLAMING-PIT-F), seen from the parapet, the
+// corridor and the cells; what is thrown into it is gone.
+kind FlamingPit is Scenery, Receptacle {
+  contains
+  pass any (false)
+  grammar { name "flaming pit"  nouns "pit", "abyss", "flames", "fire", "smoke"  adjectives "fiery", "flaming", "great", "bottomless" }
+  passage short { flaming pit }
+  describe { text "The flaming pit is a seemingly bottomless abyss filled with smoke and flame. It is circular, about two hundred feet across, and the eight cells, by the lore book's account, stand round it like the hours on a dial that has lost four." }
+  as container for put { do { } }
+  as target for listen { do { say "The fire roars, steadily, with now and then a crack in it like a thing giving way a long way down." } }
+  as target for smell { do { say "Smoke, and hot stone, and under them something older that you would rather not put a name to." } }
+  as target for leap_at { do { say "It would be a pity to end your life so near the end of your quest!" } }
+  as target for through { do { say "It would be a pity to end your life so near the end of your quest!" } }
+  passage no_take { You would have to be a good deal more fireproof. }
+}
+
+// The parapet as a thing (PARAPET-OBJ, PARAPET-OBJ-F): the stone wall at
+// the pit's edge, seen from the corridor and the cell too.
+kind ParapetWall is Scenery, Touchable {
+  grammar { name "parapet"  nouns "wall", "retaining wall", "rim", "ledge"  adjectives "stone", "retaining", "northern" }
+  passage short { parapet }
+  describe {
+    if (here.is(Parapet)) { text "A stone retaining wall at the height of your waist, rimming the parapet, and warm to the touch all along its length. On the inner side of it, where a hand would rest, the stone is worn in two places about a stride apart: somebody has stood here a great deal, and leaned." }
+    else { text "You can see the parapet and sundial from here.{if underground_caverns_3.get(:dm_at) == :parapet} The dungeon master is there also, leaning on his staff.{/if}" }
+  }
+  as target for rub { do { say "Warm stone, and smooth where hands have been." } }
+  as target for climb_up { do { say "You get a knee on the retaining wall, look down, and get it off again. There is nothing on the other side but the pit." } }
+  passage no_take { It is the edge of the pit, and built into it. }
+}
+
+object north_corridor is DungeonRoom in underground_caverns_3 {
+  grammar {
+    name "North Corridor"
+    exit east "east" -> east_corridor
+    exit west "west" -> west_corridor
+    exit north "north" -> parapet
+    exit south "south" -> dungeon_cell when (underground_caverns_3.get(:cell_door_open))
+    exit south "south" refuse "The cell door is closed."
+    exit in "in" -> dungeon_cell when (underground_caverns_3.get(:cell_door_open))
+    exit in "in" refuse "The cell door is closed."
+  }
+  :id north_corridor
+  :walls 29
+  passage body { This is a wide east-west corridor which opens onto a northern parapet at its center. You can see flames and smoke as you peer towards the parapet. The corridor turns south at either end, and in the center of the south wall is a heavy wooden door with a small barred window. The door is {if underground_caverns_3.get(:cell_door_open)}open.{else}closed.{/if} }
+  object master_voice is MasterVoice { :room north_corridor }
+  object cell_door is CellDoor
+  object pit is FlamingPit
+  object parapet_wall is ParapetWall
+}
+
+// The parapet (PARAPET, PARAPET-F), with the sundial (SUNDIAL, DIAL) and
+// the large button (DIAL-BUTTON, DIALBUTTON).
+kind Parapet is DungeonRoom { }
+
+kind Sundial is Scenery, Dial, Touchable, Readable {
+  grammar { name "sundial"  nouns "dial", "indicator", "arrow", "face", "numbers"  adjectives "sun", "indicator", "large" }
+  passage short { sundial }
+  describe { text "The dial points to {underground_caverns_3.get(:pnumb)}." }
+  as target for read { do { say "The numbers 1 through 8, round the face; the indicator points to {underground_caverns_3.get(:pnumb)}." } }
+  // Set to a number (DIAL): one to eight. The one setting it is told where
+  // it points only when the one setting it is the visitor; the Dungeon
+  // Master's setting is his own affair, as the original's is.
+  as target for set_dial {
+    year from 1 to 8
+    do {
+      if (bound year) {
+        send underground_caverns_3 :pnumb_set with year
+        if (actor.is(Adventurer)) { say "The dial now points to {year}." }
+      }
+      else { say "There is no such setting." }
+    }
+  }
+  // Spun (DIAL's SPIN): it stops where it stops.
+  as target for turn {
+    do {
+      let n = 1 + random(8)
+      send underground_caverns_3 :pnumb_set with n
+      if (actor.is(Adventurer)) { say "The dial spins and comes to a stop pointing at {n}." }
+    }
+  }
+  as target for shift { do { say "The dial is set, not pushed: say what to set it to, or spin it." } }
+  as target for rub { do { say "Warm bronze, and the indicator arrow a little loose on its pin, so that it turns under a finger." } }
+  passage no_take { It is fixed to the parapet, and the parapet to the pit. }
+}
+
+kind DialButton is Scenery, Touchable {
+  grammar { name "large button"  nouns "button"  adjectives "large", "big" }
+  passage short { large button }
+  describe { text "A large button in the middle of the sundial's face, with the indicator arrow going round it. It is the kind of button that does one thing, and wants to be pushed to find out what." }
+  // Pushed (DIALBUTTON, CELL-MOVE): the cell the dial points to comes into
+  // the slot, and the one that was there goes back to its place round the
+  // pit, with whatever and whoever is in it. The cells and their stores
+  // are the world's to reach, so the world does the turning.
+  as target for shift {
+    do {
+      if (actor.is(Adventurer)) {
+        say "The button depresses with a slight click, and pops back."
+        if (underground_caverns_3.get(:cell_door_open)) { say "You notice that the cell door is now closed." }
+      }
+      send underground_caverns_3 :turn_cells with underground_caverns_3.get(:cell_door_open)
+    }
+  }
+  as target for rub { do { say "It gives a little under a finger, and would give the rest under a push." } }
+  passage no_take { It is part of the dial. }
+}
+
+object parapet is Parapet in underground_caverns_3 {
+  grammar {
+    name "Parapet"
+    exit south "south" -> north_corridor
+    exit north "north" refuse "You would be burned to a crisp in no time."
+    exit down "down" refuse "You would be burned to a crisp in no time."
+  }
+  :id parapet
+  :walls 30
+  passage body {
+    You are standing behind a stone retaining wall which rims a parapet overlooking a fiery pit. It is difficult to see through the smoke and flame which fills the pit, but it seems to be bottomless. The pit itself is circular, about two hundred feet in diameter, and is fashioned of roughly hewn stone. The flames generate considerable heat, so it is rather uncomfortable standing here.
+
+    There is an object here which looks like a sundial. On it are an indicator arrow surrounding a large button. On the face of the dial are numbers 1 through 8. The indicator points to the number {underground_caverns_3.get(:pnumb)}.
+
+    To the south, across a narrow corridor, is a prison cell.
+  }
+  object master_voice is MasterVoice { :room parapet }
+  object sundial is Sundial
+  object button is DialButton
+  object pit is FlamingPit
+  object parapet_wall is ParapetWall
+  object cell_view is Scenery {
+    grammar { name "prison cell"  nouns "cell"  adjectives "prison", "south" }
+    passage short { prison cell }
+    describe { text "Across the corridor to the south, the door of a prison cell, heavy and wooden with a small barred window, {if underground_caverns_3.get(:cell_door_open)}standing open{else}closed{/if}. It is the one cell of the eight that is where a cell can be got into." }
+    as target for through { do { say "The cell is to the south, across the corridor; say so." } }
+    passage no_take { It is a cell. }
+  }
+}
+
+// The cell in the slot (CELL, CELL-ROOM): the one of the eight that the
+// corridor opens on. Whoever is in it when the button is pushed goes
+// round the pit with it.
+kind SlotCell is DungeonRoom { }
+
+object dungeon_cell is SlotCell in underground_caverns_3 {
+  grammar {
+    name "Prison Cell"
+    exit out "out" -> north_corridor when (underground_caverns_3.get(:cell_door_open))
+    exit out "out" refuse "The cell door is closed."
+    exit north "north" -> north_corridor when (underground_caverns_3.get(:cell_door_open))
+    exit north "north" refuse "The cell door is closed."
+  }
+  :id dungeon_cell
+  :walls 31
+  passage body {
+    You are in a featureless prison cell. You can see {if underground_caverns_3.get(:cell_door_open)}an east-west corridor outside the cell door. Your view also takes in the parapet and a large, fiery pit.{else}through the small window in the closed door the parapet, and, behind that, smoke and flames rising from a fiery pit.{/if}{if underground_caverns_3.get(:dm_at) == :parapet}
+
+    The dungeon master is at the parapet, leaning on his staff. His keen gaze is fixed on you and he looks tense, as if waiting for something to happen.{/if}{if underground_caverns_3.get(:lcell) == 4}
+
+    Behind you, to the south, is a bronze door which is {if underground_caverns_3.get(:bronze_open)}open.{else}closed.{/if}{/if}
+  }
+  object master_voice is MasterVoice { :room dungeon_cell }
+  object cell_door is CellDoor
+  object pit is FlamingPit
+  object parapet_wall is ParapetWall
+}
+
+// The bronze door (BRONZE-DOOR, BRONZE-DOOR-F, BRONZE-DOOR-EXIT): in the
+// south wall of the fourth cell, and seen from the South Corridor when
+// the fourth cell is in the slot. It is locked, and the strange key fits
+// it, and turns in it only when the fourth cell stands where it belongs.
+kind BronzeDoor is Scenery, Openable, Knockable, Touchable {
+  grammar { name "bronze door"  nouns "door"  adjectives "bronze", "massive", "heavy" }
+  passage short { bronze door }
+  describe { text "A massive door of bronze, green at the edges and bright in the middle where it has been looked at, with a keyhole and a bolt behind it that you can hear when you lean on the door. It is {if underground_caverns_3.get(:bronze_open)}open{else}closed{/if}{if !underground_caverns_3.get(:bronze_locked)}, and unlocked{/if}." }
+  as target for open {
+    do {
+      if (underground_caverns_3.get(:bronze_open)) { say "It is already open." }
+      else if (underground_caverns_3.get(:bronze_locked)) { say "The bronze door is locked." }
+      else if (here.is(FarCell)) {
+        send underground_caverns_3 :bronze_set with true
+        say "On the other side of the bronze door is a narrow passage which opens out into a larger area."
+      }
+      else { say "The bronze door is locked." }
+    }
+  }
+  as target for close {
+    do {
+      if (!underground_caverns_3.get(:bronze_open)) { say "It is already closed." }
+      else { send underground_caverns_3 :bronze_set with false  say "The bronze door is now closed." }
+    }
+  }
+  // Unlocked with the strange key (KEY-F): only in the fourth cell's own
+  // place round the pit does the key turn.
+  as target for unlock {
+    do {
+      if (bound tool) {
+        if (tool.is(StrangeKey)) {
+          if (self.get(:in_far_cell)) {
+            if (underground_caverns_3.get(:bronze_locked)) {
+              send underground_caverns_3 :bronze_unlocked
+              say "The key seems to mold itself to the shape of the lock. With a mere twist of your hand, the massive bolt gives way."
+            }
+            else { say "It already is." }
+          }
+          else { say "The key molds itself to the lock but will not turn." }
+        }
+        else { say "It doesn't seem to work." }
+      }
+      else { say "You'll have to say what to unlock it with." }
+    }
+  }
+  as target for knock { do { say "A deep note, like a bell struck underwater, and nobody comes." } }
+  as target for shift { do { say "The door is bronze, and bolted; it does not push." } }
+  as target for look_in { do { say "{if underground_caverns_3.get(:bronze_open)}A narrow passage, which opens out, a little way along, into a larger area, with a golden light in it.{else}The keyhole shows a golden light on the other side, and nothing else.{/if}" } }
+  // Going through it is going south, from the fourth cell
+  // (adventurer.sprout).
+  as target for through { do { } }
+  passage no_take { It is a door, and bronze, and hung by somebody who meant it. }
+  :in_far_cell false
+  on :cells_turned { if (!self.get(:in_far_cell)) { self.set(:unseen, underground_caverns_3.get(:lcell) != 4) } }
+}
+
+// A cell in its own place round the pit (PRISON-CELL, GOOD-CELL): where a
+// visitor ends who was in the cell when the button turned it away. Its
+// door is fastened for good; the fourth has the bronze door. The
+// original leaves a visitor in the wrong one for ever; this world has no
+// restore, so its heat is the way out, at a death's price, and the
+// window a quicker one.
+kind FarCell is DungeonRoom {
+  :good false
+}
+kind LockedDoor is Scenery, Openable, Knockable, Touchable, Concealing {
+  grammar { name "cell door"  nouns "door", "window"  adjectives "cell", "wooden", "wood", "locked", "fastened", "small" }
+  passage short { cell door }
+  describe { text "A wooden door, securely fastened, with a small window in it through which you can see only flames and smoke. The heat comes through the window in waves. There is no handle on this side, and the lock has no keyhole on this side either; this is a cell, and cells are opened from without." }
+  as target for open { do { say "The door is securely fastened." } }
+  as target for close { do { say "It is as closed as a door gets." } }
+  as target for unlock { do { say "The door is securely fastened." } }
+  as target for shift { do { say "The door is securely fastened." } }
+  as target for knock { do { say "You knock. The fire answers, after its fashion." } }
+  as target for look_in { do { say "Through the small window: flames, and smoke, and the far side of the pit a long way off, with the shapes of other cells on it, as featureless as this one." } }
+  as target for look_behind { do { say "Behind the door is the pit; the cell hangs on the pit's rim with its door toward the fire, which is how the cells are." } }
+  passage no_take { It is securely fastened. }
+}
+kind CellWindow is Scenery, Concealing {
+  grammar { name "small window"  nouns "window", "opening", "bars"  adjectives "small", "barred" }
+  passage short { small window }
+  describe { text "A small window in the door, unbarred, and just wide enough for a person who had stopped caring what became of them. Through it, flames and smoke, and the heat coming in." }
+  as target for through {
+    do {
+      say "You squeeze through the window, which is wider than it looked, and out over the pit, which is exactly as deep as it looked. It is a long way down, and warm all the way."
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  as target for leap_at {
+    do {
+      say "You squeeze through the window, which is wider than it looked, and out over the pit, which is exactly as deep as it looked. It is a long way down, and warm all the way."
+      if (actor.is(Adventurer)) { send actor :die }
+    }
+  }
+  as target for look_in { do { say "Flames, and smoke, and nothing you would want to be nearer to." } }
+  passage no_take { It is a window; it is for looking out of, or, at a pinch, going out of. }
+}
+
+object wrong_cell is FarCell in underground_caverns_3 {
+  grammar {
+    name "Prison Cell"
+    exit out "out" refuse "The door is securely fastened."
+    exit north "north" refuse "The door is securely fastened."
+    exit south "south" refuse "The south wall is stone, and hot."
+  }
+  :id wrong_cell
+  :walls 31
+  passage body { You are in a bare prison cell. Its wooden door is securely fastened, and you can see only flames and smoke through its small window. The cell has gone back to its own place on the rim of the pit, and the heat here is the pit's own. }
+  object master_voice is MasterVoice { :room wrong_cell }
+  object locked_door is LockedDoor
+  object window is CellWindow
+  object pit is FlamingPit
+}
+
+object good_cell is FarCell in underground_caverns_3 {
+  grammar {
+    name "Prison Cell"
+    exit out "out" -> nirvana when (underground_caverns_3.get(:bronze_open))
+    exit out "out" refuse "The door is securely fastened; the bronze door is closed."
+    exit north "north" refuse "The door is securely fastened."
+    exit south "south" -> nirvana when (underground_caverns_3.get(:bronze_open))
+    exit south "south" refuse "The bronze door is closed."
+  }
+  :id good_cell
+  :good true
+  :walls 31
+  passage body { You are in a bare prison cell. Its wooden door is securely fastened, and you can see only flames and smoke through its small window. On the south wall is a bronze door which seems to be {if underground_caverns_3.get(:bronze_open)}open.{else}closed.{/if} }
+  object master_voice is MasterVoice { :room good_cell }
+  object locked_door is LockedDoor
+  object window is CellWindow
+  object pit is FlamingPit
+  object good_bronze_door is BronzeDoor { :in_far_cell true }
+}
+
+object bronze_door is BronzeDoor in south_corridor, dungeon_cell {
+  :unseen true
+}
+
+// Where the things left in a cell wait while the cell is round the pit
+// (CELLOBJS): one store a cell.
+kind CellStore {
+  contains
+}
+object cell_store_1 is CellStore in underground_caverns_3 { }
+object cell_store_2 is CellStore in underground_caverns_3 { }
+object cell_store_3 is CellStore in underground_caverns_3 { }
+object cell_store_4 is CellStore in underground_caverns_3 { }
+object cell_store_5 is CellStore in underground_caverns_3 { }
+object cell_store_6 is CellStore in underground_caverns_3 { }
+object cell_store_7 is CellStore in underground_caverns_3 { }
+object cell_store_8 is CellStore in underground_caverns_3 { }
+
+// The Treasury of Zork (NIRVANA, NIRVANA-F): the end.
+object nirvana is DungeonRoom in underground_caverns_3 {
+  grammar {
+    name "Treasury of Zork"
+    exit north "north" refuse "There is no going back from here, and nothing to go back for."
+  }
+  :id nirvana
+  :walls 33
+  passage body {
+    This is a large room, richly appointed in a style that bespeaks exquisite taste. To judge from its contents, it is the ultimate storehouse of the wealth of the Great Underground Empire.
+
+    There are chests containing precious jewels, mountains of zorkmids, rare paintings, ancient statuary, and beguiling curios.
+
+    On one wall is an annotated map of the Empire, showing the locations of various troves of treasure, and of many superior scenic views.
+
+    On a desk at the far end of the room are stock certificates representing a controlling interest in FrobozzCo International, the multinational conglomerate and parent company of the Frobozz Magic Boat Co., etc.
+  }
+  passage ending { As you examine your new-found riches, the Dungeon Master materializes beside you, and says, "Now that you have solved all the mysteries of the Dungeon, it is time for you to assume your rightly earned place in the scheme of things. Long have I waited for one capable of releasing me from my burden!" He taps you lightly on the head with his staff, mumbling a few well-chosen spells, and you feel yourself changing, growing older and more stooped. For a moment there are two identical mages standing among the treasure, then your counterpart dissolves into a mist and disappears, a sardonic grin on his face. }
+  passage ending_2 { For a moment you are relieved, safe in the knowledge that you have at last completed your quest in ZORK. You begin to feel the vast powers and lore at your command and thirst for an opportunity to use them. }
+  on :entered (item, from) {
+    if (item.is(Adventurer)) {
+      tell item ending
+      tell item ending_2
+      send item :quest_done
+    }
+  }
+  object chests is Scenery, Openable, Searchable {
+    grammar { name "chests"  nouns "chest", "jewels", "jewel", "gems"  adjectives "precious", "wooden" }
+    passage short { chests }
+    describe { text "Chests, a dozen of them, standing open, and in them precious jewels of every kind the Empire ever mined, cut or stole, heaped without any order, the way a person heaps things who has stopped needing to count them." }
+    as target for open { do { say "They are open already, every one; nobody down here was worried about theft." } }
+    as target for search { do { say "Jewels, under the jewels; and under those, more." } }
+    passage no_take { They are yours already, which is a strange thing to find out about a chest of jewels: that it is less interesting owned. }
+  }
+  object zorkmids is Scenery {
+    grammar { name "mountains of zorkmids"  nouns "zorkmids", "zorkmid", "coins", "money", "mountains", "mountain"  adjectives "gold" }
+    passage short { mountains of zorkmids }
+    describe { text "Zorkmids, in heaps taller than you, every one with a Flathead on it, and all of them, from today, yours. You find you would trade a mountain of them for a glass of water." }
+    passage no_take { You could carry a handful; they would all be yours anyway, and you have had enough of carrying. }
+  }
+  object paintings is Scenery {
+    grammar { name "rare paintings"  nouns "painting", "paintings", "pictures", "picture", "art"  adjectives "rare" }
+    passage short { rare paintings }
+    describe { text "Paintings, stacked against the walls in their frames: Flatheads, mostly, in their favourite poses, and one small landscape of a cliff with trees on it and sunlight coming down through a hole, which somebody has hung at the height of an eye." }
+    passage no_take { They are heavy, and yours, and going nowhere. }
+  }
+  object statuary is Scenery {
+    grammar { name "ancient statuary"  nouns "statuary", "statues", "statue"  adjectives "ancient", "stone" }
+    passage short { ancient statuary }
+    describe { text "Statues of an age before the Flatheads, which is a long age, standing about the room with the patience of stone. Two of them, you notice, are armoured warriors with bludgeons, a good deal smaller than the ones in the hall and, you hope, a good deal less attentive." }
+    passage no_take { Stone, and heavy, and yours. }
+  }
+  object curios is Scenery, Searchable {
+    grammar { name "beguiling curios"  nouns "curios", "curio", "oddments", "trinkets"  adjectives "beguiling" }
+    passage short { beguiling curios }
+    describe { text "Curios: a brass lantern of the old pattern, a sword in a stand with runes down the blade, a vial, a spray can with Frobozz on the label, a small golden amulet; the Dungeon Master kept the things that mattered, and they are all here, and they all look very small." }
+    as target for search { do { say "Nothing in the collection is missing; you check twice." } }
+    passage no_take { You have carried every one of these far enough. }
+  }
+  object map is Scenery, Readable {
+    grammar { name "annotated map"  nouns "map", "annotations", "notes"  adjectives "annotated", "wall" }
+    passage short { annotated map }
+    describe { text "A map of the Great Underground Empire, large and much annotated, showing the locations of various troves of treasure, and of many superior scenic views; a hand you recognise from the lore book has marked the Scenic Vista with a small, wry star." }
+    as target for read { do { say "Every room you have been in, and a great many you have not, with the treasure marked in red and the views in blue. In the corner, in the same hand: \"For my successor. The lamp is in the usual place.\"" } }
+    passage no_take { It is pasted to the wall, and larger than the door. }
+  }
+  object desk is Scenery, Searchable {
+    grammar { name "desk"  nouns "table", "bureau"  adjectives "far", "wooden" }
+    passage short { desk }
+    describe { text "A desk at the far end of the room, with the stock certificates on it, squared off, and a pen, and a chair pushed back from it as though somebody had got up a moment ago and would be back in a long age." }
+    as target for search { do { say "The drawers hold pens, a seal, and a ledger in which the last entry, undated, reads \"Successor arrived.\"" } }
+    passage no_take { It is a desk; it is yours, and it stays. }
+  }
+  object certificates is Scenery, Readable {
+    grammar { name "stock certificates"  nouns "certificates", "certificate", "stock", "shares", "papers"  adjectives "stock" }
+    passage short { stock certificates }
+    describe { text "Stock certificates representing a controlling interest in FrobozzCo International, the multinational conglomerate and parent company of the Frobozz Magic Boat Co., the Frobozz Magic Grue Repellent Co., the Frobozz Magic Cave Co., etc., etc., etc." }
+    as target for read { do { say "FrobozzCo International. Fifty-one per cent. Bearer. The small print, which goes on for some pages, mostly concerns warranties, and mostly declines to express or imply any." } }
+    passage no_take { You own them already; carrying them would only be showing off. }
+  }
+}

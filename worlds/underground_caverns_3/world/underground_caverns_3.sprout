@@ -1,7 +1,8 @@
-// Zork III: The Dungeon Master, the first three of its four quarters: the
-// Endless Stair, the Land of Shadow and the lake; the cliff, the old man,
-// the far shores and the aqueduct; the Royal Museum, its puzzle and its
-// time machine. The world keeps Zork's narrator for the
+// Zork III: The Dungeon Master, all four of its quarters: the Endless
+// Stair, the Land of Shadow and the lake; the cliff, the old man, the far
+// shores and the aqueduct; the Royal Museum, its puzzle and its time
+// machine; and beyond the secret door the mirror box, the Guardians, the
+// Dungeon Master and his dungeon, and the Treasury of Zork. The world keeps Zork's narrator for the
 // lines the engine speaks for itself, and a gate: a room cannot reach
 // another, so where Zork moves a body or a thing across the map at a
 // stroke (dying, the lake taking what is carried, the sword called to a
@@ -15,8 +16,10 @@
 // changes every four moves; the state of the man at the cliff and his
 // rope, which the cliff's way down must read; the Royal Puzzle's grid of
 // walls, which is one puzzle for everyone; the museum's doors, which a
-// trip through time shuts in every year at once; and the history the
-// time machine can change, which the present reads.
+// trip through time shuts in every year at once; the history the time
+// machine can change, which the present reads; the mirror box, which is
+// one box in one hallway; and the dungeon's doors, dial and cells, and
+// where the Dungeon Master stands.
 import * as sprout from 'sprout'
 import {Person} from 'person'
 import {Adventurer} from 'adventurer'
@@ -25,8 +28,9 @@ import {cliff, cliff_ledge} from 'cliff'
 import {go} from 'sprout'
 import {Portable} from 'thing'
 import {cp_out} from 'puzzle'
+import {dungeon_cell, good_cell, wrong_cell, cell_store_1, cell_store_2, cell_store_3, cell_store_4, cell_store_5, cell_store_6, cell_store_7, cell_store_8} from 'dungeon'
 import {cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36} from 'puzzle_grid'
-import {ManStage, Dest, :open_gate, :gate_open, :close_gate, :move_made, :quake, :view_changed, :man_set, :man_stage, :rope_set, :lift_chest, :drop_chest, :ledge_entered, :tied, :cp_from, :cp_to, :cp_done, :cp_changed, :cp_open_door, :stone_door, :wooden_door, :ring_hidden, :ring_taken, :history, :machine_gone} from 'verbs'
+import {ManStage, Dest, :beam_set, :mirror_set, :mirror_shut, :wood_set, :wood_shut, :mdir_set, :mloc_set, :pole_set, :mirror_broken, :guardians_seen, :cell_door_set, :bronze_set, :bronze_unlocked, :pnumb_set, :cells_turned, :cell_turned, :turn_cells, :dm_at_set, :dm_follow_set, :dm_folflag_set, :dm_moved, :open_gate, :gate_open, :close_gate, :move_made, :quake, :view_changed, :man_set, :man_stage, :rope_set, :lift_chest, :drop_chest, :ledge_entered, :tied, :cp_from, :cp_to, :cp_done, :cp_changed, :cp_open_door, :stone_door, :wooden_door, :ring_hidden, :ring_taken, :history, :machine_gone} from 'verbs'
 
 world underground_caverns_3 is sprout.World {
   visitors are Person
@@ -106,6 +110,106 @@ world underground_caverns_3 is sprout.World {
   :cp_pushed false
   :cp_blocked false
   :cp_door_open false
+  // The mirror box (MLOC, MDIR, POLEUP-FLAG, MR1-FLAG, MR2-FLAG,
+  // MIRROR-OPEN-FLAG, MIRROR-OPENED, WOOD-OPEN-FLAG, GUARDIANS-SEEN,
+  // BEAM-STOPPED?): where it stands, 1 to 5 south to north; which way
+  // its arrow points, in eighths of a turn from north; its short pole, 0
+  // dropped, 1 on the floor, 2 raised; its two mirrors whole; its mirror
+  // side opened by the button, for seven moves (I-MRINT); its pine side
+  // opened from inside, for five (I-PININ); and whether the beam in the
+  // Beam Room is broken.
+  :mloc 2 min 1 max 5
+  :mdir 270 min 0 max 315
+  :poleup 0 min 0 max 2
+  :mr1 true
+  :mr2 true
+  :mirror_open false
+  :mirror_left 0 min 0 max 7
+  :mirror_opened false
+  :wood_open false
+  :wood_left 0 min 0 max 5
+  :guardians_seen false
+  :beam_blocked false
+  // The dungeon (CELL-DOOR, BRONZE-DOOR, BRONZE-DOOR-LOCKED, LCELL,
+  // PNUMB, FOLFLAG): its doors, which cell is in the slot, where the
+  // sundial points, where the Dungeon Master stands and whether he
+  // follows.
+  :cell_door_open false
+  :bronze_open false
+  :bronze_locked true
+  :lcell 1 min 1 max 8
+  :pnumb 1 min 1 max 8
+  :dm_at Dest default behind_door
+  :dm_following false
+  :dm_folflag true
+  on :beam_set (from, value) { self.set(:beam_blocked, value) }
+  on :mirror_set (from, value) {
+    self.set(:mirror_open, value)
+    if (value) { self.set(:mirror_left, 7)  self.set(:mirror_opened, true) } else { self.set(:mirror_left, 0) }
+  }
+  on :wood_set (from, value) {
+    self.set(:wood_open, value)
+    if (value) { self.set(:wood_left, 5) } else { self.set(:wood_left, 0) }
+  }
+  on :mdir_set (from, value) { if (value >= 360) { self.set(:mdir, value - 360) } else { self.set(:mdir, value) } }
+  on :mloc_set (from, value) { self.set(:mloc, value) }
+  on :pole_set (from, value) { self.set(:poleup, value) }
+  on :mirror_broken (from, value) { if (value == 1) { self.set(:mr1, false) } else { self.set(:mr2, false) } }
+  on :guardians_seen { self.set(:guardians_seen, true) }
+  on :cell_door_set (from, value) { self.set(:cell_door_open, value) }
+  on :bronze_set (from, value) { self.set(:bronze_open, value) }
+  on :bronze_unlocked { self.set(:bronze_locked, false) }
+  on :pnumb_set (from, value) { self.set(:pnumb, value) }
+  // The button pushed (DIALBUTTON, CELL-MOVE, MOVE-CELL-OBJECTS): both
+  // doors shut; if the dial points elsewhere than the cell in the slot,
+  // whoever is in that cell goes round the pit with it (and their things
+  // with them), and otherwise what lies in it goes to its store and what
+  // lay in the cell the dial names comes out.
+  on :turn_cells (from, value) {
+    self.set(:cell_door_open, false)
+    self.set(:bronze_open, false)
+    let p = self.get(:pnumb)
+    let l = self.get(:lcell)
+    if (p != l) {
+      self.set(:cell_occupied, false)
+      each a: Adventurer in dungeon_cell { self.set(:cell_occupied, true) }
+      if (self.get(:cell_occupied)) {
+        each a: Adventurer in dungeon_cell {
+          if (value) { tell a "You notice that the cell door is now closed." }
+          send a :cell_turned with l
+        }
+        if (l == 4) { each t: Portable in dungeon_cell { move t to good_cell } }
+        else { each t: Portable in dungeon_cell { move t to wrong_cell } }
+      }
+      else {
+        if (l == 1) { each t: Portable in dungeon_cell { move t to cell_store_1 } }
+        else if (l == 2) { each t: Portable in dungeon_cell { move t to cell_store_2 } }
+        else if (l == 3) { each t: Portable in dungeon_cell { move t to cell_store_3 } }
+        else if (l == 4) { each t: Portable in dungeon_cell { move t to cell_store_4 } }
+        else if (l == 5) { each t: Portable in dungeon_cell { move t to cell_store_5 } }
+        else if (l == 6) { each t: Portable in dungeon_cell { move t to cell_store_6 } }
+        else if (l == 7) { each t: Portable in dungeon_cell { move t to cell_store_7 } }
+        else { each t: Portable in dungeon_cell { move t to cell_store_8 } }
+        if (p == 1) { each t: Portable in cell_store_1 { move t to dungeon_cell } }
+        else if (p == 2) { each t: Portable in cell_store_2 { move t to dungeon_cell } }
+        else if (p == 3) { each t: Portable in cell_store_3 { move t to dungeon_cell } }
+        else if (p == 4) { each t: Portable in cell_store_4 { move t to dungeon_cell } }
+        else if (p == 5) { each t: Portable in cell_store_5 { move t to dungeon_cell } }
+        else if (p == 6) { each t: Portable in cell_store_6 { move t to dungeon_cell } }
+        else if (p == 7) { each t: Portable in cell_store_7 { move t to dungeon_cell } }
+        else { each t: Portable in cell_store_8 { move t to dungeon_cell } }
+      }
+      self.set(:lcell, p)
+      broadcast :cells_turned
+    }
+  }
+  :cell_occupied false
+  on :dm_at_set (from, value) {
+    self.set(:dm_at, value)
+    broadcast :dm_moved with value
+  }
+  on :dm_follow_set (from, value) { self.set(:dm_following, value) }
+  on :dm_folflag_set (from, value) { self.set(:dm_folflag, value) }
   on :cp_from (from, value) { self.set(:cp_from, value) }
   // The wall leaves one cell and enters the next (CPWALL-OBJECT): what lay
   // in the cell it enters is carried to the Side Room with a snap, a wall
@@ -190,6 +294,16 @@ world underground_caverns_3 is sprout.World {
     else if (value == 36) { each t: Portable in cp_36 { move t to cp_out  self.set(:cp_snap, true) }  self.set(:c36, v) }
     if (value == 1) { self.set(:cp_blocked, true) }
     if (self.get(:cp_snap)) { tell from "You hear a soft \"snap\" from behind the wall you were pushing." }
+    // The good ladder pushed where nothing can get behind it to push it
+    // back (the set-aside round 8's finding): against the west side,
+    // along the south side, into the far corner of the north side, or
+    // under the hole itself. The pusher is told, since the Puzzle has no
+    // restore to undo it with.
+    if (v == -2) {
+      if (value == 1 || value == 6 || value == 7 || value == 13 || value == 19 || value == 25 || value == 31 || value == 32 || value == 33 || value == 34 || value == 35 || value == 36) {
+        tell from "The wall with the ladder on it has gone where nothing can get behind it to push it back: it is against the outer wall of the Puzzle now, and the Puzzle keeps what reaches its edges. Whatever way out that ladder was, it is not one any longer. There is still the door, and its fee, if you have the fee; and failing that, it is said, prayer."
+      }
+    }
     broadcast :cp_changed
     send from :cp_done
   }
@@ -214,6 +328,22 @@ world underground_caverns_3 is sprout.World {
         broadcast :quake
       }
     }
+    // The mirror's opened side swings shut seven moves after the button
+    // (I-MRINT), and the pine wall five after it is opened (I-PININ).
+    if (self.get(:mirror_left) > 0) {
+      self.adjust(:mirror_left, -1)
+      if (self.get(:mirror_left) == 0) {
+        self.set(:mirror_open, false)
+        broadcast :mirror_shut
+      }
+    }
+    if (self.get(:wood_left) > 0) {
+      self.adjust(:wood_left, -1)
+      if (self.get(:wood_left) == 0 && self.get(:wood_open)) {
+        self.set(:wood_open, false)
+        broadcast :wood_shut
+      }
+    }
     self.adjust(:view_tick, 1)
     if (self.get(:view_tick) >= 4) {
       self.set(:view_tick, 0)
@@ -226,6 +356,7 @@ world underground_caverns_3 is sprout.World {
     self.set(:man_stage, value)
     if (value == :waiting || value == :away) { self.set(:man_seen, true) }
     send cliff.man :man_stage with value
+    send cliff.still_thing :man_stage with value
     if (value == :gone) { send cliff.man :drop_chest }
   }
   on :rope_set (from, value) { self.set(:rope_down, value) }

@@ -1,5 +1,5 @@
 {
-  "about": "The old man in the Engravings Room (OLD-MAN-F, MSTAIRS-F, SECRET-DOOR-F): asleep until shaken, awake three moves, fed the waybread, and the secret door he points to; and the stairs beyond it, which are the fourth quarter's and turn the visitor back.",
+  "about": "The old man in the Engravings Room (OLD-MAN-F, MSTAIRS-F, SECRET-DOOR-F): asleep until shaken, awake three moves, fed the waybread, and the secret door he points to; and the stairs beyond it, down to the Button Room and back up.",
   "steps": [
     { "arrive": "Ann", "expect": [
       { "reader": "Ann", "kind": "described", "words": "As in a dream, you see yourself tumbling down a great, dark staircase. All about you are shadowy images of struggles against fierce opponents and diabolical traps. These give way to another round of images: of imposing stone figures, a cool, clear lake, and, now, of an old, yet oddly youthful man. He turns toward you slowly, his long, silver hair dancing about him in a fresh breeze. \"You have reached the final test, my friend! You are proved clever and powerful, but this is not yet enough! Seek me when you feel yourself worthy!\" The dream dissolves around you as his last words echo through the void...." },
@@ -105,16 +105,23 @@
       { "reader": "Ann", "kind": "said", "words": "The massive stone door opens noiselessly. Beyond the secret door are dark, forbidding stairs leading down to a passage below. Flickering torchlight illuminates the passage." }
     ] },
     { "as": "Ann", "type": "n", "expect": [
-      { "reader": "Ann", "kind": "refused", "words": "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for: not for anything left undone up here, no word or key or deed this room is waiting on, but for what is still to be gathered in places you have not yet been. The door is open, and will stay open. The way down is not yours today. You come back up." }
+      { "reader": "Ann", "kind": "said", "words": "You go through the secret door and down the dark, forbidding stairs, toward the flickering torchlight below." },
+      { "reader": "Ann", "kind": "described", "words": "Button Room" },
+      { "reader": "Ann", "kind": "described", "words": "You are at the southern end of a long hall. To the south, stairs ascend into darkness. To the north the corridor is illuminated by torches set high in the walls, out of reach. On one wall is a red button." }
+    ] },
+    { "as": "Ann", "type": "examine button", "expect": [
+      { "reader": "Ann", "kind": "described", "words": "A red button, set in the wall at the height of a hand, with nothing written near it to say what it does. It has been pushed before; the red is worn through to brass at the middle." }
+    ] },
+    { "as": "Ann", "type": "examine torches", "expect": [
+      { "reader": "Ann", "kind": "described", "words": "Torches, set in brackets high in the walls to the north, well out of reach, and burning with a steadiness that torches do not usually manage; whoever lit them did not expect to have to come back and do it again." }
+    ] },
+    { "as": "Ann", "type": "s", "expect": [
+      { "reader": "Ann", "kind": "described", "words": "Engravings Room" }
     ] },
     { "as": "Ann", "type": "read runes", "expect": [
       { "reader": "Ann", "kind": "said", "words": "The runes are in an ancient language. Some pictures among the runes depict flames, stone statues, and an old man. You cannot read the language, but the pictures read you: the flames are leaping up at a window, the statues stand either side of a way, and the old man is waiting." }
     ] },
     { "as": "Ann", "type": "se", "expect": [
-      { "reader": "Ann", "kind": "described", "words": "Dead End" },
-      { "reader": "Ann", "kind": "described", "words": "You have come to the end of two adjoining passages to the west and the northwest." }
-    ] },
-    { "as": "Ann", "type": "look", "expect": [
       { "reader": "Ann", "kind": "described", "words": "Dead End" },
       { "reader": "Ann", "kind": "described", "words": "You have come to the end of two adjoining passages to the west and the northwest." }
     ] }

@@ -10,6 +10,7 @@ import {Adventurer} from 'adventurer'
 import {Shadow} from 'shadow'
 import {read, look_under, shift, raise, lower, smell, drink, drink_from, pour, pour_on, fill, shake, cut, burn, eat, put, unlock, spray, put_on, open, close, listen, :glow, :sword_come, :consume, :hood_taken, :sprayed, :snap, :die, :jewels_home, :history} from 'verbs'
 import {old_jewel_room} from 'museum'
+import {BronzeDoor} from 'dungeon'
 
 kind Sword is Weapon, Readable {
   // "runes" is not among its nouns: where the carved north wall stands,
@@ -320,10 +321,12 @@ kind StrangeKey is Portable {
     else { text "The key is sharp as an awl, and rusted badly." }
     text "Strange, though. The key seems to change shape constantly."
   }
+  // The one lock it fits (KEY-F): the bronze door, whose own part says
+  // what the key does there, since a key in a hand cannot read the
+  // world's bolt; everywhere else, the key's own refusal.
   as tool for unlock {
     do {
-      if (target.is(Thing)) { say "The key, which initially seemed certain to fit the lock, seems to change shape and will not enter the keyhole." }
-      else { say "The key, which initially seemed certain to fit the lock, seems to change shape and will not enter the keyhole." }
+      if (!target.is(BronzeDoor)) { say "The key, which initially seemed certain to fit the lock, seems to change shape and will not enter the keyhole." }
     }
   }
 }
@@ -341,7 +344,8 @@ kind Repellent is Portable, Readable, Sprayable {
   passage a_short { a can of grue repellent }
   passage fdesc { A spray can is in the corner. In large type is the legend "Frobozz Magic Grue Repellent." }
   passage ldesc { There is a can of Frobozz Magic Grue Repellent here. }
-  describe { text "A spray can, dented, of the kind the Frobozz Magic Company sold to adventurers who were going to need it and to everyone else who was not. The legend on it is in large type, with instructions under it in small, and the small print is the Company's one moment of candour: the can holds a single application, and an application is good for a few minutes of a grue's good manners, which the label calls unpredictable and you would do well to call short. There is {if self.get(:used)}nothing left in it to slosh.{else}a slosh in it when it is moved: one slosh, one spraying.{/if}" }
+  passage can_look { A spray can, dented, of the kind the Frobozz Magic Company sold to adventurers who were going to need it and to everyone else who was not. The legend on it is in large type, with instructions under it in small, and the small print is the Company's one moment of candour: the can holds a single application, and an application is good for a few minutes of a grue's good manners, which the label calls unpredictable and you would do well to call short: about as long, it says, as it takes to get from a water's edge to the top of a slope, so that the place to spray is the edge, with the hands already empty. There is {if self.get(:used)}nothing left in it to slosh.{else}a slosh in it when it is moved: one slosh, one spraying.{/if} }
+  describe { text can_look }
   passage label {
     {verbatim}
     !!! FROBOZZ MAGIC GRUE REPELLENT !!!
@@ -354,8 +358,12 @@ kind Repellent is Portable, Readable, Sprayable {
     (No warranty expressed or implied)
 
     Contents: one (1) application. Effect
-    lasts a few minutes at most; do not
-    stop to admire the scenery.
+    lasts a few minutes at most: about as
+    long as it takes to get from a water's
+    edge to the top of a slope. Apply at
+    the edge, with the hands already
+    empty, and do not stop to admire the
+    scenery.
     {/verbatim}
   }
   as target for read { do { say label } }
@@ -409,9 +417,13 @@ kind LoreBook is Portable, Readable, Openable {
   passage fdesc { Nestled inside the niche is an old and dusty book. }
   passage ldesc { There is an old book here. }
   passage pages { The book is written in a strong and elegant hand and is full of strange, wondrous pictures. The text, penned in many colours, is in a tongue unknown to you. The words seem to change colour as you read them. The book itself is very old and the pages dry and brittle. }
-  describe { text pages }
-  as target for read { do { say pages } }
-  as target for open { do { say "The book can be perused but not left open." } }
+  passage dungeon_page { The book seems to will itself open to a specific page. It shows a picture of eight small rooms located around a great circle of flame. All are identical save one, which has a bronze door leading to a room bathed in golden light. A legend beneath the picture says "The Dungeon and Treasury of Zork." }
+  describe {
+    if (actor.is(Adventurer)) { if (actor.get(:in_dungeon)) { text dungeon_page } else { text pages } }
+    else { text pages }
+  }
+  as target for read { do { if (actor.is(Adventurer)) { if (actor.get(:in_dungeon)) { say dungeon_page } else { say pages } } else { say pages } } }
+  as target for open { do { if (actor.is(Adventurer)) { if (actor.get(:in_dungeon)) { say dungeon_page } else { say "The book can be perused but not left open." } } else { say "The book can be perused but not left open." } } }
   as target for close { do { say "It is closed already; it closes itself, the way a book does that would rather not be read by just anyone." } }
   as target for smell { do { say "Dust, and old paper, and under those something like a fresh breeze, which is not a smell a book should have." } }
   on :consume { finally destroy self }

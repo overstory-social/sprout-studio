@@ -3,7 +3,7 @@
 // blocked; the Dead End beside it; and the Engravings Room, with the runes
 // on its north wall, the sleeping old man who is sometimes huddled in its
 // corner, the waybread that wakes him for good, and the secret door he
-// points to, which opens on the stairs down to the fourth quarter.
+// points to, which opens on the stairs down to the Button Room.
 //
 // The old man is the Dungeon Master in another guise: an NPC who comes
 // into the room by chance as a visitor enters it, sleeps until shaken,
@@ -17,6 +17,7 @@ import {Rubble} from 'way_in'
 import {junction} from 'way_in'
 import {Waybread} from 'items'
 import {Moss, WaterChannel} from 'aqueduct'
+import {button_room} from 'mirror'
 import {open, close, read, give, talk, greet, hail, alarm, shake, mung, rub, smell, listen, search, look_in, look_under, look_behind, climb_up, climb_down, through, kick, kiss, follow, shift, :door_found, :reveal, :not_yet, :sleeper_gone, :tick_sleep} from 'verbs'
 
 // The old and wizened man (OLD-MAN, OLD-MAN-F), asleep in the corner.
@@ -249,9 +250,9 @@ object dead_end is DarkRoom in underground_caverns_3 {
 object engravings_room is EngravingsRoom in underground_caverns_3 {
   grammar {
     name "Engravings Room"
-    exit north "north" refuse "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for: not for anything left undone up here, no word or key or deed this room is waiting on, but for what is still to be gathered in places you have not yet been. The door is open, and will stay open. The way down is not yours today. You come back up." when (secret_door.get(:door_open))
+    exit north "north" -> button_room say "You go through the secret door and down the dark, forbidding stairs, toward the flickering torchlight below." when (secret_door.get(:door_open))
     exit north "north" refuse "You can't go that way."
-    exit down "down" refuse "You go through the door and a few steps down the dark stairs beyond it, and the torchlight below does not come nearer, and the stairs go on. Something in you knows the old man is at the bottom of them and knows, as well, that you are not yet what he asked for: not for anything left undone up here, no word or key or deed this room is waiting on, but for what is still to be gathered in places you have not yet been. The door is open, and will stay open. The way down is not yours today. You come back up." when (secret_door.get(:door_open))
+    exit down "down" -> button_room say "You go through the secret door and down the dark, forbidding stairs, toward the flickering torchlight below." when (secret_door.get(:door_open))
     exit down "down" refuse "You can't go that way."
     exit southwest "southwest" -> damp_passage
     exit southeast "southeast" -> dead_end

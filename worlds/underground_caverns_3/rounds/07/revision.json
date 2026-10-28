@@ -1,0 +1,208 @@
+{
+  "decisions": [
+    {
+      "answers": "P1",
+      "decision": "accept",
+      "reason": "The brief's rule that every thing a description names can be examined was broken on the first scene most players reach, by a cue I added. The still thing among the trees is now a thing of the Cliff that answers the cue's words with the original's \"nobody there, but it's hard to tell\", and goes unseen when the man shows himself; `look among the trees` is read."
+    },
+    {
+      "answers": "P2",
+      "decision": "accept",
+      "reason": "A fault breaks the brief. The world may not take `help` (the compiler refuses it as an engine verb), and the engine's listing faults even at the Endless Stair empty-handed in the committed world, so the world answers `hint` and its kin in Zork's voice, the walkthrough runs it in a puzzle square, and friction 56 files the engine finding for Sprout; no test runs `help`, since it could only record a fault."
+    },
+    {
+      "answers": "P3",
+      "decision": "accept",
+      "reason": "The rock's line invited a verb the parser then refused with a false \"can't see\". The rock composes Shakeable, `shake` takes a tool, `attack` has \"strike [target] with [weapon]\", the line says the shake is the earth's, and the false answer is logged beside 38 as friction 57."
+    },
+    {
+      "answers": "P4",
+      "decision": "accept",
+      "reason": "The lake's lessons now land so well that visitors arrive at the table empty-handed; the odds stay, and the table's lean tells a lightless visitor the places it shows have no sun and the torch beside it has not been near the water, and `feel around` in a dark Room 8 finds the can and says the dark keeps it."
+    },
+    {
+      "answers": "P5",
+      "decision": "accept",
+      "reason": "The five moves are the intent's own secret and are kept exactly; what changes is where the can says to start (the water's edge, hands empty), a hurry-up on arriving at the Southern Shore with the smell holding, and an honest line when it goes there."
+    },
+    {
+      "answers": "P6",
+      "decision": "reject",
+      "reason": "The ship that passes once is the brief's showcase and the original's one command; a bare `wait` is a choice to do nothing in the window, and the near-calls already hold it once. The recommendation's own default is to leave it, and I do."
+    },
+    {
+      "answers": "P7",
+      "decision": "accept",
+      "reason": "The parser's false answers to compound lines are Sprout's (friction 38, status added), but `who is up there` and `look among [x]` are cheap to read in the world, and now are."
+    },
+    {
+      "answers": "P8",
+      "decision": "accept",
+      "reason": "Three small gaps the brief's rules cover: \"walls\" is a thing of every puzzle square answered in the square's own words, `wear` is an intent that takes what is worn when held and refuses the rest in V-WEAR's words, and `tug`, `yank` and `heave on` are a pull."
+    },
+    {
+      "answers": "P9",
+      "decision": "accept",
+      "reason": "Kept as they are, as the point asks: the shore's lesson and the ledge's nine beats landed, and the newcomer's departure is MAN-SEEN working as the original has it. No further beats are added."
+    },
+    {
+      "answers": "P10",
+      "decision": "accept",
+      "reason": "Every trap and its odds are kept, as the point asks. The footsteps-before-a-guard cue is not added: the original's GUARD-CAUGHT is a draw per command with no clock to warn from, and the brief keeps the original's mechanics."
+    },
+    {
+      "answers": "S1",
+      "decision": "accept",
+      "reason": "The director's steering outranks the schedule and the median playtester. The first try's failure is said in intent.md; the fourth quarter is built whole and the secret door's way down opens onto it, with the walkthrough extended to the Treasury; and the set-aside round's four findings are answered: prayer in the Royal Puzzle is a way out at a death's price with the wall's line when the good ladder is past saving and the slot's fee said plainly (friction 65), `hint` answers in Zork's voice with `help`'s engine fault filed (friction 56), the can's small print and the Southern Shore say where and how fast, and an underwater slip says the thing settles within reach."
+    }
+  ],
+  "changes": [
+    {
+      "what": "By the brief's schedule, the fourth quarter built whole: the Button Room and its red button, the Beam Room and its beam, the five hallways and ten narrow rooms of the long hallway, the Guardians of Zork who strike what they see, and the mirror box, one place turned an eighth at a time on its pole and slid along the channel, with every death the original has; its ways out go through a landing, since an exit's destination is source's (friction 60).",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/mirror.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/sprout.json"
+      ],
+      "for": [
+        "S1",
+        "P5"
+      ]
+    },
+    {
+      "what": "By the brief's schedule, the Dungeon Master's domain: the Dungeon Entrance and the wooden door knocked at (the seven things counted, the two words given), the Narrow Corridor, the four corridors, the Parapet with its sundial and button, the slot's cell and the two cells in their own places, the bronze door the strange key fits at last, the Treasury of Zork and its ending; the Dungeon Master as a Guise, Creature and Actor who follows by his own walk, is ordered by verbs whose first role is him or the presence that stands for him, and pushes the button and sets the dial by acting; the wrong cell's heat and window as a death in a world with no restore (friction 65).",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/dungeon.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/sprout.json"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "The world keeps the box (where it stands, its facing, pole, mirrors, the mirror side's seven-move and the pine side's five-move clocks, the beam) and the dungeon (doors, the cell in the slot, the dial, where the Dungeon Master stands and whether he follows), turns the cells in its own body (friction 63), and tells the pusher when the good ladder is pushed past saving; the Dest enum, the Panel enum, the Orderable kind and the new messages and order verbs; the secret door's way down leads to the Button Room; wall looks for the new rooms.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/underground_caverns_3.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/thing.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/engravings.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/room.sprout"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "The adventurer's part of the fourth quarter: the Dungeon Master's following at the end of each move and the orders' answers, the gate errands (out of the box, to and from the door, the cell turned round the pit, the orders found by room since a path names a thing by where it was declared, friction 59), the two words, the drop that breaks the beam, things put in the beam, the channel and the pit, a throw at the Guardians, the Dungeon Master struck, the potion wearing off in the Guardians' sight, the far cells' heat, and the ending's game-over line.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "The still thing among the trees: a scenery of the Cliff answering \"something\", \"thing\", \"shape\", \"figure\", \"watcher\", \"somebody\" and \"movement\" to examine, search, look in, find, listen, talk and follow, unseen once the man has shown himself; `look among [x]` an intent over look_in.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/cliff.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/underground_caverns_3.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout"
+      ],
+      "for": [
+        "P1",
+        "P7"
+      ]
+    },
+    {
+      "what": "`hint` and its kin answered in one paragraph of Zork's voice, run in the walkthrough's first puzzle square; the engine's `help`, which the world may not take and whose listing faults, filed as friction 56.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/walkthrough.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/friction.md"
+      ],
+      "for": [
+        "P2",
+        "S1"
+      ]
+    },
+    {
+      "what": "The cracked rock composes Shakeable and answers shake, shake-with and strike-with in its own voice; its line says the shake it waits for is the earth's; `shake` takes an optional carried tool and `attack` has \"strike [target] with [weapon]\".",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/museum.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout"
+      ],
+      "for": [
+        "P3"
+      ]
+    },
+    {
+      "what": "The viewing table's lean, to a visitor carrying no light, says the places it shows have no sun of their own and the flame on the wall beside it has not been near the water; `feel around` in a dark Room 8 finds the can and says the dark keeps it.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/vista.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P4"
+      ]
+    },
+    {
+      "what": "The can's label and its examine say an application lasts about as long as the walk from a water's edge to the top of a slope, so spray at the edge with empty hands; arriving at the Southern Shore with the smell holding is a hurry-up; the smell's going there or in the lair says the dark has noticed. The five moves are untouched.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/items.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P5",
+        "S1"
+      ]
+    },
+    {
+      "what": "`who is up there` and its kin are a shout; \"walls\" together is a thing of every puzzle square answered in the square's own words; `wear` is an intent that takes what is worn when held and refuses the rest with \"You can't wear the X.\"; `tug`, `yank`, `pull on` and `heave on` are a pull.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/verbs.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/puzzle.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout"
+      ],
+      "for": [
+        "P7",
+        "P8"
+      ]
+    },
+    {
+      "what": "The sealed puzzle's way out: `pray` in a square is a death at a death's price, `yell` there says so, the slot says plainly that its fee is the book and nothing less, and a push that leaves the good ladder against the west side, along the south, in the north's far corner or under the hole tells the pusher it is past saving. An underwater slip, of a dropped thing or the shiny object, says it settles in the sand within reach of another try.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/adventurer.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/puzzle.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/underground_caverns_3.sprout",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/lake.sprout"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "The walkthrough extended from the Jewel Room back to the Engravings Room, down to the Button Room, through the beam, the button, the box turned, steadied and slid past the Guardians, turned again and left by the pine side, the door knocked at, the Dungeon Master followed, sent to the parapet and ordered to push the button, the bronze door unlocked and the Treasury, with 7 of 7 in 255 moves and the Dungeon Master's last words; the old man's test now goes down to the Button Room and back; the README says four quarters.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/walkthrough.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/tests/old_man.json",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/world/README.md"
+      ],
+      "for": [
+        "S1"
+      ]
+    },
+    {
+      "what": "intent.md's round 8: the first try's failure said, which quarters are built, what the round's points changed, how the fourth quarter is built and where it departs, the Dungeon Master's fourth body, the new secrets and what done looks like; friction 56 to 65 (the engine's `help`, the typed verb's false \"can't see\", a hand's thing that cannot read the world, a path that names a thing by where it was declared, exits whose destinations are source's, `in` as a reserved word, no `here` for a non-actor's handler, nearest-name resolution in kinds, tests that cannot begin mid-world, and the fourth quarter's departures), 38's status, and the first draft of the section naming what all three worlds copy.",
+      "files": [
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/intent.md",
+        "/home/eslinger/code/sprout-studio-uc3/worlds/underground_caverns_3/friction.md"
+      ],
+      "for": [
+        "S1",
+        "P2",
+        "P3",
+        "P7"
+      ]
+    }
+  ]
+}

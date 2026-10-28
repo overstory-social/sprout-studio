@@ -25,7 +25,7 @@ import {flathead_ocean} from 'ocean'
 import {Waybread, Staff, BrokenStaff, Sword} from 'items'
 import {Lamp} from 'lamp'
 import {examine} from 'sprout'
-import {tie, untie, climb_up, climb_down, through, leap_at, take_fixed, shift, raise, open, close, unlock, put, give, talk, greet, hail, attack, mung, burn, cut, look_in, search, smell, listen, look_under, find, ManStage, :man_set, :man_stage, :lift_chest, :drop_chest, :haul_me, :tied, :opened, :slain, :man_away, :holding, :snap, :rope_set, :ledge_entered, :die, kiss, follow, look_behind} from 'verbs'
+import {tie, untie, climb_up, climb_down, through, leap_at, take_fixed, shift, raise, open, close, unlock, put, give, talk, greet, hail, attack, mung, burn, cut, look_in, search, smell, listen, look_under, find, ManStage, :man_set, :man_stage, :lift_chest, :drop_chest, :haul_me, :tied, :opened, :slain, :man_away, :holding, :snap, :rope_set, :ledge_entered, :die, kiss, follow, look_behind, follow_sound} from 'verbs'
 
 // The man's hauling: a verb only he performs, whose target's own part
 // climbs to the top (adventurer.sprout).
@@ -437,6 +437,23 @@ kind Trees is Scenery, Searchable, Concealing {
   passage no_take { They are rooted, and large, and you are not. }
 }
 
+// The something among the trees that is not a tree (round 7's P1): the
+// man, before he has shown himself, as the cliff's description names him.
+// Gone, as a thing to be named, once he has.
+kind StillThing is Scenery, Searchable {
+  grammar { name "something among the trees"  nouns "something", "thing", "shape", "figure", "watcher", "somebody", "someone", "movement"  adjectives "still", "dark", "not" }
+  passage short { something among the trees }
+  describe { text "There seems to be nobody there, but it's hard to tell. Whatever it was, if it was anything, has the knack of being a trunk whenever you look straight at it, and of being a little to one side of where you looked when you look away. It is keeping very still, and it is not keeping still the way a tree does." }
+  as target for search { do { say "You look among the trunks, and the trunks look back, and one of them, you would swear, has moved; but a tree that has moved is a tree, by the time you reach it. There seems to be nobody there, but it's hard to tell." } }
+  as target for look_in { do { say "Among the trees: the light coming down through them, and the shadows the light makes, and one shadow that is a little the wrong shape and slips back among the trunks as you look at it." } }
+  as target for find { do { say "It is among the trees, if it is anywhere; it does not seem to want finding, and the trees are on its side." } }
+  as target for listen { do { say "Nothing; and then, from among the trees, a sound that might be somebody not laughing." } }
+  as target for talk { do { say "Nobody answers. Among the trees, something that is not a tree goes on keeping very still." } }
+  as target for follow_sound { do { say "You go in among the trunks, and whatever it was is not where you go; it is behind you, or to one side, or a tree." } }
+  passage no_take { You would have to find it first, and it has an opinion about that. }
+  on :man_stage (from, value) { self.set(:unseen, value != :unmet) }
+}
+
 // The precipice at the top (CLIFF-OBJECT, CLIFF-OBJECT-F): a fifty-foot
 // drop to the ledge, down a rope or not at all.
 kind CliffEdge is Scenery {
@@ -583,6 +600,7 @@ object cliff is CliffTop in underground_caverns_3 {
     A rope is tied to one of the large trees here and is dangling over the side of the cliff, reaching down to the shelf below.{if underground_caverns_3.get(:man_stage) == :unmet} Among the trees, unless you are mistaken, something that is not a tree is keeping very still.{/if}{/if}
   }
   object trees is Trees
+  object still_thing is StillThing
   object rope is CliffRope
   object precipice is CliffEdge
   object sunshine is Sunlight

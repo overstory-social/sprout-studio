@@ -13,7 +13,7 @@
 // history the time machine can change (RING-STOLEN, CLUMSY-ROBBERY,
 // MYSTERY) is the world's too, and the present reads it.
 import * as sprout from 'sprout'
-import {Thing, Scenery, Portable, Fixed, Openable, Readable, Searchable, Concealing, Touchable, Knockable, Creature} from 'thing'
+import {Thing, Scenery, Portable, Fixed, Openable, Readable, Searchable, Concealing, Touchable, Knockable, Creature, Shakeable} from 'thing'
 import {Room, DarkRoom} from 'room'
 import {Box} from 'box'
 import {Adventurer} from 'adventurer'
@@ -23,7 +23,7 @@ import {Jewel, Sceptre, JewelledKnife, Ring} from 'items'
 import {TimeMachine} from 'time_machine'
 import {cp_ante, mid_cp_ante} from 'puzzle'
 import {examine} from 'sprout'
-import {open, close, read, look_in, look_under, search, shift, raise, through, climb_up, climb_down, smell, listen, follow, knock, mung, put, put_on, rub, take_fixed, unlock, cross, Dest, Era, :quake, :stone_door, :wooden_door, :history, :old_entered} from 'verbs'
+import {open, close, read, look_in, look_under, search, shift, raise, through, climb_up, climb_down, smell, listen, follow, knock, mung, put, put_on, rub, take_fixed, unlock, cross, Dest, Era, :quake, :stone_door, :wooden_door, :history, :old_entered, shake} from 'verbs'
 
 // A room of the museum, in whichever year.
 kind MuseumRoom is Room {
@@ -441,10 +441,12 @@ object great_door is GreatDoor in underground_caverns_3 {
   // The strained rock beside the door, before the quake (round 6's P1):
   // the cleft's promise, said so that a visitor turned back by the rust
   // knows to come back. The quake takes it, and the cleft answers after.
-  object cracked_rock is Scenery {
+  object cracked_rock is Scenery, Shakeable {
     grammar { name "cracked rock"  nouns "rock", "crack", "cracks", "wall"  adjectives "cracked", "strained", "right" }
     passage short { cracked rock }
-    describe { text "To the right of the iron door the rock of the wall is cracked from the floor to the vault, the cracks dark and wide enough to put a finger in, and running the way cracks run in a thing that is being pushed from behind. Dust sifts out of them now and then, without any reason you can see. The door is for ever; the rock, by the look of it, is not, and a good shake would settle the matter." }
+    describe { text "To the right of the iron door the rock of the wall is cracked from the floor to the vault, the cracks dark and wide enough to put a finger in, and running the way cracks run in a thing that is being pushed from behind. Dust sifts out of them now and then, without any reason you can see. The door is for ever; the rock, by the look of it, is not, and a good shake of the earth would settle the matter. Nothing smaller will." }
+    as target for shake { do { say "{if bound tool}You {if tool.is(Thing)}lay the {tool.short} against the rock and heave{else}heave{/if}, and the rock does not notice; it{else}You set your hands to the rock and shake, and the rock does not notice; it{/if} is waiting for a shake a good deal bigger than yours, the kind that comes up through the floor." } }
+    as target for mung { do { say "{if bound tool}{if tool.is(Thing)}You strike the rock with the {tool.short}, and dust comes out of the cracks, and that is all; it{else}You strike the rock, and dust comes out of the cracks, and that is all; it{/if}{else}You hit the rock with your bare hands, which the rock minds less than you do; it{/if} is waiting for something a good deal bigger than a blow." } }
     as target for shift { do { say "You push on the rock, and the rock does not notice you; it is waiting for something a good deal bigger than a push." } }
     as target for look_in { do { say "Dark, and dust, and a draught that smells faintly of a room beyond: there is something behind this rock, and the rock knows it." } }
     as target for listen { do { say "Now and then, from inside the rock, a tick, like a thing settling that has not finished settling." } }

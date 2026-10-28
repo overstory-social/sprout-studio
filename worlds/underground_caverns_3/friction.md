@@ -1006,3 +1006,248 @@ N" is `worlds/underground_caverns/friction.md`, "caverns 2 N" is
   compose, so there is one machine for it to mean. Bare `examine
   machine` and bare `open door` in the museum still draw among three,
   with the engine's warning, where the original asks which.
+
+## Round 8: the revision after round 7, and the fourth quarter
+
+### 56. `help` is the engine's, and its listing overruns a turn
+
+- **Wanted:** round 7's P2 and the set-aside round 8's finding: `help`
+  typed in a square of the Royal Puzzle faulted with BudgetExhausted
+  ("one turn may say 8000 characters to any one person"). The steering
+  asked the world to answer `help` and `hint` itself, in Zork's voice,
+  and to add a test that runs `help` in a puzzle square.
+- **Found:** `verb help { "help" … }` is refused: "`help` is one of the
+  engine's verbs, and only the standard library declares those. The
+  engine answers `go`, `look`, `examine`, `inventory`, `wait` and `help`
+  itself." The world cannot take the word. Measured against the world as
+  committed after round 7, the engine's `help` faults at the Endless
+  Stair with empty hands (the stair's six shared presences and the lamp
+  already offer more readings than fit), passes in the first puzzle
+  square with empty hands, and faults there with a full inventory, which
+  is how round 7's explorer met it; in this revision's world, with its
+  new things and intents, it faults in the puzzle square empty-handed
+  too. The listing grows with every thing in range times every untyped
+  verb (Zork answers `turn`, `tie`, `burn`, `cut`, `play`, `count` and
+  twenty more for everything, in YUKS), and a world cannot bound it.
+- **Wrote instead:** `hint` ("hint", "hints", "help me", "clue", "what
+  now", "what should i do", "i need help", "give me a hint"), answered
+  with one paragraph in Zork's voice; the walkthrough runs it in the
+  first puzzle square. `help` is left to the engine, and a test that ran
+  it could only record the fault, so none does. For
+  overstory-social/sprout: the engine's `help` should bound or summarise
+  its own output (the verbs alone, or the first screenful, or the
+  readings of what the visitor carries left out) rather than fault; and
+  a world should be able to answer `help` itself, as it may answer
+  `take`. Until then, "No fault in any run" cannot be promised to a
+  visitor who types `help`.
+- **Spec:** Verbs › Engine verbs; Limits › Runtime budgets.
+
+### 57. A verb typed by a kind answers "can't see" to a thing in plain view
+
+- **Wanted:** round 7's P3: `strike rock with staff` and `shake rock with
+  staff` at the Great Door, with the cracked rock in plain view, were
+  answered "You can't see any such thing."
+- **Found:** `strike [target]` was a phrase of `lamp_on`, typed by
+  `Switchable`, and `shake [target]` of `shake`, typed by `Shakeable`;
+  with a thing named that does not compose the kind, and words left over
+  that no phrase takes, the parser's answer is `not_here`, which reads as
+  a lie about a thing the room has just described. The same shape as 38:
+  a remainder the parser could not place is answered as an absence.
+- **Wrote instead:** the cracked rock composes `Shakeable`; `shake` takes
+  an optional carried tool ("shake [target] with [tool]"); `attack` has
+  "strike [target] with [weapon]". The rock answers each in its own voice
+  and the examine line says the shake it waits for is the earth's. A bare
+  `strike rock` is still `lamp_on`'s phrase and still `not_here`, since a
+  second "strike [target]" on `attack` would tie with it on the lamp.
+- **Spec:** Parsing › Matching a line; Verbs › Roles compose.
+
+### 58. A thing in a hand cannot read the world
+
+- **Wanted:** the strange key, as `tool` for `unlock` against the bronze
+  door, to read the world's `:bronze_locked` and send `:bronze_unlocked`,
+  as the cliff's trees read the world's `:man_stage`.
+- **Found:** a NameOutOfRange fault at run time: "`underground_caverns_3`
+  is out of range of `underground_caverns_3.key_room.key`". A thing lying
+  in a room has the world in range; the same thing in a visitor's hands
+  does not, since the visitor's body does not pass outward. 53 found the
+  converse, that a room's thing cannot move what a hand holds.
+- **Wrote instead:** the bronze door's own part does the unlocking and
+  says the key's words; the key's tool part is silent for that one target
+  and refuses every other lock in its own.
+- **Spec:** Objects › Range; Verbs › Playing a role.
+
+### 59. A path names a thing by where it was declared, not where it is
+
+- **Wanted:** to order the Dungeon Master by his path,
+  `behind_door.dungeon_master`, wherever he had followed the visitor to.
+- **Found:** "a send reached nothing: sent :dm_come to
+  behind_door.dungeon_master, which reaches nothing in its range now" the
+  moment he had left the Narrow Corridor: a dotted path is a containment
+  path, and names whatever of that name is inside that place now.
+- **Wrote instead:** the world keeps where he stands (`:dm_at`), and an
+  order finds him with `each m: DungeonMaster in <that room>`, in a chain
+  over the six rooms he can be in, each narrowed with `is()` first, since
+  a place named in a kind's body is "whatever is called that nearest each
+  instance" (63).
+- **Spec:** Names › Addressing and display; Objects › Range.
+
+### 60. An exit's destination is written in source, so a room that moves lets out through a landing
+
+- **Wanted:** the mirror box's ways out (MIROUT): `out`, or the compass
+  direction its open side faces, leads to whichever hallway or narrow
+  room the box stands beside, which changes as the box is turned and slid.
+- **Found:** an exit names its destination in source; a link's destination
+  may be set while the world runs, but a link is taken by its label and
+  "is not a direction: `go north` never means a link". So no direction can
+  lead to a place decided at run time.
+- **Wrote instead:** every direction out of the box is a run of
+  conditional exits whose one destination is a landing place; the landing
+  sends whoever arrives `:mirror_out`, and the visitor, with the world's
+  gate open, works out from the box's state where the landing lets out
+  and moves there in the same turn, as the death's cell carries a visitor
+  on. The hallways' ways into the box are plain conditional exits, since
+  the box is one place. It works, and it costs a place that is never
+  read, forty-odd exits and a chain of moves; a `connect` that a
+  direction could take would have been one line.
+- **Spec:** Verbs › Exits; Verbs › Links, for space that does not exist
+  yet.
+
+### 61. `in` is a word of the language, so a list of directions cannot hold it
+
+- **Wanted:** the `Direction` enum to hold `in` beside `out`, so that
+  "master, go in" could be read against it.
+- **Found:** "`in` is a word of the language, so it cannot be an option of
+  `Direction`." `out` is allowed.
+- **Wrote instead:** the enum does without it; "enter" orders are not read.
+- **Spec:** Properties › Enums; Verbs › Exits (the closed set).
+
+### 62. A thing that is not an actor has no `here` in a handler
+
+- **Wanted:** the box's mirror, told the box had turned, to work out which
+  side faces its room from the room's own numbers; the Dungeon Master's
+  presence in each room to go unseen when he is in that room; the bronze
+  door to know whether it hangs in the fourth cell's own place.
+- **Found:** "`here` is not bound inside `on :refresh`: only an actor's
+  own handler has a place". A `describe` and a verb part have `here`; a
+  message handler on a thing that is not an actor does not.
+- **Wrote instead:** the room works out the side as a visitor comes in and
+  sends it to the mirror (`:set_side with integer`); the presence and the
+  bronze door carry a property saying which room they stand in, set per
+  object. Three properties that duplicate the containment tree.
+- **Spec:** Messages › What a handler may read.
+
+### 63. A name in a kind's body is whatever is nearest, so the cells turn in the world's body
+
+- **Wanted:** the parapet's button, a kind, to move what lies in the cell
+  to one of eight stores and back (MOVE-CELL-OBJECTS) with `each t:
+  Portable in dungeon_cell`.
+- **Found:** "`dungeon_cell` is whatever is called that nearest each
+  instance, so Sprout does not know what it is, and cannot walk it", for
+  every place and store named; the remedy is an `is()` round each use. In
+  the world's own body the same names resolve statically, as the puzzle's
+  thirty-six squares already did.
+- **Wrote instead:** the button sends the world `:turn_cells`, and the
+  world does the turning, as it slides the puzzle's walls; the visitor in
+  the turned cell is told, and moves themself with the gate open.
+- **Spec:** Names › Identifiers and scope.
+
+### 64. A test cannot begin anywhere but the arrival place
+
+- **Wanted:** tests of the mirror box's deaths, the Guardians on foot, the
+  wrong cell's heat and the two words, each beginning in its room, as
+  `sprout play --at` begins an interactive session.
+- **Found:** a script's steps are `as`, `arrive`, `leave`, `tick`,
+  `advance`, `seed` and `comment`; `arrive` takes no place. Every test
+  starts at the Endless Stair, and the fourth quarter is two hundred and
+  fifty moves in.
+- **Wrote instead:** the walkthrough carries the fourth quarter, and its
+  edges were smoke-tested with `--at` and not pinned. For
+  overstory-social/sprout: `{ "arrive": "Marta", "at": "mra" }`, as `--at`
+  already admits a returning visitor.
+- **Spec:** Tooling › sprout play and test.
+
+### 65. The fourth quarter's departures from the original
+
+- **The wrong cell is a death, not a lock.** PRISON-CELL, the cell turned
+  away from the slot with the visitor in it, has no way out and the hint
+  book says so; the original expects a restore. This world has none, so
+  the cell's heat ends a visitor in ten moves, with a word at four and
+  seven, and the window over the pit at once; either is the old man's
+  visit, the possessions scattered, and the stair. The fourth cell in its
+  own place has the same heat, since without the key it is the same lock.
+- **Prayer in the Royal Puzzle is answered.** The puzzle can seal a
+  visitor in for good (the set-aside round 8's finding); `pray` there is a
+  death at a death's price, and `yell` there says so. Zork's own "If you
+  pray enough, your prayers may be answered." stands everywhere else.
+- **The Dungeon Master struck is a death like any other**, where the
+  original's REALLY-DEAD ends the game; as Q3's deaths in other years.
+- **The Dungeon Entrance's southeast and southwest** lead to the narrow
+  rooms only while the box stands long-ways in the last hallway, and
+  otherwise to the hallway, as MRGO routes every other stretch; the
+  original's FRONT-DOOR leads to them unconditionally, and a narrow room
+  with no box beside it still describes a mirror wall.
+- **The Guardians are noticed on entering** the rooms that describe them,
+  where the original marks GUARDIANS-SEEN on a look; a description may
+  not write.
+- **One box for everyone.** Where the box stands, which way it faces, its
+  pole, its mirrors and its two doors' clocks are the world's, as the
+  earthquake and the puzzle's grid are (31, 34, 46); two visitors in the
+  hallways would find one box and its clocks counting both their moves.
+- **`help` is not the world's to answer** (56); `hint` is.
+
+### 38, status after round 7
+
+- Seen again (round 7's P7): "look among the trees" was a bare look, and
+  "hello, who is up there?" got the shout's answer and then "That
+  sentence isn't one I recognize." in the same turn. "look among [x]" and
+  "who is up there" are now read (an intent over `look_in`, and one over
+  `yell`). For overstory-social/sprout, as before: a comma-split
+  remainder after a line that was answered should not add an
+  unrecognised notice, and a remainder should be refused or read, never
+  dropped.
+
+## What all three worlds copy
+
+The pieces the three caverns worlds now carry by hand, which the brief
+asks be named for promotion to Sprout's standard library:
+
+- **The Zork narrator's lines**: `unknown`, `not_here`, `no_way`, `dark`,
+  `unremarkable`, `nothing_happens`, `waited`, `not_carrying`,
+  `too_heavy`, as a register library a world composes.
+- **`Thing` and its YUKS**: a thing that answers every general verb with
+  Zork's refusal as a `default` play, and the typed kinds beside it
+  (`Portable`, `Fixed`, `Scenery`, `Wearable`, `Switchable`, `Readable`,
+  `Searchable`, `Concealing`, `Food`, `Touchable`, `Shakeable`,
+  `Squeezable`, `Greetable`, `Creature`, `Openable`, `Receptacle`,
+  `Knockable`, `Seatable`, `Orderable`), so that a verb is offered only
+  where something it applies to is in range (26).
+- **Zork's verbs** over the library's: `take` with "all" typed by what can
+  be carried and `take_fixed` beside it (52), `drop`, `put`, `put_on`,
+  `open`, `close`, `look_in`, `unlock`, `give`, `throw` with a direction
+  read whole (37), `attack` with an orphaned weapon filled, `wear` as a
+  take that refuses what is not worn, and the bare verbs Zork answers
+  everywhere (`score`, `diagnose`, `xyzzy`, `verbose`, `brief`,
+  `superbrief`, `pray`, `hint`).
+- **A room in Zork's shape**: name, long description on the first visit
+  and on `look`, contents by first description and long description
+  (`here_line`), BRIEF, VERBOSE and SUPERBRIEF per visitor, the shared
+  presences every room holds (wall, passage, ground, ceiling, room, grue)
+  since nothing is everywhere at once (caverns 2 7).
+- **Darkness and the grue**: a dark room that counts its lights and tells
+  each visitor whether it would be lit without them (`:room_lit`), the
+  lamp that burns down, and a walk in the dark that feeds the grue four
+  times in five (1).
+- **The world's gate**: a world that passes while an errand needs the
+  whole map in range (`:open_gate`, `:gate_open`, `:close_gate`), and a
+  visitor's `:dest` that says where the errand goes; every death, lake,
+  table, teleport and NPC walk in all three worlds goes through it (33,
+  59).
+- **Death as the old man's visit**: a holding place a dead visitor is
+  carried to and out of in one turn, an NPC there who acts on them, the
+  lamp home and the rest scattered (35).
+- **Orders to an NPC** as verbs whose first role is the one ordered, with
+  the comma in the phrase (caverns 2 7, here the Dungeon Master).
+- **A clock on the visitor's `after command`** for everything Zork queues
+  (I-CURE, I-SPRAY, I-VISIBLE, I-BOAT-DISAPPEAR, I-LAKE, I-MRINT,
+  I-PININ, I-FOLIN), and on the world's `:move_made` for what is the
+  game's (I-CLEFT, I-VIEW-CHANGE).

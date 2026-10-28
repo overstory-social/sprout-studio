@@ -216,7 +216,7 @@ kind PuzzleSlot is Scenery, Receptacle, Searchable {
   release (item, to) { refuse "The slot does not give back." }
   grammar { name "narrow slot"  nouns "slot", "slit", "opening"  adjectives "narrow", "small" }
   passage short { narrow slot }
-  describe { text "A narrow slot in the wall beside the steel door, a little wider than a book, going down into the dark further than a slot has any right to. Something about it says it is for paying." }
+  describe { text "A narrow slot in the wall beside the steel door, a little wider than a book, going down into the dark further than a slot has any right to. Something about it says it is for paying, and what it is for paying with is written small along its lip: the fee is the book, the ancient one from the niche, and nothing less, and it is not given back. The steel door opens for the fee and for nothing else." }
   as container for put { do { } }
   as target for look_in { do { say "Dark, and narrow, and nothing in it that you can see; whatever goes in does not stay where you could see it." } }
   as target for search { do { say "You feel into the slot as far as a hand goes, and the slot goes further." } }
@@ -398,4 +398,21 @@ object puzzle_south_wall is PuzzleWall in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp
   grammar { name "southern wall"  nouns "wall"  adjectives "south", "southern" }
   passage short { southern wall }
 }
+// "Walls", together (round 7's P8): a thing of every square that answers
+// for the four at once, in the square's own words.
+kind PuzzleWalls is Scenery {
+  grammar { name "walls"  nouns "stone", "sandstone", "marble"  adjectives "four", "surrounding" }
+  passage short { walls }
+  passage four_walls { Four walls, close: to the north {if here.is(PuzzleSquare)}{if here.get(:vn) == 0}an opening{else if here.get(:vn) == 1}marble, polished and cold{else}sandstone, rough and dry{/if}; to the south {if here.get(:vs) == 0}an opening{else if here.get(:vs) == 1}marble{else}sandstone{/if}; to the east {if here.get(:ve) == 0}an opening{else if here.get(:ve) == 1}marble{else}sandstone{if here.get(:ve) == -2}, with a ladder fixed to it{/if}{/if}; to the west {if here.get(:vw) == 0}an opening{else if here.get(:vw) == 1}marble{else}sandstone{if here.get(:vw) == -3}, with a ladder fixed to it{/if}{/if}{/if}. The marble is not going anywhere; the sandstone might be pushed, where there is room beyond it, by naming the wall. }
+  describe {
+    if (here.is(PuzzleSquare)) {
+      text four_walls
+    }
+    else { text "Walls." }
+  }
+  as target for shift { do { say "Name the wall: the eastern, the western, the northern or the southern; a wall of this kind is pushed one at a time." } }
+  as target for rub { do { say "Stone, cold and dry; the sandstone rough and the marble smooth, and your hand can tell them apart in the dark." } }
+  passage no_take { They are the walls. }
+}
+object puzzle_walls is PuzzleWalls in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36
 object puzzle_ladder is PuzzleLadder in cp_1, cp_2, cp_3, cp_4, cp_5, cp_6, cp_7, cp_8, cp_9, cp_10, cp_11, cp_12, cp_13, cp_14, cp_15, cp_16, cp_17, cp_18, cp_19, cp_20, cp_21, cp_22, cp_23, cp_24, cp_25, cp_26, cp_27, cp_28, cp_29, cp_30, cp_31, cp_32, cp_33, cp_34, cp_35, cp_36

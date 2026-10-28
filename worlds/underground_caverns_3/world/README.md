@@ -1,7 +1,7 @@
 # Underground Caverns 3: The Dungeon Master
 
 A Sprout microworld: Zork III: The Dungeon Master, ported a quarter at a
-time. Three quarters are built.
+time. All four quarters are built.
 
 The first: the Endless Stair and the way in (the Junction and the sword
 in its great rock, the Barren Area, the Creepy Crawl, the Foggy Room); the
@@ -41,17 +41,27 @@ gold machine's dial, seat and button, and the museum in other years: the
 same rooms between the dedication and now, and unfinished in 776, with
 the guards outside the door, Lord Flathead's voice through it, the robot
 that tidies, and the ring that can be hidden under the seat for two
-hundred years). What the visitor does in 776 changes the present. The
-way down beyond the secret door is the fourth quarter's, and turns the
-visitor back. Death is the old man's visit in the cell, and the fourth is
-the last.
+hundred years). What the visitor does in 776 changes the present.
+
+The fourth: beyond the secret door, the Button Room and its red button,
+the Beam Room and its beam; the long hallway with the Guardians of Zork
+in the middle of it, who strike what they see, and the mirror box, a
+room you are inside that turns an eighth at a time on its pole and
+slides along the channel from one compass rose to the next, past the
+Guardians, who cannot tell a reflection from each other; the Dungeon
+Entrance and the wooden door knocked at; and the dungeon itself: the
+corridors round a parapet over a pit of fire, the sundial and the button
+that turn eight cells round the pit, the Dungeon Master, who follows,
+stays and does what he is told, the one cell with a bronze door that the
+strange key fits at last, and the Treasury of Zork. Death is the old
+man's visit in the cell, and the fourth is the last.
 
 The score is a potential, out of 7, as the original counts it; all seven
-are in these three quarters.
+are had before the dungeon, and the dungeon is the end.
 
 `sprout check .` checks it, and `sprout test .` runs its tests, the
 scripts in `tests/`: `walkthrough.json` plays from the Endless Stair to
-the end of the third quarter with 7 of 7, `arrival.json` what a visitor
+the Treasury of Zork with 7 of 7 and the Dungeon Master's last words, `arrival.json` what a visitor
 first reads and the stair's refusals, `duel.json`, `slain.json`,
 `hood_pull.json` and `fight.json` the hooded figure, `ship.json`,
 `hail.json` and `sword_sea.json` the ocean, `shore.json` and `death.json`

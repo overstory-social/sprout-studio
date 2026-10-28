@@ -31,10 +31,12 @@ import {on_lake, in_lake, OnLake, Underwater, LakeShore, AqueductView, Lake, Shi
 import {oblivion} from 'oblivion'
 import {prison_cell, send_back} from 'cell'
 import {cliff, cliff_ledge, cliff_base, CliffTop, CliffLedge, CliffBase, CliffMan, LedgeMan, CliffRope, LedgeRope, CliffEdge, Ledge, Chest, haul} from 'cliff'
-import {damp_passage, dead_end, Sleeper} from 'engravings'
+import {damp_passage, dead_end, Sleeper, EngravingsRoom} from 'engravings'
+import {BeamRoom, Beam, MirrorBox, GuardianRoom, GuardianSide, Guardians, Channel, ShortPole, BoxFace, BoxMirror, BoxOuterPanel, Hallway, mra, mrb, mrc, mrg, mrd, mrae, mraw, mrbe, mrbw, mrce, mrcw, mrge, mrgw, mrde, mrdw, beam_room, button_room} from 'mirror'
+import {DungeonMaster, MasterVoice, FarCell, SlotCell, DungeonRoom, Parapet, BronzeDoor, CellDoor, FlamingPit, front_door, behind_door, parapet, dungeon_cell, good_cell, wrong_cell, north_corridor, south_corridor, east_corridor, west_corridor} from 'dungeon'
 import {scenic_vista, timber_room, room_8, altar_room, TimberRoom, MineRoom, Altar, FarShore, VistaRoom, TorchBracket} from 'vista'
 import {key_room, SouthShore, GrueLair, DarkTwo, KeyRoom, AqueductRoom, HighArch, WaterSlide, FarBalcony, Chasm} from 'aqueduct'
-import {take, take_fixed, drop, put, put_on, put_under, give, throw, throw_dir, throw_far, scramble, dig_here, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, get_out, exit_thing, board, search_here, feel_around, wait_long, Dest, Mode, Direction, ManStage, Era, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep, :cp_push, :cp_from, :cp_to, :cp_done, :cp_open_door, :tm_point, :time_trip, :push_machine, :machine_follow, :dial_set, :stone_door, :wooden_door, :old_entered, :jewels_home, :history} from 'verbs'
+import {take, take_fixed, drop, put, put_on, put_under, give, throw, throw_dir, throw_far, scramble, dig_here, attack, unmask, greet, hail, jump, dive, swim, through, leap_at, climb_up, climb_down, spray, score, diagnose, xyzzy, hello, yell, who_there, zork, verbose, brief, superbrief, quit, restart, save, restore, version, curse, pray, walk_about, back, stay, win, wish, bug, echo, repent, frobozz, answer_bare, say_bare, stand, chomp, odysseus, treasure, mumble, look_up, look_down, smell_here, listen_here, get_out, exit_thing, board, search_here, feel_around, wait_long, hint, cant_wear, incant, master_follow, master_stay, master_go, master_parapet, master_push, master_dial, master_spin, master_take, master_open, master_other, Dest, Mode, Direction, ManStage, Era, :light, :relight, :room_lit, :snuffed, :open_gate, :gate_open, :close_gate, :die, :grue, :glow, :sword_come, :fight_on, :fight_off, :shadow_here, :unhood, :unblock, :slain, :fry, :smash, :consume, :brief_hint, :settle, :lamp_home, :near_greet, :hood_taken, :move_made, :quake, :table_touched, :altar_death, :man_set, :rope_set, :lift_chest, :haul_me, :falling, :sprayed, :not_yet, :man_away, :holding, :snap, :ledge_entered, :tick_sleep, :cp_push, :cp_from, :cp_to, :cp_done, :cp_open_door, :tm_point, :time_trip, :push_machine, :machine_follow, :dial_set, :stone_door, :wooden_door, :old_entered, :jewels_home, :history, :mirror_out, :admitted, :sent_back, :cell_turned, :quest_done, :dm_order, :dm_follow_set, :dm_folflag_set, :wood_set, :pole_set} from 'verbs'
 
 kind Adventurer is sprout.Visitor {
   :capacity 30
@@ -123,6 +125,22 @@ kind Adventurer is sprout.Visitor {
   :holding_rope false
   // Whether a death sends the strange key home (JIGS-UP).
   :key_home false
+  // The dungeon (IN-DUNGEON, and FRONT-DOOR's TOUCHBIT for the two words):
+  // let in by the Dungeon Master; been to his door; the end reached; and
+  // the moves spent in a cell gone back to the rim of the pit.
+  :in_dungeon false
+  :front_door_touched false
+  :won false
+  :cell_heat 0 min 0 max 20
+  // Scratch: where the box lets out, the number an order sets the dial
+  // to, and whether a drop has broken the beam this command.
+  :mo Dest default nowhere
+  :dm_target Dest default nowhere
+  :dm_n 0
+  :cell_to 1 min 1 max 8
+  :beam_done false
+  // The directions an order to the Dungeon Master may name.
+  :ways [Direction] default [north, south, east, west, northeast, northwest, southeast, southwest, up, down, out]
   // Scratch for taking several things in one command.
   :fresh 0 min 0 max 50
   // Whether the visitor stood at the Scenic Vista as the turn's clock
@@ -162,7 +180,7 @@ kind Adventurer is sprout.Visitor {
     {t.indef}{if t.is(Light)}{if t.get(:lit)} (providing light){/if}{/if}{if t.is(Wearable)} (being worn){/if}{t.inside_lines}{/for}{/if}
   }
   passage too_heavy { Your load is too heavy. }
-  passage over { The game is over. Nothing further will happen to you in it; whoever the old man was waiting for, he has gone to look for them elsewhere. }
+  passage over { {if self.get(:won)}Your quest in ZORK is complete. The lore and the powers are yours, and the burden with them; there is nothing further this world can ask of you, and nothing further you need do in it but enjoy the treasury, which is a thing a Dungeon Master learns to do slowly.{else}The game is over. Nothing further will happen to you in it; whoever the old man was waiting for, he has gone to look for them elsewhere.{/if} }
   passage score_line {
     Your potential is {self.get(:score)} of a possible 7, in {self.get(:moves)} {if self.get(:moves) == 1}move{else}moves{/if}.
   }
@@ -289,16 +307,61 @@ kind Adventurer is sprout.Visitor {
       // I-VISIBLE: the potion wears off.
       if (self.get(:invisible)) {
         self.adjust(:invis_left, -1)
-        if (self.get(:invis_left) == 0) { self.set(:invisible, false) }
+        if (self.get(:invis_left) == 0) {
+          self.set(:invisible, false)
+          if (here.is(GuardianRoom) || here.is(GuardianSide)) {
+            say "One of the stone figures (or maybe both, it's hard to tell) suddenly springs to life and crushes you with his stone bludgeon."
+            self.set(:dying, true)
+            send self :die
+          }
+        }
       }
-      // I-SPRAY: the repellent wears off.
+      // I-SPRAY: the repellent wears off; on the far shore, or in the
+      // lair, the line says what that means (round 7's P5).
       if (self.get(:sprayed)) {
         self.adjust(:spray_left, -1)
         if (self.get(:spray_left) == 0) {
           self.set(:sprayed, false)
-          say "That horrible smell is much less pungent now."
+          if (here.is(SouthShore) || here.is(GrueLair)) { say "That horrible smell is much less pungent now, which is to say it is nearly gone, and the dark up the slope, which kept its distance while it lasted, has noticed." }
+          else { say "That horrible smell is much less pungent now." }
         }
       }
+      // The Dungeon Master follows (I-FOLIN): at the end of each move, to
+      // wherever the visitor has gone, by his own walk with the world's
+      // gate open; never into a cell, which he says once.
+      if (!self.get(:dying) && self.get(:in_dungeon) && underground_caverns_3.get(:dm_following) && here.is(Room)) {
+        if (underground_caverns_3.get(:dm_at) != here.get(:id)) {
+          if (here.is(SlotCell) || here.is(FarCell)) {
+            if (underground_caverns_3.get(:dm_folflag)) {
+              say "You notice that the dungeon master doesn't follow you."
+              send underground_caverns_3 :dm_folflag_set with false
+            }
+          }
+          else if (here.is(DungeonRoom)) {
+            if (!underground_caverns_3.get(:dm_folflag)) {
+              say "The dungeon master rejoins you."
+              send underground_caverns_3 :dm_folflag_set with true
+            }
+            else { say "The dungeon master follows you." }
+            self.set(:dest, :dm_follow)
+            send underground_caverns_3 :open_gate
+          }
+        }
+      }
+      // A cell gone back to its place on the rim of the pit is the fire's
+      // own: the original leaves a visitor in the wrong one for ever, and
+      // this world, which has no restore, lets the heat end it instead,
+      // at a death's price.
+      if (!self.get(:dying) && here.is(FarCell)) {
+        self.adjust(:cell_heat, 1)
+        if (self.get(:cell_heat) == 4) { say "The heat through the window is fierce, and getting fiercer; the cell, back in its own place on the rim, is as near the fire as a cell can be, and the fire knows it." }
+        else if (self.get(:cell_heat) == 7) { say "The air is scorching now, and hard to breathe. Whatever is to be done in this cell wants doing soon, and if there is nothing to be done in it, the window is quicker than the heat." }
+        else if (self.get(:cell_heat) >= 10) {
+          say "The heat has done what the fire could not reach to do. You slide down the wall of the cell, and the pit's roar goes a long way off."
+          self.set(:dying, true)
+          send self :die
+        }
+      } else { self.set(:cell_heat, 0) }
       // The Viking ship (FLATHEAD-OCEAN-F, I-BOAT-DISAPPEAR): once, one
       // time in five per move on the shore, and gone again at the end of
       // the next move.
@@ -964,6 +1027,7 @@ kind Adventurer is sprout.Visitor {
       self.set(:snap_in, 0)
       self.set(:guards, false)
       self.set(:pushing, false)
+      self.set(:cell_heat, 0)
       self.set(:key_home, here.is(GrueLair) || here.is(KeyRoom) || here.is(AqueductRoom))
       // The man's clocks die with you (KILL-INTERRUPTS): a man away with
       // the chest does not come back for anyone.
@@ -1039,6 +1103,65 @@ kind Adventurer is sprout.Visitor {
         }
       }
       move self to endless_stair
+    } else if (d == :mirror_out) {
+      // MIROUT: out of the box by whichever of its doors is open, to the
+      // room the box's place and facing say.
+      let ml = underground_caverns_3.get(:mloc)
+      let md = underground_caverns_3.get(:mdir)
+      self.set(:mo, :nowhere)
+      if (underground_caverns_3.get(:mirror_open)) {
+        if (md == 0) {
+          if (ml == 1) { self.set(:mo, :mraw) } else if (ml == 2) { self.set(:mo, :mrbw) } else if (ml == 3) { self.set(:mo, :mrcw) } else if (ml == 4) { self.set(:mo, :mrgw) } else { self.set(:mo, :mrdw) }
+        }
+        else if (md == 180) {
+          if (ml == 1) { self.set(:mo, :mrae) } else if (ml == 2) { self.set(:mo, :mrbe) } else if (ml == 3) { self.set(:mo, :mrce) } else if (ml == 4) { self.set(:mo, :mrge) } else { self.set(:mo, :mrde) }
+        }
+        else if (md < 180) {
+          if (ml == 1) { self.set(:mo, :mrb) } else if (ml == 2) { self.set(:mo, :mrc) } else if (ml == 3) { self.set(:mo, :mrg) } else if (ml == 4) { self.set(:mo, :mrd) } else { self.set(:mo, :front_door) }
+        }
+        else {
+          if (ml == 1) { self.set(:mo, :beam_room) } else if (ml == 2) { self.set(:mo, :mra) } else if (ml == 3) { self.set(:mo, :mrb) } else if (ml == 4) { self.set(:mo, :mrc) } else { self.set(:mo, :mrg) }
+        }
+      }
+      else {
+        tell self "As you leave, the door swings shut."
+        send underground_caverns_3 :wood_set with false
+        if (md == 0) {
+          if (ml == 1) { self.set(:mo, :beam_room) } else if (ml == 2) { self.set(:mo, :mra) } else if (ml == 3) { self.set(:mo, :mrb) } else if (ml == 4) { self.set(:mo, :mrc) } else { self.set(:mo, :mrg) }
+        }
+        else {
+          if (ml == 1) { self.set(:mo, :mrb) } else if (ml == 2) { self.set(:mo, :mrc) } else if (ml == 3) { self.set(:mo, :mrg) } else if (ml == 4) { self.set(:mo, :mrd) } else { self.set(:mo, :front_door) }
+        }
+      }
+      let mo = self.get(:mo)
+      if (mo == :mraw) { move self to mraw } else if (mo == :mrbw) { move self to mrbw } else if (mo == :mrcw) { move self to mrcw } else if (mo == :mrgw) { move self to mrgw } else if (mo == :mrdw) { move self to mrdw }
+      else if (mo == :mrae) { move self to mrae } else if (mo == :mrbe) { move self to mrbe } else if (mo == :mrce) { move self to mrce } else if (mo == :mrge) { move self to mrge } else if (mo == :mrde) { move self to mrde }
+      else if (mo == :mra) { move self to mra } else if (mo == :mrb) { move self to mrb } else if (mo == :mrc) { move self to mrc } else if (mo == :mrg) { move self to mrg } else if (mo == :mrd) { move self to mrd }
+      else if (mo == :front_door) { move self to front_door } else if (mo == :beam_room) { move self to beam_room }
+    } else if (d == :dm_follow || d == :dm_send || d == :dm_push || d == :dm_dial || d == :dm_spin) {
+      // I-FOLIN, and the orders: the Dungeon Master is found in the room
+      // the world says he stands in, and told the errand.
+      if (here.is(Room)) { self.set(:dm_target, here.get(:id)) }
+      let dm_pos = underground_caverns_3.get(:dm_at)
+      if (dm_pos == :behind_door) { if (behind_door.is(DungeonRoom)) { each m: DungeonMaster in behind_door { send m :dm_order with d } } }
+      else if (dm_pos == :south_corridor) { if (south_corridor.is(DungeonRoom)) { each m: DungeonMaster in south_corridor { send m :dm_order with d } } }
+      else if (dm_pos == :east_corridor) { if (east_corridor.is(DungeonRoom)) { each m: DungeonMaster in east_corridor { send m :dm_order with d } } }
+      else if (dm_pos == :west_corridor) { if (west_corridor.is(DungeonRoom)) { each m: DungeonMaster in west_corridor { send m :dm_order with d } } }
+      else if (dm_pos == :north_corridor) { if (north_corridor.is(DungeonRoom)) { each m: DungeonMaster in north_corridor { send m :dm_order with d } } }
+      else if (dm_pos == :parapet) { if (parapet.is(Parapet)) { each m: DungeonMaster in parapet { send m :dm_order with d } } }
+    } else if (d == :cell_turn) {
+      // CELL-MOVE: round the pit with the cell, to the fourth cell's own
+      // place or another's.
+      if (self.get(:cell_to) == 4) { move self to good_cell } else { move self to wrong_cell }
+    } else if (d == :to_button) {
+      // DUNGEON-DOOR-F: sent back to the Button Room with the two words.
+      move self to button_room
+    } else if (d == :to_front) {
+      // V-SAY's FROTZ OZMOO: from the secret door to the Dungeon Entrance.
+      move self to front_door
+    } else if (d == :to_behind) {
+      // DUNGEON-DOOR-F: let in.
+      move self to behind_door
     } else if (d == :sword) {
       broadcast :sword_come
     } else if (d == :splash) {
@@ -1197,6 +1320,40 @@ kind Adventurer is sprout.Visitor {
     }
     send underground_caverns_3 :close_gate
   }
+  // Out of the mirror box (MIROUT): the landing says so, and the gate
+  // does the rest.
+  on :mirror_out {
+    self.set(:dest, :mirror_out)
+    send underground_caverns_3 :open_gate
+  }
+  // Let in at the dungeon door (DUNGEON-DOOR-F): the Dungeon Master
+  // follows from here on, and the narrow corridor is where he stands.
+  on :admitted {
+    self.set(:in_dungeon, true)
+    self.set(:front_door_touched, true)
+    send underground_caverns_3 :dm_follow_set with true
+    send underground_caverns_3 :dm_folflag_set with true
+    self.set(:dest, :to_behind)
+    send underground_caverns_3 :open_gate
+  }
+  // Sent back from the door to the Button Room, with the two words.
+  on :sent_back {
+    self.set(:front_door_touched, true)
+    self.set(:dest, :to_button)
+    send underground_caverns_3 :open_gate
+  }
+  // The cell turned round the pit with you in it (CELL-MOVE): to the
+  // fourth cell's own place, or another's.
+  on :cell_turned (from, value) {
+    self.set(:cell_to, value)
+    self.set(:dest, :cell_turn)
+    send underground_caverns_3 :open_gate
+  }
+  // The Treasury (NIRVANA-F): the end.
+  on :quest_done {
+    self.set(:finished, true)
+    self.set(:won, true)
+  }
   // Back in the present's Technology Museum, with the machine there: into
   // its seat (TGOTO's last MOVE), once the machine has come home.
   on :board_here {
@@ -1230,6 +1387,9 @@ kind Adventurer is sprout.Visitor {
       each b: Box in self {
         if (b.get(:open) || b.get(:transparent)) { each l: Light in b { if (l.get(:lit)) { self.set(:own_light, true) } } }
       }
+      // On the far shore with the repellent still on (round 7's P5): a
+      // hurry-up, not a retreat.
+      if (here.is(SouthShore) && self.get(:sprayed)) { say "The smell is holding, for the moment: it is good for about as long as the climb takes, if you do not dawdle on the beach." }
       if (here.is(DarkRoom)) {
         if (!self.get(:own_light) && !here.get(:alight)) {
           if (self.get(:room_dark) && random(5) < 4) {
@@ -1313,13 +1473,13 @@ kind Adventurer is sprout.Visitor {
               spawn Amulet in self
               send t :taken
             }
-            else { say "{if several}{t.short}: {/if}The shiny object slips from your grasp and back onto the floor of the lake, where it is covered in sand." }
+            else { say "{if several}{t.short}: {/if}The shiny object slips from your grasp and back onto the floor of the lake, where it is covered in sand. It is still there, under the sand, within reach of another try." }
           }
           else if (!t.is(Portable)) { say "{if several}{t.short}: {/if}{t.no_take}" }
           // Underwater (IN-LAKE-F): a load over 25 is too much, and a thing
           // slips three times in ten.
           else if (here.is(Underwater) && self.get(:load) > 25) { say "{if several}{t.short}: {/if}You can't carry that much underwater." }
-          else if (here.is(Underwater) && random(10) < 3) { say "{if several}{t.short}: {/if}The {t.short} is yours for a moment, but drops from your grasp." }
+          else if (here.is(Underwater) && random(10) < 3) { say "{if several}{t.short}: {/if}The {t.short} is yours for a moment, but drops from your grasp, and settles in the sand within reach; another try might hold it." }
           else if (self.get(:load) + t.get(:size) > 100) { say "{if several}{t.short}: {/if}Your load is too heavy." }
           else if (!t.is(Wearable) && self.count(Thing) - self.count(Wearable) > 7 && random(100) < (self.count(Thing) - self.count(Wearable)) * 8) { say "{if several}{t.short}: {/if}You're holding too many things already!" }
           else {
@@ -1363,10 +1523,18 @@ kind Adventurer is sprout.Visitor {
   as actor for drop {
     do {
       let several = target.count > 1
+      self.set(:beam_done, false)
       each t of target {
         if (t.is(Potion)) {
           say "{if several}{t.short}: {/if}Nothing seems to come out, although the sweet smell disappears from the vial, seeming to permeate the air briefly before fading entirely."
           send t :consume
+        }
+        // MREYE-ROOM: a thing dropped in the Beam Room, with the beam
+        // whole, lands where it breaks the beam.
+        else if (here.is(BeamRoom) && !here.get(:blocked) && !self.get(:beam_done)) {
+          self.set(:beam_done, true)
+          move t to here
+          say "{if several}{t.short}: {/if}You conveniently drop the {t.short} in position to block the beam of light."
         }
         else {
           move t to here
@@ -1416,6 +1584,51 @@ kind Adventurer is sprout.Visitor {
             say "The item vanishes into the slot. A moment later, a previously unseen sign flashes \"Garbage In, Garbage Out\" and spews out the {item.short} (now atomized)."
           }
         }
+      }
+      // The beam (BEAM-FUNCTION): a thing put in it lies on the floor and
+      // breaks it.
+      else if (container.is(Beam)) {
+        if (item == self) { say "You step into the beam, and it is broken for as long as you stand there, and whole again when you step back; a thing on the floor would do it better, and stay." }
+        else if (self.holds(item)) {
+          if (item.is(Thing)) {
+            move item to here
+            say "The beam is now interrupted by {item.a_short} lying on the floor."
+          }
+        }
+        else if (here.holds(item)) { if (item.is(Thing)) { say "The {item.short} already breaks the beam." } }
+        else if (item.is(Thing)) { say "You're not holding the {item.short}." }
+        else { say "You're not holding that." }
+      }
+      // The channel (SHORT-POLE-F's PUT): the short pole dropped into it.
+      else if (container.is(Channel)) {
+        if (item.is(ShortPole)) {
+          let p = underground_caverns_3.get(:poleup)
+          let md = underground_caverns_3.get(:mdir)
+          if (p == 0) { say "The pole cannot be lowered further." }
+          else if (md == 0 || md == 180) { send underground_caverns_3 :pole_set with 0  say "The pole is lowered into the channel." }
+          else if (md == 270 && underground_caverns_3.get(:mloc) == 2) { send underground_caverns_3 :pole_set with 0  say "The pole is lowered into the stone hole." }
+          else if (p == 1) { say "The pole is already resting on the floor." }
+          else { send underground_caverns_3 :pole_set with 1  say "The pole now rests on the stone floor." }
+        }
+        else if (self.holds(item)) {
+          if (item.is(Thing)) { move item to here  say "You lay the {item.short} in the channel, which is a few inches deep, so that it is lying, in effect, on the floor." }
+        }
+        else { say "You don't have that." }
+      }
+      // The flaming pit (FLAMING-PIT-F): what goes in is gone.
+      else if (container.is(FlamingPit)) {
+        if (item == self) { say "It would be a pity to end your life so near the end of your quest!" }
+        else if (!self.holds(item)) { say "You don't have that." }
+        else if (here.is(Room)) {
+          if (here.is(Parapet) || here.get(:id) == :north_corridor) {
+            if (item.is(Thing)) {
+              move item to container
+              say "You cast the {item.short} into the pit, where it is lost forever."
+            }
+          }
+          else { say "You're not close enough." }
+        }
+        else { say "You're not close enough." }
       }
       else if (container.is(OldPedestal)) {
         if (!self.holds(item)) { say "You don't have that." }
@@ -1513,6 +1726,12 @@ kind Adventurer is sprout.Visitor {
           }
           else if (aim.is(Chasm)) {
             say "You weigh the {target.short} in your hand and the chasm with your eye, and keep the one. Nothing that has gone into that chasm has been seen again, and the {target.short} would not be the first exception."
+          }
+          // Thrown at the Guardians (GUARDIANS): destroyed in perfect
+          // unison.
+          else if (aim.is(Guardians)) {
+            move target to aim
+            say "The {target.short} falls in front of the Guardians, who destroy it in perfect unison. Satisfied, they resume their posts."
           }
           // Thrown at the man at the brink (GLOBAL-MAN-F): not nearly far
           // enough.
@@ -1728,6 +1947,15 @@ kind Adventurer is sprout.Visitor {
         } else { say "You wouldn't hurt him with that!" }
       }
       else if (target.is(LedgeMan)) { say "It's unlikely you'll succeed at this distance." }
+      else if (target.is(Guardians)) { say "You aren't close enough, and even if you were, the fight would be a bit one-sided." }
+      // The Dungeon Master struck (DUNGEON-MASTER-F's REALLY-DEAD): here a
+      // death like any other, since this world has no restore.
+      else if (target.is(DungeonMaster)) {
+        say "The dungeon master is taken by surprise. He dodges your blow, and with a disappointed expression on his face, traces a complicated pattern in the air with his staff. You crumble into dust."
+        self.set(:dying, true)
+        send self :die
+      }
+      else if (target.is(MasterVoice)) { say "The dungeon master isn't here." }
       else if (target.is(Sleeper)) {
         say "The attack seems to have left the old man unharmed! You watch in awe as he rises to his feet and seems to tower above you. He peers down menacingly, then sadly and wearily. \"Not yet,\" he mourns, and vanishes in a puff of smoke."
         send target :not_yet
@@ -1765,7 +1993,7 @@ kind Adventurer is sprout.Visitor {
       }
       else if (target.is(Shadow)) { say "The hooded figure does not respond to your words." }
       else if (target.is(Footsteps)) { say "You say hello to the hills. The footsteps stop, as if somebody were listening, and after a moment go on, no nearer." }
-      else if (target.is(CliffMan) || target.is(LedgeMan) || target.is(Sleeper)) { }
+      else if (target.is(CliffMan) || target.is(LedgeMan) || target.is(Sleeper) || target.is(Guardians) || target.is(DungeonMaster) || target.is(MasterVoice)) { }
       else if (target.is(Creature)) { say "The {target.short} bows his head to you in greeting." }
       else if (target.is(Thing)) { say "It's a well known fact that only schizophrenics say \"Hello\" to {target.a_short}." }
       else { say "It's a well known fact that only schizophrenics say \"Hello\" to that." }
@@ -1815,6 +2043,8 @@ kind Adventurer is sprout.Visitor {
   // hears every call that is nearly the words: the ship holds, once.
   as actor for yell {
     do {
+      if (here.is(PuzzleSquare)) { say "The walls take the shout and give nothing back, and nobody comes; the note at the entrance said as much. If you pray enough, it is said down here, your prayers may be answered." }
+      else
       if (here.is(FlatheadOcean)) {
         if (self.get(:ship_visible)) {
           say "You shout across the water, and the sailor, his hand still cupped to his ear, turns toward the sound."
@@ -1888,8 +2118,30 @@ kind Adventurer is sprout.Visitor {
   passage go_under { You take a breath and go under. }
   as actor for through {
     do {
+      // The mirror box entered by its mirror or its panel (MIRIN): in,
+      // where the opened side faces you, and told why not where it does
+      // not.
+      if (target.is(BoxFace)) {
+        let m = target.get(:m)
+        if (m == 1 && underground_caverns_3.get(:mirror_open)) { move self in }
+        else if (m == 1 && !underground_caverns_3.get(:mirror_opened) && underground_caverns_3.get(:mr1)) { say "A mirror blocks your way." }
+        else if (m == 1) { say "The panel is closed." }
+        else { say "The structure blocks your way." }
+      }
+      // The cell door (CELL-DOOR-F): south through it, from the corridor.
+      else if (target.is(CellDoor)) {
+        if (here.is(SlotCell)) { say "Look around." }
+        else if (underground_caverns_3.get(:cell_door_open)) { move self south }
+        else { say "The cell door is closed." }
+      }
+      // The bronze door: south through it, from the fourth cell.
+      else if (target.is(BronzeDoor)) {
+        if (here.is(FarCell) && underground_caverns_3.get(:bronze_open)) { move self south }
+        else if (underground_caverns_3.get(:bronze_open)) { move self north }
+        else { say "The bronze door is closed." }
+      }
       // The gold machine, boarded (V-BOARD), by its name or its seat's.
-      if (target.is(TimeMachine)) {
+      else if (target.is(TimeMachine)) {
         if (here == target) { say "You are in it already, in the seat, before the console." }
         else {
           say "You climb into the gold machine and settle on the seat before the console."
@@ -1960,7 +2212,12 @@ kind Adventurer is sprout.Visitor {
   }
   as actor for leap_at {
     do {
-      if (target.is(Lake)) {
+      // BEAM-FUNCTION's LEAP: over the beam and north.
+      if (target.is(Beam)) {
+        say "You jump over the beam and into the hallway."
+        move self north
+      }
+      else if (target.is(Lake)) {
         if (here.is(LakeShore) || here.is(FarShore) || here.is(SouthShore)) {
           if (self.count(Thing) - self.count(Wearable) > 0) {
             say plunge
@@ -2093,7 +2350,149 @@ kind Adventurer is sprout.Visitor {
       else if (self.get(:deaths) >= 3) { say "You have been killed an awful lot." }
     }
   }
+  // Help, in Zork's voice (round 7's P2): the library's listing overran
+  // a turn in the Royal Puzzle; this is the world's own, and short.
   as actor for help { do { self.set(:aside, true) } }
+  passage hint_line { Help, down here, is what you bring with you. The words that work are the usual ones: the compass, UP and DOWN to move; LOOK and EXAMINE to see; TAKE, DROP, OPEN, PUSH and whatever a thing seems to invite when it is looked at; INVENTORY for what you carry, SCORE for how you stand, DIAGNOSE for how you are. The old man said to seek him when you felt yourself worthy, and that is the only hint he gives, and he meant it. }
+  as actor for hint { do { self.set(:aside, true)  say hint_line } }
+  as actor for cant_wear { do { say "You can't wear the {target.short}." } }
+  // The two words (V-SAY's FROTZ OZMOO): at the secret door, once the
+  // Dungeon Master has given them, back to his door; anywhere else,
+  // nothing; before he has given them, an echo.
+  as actor for incant {
+    do {
+      if (!self.get(:front_door_touched)) { say "The incantation echoes back faintly, but nothing else happens." }
+      else if (here.is(EngravingsRoom)) {
+        say "The runes on the north wall brighten, one after another, and the room goes out like a lamp."
+        self.set(:dest, :to_front)
+        send underground_caverns_3 :open_gate
+      }
+      else { say "Nothing happens." }
+    }
+  }
+  // Orders to the Dungeon Master (DUNGEON-MASTER-F with WINNER the master,
+  // MASTER-F): answered by where he stands, and done by him.
+  passage dm_not_here { The dungeon master isn't here. }
+  passage dm_cant_hear { He can't hear you. }
+  as actor for master_follow {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (here.is(Room) && underground_caverns_3.get(:dm_at) == here.get(:id)) {
+        say "The dungeon master answers, \"I will follow.\""
+        send underground_caverns_3 :dm_follow_set with true
+      }
+      else { say "The dungeon master's voice replies, \"You must come here first!\"" }
+    }
+  }
+  as actor for master_stay {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else {
+        say "The dungeon master answers, \"I will stay.\""
+        send underground_caverns_3 :dm_follow_set with false
+      }
+    }
+  }
+  as actor for master_go {
+    way from :ways
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (bound way) {
+        let dm_pos = underground_caverns_3.get(:dm_at)
+        if (dm_pos == :north_corridor && way == :north) {
+          say "\"Very well. I am at the parapet!\""
+          send underground_caverns_3 :dm_follow_set with false
+          self.set(:dest, :dm_send)
+          send underground_caverns_3 :open_gate
+        }
+        else if (dm_pos == :north_corridor && way == :south) { say "\"I am not permitted to enter the prison cell.\"" }
+        else if (dm_pos == :south_corridor && way == :north) { say "\"I am not permitted to enter the prison cell.\"" }
+        else { say "\"I prefer to stay where I am, thank you.\"" }
+      }
+      else { say "\"I prefer to stay where I am, thank you.\"" }
+    }
+  }
+  as actor for master_parapet {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (underground_caverns_3.get(:dm_at) == :parapet) {
+        say "\"I am at the parapet already,\" he replies, \"and I will stay at it.\""
+        send underground_caverns_3 :dm_follow_set with false
+      }
+      else {
+        say "\"Very well!\""
+        send underground_caverns_3 :dm_follow_set with false
+        self.set(:dest, :dm_send)
+        send underground_caverns_3 :open_gate
+      }
+    }
+  }
+  as actor for master_push {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (underground_caverns_3.get(:dm_at) == :parapet) {
+        say "\"If you wish,\" he replies."
+        self.set(:dest, :dm_push)
+        send underground_caverns_3 :open_gate
+      }
+      else { say "\"If you wish,\" he replies, and then, after a moment, \"but there is no button where I am standing. The button is on the parapet.\"" }
+    }
+  }
+  as actor for master_dial {
+    n from 1 to 8
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (underground_caverns_3.get(:dm_at) == :parapet) {
+        if (bound n) {
+          say "\"If you wish,\" he replies."
+          self.set(:dm_n, n)
+          self.set(:dest, :dm_dial)
+          send underground_caverns_3 :open_gate
+        }
+        else { say "\"There is no such setting,\" he replies." }
+      }
+      else { say "\"If you wish,\" he replies, and then, after a moment, \"but there is no dial where I am standing. The dial is on the parapet.\"" }
+    }
+  }
+  as actor for master_spin {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else if (underground_caverns_3.get(:dm_at) == :parapet) {
+        say "\"If you wish,\" he replies."
+        self.set(:dest, :dm_spin)
+        send underground_caverns_3 :open_gate
+      }
+      else { say "\"If you wish,\" he replies, and then, after a moment, \"but there is no dial where I am standing. The dial is on the parapet.\"" }
+    }
+  }
+  as actor for master_take {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else { say "\"I will have no use for that, I am afraid.\"" }
+    }
+  }
+  as actor for master_open {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else { say "The dungeon master appears angered. \"Do not run from your quest: you are nearing the end!\"" }
+    }
+  }
+  as actor for master_other {
+    do {
+      if (!self.get(:in_dungeon)) { say dm_not_here }
+      else if (here.is(FarCell)) { say dm_cant_hear }
+      else { say "\"Do not be foolish! Consider the end of your quest!\"" }
+    }
+  }
   as actor for verbose { do { self.set(:aside, true)  self.set(:mode, :verbose)  say "Maximum verbosity." } }
   as actor for brief { do { self.set(:aside, true)  self.set(:mode, :brief)  say "Brief descriptions." } }
   as actor for superbrief { do { self.set(:aside, true)  self.set(:mode, :superbrief)  say "Superbrief descriptions." } }
@@ -2114,7 +2513,20 @@ kind Adventurer is sprout.Visitor {
   as actor for xyzzy { do { say "A hollow voice says \"Fool.\"" } }
   as actor for zork { do { say "At your service!" } }
   as actor for curse { do { say "Such language in a high-class establishment like this!" } }
-  as actor for pray { do { say "If you pray enough, your prayers may be answered." } }
+  // Prayer in the Royal Puzzle (the set-aside round 8's finding): the
+  // original lets a visitor seal themselves in for good and restore; this
+  // world has no restore, so a prayer there is answered, at what a death
+  // costs. Zork's own line everywhere else is the hint.
+  as actor for pray {
+    do {
+      if (here.is(PuzzleSquare)) {
+        say "You pray. The Puzzle takes the sound of it the way it takes every sound, and gives nothing back; and then the sandstone goes dark round you, and the floor goes from under you, and somebody who has been watching you all this while answers, after his fashion. It costs what it costs."
+        self.set(:dying, true)
+        send self :die
+      }
+      else { say "If you pray enough, your prayers may be answered." }
+    }
+  }
   as actor for walk_about { do { say "Use compass directions for movement." } }
   as actor for back { do { say "Sorry, my memory is poor. Please give a direction." } }
   as actor for stay { do { say "You will be lost without me!" } }
@@ -2204,9 +2616,13 @@ kind Adventurer is sprout.Visitor {
     }
   }
   // Feeling about, in the dark or out of it.
+  passage room_8_felt { You feel around. Rock, rough, and in one corner something that rolls under your hand and is a can, by the feel of it; and the dark keeps it. There is no telling in the dark which end of it sprays, or reading what it says, or finding it again once it has rolled, and the table will have you back before your hands have learned what a light would have told you at a glance. The flame on the wall beside the table is a light that has not been near the water. }
   as actor for feel_around {
     do {
-      if (self.get(:room_dark) && here.is(DarkRoom) && !here.get(:alight) && self.get(:light) == 0) { say "You feel around. Rock, cold and a little wet, where the walls are; air, which is where the ways out are, and the ways out are still compass directions in the dark; and nothing, yet, that bites. A light would be better than a hand." }
+      // Room 8 in the dark (round 7's P4): the can is there, and the dark
+      // keeps it; the lesson is the light.
+      if (self.get(:room_dark) && here.is(DarkRoom) && !here.get(:alight) && self.get(:light) == 0 && here == room_8) { say room_8_felt }
+      else if (self.get(:room_dark) && here.is(DarkRoom) && !here.get(:alight) && self.get(:light) == 0) { say "You feel around. Rock, cold and a little wet, where the walls are; air, which is where the ways out are, and the ways out are still compass directions in the dark; and nothing, yet, that bites. A light would be better than a hand." }
       else { say "You feel around, and find what is listed above, at about the height you expected it, and nothing that the light had not already shown you." }
     }
   }

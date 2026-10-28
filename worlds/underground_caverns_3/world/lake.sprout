@@ -83,7 +83,7 @@ kind ShinyObject is Portable {
   :taken false
   passage short { shiny object }
   describe { text "Something small and shiny, half in the sand and half out of it, that catches the light coming down through the water and then does not; the sand moves over it as you watch. It is close enough to reach for." }
-  passage no_take { The shiny object slips from your grasp and back onto the floor of the lake, where it is covered in sand. }
+  passage no_take { The shiny object slips from your grasp and back onto the floor of the lake, where it is covered in sand. It is still there, under the sand, within reach of another try. }
   on :taken {
     self.set(:taken, true)
     self.set(:unseen, true)

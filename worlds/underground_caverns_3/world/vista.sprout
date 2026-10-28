@@ -29,7 +29,7 @@ kind ViewingTable is Scenery, Touchable, Concealing, Searchable {
   }
   // The image fades, and the surface asks for a hand: eyes are not what
   // the table was made for.
-  passage pull { {if underground_caverns_3.get(:active_view) == 4}The image slowly fades. The surface, for once, seems content to be looked at.{else}The image slowly fades, and the pale surface, angled toward you, seems to lean a little nearer as it goes, the way a thing does that would rather be touched than looked at.{/if} }
+  passage pull { {if underground_caverns_3.get(:active_view) == 4}The image slowly fades. The surface, for once, seems content to be looked at.{else}The image slowly fades, and the pale surface, angled toward you, seems to lean a little nearer as it goes, the way a thing does that would rather be touched than looked at.{if bound actor}{if actor.is(Adventurer)}{if actor.get(:light) == 0} The places it shows are underground, and have no sun of their own; and the flame on the wall beside it is the one light in this room that has not been near the water.{/if}{/if}{/if}{/if} }
   // On the move the indicator changes (the world's clock ticks after the
   // command, and the tick before the change is 3), the table shows no
   // image, so that the image and the indicator are never read disagreeing

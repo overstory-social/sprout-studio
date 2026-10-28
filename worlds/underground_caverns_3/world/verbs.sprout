@@ -7,7 +7,7 @@
 // in range; a verb with no role is kept for what works everywhere.
 import * as sprout from 'sprout'
 import {inventory, wait} from 'sprout'
-import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace, Openable, Readable, Searchable, Concealing, Food, Touchable, Shakeable, Squeezable, Greetable, Sprayable, Pushable, Dial, Knockable, Seatable} from 'thing'
+import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pourable, Wearable, Diggable, Receptacle, Vessel, Trace, Openable, Readable, Searchable, Concealing, Food, Touchable, Shakeable, Squeezable, Greetable, Sprayable, Pushable, Dial, Knockable, Seatable, Orderable} from 'thing'
 
 // Zork III wears a thing by taking it (V-WEAR performs TAKE), so "wear"
 // and "put on" are phrases of `take`, and a worn thing is a held one.
@@ -22,9 +22,18 @@ import {Portable, Fixed, Switchable, Creature, Hooded, Drinkable, Fillable, Pour
 verb take {
   role target: Portable many
   "take [target]"  "get [target]"  "pick up [target]"  "pick [target] up"
-  "wear [target]"  "put on [target]"  "don [target]"
   synonyms "hold", "carry", "grab", "catch", "remove", "seize"
 }
+// Zork III wears a thing by taking it (V-WEAR performs TAKE), and refuses
+// to wear what has no WEARBIT: the wear is a take where the thing is worn
+// when held, and a refusal in V-WEAR's words where it is not (round 7's
+// P8). `cant_wear` has no phrase of its own; it is the intent's second
+// step, and only that.
+intent wear_it {
+  "wear [x]"  "put on [x]"  "don [x]"  "wear the [x]"
+  do take (target: x) when (x.is(Wearable)) then cant_wear (target: x) when (!x.is(Wearable))
+}
+verb cant_wear { role target: Portable }
 // Its phrases write `take` and not its own name, so a synonym would give
 // it nothing; the words are written out.
 verb take_fixed {
@@ -80,6 +89,7 @@ verb attack {
   role target
   role weapon carried
   "attack [target] with [weapon]"  "attack [target]"  "swing [weapon] at [target]"  "knock down [target]"
+  "strike [target] with [weapon]"
   synonyms "kill", "fight", "hurt", "injure", "hit", "murder", "slay", "stab"
 }
 // The hood taken from the one wearing it, named by the wearer rather than
@@ -95,6 +105,12 @@ verb shift {
   role target
   "move [target]"  "push [target]"  "pull [target]"  "slide [target]"
   "press [target]"  "shove [target]"  "push on [target]"  "roll [target]"
+}
+// A tug, a yank, a heave: a pull by other names (round 7's P8).
+intent tug_it {
+  "tug [x]"  "tug on [x]"  "tug at [x]"  "yank [x]"
+  "yank on [x]"  "pull on [x]"  "heave on [x]"  "haul on [x]"
+  do shift (target: x)
 }
 // A hood pulled back, a cover pushed back: the same reach as a push.
 intent pull_back {
@@ -205,7 +221,8 @@ verb throw_far {
 verb kick { role target: Creature  "kick [target]"  "taunt [target]" }
 verb rub { role target: Touchable  "rub [target]"  "touch [target]"  "feel [target]"  "pat [target]"  "pet [target]"  "stroke [target]" }
 verb wave { role target: Portable carried  "wave [target]"  "brandish [target]"  "wave [target] around" }
-verb shake { role target: Shakeable  "shake [target]" }
+// A shake, with or without something to shake it with (round 7's P3).
+verb shake { role target: Shakeable  role tool carried  "shake [target]"  "shake [target] with [tool]" }
 verb squeeze { role target: Squeezable  "squeeze [target]"  "hug [target]" }
 verb fill { role target: Fillable  role tool  "fill [target]"  "fill [target] with [tool]"  "fill up [target]" }
 verb pour { role target: Pourable  "pour [target]"  "pour out [target]"  "spill [target]"  "empty [target]" }
@@ -289,6 +306,13 @@ verb spray {
 }
 verb unlock { role target  role tool carried  "unlock [target] with [tool]"  "unlock [target]"  "lock [target] with [tool]"  "lock [target]" }
 
+// A hint, in Zork's voice (round 7's P2): the engine's `help` lists every
+// reading in range, and in a square of the Royal Puzzle, with its many
+// per-square things, the listing overran a turn's budget and faulted; and
+// `help` is the engine's own word, which a world may not take (friction).
+// This is the world's nearest: the same answer under the words that are
+// left to it.
+verb hint { "hint"  "hints"  "help me"  "clue"  "what now"  "what should i do"  "i need help"  "give me a hint" }
 verb score { "score" }
 verb diagnose { "diagnose" }
 verb xyzzy { "xyzzy"  "plugh" }
@@ -331,6 +355,18 @@ verb wait_long { "wait 2"  "wait 3"  "wait 4"  "wait 5"  "wait 10"  "wait 20"  "
 // shadow the footsteps answer it, at the ocean the sailor, and anywhere
 // else nobody, which is the answer wanted.
 verb who_there { "who is there"  "who's there"  "is anyone there"  "is anybody there"  "is somebody there"  "anyone there"  "who goes there"  "hello? who is there" }
+// A look among or between things (round 7's P1): a look in them.
+intent look_among {
+  "look among [x]"  "look between [x]"  "look in among [x]"  "peer among [x]"
+  "look amongst [x]"  "look through [x]"  "search among [x]"  "look closely at [x]"
+  do look_in (target: x)
+}
+// The question asked upward, at the ledge mostly (round 7's P7): a shout.
+intent who_up {
+  "who is up there"  "who's up there"  "is anyone up there"  "is somebody up there"
+  "is anybody up there"  "hello, who is up there"  "who is that up there"  "anyone up there"
+  do yell
+}
 verb zork { "zork" }
 verb verbose { "verbose" }
 verb brief { "brief" }
@@ -370,10 +406,79 @@ intent how_doing {
   do score
 }
 
+// The two words the Dungeon Master gives at his door (V-SAY's FROTZ OZMOO):
+// said at the secret door, they carry whoever has knocked back to the
+// Dungeon Entrance. The parser drops quotation marks before it reads, so
+// the double quotes he insists on are honoured whether or not they are
+// typed.
+verb incant {
+  "say frotz ozmoo"  "frotz ozmoo"  "say the words frotz ozmoo"  "incant frotz ozmoo"
+  "shout frotz ozmoo"  "say frotz ozmoo loudly"  "frotz"  "ozmoo"
+}
+// Orders to the Dungeon Master (DUNGEON-MASTER-F with WINNER the master):
+// a line has no addressee in Sprout (the spec's Parsing › Sequences,
+// again and all), so, as caverns 2 ordered its robot, an order is a verb
+// whose first role is the one ordered and whose comma is part of the
+// phrase. He answers to "master" wherever he can be spoken to: in the
+// room, himself; from another room of the dungeon, a presence that stands
+// for him (MASTER, the local-global), unseen while he is here.
+verb master_follow {
+  role target: Orderable
+  "[target], follow me"  "[target], follow"  "tell [target] to follow me"  "[target], come with me"
+  "[target] follow me"  "ask [target] to follow me"  "[target], come"  "tell [target] to follow"
+}
+verb master_stay {
+  role target: Orderable
+  "[target], stay"  "[target], wait"  "[target], stay here"  "[target], wait here"
+  "tell [target] to stay"  "tell [target] to wait"  "[target], stop"  "[target], remain here"
+}
+verb master_go {
+  role target: Orderable
+  role way: symbol
+  "[target], go [way]"  "[target], walk [way]"  "[target], [way]"  "tell [target] to go [way]"
+  "[target] go [way]"  "ask [target] to go [way]"  "send [target] [way]"  "[target], go to the [way]"
+}
+verb master_parapet {
+  role target: Orderable
+  "[target], go to parapet"  "[target], go to the parapet"  "tell [target] to go to the parapet"  "[target], walk to parapet"
+  "[target], walk to the parapet"  "send [target] to the parapet"  "ask [target] to go to the parapet"  "[target], stand on the parapet"
+}
+verb master_push {
+  role target: Orderable
+  "[target], push button"  "[target], push the button"  "[target], press button"  "[target], press the button"
+  "tell [target] to push the button"  "tell [target] to push button"  "[target] push button"  "ask [target] to push the button"
+}
+verb master_dial {
+  role target: Orderable
+  role n: integer
+  "[target], turn dial to [n]"  "[target], set dial to [n]"  "[target], turn the dial to [n]"  "[target], set the dial to [n]"
+  "tell [target] to turn dial to [n]"  "tell [target] to set dial to [n]"  "[target], turn dial [n]"  "[target], set dial [n]"
+}
+verb master_spin {
+  role target: Orderable
+  "[target], spin dial"  "[target], spin the dial"  "tell [target] to spin the dial"  "ask [target] to spin the dial"
+}
+verb master_take {
+  role target: Orderable
+  role item
+  "[target], take [item]"  "[target], get [item]"  "[target], pick up [item]"  "tell [target] to take [item]"
+  "[target], carry [item]"  "ask [target] to take [item]"  "[target] take [item]"  "[target], hold [item]"
+}
+verb master_open {
+  role target: Orderable
+  "[target], open door"  "[target], open the door"  "tell [target] to open the door"  "[target], open wooden door"
+  "ask [target] to open the door"  "[target], unlock door"  "[target], unlock the door"  "[target], let me out"
+}
+verb master_other {
+  role target: Orderable
+  "[target], hello"  "[target], help"  "[target], jump"  "[target], dance"
+  "[target], kill me"  "[target], sit down"  "[target], look"  "[target], read the book"
+}
+
 // Where somebody or something may be sent by the world's gate, and which
 // room a room is: every place keeps its own, so that what stands in it
 // can name it to something that cannot see it.
-enum Dest { nowhere, stair, junction, barren, creepy, foggy, shadow_1, shadow_2, shadow_3, shadow_4, shadow_5, shadow_6, shadow_7, shadow_8, ocean, lake_shore, aq_view, on_lake, in_lake, oblivion, cell, scatter, sword, splash, damp, dead_end, view, vista, haul, fall_ledge, fall_base, tight_squeeze, grotto, royal_hall, great_door, museum_entrance, jewel_room, tech_museum, cp_ante, cp_out, mid_entrance, mid_jewel, mid_tech, mid_cp_ante, mid_cp_out, old_entrance, old_jewel, old_tech, puzzle, time_trip, machine }
+enum Dest { nowhere, stair, junction, barren, creepy, foggy, shadow_1, shadow_2, shadow_3, shadow_4, shadow_5, shadow_6, shadow_7, shadow_8, ocean, lake_shore, aq_view, on_lake, in_lake, oblivion, cell, scatter, sword, splash, damp, dead_end, view, vista, haul, fall_ledge, fall_base, tight_squeeze, grotto, royal_hall, great_door, museum_entrance, jewel_room, tech_museum, cp_ante, cp_out, mid_entrance, mid_jewel, mid_tech, mid_cp_ante, mid_cp_out, old_entrance, old_jewel, old_tech, puzzle, time_trip, machine, button_room, beam_room, mra, mrb, mrc, mrg, mrd, mrae, mraw, mrbe, mrbw, mrce, mrcw, mrge, mrgw, mrde, mrdw, in_mirror, front_door, behind_door, south_corridor, east_corridor, west_corridor, north_corridor, parapet, dungeon_cell, wrong_cell, good_cell, nirvana, mirror_out, dm_follow, dm_push, dm_dial, dm_spin, dm_send, to_button, to_front, to_behind, cell_turn }
 
 // Which year a museum room is: the present (948 GUE), the years between
 // the dedication and now, and 776, the year the museum was built.
@@ -383,6 +488,10 @@ enum Era { present, mid, old }
 // the world keeps him: not yet met; met, and waiting at the brink for the
 // chest; away with it; back with the rope; at the top beside you; gone.
 enum ManStage { unmet, waiting, away, returned, at_cliff, gone }
+
+// The panels of the mirror box (RED-PANEL, YELLOW-PANEL, BLACK-PANEL,
+// WHITE-PANEL, MAHOGANY-PANEL, PINE-PANEL).
+enum Panel { red, yellow, black, white, mahogany, pine }
 
 // How much of a room a visitor is told on coming back to it: Zork's BRIEF
 // (the default), VERBOSE and SUPERBRIEF.
@@ -522,3 +631,48 @@ message :ring_hidden
 message :ring_taken
 message :machine_gone
 message :history with integer
+// The mirror box (MRSWITCH, I-MRINT, MPANELS, MENDS, I-PININ, MIRMOVE,
+// SHORT-POLE-F, MIRROR-FUNCTION) and the beam (BEAM-STOPPED?): the beam
+// blocked or clear; the mirror side opened by the button and shut again
+// by its clock; the pine panel opened and shut; the structure turned and
+// slid; the short pole raised or dropped; a mirror broken; the Guardians
+// noticed; and the visitor leaving the box by whichever side is open.
+message :beam_set with boolean
+message :mirror_set with boolean
+message :mirror_shut
+message :wood_set with boolean
+message :wood_shut
+message :mdir_set with integer
+message :mloc_set with integer
+message :pole_set with integer
+message :mirror_broken with integer
+message :guardians_seen
+message :mirror_out
+// The dungeon (DUNGEON-DOOR-F, CELL-DOOR, BRONZE-DOOR, DIAL, DIALBUTTON,
+// CELL-MOVE, I-FOLIN, NIRVANA-F): the visitor let in, or sent back to
+// the Button Room; the cell door and the bronze door opened and shut, and
+// the bronze door unlocked; the sundial set; the cells turned, and the
+// one in the slot told; the Dungeon Master told where to come, what to
+// push and what to set, where he stands, and whether he follows; and the
+// end.
+message :admitted
+message :sent_back
+message :cell_door_set with boolean
+message :bronze_set with boolean
+message :bronze_unlocked
+message :pnumb_set with integer
+message :cells_turned
+message :cell_turned with integer
+// An order to the Dungeon Master, by the errand's name: to come to the
+// room the one ordering has named on themselves, to go to the parapet,
+// to push the button, to set the dial to the number they have named, or
+// to spin it.
+message :dm_order with Dest
+message :dm_at_set with Dest
+message :dm_follow_set with boolean
+message :dm_folflag_set with boolean
+message :quest_done
+// The button pushed (DIALBUTTON): the world turns the cells, carrying
+// whether the cell door stood open.
+message :turn_cells with boolean
+message :dm_moved with Dest

@@ -522,6 +522,123 @@ changed:
 - The cap of eight phrases on a verb and eight nouns on a thing shaped
   the ledge's new words (friction 55).
 
+**Round 8 (the revision after round 7): Q1, Q2 and Q3 refined, and Q4
+built whole, by the brief's schedule.** The first try of this revision
+failed: the author's model hit its usage limit before the world was
+widened, a round 8 was played on the unrevised world and set aside, and
+this is the revision done again, answering round 7's points and the four
+things the set-aside round found. All four quarters are built: 89 rooms
+and the puzzle's 36 squares; all seven points are in reach, and the
+walkthrough plays from the Endless Stair to the Treasury of Zork with 7
+of 7 in 255 moves and the Dungeon Master's last words. The secret door's
+way down leads on to the Button Room.
+
+What round 7's playtest, and the set-aside round 8, changed:
+
+- **The still thing among the trees is a thing** (P1): before the man has
+  shown himself, "something", "thing", "shape", "figure", "watcher",
+  "somebody" and "movement" at the Cliff are a scenery of the trees that
+  answers `examine`, `search`, `look in`, `find`, `listen` and `talk`
+  with the original's "There seems to be nobody there, but it's hard to
+  tell" and a slip back among the trunks; `look among the trees` is an
+  intent over `look_in`. It goes unseen the moment he shows himself, as
+  the cue does.
+- **`hint` is the world's; `help` is the engine's** (P2, S1). The world
+  may not declare `help`, and the engine's listing faults where there is
+  much in range (friction 56); `hint` and its kin answer in one paragraph
+  of Zork's voice, and the walkthrough runs it in the first puzzle
+  square. No test runs `help`, since it could only record a fault.
+- **The cracked rock answers the verbs it invites** (P3): it composes
+  `Shakeable`, `shake` takes a tool, `attack` has "strike [target] with
+  [weapon]", and the examine line says the shake it waits for is the
+  earth's.
+- **The table says to bring the flame** (P4): to a visitor carrying no
+  light, the lean toward the hand adds that the places it shows have no
+  sun of their own and that the torch beside it is the one light in the
+  room that has not been near the water; `feel around` in a dark Room 8
+  finds the can and says the dark keeps it.
+- **The can's small print says where to start** (P5, S1): an application
+  lasts about as long as the walk from a water's edge to the top of a
+  slope, so spray at the edge with the hands already empty; the Southern
+  Shore, entered with the repellent still on, says it is holding and good
+  for the climb if you do not dawdle; the smell's going, on that shore or
+  in the lair, says the dark up the slope has noticed. The five moves are
+  untouched.
+- **Small gaps** (P7, P8): "who is up there" and its kin are a shout;
+  "walls" together is a thing of every puzzle square, answered in the
+  square's own words; `wear` is an intent that takes what is worn when
+  held and refuses the rest with "You can't wear the X."; `tug`, `yank`
+  and `heave on` are a pull.
+- **The sealed puzzle has a way out** (S1): `pray` in a square is
+  answered at a death's price, `yell` there says so, the slot says plainly
+  that its fee is the book and nothing less, and a push that leaves the
+  good ladder where nothing can get behind it (against the west side,
+  along the south, in the far north corner, or under the hole) tells the
+  pusher it is past saving.
+- **An underwater slip settles within reach** (S1): the dropped thing and
+  the shiny object both say they are still there for another try.
+- **Kept as they are** (P6, P9, P10): the ship's one command, the ledge's
+  nine beats, the lake's lessons, and every trap and its odds.
+
+What Q4 holds, and how it is built:
+
+- **The Button Room and the Beam Room**: the red button opens the mirror's
+  first side for seven moves (I-MRINT) when the beam is broken; a thing
+  dropped in the Beam Room lands where it breaks the beam (MREYE-ROOM),
+  and the beam can be jumped, put things into, and not taken.
+- **The long hallway** is five stretches (MRA to MRD, with the Guardians'
+  in the middle) between the Beam Room and the Dungeon Entrance, and the
+  box's two long sides are ten narrow rooms, reached only while the box
+  stands long-ways in a stretch. Every way into the box, and the wooden
+  wall, the mirror and the panel seen from outside, read the world's box:
+  where it stands (`:mloc`), which way its arrow points (`:mdir`, in
+  eighths), its short pole, its two mirrors, and its two doors' clocks.
+  Which mirror faces a room is sent to the room's mirror as a visitor
+  comes in (friction 62).
+- **Inside the mirror** is one place whose description is the original's,
+  with the pole's and the arrow's state read from the world; its ways out
+  are runs of conditional exits onto a landing that carries the visitor
+  to where the box's state says (friction 60). The six panels turn
+  (red and yellow clockwise, black and white the other way, pole up),
+  slide (mahogany, along the channel, the way the arrow points), and open
+  (pine, for five moves, I-PININ); the short pole is raised, lowered,
+  pushed, or put in the channel. Every death the original has is here:
+  turning in the Guardians' stretch, opening the pine into their view,
+  sliding past them with the pole up, a mirror broken or a door open.
+- **The Guardians of Zork** strike whoever walks into their stretch or
+  its sides on foot, unless invisible, and the potion wearing off there
+  is a death (I-VISIBLE); a thing thrown at them is destroyed in unison.
+  The box is the way past them; the potion, drunk two moves before, is
+  the other, with the box turned long-ways so the narrow rooms open.
+- **The dungeon door** is knocked at; the one knocking is counted for the
+  seven things (LOOK-LIKE-DM?) and let in, or told how far along they are
+  (DM-REASONS) and sent to the Button Room with the two words. `say frotz
+  ozmoo` at the Engravings Room, once he has given them, is the way back
+  to his door.
+- **The Dungeon Master** is a `Guise`, a `Creature` and an `Actor` who
+  stands in the Narrow Corridor and follows at the end of each move
+  (I-FOLIN) by his own walk with the world's gate open, found in the room
+  the world says he is in (friction 59); he will not enter a cell, and
+  says so once. Orders are verbs whose first role is him or the presence
+  that stands for him in a room he is not in (MASTER-F), unseen while he
+  is there: follow, stay, go a direction (north from the North Corridor
+  is the parapet), go to the parapet, push the button, set or spin the
+  dial, take, open, and the foolish rest. The button he pushes and the
+  dial he sets he pushes and sets by acting, at the parapet; the cells
+  turn in the world's body (friction 63), the visitor in the slot's cell
+  goes round the pit with it to the fourth cell's own place or another's,
+  and what lies in a cell nobody is in goes to one of eight stores.
+- **The bronze door** is seen from the South Corridor and the slot's cell
+  only while the fourth cell is in the slot, and unlocked by the strange
+  key only in the fourth cell's own place (friction 58); the Treasury is
+  through it, and its ending ends the game, with the score's seven kept.
+- **The lore book** in the dungeon opens to the picture of the eight cells.
+
+Choices that depart from the original, in Q4: friction 65 (the wrong
+cell's heat and window, prayer in the puzzle, the Dungeon Master struck,
+the entrance's diagonals, the Guardians noticed on entering, one box for
+everyone).
+
 ## The arc
 
 Zork III is the melancholy one. The visitor wakes with a dream of an old
@@ -658,8 +775,44 @@ is the eyes and the word "worthy".
 - Jumping at the Aqueduct View is fatal, as in the original.
 - A worn thing weighs one, as in the original, so the hood, cloak and
   amulet never sink.
+- The box can be steadied: the short pole dropped into the channel makes
+  the slide steady, and a steady slide past the Guardians, with both
+  mirrors whole and both doors shut, is the way; raised, it is a wobble,
+  and the wobble is noticed.
+- The pine side opens into the Guardians' view from the last hallway
+  facing north and from the third facing south; turned half round first,
+  it opens on the Dungeon Entrance.
+- The potion is the other way past the Guardians, if the box has been
+  turned long-ways so the narrow rooms open: two moves of it are the
+  walk, and the third, spent in their sight, is a death.
+- Knocking at the dungeon door with fewer than seven of his things is
+  told how many short it is, by the shade of his sentence; and anyone who
+  has knocked once can say the two words at the secret door and be at
+  his door again.
+- The lore book, read in the dungeon, is the hint book's picture of the
+  eight cells and the one bronze door.
+- The dial can be set by the visitor at the parapet and the button pushed
+  by the Dungeon Master from the cell; or the Dungeon Master can set it
+  too, told the number, from the cell.
+- The wrong cell has a window, and the window is quicker than the heat.
+- Prayer in the Royal Puzzle is answered, at the usual price; and the
+  shout there says so.
 
-## What "done" looks like for round 6
+## What "done" looks like for round 8
+
+- `tests/walkthrough.json` plays from the Endless Stair through all four
+  quarters to the Treasury of Zork with 7 of 7 and the Dungeon Master's
+  last words: the beam broken, the button, the box entered, turned,
+  steadied and slid past the Guardians, turned again and left by the pine
+  side, the door knocked at with all seven things, the Dungeon Master
+  followed to the parapet, the dial set, the cell entered, the button
+  pushed by him, the bronze door unlocked and the Treasury.
+- Every room of the four quarters has the original's name and ways out;
+  every thing a description names answers `examine`.
+- No fault in any run that does not type the engine's `help` (friction
+  56); `check` and `test` pass.
+
+## What "done" looked like for round 6
 
 - `tests/walkthrough.json` plays from the Endless Stair through all three
   quarters to 7 of 7: the Royal Puzzle's first push, the book from its
