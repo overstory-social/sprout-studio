@@ -65,7 +65,8 @@ the Treasury of Zork with 7 of 7 and the Dungeon Master's last words, `arrival.j
 first reads and the stair's refusals, `duel.json`, `slain.json`,
 `hood_pull.json` and `fight.json` the hooded figure, `ship.json`,
 `hail.json` and `sword_sea.json` the ocean, `shore.json` and `death.json`
-the lake, `cliff_man.json` and `ledge_cues.json` the man at the cliff,
+the lake, `cliff_man.json`, `cliff_hello.json` and `ledge_cues.json` the man at the
+cliff, `vial.json` the vial and `all`, `help.json` the engine's `help`,
 `old_man.json` the Engravings Room, `vista.json` the viewing table,
 `quake.json` the earthquake, `throw_direction.json` and `dig_bare.json`
 the parser, `dark.json` the grue, and `void.json` four deaths.
